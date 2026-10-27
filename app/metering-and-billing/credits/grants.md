@@ -157,7 +157,7 @@ When the granted credits are in a custom currency, the purchase converts the cus
 ```text
 grant currency:     100 credits (custom currency)
 cost basis rate:    1 credit = 0.50 USD
-purchase amount:   50.00 USD
+purchase amount:    50.00 USD
 ```
 {:.no-copy-code}
 
@@ -173,16 +173,16 @@ columns:
     key: description
 rows:
   - type: "Dynamic"
-    description: "The rate is resolved from the custom currency's active cost basis when the purchase is charged. Use this when you want the purchase to follow the currency's current rate."
+    description: "{{site.metering_and_billing}} resolves the rate from the custom currency's active cost basis when it charges the purchase. Use this when you want the purchase to follow the currency's current rate."
   - type: "Pinned"
-    description: "The rate is pinned to a specific cost basis of the custom currency, so later rate changes don't affect the purchase."
+    description: "{{site.metering_and_billing}} pins the rate to a specific cost basis of the custom currency, so later rate changes don't affect the purchase."
   - type: "Manual"
     description: "You provide an explicit rate for this purchase, independent of the currency's cost bases."
 {% endtable %}
 <!--vale on-->
 
 {:.info}
-> The `perUnitCostBasis` field only applies to fiat-currency grants.
+> **Note:** The `perUnitCostBasis` field only applies to fiat-currency grants.
 > For a custom-currency grant, use `purchase.costBasis` instead.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.

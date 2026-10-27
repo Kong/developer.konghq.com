@@ -48,7 +48,7 @@ Charges consume credits from the matching currency balance.
 Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/), such as credits or tokens you define for your organization.
 
 The purchase that funds a grant always settles in a fiat currency, even when the granted balance is in a custom currency.
-Custom-currency charges on a fiat invoice are converted through the currency's cost basis.
+{{site.metering_and_billing}} converts custom-currency charges on a fiat invoice through the currency's cost basis.
 
 For an end-to-end tutorial on setting up prepaid credits, see [Get started with prepaid credits](/how-to/get-started-with-prepaid-credits/).
 

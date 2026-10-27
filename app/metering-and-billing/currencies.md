@@ -22,8 +22,11 @@ related_resources:
     url: /metering-and-billing/credits/grants/
 ---
 
-Every monetary amount in {{site.konnect_short_name}} {{site.metering_and_billing}} carries a currency.
-{{site.metering_and_billing}} supports two kinds: fiat currencies, which are the real-world currencies defined by the ISO 4217 standard, and custom currencies, which you define yourself to price and grant units of value that aren't money.
+Every monetary amount in {{site.konnect_short_name}} {{site.metering_and_billing}} has a currency.
+{{site.metering_and_billing}} supports two kinds of currency: fiat currencies and custom currencies.
+
+* Fiat currencies are the currencies defined by the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) standard.
+* Custom currencies are units of value that you define yourself, such as LLM credits or tokens, so you can price and grant things that aren't money.
 
 Invoices are always issued in a fiat currency.
 A custom currency becomes billable only once you give it a cost basis, which is an explicit rate against a fiat currency.
@@ -31,20 +34,20 @@ A custom currency becomes billable only once you give it a cost basis, which is 
 ## Fiat currencies
 
 A fiat currency is identified by its three-letter ISO 4217 code, such as `USD`, `EUR`, or `JPY`.
-Any code defined by the standard is accepted.
+{{site.metering_and_billing}} accepts any code defined by the standard.
 
 The standard supplies each currency's display name, symbol, precision, decimal mark, and thousands separator, so you don't configure any of these.
-Precision is the number of decimal places the currency uses.
-Most currencies use two, and zero-decimal currencies such as `JPY` use none, which means amounts in those currencies are rounded to whole units.
+For example, `USD` uses two decimal places and `JPY` uses none.
 
 Only a fiat currency can be invoiced and settled through a payment provider.
 
 ## Custom currencies
 
 A custom currency is a unit of value that you define for your organization.
-Use one when you price in something other than money, such as credits, tokens, or compute units.
+Use one when you price in something other than money, such as LLM provider credits, tokens, or compute units.
 
-Unlike a fiat currency, a custom currency has no standard definition, so you supply its display properties yourself, and it has no intrinsic value until you attach a cost basis to it.
+Unlike a fiat currency, a custom currency has no standard definition, so you supply its display properties yourself.
+A custom currency also has no intrinsic value until you attach a cost basis to it.
 
 A custom currency has the following properties:
 
@@ -63,7 +66,7 @@ rows:
     description: |
       The identifier for the currency, between 4 and 24 characters.
       It must not match an ISO 4217 code, must not contain the `|` character, and must not have leading or trailing spaces.
-      The length is what distinguishes a custom currency from a fiat one, so a four-character minimum keeps the two sets from colliding.
+      The four-character minimum distinguishes custom currency codes from three-letter ISO 4217 codes, so the two can't overlap.
   - property: "Name"
     required: "Yes"
     description: "The display name, between 1 and 256 characters."
@@ -72,7 +75,10 @@ rows:
     description: "The symbol shown next to amounts in this currency."
   - property: "Precision"
     required: "Yes"
-    description: "The number of decimal places, from 0 to 12."
+    description: |
+      The number of decimal places, from 0 to 12.
+      <br><br>
+      Amounts in this currency round to this precision. For example, a precision of 0 rounds amounts to whole units.
   - property: "Decimal mark"
     required: "Yes"
     description: "The single character that separates the whole and fractional parts of an amount."
@@ -105,11 +111,11 @@ rows:
   - field: "Fiat currency"
     description: "The fiat currency that the rate converts into."
   - field: "Rate"
-    description: "The fiat amount that one unit of the custom currency is worth. Rate amounts are expressed and formatted in the fiat currency, not the custom one."
+    description: "The fiat amount that one unit of the custom currency is worth. Rate amounts are expressed and formatted in the fiat currency."
   - field: "Effective from"
-    description: "When the rate starts applying. Defaults to the time you create the cost basis. If you set it, it must be in the future."
+    description: "When the rate starts applying. Defaults to the time you create the cost basis. If you set this field, the date must be in the future."
   - field: "Effective to"
-    description: "When the rate stops applying. Leave it empty for an open-ended rate. Must come after the effective from date."
+    description: "When the rate stops applying. Leave it empty for an open-ended rate. The date must come after the effective from date."
 {% endtable %}
 <!--vale on-->
 
@@ -188,20 +194,30 @@ rows:
   - entity: "Plan"
     who: "You, when you create the plan"
     notes: |
-      Read-only after the plan exists. Can be a fiat or a custom currency.
-      A fiat-currency plan contains only that one fiat currency, though individual rate cards can override it to a custom currency.
-      A custom-currency plan contains no fiat currency at all, and its subscriptions are invoiced in the customer's currency.
-      With [`credit_then_invoice`](/metering-and-billing/credits/#settlement-modes) settlement, the custom currency needs a cost basis that's active against the customer's currency when the subscription starts, so its cost bases determine which customers can subscribe.
+      A plan's currency becomes read-only after you create the plan.
+      The currency can be fiat or custom.
+      <br>
+      * A fiat-currency plan contains only that one fiat currency, though individual rate cards can override it to set a custom currency.
+      * A custom-currency plan contains no fiat currency at all, and its subscriptions are invoiced in the customer's currency.
+
+      <br><br>
+      When the plan uses [`credit_then_invoice`](/metering-and-billing/credits/#settlement-modes) settlement, the custom currency needs a cost basis that's active against the customer's currency when the subscription starts.
+      The custom currency's cost bases therefore determine which customers can subscribe.
   - entity: "Add-on"
     who: "You, when you create the add-on"
     notes: |
-      Read-only after the add-on exists.
-      On a fiat-currency plan, the add-on can use the plan's fiat currency, and its rate cards can use a custom currency under the same override rules as the plan's rate cards.
-      On a custom-currency plan, the add-on's rate cards must use the plan's custom currency.
-      An add-on rate card that shares its key with a plan rate card must keep that rate card's currency.
+      An add-on's currency becomes read-only after you create the add-on.
+      <br>
+      * On a fiat-currency plan, the add-on can use the plan's fiat currency or a custom currency. Its rate cards can also use a custom currency under the same override rules as the plan's rate cards.
+      * On a custom-currency plan, the add-on's priced rate cards must use the plan's custom currency.
+
+      <br><br>
+      A priced add-on rate card that shares its key with a priced plan rate card must keep that rate card's currency.
   - entity: "Rate card"
     who: "You, as an optional override"
-    notes: "Inherits the plan or add-on currency unless you override it. Can only be overridden to a custom currency."
+    notes: |
+      The rate card inherits the plan or add-on currency unless you override it.
+      You can only override a fiat currency, and only with a custom currency.
   - entity: "Subscription"
     who: "Derived from the plan, or from the customer for a custom-currency plan"
     notes: |
@@ -210,7 +226,9 @@ rows:
       Either way, the invoice currency has to agree with the customer's currency, and it can't be changed after the subscription starts.
   - entity: "Invoice"
     who: "Derived from the subscription"
-    notes: "Always a fiat currency. Custom-currency charges are converted through their cost basis before they reach the invoice."
+    notes: |
+      The invoice currency is always a fiat currency.
+      {{site.metering_and_billing}} converts custom-currency charges through their cost basis before adding them to the invoice.
   - entity: "Credit grant"
     who: "You, when you create the grant"
     notes: "The granted balance can be in a custom currency. The purchase that funds it always settles in a fiat currency."
@@ -231,9 +249,9 @@ A rate card can override the currency it inherits, within these rules:
 
 {{site.metering_and_billing}} rounds every monetary amount to the precision of its currency, rounding halves away from zero.
 
-Rounding is applied at each stage of the calculation, not only on the invoice total.
-Individual line items, pricing tiers, and discount or commitment adjustments are each rounded to the currency's precision, and the resulting totals are rounded again.
-A custom-currency amount is converted through its cost basis and then rounded to the precision of the fiat currency it converts into.
+Rounding applies at each stage of the calculation, including the invoice total.
+{{site.metering_and_billing}} rounds individual line items, pricing tiers, and discount or commitment adjustments to the currency's precision, and then rounds the resulting totals again.
+For a custom-currency amount, {{site.metering_and_billing}} converts the amount through its cost basis and rounds the result to the precision of the fiat currency.
 
 ## Currency constraints
 

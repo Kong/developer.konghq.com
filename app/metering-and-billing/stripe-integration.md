@@ -33,8 +33,8 @@ You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.meter
 * Support multiple payment methods and [currencies](https://docs.stripe.com/currencies) including cryptocurrency
 
 {:.info}
-> Invoices are always issued in a fiat [currency](/metering-and-billing/currencies/), so [custom currencies](/metering-and-billing/currencies/#custom-currencies) don't change how the Stripe integration settles payments.
-> A custom currency is converted to the invoice's fiat currency before the invoice reaches Stripe.
+> **Note:** Invoices are always issued in a fiat [currency](/metering-and-billing/currencies/), so [custom currencies](/metering-and-billing/currencies/#custom-currencies) don't change how the Stripe integration settles payments.
+> {{site.metering_and_billing}} converts a custom currency to the invoice's fiat currency before it sends the invoice to Stripe.
 
 ## Revenue lifecycle
 

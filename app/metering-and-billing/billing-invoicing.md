@@ -282,8 +282,9 @@ The invoice can include two kinds of lines:
 #### Custom-currency charges
 
 A rate card priced in a [custom currency](/metering-and-billing/currencies/) doesn't invoice in that currency.
-When the charge reaches the invoice, {{site.metering_and_billing}} converts it to the invoice's fiat currency through the [cost basis](/metering-and-billing/currencies/#cost-basis) pinned to the subscription.
-For charges that settle in credits, custom-currency credits are consumed first and only the uncovered overage is converted to fiat and invoiced.
+When {{site.metering_and_billing}} adds the charge to the invoice, it converts the charge to the invoice's fiat currency through the custom currency's [cost basis](/metering-and-billing/currencies/#cost-basis).
+For charges on the `credit_then_invoice` settlement mode, {{site.metering_and_billing}} consumes custom-currency credits first and converts only the uncovered overage to fiat for invoicing.
+Charges on the `credit_only` settlement mode never convert to fiat and aren't invoiced.
 
 The invoice line records both sides of the conversion:
 
@@ -293,7 +294,7 @@ The invoice line records both sides of the conversion:
 In the {{site.konnect_short_name}} UI, the line shows the custom-currency amount, and the invoice totals show the converted fiat amount.
 
 {:.info}
-> Conversion and rounding happen each time usage is realized into an invoice.
+> **Note:** Conversion and rounding happen each time usage is realized into an invoice.
 > Rounding differences across separate realization runs within a billing period aren't corrected against each other.
 
 ## Discounts and commitments

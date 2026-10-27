@@ -166,8 +166,8 @@ Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or syst
 
 ## Customer currency
 
-A customer's currency is optional, but when set it must be a fiat [currency](/metering-and-billing/currencies/).
-You can select it when you create the customer, and it's shown on the customer's details page.
+A customer's currency is optional. When you set one, it must be a fiat [currency](/metering-and-billing/currencies/).
+You can select the currency when you create the customer, and then view it on the customer's details page.
 
 The customer currency is the settlement currency for everything billed to the customer:
 

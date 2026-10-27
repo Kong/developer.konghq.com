@@ -232,10 +232,10 @@ Plans can take different forms, for example:
 
 ### Plan currency
 
-Every plan has a currency that its rate card prices are expressed in.
+Every plan has a currency, and the plan's rate cards express their prices in that currency.
 When you create a plan, you select the currency, and it defaults to `USD`.
 
-A plan can hold only one fiat currency, and the currency is read-only after the plan is created.
+A plan can hold only one fiat currency. The currency becomes read-only after you create the plan.
 You can also price a plan in a [custom currency](/metering-and-billing/currencies/), such as credits or tokens.
 In that case, the invoice currency comes from the customer instead, so the customer must already have a fiat currency set.
 
