@@ -59,3 +59,4 @@ cvss_score
 cvss_version
 affected_versions
 fixed_versions
+status

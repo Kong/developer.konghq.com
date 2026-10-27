@@ -8,18 +8,26 @@ works_on:
   - on-prem
   - konnect
 advisory:
-  published: "2026-01-01"
+  id: KONGSA-00000000            # optional
+  published: "2026-01-01"        # optional, only a full date with a year
   updated: "2026-01-01"          # optional
   cves:
     - id: CVE-0000-00000
-      severity: high             # critical | high | medium | low
+      severity: high             # optional: critical | high | medium | low
       cvss_score: 7.5            # optional
       cvss_version: "4.0"        # optional
+      status: affected           # optional: affected | not_affected
       summary: <Short description of the vulnerability>
-  affected_versions:
+  affected_versions:             # optional, one product group
     - "3.x.x.x to 3.y.y.y"
   fixed_versions:
     - "3.y.y.z"
+  products:                      # optional, instead of the flat lists for multi-product advisories
+    - product: mesh              # gateway | ai-gateway | mesh | kic | operator
+      affected_versions:
+        - "2.x.x to 2.y.y"
+      fixed_versions:
+        - "2.y.z"
 ---
 
 <Opening paragraph: what Kong has patched and which products are affected.>
@@ -27,6 +35,14 @@ advisory:
 ## CVE-0000-00000
 
 <What the vulnerability is, who is affected, and what an attacker needs in order to exploit it.>
+
+### Am I affected?
+
+<The conditions that must all be true, and the configurations that are not affected.>
+
+### Mitigation
+
+<Optional: what customers who cannot upgrade can do.>
 
 ### Recommendation
 

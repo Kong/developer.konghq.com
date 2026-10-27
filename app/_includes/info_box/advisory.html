@@ -1,30 +1,65 @@
 {% assign advisory = page.advisory %}
 {% include support/advisory_severity.html advisory=advisory %}
 
+{% if advisory.id %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Advisory ID</div>
+  <div>{{ advisory.id }}</div>
+</div>
+{% endif %}
+
+{% if advisory_severity != "" %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Severity</div>
   <div>{{ advisory_severity | capitalize }}</div>
 </div>
+{% endif %}
 
+{% if advisory.published %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Published</div>
   <div>{{ advisory.published }}{% if advisory.updated %} (updated {{ advisory.updated }}){% endif %}</div>
 </div>
+{% endif %}
 
+{% if advisory.fixed_versions.size > 0 %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Fixed versions</div>
   <ul class="list-none p-0 m-0">
     {% for version in advisory.fixed_versions %}<li>{{ version }}</li>{% endfor %}
   </ul>
 </div>
+{% endif %}
 
+{% if advisory.affected_versions.size > 0 %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Affected versions</div>
   <ul class="list-none p-0 m-0">
     {% for version in advisory.affected_versions %}<li>{{ version }}</li>{% endfor %}
   </ul>
 </div>
+{% endif %}
 
+{% for entry in advisory.products %}
+{% include support/advisory_product_name.html product=entry.product %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">{{ advisory_product_name }}</div>
+  {% if entry.fixed_versions.size > 0 %}
+  <div>Fixed versions</div>
+  <ul class="list-none p-0 m-0">
+    {% for version in entry.fixed_versions %}<li>{{ version }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if entry.affected_versions.size > 0 %}
+  <div>Affected versions</div>
+  <ul class="list-none p-0 m-0">
+    {% for version in entry.affected_versions %}<li>{{ version }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% if page.products contains "gateway" or page.products contains "ai-gateway" %}{% if advisory.fixed_versions.size > 0 or advisory.products.size > 0 %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Resources</div>
   <div class="flex gap-1.5 flex-col">
@@ -32,6 +67,8 @@
     <a href="/gateway/upgrade/in-place/">Upgrade Kong Gateway</a>
   </div>
 </div>
+{% endif %}
+{% endif %}
 
 {% if page.related_resources %}
 {% include info_box/sections/related_resources.html %}
