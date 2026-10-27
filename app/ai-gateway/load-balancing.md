@@ -74,6 +74,16 @@ rows:
   - algorithm: "Lowest-usage"
     description: |
       Routes requests to models with the lowest measured resource usage. The [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) parameter defines how usage is measured: prompt tokens, completion tokens, total tokens (the default), cost, or an LLM-accuracy score.
+
+      {:.info}
+      > **Note**: If you don't configure any cost fields on a target, {{site.ai_gateway}} falls back to the [Price Catalog](/ai-cost-management/price-catalog).
+      > <br><br>
+      > If dynamic pricing is off (`KONG_DYNAMIC_PRICING=off`):
+      > * {{site.konnect_short_name}} data planes have no fallback
+      > * On-prem data planes can set `KONG_DYNAMIC_PRICING_URI` to the path of a local file
+      >
+      > <br>
+      > For the full precedence order, see [How a request is priced](/ai-cost-management/price-catalog/#how-a-request-is-priced).
     considerations: |
       * Balances load based on actual consumption metrics.
       * Useful for cost optimization and avoiding overloading individual models.
@@ -214,6 +224,7 @@ rows:
     action: "Set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`"
     description: |
       Route requests by considering cost, balancing model performance with budget targets.
+      In {{site.ai_gateway}} 2.3 and later, targets with no cost fields are priced from the [Price Catalog](/ai-cost-management/price-catalog/#how-a-request-is-priced).
 {% endtable %}
 <!--vale on-->
 
