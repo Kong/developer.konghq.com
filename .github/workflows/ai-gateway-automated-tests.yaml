@@ -9,8 +9,8 @@ on:
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
-      konnect_event_gateway_min_version:
-        description: 'Minimum Konnect Event Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
+      konnect_ai_gateway_min_version:
+        description: 'Minimum Konnect AI Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
         required: false
   schedule:
     - cron: '0 0 * * MON'
@@ -71,11 +71,11 @@ jobs:
       - name: Pre-pull AI Gateway quickstart dependencies
         run: docker pull ghcr.io/jqlang/jq:latest
 
-      - name: Set Event Gateway min version
-        if: ${{ inputs.konnect_event_gateway_min_version != '' }}
+      - name: Set AI Gateway min version
+        if: ${{ inputs.konnect_ai_gateway_min_version != '' }}
         env:
-          MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
-        run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+          MIN_VERSION: ${{ inputs.konnect_ai_gateway_min_version }}
+        run: echo "KONNECT_AI_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: tools/automated-tests
