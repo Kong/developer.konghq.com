@@ -376,19 +376,19 @@ columns:
   - title: Description
     key: description
 rows:
-  - metric: Compression Saved Tokens
+  - metric: "`save_token_count`"
     type: Count
     description: Number of tokens saved, summed over the compressed messages. This metric is reported per compression provider and has no model dimension.
-  - metric: Compression Original Tokens
+  - metric: "`original_token_count`"
     type: Count
     description: Number of tokens before compression.
-  - metric: Compression Compressed Tokens
+  - metric: "`compress_token_count`"
     type: Count
     description: Number of tokens after compression.
-  - metric: Compression Message Count
+  - metric: "`compressed_message_count`"
     type: Count
     description: Number of compressed messages per request.
-  - metric: Compression Duration
+  - metric: "`duration`"
     type: Latency
     description: Average time the compressor took, in milliseconds.
 {% endtable %}
@@ -408,10 +408,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - dimension: Compressor Provider
+  - dimension: "`provider`"
     values: "`kong`, `headroom`"
     description: The compression provider that handled the request.
-  - dimension: Compression Type
+  - dimension: "`compress_type`"
     values: "`rate`, `target_token`"
     description: The compression method used. Available for the `kong` provider only. For `headroom`, the value is empty.
 {% endtable %}
