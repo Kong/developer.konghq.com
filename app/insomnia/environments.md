@@ -244,10 +244,9 @@ You mark a variable as confidential or make it visible again in an environment's
 
 ### Export and Git Sync
 
-When you export an environment or sync it with Git Sync, {{ site.insomnia }} records which variables are confidential in a `confidentialKeys` list in the v5 file:
+When you export an environment or sync it with Git Sync, {{ site.insomnia }} records which variables are confidential in a `confidentialKeys` list in the v5 file. The list contains variable names only. Values are exported like any other variable value.
 
-* The list contains variable names only.
-* {{ site.insomnia }} exports or syncs all environment variable values in plain text, including confidential values: anyone with access to the exported file or the repository can read them. Use [secret variables](#secret-environment-variables) if the value must not be stored in plain text.
+{% include insomnia/confidential-export-warning.md %}
 
 {:.warning}
 > **Confidential variables reduce accidental exposure, not access**. They protect a value from being seen on a shared screen or an unattended laptop, and from being copied into generated code or logs. They don't prevent someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request.
