@@ -536,7 +536,7 @@ config:
 {% include md/ai-gateway/v2/upstream-tls.md name='AI MCP Server' schema_prefix='schema-aigateway-mcpserver-config' %}
 
 These fields work in every [server mode](#server-modes) that connects to an upstream: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
-They have no effect in `listener` mode, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
+The `listener` mode doesn't accept them, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
 
 In the following example, the AI MCP Server presents the `mcp-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
 

@@ -26,6 +26,7 @@ rows:
 <!-- vale on -->
 
 You can use either field on its own, or both together.
+The upstream `config.url` must use `https` when you set either field. Otherwise, the API returns an `HTTP 400` error.
 
 To reference a certificate, create the AI Certificate or AI CA Certificate first, then enter its `name` in the field.
 The `name` of a certificate can't be changed after you create it, so the reference stays valid.
