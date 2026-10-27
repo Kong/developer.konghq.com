@@ -199,7 +199,7 @@ expected:
   return_code: 0
   message: |
     true
-    Valid SPDX SBOM with 568 packages
+    Valid SPDX SBOM with 600 packages
 render_output: false
 {% endvalidation %}
 
