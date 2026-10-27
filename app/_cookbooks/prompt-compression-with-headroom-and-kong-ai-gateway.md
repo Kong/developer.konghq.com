@@ -642,7 +642,7 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-Both requests contain the same conversation. On `/compressed`, OpenAI receives the log records as a table, so OpenAI counts about half as many input tokens. Headroom compresses each request before Kong sends the request to OpenAI. The copy of the conversation in the script doesn't change.
+Both requests contain the same conversation. On `/compressed`, OpenAI receives the log records as a table, so OpenAI counts about half as many input tokens. The copy of the conversation in the script doesn't change.
 
 Steps 2 and 3 cover two more cases:
 
