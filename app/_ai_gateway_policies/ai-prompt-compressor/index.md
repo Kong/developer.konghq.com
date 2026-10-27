@@ -448,6 +448,42 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+#### Headroom session fields
+
+For the `headroom` provider, the one `compress_items` entry has an `information` string in this format:
+
+`<transforms>;frozen_message_count=<N>;cached_prefix_replayed=<true|false>`
+
+Headroom adds the two session parts only when it runs the request in a session.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Part
+    key: part
+  - title: Description
+    key: description
+rows:
+  - part: "`<transforms>`"
+    description: A comma-separated list of the transforms that Headroom applied to the request.
+  - part: "`frozen_message_count`"
+    description: |
+      The number of leading messages that Headroom did not compress again on this turn.
+      Headroom counts the leading messages that it can replay from the compression cache of the session.
+      Plain messages always count. A tool result counts only after Headroom caches it. The last message never counts.
+      Headroom calculates this value from its own state, not from the LLM provider. The value can be more than zero on the first turn.
+  - part: "`cached_prefix_replayed`"
+    description: |
+      `true` when Headroom compressed some earlier messages to different bytes than on the previous turn, and then replaced them with the bytes from the previous turn. This keeps the start of the prompt the same.
+      `false` when Headroom replaced nothing. This is the usual value.
+      The value is also `false` when the Headroom process has no previous turn for the session. This happens on the first turn, after the session state expires, or, when Headroom keeps sessions in memory, on a Headroom instance that did not serve the session before. In these cases, the start of the prompt can change.
+{% endtable %}
+<!-- vale on -->
+
+{:.warning}
+> Do not use `cached_prefix_replayed` to measure prompt cache hits. The field reports a Headroom repair step. It does not report on the prompt cache of the LLM provider. A value of `false` does not mean that the start of the prompt is the same as on the previous turn.
+> To measure cache hits, use the cached-token counts that the LLM provider reports. These are `cached_tokens` in `ai.proxy.usage.prompt_tokens_details` in the [audit log](/ai-gateway/ai-audit-log-reference/#core-logs), and the `gen_ai.usage.cache_read.input_tokens` attribute in [OpenTelemetry traces](/ai-gateway/llm-open-telemetry/#span-attribute-reference).
+
 ### Response headers
 
 When the compressor handles a request, the Policy adds the following headers to plain and streamed responses, so the caller can read what compression saved:
