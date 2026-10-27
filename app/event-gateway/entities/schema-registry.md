@@ -62,6 +62,9 @@ data:
       password: $MY_PASSWORD
 {% endentity_example %}
 
+{:.info}
+> **Note**: {{site.event_gateway_short}} only requires **read-only** access to the schema registry to fetch schemas for validation.
+
 ## Schema
 
 {% entity_schema %}
