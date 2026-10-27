@@ -86,7 +86,7 @@ rows:
   - field: "`trustDomain`"
     value: "The trust domain the bundles verify. Required, at most 253 characters, and must match the trust domain of the identities being verified."
   - field: "`caBundles`"
-    value: "At least one CA bundle. Each has `type: Pem` and the certificate in `pem.value`. The control plane rejects a value that isn't valid PEM, or that is a private key, when you apply it."
+    value: "At least one CA bundle. Each has `type: Pem` and the certificate in `pem.value`. The control plane rejects a value that isn't PEM or whose first block is a private key. It doesn't check the rest of the value, so make sure it contains only CA certificates."
 {% endtable %}
 
 `caBundles` accepts several entries, so old and new certificates stay verifiable during a CA
@@ -97,7 +97,8 @@ rotation:
    trust bundle changes on the configuration refresh interval
    (`KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`, 10 seconds by default).
 1. Switch certificate issuance to the new CA, and confirm that connections with the new
-   certificates work.
+   certificates work. For a `Bundled` identity, update `provider.bundled.ca` in place. Workloads
+   get new certificates right away, so publish the new CA first, otherwise their connections fail.
 1. Remove the old CA when no workload needs certificates it issued.
 
 Adding a CA doesn't change the issuer or renew workload certificates, so coordinate the change
@@ -121,7 +122,10 @@ case, so diagnose the handshake and the authorization decision separately.
 ## Resources created from a MeshIdentity
 
 A `MeshTrust` created by the control plane has `status.origin.kri`, which identifies its
-`MeshIdentity`. A `MeshTrust` written by hand has no origin.
+`MeshIdentity`. A `MeshTrust` written by hand has no origin. The status is only visible in the
+zone that generated the trust. On the global control plane, identify generated trusts by the
+`kuma.io/origin: zone` and `kuma.io/zone` labels, with `kuma.io/display-name` set to the
+`MeshIdentity` name.
 
 A generated `MeshTrust` always publishes the trust domain recorded in its `MeshIdentity`
 status. An identity's trust domain can't be changed in place. For a staged transition, create a
@@ -146,6 +150,7 @@ To publish trust bundles yourself, set `meshTrustCreation: Disabled` on the `Mes
    certificate or its private key.
 1. Connect from a workload in that trust domain and confirm that the mTLS handshake succeeds.
 1. Connect with a certificate from an untrusted domain or CA and confirm that the handshake
-   fails.
+   fails. An HTTP caller sees `503` when the handshake fails, and `403` when the handshake
+   succeeds but `MeshTrafficPermission` denies it.
 1. In a multi-zone deployment, confirm that every zone has a `MeshTrust` for each other zone's
    trust domain, then connect across zones and confirm that the handshake succeeds.

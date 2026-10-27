@@ -112,7 +112,7 @@ rows:
     callers: "Every service account in the namespace, with the default Kubernetes path. A prefix ending at `/ns/storefront` would also match `storefront-test`."
   - match: "Trust-domain prefix"
     example: "`spiffe://default.default.mesh.local`"
-    callers: "Every identity in the trust domain. A trailing `/` isn't a valid SPIFFE ID."
+    callers: "Every identity in the trust domain, and in any trust domain whose name starts with the same string, such as `default.default.mesh.local-test`. A trailing `/` isn't a valid SPIFFE ID."
 {% endtable %}
 
 By default, identity paths use the following formats:
@@ -237,7 +237,7 @@ For TCP listeners, use `envoy.filters.network.rbac` in the two metadata operator
 information, see [Envoy RBAC metadata fields](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rbac_filter).
 
 Send requests from `legacy` and check the destination's log. The `shadow` field reports
-`denied`, and `policy` identifies the matching `MeshTrafficPermission`.
+`denied`, and `policy` identifies the matching `MeshTrafficPermission` by its KRI, for example `kri_mtp_default___shadow-deny-legacy_` (`kri_mtp_<mesh>_<zone>_<namespace>_<name>_`).
 
 Check `policy` as well as `shadow`. When no shadow entry matches, the log still reports
 `denied`, with policy `default`. A `shadow_denied` counter alone doesn't tell you how many
@@ -258,7 +258,7 @@ columns:
     key: effect
 rows:
   - target: "`kind: Mesh`, or no `targetRef`"
-    effect: "Every identified workload the policy reaches."
+    effect: "Every identified workload the policy reaches, and the zone egress listeners of mesh-scoped zone proxies when the policy is in the system namespace or on the global control plane."
   - target: "`kind: Dataplane` with `labels`"
     effect: "Matching destination proxies only."
   - target: "`kind: Dataplane` with `labels` and `sectionName`"
@@ -284,7 +284,10 @@ kubectl get dataplanes.kuma.io DESTINATION_DATAPLANE -n DESTINATION_NAMESPACE -o
 ```
 
 Copy the inbound's `name` into `targetRef.sectionName`. If it has no name, use its `port` as a
-quoted string, such as `"8080"`.
+quoted string, such as `"8080"`. On Kubernetes, the inbound name is the name of the container
+port that the Service `targetPort` resolves to, not the Service port name, and the port is the
+container port. On Universal, read the inbounds with
+`kumactl get dataplane DESTINATION_DATAPLANE -m MESH -o yaml`.
 
 The following example denies `observability` on the `backend-admin-api` inbound, even when
 another policy allows that namespace:
@@ -315,9 +318,11 @@ spec:
 no effect on zone ingress listeners, which pass TLS through without terminating it. Select the
 proxy role and zone with `targetRef.labels`, and the listener with `targetRef.sectionName`.
 
-`sectionName` matches the listener's `name` in `Dataplane.networking.listeners[]`. A listener
-without a `name` uses its port number, so a Helm install with default ports uses `10002` for
-zone egress. Read the listener names instead of assuming the defaults:
+`sectionName` matches the listener's `name` in `Dataplane.networking.listeners[]`. On Kubernetes,
+the listener takes its name from the zone proxy Service port name, or the Service port number
+when the port is unnamed, so a Helm install with default values uses `10002` for zone egress.
+On Universal, use the `name` from the zone proxy's `Dataplane`, or its port when it has no name.
+Read the listener names instead of assuming the defaults:
 
 ```sh
 kubectl get dataplanes.kuma.io ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
@@ -354,10 +359,8 @@ On zone egress, `sni` matches the destination name in the TLS handshake. It iden
 requested destination, not the caller. It accepts only `type: Exact`, and the value must be a
 DNS subdomain.
 
-To find the value, inspect the zone egress proxy's Envoy `/config_dump`, find the filter chain
-for the external service, and copy its `filter_chain_match.server_names` value into
-`rules[].default.deny[].sni.value`. The value is an internal routing name, not the external
-service's public hostname.
+To find the value, read the `snis` field of the MeshExternalService. In the GUI, open the service under **Services > Mesh External Services** and view its YAML in Universal format. From the control plane API, run `curl -s http://<control-plane>:5681/meshes/<mesh>/meshexternalservices/<name> | jq -r '.snis[].sni'`. Copy the entry for the port you want into `rules[].default.deny[].sni.value`.
+The value follows the format `sni.extsvc.<mesh>[.<zone>[.<namespace>]].<name>.<port>`, where zone and namespace are present only for a MeshExternalService created in a zone. It is an internal routing name, not the external service's public hostname.
 
 The following example denies traffic to one external service through zone egress:
 
@@ -392,7 +395,7 @@ Test from an allowed caller and a caller that should be denied, using new connec
 1. Confirm that the destination has an identity and that the test uses mTLS.
 1. Confirm that `targetRef` selects the destination proxy and, if set, the intended
    `sectionName`.
-1. Check the caller's certificate in its Envoy admin `/certs` endpoint. Confirm that the SPIFFE
+1. Check the caller's issued certificate with `kumactl inspect dataplane CALLER_DATAPLANE --type config-dump`. Confirm that the SPIFFE
    URI in its subject alternative names matches the policy's `Exact` or `Prefix` value.
 1. Send the same request from both callers. Confirm that the allowed caller reaches the
    application and the denied caller doesn't. If a request fails unexpectedly, check the

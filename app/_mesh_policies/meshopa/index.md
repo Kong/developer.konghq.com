@@ -109,8 +109,10 @@ Inline content is readable by anyone who can read the policy. Inline Rego is usu
 put an `agentConfig` that carries a management server token in a `Secret`.
 
 Inline Rego is compiled when the resource is applied, so a syntax error is rejected with the
-OPA parse error. Rego from `Secret`, `File`, or `EnvVar` is only compiled later, when the control
-plane generates the agent configuration, so missing sources or incompatible modules fail then.
+OPA parse error. Modules use Rego v0 syntax, as in the examples on this page. To write OPA 1.x
+syntax, such as `allow if { ... }`, add `import rego.v1` to the module. Rego from `Secret`, `File`,
+or `EnvVar` is only compiled later, when the control plane generates the agent configuration, so
+missing sources or incompatible modules fail then.
 A successfully created resource doesn't prove that the agent has a working policy.
 
 `appendPolicies[].ignoreDecision` keeps a policy loaded on the agent, but leaves its result out
