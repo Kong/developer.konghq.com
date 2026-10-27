@@ -8,7 +8,7 @@ To create the webhook:
 1. In the **App name** field, enter a name like `Kong AI Cost Management`.
 1. Select the Slack workspace that receives the alerts, then click **Continue**.
 1. Set bot scopes to `incoming-webhook`, then click **Continue**.
-1. Skip **What it can respond to** for this example: click **Continue** without setting any options.
+1. Click **Continue** to skip **What it can respond to**, which you don't need for this example.
 1. Click **Create and Install**.
 1. In the auth dialog, choose a channel in your workspace.
 1. Click **Allow**.
