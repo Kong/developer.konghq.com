@@ -96,7 +96,7 @@ flowchart LR
 
 ### How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 
-Routing rules are configured at the Data Plane level. The Data Plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the Data Plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
+Routing rules are configured at the Data Plane level. The Data Plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, for example [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the Data Plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
 
 How traffic is routed to the appropriate Workspace varies depending on if you're using {{site.base_gateway}} or {{site.konnect_short_name}}:
@@ -264,7 +264,7 @@ data:
 
 ## Resolve Workspace name conflicts {% new_in 3.15 %}
 
-Starting in {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-level Admin API route segment (such as `services`, `routes`, or `consumers`) are no longer allowed.
+Starting in {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-level Admin API route segment (for example `services`, `routes`, or `consumers`) are no longer allowed.
 {{site.base_gateway}} enforces this check at startup and before running migrations.
 If it detects a conflict, {{site.base_gateway}} exits with an error and won't start until all conflicting Workspaces are renamed.
 
@@ -310,7 +310,7 @@ If you're running 3.15 or later and have Workspaces with conflicting names, upda
    {:.no-copy-code}
 
 
-Once all conflicts are resolved, you can start {{site.base_gateway}} or run migrations.
+After all conflicts are resolved, you can start {{site.base_gateway}} or run migrations.
 
 {:.info}
 > **Note**: After renaming a Workspace, running {{site.base_gateway}} nodes serve cached configuration and won't pick up the change until they re-read the database.

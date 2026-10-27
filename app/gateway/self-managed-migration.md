@@ -128,9 +128,7 @@ the desired control plane. This can be done using the
 Just like in self-managed deployments, the custom plugin code must be distributed to the Data Plane instances.
 
 {:.info}
-> **Note**: {{site.konnect_short_name}}'s Dedicated Cloud Gateways can support custom plugins
-but currently require a manual deployment process involving {{site.base_gateway}}'s support team.
-Contact your Kong representative for more information.
+> **Note**: {{site.konnect_short_name}}'s Dedicated Cloud Gateways can support custom plugins, but they require a manual deployment process involving {{site.base_gateway}}'s support team. Contact your Kong representative for more information.
 
 ## Migrating {{site.base_gateway}} configuration
 
