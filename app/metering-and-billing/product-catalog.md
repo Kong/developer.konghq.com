@@ -236,7 +236,7 @@ Every plan has a currency, and the plan's rate cards express their prices in tha
 When you create a plan, you select the currency, and it defaults to `USD`.
 
 A plan can hold only one fiat currency. The currency becomes read-only after you create the plan.
-You can also price a plan in a [custom currency](/metering-and-billing/currencies/), such as credits or tokens.
+You can also price a plan in a [custom currency](/metering-and-billing/currencies/), such as tokens or compute units.
 In that case, the invoice currency comes from the customer instead, so the customer must already have a fiat currency set.
 
 See [Currencies](/metering-and-billing/currencies/) for how fiat and custom currencies work.
@@ -364,7 +364,7 @@ Using a 100% discount on the standard price provides transparency to users by di
 #### Currency
 
 A rate card inherits the currency of the plan or add-on it belongs to.
-If the plan or add-on uses a fiat currency, you can override the rate card to a [custom currency](/metering-and-billing/currencies/), for example to price a feature in credits while the rest of the plan is priced in USD.
+If the plan or add-on uses a fiat currency, you can override the rate card to a [custom currency](/metering-and-billing/currencies/), for example to price a feature in tokens while the rest of the plan is priced in USD.
 
 A currency override has the following rules:
 

@@ -23,7 +23,7 @@ related_resources:
 With {{site.metering_and_billing}}, you can implement various pricing strategies to meet your business needs.
 
 The [currency](/metering-and-billing/currencies/) for all pricing models is set based on the related plan.
-A rate card can override the plan's fiat currency with a [custom currency](/metering-and-billing/currencies/#custom-currencies), for example to price a single feature in credits.
+A rate card can override the plan's fiat currency with a [custom currency](/metering-and-billing/currencies/#custom-currencies), for example to price a single feature in tokens.
 When a rate card is priced in a custom currency, {{site.metering_and_billing}} converts its charges to the invoice's fiat currency through the currency's [cost basis](/metering-and-billing/currencies/#cost-basis).
 
 ## Free

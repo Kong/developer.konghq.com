@@ -43,7 +43,7 @@ A credit grant adds credits to a customer balance.
 Grants are the main way to create prepaid or promotional credit.
 
 Every grant has an amount and a [currency](/metering-and-billing/currencies/).
-The currency can be a fiat currency or a [custom currency](/metering-and-billing/currencies/#custom-currencies), such as credits or tokens you define for your organization.
+The currency can be a fiat currency or a [custom currency](/metering-and-billing/currencies/#custom-currencies), such as tokens, API calls, or compute units you define for your organization.
 A grant can also define how it's funded, when unused credits expire, and how {{site.metering_and_billing}} prioritizes it against other grants during consumption.
 
 ## Funding methods
@@ -155,8 +155,8 @@ The purchase currency must be a fiat currency, and it has to match the customer'
 When the granted credits are in a custom currency, the purchase converts the custom-currency amount into the fiat purchase amount through a cost basis:
 
 ```text
-grant currency:     100 credits (custom currency)
-cost basis rate:    1 credit = 0.50 USD
+grant currency:     100 tokens (custom currency)
+cost basis rate:    1 token = 0.50 USD
 purchase amount:    50.00 USD
 ```
 {:.no-copy-code}

@@ -59,7 +59,7 @@ faqs:
 automated_tests: false
 ---
 
-A custom currency is a unit of value that you define for your organization, such as credits, tokens, or compute units.
+A custom currency is a unit of value that you define for your organization, such as tokens, API calls, or compute units.
 Because a custom currency isn't real money, it needs a cost basis, which is a rate that converts one unit of the currency into a fiat amount for invoicing.
 
 In this guide, you'll create a custom currency, define its first cost basis, and then change its rate.

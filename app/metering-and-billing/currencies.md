@@ -111,11 +111,11 @@ rows:
   - field: "Fiat currency"
     description: "The fiat currency that the rate converts into."
   - field: "Rate"
-    description: "The fiat amount that one unit of the custom currency is worth. Rate amounts are expressed and formatted in the fiat currency."
+    description: "The fiat amount that one unit of the custom currency is worth. The rate must be a positive number. Rate amounts are expressed and formatted in the fiat currency."
   - field: "Effective from"
-    description: "When the rate starts applying. Defaults to the time you create the cost basis. If you set this field, the date must be in the future."
+    description: "When the rate starts applying. Defaults to the time you create the cost basis. If you set this field, the date must be in the future. The rate already applies at this exact time."
   - field: "Effective to"
-    description: "When the rate stops applying. Leave it empty for an open-ended rate. The date must come after the effective from date."
+    description: "When the rate stops applying. Leave it empty for an open-ended rate. The date must come after the effective from date. The rate no longer applies at this exact time."
 {% endtable %}
 <!--vale on-->
 
@@ -127,14 +127,6 @@ The rate of the superseded cost basis doesn't change, so the historical rates st
 
 A single custom currency can carry cost bases against several fiat currencies at once.
 For any one fiat currency, only one cost basis is active at a time, and its successive cost bases cover consecutive time windows.
-
-Keep the following rules in mind when you create a cost basis:
-
-* The rate must be a positive number.
-* The effective from date must be in the future, or left empty to start the rate now.
-* The effective to date must come after the effective from date.
-* The effective from date is inclusive, and the effective to date is exclusive.
-* Adding a cost basis for a fiat currency that already has an open-ended cost basis closes that cost basis on the new rate's effective from date.
 
 ## Where currency is set
 
