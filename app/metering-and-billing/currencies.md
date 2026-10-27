@@ -235,7 +235,7 @@ A rate card can override the currency it inherits, within these rules:
 * You can't override one fiat currency with another fiat currency, because a plan can hold only one fiat currency.
 * You can't override a rate card that already inherits a custom currency.
 * The override must differ from the currency it replaces.
-* The custom currency needs a cost basis that's active against the plan's fiat currency, unless the rate card settles in credits only.
+* The custom currency needs a cost basis that's active against the plan's fiat currency, unless the plan uses the `credit_only` settlement mode.
 
 ## Rounding
 
@@ -254,7 +254,6 @@ Keep the following constraints in mind when you plan your product catalog:
 * There is no exchange rate between fiat currencies. To sell in several fiat currencies, create one plan per currency, or price a plan in a custom currency that has a cost basis for each fiat currency you sell in.
 * A custom currency is immutable and can't be deleted after you create it.
 * Custom currencies are only available through the v3 API. The v1 API rejects resources that use a custom currency.
-* Custom currencies require the credits feature to be enabled on your organization.
 
 ## Validation errors
 

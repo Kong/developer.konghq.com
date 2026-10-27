@@ -608,7 +608,7 @@ To set up a pricing model on a rate card:
    {:.info}
    > **Note:** By default, prices use the plan's currency.
    > To price this rate card in a [custom currency](/metering-and-billing/currencies/) instead, select it in the **Currency** dropdown menu.
-   > Custom currencies without an active cost basis for the plan's fiat currency appear in the list but aren't selectable, unless the plan settles in credits only.
+   > Custom currencies without an active cost basis for the plan's fiat currency appear in the list but aren't selectable, unless the plan uses the `credit_only` settlement mode.
 1. Set the [entitlement](/metering-and-billing/entitlements/).
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.

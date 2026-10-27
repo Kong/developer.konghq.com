@@ -368,7 +368,7 @@ If the plan or add-on uses a fiat currency, you can override the rate card to a 
 
 A currency override has the following rules:
 
-* The custom currency needs a cost basis that's active against the plan's fiat currency, unless the rate card settles in credits only.
+* The custom currency needs a cost basis that's active against the plan's fiat currency, unless the plan uses the `credit_only` settlement mode.
 * You can't override one fiat currency with another fiat currency, because a plan can hold only one fiat currency.
 * You can't override a rate card that already inherits a custom currency.
 * The override must differ from the currency it replaces.

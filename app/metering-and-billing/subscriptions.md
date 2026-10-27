@@ -57,11 +57,11 @@ Either way, the invoice currency has to agree with the customer's currency.
 The invoice currency is fixed for the life of the subscription and can't be changed afterwards.
 
 In the {{site.konnect_short_name}} UI, the plan selector only offers plans whose pricing matches the customer's currency.
-A customer on a fiat currency can subscribe to a custom-currency plan only when the plan uses the [`credit_only`](/metering-and-billing/credits/#settlement-modes) settlement mode, or when the custom currency has an active cost basis for the customer's fiat currency when the subscription starts.
+A customer on a fiat currency can subscribe to a custom-currency plan only when the subscription uses the [`credit_only`](/metering-and-billing/credits/#settlement-modes) settlement mode, or when the custom currency has an active cost basis for the customer's fiat currency when the subscription starts.
 
-When a subscription uses a custom-currency rate card, {{site.metering_and_billing}} pins the cost basis that's active for the invoice currency at subscription start.
-The subscription keeps converting custom-currency charges at that pinned rate, so later changes to the currency's cost bases don't affect running subscriptions.
-Rate cards that settle in credits only don't need a cost basis, because their charges never convert to a fiat currency.
+When a subscription uses a custom-currency rate card on the `credit_then_invoice` settlement mode, the custom currency must have an active cost basis for the invoice currency when the subscription starts.
+{{site.metering_and_billing}} converts each charge through the cost basis that's effective when that charge's service period starts, so a new cost basis applies to the charges that follow it.
+Subscriptions on the `credit_only` settlement mode don't need a cost basis, because their charges never convert to a fiat currency.
 
 ## Change plans
 
