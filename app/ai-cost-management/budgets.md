@@ -386,8 +386,8 @@ The following sample event shows an 80% threshold reached by a pooled budget, wi
   },
   "value": null,
   "window": {
-    "start": "2026-06-30T22:00:00Z",
-    "end": "2026-07-31T22:00:00Z"
+    "start": "2026-07-01T00:00:00Z",
+    "end": "2026-08-01T00:00:00Z"
   },
   "limit": {
     "currency": "USD",
