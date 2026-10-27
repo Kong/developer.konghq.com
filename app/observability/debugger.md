@@ -192,7 +192,6 @@ It can take a couple of minutes for the flamegraph and analysis summary to gener
   The top row is the entry point, and moving down follows the call stack deeper.
   * **Horizontally:** The width of a block is proportional to that function's share of total CPU time at that level. 
   A wider block means more CPU time. 
-  The top bar reads **Total (100.0%)** and acts as the reference scale.
 
 Each block has a label with the function name, its source location, and its percentage of total time, for example `Lua():173 (47.8%)`.
 Scan the flamegraph for a single function or call path that uses a large share of CPU time, then decide whether that's expected or worth investigating.
@@ -232,8 +231,8 @@ rows:
 
 ### Analyze a profile with KAi
 
-The **Flamegraph analysis summary** panel uses [KAi](/konnect-platform/kai/) to generate a write-up of the captured profile.
-The panel shows how long ago the summary was generated, and you can collapse or close it.
+The **Flamegraph analysis summary** panel uses [KAi](/konnect-platform/kai/) to generate an explanation of the captured profile.
+The panel shows when the summary was generated.
 The summary contains:
 
 * **An action:** A short verdict that explains whether the profile points to something to change, with a concrete suggestion. 
