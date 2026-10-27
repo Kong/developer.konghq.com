@@ -245,7 +245,6 @@ environments:
         - api_token
 ```
 
-Files that don't include `confidentialKeys` import as before.
 
 {% include insomnia/confidential-export-warning.md %}
 
