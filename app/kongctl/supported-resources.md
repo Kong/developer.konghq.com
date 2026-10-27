@@ -100,7 +100,7 @@ Use YAML tags in field values to load files or reference other resources.
 
 - `!file`: Load content from a file. 
   Supports `path#extract.path` and `path`/`extract` map form.
-- `!env`: Load string content from an environment variable. Supports
+- `!env`: Load content from an environment variable. Supports
   `VAR#extract.path` and `var`/`extract` map form. Add `store: true` in
   mapping form to retain typed values in plaintext plans. Known destination
   types are inferred; unknown or ambiguous destinations require `type`.
