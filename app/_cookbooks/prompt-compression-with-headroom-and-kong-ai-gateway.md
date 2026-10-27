@@ -878,7 +878,7 @@ compressed  path=/compressed  policies=["headroom-compressor"]
 
 ## Variations and next steps
 
-**Require an API key.** Add a key-auth [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) and an [AI Consumer](/ai-gateway/entities/ai-consumer/). Then list the strategy in the `access.auth_strategies` field of each AI Model. The [Mistral AI cookbook](/cookbooks/mistral-ai-with-kong-ai-gateway/) shows the configuration. On {{site.ai_gateway}} 2.2, if the AI Auth Strategy rejects a request to `/compressed`, Kong still sends the request to Headroom. Kong doesn't send the rejected request to OpenAI.
+**Require an API key.** Add a key-auth [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) and an [AI Consumer](/ai-gateway/entities/ai-consumer/). Then list the strategy in the `access.auth_strategies` field of each AI Model. The [Mistral AI cookbook](/cookbooks/mistral-ai-with-kong-ai-gateway/) shows the configuration. If the AI Auth Strategy rejects a request to `/compressed`, Kong still sends the request to Headroom. Kong doesn't send the rejected request to OpenAI.
 
 **Keep specific tool results exact.** Set `HEADROOM_PROTECT_TOOL_RESULTS` on Headroom to a comma-separated list of tool names, such as `list_orders`. Headroom doesn't apply lossy compression to the results of those tools.
 
