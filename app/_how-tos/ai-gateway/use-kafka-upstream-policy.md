@@ -57,8 +57,9 @@ cleanup:
     - title: Stop the Kafka broker
       content: |
         ```sh
-        docker compose down
+        docker compose -f kafka-upstream-test/docker-compose.yaml down
         ```
+        {: data-test-cleanup="block" }
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 ---
@@ -68,9 +69,9 @@ cleanup:
 Create a working directory and a JAAS file that defines the SASL/PLAIN user for the broker:
 
 ```sh
-mkdir -p ~/kafka-upstream-test && cd ~/kafka-upstream-test
+mkdir -p kafka-upstream-test
 
-cat <<'EOF' > kafka_server_jaas.conf
+cat <<'EOF' > kafka-upstream-test/kafka_server_jaas.conf
 KafkaServer {
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username="kafka_user"
@@ -79,6 +80,7 @@ KafkaServer {
 };
 EOF
 ```
+{: data-test-step="block" }
 
 ## Start a Kafka broker
 
@@ -88,7 +90,7 @@ Run a single-node KRaft broker with two listeners:
 * Plaintext on port `9094`, advertised as `localhost`. Local tooling connects to this listener, because `host.docker.internal` doesn't resolve from the host itself.
 
 ```sh
-cat <<'EOF' > docker-compose.yaml
+cat <<'EOF' > kafka-upstream-test/docker-compose.yaml
 name: kafka_aigw
 
 services:
@@ -118,27 +120,33 @@ services:
       - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
 EOF
 
-docker compose up -d
+docker compose -f kafka-upstream-test/docker-compose.yaml up -d
 ```
+{: data-test-step="block" }
 
 ## Verify SASL authentication
 
 Run the SASL check from a separate container so it uses the same network path as the data plane:
 
-```sh
-cat <<'EOF' > client.properties
-security.protocol=SASL_PLAINTEXT
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka_user" password="kafka-password";
-EOF
+{% validation custom-command %}
+command: |
+  cat <<'EOF' > kafka-upstream-test/client.properties
+  security.protocol=SASL_PLAINTEXT
+  sasl.mechanism=PLAIN
+  sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka_user" password="kafka-password";
+  EOF
 
-docker run --rm \
-  -v "$PWD/client.properties:/tmp/client.properties" \
-  apache/kafka:4.3.1 \
-  /opt/kafka/bin/kafka-broker-api-versions.sh \
-    --bootstrap-server host.docker.internal:9092 \
-    --command-config /tmp/client.properties
-```
+  docker run --rm \
+    -v "$PWD/kafka-upstream-test/client.properties:/tmp/client.properties" \
+    apache/kafka:4.3.1 \
+    /opt/kafka/bin/kafka-broker-api-versions.sh \
+      --bootstrap-server host.docker.internal:9092 \
+      --command-config /tmp/client.properties
+expected:
+  return_code: 0
+  message: 'SaslHandshake(17)'
+render_output: false
+{% endvalidation %}
 
 The output lists the broker API versions, including `SaslHandshake(17)` and `SaslAuthenticate(36)`, without a `SaslAuthenticationException`.
 
@@ -146,16 +154,21 @@ The output lists the broker API versions, including `SaslHandshake(17)` and `Sas
 
 Create a `kafkactl` context that connects through the plaintext listener, then create the `kong-upstream` topic:
 
-```sh
-cat <<'EOF' > kafkactl.yaml
-contexts:
-  direct:
-    brokers:
-      - localhost:9094
-EOF
+{% validation custom-command %}
+command: |
+  cat <<'EOF' > kafka-upstream-test/kafkactl.yaml
+  contexts:
+    direct:
+      brokers:
+        - localhost:9094
+  EOF
 
-kafkactl -C kafkactl.yaml --context direct create topic kong-upstream
-```
+  kafkactl -C kafka-upstream-test/kafkactl.yaml --context direct create topic kong-upstream
+expected:
+  return_code: 0
+  message: 'topic created: kong-upstream'
+render_output: false
+{% endvalidation %}
 
 ## Create a Kafka Upstream Policy and an AI Agent
 
@@ -166,7 +179,7 @@ This example sets `security.ssl` to `false` so the test setup doesn't need certi
 We don't recommend this in production because the traffic isn't encrypted.
 
 ```sh
-cat <<'EOF' > kafka-upstream.yaml
+cat <<'EOF' > kafka-upstream-test/kafka-upstream.yaml
 _defaults:
   kongctl:
     namespace: kafka-upstream-test
@@ -218,8 +231,9 @@ ai_gateway_agents:
         strip_path: true
 EOF
 
-kongctl sync -f kafka-upstream.yaml --pat "$KONNECT_TOKEN"
+kongctl sync -f kafka-upstream-test/kafka-upstream.yaml --auto-approve --pat "$KONNECT_TOKEN"
 ```
+{: data-test-step="block" }
 
 ## Validate
 
@@ -228,25 +242,32 @@ Requests sent before the data plane picks up the configuration return `404`.
 
 1. Send a `POST` request with a JSON body to the Agent's Route:
 
-   {% validation request-check %}
-   url: /upstream-test
-   status_code: 200
-   display_headers: true
-   method: POST
-   headers:
-     - 'Content-Type: application/json'
-   body:
-     hello: world
-   {% endvalidation %}
+{% validation request-check %}
+url: /upstream-test
+status_code: 200
+display_headers: true
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  hello: world
+indent: 3
+{% endvalidation %}
 
    The Policy terminates the request, so the response is a `200` with an acknowledgement from the Policy instead of a response from `config.url`.
    A `502` means the Policy didn't engage, so the Agent forwarded the request to the unused upstream port.
 
 1. Read the message back from the topic:
 
-   ```sh
-   kafkactl -C kafkactl.yaml --context direct consume kong-upstream --from-beginning --exit | jq .
-   ```
+{% validation custom-command %}
+command: |
+  kafkactl -C kafka-upstream-test/kafkactl.yaml --context direct consume kong-upstream --from-beginning --exit | jq .
+expected:
+  return_code: 0
+  message: '"uri": "/upstream-test"'
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The output contains the request body, headers, method, and URI:
 
