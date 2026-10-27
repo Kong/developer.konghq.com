@@ -227,6 +227,8 @@ insomnia.vault.get('VARIABLE NAME')
 
 Unlike [secret variables](#secret-environment-variables), {{ site.insomnia }} doesn't encrypt confidential variables, and they don't require a vault key. You reference them like a standard environment variable.
 
+Confidential variables reduce accidental exposure, not access. They don't stop someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request.
+
 You mark a variable as confidential or make it visible again in an environment's variable table, by clicking the lock icon beside the variable.
 
 {:.info}
@@ -247,9 +249,6 @@ You mark a variable as confidential or make it visible again in an environment's
 When you export an environment or sync it with Git Sync, {{ site.insomnia }} records which variables are confidential in a `confidentialKeys` list in the v5 file. The list contains variable names only. Values are exported like any other variable value.
 
 {% include insomnia/confidential-export-warning.md %}
-
-{:.warning}
-> **Confidential variables reduce accidental exposure, not access**. They protect a value from being seen on a shared screen or an unattended laptop, and from being copied into generated code or logs. They don't prevent someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request.
 
 ## Confidential variables versus secret variables
 
