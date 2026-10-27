@@ -6,7 +6,7 @@ products:
   - konnect-reference-platform
 works_on:
   - konnect
-description: A public implementation of the {{site.konnect_short_name}} Reference Platform.
+description: A public implementation of the {{site.konnect_short_name}} Reference Platform. Lists the repositories, who owns each part, and where to start reading.
 breadcrumbs:
   - /konnect-reference-platform/
 related_resources:
@@ -22,22 +22,18 @@ related_resources:
     url: /konnect-reference-platform/faq/
 ---
 
-[KongAirlines](https://github.com/KongAirlines) is the example implementation of
-the Reference Platform. Its public repositories show how service teams can
-deliver independently while a platform team governs shared infrastructure and
-production Gateway changes.
+[KongAirlines](https://github.com/KongAirlines) is the example implementation of the Reference Platform.
+Its public repositories show how service teams deliver independently while a platform team governs shared infrastructure and production Gateway changes.
 
-The useful starting points are the OpenAPI contracts, [kongctl](/kongctl/)
-manifests, generated [decK](/deck/) configuration, and delivery workflows.
-You can read them without deploying the example. Use the
-[pattern guide](/konnect-reference-platform/patterns/) to choose practices
-to adapt rather than reproducing every repository and resource.
+The best starting points are the OpenAPI contracts, the [kongctl](/kongctl/) manifests, the generated [decK](/deck/) configuration, and the delivery workflows.
+You can read them without deploying the example.
+Use the [pattern guide](/konnect-reference-platform/patterns/) to choose the practices that you want to adapt.
+You don't need to reproduce every repository and resource.
 
 ## Meet the repositories
 
-The [platform repository](https://github.com/KongAirlines/platform) represents
-the platform team. It owns shared Konnect infrastructure, access governance,
-Developer Portals, and production Gateway configuration.
+The [platform repository](https://github.com/KongAirlines/platform) represents the platform team.
+It owns shared {{site.konnect_short_name}} infrastructure, access governance, [Dev Portals](/dev-portal/), and production Gateway configuration.
 
 Two service teams own the API repositories:
 
@@ -64,55 +60,50 @@ rows:
     access: Public
 {% endtable %}
 
-Service teams own their development and production Catalog APIs, specifications,
-versions, and publications. They write Gateway configuration directly to their
-team's development control plane. They propose production Gateway changes
-through platform PRs instead of writing to the production control plane.
+Service teams own their development and production [Catalog](/catalog/) APIs, specifications, versions, and publications.
+They write Gateway configuration directly to the development control plane of their team.
+They propose production Gateway changes through platform PRs and don't write to the production control plane.
 
 ## Start with one service
 
-Read [Bookings](https://github.com/KongAirlines/bookings) as a representative
-service repository. The other services follow the same delivery structure;
-Flights provides a public-API contrast.
+Read [Bookings](https://github.com/KongAirlines/bookings) first, because it is a representative service repository.
+The other services follow the same delivery structure.
+Flights is a good contrast because it has a public API.
 
-- [OpenAPI contract](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml):
-  the current development design.
-- [Konnect manifests](https://github.com/KongAirlines/bookings/tree/main/konnect):
-  service-owned Catalog state and references to shared infrastructure.
-- [Gateway artifacts](https://github.com/KongAirlines/bookings/tree/main/gateway):
-  generated development and production configuration, alongside policy inputs.
-- [Workflows](https://github.com/KongAirlines/bookings/tree/main/.github/workflows):
-  validation, development delivery, release preparation, and production promotion.
+- [OpenAPI contract](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml): the current development design.
+- [{{site.konnect_short_name}} manifests](https://github.com/KongAirlines/bookings/tree/main/konnect): service-owned Catalog state and references to shared infrastructure.
+- [Gateway artifacts](https://github.com/KongAirlines/bookings/tree/main/gateway): generated development and production configuration, and the policy inputs.
+- [Workflows](https://github.com/KongAirlines/bookings/tree/main/.github/workflows): validation, development delivery, release preparation, and production promotion.
 
-For the sequence connecting these files, [follow an API change](/konnect-reference-platform/apiops/).
+To see how these files connect in sequence, [follow an API change](/konnect-reference-platform/apiops/).
 
-## Then inspect the platform boundary
+## Inspect the platform boundary
 
 In the platform repository, compare the
 [shared foundations](https://github.com/KongAirlines/platform/blob/main/konnect/foundations.yaml)
-with the service's references to those resources. Then inspect
+with the references that the service makes to those resources.
+Then read the
 [production Gateway configuration](https://github.com/KongAirlines/platform/tree/main/gateway/prod)
 to see the reviewed service artifacts and their provenance.
 
 The [production delivery workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/apply-production-gateway.yaml)
-shows how platform approval leads to Gateway synchronization and then dispatches
-production Catalog delivery back to the owning service.
+shows how platform approval leads to Gateway synchronization.
+After synchronization, the workflow dispatches production Catalog delivery to the service that owns the change.
 
 ## Explore the consumer experience
 
-The platform also owns [Portal pages and navigation](https://github.com/KongAirlines/platform/tree/main/konnect/portal).
-Service-owned publications connect API delivery to discovery and application
-access. The protected service source demonstrates fictional accounts scoped to
-an application, not passenger login.
+The platform also owns the [Portal pages and navigation](https://github.com/KongAirlines/platform/tree/main/konnect/portal).
+Publications that the services own connect API delivery to discovery and application access.
+The source of the protected services uses fictional accounts that belong to an application.
+It doesn't use passenger login.
 
-The Gateway delivery workflows do not deploy the application source. Read that
-source as an illustration of the identity contract, not proof that an existing
-upstream deployment implements it.
+The Gateway delivery workflows don't deploy the application source.
+The source shows the identity contract.
+It doesn't show how an existing upstream deployment behaves.
 
 ## Choose what to adapt
 
-The repository topology, version conventions, and authentication strategy are
-example decisions. You can adopt API-first PR review without also adopting the
-same Portal or control-plane topology. Start with a
-[pattern that addresses your needs](/konnect-reference-platform/patterns/),
-and consult the [FAQ](/konnect-reference-platform/faq/) for design tradeoffs.
+The repository topology, the version conventions, and the authentication strategy are example decisions.
+You can adopt API-first PR review without the same Portal or control plane topology.
+Start with a [pattern that addresses your needs](/konnect-reference-platform/patterns/).
+For design tradeoffs, read the [FAQ](/konnect-reference-platform/faq/).
