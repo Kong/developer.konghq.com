@@ -243,36 +243,35 @@ rows:
   - attribute: "Cost Savings"
     unit: "Cost"
     description: "Cost savings from cache."
-  - attribute: "Compression Saved Tokens"
+  - attribute: "`save_token_count`"
     unit: "Count"
     description: |
-      Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages.
-  - attribute: "Compression Original Tokens"
+      Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages. Reported per compression provider, with no model dimension.
+  - attribute: "`original_token_count`"
     unit: "Count"
     description: |
       Number of tokens before compression.
-  - attribute: "Compression Compressed Tokens"
+  - attribute: "`compress_token_count`"
     unit: "Count"
     description: |
       Number of tokens after compression.
-  - attribute: "Compression Message Count"
+  - attribute: "`compressed_message_count`"
     unit: "Count"
     description: |
       Number of compressed messages per request.
-  - attribute: "Compression Duration"
+  - attribute: "`duration`"
     unit: "Latency"
     description: |
       Average time the compressor took, in milliseconds.
-  - attribute: "Compressor Provider"
+  - attribute: "`provider`"
     unit: "String"
     description: |
       Compression provider that handled the request. Possible values: `kong` or `headroom`.
-  - attribute: "Compression Type"
+  - attribute: "`compress_type`"
     unit: "String"
     description: |
       Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only.
 {% endtable %}
-<!-- TODO: Verify compression attribute labels in Konnect Explorer. -->
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Platform usage" %}
