@@ -180,7 +180,7 @@ This recipe creates two [AI Models](/ai-gateway/entities/ai-model/) that call th
 - `compressed`, on the `/compressed` path, with the Policy attached
 - `uncompressed`, on the `/uncompressed` path, without the Policy
 
-The Policy applies only to the AI Model that lists it. Kong sends requests to `/uncompressed` to OpenAI without a call to Headroom.
+The Policy applies only to the AI Model that lists it.
 
 Headroom keeps a session for each conversation. When the next turn of a conversation has the same session ID, Headroom reuses the compressed version of the earlier turns. Headroom compresses only the new messages, so the start of the prompt stays the same from turn to turn.
 
