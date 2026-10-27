@@ -10,8 +10,6 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Connect to Amazon Bedrock through a VPC endpoint
-    url: /ai-gateway/connect-to-bedrock-through-vpc-endpoint/
 
 description: Configure an AI Model that sends OpenAI Chat Completions requests to the Amazon Bedrock Mantle endpoint without translating them.
 

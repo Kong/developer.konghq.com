@@ -112,7 +112,7 @@ Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as
 
 Mantle supports only chat and Responses requests, in the `openai` or `anthropic` format. For embeddings, the `bedrock` format, and Bedrock-specific APIs such as Rerank, async invoke, and batch, use `runtime`.
 
-For Anthropic requests, {{site.ai_gateway}} sets the `anthropic-version` header to `2023-06-01` unless the client sends one. It also sets `max_tokens` to `1024` when neither the client nor the model options set it.
+For Anthropic requests, {{site.ai_gateway}} sets the `anthropic-version` header to `2023-06-01` unless the client sends one.
 If you set `upstream_url` on a Mantle target, {{site.ai_gateway}} keeps that URL's path.
 
 {% comment %}
@@ -132,6 +132,14 @@ data:
     - type: openai
   capabilities:
     - generate
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - my-mantle-model
   targets:
     - name: ${model_id}
       provider: my-aws-account
@@ -149,16 +157,22 @@ For a complete walkthrough, see [Route OpenAI traffic to Amazon Bedrock Mantle](
 
 ## Connect through a VPC endpoint
 
+Before you configure `vpc_endpoint`, make sure that:
+
+* You created an interface VPC endpoint for the Bedrock Runtime service (`com.amazonaws.{region}.bedrock-runtime`) in the VPC where your data plane nodes run. See [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html) in the AWS documentation.
+* Your data plane nodes can resolve the endpoint's DNS name and reach it on port 443.
+* Your IAM user or role has `bedrock:Converse` and `bedrock:ConverseStream` permissions, and the VPC endpoint policy allows them.
+
 To connect to Amazon Bedrock through a VPC endpoint over AWS PrivateLink, set `vpc_endpoint` in the target `config` to the hostname of your interface VPC endpoint.
 {{site.ai_gateway}} then sends requests to that host.
+Set the value to a hostname only, without a scheme (for example `https://`).
 The rest of the request behaves as it does with the public endpoint:
 
 * {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming (`invoke-with-response-stream`) and async invoke.
 * SigV4 signs requests for the Bedrock service and the configured `region`, not for the VPC endpoint hostname.
+  Set `region` to the region of the VPC endpoint.
 * If the VPC endpoint is unreachable, the request fails.
   {{site.ai_gateway}} doesn't fall back to the public endpoint.
-
-`vpc_endpoint` is available on chat and invoke targets and on the embeddings model configuration in [`config.balancer.embeddings`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-embeddings).
 
 {% entity_example %}
 type: model
@@ -170,6 +184,14 @@ data:
     - type: openai
   capabilities:
     - generate
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - my-private-bedrock-model
   targets:
     - name: us.anthropic.claude-haiku-4-5-20251001-v1:0
       provider: my-aws-account
@@ -186,13 +208,3 @@ variables:
 `vpc_endpoint` overrides only the host.
 If you also set `upstream_url` on the same target, `upstream_url` takes precedence and {{site.ai_gateway}} ignores `vpc_endpoint`.
 Use `upstream_url` only when you need to override the full URL, because it also replaces the path that {{site.ai_gateway}} builds for each Bedrock operation.
-
-{% comment %}
-TODO(reviewer, AI-125):
-- Q1: If `vpc_endpoint` and `upstream_url` are both set, is that a validation error instead of `upstream_url` winning? Update this paragraph if so.
-- Confirm the accepted value format: bare hostname (OpenAPI description) or URL with scheme (Aha says "same rules as `aws_sts_endpoint_url`").
-- Confirm whether `vpc_endpoint` also applies when `endpoint_type: mantle` (a Mantle PrivateLink endpoint), or only to Runtime.
-- Confirm that serverless and Dedicated Cloud Gateways can't use this (PrivateLink reachability), or document how they can.
-{% endcomment %}
-
-For a complete walkthrough, see [Connect to Amazon Bedrock through a VPC endpoint](/ai-gateway/connect-to-bedrock-through-vpc-endpoint/).

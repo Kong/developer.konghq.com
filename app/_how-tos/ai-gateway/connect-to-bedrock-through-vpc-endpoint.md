@@ -2,7 +2,7 @@
 title: Connect to Amazon Bedrock through a VPC endpoint with {{site.ai_gateway}}
 content_type: how_to
 permalink: /ai-gateway/connect-to-bedrock-through-vpc-endpoint/
-
+published: false
 related_resources:
   - text: Amazon Bedrock provider
     url: /ai-gateway/ai-providers/bedrock/
@@ -56,12 +56,6 @@ cleanup:
 
 ---
 
-{% comment %}
-TODO(reviewer, AI-125):
-- Confirm the value format for `vpc_endpoint` (bare hostname vs. URL with scheme) and update the prereq export and example.
-- Confirm which data plane deployments can use this (self-managed hybrid only, or also Dedicated Cloud Gateways with private networking).
-- Q1: Confirm the `vpc_endpoint` + `upstream_url` behavior (precedence or validation error).
-{% endcomment %}
 
 ## Create an AI Model Provider
 
@@ -116,12 +110,10 @@ ai_gateway_models:
 
 The target uses the following settings:
 
-* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
+* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. Set it to a hostname only, without a scheme (for example,`https://`). {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
 * `region`: Sets the region used for SigV4 signing. It must match the region of the VPC endpoint.
 
 Leave `upstream_url` unset on this target. If both are set, `upstream_url` takes precedence and replaces the full URL, including the path.
-
-If your AI Model also uses Bedrock embeddings, set `vpc_endpoint` in [`config.balancer.embeddings`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-embeddings) as well.
 
 ## Validate
 
