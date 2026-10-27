@@ -2,10 +2,9 @@
 title: Resource scoping
 content_type: reference
 layout: reference
-description: Learn which control plane owns each {{site.mesh_product_name}} resource in the Kong Air scenarios, where you create it, and where zone resources live on Kubernetes.
+description: Learn which control plane owns each {{site.mesh_product_name}} resource, where you create it, and where zone resources live on Kubernetes.
 breadcrumbs:
   - /mesh/
-  - /mesh/scenarios/
 products:
   - mesh
 works_on:
@@ -13,9 +12,6 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
-next_steps:
-  - text: "How-to: Split traffic with MeshService resources"
-    url: "/mesh/split-traffic-with-meshservice-resources/"
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
@@ -26,40 +22,18 @@ related_resources:
 A multi-zone {{site.mesh_product_name}} deployment has one global control plane and one zone control plane in each zone.
 Each zone control plane connects to the global control plane over the Kuma Discovery Service (KDS), a two-way synchronization channel.
 The control plane where a resource is first stored owns that resource.
-You change the resource only on that control plane.
+A copy that another control plane receives over KDS is read-only, so you change the resource only on the control plane that owns it.
+For how the control planes connect, see [How the control planes connect](/mesh/architecture-overview/#how-the-control-planes-connect).
 
 Resources reach the mesh in three ways:
 
 * **Global resources**: You create them on the global control plane. The global control plane sends a copy to each zone.
-* **Zone resources**: You create them on a zone control plane. In the Kubernetes zones of these scenarios, you create them with `kubectl`.
+* **Zone resources**: You create them on a zone control plane. On a Kubernetes zone, you create them with `kubectl`.
 * **Workload resources**: The zone control plane creates a `Dataplane` for each proxy and a `MeshService` for each service in its zone. The zone control plane sends them to the global control plane, and the global control plane sends each `MeshService` to the other zones.
 
-## How configuration moves between control planes
+## Resource ownership
 
-The global control plane and the zone control planes exchange resources over KDS.
-Each zone control plane then sends proxy configuration to its local proxies over xDS, the Envoy configuration protocol.
-
-{% mermaid %}
-flowchart TD
-    K["Global control plane<br/>global resources and central view"]
-    Z1["Kubernetes zone control plane<br/>zone1"]
-    Z2["Kubernetes zone control plane<br/>zone2"]
-    D1["Local workloads and proxies"]
-    D2["Local workloads and proxies"]
-
-    K <-->|KDS| Z1
-    K <-->|KDS| Z2
-    Z1 -->|xDS| D1
-    Z2 -->|xDS| D2
-{% endmermaid %}
-
-KDS works in both directions, but each resource type syncs only in the directions that {{site.mesh_product_name}} allows for it.
-A copy that a control plane receives over KDS is read-only.
-To change the resource, update it on the control plane that owns it.
-
-## Resource ownership in the Kong Air scenarios
-
-The following table shows where you create each resource that the scenarios use, and where it lives on Kubernetes:
+The following table shows where you create each resource, and where it lives on Kubernetes:
 
 <!-- vale off -->
 {% table %}
@@ -123,23 +97,17 @@ A zone control plane that isn't connected to a global control plane accepts a `M
 
 ## Zone resources on Kubernetes
 
-The early Kong Air scenarios use a single zone, so you create most resources on that zone with `kubectl`.
-A zone resource in the system namespace needs the `kuma.io/mesh` label, because the scenarios use `kong-air-mesh` instead of the `default` mesh:
+A zone resource in the system namespace needs the `kuma.io/mesh` label, unless it belongs to the `default` mesh:
 
 ```yaml
 metadata:
   namespace: {{site.mesh_namespace}}
   labels:
-    kuma.io/mesh: kong-air-mesh
+    kuma.io/mesh: my-mesh
 ```
 {:.no-copy-code}
 
-The zone control plane adds the other ownership labels when it stores the resource:
-
-* `kuma.io/origin: zone`, because you created the resource on a zone control plane
-* `kuma.io/zone`, set to the name of the zone
-* `kuma.io/policy-role`, on a policy, which decides which proxies the policy can reach
-
+The zone control plane adds the other [resource labels](/mesh/concepts/#resource-labels), such as `kuma.io/origin`, `kuma.io/zone`, and `kuma.io/policy-role`, when it stores the resource.
 Don't copy these labels from a synced resource into new YAML.
 If you set one of these labels to a value that differs from the value the control plane computes, the control plane rejects the resource.
 
@@ -156,14 +124,12 @@ On Kubernetes, you can create the following resource types only in `{{site.mesh_
 You can create policies, `MeshService`, and `MeshZoneAddress` resources in an application namespace on a zone control plane.
 A zone control plane that's connected to a global control plane rejects a `MeshMultiZoneService`, because only the global control plane can create one.
 
-A policy in an application namespace reaches only proxies in that namespace, unless it's a producer policy for a service in that namespace.
-Put a policy in `{{site.mesh_namespace}}` only when a platform operator needs it to reach the whole zone.
-For the full rules, see [Policy scope](/mesh/policy-targeting/#policy-scope).
+The namespace of a policy limits which proxies it reaches.
+For the rules, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 ## Universal zones
 
-Universal zones don't have namespaces, so every policy that you create there reaches the whole zone.
-To create a resource, run `kongctl` against the control plane that owns it:
+To create a resource on a Universal zone, run `kongctl` against the control plane that owns it:
 
 ```sh
 kongctl apply mesh -f mesh-traffic-permission.yaml --control-plane-name "$MESH_CP"
@@ -172,7 +138,7 @@ kongctl apply mesh -f mesh-traffic-permission.yaml --control-plane-name "$MESH_C
 Before you change a resource, read its `kuma.io/origin` label to find the control plane that owns it:
 
 ```sh
-kongctl get mesh meshtrafficpermissions --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
+kongctl get mesh meshtrafficpermissions --control-plane-name "$MESH_CP" --mesh my-mesh -o yaml
 ```
 
 Update a resource with `kuma.io/origin: global` on the global control plane, and a resource with `kuma.io/origin: zone` on the zone that owns it.

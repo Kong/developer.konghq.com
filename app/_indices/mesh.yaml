@@ -46,7 +46,6 @@ sections:
       - path: /mesh/scenarios/
       - path: /mesh/install-kong-mesh-and-deploy-kong-air/
       - path: /mesh/create-a-security-policy/
-      - path: /mesh/policy-targeting-and-precedence/
       - path: /mesh/split-traffic-with-meshservice-resources/
       - path: /mesh/target-workloads-and-services/
       - path: /mesh/deploy-an-opentelemetry-collector/

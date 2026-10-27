@@ -71,32 +71,15 @@ rows:
 ## {{site.mesh_product_name}} architecture
 
 The following diagrams show how the control planes are distributed, and how a request travels through a zone.
-Both diagrams use the same notation:
+The diagrams use the same notation:
 
 - A solid arrow is data plane traffic.
 - A dashed arrow is a control plane channel: xDS or KDS.
 
 ### How the control planes connect
 
-The global control plane stores global resources and the central view of the deployment.
-Each zone control plane exchanges resources with the global control plane over KDS, and sends xDS configuration to its local data plane proxies.
-The zone control plane also sends the resources that its zone creates, such as discovered workloads and zone policies, to the global control plane.
+{% include md/mesh/v3/multi-zone-components.md %}
 
-{% mermaid %}
-flowchart TD
-    GCP["Global control plane"]
-    Z1CP["Zone control plane<br/>(Kubernetes, zone1)"]
-    Z2CP["Zone control plane<br/>(Kubernetes, zone2)"]
-    DP1["Data plane proxies<br/>(Envoy sidecars)"]
-    DP2["Data plane proxies<br/>(Envoy sidecars)"]
-
-    GCP <-.->|KDS| Z1CP
-    GCP <-.->|KDS| Z2CP
-    Z1CP -.->|xDS| DP1
-    Z2CP -.->|xDS| DP2
-{% endmermaid %}
-
-Every arrow in this diagram is a control plane channel, and no application traffic uses these links.
 If the global control plane goes offline, each zone control plane keeps the global resources that it last received and keeps configuring its data plane proxies, so the mesh keeps working.
 
 ### How a request travels between zones

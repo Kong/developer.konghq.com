@@ -73,12 +73,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Policy targeting and precedence
+              title: Policy targeting
               description: |
-                Learn how Kong Air policies use `targetRef`, `to`, and `rules`, and which policy wins when several apply.
+                Learn how policies use `targetRef`, `to`, and `rules`, and which policy wins when several apply.
               cta:
                 text: Read
-                url: /mesh/policy-targeting-and-precedence/
+                url: /mesh/policy-targeting/
       - blocks:
           - type: card
             config:

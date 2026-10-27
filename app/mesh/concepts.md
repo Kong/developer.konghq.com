@@ -23,8 +23,8 @@ related_resources:
     url: /mesh/architecture-overview/
   - text: Resource scoping
     url: /mesh/resource-scoping/
-  - text: Policy targeting and precedence
-    url: /mesh/policy-targeting-and-precedence/
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
 ---
 This page defines terms related to {{site.mesh_product_name}}.
 
