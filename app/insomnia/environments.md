@@ -10,6 +10,8 @@ breadcrumbs:
 search_aliases:
   - env variables
   - insomnia secrets
+  - confidential variables
+  - mask variables
   - env var
 products:
   - insomnia
@@ -186,6 +188,8 @@ rows:
 
 Secret environment variables allow you to store sensitive data locally in encrypted form. These variables are masked by default, are not stored in plain text, and are only accessible within the vault namespace (for example, `vault.foo` for a variable named `foo`).
 
+If you want to hide a value in the {{ site.insomnia }} interface without encrypting it, use [confidential variables](#confidential-variables) instead.
+
 {{ site.insomnia }} does not persist the vault key automatically. If you lose your vault key, you can reset it, but all stored secrets will be permanently deleted for security reasons.
 
 ### Managing secrets
@@ -216,3 +220,62 @@ insomnia.vault.get('VARIABLE NAME')
 
 {:.info}
 > Make sure to select the relevant global private sub-environment in your collection to make the secrets available to the requests.
+
+## Confidential variables
+
+{% new_in 13.4 %} Confidential variables let you hide the value of an environment variable in the {{ site.insomnia }} interface. This avoids exposing the value if you share your screen, for example. {{ site.insomnia }} replaces the value with `••••••` in previews, generated code, the timeline, and the console. {{ site.insomnia }} still uses the real value when it sends a request or runs a script.
+
+Unlike [secret variables](#secret-environment-variables), {{ site.insomnia }} doesn't encrypt confidential variables, and they don't require a vault key. You reference them like a standard environment variable.
+
+You mark a variable as confidential or make it visible again in an environment's variable table, by clicking the lock icon beside the variable.
+
+{:.info}
+> **Notes**
+> * The lock icon isn't available for variables with the `Secret` type, because secrets are already encrypted and masked.
+> * If you change a variable's type from `Secret` to another type, {{ site.insomnia }} decrypts the value and marks the variable as confidential.
+> * Confidential markings only exist in table view. Before you switch an environment to JSON view, {{ site.insomnia }} asks you to remove all confidential markings and secrets.
+
+### Confidential variables general settings
+
+{{ site.insomnia }} hides confidential values by default. To change this:
+
+1. Navigate to the **Preferences** settings at the bottom left in the {{ site.insomnia }} sidebar.
+1. In the **General** tab, turn off **Hide Confidential values in Preview/Console**.
+
+### Export and Git Sync
+
+When you export an environment or sync it with Git Sync, {{ site.insomnia }} records which variables are confidential in a `confidentialKeys` list in the v5 file. Exports display variables in the following way:
+
+* The list contains variable names only.
+* {{ site.insomnia }} exports or syncs values all environment variable values: anyone with access to the exported file or the repository can read them. Use [secret variables](#secret-environment-variables) if the value must not be stored in plain text.
+
+{:.warning}
+> **Confidential variables reduce accidental exposure, not access**. They protect a value from being seen on a shared screen or an unattended laptop, and from being copied into generated code or logs. They don't prevent someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request.
+
+## Confidential variables versus secret variables
+
+{% table %}
+columns:
+  - title: ""
+    key: feature
+  - title: Confidential variables
+    key: confidential
+  - title: Secret variables
+    key: secret
+rows:
+  - feature: Stored locally
+    confidential: In plain text
+    secret: Encrypted with your vault key
+  - feature: Requires a vault key
+    confidential: No
+    secret: Yes
+  - feature: Available in
+    confidential: Global, collection, and folder environments in table view
+    secret: Private global sub-environments only
+  - feature: Referenced as
+    confidential: A regular environment variable
+    secret: In the vault namespace, for example `vault.foo`
+  - feature: Synced and exported
+    confidential: Yes, the value is included like any other variable value
+    secret: Not synced or exported with private sub-environments
+{% endtable %}
