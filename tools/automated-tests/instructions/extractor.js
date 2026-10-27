@@ -86,6 +86,7 @@ async function extractPrereqs(page, platform) {
       if (i >= 1) {
         await trigger.click();
       }
+      await revealAccordionPanels(prereq);
 
       const extractedBlocks = await extractPrereqsBlocks(prereq);
       blocks.push(...extractedBlocks);
@@ -93,6 +94,25 @@ async function extractPrereqs(page, platform) {
   }
 
   return { blocks };
+}
+
+// The accordion binds its click handler on DOMContentLoaded, but pages are
+// loaded with waitUntil: "domcontentloaded" and clicked immediately, so the
+// handler may not be bound yet when the trigger click lands. A click on an
+// unbound trigger leaves the panel hidden, and every [data-test-prereq] block
+// inside is then silently skipped — the generated instruction file loses the
+// how-to's prerequisite commands (e.g. the Kafka compose stack), which only
+// surfaces later as a test failing on a missing docker network. Reveal the
+// item's panels directly instead of trusting the click.
+async function revealAccordionPanels(item) {
+  await item
+    .locator(".accordion-panel")
+    .evaluateAll((panels) =>
+      panels.forEach((panel) => {
+        panel.classList.remove("hidden");
+        panel.hidden = false;
+      }),
+    );
 }
 
 async function extractCleanupBlocks(elem) {
@@ -141,6 +161,7 @@ async function extractCleanup(page) {
       if (i >= 1) {
         await trigger.click();
       }
+      await revealAccordionPanels(item);
 
       const extractedBlocks = await extractCleanupBlocks(item);
       instructions.push(...extractedBlocks);

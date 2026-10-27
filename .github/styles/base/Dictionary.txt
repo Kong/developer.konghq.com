@@ -112,6 +112,7 @@ camelCase
 CDNs
 ce
 cef
+cel
 cerebras
 certificate_admin
 charset
@@ -212,6 +213,9 @@ dereferenced
 dereferencing
 deserialization
 deserialize
+deserializer
+deserializing
+deserializes
 deserialized
 destructuring
 dev
@@ -412,6 +416,7 @@ JMeter
 journald
 jq
 jQuery
+js
 json
 JSONObject
 JSONObjects
@@ -582,6 +587,8 @@ Nullsoft
 nunjucks
 noname
 nonamesecurity
+nonce
+nonces
 nopp
 nopped
 nopping
@@ -825,6 +832,7 @@ svg
 svgs
 swaggerhub
 switchyard
+syntaxes
 syscall
 syslog
 systemd
@@ -868,8 +876,11 @@ tooltip
 tproxy
 traceable
 Traefik
+transcode
+transcodes
 transcoded
 transcoder
+transcoding
 transpile
 transpiled
 trendai

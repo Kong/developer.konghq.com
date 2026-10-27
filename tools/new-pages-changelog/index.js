@@ -229,7 +229,7 @@ function loadFrontmatter(repoRoot, file) {
 
 // Fallback permalink derivation for pages that don't declare an explicit
 // `permalink` in frontmatter. Ported from the path table already documented
-// in .claude/skills/release-changelog/SKILL.md.
+// in .claude/skills/release-changelog/products/gateway.md.
 function derivePermalink(file) {
   let match;
 

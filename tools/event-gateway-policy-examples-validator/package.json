@@ -1,0 +1,21 @@
+{
+    "name": "event-gateway-policy-examples-validator",
+    "version": "1.0.0",
+    "description": "Validates Event Gateway policy example configs against the API spec schemas",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "validate": "node index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@apidevtools/json-schema-ref-parser": "^16.0.2",
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
+        "minimist": "^1.2.8",
+        "tinyglobby": "^0.2.12",
+        "yaml": "^2.6.0"
+    }
+}

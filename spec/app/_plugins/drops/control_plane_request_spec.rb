@@ -21,6 +21,24 @@ RSpec.describe Jekyll::Drops::ControlPlaneRequest do
     end
   end
 
+  describe '#validate_section!' do
+    context 'when section is unrecognized' do
+      let(:yaml) { { 'url' => '/services', 'section' => 'prereq' } }
+
+      it 'raises an error naming the rejected value' do
+        expect { drop }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
+  end
+
+  describe '#config' do
+    let(:yaml) { { 'url' => '/services', 'section' => 'cleanup' } }
+
+    it 'drops section from the instruction config' do
+      expect(drop.config).not_to have_key('section')
+    end
+  end
+
   describe '#konnect_snippet_config' do
     it 'resolves the url against the konnect origin' do
       expect(drop.konnect_snippet_config['url']).to eq('$KONNECT_CONTROL_PLANE_URL/services')
