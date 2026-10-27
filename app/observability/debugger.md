@@ -41,7 +41,7 @@ related_resources:
 * **Troubleshoot issues:** Investigate and resolve problems during deployments or incidents with targeted, on-demand traces.
 * **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution. See [Debugger spans](/observability/debugger-spans/) for a list of spans captured.
 * **Improve performance and reliability:** Use deep insights to fine-tune configurations and resolve bottlenecks.
-* **Find CPU-intensive functions:** Use [CPU profiling](#profile-cpu-usage) to see which functions or a custom plugin consume the most CPU time.
+* **Find CPU-intensive functions:** Use [CPU profiling](#profile-cpu-usage) to see which functions or custom plugins consume the most CPU time.
 
 {{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
 
@@ -184,7 +184,6 @@ After the session completes, the **CPU Profiling** tab shows the top functions u
 It can take a couple of minutes for the flamegraph and analysis summary to generate.
 
 * The top functions table shows every captured function, ranked by self time.
-Self time is the percentage of total CPU time a function spends in its own code, excluding time spent in the functions it calls.
 
    For example, the top rows of a profile might show `phase_handler` at 25%, `Lua()` at 18%, `wait()` at 10%, and `do_phase_handler` at 7%.
 
@@ -391,7 +390,7 @@ To begin using the Debugger, ensure the following requirements are met:
 1. From the **Data plane nodes** dropdown menu, select one or more data plane nodes.
 1. In the **Session time** field, enter a duration, and from the unit dropdown menu, select a unit, such as `300` and **Seconds**.
 1. In the **Tracing** section, define the sampling criteria. For details, see [Sampling rules](#sampling-rules).
-1. *(Optional)* On the **Capture payloads and logs** section, select **Payload headers**, **Payload bodies**, or **Logs**.
+1. *(Optional)* In the **Capture payloads and logs** section, select **Payload headers**, **Payload bodies**, or **Logs**.
 1. *(Optional)* In the **CPU Profiling** section, enable the toggle to capture a CPU profile. For details, see [Choose a CPU profiling method](#cpu-profiling-methods).
 1. Click **Create**.
 
