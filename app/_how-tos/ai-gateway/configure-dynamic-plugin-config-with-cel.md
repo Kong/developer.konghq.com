@@ -2,6 +2,7 @@
 title: Configure dynamic Policy config with CEL in {{site.ai_gateway}}
 permalink: /ai-gateway/configure-dynamic-plugin-config-with-cel/
 content_type: how_to
+published: false
 
 description: Learn how to set a Rate Limiting Advanced Policy's rate limit and rate limiting key per request, based on the authenticated Principal's metadata.
 products:
