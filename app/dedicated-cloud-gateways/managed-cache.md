@@ -361,7 +361,7 @@ To create a managed cache, use the following steps:
    export AI_GATEWAY_ID='YOUR AI GATEWAY ID'
    ```
 
-1. Create a managed cache using the Cloud Gateways add-ons API. Set `owner.type` to `ai`:
+1. Create a managed cache by sending a POST request to the [`/cloud-gateways/add-ons` endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-add-on):
 
    {% capture create_ai_addon %}
    <!--vale off-->
@@ -425,7 +425,7 @@ To create a managed cache, use the following steps:
    {% endcapture %}
    {{ list_datastores | indent: 3}}
 
-1. Reference the datastore in the `datastores` array of a Policy that supports it.
+1. Reference the datastore in the `datastores` array of a [Policy that supports it](#configure-a-managed-cache-for-ai-gateway).
    The following example creates a Rate Limiting Advanced Policy that uses the managed cache:
 
    {% capture create_policy %}
