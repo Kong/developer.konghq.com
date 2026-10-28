@@ -229,6 +229,7 @@ Unlike [secret variables](#secret-environment-variables), {{ site.insomnia }} do
 
 Confidential variables reduce accidental exposure, not access. They don't stop someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request. You can clear the history and the logs:
 
+* At general level: In the toolbar, select **Tools** and **Clear All Response History**. 
 * For the collection: Go to **Settings** > **Actions** > **Clear Response History**.
 * For the request: Click the arrow showing the time since the last request was sent, and either delete the current response or clear the history.
 
