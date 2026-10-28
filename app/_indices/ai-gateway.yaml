@@ -14,7 +14,7 @@ sections:
         url: /ai-gateway/get-started/
       - title: "{{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways"
         description: Run a fully-hosted {{site.ai_gateway}} control plane and data planes on Dedicated Cloud Gateways.
-        url: /dedicated-cloud-gateways/reference/#ai-gateway-20-on-dedicated-cloud-gateways
+        url: /dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways
       - path: /ai-gateway/architecture/
       - title: "{{site.ai_gateway}} capabilities"
         description: Learn about the core capabilities of {{site.ai_gateway}}.
