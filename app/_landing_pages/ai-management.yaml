@@ -66,7 +66,7 @@ rows:
           - type: card
             config:
               title: Agents
-              description: Use the AI Agent entity to expose upstream agents through {{site.ai_gateway}}.
+              description: The AI Agent entity exposes upstream agents through {{site.ai_gateway}}.
               icon: /assets/icons/a2a-quickstart.svg
               cta:
                 text: AI Agent entity
