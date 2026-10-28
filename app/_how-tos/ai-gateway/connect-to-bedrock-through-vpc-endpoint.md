@@ -110,7 +110,7 @@ ai_gateway_models:
 
 The target uses the following settings:
 
-* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. Set it to a hostname only, without a scheme (for example,`https://`). {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
+* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. Set it to a hostname only, without a scheme (for example, don't include `https://`). {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
 * `region`: Sets the region used for SigV4 signing. It must match the region of the VPC endpoint.
 
 Leave `upstream_url` unset on this target. If both are set, `upstream_url` takes precedence and replaces the full URL, including the path.
