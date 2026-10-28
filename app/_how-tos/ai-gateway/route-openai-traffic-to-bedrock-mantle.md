@@ -10,8 +10,6 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Connect to Amazon Bedrock through a VPC endpoint
-    url: /ai-gateway/connect-to-bedrock-through-vpc-endpoint/
 
 description: Configure an AI Model that sends OpenAI Chat Completions requests to the Amazon Bedrock Mantle endpoint without translating them.
 
@@ -40,7 +38,35 @@ prereqs:
     - title: Amazon Bedrock Mantle
       content: |
         1. In the AWS Management Console, confirm that Amazon Bedrock Mantle is available in your region and that your account has access to the model you want to use.
-        1. Create an IAM user or role with permission to call Bedrock Mantle, then create access keys for it.
+        1. Create an IAM user or role with permission to call Bedrock Mantle, then create access keys for it. The following is an example security policy you can apply to your IAM user or role:
+           ```json
+           {
+             "Version": "2012-10-17",
+             "Statement": [
+               {
+                 "Sid": "VisualEditor0",
+                 "Effect": "Allow",
+                 "Action": [
+                   "bedrock-mantle:GetModel",
+                   "bedrock-mantle:ListFiles",
+                   "bedrock:InvokeModel",
+                   "bedrock-mantle:CreateFile",
+                   "bedrock-mantle:ListModels",
+                   "bedrock-mantle:CancelInference",
+                   "bedrock-mantle:GetFile",
+                   "bedrock:InvokeModelWithResponseStream",
+                   "bedrock-mantle:CreateInference",
+                   "bedrock-mantle:CountTokens"
+                 ],
+                 "Resource": [
+                   "arn:aws:bedrock-mantle:{region}:{account_id}:project/{project_name_or_default}",
+                   "arn:aws:bedrock-mantle:{region}:{account_id}:project/{project_name_or_default}/{model_name_1}",
+                   "arn:aws:bedrock-mantle:{region}:{account_id}:project/{project_name_or_default}/{model_name_2}"
+                 ]
+               }
+             ]
+           }
+           ```
         1. Export your AWS credentials, region, and the Mantle model ID:
            ```bash
            export AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY_ID'
@@ -54,12 +80,6 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 
 ---
-
-{% comment %}
-TODO(reviewer, AI-123):
-- Name the exact IAM actions Mantle requires (prereqs step 2) and link the AWS Mantle docs.
-- Pick a concrete Mantle model ID and region for this guide so the validation step can run in CI.
-{% endcomment %}
 
 ## Create an AI Model Provider
 

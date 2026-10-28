@@ -2,7 +2,7 @@
 title: Connect to Amazon Bedrock through a VPC endpoint with {{site.ai_gateway}}
 content_type: how_to
 permalink: /ai-gateway/connect-to-bedrock-through-vpc-endpoint/
-
+published: false
 related_resources:
   - text: Amazon Bedrock provider
     url: /ai-gateway/ai-providers/bedrock/
@@ -39,7 +39,7 @@ prereqs:
   inline:
     - title: Amazon Bedrock VPC endpoint
       content: |
-        1. Create an interface VPC endpoint for the Bedrock Runtime service (`com.amazonaws.<region>.bedrock-runtime`) in the VPC where your data plane nodes run. See [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html) in the AWS documentation.
+        1. Create an interface VPC endpoint for the Bedrock Runtime service (`com.amazonaws.<region>.bedrock-runtime`) in the VPC where your data plane nodes run. See [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html) in the AWS documentation. You can use the public Bedrock endpoint for testing, but we do not recommend using it in production.
         1. Make sure your data plane nodes can resolve the endpoint's DNS name and reach it on port 443.
         1. Make sure your IAM user or role has `bedrock:Converse` and `bedrock:ConverseStream` permissions, and that the VPC endpoint policy allows them.
         1. Export your AWS credentials, region, and the endpoint DNS name:
@@ -56,12 +56,6 @@ cleanup:
 
 ---
 
-{% comment %}
-TODO(reviewer, AI-125):
-- Confirm the value format for `vpc_endpoint` (bare hostname vs. URL with scheme) and update the prereq export and example.
-- Confirm which data plane deployments can use this (self-managed hybrid only, or also Dedicated Cloud Gateways with private networking).
-- Q1: Confirm the `vpc_endpoint` + `upstream_url` behavior (precedence or validation error).
-{% endcomment %}
 
 ## Create an AI Model Provider
 
@@ -116,16 +110,14 @@ ai_gateway_models:
 
 The target uses the following settings:
 
-* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
+* `vpc_endpoint`: Replaces only the host that {{site.ai_gateway}} connects to. Set it to a hostname only, without a scheme (for example, don't include `https://`). {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming, and SigV4 still signs for the Bedrock service in `region`.
 * `region`: Sets the region used for SigV4 signing. It must match the region of the VPC endpoint.
 
 Leave `upstream_url` unset on this target. If both are set, `upstream_url` takes precedence and replaces the full URL, including the path.
 
-If your AI Model also uses Bedrock embeddings, set `vpc_endpoint` in [`config.balancer.embeddings`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-embeddings) as well.
-
 ## Validate
 
-Send a streaming chat request to the AI Model:
+Send a chat request to the AI Model:
 
 <!-- vale off -->
 {% validation request-check %}
@@ -141,8 +133,7 @@ body:
   - role: "user"
     content: "Say this is a test!"
   model: my-private-bedrock-model
-  stream: true
 {% endvalidation %}
 <!-- vale on -->
 
-A `200` response with streamed chunks confirms that {{site.ai_gateway}} reached Bedrock through the VPC endpoint and built the streaming path. If the request fails with a connection error, check that your data plane nodes can resolve and reach the VPC endpoint. {{site.ai_gateway}} doesn't fall back to the public Bedrock endpoint.
+A `200` response confirms that {{site.ai_gateway}} reached Bedrock through the VPC endpoint. If the request fails with a connection error, check that your data plane nodes can resolve and reach the VPC endpoint.

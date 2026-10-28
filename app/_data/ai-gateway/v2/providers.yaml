@@ -115,13 +115,25 @@ providers:
       generate:
         supported: true
         streaming: true
-        upstream_path: '`/v1/chat/completions`, `/v1/responses`, and `/anthropic/v1/messages` (OpenAI and Anthropic formats, without translation)'
+        upstream_path: '`/v1/chat/completions` and `/anthropic/v1/messages` (OpenAI and Anthropic formats, without translation)'
         model_example: '[Use a model ID that Amazon Bedrock serves through the Mantle endpoint](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.3'
+      agentic:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/responses`'
+        model_example: '[Use a model ID that Amazon Bedrock serves through the Mantle endpoint](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.3'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/files`'
+        model_example: 'n/a'
         min_version: '2.3'
     limitations:
       provider_specific:
         - 'Mantle has no Converse or InvokeModel API, so Konnect rejects a target with `endpoint_type: mantle` if its AI Model declares a format with `type: bedrock`. Use the `openai` or `anthropic` format instead.'
-        - 'Mantle supports only chat and Responses requests. Embeddings and other capabilities are not supported. Use the `runtime` endpoint for them.'
+        - 'Mantle supports only chat, Responses, and files requests. Embeddings and other capabilities are not supported. Use the `runtime` endpoint for them.'
       statistics_logging: []
 
   - name: Anthropic
