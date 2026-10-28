@@ -220,7 +220,7 @@ To re-order policies using the {{site.konnect_short_name}} UI:
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
 Here's an example configuration for the Modify Headers consume policy:
-
+<!--vale off-->
 {% entity_example %}
 type: event_gateway_policy
 policy_type: modify-headers
@@ -232,11 +232,12 @@ data:
       key: My-New-Header
       value: header_value
 {% endentity_example %}
+<!--vale on-->
 
 ## Failure modes
 
 Some produce and consume policies have a `failure_mode` setting that controls what happens to a record when the policy fails to process it:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Failure mode
@@ -262,8 +263,9 @@ rows:
     description: "Delivers the record, and {{site.event_gateway_short}} adds a `kong/policy-failure-<id>` header whose value is the reason for the failure (truncated to 512 characters)."
     policy_type: Consume and produce
 {% endtable %}
+<!--vale on-->
 
-See each policy for the failure modes it supports.
+See [each policy](/event-gateway/policies/) for the failure modes it supports.
 
 ### mark
 
