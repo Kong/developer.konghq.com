@@ -30,7 +30,7 @@ When you set `allow_when`, the request is allowed if any entry evaluates to true
 If an entry fails to evaluate and no other entry evaluates to true, the request is denied with HTTP 403.
 An entry that evaluates to true still allows the request, even if an earlier entry failed.
 When you set `deny_when`, the request is denied if any entry evaluates to true.
-If an entry fails to evaluate before an entry that evaluates to true, the request fails closed with HTTP 500.
+If an entry fails to evaluate, the request fails closed with HTTP 500, unless an entry that evaluates to true comes first.
 If an entry that evaluates to true comes first, the request is denied with HTTP 403 and later entries aren't evaluated.
 
 When you set `allow_when` or `deny_when`, {{site.ai_gateway}} ignores `include_consumer_groups`.
