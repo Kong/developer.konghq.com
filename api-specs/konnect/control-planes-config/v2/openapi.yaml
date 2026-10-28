@@ -13,9 +13,9 @@ info:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
-  version: 3.15.0
-  x-oas-source: kong/platform-api@0296d97374f56ce800b859023385867105124517
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0296d97374f56ce800b859023385867105124517'
+  version: 3.16.0
+  x-oas-source: kong/platform-api@873ee7e634d5332da8bd62e6166a58c3cd3ff749
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/873ee7e634d5332da8bd62e6166a58c3cd3ff749'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -575,6 +575,3894 @@ paths:
           $ref: '#/components/responses/ConfigStoreSecretNotFound'
       tags:
         - Config Store Secrets
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/acls':
+    get:
+      operationId: list-acl-in-workspace
+      summary: List all ACLs in a workspace
+      description: List all ACLs in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing ACLs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/acls/{ACLId}':
+    get:
+      operationId: get-acl-in-workspace
+      summary: Get an ACL in a workspace
+      description: Get an ACL using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/ACLId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/basic-auths':
+    get:
+      operationId: list-basic-auth-in-workspace
+      summary: List all Basic-auth credentials in a workspace
+      description: List all Basic-auth credentials in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Basic-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BasicAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Basic-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/basic-auths/{BasicAuthId}':
+    get:
+      operationId: get-basic-auth-in-workspace
+      summary: Get a Basic-auth credential in a workspace
+      description: Get a Basic-auth credential using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Basic-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicAuth'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Basic-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/BasicAuthId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/certificates':
+    get:
+      operationId: list-certificate-in-workspace
+      summary: List all Certificates in a workspace
+      description: List all Certificates in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Certificates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certificate'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Certificates
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-certificate-in-workspace
+      summary: Create a new Certificate in a workspace
+      description: Create a new Certificate in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Certificate for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateRequest'
+      responses:
+        '201':
+          description: Successfully created Certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Certificates
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/certificates/{CertificateId}':
+    delete:
+      operationId: delete-certificate-in-workspace
+      summary: Delete a Certificate in a workspace
+      description: Delete a Certificate in a workspace
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Certificate or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Certificates
+    get:
+      operationId: get-certificate-in-workspace
+      summary: Get a Certificate in a workspace
+      description: Get a Certificate using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Certificates
+    parameters:
+      - $ref: '#/components/parameters/CertificateId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-certificate-in-workspace
+      summary: Upsert a Certificate in a workspace
+      description: Create or Update Certificate using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Certificate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateRequest'
+      responses:
+        '200':
+          description: Successfully upserted Certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Certificates
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/certificates/{CertificateId}/snis':
+    get:
+      operationId: list-sni-with-certificate-in-workspace
+      summary: List all SNIs associated with a Certificate in a workspace
+      description: List all SNIs associated with a Certificate in a workspace
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing SNIs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SNI'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - SNIs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-sni-with-certificate-in-workspace
+      summary: Create a new SNI associated with a Certificate in a workspace
+      description: Create a new SNI associated with a Certificate in a workspace
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new SNI for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SNIWithoutParents'
+      responses:
+        '201':
+          description: Successfully created SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+      tags:
+        - SNIs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/certificates/{CertificateId}/snis/{SNIId}':
+    delete:
+      operationId: delete-sni-with-certificate-in-workspace
+      summary: Delete a an SNI associated with a Certificate in a workspace
+      description: Delete a an SNI associated with a Certificate using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/SNIId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted SNI or the resource didn't exist
+      tags:
+        - SNIs
+    get:
+      operationId: get-sni-with-certificate-in-workspace
+      summary: Get an SNI associated with a Certificate in a workspace
+      description: Get an SNI associated with a Certificate using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/SNIId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+        '404':
+          description: Resource does not exist
+      tags:
+        - SNIs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-sni-with-certificate-in-workspace
+      summary: Upsert an SNI associated with a Certificate in a workspace
+      description: Create or Update an SNI associated with a Certificate using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+        - $ref: '#/components/parameters/SNIId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the SNI
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SNIWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+      tags:
+        - SNIs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups':
+    get:
+      operationId: list-consumer_group-in-workspace
+      summary: List all Consumer Groups in a workspace
+      description: List all Consumer Groups in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Consumer Groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConsumerGroup'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumer Groups
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-consumer_group-in-workspace
+      summary: Create a new Consumer Group in a workspace
+      description: Create a new Consumer Group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Consumer Group for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsumerGroup'
+      responses:
+        '201':
+          description: Successfully created Consumer Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerGroup'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumer Groups
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups/{ConsumerGroupId}':
+    delete:
+      operationId: delete-consumer_group-in-workspace
+      summary: Delete a Consumer Group in a workspace
+      description: Delete a Consumer Group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Consumer Group or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumer Groups
+    get:
+      operationId: get-consumer_group-in-workspace
+      summary: Get a Consumer Group in a workspace
+      description: Get a Consumer Group using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ListConsumers'
+      responses:
+        '200':
+          description: Successfully fetched Consumer Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerGroupInsideWrapper'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Consumer Groups
+    parameters:
+      - $ref: '#/components/parameters/ConsumerGroupId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-consumer_group-in-workspace
+      summary: Upsert a Consumer Group in a workspace
+      description: Create or Update Consumer Group using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Consumer Group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsumerGroup'
+      responses:
+        '200':
+          description: Successfully upserted Consumer Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerGroup'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumer Groups
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups/{ConsumerGroupId}/consumers':
+    delete:
+      operationId: remove-all-consumers-from-consumer-group-in-workspace
+      summary: Remove consumers from consumer group in a workspace
+      description: |-
+        **Pre-release Endpoint**
+        This endpoint is currently in beta and is subject to change.
+
+        Removes all consumers from a Consumer Groups. This operation does not delete the consumer group in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Consumers removed from group
+        '404':
+          description: Consumer group or consumer association does not exist
+      tags:
+        - Consumer Groups
+    get:
+      operationId: list-consumers-for-consumer-group-in-workspace
+      summary: List all Consumers in a Consumer Group in a workspace
+      description: List all consumers in a consumer group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing of consumers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Consumer'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Consumer Groups
+    parameters:
+      - $ref: '#/components/parameters/ConsumerGroupIdManageConsumers'
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: add-consumer-to-group-in-workspace
+      summary: Add consumer to consumer group in a workspace
+      description: Add a consumer to a consumer group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumer:
+                  type: string
+                  example: cf4c7e60-11db-49dd-b300-7c7e5f0f7e6b
+      responses:
+        '201':
+          description: Consumer added to group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consumer_group:
+                    $ref: '#/components/schemas/ConsumerGroup'
+                  consumers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Consumer'
+      tags:
+        - Consumer Groups
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups/{ConsumerGroupId}/consumers/{ConsumerId}':
+    delete:
+      operationId: remove-consumer-from-group-in-workspace
+      summary: Remove consumer from consumer group in a workspace
+      description: Remove a consumer from a consumer group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Consumer removed from group
+      tags:
+        - Consumer Groups
+    parameters:
+      - $ref: '#/components/parameters/ConsumerGroupIdManageConsumers'
+      - name: ConsumerId
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups/{ConsumerGroupId}/plugins':
+    get:
+      operationId: list-plugin-with-consumer_group-in-workspace
+      summary: List all Plugins associated with a Consumer Group in a workspace
+      description: List all Plugins associated with a Consumer Group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-plugin-with-consumer_group-in-workspace
+      summary: Create a new Plugin associated with a Consumer Group in a workspace
+      description: Create a new Plugin associated with a Consumer Group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumer_groups/{ConsumerGroupId}/plugins/{PluginId}':
+    delete:
+      operationId: delete-plugin-with-consumer_group-in-workspace
+      summary: Delete a a Plugin associated with a Consumer Group in a workspace
+      description: Delete a a Plugin associated with a Consumer Group using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Plugin or the resource didn't exist
+      tags:
+        - Plugins
+    get:
+      operationId: get-plugin-with-consumer_group-in-workspace
+      summary: Get a Plugin associated with a Consumer Group in a workspace
+      description: Get a Plugin associated with a Consumer Group using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ExpandPartials'
+      responses:
+        '200':
+          description: Successfully fetched Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-plugin-with-consumer_group-in-workspace
+      summary: Upsert a Plugin associated with a Consumer Group in a workspace
+      description: Create or Update a Plugin associated with a Consumer Group using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers':
+    get:
+      operationId: list-consumer-in-workspace
+      summary: List all Consumers in a workspace
+      description: List all Consumers in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/CustomId'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
+      responses:
+        '200':
+          description: A successful response listing Consumers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Consumer'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumers
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-consumer-in-workspace
+      summary: Create a new Consumer in a workspace
+      description: Create a new Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Consumer for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consumer'
+      responses:
+        '201':
+          description: Successfully created Consumer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consumer'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumers
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerId}':
+    delete:
+      operationId: delete-consumer-in-workspace
+      summary: Delete a Consumer in a workspace
+      description: Delete a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Consumer or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumers
+    get:
+      operationId: get-consumer-in-workspace
+      summary: Get a Consumer in a workspace
+      description: Get a Consumer using ID or username in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Consumer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consumer'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Consumers
+    parameters:
+      - $ref: '#/components/parameters/ConsumerId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-consumer-in-workspace
+      summary: Upsert a Consumer in a workspace
+      description: Create or Update Consumer using ID or username in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Consumer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consumer'
+      responses:
+        '200':
+          description: Successfully upserted Consumer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consumer'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Consumers
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerId}/consumer_groups':
+    delete:
+      operationId: remove-consumer-from-all-consumer-groups-in-workspace
+      summary: Remove consumer from all consumer groups in a workspace
+      description: Removes a consumer from all Consumer Groups. This operation does not delete the consumer group in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Consumer removed from all groups
+        '404':
+          description: Consumer does not exist
+      tags:
+        - Consumers
+    get:
+      operationId: list-consumer-groups-for-consumer-in-workspace
+      summary: List all Consumer Groups a Consumer belongs to in a workspace
+      description: List all Consumer Groups a Consumer belongs to in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Consumer Groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConsumerGroup'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Consumers
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: add-consumer-to-specific-consumer-group-in-workspace
+      summary: Add consumer to a specific consumer group in a workspace
+      description: Add a consumer to a consumer group in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: string
+                  example: fedee695-2ae2-4e45-877a-776d9b2fc793
+      responses:
+        '201':
+          description: Consumer added to a specific group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consumer:
+                    $ref: '#/components/schemas/Consumer'
+                  consumer_groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConsumerGroup'
+      tags:
+        - Consumers
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerId}/consumer_groups/{ConsumerGroupId}':
+    delete:
+      operationId: remove-consumer-from-consumer-group-in-workspace
+      summary: Remove consumer from consumer group in a workspace
+      description: Removes a consumer from a Consumer Group. This operation does not delete the consumer group in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerId'
+        - $ref: '#/components/parameters/ConsumerGroupId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Consumer removed from group
+      tags:
+        - Consumers
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/acls':
+    get:
+      operationId: list-acl-with-consumer-in-workspace
+      summary: List all ACLs associated with a Consumer in a workspace
+      description: List all ACLs associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing ACLs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ACL'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-acl-with-consumer-in-workspace
+      summary: Create a new ACL associated with a Consumer in a workspace
+      description: Create a new ACL associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new ACL for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+      responses:
+        '201':
+          description: Successfully created ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+      tags:
+        - ACLs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/acls/{ACLId}':
+    delete:
+      operationId: delete-acl-with-consumer-in-workspace
+      summary: Delete a an ACL associated with a Consumer in a workspace
+      description: Delete a an ACL associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted ACL or the resource didn't exist
+      tags:
+        - ACLs
+    get:
+      operationId: get-acl-with-consumer-in-workspace
+      summary: Get an ACL associated with a Consumer in a workspace
+      description: Get an ACL associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+        '404':
+          description: Resource does not exist
+      tags:
+        - ACLs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-acl-with-consumer-in-workspace
+      summary: Upsert an ACL associated with a Consumer in a workspace
+      description: Create or Update an ACL associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/ACLId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the ACL
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ACLWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted ACL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACL'
+      tags:
+        - ACLs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/basic-auth':
+    get:
+      operationId: list-basic-auth-with-consumer-in-workspace
+      summary: List all Basic-auth credentials associated with a Consumer in a workspace
+      description: List all Basic-auth credentials associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Basic-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BasicAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Basic-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-basic-auth-with-consumer-in-workspace
+      summary: Create a new Basic-auth credential associated with a Consumer in a workspace
+      description: Create a new Basic-auth credential associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Basic-auth credential for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BasicAuthWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Basic-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicAuth'
+      tags:
+        - Basic-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/basic-auth/{BasicAuthId}':
+    delete:
+      operationId: delete-basic-auth-with-consumer-in-workspace
+      summary: Delete a a Basic-auth credential associated with a Consumer in a workspace
+      description: Delete a a Basic-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/BasicAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Basic-auth credential or the resource didn't exist
+      tags:
+        - Basic-auth credentials
+    get:
+      operationId: get-basic-auth-with-consumer-in-workspace
+      summary: Get a Basic-auth credential associated with a Consumer in a workspace
+      description: Get a Basic-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/BasicAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Basic-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicAuth'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Basic-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-basic-auth-with-consumer-in-workspace
+      summary: Upsert a Basic-auth credential associated with a Consumer in a workspace
+      description: Create or Update a Basic-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/BasicAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Basic-auth credential
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BasicAuthWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Basic-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicAuth'
+      tags:
+        - Basic-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/hmac-auth':
+    get:
+      operationId: list-hmac-auth-with-consumer-in-workspace
+      summary: List all HMAC-auth credentials associated with a Consumer in a workspace
+      description: List all HMAC-auth credentials associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing HMAC-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HMACAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-hmac-auth-with-consumer-in-workspace
+      summary: Create a new HMAC-auth credential associated with a Consumer in a workspace
+      description: Create a new HMAC-auth credential associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new HMAC-auth credential for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuthWithoutParents'
+      responses:
+        '201':
+          description: Successfully created HMAC-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+      tags:
+        - HMAC-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/hmac-auth/{HMACAuthId}':
+    delete:
+      operationId: delete-hmac-auth-with-consumer-in-workspace
+      summary: Delete a a HMAC-auth credential associated with a Consumer in a workspace
+      description: Delete a a HMAC-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/HMACAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted HMAC-auth credential or the resource didn't exist
+      tags:
+        - HMAC-auth credentials
+    get:
+      operationId: get-hmac-auth-with-consumer-in-workspace
+      summary: Get a HMAC-auth credential associated with a Consumer in a workspace
+      description: Get a HMAC-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/HMACAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched HMAC-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+        '404':
+          description: Resource does not exist
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-hmac-auth-with-consumer-in-workspace
+      summary: Upsert a HMAC-auth credential associated with a Consumer in a workspace
+      description: Create or Update a HMAC-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/HMACAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the HMAC-auth credential
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuthWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted HMAC-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+      tags:
+        - HMAC-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/jwt':
+    get:
+      operationId: list-jwt-with-consumer-in-workspace
+      summary: List all JWTs associated with a Consumer in a workspace
+      description: List all JWTs associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing JWTs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JWT'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - JWTs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-jwt-with-consumer-in-workspace
+      summary: Create a new JWT associated with a Consumer in a workspace
+      description: Create a new JWT associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new JWT for creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWTWithoutParents'
+      responses:
+        '201':
+          description: Successfully created JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+      tags:
+        - JWTs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/jwt/{JWTId}':
+    delete:
+      operationId: delete-jwt-with-consumer-in-workspace
+      summary: Delete a a JWT associated with a Consumer in a workspace
+      description: Delete a a JWT associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted JWT or the resource didn't exist
+      tags:
+        - JWTs
+    get:
+      operationId: get-jwt-with-consumer-in-workspace
+      summary: Get a JWT associated with a Consumer in a workspace
+      description: Get a JWT associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+        '404':
+          description: Resource does not exist
+      tags:
+        - JWTs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-jwt-with-consumer-in-workspace
+      summary: Upsert a JWT associated with a Consumer in a workspace
+      description: Create or Update a JWT associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the JWT
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWTWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+      tags:
+        - JWTs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/key-auth':
+    get:
+      operationId: list-key-auth-with-consumer-in-workspace
+      summary: List all API-keys associated with a Consumer in a workspace
+      description: List all API-keys associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing API-keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KeyAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-key-auth-with-consumer-in-workspace
+      summary: Create a new API-key associated with a Consumer in a workspace
+      description: Create a new API-key associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new API-key for creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuthWithoutParents'
+      responses:
+        '201':
+          description: Successfully created API-key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+      tags:
+        - API-keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/key-auth/{KeyAuthId}':
+    delete:
+      operationId: delete-key-auth-with-consumer-in-workspace
+      summary: Delete a an API-key associated with a Consumer in a workspace
+      description: Delete a an API-key associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/KeyAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted API-key or the resource didn't exist
+      tags:
+        - API-keys
+    get:
+      operationId: get-key-auth-with-consumer-in-workspace
+      summary: Get an API-key associated with a Consumer in a workspace
+      description: Get an API-key associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/KeyAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched API-key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+        '404':
+          description: Resource does not exist
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-key-auth-with-consumer-in-workspace
+      summary: Upsert an API-key associated with a Consumer in a workspace
+      description: Create or Update an API-key associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/KeyAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the API-key
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuthWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted API-key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+      tags:
+        - API-keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/mtls-auth':
+    get:
+      operationId: list-mtls-auth-with-consumer-in-workspace
+      summary: List all MTLS-auth credentials associated with a Consumer in a workspace
+      description: List all MTLS-auth credentials associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing MTLS-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-mtls-auth-with-consumer-in-workspace
+      summary: Create a new MTLS-auth credential associated with a Consumer in a workspace
+      description: Create a new MTLS-auth credential associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new MTLS-auth credential for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+      responses:
+        '201':
+          description: Successfully created MTLS-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+      tags:
+        - MTLS-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/mtls-auth/{MTLSAuthId}':
+    delete:
+      operationId: delete-mtls-auth-with-consumer-in-workspace
+      summary: Delete a a MTLS-auth credential associated with a Consumer in a workspace
+      description: Delete a a MTLS-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted MTLS-auth credential or the resource didn't exist
+      tags:
+        - MTLS-auth credentials
+    get:
+      operationId: get-mtls-auth-with-consumer-in-workspace
+      summary: Get a MTLS-auth credential associated with a Consumer in a workspace
+      description: Get a MTLS-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched MTLS-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+        '404':
+          description: Resource does not exist
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-mtls-auth-with-consumer-in-workspace
+      summary: Upsert a MTLS-auth credential associated with a Consumer in a workspace
+      description: Create or Update a MTLS-auth credential associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the MTLS-auth credential
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted MTLS-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+      tags:
+        - MTLS-auth credentials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/plugins':
+    get:
+      operationId: list-plugin-with-consumer-in-workspace
+      summary: List all Plugins associated with a Consumer in a workspace
+      description: List all Plugins associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-plugin-with-consumer-in-workspace
+      summary: Create a new Plugin associated with a Consumer in a workspace
+      description: Create a new Plugin associated with a Consumer in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/consumers/{ConsumerIdForNestedEntities}/plugins/{PluginId}':
+    delete:
+      operationId: delete-plugin-with-consumer-in-workspace
+      summary: Delete a a Plugin associated with a Consumer in a workspace
+      description: Delete a a Plugin associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Plugin or the resource didn't exist
+      tags:
+        - Plugins
+    get:
+      operationId: get-plugin-with-consumer-in-workspace
+      summary: Get a Plugin associated with a Consumer in a workspace
+      description: Get a Plugin associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ExpandPartials'
+      responses:
+        '200':
+          description: Successfully fetched Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-plugin-with-consumer-in-workspace
+      summary: Upsert a Plugin associated with a Consumer in a workspace
+      description: Create or Update a Plugin associated with a Consumer using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/degraphql_routes':
+    get:
+      operationId: list-degraphql_route-in-workspace
+      summary: List all Degraphql_routes in a workspace
+      description: List all Degraphql_routes in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Degraphql_routes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Degraphql_route'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Degraphql_routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/degraphql_routes/{Degraphql_routeId}':
+    get:
+      operationId: get-degraphql_route-in-workspace
+      summary: Get a Degraphql_route in a workspace
+      description: Get a Degraphql_route using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Degraphql_route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degraphql_route'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Degraphql_routes
+    parameters:
+      - $ref: '#/components/parameters/Degraphql_routeId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/graphql-rate-limiting-advanced/costs':
+    get:
+      operationId: list-graphql-rate-limiting-advanced-cost-in-workspace
+      summary: List all GraphQL Cost Decorations in a workspace
+      description: List all GraphQL Cost Decorations in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing GraphQL Cost Decorations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GraphQLCostDecoration'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}':
+    get:
+      operationId: get-graphql-rate-limiting-advanced-cost-in-workspace
+      summary: Get a GraphQL Cost Decoration in a workspace
+      description: Get a GraphQL Cost Decoration using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/GraphQLCostDecorationId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/hmac-auths':
+    get:
+      operationId: list-hmac-auth-in-workspace
+      summary: List all HMAC-auth credentials in a workspace
+      description: List all HMAC-auth credentials in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing HMAC-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HMACAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/hmac-auths/{HMACAuthId}':
+    get:
+      operationId: get-hmac-auth-in-workspace
+      summary: Get a HMAC-auth credential in a workspace
+      description: Get a HMAC-auth credential using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched HMAC-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/HMACAuthId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/jwts':
+    get:
+      operationId: list-jwt-in-workspace
+      summary: List all JWTs in a workspace
+      description: List all JWTs in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing JWTs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JWT'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - JWTs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/jwts/{JWTId}':
+    get:
+      operationId: get-jwt-in-workspace
+      summary: Get a JWT in a workspace
+      description: Get a JWT using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - JWTs
+    parameters:
+      - $ref: '#/components/parameters/JWTId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-auths':
+    get:
+      operationId: list-key-auth-in-workspace
+      summary: List all API-keys in a workspace
+      description: List all API-keys in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing API-keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KeyAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-auths/{KeyAuthId}':
+    get:
+      operationId: get-key-auth-in-workspace
+      summary: Get an API-key in a workspace
+      description: Get an API-key using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched API-key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/KeyAuthId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-sets':
+    get:
+      operationId: list-key-set-in-workspace
+      summary: List all KeySets in a workspace
+      description: List all KeySets in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing KeySets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KeySet'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - KeySets
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-key-set-in-workspace
+      summary: Create a new KeySet in a workspace
+      description: Create a new KeySet in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new KeySet for creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeySet'
+      responses:
+        '201':
+          description: Successfully created KeySet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeySet'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - KeySets
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-sets/{KeySetId}':
+    delete:
+      operationId: delete-key-set-in-workspace
+      summary: Delete a KeySet in a workspace
+      description: Delete a KeySet in a workspace
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted KeySet or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - KeySets
+    get:
+      operationId: get-key-set-in-workspace
+      summary: Get a KeySet in a workspace
+      description: Get a KeySet using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched KeySet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeySet'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - KeySets
+    parameters:
+      - $ref: '#/components/parameters/KeySetId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-key-set-in-workspace
+      summary: Upsert a KeySet in a workspace
+      description: Create or Update KeySet using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the KeySet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeySet'
+      responses:
+        '200':
+          description: Successfully upserted KeySet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeySet'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - KeySets
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-sets/{KeySetId}/keys':
+    get:
+      operationId: list-key-with-key-set-in-workspace
+      summary: List all Keys associated with a KeySet in a workspace
+      description: List all Keys associated with a KeySet in a workspace
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Key'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-key-with-key-set-in-workspace
+      summary: Create a new Key associated with a KeySet in a workspace
+      description: Create a new Key associated with a KeySet in a workspace
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Key for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+      tags:
+        - Keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/key-sets/{KeySetId}/keys/{KeyId}':
+    delete:
+      operationId: delete-key-with-key-set-in-workspace
+      summary: Delete a a Key associated with a KeySet in a workspace
+      description: Delete a a Key associated with a KeySet using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/KeyId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Key or the resource didn't exist
+      tags:
+        - Keys
+    get:
+      operationId: get-key-with-key-set-in-workspace
+      summary: Get a Key associated with a KeySet in a workspace
+      description: Get a Key associated with a KeySet using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/KeyId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-key-with-key-set-in-workspace
+      summary: Upsert a Key associated with a KeySet in a workspace
+      description: Create or Update a Key associated with a KeySet using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/KeySetId'
+        - $ref: '#/components/parameters/KeyId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+      tags:
+        - Keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/keys':
+    get:
+      operationId: list-key-in-workspace
+      summary: List all Keys in a workspace
+      description: List all Keys in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Key'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Keys
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-key-in-workspace
+      summary: Create a new Key in a workspace
+      description: Create a new Key in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Key for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Key'
+      responses:
+        '201':
+          description: Successfully created Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/keys/{KeyId}':
+    delete:
+      operationId: delete-key-in-workspace
+      summary: Delete a Key in a workspace
+      description: Delete a Key in a workspace
+      parameters:
+        - $ref: '#/components/parameters/KeyId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Key or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Keys
+    get:
+      operationId: get-key-in-workspace
+      summary: Get a Key in a workspace
+      description: Get a Key using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Keys
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-key-in-workspace
+      summary: Upsert a Key in a workspace
+      description: Create or Update Key using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Key'
+      responses:
+        '200':
+          description: Successfully upserted Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Keys
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/mtls-auths':
+    get:
+      operationId: list-mtls-auth-in-workspace
+      summary: List all MTLS-auth credentials in a workspace
+      description: List all MTLS-auth credentials in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing MTLS-auth credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MTLSAuth'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/mtls-auths/{MTLSAuthId}':
+    get:
+      operationId: get-mtls-auth-in-workspace
+      summary: Get a MTLS-auth credential in a workspace
+      description: Get a MTLS-auth credential using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched MTLS-auth credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - MTLS-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/MTLSAuthId'
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/partials':
+    get:
+      operationId: list-partial-in-workspace
+      summary: List all Partials in a workspace
+      description: List all Partials in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Partials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Partial'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Partials
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-partial-in-workspace
+      summary: Create a new Partial in a workspace
+      description: Create a new Partial in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Partial for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Partial'
+      responses:
+        '201':
+          description: Successfully created Partial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partial'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Partials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/partials/{PartialId}':
+    delete:
+      operationId: delete-partial-in-workspace
+      summary: Delete a Partial in a workspace
+      description: Delete a Partial in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PartialId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Partial or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Partials
+    get:
+      operationId: get-partial-in-workspace
+      summary: Get a Partial in a workspace
+      description: Get a Partial using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Partial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partial'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Partials
+    parameters:
+      - $ref: '#/components/parameters/PartialId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-partial-in-workspace
+      summary: Upsert a Partial in a workspace
+      description: Create or Update Partial using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Partial
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Partial'
+      responses:
+        '200':
+          description: Successfully upserted Partial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partial'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Partials
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/partials/{PartialId}/links':
+    get:
+      operationId: list-partial-link-in-workspace
+      summary: List partial links in a workspace
+      description: List all plugins linked to the partial in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PartialId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: The plugins linked to the partial
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    description: The total number of plugins linked to the partial
+                    type: integer
+                    example: 10
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PartialLink'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Partial Links
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/plugins':
+    get:
+      operationId: list-plugin-in-workspace
+      summary: List all Plugins in a workspace
+      description: List all Plugins in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
+      responses:
+        '200':
+          description: A successful response listing Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-plugin-in-workspace
+      summary: Create a new Plugin in a workspace
+      description: Create a new Plugin in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plugin'
+      responses:
+        '201':
+          description: Successfully created Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/plugins/{PluginId}':
+    delete:
+      operationId: delete-plugin-in-workspace
+      summary: Delete a Plugin in a workspace
+      description: Delete a Plugin in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Plugin or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Plugins
+    get:
+      operationId: get-plugin-in-workspace
+      summary: Get a Plugin in a workspace
+      description: Get a Plugin using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ExpandPartials'
+      responses:
+        '200':
+          description: Successfully fetched Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/PluginId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-plugin-in-workspace
+      summary: Upsert a Plugin in a workspace
+      description: Create or Update Plugin using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plugin'
+      responses:
+        '200':
+          description: Successfully upserted Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/routes':
+    get:
+      operationId: list-route-in-workspace
+      summary: List all Routes in a workspace
+      description: List all Routes in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
+      responses:
+        '200':
+          description: A successful response listing Routes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Route'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-route-in-workspace
+      summary: Create a new Route in a workspace
+      description: Create a new Route in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Route for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Route'
+      responses:
+        '201':
+          description: Successfully created Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/routes/{RouteId}':
+    delete:
+      operationId: delete-route-in-workspace
+      summary: Delete a Route in a workspace
+      description: Delete a Route in a workspace
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Route or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Routes
+    get:
+      operationId: get-route-in-workspace
+      summary: Get a Route in a workspace
+      description: Get a Route using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Routes
+    parameters:
+      - $ref: '#/components/parameters/RouteId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-route-in-workspace
+      summary: Upsert a Route in a workspace
+      description: Create or Update Route using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Route
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Route'
+      responses:
+        '200':
+          description: Successfully upserted Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/routes/{RouteId}/plugins':
+    get:
+      operationId: list-plugin-with-route-in-workspace
+      summary: List all Plugins associated with a Route in a workspace
+      description: List all Plugins associated with a Route in a workspace
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-plugin-with-route-in-workspace
+      summary: Create a new Plugin associated with a Route in a workspace
+      description: Create a new Plugin associated with a Route in a workspace
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/routes/{RouteId}/plugins/{PluginId}':
+    delete:
+      operationId: delete-plugin-with-route-in-workspace
+      summary: Delete a a Plugin associated with a Route in a workspace
+      description: Delete a a Plugin associated with a Route using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Plugin or the resource didn't exist
+      tags:
+        - Plugins
+    get:
+      operationId: get-plugin-with-route-in-workspace
+      summary: Get a Plugin associated with a Route in a workspace
+      description: Get a Plugin associated with a Route using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ExpandPartials'
+      responses:
+        '200':
+          description: Successfully fetched Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-plugin-with-route-in-workspace
+      summary: Upsert a Plugin associated with a Route in a workspace
+      description: Create or Update a Plugin associated with a Route using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services':
+    get:
+      operationId: list-service-in-workspace
+      summary: List all Services in a workspace
+      description: List all Services in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/NameContainsFilter'
+        - $ref: '#/components/parameters/NameEqualsFilter'
+      responses:
+        '200':
+          description: A successful response listing Services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Services
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-service-in-workspace
+      summary: Create a new Service in a workspace
+      description: Create a new Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Service for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+      responses:
+        '201':
+          description: Successfully created Service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Services
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}':
+    delete:
+      operationId: delete-service-in-workspace
+      summary: Delete a Service in a workspace
+      description: Delete a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Service or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Services
+    get:
+      operationId: get-service-in-workspace
+      summary: Get a Service in a workspace
+      description: Get a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Services
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-service-in-workspace
+      summary: Upsert a Service in a workspace
+      description: Create or Update Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Service
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+      responses:
+        '200':
+          description: Successfully upserted Service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Services
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/degraphql/routes':
+    get:
+      operationId: list-degraphql_route-with-service-in-workspace
+      summary: List all Degraphql_routes associated with a Service in a workspace
+      description: List all Degraphql_routes associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Degraphql_routes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Degraphql_route'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Degraphql_routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-degraphql_route-with-service-in-workspace
+      summary: Create a new Degraphql_route associated with a Service in a workspace
+      description: Create a new Degraphql_route associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Degraphql_route for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Degraphql_routeWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Degraphql_route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degraphql_route'
+      tags:
+        - Degraphql_routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/degraphql/routes/{Degraphql_routeId}':
+    delete:
+      operationId: delete-degraphql_route-with-service-in-workspace
+      summary: Delete a a Degraphql_route associated with a Service in a workspace
+      description: Delete a a Degraphql_route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Degraphql_routeId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Degraphql_route or the resource didn't exist
+      tags:
+        - Degraphql_routes
+    get:
+      operationId: get-degraphql_route-with-service-in-workspace
+      summary: Get a Degraphql_route associated with a Service in a workspace
+      description: Get a Degraphql_route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Degraphql_routeId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Degraphql_route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degraphql_route'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Degraphql_routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-degraphql_route-with-service-in-workspace
+      summary: Upsert a Degraphql_route associated with a Service in a workspace
+      description: Create or Update a Degraphql_route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Degraphql_routeId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Degraphql_route
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Degraphql_routeWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Degraphql_route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degraphql_route'
+      tags:
+        - Degraphql_routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/graphql-rate-limiting-advanced/costs':
+    get:
+      operationId: list-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+      summary: List all GraphQL Cost Decorations associated with a Service in a workspace
+      description: List all GraphQL Cost Decorations associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing GraphQL Cost Decorations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GraphQLCostDecoration'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+      summary: Create a new GraphQL Cost Decoration associated with a Service in a workspace
+      description: Create a new GraphQL Cost Decoration associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new GraphQL Cost Decoration for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+      responses:
+        '201':
+          description: Successfully created GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+      tags:
+        - GraphQL Cost Decorations
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}':
+    delete:
+      operationId: delete-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+      summary: Delete a a GraphQL Cost Decoration associated with a Service in a workspace
+      description: Delete a a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+      tags:
+        - GraphQL Cost Decorations
+    get:
+      operationId: get-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+      summary: Get a GraphQL Cost Decoration associated with a Service in a workspace
+      description: Get a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+        '404':
+          description: Resource does not exist
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+      summary: Upsert a GraphQL Cost Decoration associated with a Service in a workspace
+      description: Create or Update a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the GraphQL Cost Decoration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+      tags:
+        - GraphQL Cost Decorations
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/plugins':
+    get:
+      operationId: list-plugin-with-service-in-workspace
+      summary: List all Plugins associated with a Service in a workspace
+      description: List all Plugins associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-plugin-with-service-in-workspace
+      summary: Create a new Plugin associated with a Service in a workspace
+      description: Create a new Plugin associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/plugins/{PluginId}':
+    delete:
+      operationId: delete-plugin-with-service-in-workspace
+      summary: Delete a a Plugin associated with a Service in a workspace
+      description: Delete a a Plugin associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Plugin or the resource didn't exist
+      tags:
+        - Plugins
+    get:
+      operationId: get-plugin-with-service-in-workspace
+      summary: Get a Plugin associated with a Service in a workspace
+      description: Get a Plugin associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+        - $ref: '#/components/parameters/ExpandPartials'
+      responses:
+        '200':
+          description: Successfully fetched Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-plugin-with-service-in-workspace
+      summary: Upsert a Plugin associated with a Service in a workspace
+      description: Create or Update a Plugin associated with a Service using ID in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PluginId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      tags:
+        - Plugins
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/routes':
+    get:
+      operationId: list-route-with-service-in-workspace
+      summary: List all Routes associated with a Service in a workspace
+      description: List all Routes associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Routes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Route'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-route-with-service-in-workspace
+      summary: Create a new Route associated with a Service in a workspace
+      description: Create a new Route associated with a Service in a workspace
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Route for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+      tags:
+        - Routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{ServiceId}/routes/{RouteId}':
+    delete:
+      operationId: delete-route-with-service-in-workspace
+      summary: Delete a a Route associated with a Service in a workspace
+      description: Delete a a Route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Route or the resource didn't exist
+      tags:
+        - Routes
+    get:
+      operationId: get-route-with-service-in-workspace
+      summary: Get a Route associated with a Service in a workspace
+      description: Get a Route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Routes
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-route-with-service-in-workspace
+      summary: Upsert a Route associated with a Service in a workspace
+      description: Create or Update a Route associated with a Service using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/RouteId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Route
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+      tags:
+        - Routes
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/snis':
+    get:
+      operationId: list-sni-in-workspace
+      summary: List all SNIs in a workspace
+      description: List all SNIs in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing SNIs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SNI'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - SNIs
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-sni-in-workspace
+      summary: Create a new SNI in a workspace
+      description: Create a new SNI in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new SNI for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SNI'
+      responses:
+        '201':
+          description: Successfully created SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - SNIs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/snis/{SNIId}':
+    delete:
+      operationId: delete-sni-in-workspace
+      summary: Delete an SNI in a workspace
+      description: Delete an SNI in a workspace
+      parameters:
+        - $ref: '#/components/parameters/SNIId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted SNI or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - SNIs
+    get:
+      operationId: get-sni-in-workspace
+      summary: Get an SNI in a workspace
+      description: Get an SNI using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - SNIs
+    parameters:
+      - $ref: '#/components/parameters/SNIId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-sni-in-workspace
+      summary: Upsert a SNI in a workspace
+      description: Create or Update SNI using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the SNI
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SNI'
+      responses:
+        '200':
+          description: Successfully upserted SNI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNI'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - SNIs
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/upstreams':
+    get:
+      operationId: list-upstream-in-workspace
+      summary: List all Upstreams in a workspace
+      description: List all Upstreams in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Upstreams
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Upstream'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Upstreams
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-upstream-in-workspace
+      summary: Create a new Upstream in a workspace
+      description: Create a new Upstream in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Upstream for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Upstream'
+      responses:
+        '201':
+          description: Successfully created Upstream
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Upstream'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Upstreams
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/upstreams/{UpstreamId}':
+    delete:
+      operationId: delete-upstream-in-workspace
+      summary: Delete an Upstream in a workspace
+      description: Delete an Upstream in a workspace
+      parameters:
+        - $ref: '#/components/parameters/UpstreamId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Upstream or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Upstreams
+    get:
+      operationId: get-upstream-in-workspace
+      summary: Get an Upstream in a workspace
+      description: Get an Upstream using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Upstream
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Upstream'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Upstreams
+    parameters:
+      - $ref: '#/components/parameters/UpstreamId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-upstream-in-workspace
+      summary: Upsert a Upstream in a workspace
+      description: Create or Update Upstream using ID or name in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Upstream
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Upstream'
+      responses:
+        '200':
+          description: Successfully upserted Upstream
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Upstream'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Upstreams
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/upstreams/{UpstreamIdForTarget}/targets':
+    get:
+      operationId: list-target-with-upstream-in-workspace
+      summary: List all Targets associated with an Upstream in a workspace
+      description: List all Targets associated with an Upstream in a workspace
+      parameters:
+        - $ref: '#/components/parameters/UpstreamIdForTarget'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Targets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Target'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - Targets
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-target-with-upstream-in-workspace
+      summary: Create a new Target associated with an Upstream in a workspace
+      description: Create a new Target associated with an Upstream in a workspace
+      parameters:
+        - $ref: '#/components/parameters/UpstreamIdForTarget'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of new Target for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetWithoutParents'
+      responses:
+        '201':
+          description: Successfully created Target
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Target'
+      tags:
+        - Targets
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/upstreams/{UpstreamIdForTarget}/targets/{TargetId}':
+    delete:
+      operationId: delete-target-with-upstream-in-workspace
+      summary: Delete a a Target associated with an Upstream in a workspace
+      description: Delete a a Target associated with an Upstream using ID or target in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/UpstreamIdForTarget'
+        - $ref: '#/components/parameters/TargetId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Target or the resource didn't exist
+      tags:
+        - Targets
+    get:
+      operationId: get-target-with-upstream-in-workspace
+      summary: Get a Target associated with an Upstream in a workspace
+      description: Get a Target associated with an Upstream using ID or target in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/UpstreamIdForTarget'
+        - $ref: '#/components/parameters/TargetId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Target
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Target'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Targets
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-target-with-upstream-in-workspace
+      summary: Upsert a Target associated with an Upstream in a workspace
+      description: Create or Update a Target associated with an Upstream using ID or target in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/UpstreamIdForTarget'
+        - $ref: '#/components/parameters/TargetId'
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Target
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted Target
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Target'
+      tags:
+        - Targets
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/vaults':
+    get:
+      operationId: list-vault-in-workspace
+      summary: List all Vaults in a workspace
+      description: List all Vaults in a workspace
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: A successful response listing Vaults
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vault'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Vaults
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-vault-in-workspace
+      summary: Create a new Vault in a workspace
+      description: Create a new Vault in a workspace
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the new Vault for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vault'
+      responses:
+        '201':
+          description: Successfully created Vault
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vault'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Vaults
+  '/control-planes/{controlPlaneId}/core-entities/{workspace}/vaults/{VaultId}':
+    delete:
+      operationId: delete-vault-in-workspace
+      summary: Delete a Vault in a workspace
+      description: Delete a Vault in a workspace
+      parameters:
+        - $ref: '#/components/parameters/VaultId'
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '204':
+          description: Successfully deleted Vault or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Vaults
+    get:
+      operationId: get-vault-in-workspace
+      summary: Get a Vault in a workspace
+      description: Get a Vault using ID or prefix in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      responses:
+        '200':
+          description: Successfully fetched Vault
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vault'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Vaults
+    parameters:
+      - $ref: '#/components/parameters/VaultId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-vault-in-workspace
+      summary: Upsert a Vault in a workspace
+      description: Create or Update Vault using ID or prefix in a workspace.
+      parameters:
+        - $ref: '#/components/parameters/Workspace'
+      requestBody:
+        description: Description of the Vault
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vault'
+      responses:
+        '200':
+          description: Successfully upserted Vault
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vault'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Vaults
   '/control-planes/{controlPlaneId}/core-entities/acls':
     get:
       operationId: list-acl
@@ -1005,6 +4893,115 @@ paths:
                 $ref: '#/components/schemas/SNI'
       tags:
         - SNIs
+  '/control-planes/{controlPlaneId}/core-entities/cloned-plugins':
+    get:
+      operationId: list-cloned-plugin
+      summary: List all Cloned Plugins
+      description: List all Cloned Plugins
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          description: A successful response listing Cloned Plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClonedPlugin'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Cloned Plugins
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-cloned-plugin
+      summary: Create a new Cloned Plugin
+      description: Create a new Cloned Plugin
+      requestBody:
+        description: Description of the new Cloned Plugin for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClonedPlugin'
+      responses:
+        '201':
+          description: Successfully created Cloned Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClonedPlugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Cloned Plugins
+  '/control-planes/{controlPlaneId}/core-entities/cloned-plugins/{ClonedPluginId}':
+    delete:
+      operationId: delete-cloned-plugin
+      summary: Delete a Cloned Plugin
+      description: Delete a Cloned Plugin
+      parameters:
+        - $ref: '#/components/parameters/ClonedPluginId'
+      responses:
+        '204':
+          description: Successfully deleted Cloned Plugin or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Cloned Plugins
+    get:
+      operationId: get-cloned-plugin
+      summary: Get a Cloned Plugin
+      description: Get a Cloned Plugin using ID or name.
+      responses:
+        '200':
+          description: Successfully fetched Cloned Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClonedPlugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      tags:
+        - Cloned Plugins
+    parameters:
+      - $ref: '#/components/parameters/ClonedPluginId'
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-cloned-plugin
+      summary: Upsert a Cloned Plugin
+      description: Create or Update Cloned Plugin using ID or name.
+      requestBody:
+        description: Description of the Cloned Plugin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClonedPlugin'
+      responses:
+        '200':
+          description: Successfully upserted Cloned Plugin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClonedPlugin'
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - Cloned Plugins
   '/control-planes/{controlPlaneId}/core-entities/consumer_groups':
     get:
       operationId: list-consumer_group
@@ -2275,11 +6272,7 @@ paths:
     get:
       operationId: list-custom-plugin
       summary: List all CustomPlugins
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        List all CustomPlugins
+      description: List all CustomPlugins
       parameters:
         - $ref: '#/components/parameters/PaginationSize'
         - $ref: '#/components/parameters/PaginationOffset'
@@ -2309,11 +6302,7 @@ paths:
     post:
       operationId: create-custom-plugin
       summary: Create a new CustomPlugin
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Create a new CustomPlugin
+      description: Create a new CustomPlugin
       requestBody:
         description: Description of the new CustomPlugin for creation
         required: true
@@ -2336,11 +6325,7 @@ paths:
     delete:
       operationId: delete-custom-plugin
       summary: Delete a CustomPlugin
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Delete a CustomPlugin
+      description: Delete a CustomPlugin
       parameters:
         - $ref: '#/components/parameters/CustomPluginId'
       responses:
@@ -2353,11 +6338,7 @@ paths:
     get:
       operationId: get-custom-plugin
       summary: Get a CustomPlugin
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Get a CustomPlugin using ID or name.
+      description: Get a CustomPlugin using ID or name.
       responses:
         '200':
           description: Successfully fetched CustomPlugin
@@ -2377,11 +6358,7 @@ paths:
     put:
       operationId: upsert-custom-plugin
       summary: Upsert a CustomPlugin
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Create or Update CustomPlugin using ID or name.
+      description: Create or Update CustomPlugin using ID or name.
       requestBody:
         description: Description of the CustomPlugin
         required: true
@@ -4587,6 +8564,14 @@ components:
       required: true
       schema:
         type: string
+    ClonedPluginId:
+      description: ID of the Cloned Plugin to lookup
+      example: ''
+      in: path
+      name: ClonedPluginId
+      required: true
+      schema:
+        type: string
     configStoreId:
       schema:
         type: string
@@ -4873,6 +8858,15 @@ components:
       required: true
       schema:
         type: string
+    Workspace:
+      description: The name of the workspace
+      in: path
+      name: workspace
+      required: true
+      schema:
+        type: string
+        example: team-payments
+        default: default
   schemas:
     DataPlaneClientCertificate:
       type: object
@@ -5177,6 +9171,7 @@ components:
         cert:
           description: PEM-encoded public certificate of the CA.
           type: string
+          x-referenceable: true
         cert_digest:
           description: 'SHA256 hex digest of the public certificate. This field is read-only and it cannot be set by the caller, the value is automatically computed.'
           type: string
@@ -5374,6 +9369,46 @@ components:
                 - cert
                 - key
               title: CertificateWithCertAndKey
+    ClonedPlugin:
+      type: object
+      properties:
+        created_at:
+          description: Unix epoch when the resource was created.
+          type: integer
+          nullable: true
+        id:
+          description: A string representing a UUID (universally unique identifier).
+          type: string
+          nullable: true
+        name:
+          description: The name to associate with the cloned plugin. Consider using a distinct prefix for cloned plugins to avoid naming conflicts with new bundled plugins in future Kong releases.
+          type: string
+          maxLength: 4096
+          minLength: 1
+        priority:
+          description: 'The plugin execution priority. If not set, it will inherit the priority of the referenced plugin.'
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        ref:
+          description: The name of the base plugin that this cloned plugin references. This plugin must be cloneable.
+          type: string
+        tags:
+          description: A set of strings representing tags.
+          type: array
+          items:
+            description: A string representing a tag.
+            type: string
+          nullable: true
+        updated_at:
+          description: Unix epoch when the resource was last updated.
+          type: integer
+          nullable: true
+      additionalProperties: false
+      required:
+        - name
+        - ref
     Consumer:
       description: 'The Consumer object represents a consumer - or a user - of a Service. You can either rely on Kong as the primary datastore, or you can map the consumer list with your database to keep consistency between Kong and your existing primary datastore.'
       type: object
@@ -6629,6 +10664,25 @@ components:
                         video_output_s3_uri:
                           description: 'S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.'
                           type: string
+                    cache_read_cost:
+                      description: Defines the cost per 1M cache-read (cached) prompt tokens.
+                      type: number
+                    cache_write_cost:
+                      description: Defines the cost per 1M cache-write prompt tokens.
+                      type: number
+                    cache_write_cost_list:
+                      description: 'Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this if the upstream provider charges differently for different cache TTLs, as Anthropic does for 5m and 1h TTLs.'
+                      type: array
+                      items:
+                        properties:
+                          cost:
+                            type: number
+                          ttl:
+                            type: string
+                        required:
+                          - cost
+                          - ttl
+                        type: object
                     cohere:
                       type: object
                       properties:
@@ -6645,6 +10699,22 @@ components:
                         wait_for_model:
                           description: Wait for the model if it is not ready
                           type: boolean
+                    context_window_factor:
+                      description: 'Above an input-token threshold, scale input/output pricing with the corresponding factor.'
+                      type: array
+                      items:
+                        properties:
+                          above:
+                            type: string
+                          input_factor:
+                            type: number
+                          output_factor:
+                            type: number
+                        required:
+                          - above
+                          - input_factor
+                          - output_factor
+                        type: object
                     dashscope:
                       type: object
                       properties:
@@ -6709,6 +10779,21 @@ components:
                     output_cost:
                       description: Defines the cost per 1M tokens in the output of the AI.
                       type: number
+                    service_tier_factor:
+                      description: 'Multiplier applied to the whole request for a service tier. No need to configure a standard/default tier, as the default factor is 1.0 if none of the tier is matched.'
+                      type: array
+                      items:
+                        properties:
+                          factor:
+                            type: number
+                          tier:
+                            description: 'A word matched case-insensitively as a substring of the vendor''s reported service tier (e.g. ''priority'', ''flex'', or ''throughput'' for Gemini/Vertex''s PROVISIONED_THROUGHPUT). If several entries match, the longest (most specific) wins; array order doesn''t matter. Configure ''priority'' will also match ''fast'' (whole word) as OpenAI returns either ''priority'' or ''fast'' for priority service tier.'
+                            type: string
+                            minLength: 1
+                        required:
+                          - factor
+                          - tier
+                        type: object
                     temperature:
                       description: 'Defines the matching temperature, if using chat or completion models.'
                       type: number
@@ -6839,6 +10924,7 @@ components:
                     - aws
                     - azure
                     - gcp
+                    - oauth
                   x-referenceable: true
                 aws_access_key_id:
                   description: AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.
@@ -6892,6 +10978,84 @@ components:
                   type: string
                   x-encrypted: true
                   x-referenceable: true
+                oauth:
+                  description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                  type: object
+                  properties:
+                    auth_method:
+                      description: Client authentication method used against the token endpoint.
+                      type: string
+                      default: client_secret_post
+                      enum:
+                        - client_secret_basic
+                        - client_secret_jwt
+                        - client_secret_post
+                    client_id:
+                      description: OAuth 2.0 client ID.
+                      type: string
+                      x-referenceable: true
+                    client_secret:
+                      description: OAuth 2.0 client secret.
+                      type: string
+                      x-encrypted: true
+                      x-referenceable: true
+                    client_secret_jwt_alg:
+                      description: Signing algorithm used for `client_secret_jwt` client authentication.
+                      type: string
+                      default: HS512
+                      enum:
+                        - HS256
+                        - HS512
+                    grant_type:
+                      description: OAuth 2.0 grant type used to request access tokens.
+                      type: string
+                      default: client_credentials
+                      enum:
+                        - client_credentials
+                        - password
+                    password:
+                      description: 'Resource owner password, used with the `password` grant type.'
+                      type: string
+                      x-encrypted: true
+                      x-referenceable: true
+                    redis_username:
+                      description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                      type: string
+                      x-referenceable: true
+                    redis_username_claim:
+                      description: 'JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).'
+                      type: string
+                    scopes:
+                      description: OAuth 2.0 scopes to request.
+                      type: array
+                      items:
+                        type: string
+                      default: []
+                    ssl_verify:
+                      description: Whether to verify the TLS certificate of the token endpoint.
+                      type: boolean
+                      default: true
+                    timeout:
+                      description: 'Timeout, in milliseconds, for requests to the token endpoint.'
+                      type: number
+                      default: 10000
+                    token_endpoint:
+                      description: OAuth 2.0 token endpoint URL used to request access tokens.
+                      type: string
+                    token_headers:
+                      description: Additional HTTP headers to send with the token request.
+                      type: object
+                      additionalProperties:
+                        type: string
+                    token_post_args:
+                      description: Additional POST body arguments to send with the token request.
+                      type: object
+                      additionalProperties:
+                        type: string
+                    username:
+                      description: 'Resource owner username, used with the `password` grant type.'
+                      type: string
+                      x-referenceable: true
             database:
               description: Database to use for the Redis connection when using the `redis` strategy
               type: integer
@@ -6995,6 +11159,7 @@ components:
                     - aws
                     - azure
                     - gcp
+                    - oauth
                   x-referenceable: true
                 aws_access_key_id:
                   description: AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.
@@ -7048,6 +11213,86 @@ components:
                   type: string
                   x-encrypted: true
                   x-referenceable: true
+                oauth:
+                  description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                  type: object
+                  properties:
+                    auth_method:
+                      description: Client authentication method used against the token endpoint.
+                      type: string
+                      default: client_secret_post
+                      enum:
+                        - client_secret_basic
+                        - client_secret_jwt
+                        - client_secret_post
+                    client_id:
+                      description: OAuth 2.0 client ID.
+                      type: string
+                      x-referenceable: true
+                    client_secret:
+                      description: OAuth 2.0 client secret.
+                      type: string
+                      x-encrypted: true
+                      x-referenceable: true
+                    client_secret_jwt_alg:
+                      description: Signing algorithm used for `client_secret_jwt` client authentication.
+                      type: string
+                      default: HS512
+                      enum:
+                        - HS256
+                        - HS512
+                    grant_type:
+                      description: OAuth 2.0 grant type used to request access tokens.
+                      type: string
+                      default: client_credentials
+                      enum:
+                        - client_credentials
+                        - password
+                    password:
+                      description: 'Resource owner password, used with the `password` grant type.'
+                      type: string
+                      x-encrypted: true
+                      x-referenceable: true
+                    redis_username:
+                      description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                      type: string
+                      x-referenceable: true
+                    redis_username_claim:
+                      description: 'JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).'
+                      type: string
+                    scopes:
+                      description: OAuth 2.0 scopes to request.
+                      type: array
+                      items:
+                        type: string
+                      default: []
+                    ssl_verify:
+                      description: Whether to verify the TLS certificate of the token endpoint.
+                      type: boolean
+                      default: true
+                    timeout:
+                      description: 'Timeout, in milliseconds, for requests to the token endpoint.'
+                      type: integer
+                      default: 10000
+                      maximum: 2147483646
+                      minimum: 0
+                    token_endpoint:
+                      description: OAuth 2.0 token endpoint URL used to request access tokens.
+                      type: string
+                    token_headers:
+                      description: Additional HTTP headers to send with the token request.
+                      type: object
+                      additionalProperties:
+                        type: string
+                    token_post_args:
+                      description: Additional POST body arguments to send with the token request.
+                      type: object
+                      additionalProperties:
+                        type: string
+                    username:
+                      description: 'Resource owner username, used with the `password` grant type.'
+                      type: string
+                      x-referenceable: true
             cluster_max_redirections:
               description: Maximum retry attempts for redirection.
               type: integer
@@ -7312,6 +11557,7 @@ components:
                         - aws
                         - azure
                         - gcp
+                        - oauth
                       x-referenceable: true
                     aws_access_key_id:
                       description: AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.
@@ -7365,6 +11611,86 @@ components:
                       type: string
                       x-encrypted: true
                       x-referenceable: true
+                    oauth:
+                      description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                      type: object
+                      properties:
+                        auth_method:
+                          description: Client authentication method used against the token endpoint.
+                          type: string
+                          default: client_secret_post
+                          enum:
+                            - client_secret_basic
+                            - client_secret_jwt
+                            - client_secret_post
+                        client_id:
+                          description: OAuth 2.0 client ID.
+                          type: string
+                          x-referenceable: true
+                        client_secret:
+                          description: OAuth 2.0 client secret.
+                          type: string
+                          x-encrypted: true
+                          x-referenceable: true
+                        client_secret_jwt_alg:
+                          description: Signing algorithm used for `client_secret_jwt` client authentication.
+                          type: string
+                          default: HS512
+                          enum:
+                            - HS256
+                            - HS512
+                        grant_type:
+                          description: OAuth 2.0 grant type used to request access tokens.
+                          type: string
+                          default: client_credentials
+                          enum:
+                            - client_credentials
+                            - password
+                        password:
+                          description: 'Resource owner password, used with the `password` grant type.'
+                          type: string
+                          x-encrypted: true
+                          x-referenceable: true
+                        redis_username:
+                          description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                          type: string
+                          x-referenceable: true
+                        redis_username_claim:
+                          description: 'JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).'
+                          type: string
+                        scopes:
+                          description: OAuth 2.0 scopes to request.
+                          type: array
+                          items:
+                            type: string
+                          default: []
+                        ssl_verify:
+                          description: Whether to verify the TLS certificate of the token endpoint.
+                          type: boolean
+                          default: true
+                        timeout:
+                          description: 'Timeout, in milliseconds, for requests to the token endpoint.'
+                          type: integer
+                          default: 10000
+                          maximum: 2147483646
+                          minimum: 0
+                        token_endpoint:
+                          description: OAuth 2.0 token endpoint URL used to request access tokens.
+                          type: string
+                        token_headers:
+                          description: Additional HTTP headers to send with the token request.
+                          type: object
+                          additionalProperties:
+                            type: string
+                        token_post_args:
+                          description: Additional POST body arguments to send with the token request.
+                          type: object
+                          additionalProperties:
+                            type: string
+                        username:
+                          description: 'Resource owner username, used with the `password` grant type.'
+                          type: string
+                          x-referenceable: true
                 cluster_max_redirections:
                   description: Maximum retry attempts for redirection.
                   type: integer
@@ -7572,7 +11898,7 @@ components:
               type: string
           x-foreign: true
         consumer_group:
-          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated'
+          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated.'
           type: object
           nullable: true
           properties:
@@ -7736,7 +12062,7 @@ components:
               type: string
           x-foreign: true
         consumer_group:
-          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated'
+          description: 'If set, the plugin will activate only for requests where the specified group has been authenticated.'
           type: object
           nullable: true
           properties:
@@ -8905,7 +13231,7 @@ components:
                     successes:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                 http_path:
                   description: 'A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).'
@@ -8951,7 +13277,7 @@ components:
                     http_failures:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                     http_statuses:
                       type: array
@@ -8976,12 +13302,12 @@ components:
                     tcp_failures:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                     timeouts:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
             passive:
               type: object
@@ -9072,7 +13398,7 @@ components:
                     successes:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                 type:
                   type: string
@@ -9097,7 +13423,7 @@ components:
                     http_failures:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                     http_statuses:
                       type: array
@@ -9112,12 +13438,12 @@ components:
                     tcp_failures:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
                     timeouts:
                       type: integer
                       default: 0
-                      maximum: 255
+                      maximum: 254
                       minimum: 0
             threshold:
               type: number
@@ -9699,59 +14025,162 @@ components:
         - instance
         - detail
       title: Error
+    KonnectCPLegacyErrorDetail:
+      description: A field level failure on a rejected request.
+      type: object
+      properties:
+        field:
+          description: |
+            The field the failure applies to.
+          type: string
+          example: name
+          readOnly: true
+        messages:
+          description: |
+            The reasons the field was rejected.
+          type: array
+          items:
+            type: string
+          example:
+            - 'name (type: unique) constraint failed'
+          readOnly: true
+        type:
+          description: |
+            The kind of failure. `ERROR_TYPE_FIELD` for a field that failed
+            validation, `ERROR_TYPE_REFERENCE` for a value that is already in
+            use or that points at a missing resource.
+          type: string
+          example: ERROR_TYPE_FIELD
+          readOnly: true
+      title: Error Detail
     KonnectCPLegacyUnauthorizedError:
       description: standard error
       type: object
       properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
         message:
           description: |
             A short summary of the problem.
           type: string
           example: Unauthorized
           readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
       title: Error
     KonnectCPLegacyForbiddenError:
       description: standard error
       type: object
       properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
         message:
           description: |
             A short summary of the problem.
           type: string
           example: Forbidden
           readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
       title: Error
     KonnectCPLegacyNotFoundError:
       description: standard error
       type: object
       properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
         message:
           description: |
             A short summary of the problem.
           type: string
           example: Not Found
           readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
       title: Error
     KonnectCPLegacyBadRequestError:
       description: standard error
       type: object
       properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
         message:
           description: |
             A short summary of the problem.
           type: string
           example: Bad Request
           readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
       title: Error
     KonnectCPLegacyConflictError:
       description: standard error
       type: object
       properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
         message:
           description: |
             A short summary of the problem.
           type: string
           example: Conflict
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
       title: Error
     CreatedAt:
@@ -10521,7 +14950,7 @@ components:
             UnauthorizedExample:
               $ref: '#/components/examples/KonnectCPLegacyForbiddenExample'
     KonnectCPLegacyNotFound:
-      description: Forbidden
+      description: Not Found
       content:
         application/json:
           schema:
@@ -10530,7 +14959,7 @@ components:
             UnauthorizedExample:
               $ref: '#/components/examples/KonnectCPLegacyNotFoundExample'
     KonnectCPLegacyBadRequest:
-      description: Forbidden
+      description: Bad Request
       content:
         application/json:
           schema:
@@ -10539,7 +14968,7 @@ components:
             UnauthorizedExample:
               $ref: '#/components/examples/KonnectCPLegacyBadRequestExample'
     KonnectCPLegacyConflict:
-      description: Forbidden
+      description: Conflict
       content:
         application/json:
           schema:
@@ -10590,6 +15019,7 @@ tags:
       <br><br>
       If intermediate certificates are required in addition to the main certificate, they should be concatenated together into one string.
     name: Certificates
+  - name: Cloned Plugins
   - description: |-
       Consumer groups enable the organization and categorization of consumers (users or applications) within an API ecosystem.
       By grouping consumers together, you eliminate the need to manage them individually, providing a scalable, efficient approach to managing configurations.
