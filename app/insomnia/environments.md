@@ -229,7 +229,7 @@ Unlike [secret variables](#secret-environment-variables), {{ site.insomnia }} do
 
 Confidential variables reduce accidental exposure, not access. They don't stop someone with access to the variable from retrieving its value, for example by sending a request to a server they control. The value is also stored in plain text on disk, and in your response history if it was visible when you sent the request.
 
-You mark a variable as confidential or make it visible again in an environment's variable table, by clicking the lock icon beside the variable.
+To mark a variable as confidential or make it visible again, navigate to an environment in table mode and click the lock icon beside a variable.
 
 {:.info}
 > **Notes**

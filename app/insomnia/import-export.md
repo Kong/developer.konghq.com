@@ -243,7 +243,6 @@ environments:
         api_token: staging-token-value
       confidentialKeys:
         - api_token
-```
 
 
 {% include insomnia/confidential-export-warning.md %}
