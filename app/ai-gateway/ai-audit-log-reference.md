@@ -535,7 +535,7 @@ rows:
   - property: "`msg_id`"
     description: The identifier of the message that was compressed.
   - property: "`information`"
-    description: A summary or message describing the result of compression.
+    description: A summary of the compression result. For the `headroom` provider, it lists the transforms that Headroom applied and, when the request runs in a Headroom session, the Headroom session fields. For more information, see [Headroom session fields](/ai-gateway/policies/ai-prompt-compressor/#headroom-session-fields).
 {% endtable %}
 
 ### AI RAG Injector logs
