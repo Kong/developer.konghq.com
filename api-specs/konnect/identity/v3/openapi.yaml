@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.9.1
+  version: 3.9.2
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@1b6221f087191f00910f6623e58f57613d2a0c4b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b6221f087191f00910f6623e58f57613d2a0c4b'
+  x-oas-source: kong/platform-api@10b26e90ececa4ad607aa3031be172469293b16c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/10b26e90ececa4ad607aa3031be172469293b16c'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -490,6 +490,8 @@ paths:
                 type: object
                 additionalProperties:
                   $ref: '#/components/schemas/LegacyStringFieldFilterWithExists'
+              konnect_managed:
+                $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -2102,6 +2104,8 @@ components:
           format: date-time
           example: '2022-02-07T17:00:00.52Z'
           readOnly: true
+        konnect_managed:
+          $ref: '#/components/schemas/KonnectManaged'
       example:
         id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
         name: IDM - Developers
@@ -2111,6 +2115,7 @@ components:
           env: test
         created_at: '1992-02-07T17:46:57.52Z'
         updated_at: '2022-08-31T17:00:00.52Z'
+        konnect_managed: false
       title: Team
     TeamResponse:
       allOf:
@@ -2124,6 +2129,7 @@ components:
             - labels
             - created_at
             - updated_at
+            - konnect_managed
     UserTeamMembership:
       description: 'A team that a user belongs to, including the group claim that granted the membership.'
       allOf:
@@ -3084,6 +3090,12 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    KonnectManaged:
+      description: Whether the team's membership is managed by Konnect instead of being synced from an identity provider's team mappings. Set to `false` (default) to let identity provider team mappings keep syncing members into this team. Set to `true` to manage membership directly in Konnect and prevent identity provider team mappings from syncing to this team.
+      type: boolean
+      example: false
+      default: false
+      title: KonnectManaged
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3380,6 +3392,7 @@ components:
           service: test
         created_at: '2022-02-07T17:46:57.52Z'
         updated_at: '2022-09-25T13:00:00.00Z'
+        konnect_managed: false
     team-mapping-collection:
       value:
         meta:
@@ -3458,6 +3471,7 @@ components:
               env: test
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            konnect_managed: false
             claim_names:
               - GroupClaimA
               - GroupClaimB
@@ -3495,12 +3509,14 @@ components:
         labels:
           env: test
           service: test
+        konnect_managed: false
     Update-Team-Request:
       value:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
         labels:
           env: prod
+        konnect_managed: false
     Update-Team-Mappings:
       value:
         mappings:
@@ -3851,6 +3867,8 @@ components:
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/Labels'
+              konnect_managed:
+                $ref: '#/components/schemas/KonnectManaged'
             required:
               - name
           examples:
@@ -3880,6 +3898,8 @@ components:
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              konnect_managed:
+                $ref: '#/components/schemas/KonnectManaged'
           examples:
             Example Request Body:
               $ref: '#/components/examples/Update-Team-Request'
@@ -4419,6 +4439,7 @@ components:
                       env: test
                     created_at: '2022-02-07T17:46:57.52Z'
                     updated_at: '2022-09-25T13:00:00.00Z'
+                    konnect_managed: false
     UserTeamMembershipCollection:
       description: A paginated list response for a collection of teams that a user belongs to.
       content:
@@ -4467,6 +4488,7 @@ components:
                       env: test
                     created_at: '2022-02-07T17:46:57.52Z'
                     updated_at: '2022-09-25T13:00:00.00Z'
+                    konnect_managed: false
     TeamMappingCollection:
       description: A paginated list response for a collection of team mappings.
       content:

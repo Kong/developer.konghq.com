@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes
-  version: 2.1.1
+  version: 2.1.2
   description: The API for Kong Konnect Control Planes.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@873ee7e634d5332da8bd62e6166a58c3cd3ff749
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/873ee7e634d5332da8bd62e6166a58c3cd3ff749'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -335,6 +335,172 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Plane Groups
+  '/control-planes/{controlPlaneId}/core-entities/workspaces':
+    parameters:
+      - name: controlPlaneId
+        in: path
+        description: ID of a control plane
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: list-workspaces
+      summary: List all Workspaces
+      description: List all Workspaces
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/FilterByNameContains'
+        - $ref: '#/components/parameters/FilterByNameEquality'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListWorkspacesResponse'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      tags:
+        - Workspaces
+    post:
+      operationId: create-workspace
+      summary: Create a Workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+            examples:
+              Example Request Body:
+                $ref: '#/components/examples/CreateWorkspaceRequestExample'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateWorkspaceResponse'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+        '409':
+          $ref: '#/components/responses/KonnectCPLegacyConflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      tags:
+        - Workspaces
+  '/control-planes/{controlPlaneId}/core-entities/workspaces/{workspaceIdOrName}':
+    parameters:
+      - name: controlPlaneId
+        in: path
+        description: ID of a control plane
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: workspaceIdOrName
+        in: path
+        description: ID or name of the workspace to retreive
+        required: true
+        schema:
+          type: string
+          example: 2747d1e5-8246-4f65-a939-b392f1ee17f8
+    get:
+      operationId: get-workspace
+      summary: Get a Workspace
+      description: Get a Workspace using ID or name.
+      responses:
+        '200':
+          $ref: '#/components/responses/RetrieveWorkspaceResponse'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      tags:
+        - Workspaces
+    delete:
+      operationId: delete-workspace
+      summary: Delete a Workspace
+      description: Delete an individual workspace.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      tags:
+        - Workspaces
+    put:
+      operationId: upsert-workspace
+      summary: Upsert a Workspace
+      description: Create or Update Workspace using ID or name.
+      requestBody:
+        description: Description of the Workspace
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+      responses:
+        '200':
+          description: Successfully upserted Workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/KonnectCPLegacyBadRequest'
+        '401':
+          $ref: '#/components/responses/KonnectCPLegacyUnauthorized'
+        '403':
+          $ref: '#/components/responses/KonnectCPLegacyForbidden'
+        '404':
+          $ref: '#/components/responses/KonnectCPLegacyNotFound'
+        '409':
+          $ref: '#/components/responses/KonnectCPLegacyConflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      tags:
+        - Workspaces
 components:
   parameters:
     ControlPlaneFilter:
@@ -362,6 +528,22 @@ components:
       schema:
         type: string
         example: 'key:value,existCheck'
+    FilterByNameContains:
+      name: 'filter[name][contains]'
+      description: Filter by contains comparison of the name property with a supplied substring.
+      in: query
+      required: false
+      schema:
+        type: string
+        example: test
+    FilterByNameEquality:
+      name: 'filter[name][eq]'
+      description: Filter by direct equality comparison of the name property with a supplied value.
+      in: query
+      required: false
+      schema:
+        type: string
+        example: test
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
@@ -389,6 +571,22 @@ components:
       schema:
         type: integer
         example: 10
+    PaginationOffset:
+      allowEmptyValue: true
+      description: Offset from which to return the next set of resources. Use the value of the 'offset' field from the response of a list operation as input here to paginate through all the resources
+      in: query
+      name: offset
+      schema:
+        type: string
+    PaginationSize:
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+        minimum: 1
   schemas:
     GroupMembership:
       type: object
@@ -801,6 +999,66 @@ components:
           $ref: '#/components/schemas/BooleanFieldFilter'
       additionalProperties: false
       title: ControlPlaneFilterParameters
+    Workspace:
+      description: Workspaces provide a way to segment Kong entities.
+      type: object
+      properties:
+        id:
+          description: The unique UUID for this resource.
+          type: string
+        name:
+          type: string
+        comment:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: false
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        created_at:
+          description: Unix epoch when the resource was created.
+          type: integer
+          example: 1667592606
+          readOnly: true
+        updated_at:
+          description: Unix epoch when the resource was last updated.
+          type: integer
+          example: 1667592606
+          readOnly: true
+      required:
+        - name
+      x-examples:
+        Example 1:
+          name: team-payments
+          comment: string
+          description: string
+          managed_by:
+            team: platform
+          created_at: 0
+          id: string
+    CreateWorkspaceRequest:
+      description: The request schema for the create a workspace request.
+      type: object
+      properties:
+        name:
+          description: The name of the workspace.
+          type: string
+          example: team-1
+        comment:
+          description: The description of the workspace.
+          type: string
+          example: A test workspace for team 1
+        description:
+          description: The description of the workspace.
+          type: string
+          example: A test workspace for team 1
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+      title: CreateWorkspaceRequest
     CursorPaginatedMetaWithSizeAndTotal:
       description: returns the pagination information
       type: object
@@ -1428,6 +1686,232 @@ components:
         - instance
         - detail
       title: Error
+    NotImplementedError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 501
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Implemented
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/501'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Implemented
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
+    PaginationNextResponse:
+      description: URI to the next page (may be null)
+      type: string
+    PaginationOffsetResponse:
+      description: Offset is used to paginate through the API. Provide this value to the next list operation to fetch the next page
+      type: string
+    KonnectCPLegacyErrorDetail:
+      description: A field level failure on a rejected request.
+      type: object
+      properties:
+        field:
+          description: |
+            The field the failure applies to.
+          type: string
+          example: name
+          readOnly: true
+        messages:
+          description: |
+            The reasons the field was rejected.
+          type: array
+          items:
+            type: string
+          example:
+            - 'name (type: unique) constraint failed'
+          readOnly: true
+        type:
+          description: |
+            The kind of failure. `ERROR_TYPE_FIELD` for a field that failed
+            validation, `ERROR_TYPE_REFERENCE` for a value that is already in
+            use or that points at a missing resource.
+          type: string
+          example: ERROR_TYPE_FIELD
+          readOnly: true
+      title: Error Detail
+    KonnectCPLegacyBadRequestError:
+      description: standard error
+      type: object
+      properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Bad Request
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
+      title: Error
+    KonnectCPLegacyUnauthorizedError:
+      description: standard error
+      type: object
+      properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Unauthorized
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
+      title: Error
+    KonnectCPLegacyForbiddenError:
+      description: standard error
+      type: object
+      properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Forbidden
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
+      title: Error
+    KonnectCPLegacyNotFoundError:
+      description: standard error
+      type: object
+      properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Not Found
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
+      title: Error
+    KonnectCPLegacyConflictError:
+      description: standard error
+      type: object
+      properties:
+        code:
+          description: |
+            The Kong error code for this failure. `3` indicates a validation
+            error and `5` a missing resource.
+          type: integer
+          example: 3
+          readOnly: true
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Conflict
+          readOnly: true
+        details:
+          description: |
+            The fields that caused the request to be rejected, when the failure
+            is attributable to values in the request.
+          type: array
+          items:
+            $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
+          readOnly: true
+      title: Error
   examples:
     400RequestFormatInvalidExample:
       value:
@@ -1630,6 +2114,17 @@ components:
                   protocol: https
             created_at: '2023-03-23T22:25:30.907Z'
             updated_at: '2023-03-30T16:18:12.067Z'
+    WorkspaceExample:
+      value:
+        id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        name: team-1
+        comment: A test workspace for team 1
+        created_at: 1667592606
+        updated_at: 1667592606
+    CreateWorkspaceRequestExample:
+      value:
+        name: Test Workspace
+        comment: A test workspace for team 1
     UnauthorizedExample:
       value:
         status: 401
@@ -1648,6 +2143,21 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    KonnectCPLegacyBadRequestExample:
+      value:
+        message: Bad Request
+    KonnectCPLegacyUnauthorizedExample:
+      value:
+        message: Unauthorized
+    KonnectCPLegacyForbiddenExample:
+      value:
+        message: Forbidden
+    KonnectCPLegacyNotFoundExample:
+      value:
+        message: Not Found
+    KonnectCPLegacyConflictExample:
+      value:
+        message: Conflict
   requestBodies:
     GroupMembershipAdd:
       content:
@@ -1787,6 +2297,51 @@ components:
           examples:
             Conflict:
               $ref: '#/components/examples/409ConflictExample'
+    KonnectCPLegacyBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyBadRequestError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyBadRequestExample'
+    KonnectCPLegacyUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyUnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyUnauthorizedExample'
+    KonnectCPLegacyForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyForbiddenExample'
+    KonnectCPLegacyNotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyNotFoundError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyNotFoundExample'
+    KonnectCPLegacyConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/KonnectCPLegacyConflictError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/KonnectCPLegacyConflictExample'
     InternalServerError:
       description: Internal Server Error
       content:
@@ -1899,6 +2454,43 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GroupMemberStatus'
+    ListWorkspacesResponse:
+      description: A paginated list response for a collection of workspaces.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+              next:
+                $ref: '#/components/schemas/PaginationNextResponse'
+              offset:
+                $ref: '#/components/schemas/PaginationOffsetResponse'
+            additionalProperties: false
+            required:
+              - data
+            title: ListWorkspacesResponse
+    CreateWorkspaceResponse:
+      description: A response to creating a workspace.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Workspace'
+          examples:
+            Create Workspace Response:
+              $ref: '#/components/examples/WorkspaceExample'
+    RetrieveWorkspaceResponse:
+      description: A response to retrieving a single workspace.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Workspace'
+          examples:
+            Single workspace response:
+              $ref: '#/components/examples/WorkspaceExample'
     Internal:
       description: Internal
       content:
@@ -1938,6 +2530,12 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    NotImplemented:
+      description: Not Implemented
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotImplementedError'
   securitySchemes:
     personalAccessToken:
       type: http
