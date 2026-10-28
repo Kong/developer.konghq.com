@@ -241,31 +241,27 @@ To receive the real `thoughtSignature`, use the native Gemini format, which retu
 
 To use the Interactions API, create an AI Model with the `passthrough` format and a Gemini target:
 
-{% entity_examples %}
-formats:
-  - kongctl
-  - konnect-api
-ai_gateway_models:
-  - ref: my-gemini-interactions
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-gemini-interactions
-    display_name: "my-gemini-interactions"
-    type: model
-    capabilities:
-      - generate
-    formats:
-      - type: passthrough
-    config:
-      route:
-        paths:
-          - /gemini
-    targets:
-      - name: gemini-2.5-flash
-        provider: my-gemini-account
-        config:
-          type: gemini
-    policies: []
-{% endentity_examples %}
+{% entity_example %}
+type: model
+data:
+  name: my-gemini-interactions
+  display_name: my-gemini-interactions
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: passthrough
+  config:
+    route:
+      paths:
+        - /gemini
+  targets:
+    - name: gemini-2.5-flash
+      provider: my-gemini-account
+      config:
+        type: gemini
+  policies: []
+{% endentity_example %}
 
 Then send requests to the Interactions path through the AI Model's route. For Gemini Standard, the path is `/v1beta/interactions`:
 
