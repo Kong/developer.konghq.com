@@ -1,5 +1,23 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "escape_path": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -18,24 +36,6 @@
         "http",
         "https"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string"
-        },
-        "port": {
-          "type": "string"
-        },
-        "host": {
-          "type": "string"
-        },
-        "escape_path": {
-          "type": "boolean",
-          "default": false
-        }
-      }
     },
     "service": {
       "type": "object",

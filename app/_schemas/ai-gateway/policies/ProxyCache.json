@@ -29,32 +29,12 @@
     "config": {
       "type": "object",
       "properties": {
-        "memory": {
-          "type": "object",
-          "properties": {
-            "dictionary_name": {
-              "type": "string",
-              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
-              "default": "kong_db_cache"
-            }
-          }
-        },
-        "cache_ttl": {
-          "type": "integer",
-          "description": "TTL, in seconds, of cache entities.",
-          "default": 300
-        },
         "strategy": {
           "type": "string",
           "enum": [
             "memory"
           ],
           "description": "The backing data store in which to hold cache entities."
-        },
-        "cache_control": {
-          "type": "boolean",
-          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
-          "default": false
         },
         "ignore_uri_case": {
           "type": "boolean",
@@ -71,16 +51,13 @@
           },
           "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration."
         },
-        "vary_headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
-        },
         "response_headers": {
           "type": "object",
           "properties": {
+            "age": {
+              "type": "boolean",
+              "default": true
+            },
             "X-Cache-Status": {
               "type": "boolean",
               "default": true
@@ -88,28 +65,9 @@
             "X-Cache-Key": {
               "type": "boolean",
               "default": true
-            },
-            "age": {
-              "type": "boolean",
-              "default": true
             }
           },
           "description": "Caching related diagnostic headers that should be included in cached responses"
-        },
-        "response_code": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "maximum": 900,
-            "minimum": 100
-          },
-          "minLength": 1,
-          "description": "Upstream response status code considered cacheable.",
-          "default": [
-            200,
-            301,
-            404
-          ]
         },
         "request_method": {
           "type": "array",
@@ -139,21 +97,58 @@
             "application/json",
             "text/plain"
           ]
+        },
+        "cache_control": {
+          "type": "boolean",
+          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
+          "default": false
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "dictionary_name": {
+              "type": "string",
+              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
+              "default": "kong_db_cache"
+            }
+          }
+        },
+        "vary_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
+        },
+        "cache_by_principal": {
+          "type": "boolean",
+          "description": "When enabled, use the authenticated Principal's UUID to compose the cache key.",
+          "default": false
+        },
+        "response_code": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "maximum": 900,
+            "minimum": 100
+          },
+          "minLength": 1,
+          "description": "Upstream response status code considered cacheable.",
+          "default": [
+            200,
+            301,
+            404
+          ]
+        },
+        "cache_ttl": {
+          "type": "integer",
+          "description": "TTL, in seconds, of cache entities.",
+          "default": 300
         }
       },
       "required": [
         "strategy"
       ]
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -184,6 +179,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   },
   "required": [

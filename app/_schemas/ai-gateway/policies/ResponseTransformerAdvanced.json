@@ -22,6 +22,48 @@
     "config": {
       "type": "object",
       "properties": {
+        "allow": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "transform": {
+          "type": "object",
+          "properties": {
+            "functions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "dots_in_keys": {
+          "type": "boolean",
+          "description": "Whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects..",
+          "default": true
+        },
         "remove": {
           "type": "object",
           "properties": {
@@ -70,13 +112,6 @@
         "replace": {
           "type": "object",
           "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "if_status": {
               "type": "array",
               "items": {
@@ -106,12 +141,26 @@
                 ]
               },
               "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
             }
           }
         },
         "add": {
           "type": "object",
           "properties": {
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "json": {
               "type": "array",
               "items": {
@@ -132,13 +181,6 @@
               "default": []
             },
             "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "if_status": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -184,48 +226,6 @@
               "default": []
             }
           }
-        },
-        "allow": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "transform": {
-          "type": "object",
-          "properties": {
-            "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "if_status": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "dots_in_keys": {
-          "type": "boolean",
-          "description": "Whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects..",
-          "default": true
         }
       }
     },

@@ -1,34 +1,13 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "meter_ai_token_usage": {
+          "type": "boolean",
+          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "default": true
+        },
         "ssl_verify": {
           "type": "boolean",
           "description": "Verify the TLS certificate presented by the ingest endpoint.",
@@ -39,18 +18,14 @@
           "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
           "default": 10000
         },
+        "keepalive": {
+          "type": "number",
+          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
+          "default": 60000
+        },
         "queue": {
           "type": "object",
           "properties": {
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
-            },
             "max_batch_size": {
               "type": "integer",
               "maximum": 1000000,
@@ -94,12 +69,21 @@
               "minimum": 0.001,
               "description": "Maximum time in seconds between retries, caps exponential backoff.",
               "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
             }
           }
         },
-        "meter_ai_token_usage": {
+        "meter_api_requests": {
           "type": "boolean",
-          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "description": "Emit a usage event for each API Gateway request.",
           "default": true
         },
         "ingest_endpoint": {
@@ -112,11 +96,6 @@
           "description": "Bearer token for authenticating with the ingest endpoint.",
           "x-referenceable": true,
           "x-encrypted": true
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
-          "default": 60000
         },
         "attributes": {
           "type": "array",
@@ -151,6 +130,10 @@
         "subject": {
           "type": "object",
           "properties": {
+            "field": {
+              "type": "string",
+              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
+            },
             "look_up_value_in": {
               "type": "string",
               "enum": [
@@ -161,23 +144,40 @@
               ],
               "description": "Where to find the customer identifier in the request.",
               "default": "consumer"
-            },
-            "field": {
-              "type": "string",
-              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
             }
           },
           "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
-        },
-        "meter_api_requests": {
-          "type": "boolean",
-          "description": "Emit a usage event for each API Gateway request.",
-          "default": true
         }
       },
       "required": [
         "api_token",
         "ingest_endpoint"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

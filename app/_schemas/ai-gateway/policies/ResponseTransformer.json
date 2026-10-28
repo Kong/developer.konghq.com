@@ -22,17 +22,36 @@
     "config": {
       "type": "object",
       "properties": {
-        "rename": {
+        "remove": {
           "type": "object",
           "properties": {
-            "headers": {
+            "json": {
               "type": "array",
               "items": {
                 "type": "string"
               },
               "default": []
             },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "rename": {
+          "type": "object",
+          "properties": {
             "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "headers": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -108,6 +127,13 @@
         "append": {
           "type": "object",
           "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "json": {
               "type": "array",
               "items": {
@@ -127,46 +153,10 @@
               },
               "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
               "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "remove": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
             }
           }
         }
       }
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -197,6 +187,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   }
 }

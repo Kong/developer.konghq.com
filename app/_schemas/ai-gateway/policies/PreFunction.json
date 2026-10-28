@@ -36,7 +36,7 @@
           },
           "default": []
         },
-        "rewrite": {
+        "access": {
           "type": "array",
           "items": {
             "type": "string"
@@ -71,7 +71,14 @@
           },
           "default": []
         },
-        "access": {
+        "ws_close": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "rewrite": {
           "type": "array",
           "items": {
             "type": "string"
@@ -86,13 +93,6 @@
           "default": []
         },
         "ws_upstream_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "ws_close": {
           "type": "array",
           "items": {
             "type": "string"

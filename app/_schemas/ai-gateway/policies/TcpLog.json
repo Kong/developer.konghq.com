@@ -29,16 +29,15 @@
     "config": {
       "type": "object",
       "properties": {
+        "host": {
+          "type": "string",
+          "description": "The IP address or host name to send data to."
+        },
         "port": {
           "type": "integer",
           "maximum": 65535,
           "minimum": 0,
           "description": "The port to send data to on the upstream server."
-        },
-        "timeout": {
-          "type": "number",
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-          "default": 10000
         },
         "keepalive": {
           "type": "number",
@@ -59,16 +58,51 @@
           "description": "When using TLS, this option enables verification of the certificate presented by the server.",
           "default": true
         },
+        "log_sanitization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
+              "default": []
+            },
+            "body_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "PCRE patterns to redact from the AI request and response payloads.",
+              "default": []
+            },
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
+            }
+          }
+        },
+        "timeout": {
+          "type": "number",
+          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "default": 10000
+        },
         "custom_fields_by_lua": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
           },
           "description": "A list of key-value pairs, where the key is the name of a log field and the value is a chunk of Lua code, whose return value sets or replaces the log field value."
-        },
-        "host": {
-          "type": "string",
-          "description": "The IP address or host name to send data to."
         }
       },
       "required": [
