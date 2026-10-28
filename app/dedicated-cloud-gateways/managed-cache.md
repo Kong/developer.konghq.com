@@ -186,7 +186,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Configure a managed cache
+## Configure a managed cache for {{site.base_gateway}}
 
 Managed caches are either created at the control plane or control plane group-level. 
 
@@ -330,6 +330,73 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 
 {:.info}
 > You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+
+## Configure a managed cache for {{site.ai_gateway}}
+
+You can create a managed cache for an {{site.ai_gateway}} 2.0 control plane that runs on a Dedicated Cloud Gateway.
+You can use it with any {{site.ai_gateway}} Policy that uses Redis.
+
+{:.warning}
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created the following:
+> - A [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network)
+> - An {{site.ai_gateway}} control plane with a Dedicated Cloud Gateway configuration. See [{{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-20-on-dedicated-cloud-gateways).
+
+To create a managed cache, do the following:
+
+1. Export the ID of your {{site.ai_gateway}} control plane:
+
+   ```sh
+   export AI_GATEWAY_ID='YOUR AI GATEWAY ID'
+   ```
+
+1. Create a managed cache using the Cloud Gateways add-ons API. Set `owner.type` to `ai`:
+
+   {% capture create_ai_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons
+   status_code: 201
+   method: POST
+   region: global
+   body:
+       name: managed-cache
+       owner:
+           kind: control-plane
+           type: ai
+           control_plane_id: $AI_GATEWAY_ID
+           control_plane_geo: us
+       config:
+           kind: managed-cache.v0
+           capacity_config:
+               kind: tiered
+               tier: micro
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ create_ai_addon | indent: 3}}
+
+1. Export the ID of your managed cache from the response:
+
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
+
+1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
+
+   {% capture get_ai_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
+   status_code: 200
+   method: GET
+   region: global
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ get_ai_addon | indent: 3}}
+
+For {{site.ai_gateway}} managed caches, {{site.konnect_short_name}} doesn't automatically create a Redis configuration.
+Enter the Redis connection details from the managed cache into your {{site.ai_gateway}} Policy manually.
 
 ## Managed cache health
 
