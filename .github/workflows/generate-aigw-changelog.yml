@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'AI Gateway version to generate changelog for (e.g., 3.10.0.2).'
+        description: 'AI Gateway version to generate changelog for (e.g., 2.3.0, it should match the kong-ee changelog folder changelog/aigw-2.3.0).'
         required: true
         type: string
       kong_ee_branch:
