@@ -84,7 +84,7 @@ The following diagram shows how the {{site.identity}} Token Vault works on top o
 In this scenario:
 1. A user authenticates to Okta, which generates a token.
 1. The {{site.ai_gateway}} captures the token and hands it to the Token Vault.
-1. The Token Vault verifies the Okta token and uses its issuer (`iss`) and subject (`sub`) to identify the user. If the user has no GitHub credential yet, the Token Vault returns an enrollment URL, and the {{site.ai_gateway}} asks the user to connect their GitHub account before continuing.
+1. The Token Vault verifies the Okta token and uses its issuer (`iss`) and subject (`sub`) to identify the user. If the user has no GitHub credential yet, {{site.ai_gateway}} returns an enrollment URL, and asks the user to connect their GitHub account before continuing.
 1. The user approves access on GitHub's OAuth consent screen. The Token Vault exchanges the authorization code for a GitHub token and stores it for that user. The Okta token only identifies the user, it never becomes the stored credential.
 1. Claude Code can use the `tools/list` from the GitHub MCP: the user can now interact with GitHub from Claude Code.
 
@@ -154,7 +154,7 @@ The directory is also the vault's encryption boundary. After enabling the vault 
 ## Trusted IdP
 
 The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
-A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. The Token Vault only accepts an IdP's tokens when you `vault_access_enabled` to `true` on the directory. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
+A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. The Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on the directory. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
 
 The Token Vault acts as a verifier, not a caller. It never asks the IdP about a user directly. Instead, when it receives a token, it:
 
@@ -349,10 +349,12 @@ To remove the shared credential, send a `DELETE` request to the same endpoint. T
 
 ## Set up the Token Vault
 
-To enable the Token Vault on a directory:
+To set up the Token Vault:
 
+1. Enable it on the directory.
 1. Add a trusted IdP.
 1. Add your first provider (see [Get started with the {{site.identity}} Token Vault](/how-to/get-started-with-token-vault/)).
+1. Register a vault key to start using the provider.
 
 To disable a provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`.
 
@@ -372,6 +374,7 @@ The static credential belongs to the directory instead of to an individual princ
 
 To store a static secret:
 
+1. Make sure the directory has a [vault key](#credential-storage-and-encryption). {{site.identity}} rejects a request to store a static secret with a `400` until you register one.
 1. Create the provider: For `static_secret`, send only:
   * `template_name`
   * `name`
