@@ -23,6 +23,7 @@ min_version:
   operator: '2.4'
 
 prereqs:
+  enterprise: true
   operator:
     konnect:
       auth: true
@@ -43,7 +44,6 @@ related_resources:
 By default, when a Route accepts only HTTPS, {{site.base_gateway}} answers plain HTTP requests that match the Route with a `426 Upgrade Required` status code. Use the `konghq.com/https-redirect-status-code` annotation to return a redirect status code such as `301` instead.
 
 {% include k8s/kong-namespace.md %}
-{: data-deployment-topology="on-prem"}
 
 ## Create a certificate
 

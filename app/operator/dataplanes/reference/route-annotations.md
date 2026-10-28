@@ -106,7 +106,11 @@ Annotations are optional. A malformed value sets the `KongConfigurationValid` co
 
 Strips the matched path prefix from the request before forwarding it to the upstream service. For example, if the route matches the `/httpbin` prefix and the annotation is set to `"true"`, a request to `/httpbin/get` reaches the upstream service as `/get`.
 
-Accepted values: `"true"`, `"false"`. Defaults to `"false"`.
+Accepted values: 
+- `"true"`
+- `"false"`
+
+Defaults to `"false"`.
 
 This annotation has no effect on `GRPCRoute` resources, because {{site.base_gateway}} doesn't accept `strip_path` on `grpc` and `grpcs` Routes.
 
@@ -120,7 +124,9 @@ konghq.com/strip-path: "true"
 
 Controls whether {{site.base_gateway}} sends the `Host` header of the client request to the upstream service. When set to `"false"`, {{site.base_gateway}} sets the `Host` header to the upstream target, or to the value of the [`konghq.com/host-header`](/operator/dataplanes/reference/service-annotations/#konghq-com-host-header) Service annotation.
 
-Accepted values: `"true"`, `"false"`.
+Accepted values: 
+- `"true"`
+- `"false"`
 
 Defaults:
 
@@ -137,7 +143,11 @@ konghq.com/preserve-host: "false"
 
 Controls whether {{site.base_gateway}} buffers the request body before proxying it to the upstream service. Disable buffering to stream large or long-lived request bodies to the upstream service as they arrive.
 
-Accepted values: `"true"`, `"false"`. If the annotation isn't set, {{site.base_gateway}} uses its default, which is `true`.
+Accepted values: 
+- `"true"`
+- `"false"`
+
+Defaults to `true`.
 
 Sample usage:
 
@@ -149,7 +159,11 @@ konghq.com/request-buffering: "false"
 
 Controls whether {{site.base_gateway}} buffers the response body before sending it to the client. Disable buffering to stream large or long-lived responses to the client as they arrive.
 
-Accepted values: `"true"`, `"false"`. If the annotation isn't set, {{site.base_gateway}} uses its default, which is `true`.
+Accepted values: 
+- `"true"`
+- `"false"`
+
+Defaults to `true`.
 
 Sample usage:
 
@@ -161,7 +175,14 @@ konghq.com/response-buffering: "false"
 
 Sets the HTTP status code that {{site.base_gateway}} returns when a client sends a plain HTTP request that matches a Route that only accepts HTTPS. Attach the route to an `HTTPS` listener only, for example with `sectionName` in `parentRefs`, for the redirect to apply.
 
-Accepted values: `"301"`, `"302"`, `"307"`, `"308"`, `"426"`. If the annotation isn't set, {{site.base_gateway}} uses its default, which is `426`.
+Accepted values: 
+- `"301"`
+- `"302"`
+- `"307"`
+- `"308"`
+- `"426"`
+
+Defaults to `426`.
 
 Sample usage:
 
@@ -173,7 +194,11 @@ konghq.com/https-redirect-status-code: "301"
 
 Sets the [path handling algorithm](/gateway/entities/route/#path-handling), which controls how {{site.base_gateway}} combines the Service `path` and the Route `path` into the path sent upstream.
 
-Accepted values: `v0`, `v1`. If the annotation isn't set, {{site.base_gateway}} uses its default.
+Accepted values: 
+- `v0`
+- `v1`
+
+If the annotation isn't set, {{site.base_gateway}} uses its default.
 
 Sample usage:
 
@@ -183,4 +208,12 @@ konghq.com/path-handling: "v1"
 
 ## Unsupported annotations
 
-{{ site.operator_product_name }} doesn't support the following Route annotations on `HTTPRoute` and `GRPCRoute` resources: `konghq.com/methods`, `konghq.com/headers.*`, `konghq.com/host-aliases`, `konghq.com/regex-priority`, `konghq.com/protocols`, and `konghq.com/snis`. Configure the equivalent behavior with Gateway API fields or the `Gateway` listener instead.
+{{ site.operator_product_name }} doesn't support the following Route annotations on `HTTPRoute` and `GRPCRoute` resources:
+- `konghq.com/methods`
+- `konghq.com/headers.*`
+- `konghq.com/host-aliases`
+- `konghq.com/regex-priority`
+- `konghq.com/protocols`
+- `konghq.com/snis`
+
+Configure the equivalent behavior with Gateway API fields or the `Gateway` listener instead.
