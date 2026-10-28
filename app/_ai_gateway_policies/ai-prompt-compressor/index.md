@@ -343,8 +343,16 @@ A call to Headroom that reuses a pooled connection Headroom has already closed i
 ### Limitations
 
 - Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**. Older images silently ignore the session id and run stateless.
-- By default, Headroom keeps sessions in memory in one Headroom process, and all turns of a session must reach that process. Point each data plane node at its own sidecar, or point all data plane nodes at one shared instance. Do not put a load balancer in front of Headroom instances that keep sessions in memory.
-- To run several Headroom instances behind a load balancer, set `HEADROOM_COMPRESS_SESSION_STORE` to a Redis URL (`redis://...`) on every instance. The instances then share the session state. This requires Headroom v0.42.0 or later, installed with the `redis` extra. If your Headroom image does not include the `redis` extra, build an image that installs `headroom-ai[proxy,redis]`. The lock that keeps the turns of one session in order works only inside one instance. If a client sends turns of one session in parallel, route each session to one instance. For more information, see the [Headroom repository](https://github.com/headroomlabs-ai/headroom).
+- By default, Headroom keeps sessions in memory in one Headroom process, and Kong must send all turns of a session to that process.
+  Point each data plane node at its own sidecar, or point all data plane nodes at one shared instance.
+  Do not put a load balancer in front of Headroom instances that keep sessions in memory.
+- To run several Headroom instances behind a load balancer, set `HEADROOM_COMPRESS_SESSION_STORE` to a [Redis](https://redis.io/) URL (`redis://...`) on every instance.
+  The instances then share the session state.
+  Shared sessions require Headroom v0.42.0 or later, installed with the `redis` extra.
+  The default Headroom image doesn't include the `redis` extra, so build an image that installs `headroom-ai[proxy,redis]`.
+  The lock that keeps the turns of one session in order works only inside one instance.
+  If a client sends turns of one session in parallel, route each session to one instance.
+  For more information, see the [Headroom repository](https://github.com/headroomlabs-ai/headroom).
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
 - A native Bedrock Converse request is skipped, with a warning. Headroom can't read Converse's content blocks.
@@ -451,7 +459,7 @@ rows:
 
 #### Headroom session fields
 
-For the `headroom` provider, the one `compress_items` entry has an `information` string in this format:
+For the `headroom` provider, the single `compress_items` entry has an `information` string in this format:
 
 `<transforms>;frozen_message_count=<N>;cached_prefix_replayed=<true|false>`
 
@@ -472,17 +480,26 @@ rows:
       The number of leading messages that Headroom did not compress again on this turn.
       Headroom counts the leading messages that it can replay from the compression cache of the session.
       Plain messages always count. A tool result counts only after Headroom caches it. The last message never counts.
-      Headroom calculates this value from its own state, not from the LLM provider. The value can be more than zero on the first turn.
+      Headroom calculates this value from its own state.
+      The value can be more than zero on the first turn.
   - part: "`cached_prefix_replayed`"
     description: |
-      `true` when Headroom compressed some earlier messages to different bytes than on the previous turn, and then replaced them with the bytes from the previous turn. This keeps the start of the prompt the same.
+      `true` when Headroom compressed some earlier messages to different bytes than on the previous turn, and then replaced them with the bytes from the previous turn.
+      The replacement keeps the start of the prompt the same.
       `false` when Headroom replaced nothing. This is the usual value.
-      The value is also `false` when the Headroom process has no previous turn for the session. This happens on the first turn, after the session state expires, or, when Headroom keeps sessions in memory, on a Headroom instance that did not serve the session before. In these cases, the start of the prompt can change.
+      The value is also `false` when the Headroom process has no previous turn for the session:
+      * The first turn of a session.
+      * After the session state expires.
+      * When Headroom keeps sessions in memory, on an instance that hasn't served the session before.
+
+      In these cases, the start of the prompt can change.
 {% endtable %}
 <!-- vale on -->
 
 {:.warning}
-> Do not use `cached_prefix_replayed` to measure prompt cache hits. The field reports a Headroom repair step. It does not report on the prompt cache of the LLM provider. A value of `false` does not mean that the start of the prompt is the same as on the previous turn.
+> Do not use `cached_prefix_replayed` to measure prompt cache hits.
+> The field reports whether Headroom replayed earlier bytes. It does not report on the prompt cache of the LLM provider.
+> A value of `false` does not mean that the start of the prompt is the same as on the previous turn.
 > To measure cache hits, use the cached-token counts that the LLM provider reports. These are `cached_tokens` in `ai.proxy.usage.prompt_tokens_details` in the [audit log](/ai-gateway/ai-audit-log-reference/#core-logs), and the `gen_ai.usage.cache_read.input_tokens` attribute in [OpenTelemetry traces](/ai-gateway/llm-open-telemetry/#span-attribute-reference).
 
 ### Response headers
