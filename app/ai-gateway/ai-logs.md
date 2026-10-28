@@ -204,14 +204,38 @@ rows:
     description: The request payload.
   - property: "`ai.$POLICY_NAME.payload.response`"
     description: The response payload.
-  - property: "`ai.$POLICY_NAME.usage.prompt_token`"
-    description: The number of tokens used for prompting.
-  - property: "`ai.$POLICY_NAME.usage.completion_token`"
-    description: The number of tokens used for completion.
+  - property: "`ai.$POLICY_NAME.usage.input_tokens`"
+    description: |
+      The number of input tokens.
+      The gateway reports this field for every request category.
+  - property: "`ai.$POLICY_NAME.usage.output_tokens`"
+    description: |
+      The number of output tokens.
+      The gateway reports this field for every request category.
+  - property: "`ai.$POLICY_NAME.usage.prompt_tokens`"
+    description: |
+      The number of tokens used for prompting.
+      The gateway reports this field only for text-based requests (chat, completions, embeddings).
+      This field is deprecated.
+      Use `input_tokens` instead.
+  - property: "`ai.$POLICY_NAME.usage.completion_tokens`"
+    description: |
+      The number of tokens used for completion.
+      The gateway reports this field only for text-based responses (chat, completions).
+      This field is deprecated.
+      Use `output_tokens` instead.
   - property: "`ai.$POLICY_NAME.usage.total_tokens`"
     description: The total number of tokens used.
   - property: "`ai.$POLICY_NAME.usage.cost`"
     description: The total cost of the request (input and output cost).
+  - property: "`ai.$POLICY_NAME.usage.input_token_cost`"
+    description: The cost of the input side of the request, including cache-read, cache-write, and other input tokens.
+  - property: "`ai.$POLICY_NAME.usage.output_token_cost`"
+    description: The cost of the output side of the request.
+  - property: "`ai.$POLICY_NAME.usage.service_tier`"
+    description: |
+      The service tier the provider reported for the request.
+      The gateway logs this field only when the provider returns a service tier.
   - property: "`ai.$POLICY_NAME.usage.time_per_token`"
     description: |
       The average time to generate an output token, in milliseconds.
@@ -223,6 +247,8 @@ rows:
     description:  The model used for the AI response.
   - property: "`ai.$POLICY_NAME.meta.plugin_id`"
     description:  The unique identifier of the Policy.
+  - property: "`ai.$POLICY_NAME.meta.model_id`"
+    description:  The ID of the [AI Model](/ai-gateway/entities/ai-model/) entity that handled the request.
   - property: "`ai.$POLICY_NAME.meta.llm_latency`"
     description: |
       The time, in milliseconds, it took the LLM provider to generate the full response.

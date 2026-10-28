@@ -65,7 +65,9 @@ rows:
   - property: "`ai.proxy.usage.prompt_tokens`"
     description: |
       The number of tokens used for prompting.
-      Used for text-based requests (chat, completions, embeddings).
+      The gateway reports this field only for text-based requests (chat, completions, embeddings).
+      This field is deprecated.
+      Use `ai.proxy.usage.input_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.prompt_tokens_details`"
     description: |
       A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`, `cache_write_tokens`, `cache_write_tokens_by_ttl`).
@@ -82,30 +84,44 @@ rows:
   - property: "`ai.proxy.usage.completion_tokens`"
     description: |
       The number of tokens used for completion.
-      Used for text-based responses (chat, completions).
+      The gateway reports this field only for text-based responses (chat, completions).
+      This field is deprecated.
+      Use `ai.proxy.usage.output_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.completion_tokens_details`"
     description: |
        A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.total_tokens`"
     description: |
       The total number of tokens used (input + output).
-      Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
-      The total number of input tokens (text + image + audio).
-      Used for non-text requests (for example, image or audio generation).
+      The total number of input tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
-      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
+      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`, `video_tokens`).
+      The breakdown also includes the cache fields `cached_tokens`, `cache_write_tokens`, and `cache_write_tokens_by_ttl`, with the same meaning as in `ai.proxy.usage.prompt_tokens_details`.
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
-      The total number of output tokens (text + audio).
-      Used for non-text responses (for example, image or audio generation).
+      The total number of output tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
-      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`, `image_tokens`, `video_tokens`).
   - property: "`ai.proxy.usage.cost`"
-    description: The total cost of the request.
+    description: |
+      The total cost of the request.
+      This is the sum of `input_token_cost` and `output_token_cost`.
+  - property: "`ai.proxy.usage.input_token_cost`"
+    description: |
+      The cost of the input side of the request, including cache-read, cache-write, and other input tokens.
+  - property: "`ai.proxy.usage.output_token_cost`"
+    description: |
+      The cost of the output side of the request.
+  - property: "`ai.proxy.usage.service_tier`"
+    description: |
+      The service tier the provider reported for the request, for example `flex`.
+      The gateway logs this field only when the provider returns a service tier.
   - property: "`ai.proxy.usage.time_per_token`"
     description: |
       Average time to generate an output token (ms).
@@ -120,6 +136,8 @@ rows:
     description: The name of the AI service provider.
   - property: "`ai.proxy.meta.plugin_id`"
     description: Unique identifier of the Policy instance.
+  - property: "`ai.proxy.meta.model_id`"
+    description: The ID of the [AI Model](/ai-gateway/entities/ai-model/) entity that handled the request.
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
       Time taken by the LLM provider to generate the full response (ms).
