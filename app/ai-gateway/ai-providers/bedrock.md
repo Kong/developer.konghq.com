@@ -171,7 +171,7 @@ Before you configure `vpc_endpoint`, make sure that:
 
 To connect to Amazon Bedrock through a VPC endpoint over AWS PrivateLink, set `vpc_endpoint` in the target `config` to the hostname of your interface VPC endpoint.
 {{site.ai_gateway}} then sends requests to that host.
-Set the value to a hostname only, without a scheme (for example `https://`).
+Set the value to a hostname only, for example `vpce-0123456789abcdef0-abcdefgh.bedrock-runtime.us-east-1.vpce.amazonaws.com`. Do not include a scheme.
 The rest of the request behaves as it does with the public endpoint:
 
 * {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming (`invoke-with-response-stream`) and async invoke.
@@ -179,7 +179,7 @@ The rest of the request behaves as it does with the public endpoint:
   Set `region` to the region of the VPC endpoint.
 * If the VPC endpoint is unreachable, the request fails.
   {{site.ai_gateway}} doesn't fall back to the public endpoint.
-* `vpc_endpoint` also applies to a Bedrock embeddings model, such as the one set in `config.balancer.embeddings.config` for semantic load balancing.
+* `vpc_endpoint` also applies to a Bedrock embeddings model, such as the one set in [`config.balancer.embeddings.config`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-embeddings) for semantic load balancing.
 
 {% entity_example %}
 type: model
