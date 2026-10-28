@@ -5,6 +5,7 @@ Each field is an array of expressions, 1 to 1024 characters each.
 The data plane evaluates the expressions on each request, against the authenticated AI Consumer and the request. They use the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/).
 {% if include.allow_and_deny_together -%}
 `allow_when` and `deny_when` are mutually exclusive with `allow` and `deny`.
+You can set `allow_when` and `deny_when` together.
 For {{include.entity}}s, you can set `allow` and `deny` together, as described in [ACL evaluation logic](#acl-evaluation-logic).
 {%- else -%}
 Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
@@ -22,13 +23,15 @@ access:
 
 {{site.konnect_short_name}} compiles and type-checks each expression when you create or update the {{include.entity}}.
 {{site.konnect_short_name}} rejects an entry that doesn't compile or doesn't evaluate to a boolean with HTTP 400.
-The error names the offending entry, for example `access.acls.allow_when[0]`.
+The error message describes the problem, for example `expression must evaluate to a boolean`. It doesn't identify which array entry caused it.
 
 At runtime, entries are evaluated in order with OR semantics.
-When you set `allow_when`, the request is allowed if any entry evaluates to true.
-If an entry fails to evaluate, the request is denied with HTTP 403.
-When you set `deny_when`, the request is denied if any entry evaluates to true.
-If an entry fails to evaluate, the request fails closed with HTTP 500.
+Failures to evaluate create the following responses:
+
+* **If an entry fails to evaluate and no other entry evaluates to true:**  The request is denied with HTTP 403.
+* **If an earlier entry failed but the entry evaluates to true:** The request is allowed, unless you set `deny_when`.
+* **If an entry fails to evaluate before an entry that evaluates to true:** The request fails closed with HTTP 500.
+* If an entry that evaluates to true comes first:** The request is denied with HTTP 403 and later entries aren't evaluated.
 
 When you set `allow_when` or `deny_when`, {{site.ai_gateway}} ignores `include_consumer_groups`.
 It also doesn't send the `X-Consumer-Groups` and `X-Authenticated-Groups` headers upstream.
