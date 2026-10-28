@@ -59,8 +59,7 @@ rows:
       * Shared: an admin enrolls one Slack bot token once, released to any authorized caller
   - case: "Store and reuse different secret types"
     examples: |
-      * Static API keys
-      * Client credentials
+      * Static API keys or tokens (`static_secret`)
       * Authorization code, with optional PKCE and dynamic client registration (DCR)
   - case: "Federate identity"
     examples: |
@@ -150,12 +149,12 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 
 The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes identities and access in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
 
-The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organization account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organization.
+The directory is also the vault's encryption boundary. After enabling the vault in your directory, you register a public encryption key on it (`POST /v2/directories/{directoryId}/vault/keys`) to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organization account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organization.
 
 ## Trusted IdP
 
 The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
-Each directory supports one trusted IdP, and the Token Vault only accepts its tokens when `vault_access_enabled` is set to `true`. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
+A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. The Token Vault only accepts an IdP's tokens when you `vault_access_enabled` to `true` on the directory. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
 
 The Token Vault acts as a verifier, not a caller. It never asks the IdP about a user directly. Instead, when it receives a token, it:
 
@@ -165,7 +164,7 @@ The Token Vault acts as a verifier, not a caller. It never asks the IdP about a 
 
 Users don't need to exist in {{site.identity}} beforehand. When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, the Token Vault creates one just in time. Per-user credentials are stored against that principal.
 
-To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. Each directory supports one trusted IdP, so a second `POST` returns a `409`. The request accepts the following body parameters:
+To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The request accepts the following body parameters:
 
 <!--vale off-->
 {% table %}
@@ -241,18 +240,14 @@ rows:
   - provider: "OAuth authorization code providers that support dynamic client registration (DCR)"
     value: |
       * `atlassian-rovo`
-      * `figma`
       * `datadog` (requires PKCE)
+      * `miro` (requires PKCE)
     param: |
-      None. Don't send a `client_id`: the Token Vault registers the client with the provider at first use.
+      None. Don't send a `client_id`: set `dcr_enabled` (it defaults to `true` for templates that ship a registration endpoint, such as `datadog` and `miro`), and the Token Vault registers the client with the provider on first use.
   - provider: "OAuth authorization code provider that isn't in the catalog"
     value: "`custom-oauth`"
     param: |
       `client_id`, `client_secret`, `authorization_endpoint`, and `token_endpoint`.
-  - provider: "OAuth client credentials (two-legged) provider"
-    value: "`client_credentials`"
-    param: |
-      `client_id`, `client_secret`, and `token_endpoint`.
   - provider: "Provider that authenticates with a pre-issued API key or token in a header"
     value: "`static_secret`"
     param: |
@@ -265,7 +260,7 @@ rows:
 
 The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. 
 The credential is encrypted at rest in the Token Vault. 
-The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
+The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own vault key, a public key you register, that wraps the keys used to encrypt secrets.
 
 The credentials can be personal or shared across the organization. You define this with the `credential_type` field on the provider:
 
@@ -287,9 +282,6 @@ rows:
   - type: "`authorization_code`"
     default: "`user`"
     allowed: "`user`, `shared` (an admin enrolls the shared credential)"
-  - type: "`client_credentials`"
-    default: "`shared`"
-    allowed: "`shared`, `user`"
   - type: "`static_secret`"
     default: "`shared`"
     allowed: "`shared` only"
@@ -298,12 +290,12 @@ rows:
 
 ### Credential storage and encryption
 
-The Token Vault stores credentials using envelope encryption, with two layers:
+The Token Vault protects credentials with envelope encryption, in two layers:
 
-* **Vault key:** One per directory, generated when you enable the vault, acts as a master key for the organization's Token Vault. Kong stores and manages that master key, not the Token Vault user. 
-* **Data key:** One per credential, encrypts the credential's value.
+* **Vault key:** An RSA (≥2048-bit) or EC (≥256-bit) **public key you register** on the directory (`POST /v2/directories/{directoryId}/vault/keys`). {{site.identity}} stores only the public half and uses it to wrap each credential's data key; the matching private key lives on the {{site.ai_gateway_name}}, so {{site.identity}} cannot decrypt stored credentials. A directory can hold up to 5 vault keys to support rotation.
+* **Data key:** A fresh per-credential key that encrypts the credential's value, which the vault key wraps.
 
-With envelope encryption, the vault key also encrypts each data key, providing a double layer of protection. If one secret gets leaked, the leak only impacts that specific secret, while the whole vault remains safe.
+Because only the {{site.ai_gateway}} holds the private key, the Token Vault persists each credential as an opaque encrypted envelope it cannot itself decrypt. This is why a credential value never comes back through any API, and why one leaked secret can't expose the others.
 
 The Token Vault stores each credential in its own row, and binds the encrypted credential to the row it belongs to. 
 This ensures no credential can move between rows, and prevents row-based tampering, where someone could copy an encrypted credential from one row into another and have it decrypt in a row it doesn't belong to.
@@ -532,8 +524,7 @@ method: DELETE
 The following limitations apply to the Token Vault:
 
 * **Policy enforcement:** The Token Vault isn't a policy enforcement point, only {{site.ai_gateway_name}} can enforce policies. The Token Vault doesn't handle authorization logic.
-* **Customer-managed encryption key (BYOK):** Kong manages the encryption keys that protect stored credentials. You can't bring or control your own.
+* **Customer-managed encryption key:** The key that encrypts Token Vault data is a public key you register on the directory (`POST /v2/directories/{directoryId}/vault/keys`), PEM-encoded RSA (≥2048-bit) or EC (≥256-bit). {{site.identity}} holds only the public key; the matching private key stays on the {{site.ai_gateway_name}}, so Kong cannot decrypt stored credentials. A directory can hold up to 5 vault keys for rotation.
 * **{{site.konnect_short_name}} only:** The Token Vault isn't available for self-hosted/on-prem deployments. 
-* **One trusted IdP per directory:** Each directory supports a single trusted IdP for the Token Vault.
-* **Credential quota:** By default, each provider holds up to 100 credentials, counting both shared and per-user credentials.
+* **Unique issuer per trusted IdP:** Within a directory, each trusted IdP must have a distinct `issuer_url`.
 * **No vault purge:** You can't disable the Token Vault and delete all of its data in one step. Delete providers and credentials individually, or delete the directory.
