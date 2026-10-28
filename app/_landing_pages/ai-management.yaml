@@ -40,7 +40,7 @@ rows:
             config:
               title: Models
               description: The AI Model entity gives clients a single endpoint for one or more upstream LLMs through {{site.ai_gateway}}.
-              icon: /assets/icons/model.svg
+              icon: /assets/icons/brain.svg
               cta:
                 text: AI Model entity
                 url: /ai-gateway/entities/ai-model/
@@ -49,7 +49,7 @@ rows:
             config:
               title: Providers
               description: The AI Model Provider entity lets you securely store and manage credentials for connecting to upstream LLM services.
-              icon: /assets/icons/provider.svg
+              icon: /assets/icons/cloud.svg
               cta:
                 text: AI Model Provider entity
                 url: /ai-gateway/entities/ai-model-provider/
