@@ -148,8 +148,8 @@ Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
 
 For clients that send native Gemini requests, the request path must match the variant:
 
-* If the target sets `gcp_environment`, send Gemini Enterprise paths, such as `/v1/projects/{project_id}/locations/{location}/publishers/google/models/{model_name}:generateContent`. A Gemini Standard path, such as `/v1beta/models/{model_name}:generateContent`, returns `HTTP 404`.
-* If the target doesn't set `gcp_environment`, send Gemini Standard paths. A Gemini Enterprise path returns `HTTP 404`.
+* If the target sets `gcp_environment`, send Gemini Enterprise paths, such as `/v1/projects/{project_id}/locations/{location}/publishers/google/models/{model_name}:generateContent`.
+* If the target doesn't set `gcp_environment`, send Gemini Standard paths.
 
 {{site.ai_gateway}} doesn't rewrite the path from one variant to the other.
 
