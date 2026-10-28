@@ -270,7 +270,7 @@ curl -X POST http://localhost:8000/gemini/v1beta/interactions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gemini-2.5-flash",
-    "input": "Say hi in 3 words"
+    "input": "Say hello"
   }'
 ```
 
