@@ -635,6 +635,9 @@ When `access.acl_attribute_type` is `consumer`, you can gate access by individua
 
 {% include md/ai-gateway/v2/cel-acls.md entity="AI MCP Server" anchor="#schema-aigateway-mcpserver-access-acls" scope="server-level " allow_and_deny_together=true %}
 
+A server-level `allow_when` on a `passthrough-listener` gates tool access, not the MCP connection itself.
+An AI Consumer that doesn't match can still complete `initialize`, but receives an empty `tools/list` result and HTTP 403 on every `tools/call`.
+
 ### How default and per-tool ACLs work
 
 The runtime evaluates access using a two-tier system:
