@@ -14,7 +14,7 @@ To create the webhook:
 1. Click **Allow**.
 1. Click **Go to App Settings**.
 1. Under **Features**, click **Incoming Webhooks**.
-1. Copy the **Webhook URL** for your webhook.
+1. Copy the **Webhook URL** for your webhook. The webhook URL must start with `https://hooks.slack.com/services/`.
 1. Export the webhook URL as an environment variable:
 
    ```sh

@@ -83,7 +83,8 @@ automated_tests: false
 
 A [budget](/ai-cost-management/budgets/) tracks the AI spend of requests that pass through {{site.ai_gateway}} against a limit, then sends alerts as spend grows toward that limit.
 
-In this guide, you'll create a monthly budget for OpenAI usage that sends alerts to Slack when spend reaches 50, 80, and 100 percent of the limit.
+This guide shows how {{site.ai_cost_management}} turns AI spend into Slack alerts.
+You create a monthly budget for OpenAI usage and a Slack channel, then connect them with a notification rule that alerts at 50, 80, and 100 percent of the limit.
 
 ## Create an AI Model Provider and an AI Model
 
@@ -91,7 +92,7 @@ In this guide, you'll create a monthly budget for OpenAI usage that sends alerts
 
 ## Create a Slack notification channel
 
-A notification channel is a destination for budget alerts.
+A [notification channel](/ai-cost-management/notification-channels/) is a destination for budget alerts.
 Create a Slack channel using the [`/v1/ai-cost-management/notification-channels` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-notification-channel).
 The channel posts each alert to the incoming webhook in `slack.webhook_url`:
 

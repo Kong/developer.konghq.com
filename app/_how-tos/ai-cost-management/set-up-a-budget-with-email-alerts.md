@@ -98,7 +98,7 @@ In this guide, you'll create a monthly budget for OpenAI usage that sends email 
 
 ## Create an email notification channel
 
-A notification channel is a destination for budget alerts.
+A [notification channel](/ai-cost-management/notification-channels/) is a destination for budget alerts.
 Create an email channel using the [`/v1/ai-cost-management/notification-channels` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-notification-channel).
 The channel sends one message to each address in `email.recipients`:
 
