@@ -2,7 +2,7 @@
 title: "Access management concepts"
 content_type: reference
 layout: reference
-permalink: /ai-access-management/
+permalink: /ai-access-management/concepts/
 works_on:
   - konnect
 
