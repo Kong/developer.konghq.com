@@ -85,9 +85,7 @@ rows:
 
 This policy runs during the [produce phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-produce/) has taken place.
 
-{:.info}
-> **Note**: This policy only runs on records that the parent Schema Validation policy successfully parses.
-> If the parent policy uses the `passthrough` or `mark` failure mode, records that fail schema validation are sent to the backend cluster without parsing, so the Encrypt Fields policy can't run on them and their fields aren't encrypted.
+{% include_cached /knep/schema-validation-parent-note.md phase="produce" %}
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 

@@ -87,9 +87,7 @@ rows:
 
 This policy runs during the [consume phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-consume/) has taken place.
 
-{:.info}
-> **Note**: This policy only runs on records that the parent Schema Validation policy successfully parses.
-> If the parent policy uses the `passthrough` or `mark` failure mode, records that fail schema validation are delivered to the client without parsing, so the Decrypt Fields policy can't run on them and their fields stay encrypted.
+{% include_cached /knep/schema-validation-parent-note.md phase="consume" %}
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 

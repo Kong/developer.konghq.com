@@ -174,8 +174,7 @@ rows:
 
 Set the parent [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) to `skip` or `error` to use this policy.
 
-The parent policy must not use `passthrough` or `mark`.
-With these failure modes, the parent delivers the record without parsing it. The Mask Fields Consume policy then never runs, and the client receives the fields unmasked.
+{% include_cached /knep/schema-validation-parent-note.md phase="consume" %}
 
 ## Selecting fields from schema metadata
 
