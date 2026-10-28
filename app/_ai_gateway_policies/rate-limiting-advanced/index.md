@@ -1,5 +1,5 @@
 ---
-description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance.
+description: Enhanced rate limiting capabilities, for example sliding window support, Redis Sentinel support, and increased performance.
 min_version:
   ai-gateway: '2.0'
 works_on:
@@ -35,7 +35,7 @@ To rate limit on LLM token usage or cost rather than request count, use the [AI 
 The Rate Limiting Advanced Policy supports the following window types, set with [`config.window_type`](./reference/#schema--config-window-type):
 
 * **Fixed window**: Fixed windows consist of buckets that are statically assigned to a definitive time range. Each request is mapped to only one fixed window based on its timestamp and will affect only that window's counters.
-* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (such as an IP address, AI Consumer, or credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
+* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (for example, an IP address, AI Consumer, or credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
 The default (and recommended) sliding window type ensures a resource is not consumed at a higher rate than what is configured.
 
 ## Multiple limits and window sizes
