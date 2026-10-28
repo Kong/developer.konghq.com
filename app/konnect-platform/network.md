@@ -229,7 +229,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - hostname: "`REGION.identity.konghq.com`"
+  - hostname: "`ISSUER_ID.REGION.identity.konghq.com`"
     description: The URL for the Identity server in the geo.
   - hostname: "`PORTAL_ID.REGION.kongportals.com`"
     description: The URL for the Dev Portal in the geo.

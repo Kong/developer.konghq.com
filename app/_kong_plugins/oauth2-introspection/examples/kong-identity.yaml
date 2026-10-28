@@ -17,7 +17,7 @@ variables:
     description: "The value to set for the `Authorization` header to access the introspection endpoint. For Kong Identity, it will be a basic auth header with your Base64-encoded client ID and secret: `Basic $ENCODED_CREDENTIALS`."
   url:
     value: $INTROSPECTION_URL
-    description: The full URL to the introspection endpoint. For Kong Identity, it will look like `https://a93xltvowjk8m1qe.us.identity.konghq.com/auth/introspect`
+    description: The full URL to the introspection endpoint. For Kong Identity, it will look like `https://ISSUER_ID.REGION.identity.konghq.com/auth/introspect`
   claim:
     value: $CLAIM_NAME
     description: The name of your claim in the Kong Identity auth server.
