@@ -21,6 +21,10 @@ RSpec.describe 'info_box/sections/priority' do
       expect(html).to have_css("a[href='/ai-gateway/entities/ai-policy/#ai-policy-priority']")
     end
 
+    it 'gives the help link a page-type-neutral accessible name' do
+      expect(html).to have_css("a[aria-label='Learn more about priorities']")
+    end
+
     it 'renders the priority value' do
       expect(html).to have_css('span', text: '750')
     end
