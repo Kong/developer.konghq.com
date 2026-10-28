@@ -42,6 +42,7 @@ In order to route a request using {{ site.base_gateway }} we need a Service runn
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create an HTTPRoute
 
@@ -69,6 +70,7 @@ spec:
           port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 The results should look like this:
 
@@ -78,26 +80,38 @@ httproute.gateway.networking.k8s.io/echo created
 
 ## Test your Backend
 
-Run `kubectl get gateway kong -n default` to get the IP address for the gateway and set that as the value for the variable `PROXY_IP`.
+1. Wait for the `Gateway` to be programmed:
 
-```bash
-export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
-```
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
 
-Test your Service:
-{% validation request-check %}
-url: /echo
-status_code: 200
-on_prem_url: $PROXY_IP
-konnect_url: $PROXY_IP
-display_headers: true
-{% endvalidation %}
+1. Run `kubectl get gateway kong -n kong` to get the IP address for the gateway and set that as the value for the variable `PROXY_IP`.
 
-You should see the following message:
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
 
-```text
-Welcome, you are connected to node king.
-Running on Pod echo-965f7cf84-rm7wq.
-In namespace default.
-With IP address 192.168.194.10.
-```
+1. Test your Service:
+
+   {% validation custom-command %}
+   command: |
+     curl -i "http://$PROXY_IP/echo" \
+        --no-progress-meter --fail-with-body
+   expected:
+     return_code: 0
+     message: 'Welcome, you are connected to node'
+   render_output: false
+   indent: 3
+   {% endvalidation %}
+
+   You should see the following message:
+    
+   ```text
+   Welcome, you are connected to node kind-control-plane.
+   Running on Pod echo-5f44d4c6f9-krnhk.
+   In namespace kong.
+   With IP address 10.244.0.26.
+   ```

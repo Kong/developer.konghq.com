@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap openssl default-jre-headless
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap git telnet openssl default-jre-headless
 
 # set python env
 RUN python3 -m venv /opt/myenv
@@ -122,3 +122,31 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "$CHECKSUM  regctl" | sha256sum -c - && \
     install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
     rm regctl
+
+# Install kustomize v5.8.2 (pinned + checksum verified, for the operator upgrade how-to's CRD step)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="06af0a202c2b831207d0173f9c9cdb1b30abceca0747cb3fbb72792d26055c95" ;; \
+      arm64) CHECKSUM="0991957191951cb7dddd142403b5bb98a1fcd6378ba0079dddc1e2c309080a7f" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.2/kustomize_v5.8.2_linux_${ARCH}.tar.gz" && \
+    echo "$CHECKSUM  kustomize.tar.gz" | sha256sum -c - && \
+    tar -xzf kustomize.tar.gz kustomize && \
+    install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize && \
+    rm -rf kustomize kustomize.tar.gz
+
+# Install grpcurl v1.9.4 (pinned + checksum verified, for the GRPCRoute how-to).
+# The release publishes the amd64 binary as `x86_64`, so the asset name is mapped
+# separately from dpkg's architecture name.
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) ASSET="x86_64"; CHECKSUM="97e13d58d2733a0e62cd2571d1d5f0c02823f0d25282f08bddedf1ad9c5d1736" ;; \
+      arm64) ASSET="arm64"; CHECKSUM="ad66227d90631da5428b4a5ccf28d63846f0f15649d8b2367df044a59edbb617" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o grpcurl.tar.gz "https://github.com/fullstorydev/grpcurl/releases/download/v1.9.4/grpcurl_1.9.4_linux_${ASSET}.tar.gz" && \
+    echo "$CHECKSUM  grpcurl.tar.gz" | sha256sum -c - && \
+    tar -xzf grpcurl.tar.gz grpcurl && \
+    install -o root -g root -m 0755 grpcurl /usr/local/bin/grpcurl && \
+    rm -rf grpcurl grpcurl.tar.gz

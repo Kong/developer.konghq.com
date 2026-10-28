@@ -42,7 +42,8 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
       frontmatter.products &&
       (frontmatter.products.includes("gateway") ||
         frontmatter.products.includes("ai-gateway") ||
-        frontmatter.products.includes("event-gateway"));
+        frontmatter.products.includes("event-gateway") ||
+        frontmatter.products.includes("operator"));
 
     if (isTesteable) {
       const isNonFirstSeriesPage =
@@ -144,4 +145,30 @@ export async function groupInstructionFilesByDeploymentModelAndProduct(files) {
   }
 
   return groupedFiles;
+}
+
+// Pure filter over the grouped instruction files. `products` is the split
+// PRODUCTS env var; `deploymentModel` is the DEPLOYMENT_MODEL env var or
+// undefined to run every deployment model. Returns a new object of the same
+// shape, holding only the matching groups. An empty object means the filters
+// matched nothing, which the caller reports as a hard failure.
+export function selectRunnableGroups(groups, products, deploymentModel) {
+  const selected = {};
+
+  for (const [model, instructionFilesByProduct] of Object.entries(groups)) {
+    if (deploymentModel && deploymentModel !== model) {
+      continue;
+    }
+
+    for (const [product, instructionFiles] of Object.entries(
+      instructionFilesByProduct,
+    )) {
+      if (products.includes(product)) {
+        selected[model] = selected[model] || {};
+        selected[model][product] = instructionFiles;
+      }
+    }
+  }
+
+  return selected;
 }

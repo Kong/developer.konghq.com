@@ -39,6 +39,21 @@ prereqs:
       auth: true
       network: true
 
+cleanup:
+  inline:
+    - title: Clean up AWS resources
+      content: |
+        Delete the `KonnectCloudGatewayTransitGateway`, the resource share, and the transit gateway you created:
+
+        ```bash
+        kubectl delete -n kong konnectcloudgatewaytransitgateway konnect-aws-transit-gateway-1 --ignore-not-found
+        aws ram delete-resource-share --resource-share-arn $RESOURCE_SHARE_ARN
+        aws ec2 wait transit-gateway-available --transit-gateway-ids $TRANSIT_GATEWAY_ID
+        aws ec2 delete-transit-gateway --transit-gateway-id $TRANSIT_GATEWAY_ID
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/aws.svg
+
 tldr:
   q: How can I create an AWS transit gateway and link it to {{site.konnect_short_name}} using {{ site.operator_product_name }}?
   a: Create a transit gateway in AWS and create a resources share to share the transit gateway with the AWS account linked to your {{site.konnect_short_name}} account. Then, create a [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) and accept the transit gateway attachment in AWS.
@@ -71,19 +86,20 @@ metadata:
 spec:
   createControlPlaneRequest:
     name: gateway-control-plane
+    cloud_gateway: true
   konnect:
     authRef:
       name: konnect-api-auth
-  cloud_gateway: true
 {% endkonnect_crd %}
 <!-- vale on -->
 
 ## Create a transit gateway in AWS
 
-1. Use this command to create a transit gateway in AWS:
+1. Use this command to create a transit gateway in AWS and save its output:
    ```sh
-   aws ec2 create-transit-gateway
+   aws ec2 create-transit-gateway > tgw.json
    ```
+   {: data-test-step="block" }
 
    {:.warning}
    > **Notes:**
@@ -92,9 +108,10 @@ spec:
 
 1. Export the transit gateway ID and ARN to your environment:
    ```sh
-   export TRANSIT_GATEWAY_ID='YOUR TRANSIT GATEWAY ID'
-   export TRANSIT_GATEWAY_ARN='YOUR TRANSIT GATEWAY ARN'
+   export TRANSIT_GATEWAY_ID=$(jq -r '.TransitGateway.TransitGatewayId' tgw.json)
+   export TRANSIT_GATEWAY_ARN=$(jq -r '.TransitGateway.TransitGatewayArn' tgw.json)
    ```
+   {: data-test-step="block" }
 
 ## Create a resource share in AWS
 
@@ -109,18 +126,23 @@ Create a resource share to allow the AWS account associated with your {{site.kon
 1. Export the value of the `provider_account_id` field to your environment:
 
    ```sh
-   export CLOUD_AWS_ACCOUNT_ID='KONNECT AWS ACCOUNT ID'
+   export CLOUD_AWS_ACCOUNT_ID=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $KONNECT_TOKEN" -XGET https://global.api.konghq.com/v2/cloud-gateways/provider-accounts | jq -r '.data[0].provider_account_id')
    ```
+   {: data-test-step="block" }
 
-1. Use this command to create a resource share:
+1. Use this command to create a resource share and save its output:
+
    ```sh
-   aws ram create-resource-share --name transit-gateway-resource-share --resource-arns $TRANSIT_GATEWAY_ARN --principals $CLOUD_AWS_ACCOUNT_ID
+   aws ram create-resource-share --name transit-gateway-resource-share --resource-arns $TRANSIT_GATEWAY_ARN --principals $CLOUD_AWS_ACCOUNT_ID > resource-share.json
    ```
+   {: data-test-step="block" }
 
 1. Export the resource share ARN to your environment:
+
    ```sh
-   export RESOURCE_SHARE_ARN='YOUR-RESOURCE-SHARE-ARN'
+   export RESOURCE_SHARE_ARN=$(jq -r '.resourceShare.resourceShareArn' resource-share.json)
    ```
+   {: data-test-step="block" }
 
 ## Create the KonnectCloudGatewayTransitGateway resource
 
@@ -152,19 +174,17 @@ spec:
 ## Accept the transit gateway attachment in AWS
 
 1. Fetch the list of transit gateway VPC attachments:
+
    ```sh
    aws ec2 describe-transit-gateway-vpc-attachments
    ```
 
-1. Export the relevant attachment ID:
-   ```sh
-   export ATTACHMENT_ID='YOUR-AWS-TRANSIT-GATEWAY-VPC-ATTACHMENT-ID'
-   ```
+1. Accept the transit gateway attachment. The command finds the attachment for the transit gateway you created and accepts it:
 
-1. Accept the transit gateway attachment:
    ```sh
-   aws ec2 accept-transit-gateway-vpc-attachment --transit-gateway-attachment-id $ATTACHMENT_ID
+   aws ec2 accept-transit-gateway-vpc-attachment --transit-gateway-attachment-id $(aws ec2 describe-transit-gateway-vpc-attachments | jq -r --arg tgw "$TRANSIT_GATEWAY_ID" '.TransitGatewayVpcAttachments[] | select(.TransitGatewayId==$tgw) | .TransitGatewayAttachmentId')
    ```
+   {: data-test-step="block" data-test-retry-count="6" }
 
 ## Validation
 
@@ -174,4 +194,3 @@ kind: KonnectCloudGatewayTransitGateway
 name: konnect-aws-transit-gateway-1
 {% endvalidation %}
 <!-- vale on -->
-

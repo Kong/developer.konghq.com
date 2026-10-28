@@ -33,9 +33,32 @@ prereqs:
       auth: true
       control_plane: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectGatewayControlPlane` objects also deletes the control plane and the control plane group the {{site.operator_product_name}} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          konnectgatewaycontrolplane/control-plane-group \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 ---
 
-## Create a `KonnectGatewayControlPlane`
+## Create a KonnectGatewayControlPlane
 
 Create a Control Plane using the `KonnectGatewayControlPlane` object:
 
@@ -54,7 +77,7 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-## Create a `KonnectGatewayControlPlane` with members
+## Create a KonnectGatewayControlPlane with members
 
 Create a new `KonnectGatewayControlPlane` object, add the `CLUSTER_TYPE_CONTROL_PLANE_GROUP` cluster type, and add the Control Plane created in the previous step as a member:
 

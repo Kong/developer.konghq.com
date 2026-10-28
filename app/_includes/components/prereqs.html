@@ -9,7 +9,7 @@
   {% endfor %}
 
   {% if prereqs.konnect_auth_only? %}
-    <div class="flex flex-col gap-1.5 border-b border-primary accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+    <div class="flex flex-col gap-1.5 border-b border-primary accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="{% if page.products contains 'operator' %}operator{% else %}konnect{% endif %}">
       {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
     </div>
   {% endif %}
@@ -23,9 +23,11 @@
   {% endfor %}
 
   {% if prereqs.kubernetes.gateway_api %}
+  {% unless product == 'operator' %}
   <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0">
     {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
   </div>
+  {% endunless %}
   {% endif %}
 
   {% if prereqs.kubernetes.prometheus %}
@@ -43,6 +45,14 @@
   {% if prereqs.skip_product == true %}
     {% if page.products contains 'gateway' %}
     <div class="invisible" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" {% if page.rbac %}, "rbac": true {% endif %} {% if page.wasm %}, "wasm": true {% endif %} {% if page.automated_tests.standalone_gateway %}, "standalone_gateway": true {% endif %}  }'></div>
+    {% endif %}
+    {% if page.products contains 'operator' %}
+    {% if page.works_on contains 'on-prem' %}
+    <div class="invisible" data-deployment-topology="on-prem" data-test-setup="operator"></div>
+    {% endif %}
+    {% if page.works_on contains 'konnect' %}
+    <div class="invisible" data-deployment-topology="konnect" data-test-setup="operator"></div>
+    {% endif %}
     {% endif %}
   {% else %}
     {% if page.products and prereqs.render_works_on? %}
@@ -87,6 +97,11 @@
           </div>
         {% endif %}
       {% endfor %}
+      {% if page.products[0] == 'operator' and prereqs.kubernetes.gateway_api %}
+      <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0">
+        {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
+      </div>
+      {% endif %}
     {% endif %}
   {% endif %}
 

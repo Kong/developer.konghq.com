@@ -40,15 +40,51 @@ prereqs:
         ```bash
         export KONNECT_CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
         ```
+
+        If you don't have a control plane yet, create one with the {{ site.konnect_short_name }} API and save its ID to the variable:
+
+        {% konnect_api_request %}
+        section: prereqs
+        url: /v2/control-planes
+        status_code: 201
+        method: POST
+        body:
+            name: mirror-source-control-plane
+        capture:
+          - variable: KONNECT_CONTROL_PLANE_ID
+            jq: ".id"
+        {% endkonnect_api_request %}
       icon_url: /assets/icons/self-hosted.svg
 
 next_steps:
   - text: Create a Gateway Service
     url: /operator/konnect/crd/gateway/service-and-route/
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the `KonnectGatewayControlPlane` and the authentication configuration. Because this guide references an existing control plane rather than creating one, the control plane in {{ site.konnect_short_name }} is left untouched. If you created it for this guide with the API request in the [prerequisites](#prerequisites), delete it from {{ site.konnect_short_name }} separately:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 ---
 
-## Create a `KonnectGatewayControlPlane`
+## Create a KonnectGatewayControlPlane
 
 Create a `KonnectGatewayControlPlane` object and add the {{ site.konnect_short_name }} authentication resource we created in the [prerequisites](#prerequisites).
 

@@ -108,6 +108,26 @@ prereqs:
     konnect:
       auth: true
       control_plane: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectConfigStore` also deletes the Config Store in {{ site.konnect_short_name }} and every secret
+        in it, and deleting the `KonnectGatewayControlPlane` deletes the control plane. Delete the certificate and the
+        `KongVault` before the Config Store they reference:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found kongcertificate/cert-with-vault-key
+        kubectl delete --ignore-not-found kongvault/certvault
+        kubectl delete -n kong --ignore-not-found \
+          konnectconfigstore/cert-keys \
+          kongreferencegrant/allow-kongvault-to-konnect-resources \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 A `KongCertificate` normally carries the private key as PEM material in `spec.key`, which means the key is stored in
@@ -173,6 +193,7 @@ spec:
     - group: konnect.konghq.com
       kind: KonnectGatewayControlPlane' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a `KongVault` backed by the Config Store
 
@@ -227,11 +248,20 @@ Generate a self-signed certificate and key to work with:
 ```sh
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=example.localdomain.dev"
 ```
+{: data-test-step="block" }
 
 ## Write the private key into the Config Store
 
 {% navtabs "store-certificate-key" %}
 {% navtab "{{site.konnect_short_name}} API" %}
+1. Wait for the `KonnectGatewayControlPlane` and the `KonnectConfigStore` to be programmed:
+
+   ```sh
+   kubectl wait -n kong konnectgatewaycontrolplanes.konnect.konghq.com/gateway-control-plane --for=condition=Programmed --timeout=300s
+   kubectl wait -n kong konnectconfigstores.konnect.konghq.com/cert-keys --for=condition=Programmed --timeout=300s
+   ```
+   {: data-test-step="block" }
+
 1. Fetch the {{site.konnect_short_name}} IDs of the control plane and of the Config Store that {{site.operator_product_name}}
    created. The Config Store ID is published on the `KonnectConfigStore` status, so you don't have to look it up in the
    {{site.konnect_short_name}} UI:
@@ -242,16 +272,18 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
    export CONFIG_STORE_ID=$(kubectl get -n kong konnectconfigstores.konnect.konghq.com cert-keys -o jsonpath='{.status.id}')
    echo $CONFIG_STORE_ID
    ```
+   {: data-test-step="block" }
 
 1. Build the request body, using `jq` to embed the PEM file as a JSON string:
 
    ```sh
    jq -n --arg key example-tls-key --rawfile value tls.key '{key: $key, value: $value}' > secret.json
    ```
+   {: data-test-step="block" }
 
 1. Store the private key as a secret entry in the Config Store:
-{% capture command %}
-<!--vale off-->
+
+   <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets
 status_code: 201
@@ -260,8 +292,6 @@ body_cmd: $(cat secret.json)
 indent: 3
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{command | indent}}
 
 {% capture delete %}
 1. Delete the local copies of the key once it's stored:
@@ -305,6 +335,7 @@ spec:
 $(sed 's/^/    /' tls.crt)
   key: '{vault://certvault/example-tls-key}'" | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

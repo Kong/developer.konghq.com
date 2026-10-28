@@ -27,6 +27,8 @@ tldr:
 
 prereqs:
   skip_product: true
+
+automated_tests: false
 ---
 
 {% include /how-tos/steps/operator-hybrid-data-plane.md %}

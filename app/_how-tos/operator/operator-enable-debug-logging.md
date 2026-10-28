@@ -52,6 +52,20 @@ faqs:
       ```
       
       The `env` and `args` sections are mutually exclusive. When both are provided, `args` takes precedence.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        rm -f values.yaml
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Enable debug logging 
@@ -66,6 +80,7 @@ env:
   zap_time_encoding: iso8601
 EOF
 ```
+{: data-test-step="block" }
 
 For more details about these options, see [{{ site.operator_product_name }} configuration options](/operator/reference/configuration-options/#flags).
 
@@ -82,6 +97,7 @@ content: |
     --set env.ENABLE_CONTROLLER_KONNECT=true \
     -f values.yaml
   ```
+  {: data-test-step="block" }
 {% endkonnect %}
 
 {% on_prem %}
@@ -92,15 +108,29 @@ content: |
     --set image.tag={{ site.data.operator_latest.release }} \
     -f values.yaml
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 ## Validate
 
-Use the following command to display the {{ site.operator_product_name }} logs:
+Wait for the rollout to complete:
 
 ```bash
-kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager -f
+kubectl -n kong-system rollout status deployment/kong-operator-kong-operator-controller-manager --timeout=120s
 ```
+{: data-test-step="block" }
+
+Check that the {{ site.operator_product_name }} logs contain the `DEBUG` level:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager | grep -m 1 DEBUG
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 You should see logs with the `DEBUG` level.
 

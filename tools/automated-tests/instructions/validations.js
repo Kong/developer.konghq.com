@@ -15,6 +15,25 @@ import {
   executeCommand,
   getLiveEnv,
 } from "../docker-helper.js";
+import {
+  captureCommand,
+  captureDescription,
+  captureInputText,
+} from "./capture.js";
+import { bodyFromCommand } from "./body-command.js";
+import {
+  buildCurlCommand,
+  isNetworkLevelError,
+  parseCurlResponse,
+} from "./container-request.js";
+import {
+  buildKubernetesResourceCommand,
+  buildKubernetesResourcePropertyCommand,
+  buildKubernetesWaitForCommand,
+  checkKubernetesResourceCondition,
+  compareKubernetesResourceProperty,
+} from "./kubernetes-commands.js";
+import { expectedHeaderChecks } from "./expected-headers.js";
 
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +49,11 @@ const cookieJars = {};
 const fetchInstances = {};
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Bounded retry for container-executed assertions (customCommand and the
+// kubernetes-* assertion types): 7 attempts with 10s-35s backoff (~2 minutes
+// cumulative), tolerating reconciliation lag on freshly created resources.
+const RETRY_DELAYS = [10000, 15000, 20000, 25000, 30000, 35000];
 
 export class ValidationError extends Error {
   constructor(message, assertions) {
@@ -167,6 +191,12 @@ async function executeRequest(
         config.file_dir,
       );
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.body_cmd !== undefined) {
+      // The body is produced by a shell command (e.g. `$(cat secret.json)`),
+      // matching the curl the page renders. It is not POST-gated like `body`:
+      // the snippet emits `--json "$(cmd)"` for whatever method the page sets.
+      options.body = await bodyFromCommand(container, config.body_cmd);
+      headers["Content-Type"] = headers["Content-Type"] || "application/json";
     } else if (config.form_url_encoded_data !== undefined) {
       const params = new URLSearchParams();
       for (const [key, value] of Object.entries(config.form_url_encoded_data)) {
@@ -207,23 +237,34 @@ async function executeRequest(
       if (options.body) console.log(`[debug] request body: ${options.body}`);
     }
 
+    const jar = config.cookie_jar || config.cookie;
     let response;
     try {
-      response = await fetchWithOptionalJar(
-        url,
-        options,
-        config.cookie_jar || config.cookie,
-      );
+      response = await fetchWithOptionalJar(url, options, jar);
     } catch (error) {
       const cause = error.cause
         ? ` (cause: ${error.cause.code || error.cause.message || error.cause})`
         : "";
-      log(`[debug] fetch failed for ${options.method} ${url}${cause}`);
-      console.error(
-        `[debug] fetch failed for ${options.method} ${url}${cause}`,
-      );
       error.message = `${error.message} for ${options.method} ${url}${cause}`;
-      throw error;
+
+      // The host fetch cannot reach Docker-internal addresses (on macOS, an
+      // operator k3d bridge-network $PROXY_IP lives inside the Docker
+      // Desktop VM's network). Re-run the same request inside the test
+      // container, which shares the daemon's network namespace, and let the
+      // parsed response flow through the normal status/extract/retry logic.
+      // Classification and the curl/parse contracts live in
+      // container-request.js; cookie-jar and multipart requests keep the
+      // original error, since the fallback does not cover them.
+      if (!isNetworkLevelError(error) || jar || options.body instanceof FormData) {
+        throw error;
+      }
+
+      const fallbackCommand = buildCurlCommand(url, {
+        ...options,
+        insecure: config.insecure,
+      });
+      const result = await executeCommand(container, fallbackCommand);
+      response = parseCurlResponse(result.output);
     }
     let body = {};
 
@@ -386,12 +427,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
         ...(config.expected_headers
-          ? config.expected_headers.map((header) => (response) => ({
-              assert: response.headers.has(header),
-              message: `Expected: request ${requestNumber} to have header '${header}', got: '${response.headers.get(
-                header,
-              )}'.`,
-            }))
+          ? expectedHeaderChecks(config.expected_headers, `request ${requestNumber}`)
           : []),
         ...(requestNumber === config.iterations
           ? [
@@ -416,19 +452,82 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     await sleep(config.sleep);
   }
   const statusCode = config.status_code ?? 200;
-  return validateRequest(
+  let responseText = "";
+  const assertions = await validateRequest(
     validationName,
     config,
     runtimeConfig,
     container,
     [
-      (response) => ({
-        assert: response.status === statusCode,
-        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
-      }),
+      (response, body) => {
+        if (config.capture) {
+          responseText = captureInputText({
+            status: response.status,
+            headers: response.headers,
+            // The response body arrives parsed for JSON responses;
+            // re-serialize so the container-side shell pipeline sees the same
+            // document.
+            bodyText: typeof body === "string" ? body : JSON.stringify(body ?? ""),
+            displayHeaders: Boolean(config.display_headers),
+          });
+        }
+        return {
+          assert: response.status === statusCode,
+          message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
+        };
+      },
+      ...expectedHeaderChecks(config.expected_headers, `request to ${config.url}`),
     ],
     statusCode,
   );
+  if (config.capture) {
+    assertions.push(
+      ...(await persistCapturedVariables(config.capture, config.url, responseText, container)),
+    );
+  }
+  return assertions;
+}
+
+// `capture` entries on a request validation persist response fields as
+// container env vars, so later steps can reference them ($CONTROL_PLANE_ID,
+// $SERVICE_ID, ...). Every form the page renders is honored (see
+// instructions/capture.js): a `jq` filter, a shell `command`, or the bare form
+// that keeps the whole response as the value. The value is stored through the
+// /env-vars.sh _BASE64 line format owned by instructions/export-assignment.js:
+// multi-line values (certificates) survive, and decoded entries win over any
+// earlier plain entry for the same name.
+async function persistCapturedVariables(captures, url, responseText, container) {
+  const assertions = [];
+
+  for (const capture of captures) {
+    if (!capture.variable) {
+      throw new ValidationError(
+        `Expected: capture entry to have 'variable', got: ${JSON.stringify(capture)}.`,
+        assertions,
+      );
+    }
+    const captureResult = await executeCommand(
+      container,
+      captureCommand(capture, responseText),
+    );
+    const value = captureResult.output.trim();
+
+    if (!value || value === "null") {
+      const message = `Expected: capture ${capture.variable} to produce a value with ${captureDescription(capture)}, got: empty.`;
+      assertions.push(message);
+      throw new ValidationError(message, assertions);
+    }
+
+    const base64Value = Buffer.from(value).toString("base64");
+    await executeCommand(
+      container,
+      `echo 'export ${capture.variable}_BASE64="${base64Value}"' >> /env-vars.sh`,
+    );
+    assertions.push(
+      `Captured ${capture.variable} from ${url} with ${captureDescription(capture)}.`,
+    );
+  }
+  return assertions;
 }
 
 async function unauthorizedCheck(
@@ -496,8 +595,7 @@ async function quickstart(config, runtimeConfig, container) {
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
-  const retryDelays = [10000, 15000, 20000, 25000, 30000, 35000]; // delay before retry attempts
-  const maxRetries = retryDelays.length + 1;
+  const maxRetries = RETRY_DELAYS.length + 1;
 
   let result;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -518,7 +616,7 @@ async function customCommand(validationName, config, runtimeConfig, container) {
     }
 
     if (attempt < maxRetries - 1) {
-      const backoffDelay = retryDelays[attempt];
+      const backoffDelay = RETRY_DELAYS[attempt];
       log(
         `Retry attempt ${
           attempt + 1
@@ -621,6 +719,145 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
   return [];
 }
 
+// The kubernetes-* validations are thin hooks: required-config checks (the
+// drop already validated them at render time, but a malformed step must fail
+// before any cluster command runs), then exec of the helper-built command and
+// delegation of the pass/fail decision to the helper's comparison. Command
+// construction, defaults, and comparisons live in kubernetes-commands.js.
+function requireKubernetesConfig(validationName, config, fields) {
+  for (const field of fields) {
+    // Falsy, not just null/undefined: an empty-string kind/name/path is a
+    // de-facto missing field and must fail fast here, not burn the retry
+    // budget on a kubectl error.
+    if (!config[field]) {
+      logAndError(
+        validationName,
+        `Missing '${field}' in the validation config: ${JSON.stringify(config)}.`,
+        [],
+      );
+    }
+  }
+}
+
+// The customCommand retry shape for the two assertion types: both read
+// freshly created resources whose reconciliation may lag. kubernetes-wait-for
+// does not use this: the wait itself is the retry mechanism, and kubectl's
+// --timeout governs it (an outer loop would only multiply the timeout).
+async function runKubernetesAssertion(container, command, evaluate) {
+  const maxRetries = RETRY_DELAYS.length + 1;
+  let result;
+  let check;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      result = await executeCommand(container, command);
+    } catch (error) {
+      result = error;
+    }
+
+    check = evaluate(result.output);
+
+    if (check.pass) {
+      break;
+    }
+
+    if (attempt < maxRetries - 1) {
+      log(
+        `Retry attempt ${
+          attempt + 1
+        } - the kubernetes command did not pass yet (${check.message}), retrying in ${
+          RETRY_DELAYS[attempt]
+        }ms...`,
+      );
+      await sleep(RETRY_DELAYS[attempt]);
+    }
+  }
+
+  return { check, command, output: result.output };
+}
+
+// Throws the ValidationError carrying the structured message on final
+// failure; the assertions list keeps the check, the command, and the raw
+// output so the report shows all three.
+function reportKubernetesCheck(validationName, { check, command, output }) {
+  if (!check.pass) {
+    logAndError(validationName, check.message, [
+      check.message,
+      `Command: ${command}`,
+      `Output: ${output || "(empty)"}`,
+    ]);
+  }
+  return [check.message];
+}
+
+async function kubernetesResource(validationName, config, runtimeConfig, container) {
+  requireKubernetesConfig(validationName, config, ["kind", "name"]);
+
+  return reportKubernetesCheck(
+    validationName,
+    await runKubernetesAssertion(
+      container,
+      buildKubernetesResourceCommand(config),
+      (commandOutput) => checkKubernetesResourceCondition(config, commandOutput),
+    ),
+  );
+}
+
+async function kubernetesResourceProperty(
+  validationName,
+  config,
+  runtimeConfig,
+  container,
+) {
+  requireKubernetesConfig(validationName, config, ["kind", "path"]);
+  if (!config.name && !config.name_selector) {
+    logAndError(
+      validationName,
+      `Missing 'name' or 'name_selector' in the validation config: ${JSON.stringify(config)}.`,
+      [],
+    );
+  }
+
+  return reportKubernetesCheck(
+    validationName,
+    await runKubernetesAssertion(
+      container,
+      buildKubernetesResourcePropertyCommand(config),
+      (commandOutput) => compareKubernetesResourceProperty(config, commandOutput),
+    ),
+  );
+}
+
+async function kubernetesWaitFor(validationName, config, runtimeConfig, container) {
+  requireKubernetesConfig(validationName, config, ["kind", "resource"]);
+
+  const command = buildKubernetesWaitForCommand(config);
+  let result;
+  try {
+    result = await executeCommand(container, command);
+  } catch (error) {
+    result = error;
+  }
+
+  if (result.exitCode !== 0) {
+    // kubectl wait exits 0 once the condition is reached; anything else is
+    // the timeout (or an error), and its first output line is kubectl's own
+    // message naming the resource.
+    const kubectlError = (result.output || "").trim().split("\n")[0];
+    logAndError(
+      validationName,
+      `The kubectl wait failed or timed out: ${kubectlError || "(no output)"}`,
+      [
+        "Expected: the wait to complete within the configured timeout, got: " +
+          `exit code ${result.exitCode} (the condition was not reached).`,
+        `Command: ${command}`,
+        `Output: ${result.output || "(empty)"}`,
+      ],
+    );
+  }
+  return [];
+}
+
 export async function validate(container, validation, runtimeConfig) {
   let result;
   log(`   ${validation.name}`);
@@ -680,6 +917,30 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "vault-secret":
       result = await vaultSecret(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-resource":
+      result = await kubernetesResource(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-resource-property":
+      result = await kubernetesResourceProperty(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-wait-for":
+      result = await kubernetesWaitFor(
         validation.name,
         validation.config,
         runtimeConfig,

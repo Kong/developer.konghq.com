@@ -35,6 +35,28 @@ tldr:
 prereqs:
   skip_product: true
 
+cleanup:
+  inline:
+    - title: Delete the Gateway resources
+      content: |
+        Deleting the `Gateway` also deletes the `DataPlane` and the `KonnectGatewayControlPlane` that {{ site.operator_product_name }} created for it, which removes the control plane it created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found gateway/kong
+        kubectl delete -n kong --ignore-not-found gatewayconfiguration/kong-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/gateway.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 next_steps:
   - text: Learn about Custom resource definitions (CRDs)
     url: /operator/reference/custom-resources/
@@ -103,6 +125,14 @@ kubectl patch -n kong --type=json deployment echo -p='[
     }
 ]'
 ```
+{: data-test-step="block" }
+
+Wait for the patched Deployment to roll out:
+
+```bash
+kubectl rollout status deployment/echo -n kong --timeout=60s
+```
+{: data-test-step="block" }
 
 ## Route TCP traffic with TLS
 
@@ -130,6 +160,7 @@ spec:
       tls:
         mode: Passthrough' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 Next, create a `TLSRoute`:
 
@@ -151,32 +182,52 @@ spec:
         port: 1030
 " | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward all traffic it receives on port `9443` to the `echo` Service on port `1030`.
 
 ## Validate your configuration
+
+Wait for the `Gateway` to be ready. The listener change re-provisions the data plane, and the `Gateway` gets its address back once the new data plane deployment is running:
+
+```bash
+kubectl wait gateway/kong -n kong \
+  --for=condition=DataPlaneReady=True \
+  --timeout=5m
+kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+```
+{: data-test-step="block" }
 
 Export the Gateway's external address:
 
 ```bash
 export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
 ```
+{: data-test-step="block" }
 
 You can now access the `echo` Service on port `9443` with SNI `tls9443.kong.example`.
 
 In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add an SNI automatically. For this demo, add it manually using the OpenSSL CLI:
 
-```bash
-echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
-```
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
+expected:
+  return_code: 1
+  message: 'hello'
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 The results should look like this:
 
 ```text
 Welcome, you are connected to node kind-control-plane.
 Running on Pod echo-5f44d4c6f9-krnhk.
-In namespace default.
+In namespace kong.
 With IP address 10.244.0.26.
+Through TLS connection.
 hello
 ```
 {:.no-copy-code}
@@ -198,6 +249,7 @@ The following sections walk through a second `TLSRoute` on a new listener (port 
 ```bash
 kubectl label secret tls9444.kong.example -n kong konghq.com/secret="true"
 ```
+{: data-test-step="block" }
 
 For more information about how {{ site.operator_product_name }} handles secrets, see the [Secrets reference](/operator/reference/secrets/).
 
@@ -234,6 +286,7 @@ spec:
             kind: Secret
             name: tls9444.kong.example' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ### Create a TLSRoute for the Terminate listener
 
@@ -257,15 +310,33 @@ spec:
         port: 1025
 " | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ### Validate the Terminate listener
 
-Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
+Wait for the `Gateway` to be ready. The listener change re-provisions the data plane, and the `Gateway` gets its address back once the new data plane deployment is running:
 
 ```bash
-echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
+kubectl wait gateway/kong -n kong \
+  --for=condition=DataPlaneReady=True \
+  --timeout=5m
+kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
 ```
+{: data-test-step="block" }
 
-You should see similar output as previously shown in the example using `Passthrough` TLS mode.
+Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
+expected:
+  return_code: 0
+  message: 'hello'
+render_output: false
+{% endvalidation %}
+<!--vale on-->
+
+You should see similar output as previously shown in the example using Passthrough TLS mode.
 
 Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labeled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.

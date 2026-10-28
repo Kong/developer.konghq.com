@@ -124,7 +124,12 @@ export async function setupRuntime(runtimeConfig, docker) {
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
-  // Add gateway license
+  // Add the gateway license. Every runtime needs it, including konnect
+  // operator runs: the how-tos deploy enterprise gateway data planes
+  // (kong/kong-gateway), and Kong Gateway 3.16+ runs read-only without a
+  // license, rejecting config pushes with 403, so the pages' Gateways never
+  // program. The konnect.operator reset also applies the license as a
+  // KongLicense CR because the konnect pages never do it themselves.
   if (!process.env.KONG_LICENSE_DATA) {
     throw new Error("Missing env variable KONG_LICENSE_DATA");
   }

@@ -33,6 +33,34 @@ prereqs:
       include_content: /prereqs/operator/ai-gateway
       icon_url: /assets/icons/kubernetes.svg
 
+cleanup:
+  inline:
+    - title: Delete the {{ site.ai_gateway_name }} resources
+      content: |
+        Deleting the `KonnectAIGateway` also deletes the {{ site.ai_gateway_name }} control plane the {{ site.operator_product_name }} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          aigatewaypolicy/headroom-compressor \
+          aigatewaydataplane/my-ai-gateway-dp \
+          aigatewaymodel/gpt-4o-mini \
+          aigatewaymodelprovider/openai-provider \
+          konnectaigateway/my-ai-gateway-cp \
+          secret/headroom-policy-config \
+          secret/openai-credentials
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/ai-gateway.svg
+
+    - title: Delete Headroom and the namespaces
+      content: |
+        ```bash
+        kubectl delete -n kong --ignore-not-found deployment/headroom service/headroom secret/headroom-token
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 tldr:
   q: How do I compress agent traffic with Headroom on an {{ site.ai_gateway }} managed by {{site.operator_product_name}}?
   a: |
@@ -89,6 +117,7 @@ This guide uses the following recommended layout:
    kubectl create secret generic headroom-token -n kong \
      --from-literal=token="$HEADROOM_TOKEN"
    ```
+   {: data-test-step="block" }
 
 1. Deploy Headroom and its Service:
 
@@ -137,6 +166,7 @@ This guide uses the following recommended layout:
          targetPort: 8787
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
    By default, Headroom only answers `/v1/compress` for loopback callers and returns `404` to everyone else. `HEADROOM_COMPRESS_ALLOW_REMOTE=1` lets the data plane pod call it, and `HEADROOM_PROXY_TOKEN` rejects any caller without the token with `401`.
 
@@ -145,6 +175,7 @@ This guide uses the following recommended layout:
    ```bash
    kubectl rollout status deployment/headroom -n kong --timeout=5m
    ```
+   {: data-test-step="block" }
 
 ## Record a baseline
 
@@ -166,14 +197,22 @@ Headroom compresses tool output, JSON, code, and logs. It doesn't compress plain
        {role: "tool", tool_call_id: "call_1", content: $logs}
      ]}' > request.json
    ```
+   {: data-test-step="block" }
 
 1. Send the request before you create the AI Prompt Compressor Policy and note the prompt tokens OpenAI reports:
 
-   ```bash
-   curl -s http://$AIGW_HOST:8000/v1/chat/completions \
-     -H "Content-Type: application/json" \
-     -d @request.json | jq '.usage.prompt_tokens'
-   ```
+   <!--vale off-->
+   {% validation custom-command %}
+   command: |
+     curl -s http://$AIGW_HOST:8000/v1/chat/completions \
+       -H "Content-Type: application/json" \
+       -d @request.json | jq -e '.usage.prompt_tokens'
+   expected:
+     return_code: 0
+   render_output: false
+   indent: 3
+   {% endvalidation %}
+   <!--vale on-->
 
    In this example, this request should use about 16,900 prompt tokens.
 
@@ -203,6 +242,7 @@ Headroom compresses tool output, JSON, code, and logs. It doesn't compress plain
      --from-file=config.yaml=headroom-config.yaml
    kubectl label secret headroom-policy-config -n kong konghq.com/secret=true
    ```
+   {: data-test-step="block" }
 
 1. Create the AI Policy and apply it to every AI Model:
 
@@ -231,6 +271,7 @@ Headroom compresses tool output, JSON, code, and logs. It doesn't compress plain
            key: config.yaml
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the AI Policy to be reconciled:
 
@@ -239,24 +280,39 @@ Headroom compresses tool output, JSON, code, and logs. It doesn't compress plain
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 ## Validate
 
 1. Send the same request again, this time with a session header. Use a fresh session ID, because Headroom compresses a repeated tool result more aggressively within the same session:
 
-   ```bash
-   curl -s http://$AIGW_HOST:8000/v1/chat/completions \
-     -H "Content-Type: application/json" \
-     -H "x-claude-code-session-id: $(uuidgen)" \
-     -d @request.json | jq '.usage.prompt_tokens'
-   ```
+   <!--vale off-->
+   {% validation custom-command %}
+   command: |
+     curl -s http://$AIGW_HOST:8000/v1/chat/completions \
+       -H "Content-Type: application/json" \
+       -H "x-claude-code-session-id: $(uuidgen)" \
+       -d @request.json | jq -e 'if .usage.prompt_tokens < 10000 then .usage.prompt_tokens else error("prompt tokens were not reduced by Headroom") end'
+   expected:
+     return_code: 0
+   render_output: false
+   indent: 3
+   {% endvalidation %}
+   <!--vale on-->
 
    The prompt token count drops from about 16,900 in the baseline to about 4,500.
 
 1. To confirm the savings from Headroom's side, forward Headroom's port and read its statistics:
 
-   ```bash
-   kubectl port-forward -n kong deployment/headroom 8787:8787 > /dev/null 2>&1 &
-   curl -s http://localhost:8787/stats -H "Authorization: Bearer $HEADROOM_TOKEN" \
-     | jq '{compress_calls: .requests.by_provider.compress, tokens_saved: .tokens.saved}'
-   ```
+   <!--vale off-->
+   {% validation custom-command %}
+   command: |
+     kubectl port-forward -n kong deployment/headroom 8787:8787 > /dev/null 2>&1 &
+     curl -s http://localhost:8787/stats -H "Authorization: Bearer $HEADROOM_TOKEN" \
+       | jq -e 'if .requests.by_provider.compress > 0 then {compress_calls: .requests.by_provider.compress, tokens_saved: .tokens.saved} else error("no compress calls recorded") end'
+   expected:
+     return_code: 0
+   render_output: false
+   indent: 3
+   {% endvalidation %}
+   <!--vale on-->

@@ -22,7 +22,7 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 
 The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
 
-The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`).
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`).
 
 Each product can define:
 
@@ -68,9 +68,9 @@ konnect:
 
 The script will iterate over the list of `how-tos`, check if it needs to generate instruction files for that file, by testing the following conditions:
 
-* The frontmatter doesn't include `automated_tests: false`.
+* The front matter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
+* One of `gateway`, `ai-gateway`, `event-gateway`, or `operator` is set as `products` in the front matter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
@@ -81,6 +81,10 @@ Next, it spins up a headless browser and visits the corresponding URL for each `
 * **Steps**: pulls the value of all the elements with the `data-test-step` attribute. These represent both the steps the test needs to execute and `validations` that act as the assertions.
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
   * `data-test-step=json`: When the value is a json object, it represents the configuration of a `validation` step, which the test will treat as an assertion.
+
+For products configured with `extractInstructionsAs: block` in `config/tests.yaml` (`kic`), every `data-test-step` element, including rendered validation blocks, is copied as a plain bash command instead of a JSON assertion. A block fence can also carry `data-test-retry-count`: the extracted command becomes a structured step that the runner repeats with exponential backoff (5s initial delay doubling per attempt, capped at 30s), so readers see a single command while the test waits out asynchronous provisioning.
+
+How-to series are extracted as one instruction file: the extractor starts at the series' first page and follows the `data-test-series-next` links, appending every continuation page's steps in series order. Continuation pages therefore carry their own step markers but no instruction file of their own.
 
 After extracting the information, it generates an instruction file at `<url-path>/<deployment-model>/<product>.yaml` (e.g. `how-to/my-guide/on-prem/gateway.yaml`, `how-to/my-guide/konnect/gateway.yaml`) and stores them in `instructionsDir`.
 
@@ -122,12 +126,13 @@ they never read `app/_how-tos`. Add a fixture page there to cover a new case.
 
 ### Running the tests
 
-1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file basename, e.g. `gateway.yaml`, `operator.yaml`).
+1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file's base name, e.g. `gateway.yaml`, `operator.yaml`).
 1. Runs a docker image with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
 1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding `<deployment-model>.<product>` key. It also sets the `ENV` variables defined there in the container. For products that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `GATEWAY_VERSION`.
  E.g. for on-prem gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `on-prem.gateway.versions` for the entry `version: '3.9'`.
 1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
 1. Tests can be scoped to a specific deployment model by setting the `DEPLOYMENT_MODEL` env variable, e.g. `DEPLOYMENT_MODEL=on-prem`.
+1. If the `PRODUCTS` and `DEPLOYMENT_MODEL` filters match no instruction file, the run prints the active filter values and exits with code 1 instead of reporting zero tests and passing.
 1. Runs the `setup` commands defined in `runtimes.yaml` once, and after each test it resets it by running the commands under `reset`.
 1. For each instruction file (test), it runs its `prereqs` block.
 1. Then, it runs the steps sequentially. Steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
@@ -155,6 +160,23 @@ By default, it will run all the instruction files, but it also supports running 
 #### Run on-prem operator tests
 
 `DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
+
+Operator how-tos are testable on-prem and on Konnect: the generator extracts operator pages into `on-prem/operator.yaml` and `konnect/operator.yaml` instruction files. The `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply.
+
+Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Because operator extracts instructions as blocks, validation blocks run as plain commands: an expected non-2xx response (for example a 404 isolation check) must be documented as a `custom-command`, since a `request-check`'s copied curl always fails on non-2xx responses.
+
+#### Run konnect operator tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='operator' npm run run-tests`
+
+The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to and creates a fresh k3d cluster. It does not pre-install the operator: each konnect page installs it from its own documented Helm steps (extracted via the `prereqs/products/operator.md` include, which sets `ENABLE_CONTROLLER_KONNECT=true` and waits for the controller deployment to become available). The test steps then apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
+
+Requirements and behavior:
+
+* `TESTS_KONNECT_TOKEN` must be exported: it is the Konnect token the operator authenticates with.
+* `KONG_LICENSE_DATA` is not required for konnect operator runs: konnect pages never apply a `KongLicense`.
+* Reset and cleanup delete **every control plane in the token's org** through the Konnect API, so the token must belong to a dedicated docs test org, never a shared one.
+* The transit gateway how-to creates real AWS resources (an EC2 transit gateway and a RAM resource share). It needs `TESTS_AWS_REGION`, `TESTS_AWS_ACCESS_KEY_ID`, and `TESTS_AWS_SECRET_ACCESS_KEY` exported, and it deletes the resources it creates in its cleanup.
 
 #### Run unreleased gateway version
 

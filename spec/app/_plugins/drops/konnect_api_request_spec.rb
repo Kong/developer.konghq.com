@@ -67,7 +67,6 @@ RSpec.describe Jekyll::Drops::KonnectApiRequest do
       end
     end
 
-
     context 'when the writer also sets headers' do
       let(:yaml) do
         { 'url' => '/v2/control-planes', 'headers' => ['Content-Type: application/json'] }

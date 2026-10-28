@@ -1,7 +1,5 @@
 {%- assign summary='{{site.operator_product_name}} running' -%}
-{%- if page.prereqs.enterprise -%}
-{%- assign summary = summary | append:' (with an Enterprise license)' -%}
-{%- endif -%}
+{%- capture test_attr %}{% if include.raw %}data-test-step{% else %}data-test-prereq{% endif %}{%- endcapture -%}
 {%- capture license %}
 ```sh
 echo "
@@ -12,6 +10,7 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
+{: {{ test_attr }}="block" }
 {%- endcapture -%}
 {%- capture cert-manager -%}
 {% include k8s/cert-manager.md %}
@@ -26,6 +25,9 @@ rawLicenseString: '$(cat ./license.json)'
 {%- if prereqs.operator.rapid -%}
 {%- assign chart_version = chart_version | default: site.data.products.operator.rapid.chart -%}
 {%- endif -%}
+{% unless page.output_format == 'markdown' %}
+<div data-test-setup="operator" class="hidden"></div>
+{% endunless %}
 {% capture details_content %}
 {% if prereqs.operator.rapid %}
 {% include operator/rapid-release.md %}
@@ -37,6 +39,7 @@ rawLicenseString: '$(cat ./license.json)'
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
+   {: {{ test_attr }}="block" }
 
 1. Install {{ site.operator_product_name }} using Helm:
 
@@ -52,6 +55,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endkonnect %}
    {% endif %}
@@ -66,6 +70,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}
@@ -83,7 +88,9 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
      ```
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endkonnect %}
    {% endif %}
@@ -94,13 +101,15 @@ rawLicenseString: '$(cat ./license.json)'
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
        --create-namespace \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
+        --version {{ chart_version }}{% if include.devel %} \
+        --devel{% endif %}{% else %}
+        --set image.tag={{ site.data.operator_latest.release }}{% endif %}{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
      ```
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}
@@ -109,21 +118,12 @@ rawLicenseString: '$(cat ./license.json)'
 {% unless skip_cert_manager %}{{cert-manager | indent: 3}}{% endunless %}
 {{cert | indent: 3}}
 {%- if page.works_on contains 'on-prem' -%}
-{%- if page.prereqs.enterprise -%}
 {% on_prem %}
 content: |
   Apply a `KongLicense`. This assumes that your license is available in `./license.json`
 
   {{license | indent: 2}}
 {% endon_prem %}
-{% else %}
-{% on_prem %}
-content: |
-  This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
-
-  {{license | indent: 2}}
-{% endon_prem %}
-{%- endif -%}
 {%- endif -%}
 {%- endcapture -%}
 

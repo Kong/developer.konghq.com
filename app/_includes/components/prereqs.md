@@ -10,7 +10,9 @@
 {% include {{ prereq_include }} config=config products=prereqs.product_includes_map_keys %}
 {%- endfor -%}
 {%- if prereqs.kubernetes.gateway_api -%}
+{%- unless product == 'operator' -%}
 {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
+{%- endunless -%}
 {%- endif -%}
 {%- if prereqs.kubernetes.prometheus -%}
 {% include prereqs/kubernetes/prometheus.md config=prereqs.kubernetes %}
@@ -37,7 +39,8 @@
 {%- for product_map in prereqs.product_includes_map %}{% assign product = product_map[0] %}{% assign product_include = product_map[1] %}
 {%- if page.works_on and product != 'operator' -%}
 {%- if page.works_on contains 'konnect' -%}
-{% include {{ product_include }} prereqs=prereqs topology="konnect" %}
+{%- assign variables = prereqs.konnect -%}
+{% include {{ product_include }} prereqs=prereqs env_variables=variables topology="konnect" %}
 {%- endif -%}
 {%- if page.works_on contains 'on-prem' -%}
 {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
@@ -46,6 +49,9 @@
 {% include {{ product_include }} prereqs=prereqs %}
 {%- endif -%}
 {%- endfor -%}
+{%- if page.products[0] == 'operator' and prereqs.kubernetes.gateway_api -%}
+{% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
+{%- endif -%}
 {%- endif -%}
 {%- endif -%}
 {%- unless prereqs.skip_tool == true -%}

@@ -27,6 +27,55 @@ RSpec.describe Jekyll::KonnectApiRequest do
     include_examples 'a konnect-only content div'
     include_examples 'a section-aware konnect-only content div'
 
+    context 'when section is prereqs' do
+      let(:template) do
+        <<~LIQUID
+          {% konnect_api_request %}
+          url: /v2/control-planes
+          method: POST
+          body:
+              name: demo-control-plane
+          capture:
+            - variable: CONTROL_PLANE_ID
+              jq: ".id"
+          section: prereqs
+          {% endkonnect_api_request %}
+        LIQUID
+      end
+
+      it 'renders a data-test-prereq attribute instead of data-test-step' do
+        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-prereq]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
+      end
+
+      it 'does not render a data-test-cleanup attribute' do
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-cleanup]')
+      end
+
+      it 'carries the same attribute value the step case carries' do
+        step_template = <<~LIQUID
+          {% konnect_api_request %}
+          url: /v2/control-planes
+          method: POST
+          body:
+              name: demo-control-plane
+          capture:
+            - variable: CONTROL_PLANE_ID
+              jq: ".id"
+          {% endkonnect_api_request %}
+        LIQUID
+        step_html = Capybara::Node::Simple.new(render_liquid(step_template, page: page))
+
+        step_value = step_html.find('div.content[data-deployment-topology="konnect"]')['data-test-step']
+        prereq_value = html.find('div.content[data-deployment-topology="konnect"]')['data-test-prereq']
+        expect(prereq_value).to eq(step_value)
+      end
+
+      it 'strips the section key from the emitted validation config' do
+        expect(rendered).not_to include('section')
+      end
+    end
+
     context 'with indent set' do
       let(:template) do
         <<~LIQUID
@@ -51,6 +100,34 @@ RSpec.describe Jekyll::KonnectApiRequest do
 
     it 'renders no wrapping div' do
       expect(rendered).not_to include('<div')
+    end
+
+    it 'renders identically with and without section: prereqs' do
+      request = <<~LIQUID
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        method: POST
+        body:
+            name: demo-control-plane
+        capture:
+          - variable: CONTROL_PLANE_ID
+            jq: ".id"
+        {% endkonnect_api_request %}
+      LIQUID
+      with_section = <<~LIQUID
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        method: POST
+        body:
+            name: demo-control-plane
+        capture:
+          - variable: CONTROL_PLANE_ID
+            jq: ".id"
+        section: prereqs
+        {% endkonnect_api_request %}
+      LIQUID
+
+      expect(render_liquid(with_section, page: page)).to eq(render_liquid(request, page: page))
     end
   end
 

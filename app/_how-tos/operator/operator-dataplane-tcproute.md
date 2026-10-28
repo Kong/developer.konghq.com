@@ -27,16 +27,32 @@ tldr:
   a: Add a `TCP` listener to your `Gateway`, then create a `TCPRoute` resource. {{ site.operator_product_name }} converts the `TCPRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
-  enterprise: true
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: telnet installed
       include_content: prereqs/telnet
       icon_url: /assets/icons/code.svg
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          tcproute/echo-plaintext \
+          gateway/kong-tcp-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-tcp
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `TCPRoute` is a Kubernetes Gateway API resource for routing raw TCP traffic by port, without any TLS or L7 awareness. This guide shows how to configure {{ site.operator_product_name }} to proxy TCP traffic to a backend Service.
@@ -45,48 +61,103 @@ prereqs:
 
 ## Configure the Gateway
 
-Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener:
+{% konnect %}
+content: |
+  Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener. Setting `spec.konnect.authRef` hands the data plane to {{site.konnect_short_name}}, which manages its configuration:
 
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong-gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-tcp
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: kong-gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-tcp-gateway
-  namespace: kong
-spec:
-  gatewayClassName: kong-tcp
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP' | kubectl apply -f -
-```
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+        namespace: kong
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tcp
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tcp-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: kong-tcp
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener:
+
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: kong-gateway-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tcp
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tcp-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: kong-tcp
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Deploy a TCP backend
 
@@ -95,6 +166,7 @@ Install the `echo` Service, which accepts plain TCP connections on port `1025` a
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Route TCP traffic
 
@@ -118,7 +190,8 @@ kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
        - name: stream9000
          port: 9000
          protocol: TCP' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
 
 1. Create a `TCPRoute`:
 
@@ -138,6 +211,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
              port: 1025
    " | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward all traffic it receives on port `9000` to the `echo` Service on port `1025`.
 
@@ -145,24 +219,34 @@ This configuration instructs {{ site.base_gateway }} to forward all traffic it r
 
 1. Wait for the Gateway to be programmed:
 
-   ```bash
-   kubectl wait gateway/kong-tcp-gateway -n kong \
-     --for=condition=Programmed=True \
-     --timeout=5m
-   ```
+    ```bash
+    kubectl wait gateway/kong-tcp-gateway -n kong \
+      --for=condition=Programmed=True \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to be programmed after the listener change:
+
+    ```bash
+    kubectl wait --for=condition=Programmed gateway/kong-tcp-gateway -n kong --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-tcp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
-   ```
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-tcp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    echo $PROXY_IP
+    ```
+    {: data-test-step="block" }
 
 1. Test the Route using `telnet`:
 
-   ```bash
-   telnet -e '^X' $PROXY_IP 9000
-   ```
+    ```bash
+    telnet -e '^X' $PROXY_IP 9000
+    ```
+    {: data-test-step="block" data-test-retry-count="6" }
 
    {:.info}
    > The `-e '^X'` flag allows you to chose an escape key to exit telnet.

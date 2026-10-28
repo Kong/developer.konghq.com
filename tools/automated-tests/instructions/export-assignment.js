@@ -12,13 +12,27 @@
 const ASSIGNMENT_FROM_SUBSTITUTION =
   /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*["']?\$\(/;
 
-export function parseExportAssignment(cmd) {
+// Every line of a doc-sourced command that starts an assignment from a command
+// substitution (e.g. the control-plane/config-store ID fetch blocks export
+// several variables in one command). Lines that merely continue a previous
+// command (or carry a YAML payload) never match, because the assignment must
+// start the line.
+export function parseExportAssignments(cmd) {
   if (typeof cmd !== "string") {
-    return null;
+    return [];
   }
-  const firstLine = cmd.split("\n")[0];
-  const match = firstLine.match(ASSIGNMENT_FROM_SUBSTITUTION);
-  return match ? match[1] : null;
+  const names = [];
+  for (const line of cmd.split("\n")) {
+    const match = line.match(ASSIGNMENT_FROM_SUBSTITUTION);
+    if (match && !names.includes(match[1])) {
+      names.push(match[1]);
+    }
+  }
+  return names;
+}
+
+export function parseExportAssignment(cmd) {
+  return parseExportAssignments(cmd)[0] ?? null;
 }
 
 // The single owner of the /env-vars.sh _BASE64 line format. quotedValue is the
@@ -30,13 +44,17 @@ export function base64EnvLine(name, quotedValue) {
   return `export ${name}_BASE64=${quotedValue}`;
 }
 
-export function buildPersistCommand(cmd, name) {
-  const inShellValue = `\\"$(printf %s "$${name}" | base64 -w0)\\"`;
+export function buildPersistCommand(cmd, names) {
+  // names is an array of assignment names (or a single name string).
+  const persistLines = (Array.isArray(names) ? names : [names]).map((name) => {
+    const inShellValue = `\\"$(printf %s "$${name}" | base64 -w0)\\"`;
+    return `  echo "${base64EnvLine(name, inShellValue)}" >> /env-vars.sh`;
+  });
   return [
     cmd,
     "__doc_cmd_status=$?",
     'if [ "$__doc_cmd_status" -eq 0 ]; then',
-    `  echo "${base64EnvLine(name, inShellValue)}" >> /env-vars.sh`,
+    ...persistLines,
     "fi",
     'exit "$__doc_cmd_status"',
   ].join("\n");

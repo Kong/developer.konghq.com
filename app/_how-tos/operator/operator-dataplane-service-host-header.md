@@ -26,7 +26,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -41,23 +40,54 @@ tldr:
 related_resources:
   - text: Service annotations reference
     url: /operator/dataplanes/reference/service-annotations/
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/httpbin-route \
+          service/httpbin \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, {{site.base_gateway}} sets the `Host` header to the IP address of the individual Pod it forwards the request to. Some upstream services perform host-based virtual hosting or access control and require a specific `Host` header value. You can override this behavior using the `konghq.com/host-header` annotation.
 
 ## Check the default behavior
 
+1. Wait for the `Gateway` to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
+
 1. Get the Gateway's external IP address:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 1. Send a request to the `/headers` endpoint, which returns all request headers received by the upstream service:
 
-   ```bash
-   curl -s $PROXY_IP/httpbin/headers
-   ```
+{% validation request-check %}
+url: /httpbin/headers
+status_code: 200
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+indent: 3
+{% endvalidation %}
 
    The response shows the headers the upstream received. The `Host` header will contain the Pod IP address assigned by {{site.base_gateway}}:
 
@@ -69,7 +99,7 @@ By default, {{site.base_gateway}} sets the `Host` header to the IP address of th
      }
    }
    ```
-{:.no-copy-code}
+   {:.no-copy-code}
 
 ## Annotate the Service
 
@@ -79,14 +109,20 @@ Annotate the `httpbin` Service to set a custom `Host` header:
 kubectl annotate service httpbin -n kong \
   konghq.com/host-header="internal.example.com"
 ```
+{: data-test-step="block" }
 
 ## Validate
 
 Send the same request again:
 
-```bash
-curl -s $PROXY_IP/httpbin/headers
-```
+{% validation custom-command %}
+command: |
+  curl -s $PROXY_IP/httpbin/headers
+expected:
+  return_code: 0
+  message: 'internal.example.com'
+render_output: false
+{% endvalidation %}
 
 The `Host` header in the upstream request now reflects the configured value:
 

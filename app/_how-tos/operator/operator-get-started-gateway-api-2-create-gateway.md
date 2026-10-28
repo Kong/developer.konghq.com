@@ -77,6 +77,7 @@ content: |
             - name: proxy
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 
   ### Existing {{site.konnect_short_name}} control plane
 
@@ -120,6 +121,7 @@ content: |
   ```bash
   kubectl create namespace kong
   ```
+  {: data-test-step="block" }
 
   ```bash
   echo '
@@ -135,8 +137,9 @@ content: |
           spec:
             containers:
             - name: proxy
-              image: kong/kong-gateway:3.9' | kubectl apply -f -
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 
@@ -158,6 +161,7 @@ spec:
     namespace: kong
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a `Gateway` Resource
 
@@ -178,6 +182,7 @@ spec:
     port: 80
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 {% konnect %}
 content: |

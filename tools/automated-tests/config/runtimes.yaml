@@ -109,6 +109,9 @@ on-prem:
       commands:
         - helm repo add kong https://charts.konghq.com
         - helm repo update
+        # The documented on-prem KongLicense prereq reads ./license.json from
+        # the container's working directory (.workspace, see runtimes.js).
+        - 'printf "%s" "$KONG_LICENSE_DATA" > ./license.json'
     cleanup:
       commands:
         - k3d cluster delete operator-test
@@ -117,6 +120,15 @@ on-prem:
         - k3d cluster delete operator-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-test --wait
         - kubectl config use-context k3d-operator-test
+        # Register the Helm repo only, never pre-install the operator:
+        # pre-installing creates kong-system, which breaks pages whose steps
+        # create that namespace themselves (the multi-tenancy series). Every
+        # tested page installs its own operator, either through the standard
+        # operator prereq include or in its own steps. The repo registration
+        # stays because some pages (e.g. enable-debug-logging) run
+        # `helm install` without adding the repo first.
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
 
   kic:
     setup:
@@ -224,3 +236,39 @@ konnect:
           - sleep 5
           - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
           - sleep 5
+
+  operator:
+    setup:
+      commands:
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+    cleanup:
+      commands:
+        # Deleting the cluster alone would orphan the Konnect-side control
+        # planes (the operator's finalizers die with the cluster), so every
+        # control plane in the token's org is deleted through the API first.
+        - &delete-control-planes |
+          PAGE=1
+          while :; do
+            # -g is required: the page[number]/page[size] query params would
+            # otherwise be parsed as curl URL globbing and fail with exit 3
+            # (URL malformed), silently deleting nothing.
+            RESPONSE=$(curl -s -g --max-time 60 -X GET "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes?page[number]=$PAGE&page[size]=100" -H "Authorization: Bearer $KONNECT_TOKEN")
+            # Break on any response that yields no control plane ids: an empty
+            # page (end of pagination) or any failure (empty body, non-JSON
+            # error page, auth error). Never key the loop on meta pagination
+            # fields: a parse failure would empty them and loop forever.
+            IDS=$(printf '%s' "$RESPONSE" | jq -r '.data[]?.id' 2>/dev/null)
+            [ -z "$IDS" ] && break
+            for CONTROL_PLANE_ID in $IDS; do
+              curl -s -g --max-time 60 -X DELETE "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes/$CONTROL_PLANE_ID" -H "Authorization: Bearer $KONNECT_TOKEN"
+            done
+            PAGE=$((PAGE+1))
+          done
+        - k3d cluster delete operator-konnect-test
+    reset:
+      commands:
+        - *delete-control-planes
+        - k3d cluster delete operator-konnect-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-konnect-test --wait
+        - kubectl config use-context k3d-operator-konnect-test

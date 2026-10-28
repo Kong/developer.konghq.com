@@ -6,6 +6,7 @@ import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
 import { executeCommand, executeDocCommand } from "../docker-helper.js";
+import { executeDocCommandWithRetry } from "./retry.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -101,15 +102,30 @@ async function runCleanup(cleanup, container, runtimeConfig) {
   if (cleanup) {
     const config = await processCleanup(cleanup);
     if (config.commands) {
+      // Cleanup is best-effort: a command that fails (e.g. deleting a
+      // resource an earlier failed step never created) must not skip the
+      // remaining ones, or later resources leak.
+      const errors = [];
       for (const command of config.commands) {
-        if (typeof command === "string") {
-          await executeCommand(container, command);
-        } else {
-          await validate(container, command, runtimeConfig);
+        try {
+          if (typeof command === "string") {
+            await executeCommand(container, command);
+          } else {
+            await validate(container, command, runtimeConfig);
+          }
+        } catch (err) {
+          errors.push(err.message);
         }
       }
+      if (errors.length > 0) {
+        log(`   cleanup ❌. ${errors.length} command(s) failed:`);
+        for (const error of errors) {
+          log(`     ${error}`);
+        }
+      } else {
+        log(`   cleanup ✅ .`);
+      }
     }
-    log(`   cleanup ✅ .`);
   }
 }
 
@@ -123,6 +139,15 @@ async function runSteps(steps, runtimeConfig, container) {
         for (const command of config.commands) {
           if (typeof command === "string") {
             await executeDocCommand(container, command);
+            log(`   step ✅ .`);
+          } else if (command.command !== undefined) {
+            // A command object is a bash step marked data-test-retry-count on
+            // its page fence: the runner repeats it with exponential backoff.
+            await executeDocCommandWithRetry(
+              container,
+              command.command,
+              command.retry_count,
+            );
             log(`   step ✅ .`);
           } else {
             // XXX: Sleep needed here because we need to wait for the iterator

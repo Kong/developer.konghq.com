@@ -27,23 +27,44 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/echo-route \
+          service/echo \
+          secret/my-certificate \
+          gateway/kong-tls-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-tls
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 Configuring TLS termination at the Gateway level allows {{ site.operator_product_name }} to manage SSL/TLS certificates and decrypt incoming traffic before it reaches your services. This guide shows how to set up an HTTPS listener using the standard Kubernetes Gateway API.
 
 {% include k8s/kong-namespace.md %}
-{: data-depoloyment-topology="on-prem"}
 
 ## Create a certificate
 
 1. Create a self-signed certificate:
+
    ```sh
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=demo.example.com"
    ```
+   {: data-test-step="block" }
 
 1. Create a Kubernetes secret containing the certificate and key:   
+
    ```sh
    echo "apiVersion: v1
    kind: Secret
@@ -52,9 +73,10 @@ Configuring TLS termination at the Gateway level allows {{ site.operator_product
      namespace: kong
    type: kubernetes.io/tls
    data:
-     tls.crt: "$(cat tls.crt | base64)"
-     tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
+     tls.crt: "$(cat tls.crt | base64 | tr -d '\n')"
+     tls.key: "$(cat tls.key | base64 | tr -d '\n')"" | kubectl apply -f - 
    ```
+   {: data-test-step="block" }
 
 ## Configure the Gateway
 
@@ -63,56 +85,125 @@ Create the following resources:
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
 * A `Gateway` with a listener on port 443 with the `HTTPS` protocol and a reference to the Secret we created.
 
-```sh
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong-gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-tls
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+{% konnect %}
+content: |
+  Setting `spec.konnect.authRef` attaches the data plane to {{site.konnect_short_name}}, which manages its configuration:
+
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: kong-gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-tls-gateway
-  namespace: kong
-spec:
-  gatewayClassName: kong-tls
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP
-    - name: https
-      port: 443
-      protocol: HTTPS
-      hostname: demo.example.com
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - group: ""
-            kind: Secret
-            name: my-certificate' | kubectl apply -f - 
-```
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+        namespace: kong
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tls
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tls-gateway
+    namespace: kong
+    annotations:
+      gateway-operator.konghq.com/static-naming: "true"
+  spec:
+    gatewayClassName: kong-tls
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: demo.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: my-certificate' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+
+  The `gateway-operator.konghq.com/static-naming: "true"` annotation gives the control plane {{ site.operator_product_name }} creates for the `Gateway` a predictable name: it is named after the `Gateway`, `kong-tls-gateway`.
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```sh
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: kong-gateway-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tls
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tls-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: kong-tls
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: demo.example.com
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: my-certificate' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Label the Secret
 
@@ -121,6 +212,7 @@ spec:
 ```bash
 kubectl label secret my-certificate -n kong konghq.com/secret="true"
 ```
+{: data-test-step="block" }
 
 For more information about how {{ site.operator_product_name }} handles secrets, see the [Secrets reference](/operator/reference/secrets).
 
@@ -132,6 +224,7 @@ Run the following command to create a sample echo Service:
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create a Route
 
@@ -157,8 +250,9 @@ spec:
       backendRefs:
         - name: echo
           kind: Service
-          port: 1027' | kubectl apply -f - 
+          port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 
@@ -167,17 +261,52 @@ spec:
     ```bash
     kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.listeners}'
     ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to be programmed:
+
+    ```bash
+    kubectl wait --for=condition=Programmed gateway/kong-tls-gateway -n kong --timeout=5m
+    ```
+    {: data-test-step="block" }
+
+1. Wait for the `HTTPRoute` to be ready:
+
+    {% on_prem %}
+    content: |
+      ```bash
+      kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo-route -n kong --timeout=5m
+      ```
+      {: data-test-step="block" }
+    indent: 4
+    {% endon_prem %}
+
+    {% konnect %}
+    content: |
+      ```bash
+      kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Accepted")].status}'=True httproute/echo-route -n kong --timeout=5m
+      ```
+      {: data-test-step="block" }
+    indent: 4
+    {% endkonnect %}
 
 1. Get the Gateway's external IP:
-   
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   ```
+
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    ```
+    {: data-test-step="block" }
 
 1.  Test the connection:
 
-    ```bash
-    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
-    ```
+{% validation custom-command %}
+command: |
+  curl -ivk --resolve demo.example.com:443:$PROXY_IP https://demo.example.com/echo
+expected:
+  return_code: 0
+  message: 'HTTP/2 200'
+render_output: false
+indent: 4
+{% endvalidation %}
 
     You should get TLS handshake and a 200 response.
