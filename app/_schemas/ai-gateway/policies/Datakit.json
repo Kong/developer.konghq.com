@@ -22,291 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "resources": {
-          "type": "object",
-          "properties": {
-            "vault": {
-              "type": "object",
-              "maxLength": 64,
-              "minLength": 1,
-              "additionalProperties": {
-                "type": "string",
-                "maxLength": 4095,
-                "minLength": 1,
-                "x-referenceable": true,
-                "x-lua-required": true
-              }
-            },
-            "cache": {
-              "type": "object",
-              "properties": {
-                "memory": {
-                  "type": "object",
-                  "properties": {
-                    "dictionary_name": {
-                      "type": "string",
-                      "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
-                      "default": "kong_db_cache"
-                    }
-                  }
-                },
-                "redis": {
-                  "type": "object",
-                  "properties": {
-                    "port": {
-                      "type": "integer",
-                      "maximum": 65535,
-                      "minimum": 0,
-                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                      "default": 6379,
-                      "x-referenceable": true
-                    },
-                    "database": {
-                      "type": "integer",
-                      "description": "Database to use for the Redis connection when using the `redis` strategy",
-                      "default": 0
-                    },
-                    "keepalive_backlog": {
-                      "type": "integer",
-                      "maximum": 2147483646,
-                      "minimum": 0,
-                      "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
-                    },
-                    "sentinel_master": {
-                      "type": "string",
-                      "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
-                    },
-                    "sentinel_role": {
-                      "type": "string",
-                      "enum": [
-                        "any",
-                        "master",
-                        "slave"
-                      ],
-                      "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
-                    },
-                    "ssl": {
-                      "type": "boolean",
-                      "description": "If set to true, uses SSL to connect to Redis.",
-                      "default": false
-                    },
-                    "host": {
-                      "type": "string",
-                      "description": "A string representing a host name, such as example.com.",
-                      "default": "127.0.0.1",
-                      "x-referenceable": true
-                    },
-                    "send_timeout": {
-                      "type": "integer",
-                      "maximum": 2147483646,
-                      "minimum": 0,
-                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                      "default": 2000
-                    },
-                    "password": {
-                      "type": "string",
-                      "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "sentinel_username": {
-                      "type": "string",
-                      "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
-                      "x-referenceable": true
-                    },
-                    "cloud_authentication": {
-                      "type": "object",
-                      "properties": {
-                        "aws_access_key_id": {
-                          "type": "string",
-                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                          "x-encrypted": true,
-                          "x-referenceable": true
-                        },
-                        "aws_secret_access_key": {
-                          "type": "string",
-                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "gcp_service_account_json": {
-                          "type": "string",
-                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "azure_client_id": {
-                          "type": "string",
-                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "aws_assume_role_arn": {
-                          "type": "string",
-                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "aws_role_session_name": {
-                          "type": "string",
-                          "description": "The session name for the temporary credentials when assuming the IAM role.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "azure_client_secret": {
-                          "type": "string",
-                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "azure_tenant_id": {
-                          "type": "string",
-                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "auth_provider": {
-                          "type": "string",
-                          "enum": [
-                            "aws",
-                            "azure",
-                            "gcp"
-                          ],
-                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                          "x-referenceable": true
-                        },
-                        "aws_cache_name": {
-                          "type": "string",
-                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                          "x-referenceable": true
-                        },
-                        "aws_region": {
-                          "type": "string",
-                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                          "x-referenceable": true
-                        },
-                        "aws_is_serverless": {
-                          "type": "boolean",
-                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                          "default": true
-                        }
-                      },
-                      "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
-                    },
-                    "sentinel_nodes": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "host": {
-                            "type": "string",
-                            "description": "A string representing a host name, such as example.com.",
-                            "default": "127.0.0.1"
-                          },
-                          "port": {
-                            "type": "integer",
-                            "maximum": 65535,
-                            "minimum": 0,
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                            "default": 6379
-                          }
-                        }
-                      },
-                      "minLength": 1,
-                      "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
-                    },
-                    "cluster_nodes": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "ip": {
-                            "type": "string",
-                            "description": "A string representing a host name, such as example.com.",
-                            "default": "127.0.0.1"
-                          },
-                          "port": {
-                            "type": "integer",
-                            "maximum": 65535,
-                            "minimum": 0,
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                            "default": 6379
-                          }
-                        }
-                      },
-                      "minLength": 1,
-                      "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
-                    },
-                    "server_name": {
-                      "type": "string",
-                      "description": "A string representing an SNI (server name indication) value for TLS.",
-                      "x-referenceable": true
-                    },
-                    "connect_timeout": {
-                      "type": "integer",
-                      "maximum": 2147483646,
-                      "minimum": 0,
-                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                      "default": 2000
-                    },
-                    "sentinel_password": {
-                      "type": "string",
-                      "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "keepalive_pool_size": {
-                      "type": "integer",
-                      "maximum": 2147483646,
-                      "minimum": 1,
-                      "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
-                      "default": 256
-                    },
-                    "ssl_verify": {
-                      "type": "boolean",
-                      "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                      "default": true
-                    },
-                    "connection_is_proxied": {
-                      "type": "boolean",
-                      "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
-                      "default": false
-                    },
-                    "read_timeout": {
-                      "type": "integer",
-                      "maximum": 2147483646,
-                      "minimum": 0,
-                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                      "default": 2000
-                    },
-                    "username": {
-                      "type": "string",
-                      "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
-                      "x-referenceable": true
-                    },
-                    "cluster_max_redirections": {
-                      "type": "integer",
-                      "description": "Maximum retry attempts for redirection.",
-                      "default": 5
-                    }
-                  }
-                },
-                "strategy": {
-                  "type": "string",
-                  "enum": [
-                    "memory",
-                    "redis"
-                  ],
-                  "description": "The backing data store in which to hold cache entities. Accepted values are: `memory` and `redis`."
-                }
-              }
-            }
-          }
-        },
-        "debug": {
-          "type": "boolean",
-          "default": false
-        },
         "nodes": {
           "type": "array",
           "items": {
@@ -314,6 +29,12 @@
               {
                 "type": "object",
                 "properties": {
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "branch node input"
+                  },
                   "output": {
                     "type": "string",
                     "maxLength": 255,
@@ -375,12 +96,6 @@
                     "maxLength": 64,
                     "minLength": 1,
                     "description": "nodes to execute if the input condition is `true`"
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "branch node input"
                   }
                 },
                 "title": "branch",
@@ -389,6 +104,18 @@
               {
                 "type": "object",
                 "properties": {
+                  "bypass_on_error": {
+                    "type": "boolean"
+                  },
+                  "ttl": {
+                    "type": "integer"
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "cache node input"
+                  },
                   "inputs": {
                     "type": "object",
                     "properties": {
@@ -422,12 +149,6 @@
                   "outputs": {
                     "type": "object",
                     "properties": {
-                      "miss": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "Signals a cache miss."
-                      },
                       "stored": {
                         "type": "string",
                         "maxLength": 255,
@@ -445,6 +166,12 @@
                         "maxLength": 255,
                         "minLength": 1,
                         "description": "Signals a cache hit."
+                      },
+                      "miss": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signals a cache miss."
                       }
                     },
                     "description": "cache node outputs"
@@ -462,18 +189,6 @@
                       "cache"
                     ],
                     "x-terraform-transform-const": true
-                  },
-                  "bypass_on_error": {
-                    "type": "boolean"
-                  },
-                  "ttl": {
-                    "type": "integer"
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "cache node input"
                   }
                 },
                 "title": "cache",
@@ -482,30 +197,6 @@
               {
                 "type": "object",
                 "properties": {
-                  "timeout": {
-                    "type": "integer",
-                    "maximum": 2147483646,
-                    "minimum": 0,
-                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search."
-                  },
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
-                    "x-lua-required": true
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "call"
-                    ],
-                    "x-terraform-transform-const": true
-                  },
                   "method": {
                     "type": "string",
                     "maxLength": 32,
@@ -516,6 +207,21 @@
                   "ssl_server_name": {
                     "type": "string",
                     "description": "A string representing an SNI (server name indication) value for TLS."
+                  },
+                  "ssl_verify": {
+                    "type": "boolean",
+                    "description": "Whether to verify the TLS certificate when making HTTPS requests.",
+                    "default": true
+                  },
+                  "timeout": {
+                    "type": "integer",
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search."
                   },
                   "input": {
                     "type": "string",
@@ -577,6 +283,13 @@
                     },
                     "description": "call node inputs"
                   },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "call"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
                   "output": {
                     "type": "string",
                     "maxLength": 255,
@@ -613,10 +326,12 @@
                     },
                     "description": "call node outputs"
                   },
-                  "ssl_verify": {
-                    "type": "boolean",
-                    "description": "Whether to verify the TLS certificate when making HTTPS requests.",
-                    "default": true
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
                   }
                 },
                 "title": "call",
@@ -625,6 +340,16 @@
               {
                 "type": "object",
                 "properties": {
+                  "status": {
+                    "type": "integer",
+                    "maximum": 599,
+                    "minimum": 200,
+                    "description": "HTTP status code",
+                    "default": 200
+                  },
+                  "warn_headers_sent": {
+                    "type": "boolean"
+                  },
                   "input": {
                     "type": "string",
                     "maxLength": 255,
@@ -634,17 +359,17 @@
                   "inputs": {
                     "type": "object",
                     "properties": {
-                      "body": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "HTTP response body"
-                      },
                       "headers": {
                         "type": "string",
                         "maxLength": 255,
                         "minLength": 1,
                         "description": "HTTP response headers"
+                      },
+                      "body": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "HTTP response body"
                       }
                     },
                     "description": "exit node inputs"
@@ -662,16 +387,6 @@
                       "exit"
                     ],
                     "x-terraform-transform-const": true
-                  },
-                  "status": {
-                    "type": "integer",
-                    "maximum": 599,
-                    "minimum": 200,
-                    "description": "HTTP status code",
-                    "default": 200
-                  },
-                  "warn_headers_sent": {
-                    "type": "boolean"
                   }
                 },
                 "title": "exit",
@@ -680,6 +395,18 @@
               {
                 "type": "object",
                 "properties": {
+                  "jq": {
+                    "type": "string",
+                    "maxLength": 10240,
+                    "minLength": 1,
+                    "description": "The jq filter text. Refer to https://jqlang.org/manual/ for full documentation."
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "filter input(s)"
+                  },
                   "inputs": {
                     "type": "object",
                     "additionalProperties": {
@@ -708,18 +435,6 @@
                       "jq"
                     ],
                     "x-terraform-transform-const": true
-                  },
-                  "jq": {
-                    "type": "string",
-                    "maxLength": 10240,
-                    "minLength": 1,
-                    "description": "The jq filter text. Refer to https://jqlang.org/manual/ for full documentation."
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "filter input(s)"
                   }
                 },
                 "title": "jq",
@@ -736,12 +451,42 @@
                     "maxLength": 64,
                     "minLength": 1
                   },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "json_to_xml"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "attributes_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
+                  "attributes_name_prefix": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
                   "text_block_name": {
                     "type": "string",
                     "maxLength": 32,
                     "minLength": 1,
                     "description": "The name of the block to treat as XML text content.",
                     "default": "#text"
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "JSON string or table"
                   },
                   "inputs": {
                     "type": "object",
@@ -757,36 +502,6 @@
                     "maxLength": 255,
                     "minLength": 1,
                     "description": "XML document converted from JSON"
-                  },
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
-                    "x-lua-required": true
-                  },
-                  "attributes_block_name": {
-                    "type": "string",
-                    "maxLength": 32,
-                    "minLength": 1
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "JSON string or table"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "json_to_xml"
-                    ],
-                    "x-terraform-transform-const": true
-                  },
-                  "attributes_name_prefix": {
-                    "type": "string",
-                    "maxLength": 32,
-                    "minLength": 1
                   }
                 },
                 "title": "json_to_xml",
@@ -810,12 +525,6 @@
                   "outputs": {
                     "type": "object",
                     "properties": {
-                      "signature": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "Raw signature (base64url encoded)"
-                      },
                       "header": {
                         "type": "string",
                         "maxLength": 255,
@@ -827,6 +536,12 @@
                         "maxLength": 255,
                         "minLength": 1,
                         "description": "Decoded JWT payload (claims)"
+                      },
+                      "signature": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Raw signature (base64url encoded)"
                       }
                     },
                     "description": "jwt_decode node outputs"
@@ -852,93 +567,23 @@
               {
                 "type": "object",
                 "properties": {
-                  "not_before": {
-                    "type": "integer",
-                    "description": "Seconds until token becomes valid (for nbf claim)",
-                    "default": 0
-                  },
                   "inputs": {
                     "type": "object",
                     "properties": {
-                      "key": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "Signing key (PEM, JWK JSON string, or HMAC secret)"
-                      },
                       "claims": {
                         "type": "string",
                         "maxLength": 255,
                         "minLength": 1,
                         "description": "Dynamic claims to include"
+                      },
+                      "key": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signing key (PEM, JWK JSON string, or HMAC secret)"
                       }
                     },
                     "description": "jwt_sign node inputs"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "jwt_sign"
-                    ],
-                    "x-terraform-transform-const": true
-                  },
-                  "expires_in": {
-                    "type": "integer",
-                    "description": "Seconds until token expires (for exp claim)",
-                    "default": 300
-                  },
-                  "kid": {
-                    "type": "string",
-                    "description": "Key ID for header"
-                  },
-                  "static_claims": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "type": "string"
-                    },
-                    "description": "Static claims always included",
-                    "default": {}
-                  },
-                  "typ": {
-                    "type": "string",
-                    "description": "Token type for header",
-                    "default": "JWT"
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "jwt_sign node input"
-                  },
-                  "output": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "jwt_sign node output"
-                  },
-                  "outputs": {
-                    "type": "object",
-                    "properties": {
-                      "header": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "JWT header"
-                      },
-                      "token": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "Signed JWT"
-                      },
-                      "claims": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "minLength": 1,
-                        "description": "Complete claims used"
-                      }
-                    },
-                    "description": "jwt_sign node outputs"
                   },
                   "name": {
                     "type": "string",
@@ -965,6 +610,76 @@
                       "RS512"
                     ],
                     "description": "Signing algorithm"
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "description": "Seconds until token expires (for exp claim)",
+                    "default": 300
+                  },
+                  "not_before": {
+                    "type": "integer",
+                    "description": "Seconds until token becomes valid (for nbf claim)",
+                    "default": 0
+                  },
+                  "typ": {
+                    "type": "string",
+                    "description": "Token type for header",
+                    "default": "JWT"
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_sign node output"
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "properties": {
+                      "claims": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Complete claims used"
+                      },
+                      "header": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "JWT header"
+                      },
+                      "token": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "description": "Signed JWT"
+                      }
+                    },
+                    "description": "jwt_sign node outputs"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "jwt_sign"
+                    ],
+                    "x-terraform-transform-const": true
+                  },
+                  "kid": {
+                    "type": "string",
+                    "description": "Key ID for header"
+                  },
+                  "static_claims": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Static claims always included",
+                    "default": {}
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_sign node input"
                   }
                 },
                 "title": "jwt_sign",
@@ -976,39 +691,36 @@
               {
                 "type": "object",
                 "properties": {
-                  "validate_exp": {
-                    "type": "boolean",
-                    "description": "Validate expiration claim",
-                    "default": true
+                  "allowed_algorithms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ES256",
+                        "ES384",
+                        "ES512",
+                        "EdDSA",
+                        "HS256",
+                        "HS384",
+                        "HS512",
+                        "PS256",
+                        "PS384",
+                        "PS512",
+                        "RS256",
+                        "RS384",
+                        "RS512"
+                      ]
+                    },
+                    "description": "Allowed signing algorithms (empty = any supported)",
+                    "default": []
                   },
-                  "validate_nbf": {
-                    "type": "boolean",
-                    "description": "Validate not-before claim",
-                    "default": true
-                  },
-                  "input": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "jwt_verify node input"
-                  },
-                  "output": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "jwt_verify node output"
-                  },
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
-                    "x-lua-required": true
-                  },
-                  "leeway": {
-                    "type": "integer",
-                    "description": "Allowed clock skew in seconds for exp/nbf validation",
-                    "default": 0
+                  "issuers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Allowed issuers (empty = any)",
+                    "default": []
                   },
                   "required_claims": {
                     "type": "array",
@@ -1036,6 +748,48 @@
                     },
                     "description": "jwt_verify node inputs"
                   },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_verify node output"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "audiences": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Allowed audiences (empty = any)",
+                    "default": []
+                  },
+                  "leeway": {
+                    "type": "integer",
+                    "description": "Allowed clock skew in seconds for exp/nbf validation",
+                    "default": 0
+                  },
+                  "validate_exp": {
+                    "type": "boolean",
+                    "description": "Validate expiration claim",
+                    "default": true
+                  },
+                  "validate_nbf": {
+                    "type": "boolean",
+                    "description": "Validate not-before claim",
+                    "default": true
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "jwt_verify node input"
+                  },
                   "outputs": {
                     "type": "object",
                     "properties": {
@@ -1060,45 +814,6 @@
                       "jwt_verify"
                     ],
                     "x-terraform-transform-const": true
-                  },
-                  "allowed_algorithms": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "ES256",
-                        "ES384",
-                        "ES512",
-                        "EdDSA",
-                        "HS256",
-                        "HS384",
-                        "HS512",
-                        "PS256",
-                        "PS384",
-                        "PS512",
-                        "RS256",
-                        "RS384",
-                        "RS512"
-                      ]
-                    },
-                    "description": "Allowed signing algorithms (empty = any supported)",
-                    "default": []
-                  },
-                  "audiences": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Allowed audiences (empty = any)",
-                    "default": []
-                  },
-                  "issuers": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Allowed issuers (empty = any)",
-                    "default": []
                   }
                 },
                 "title": "jwt_verify",
@@ -1158,20 +873,6 @@
               {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
-                    "x-lua-required": true
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "static"
-                    ],
-                    "x-terraform-transform-const": true
-                  },
                   "values": {
                     "type": "object",
                     "additionalProperties": true,
@@ -1192,6 +893,20 @@
                       "minLength": 1
                     },
                     "description": "Individual items from `.values`, referenced by key"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "x-lua-required": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "static"
+                    ],
+                    "x-terraform-transform-const": true
                   }
                 },
                 "title": "static",
@@ -1203,11 +918,6 @@
               {
                 "type": "object",
                 "properties": {
-                  "attributes_name_prefix": {
-                    "type": "string",
-                    "maxLength": 32,
-                    "minLength": 1
-                  },
                   "recognize_type": {
                     "type": "boolean",
                     "default": true
@@ -1216,9 +926,31 @@
                     "type": "boolean",
                     "default": false
                   },
+                  "text_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1,
+                    "default": "#text"
+                  },
                   "xpath": {
                     "type": "string",
                     "maxLength": 256,
+                    "minLength": 1
+                  },
+                  "output": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "description": "a map object converted from XML document. If connected to `request.body` or `response.body`, the output will be a JSON object."
+                  },
+                  "attributes_block_name": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                  },
+                  "attributes_name_prefix": {
+                    "type": "string",
+                    "maxLength": 32,
                     "minLength": 1
                   },
                   "input": {
@@ -1233,23 +965,6 @@
                     "minLength": 1,
                     "description": "A label that uniquely identifies the node within the policy configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
                     "x-lua-required": true
-                  },
-                  "attributes_block_name": {
-                    "type": "string",
-                    "maxLength": 32,
-                    "minLength": 1
-                  },
-                  "text_block_name": {
-                    "type": "string",
-                    "maxLength": 32,
-                    "minLength": 1,
-                    "default": "#text"
-                  },
-                  "output": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1,
-                    "description": "a map object converted from XML document. If connected to `request.body` or `response.body`, the output will be a JSON object."
                   },
                   "type": {
                     "type": "string",
@@ -1266,6 +981,291 @@
           },
           "maxLength": 64,
           "minLength": 1
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "vault": {
+              "type": "object",
+              "maxLength": 64,
+              "minLength": 1,
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 4095,
+                "minLength": 1,
+                "x-referenceable": true,
+                "x-lua-required": true
+              }
+            },
+            "cache": {
+              "type": "object",
+              "properties": {
+                "strategy": {
+                  "type": "string",
+                  "enum": [
+                    "memory",
+                    "redis"
+                  ],
+                  "description": "The backing data store in which to hold cache entities. Accepted values are: `memory` and `redis`."
+                },
+                "memory": {
+                  "type": "object",
+                  "properties": {
+                    "dictionary_name": {
+                      "type": "string",
+                      "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
+                      "default": "kong_db_cache"
+                    }
+                  }
+                },
+                "redis": {
+                  "type": "object",
+                  "properties": {
+                    "server_name": {
+                      "type": "string",
+                      "description": "A string representing an SNI (server name indication) value for TLS.",
+                      "x-referenceable": true
+                    },
+                    "host": {
+                      "type": "string",
+                      "description": "A string representing a host name, such as example.com.",
+                      "default": "127.0.0.1",
+                      "x-referenceable": true
+                    },
+                    "sentinel_username": {
+                      "type": "string",
+                      "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
+                      "x-referenceable": true
+                    },
+                    "sentinel_password": {
+                      "type": "string",
+                      "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "database": {
+                      "type": "integer",
+                      "description": "Database to use for the Redis connection when using the `redis` strategy",
+                      "default": 0
+                    },
+                    "ssl_verify": {
+                      "type": "boolean",
+                      "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                      "default": true
+                    },
+                    "keepalive_backlog": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+                    },
+                    "port": {
+                      "type": "integer",
+                      "maximum": 65535,
+                      "minimum": 0,
+                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                      "default": 6379,
+                      "x-referenceable": true
+                    },
+                    "send_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "read_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "cloud_authentication": {
+                      "type": "object",
+                      "properties": {
+                        "aws_cache_name": {
+                          "type": "string",
+                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true
+                        },
+                        "aws_region": {
+                          "type": "string",
+                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true
+                        },
+                        "aws_secret_access_key": {
+                          "type": "string",
+                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "azure_tenant_id": {
+                          "type": "string",
+                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "auth_provider": {
+                          "type": "string",
+                          "enum": [
+                            "aws",
+                            "azure",
+                            "gcp"
+                          ],
+                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                          "x-referenceable": true
+                        },
+                        "aws_is_serverless": {
+                          "type": "boolean",
+                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                          "default": true
+                        },
+                        "aws_access_key_id": {
+                          "type": "string",
+                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "aws_assume_role_arn": {
+                          "type": "string",
+                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "aws_role_session_name": {
+                          "type": "string",
+                          "description": "The session name for the temporary credentials when assuming the IAM role.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "gcp_service_account_json": {
+                          "type": "string",
+                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "azure_client_id": {
+                          "type": "string",
+                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
+                        "azure_client_secret": {
+                          "type": "string",
+                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        }
+                      },
+                      "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
+                    },
+                    "keepalive_pool_size": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 1,
+                      "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+                      "default": 256
+                    },
+                    "sentinel_role": {
+                      "type": "string",
+                      "enum": [
+                        "any",
+                        "master",
+                        "slave"
+                      ],
+                      "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+                    },
+                    "cluster_nodes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "port": {
+                            "type": "integer",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "default": 6379
+                          },
+                          "ip": {
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com.",
+                            "default": "127.0.0.1"
+                          }
+                        }
+                      },
+                      "minLength": 1,
+                      "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+                    },
+                    "sentinel_master": {
+                      "type": "string",
+                      "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+                    },
+                    "sentinel_nodes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "host": {
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com.",
+                            "default": "127.0.0.1"
+                          },
+                          "port": {
+                            "type": "integer",
+                            "maximum": 65535,
+                            "minimum": 0,
+                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                            "default": 6379
+                          }
+                        }
+                      },
+                      "minLength": 1,
+                      "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+                    },
+                    "ssl": {
+                      "type": "boolean",
+                      "description": "If set to true, uses SSL to connect to Redis.",
+                      "default": false
+                    },
+                    "cluster_max_redirections": {
+                      "type": "integer",
+                      "description": "Maximum retry attempts for redirection.",
+                      "default": 5
+                    },
+                    "connection_is_proxied": {
+                      "type": "boolean",
+                      "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+                      "default": false
+                    },
+                    "connect_timeout": {
+                      "type": "integer",
+                      "maximum": 2147483646,
+                      "minimum": 0,
+                      "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                      "default": 2000
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                      "x-referenceable": true
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "debug": {
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [

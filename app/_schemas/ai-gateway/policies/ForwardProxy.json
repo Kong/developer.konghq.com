@@ -22,9 +22,15 @@
     "config": {
       "type": "object",
       "properties": {
-        "http_proxy_host": {
+        "x_headers": {
           "type": "string",
-          "description": "A string representing a host name, such as example.com."
+          "enum": [
+            "append",
+            "delete",
+            "transparent"
+          ],
+          "description": "Determines how to handle headers when forwarding the request.",
+          "default": "append"
         },
         "http_proxy_port": {
           "type": "integer",
@@ -46,30 +52,24 @@
           "description": "The proxy scheme to use when connecting. Only `http` is supported.",
           "default": "http"
         },
-        "auth_username": {
-          "type": "string",
-          "description": "The username to authenticate with, if the forward proxy is protected\nby basic authentication.",
-          "x-referenceable": true
-        },
         "auth_password": {
           "type": "string",
           "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication.",
-          "x-referenceable": true,
-          "x-encrypted": true
+          "x-encrypted": true,
+          "x-referenceable": true
         },
-        "x_headers": {
+        "http_proxy_host": {
           "type": "string",
-          "enum": [
-            "append",
-            "delete",
-            "transparent"
-          ],
-          "description": "Determines how to handle headers when forwarding the request.",
-          "default": "append"
+          "description": "A string representing a host name, such as example.com."
         },
         "https_proxy_host": {
           "type": "string",
           "description": "A string representing a host name, such as example.com."
+        },
+        "auth_username": {
+          "type": "string",
+          "description": "The username to authenticate with, if the forward proxy is protected\nby basic authentication.",
+          "x-referenceable": true
         },
         "https_verify": {
           "type": "boolean",

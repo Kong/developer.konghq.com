@@ -24,16 +24,16 @@
             "text": {
               "type": "object",
               "properties": {
-                "schema": {
-                  "type": "string",
-                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
-                },
                 "type": {
                   "type": "string",
                   "enum": [
                     "draft4"
                   ],
                   "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
+                },
+                "schema": {
+                  "type": "string",
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                 }
               },
               "required": [
@@ -44,16 +44,16 @@
             "binary": {
               "type": "object",
               "properties": {
+                "schema": {
+                  "type": "string",
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
+                },
                 "type": {
                   "type": "string",
                   "enum": [
                     "draft4"
                   ],
                   "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
-                },
-                "schema": {
-                  "type": "string",
-                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                 }
               },
               "required": [

@@ -1,29 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string",
-          "description": "The file path of the output log file. The policy creates the log file if it doesn't exist yet."
-        },
-        "reopen": {
-          "type": "boolean",
-          "description": "Determines whether the log file is closed and reopened on every request.",
-          "default": false
-        },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        }
-      },
-      "required": [
-        "path"
-      ]
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -50,15 +26,63 @@
         "https"
       ]
     },
-    "service": {
+    "config": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
+        "path": {
+          "type": "string",
+          "description": "The file path of the output log file. The policy creates the log file if it doesn't exist yet."
+        },
+        "reopen": {
+          "type": "boolean",
+          "description": "Determines whether the log file is closed and reopened on every request.",
+          "default": false
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        },
+        "log_sanitization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
+              "default": []
+            },
+            "body_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "PCRE patterns to redact from the AI request and response payloads.",
+              "default": []
+            },
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
+            }
+          }
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+      "required": [
+        "path"
+      ]
     },
     "consumer": {
       "type": "object",
@@ -79,6 +103,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

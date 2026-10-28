@@ -1,9 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "additionalProperties": true
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -22,6 +18,10 @@
         "http",
         "https"
       ]
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": true
     },
     "consumer": {
       "type": "object",

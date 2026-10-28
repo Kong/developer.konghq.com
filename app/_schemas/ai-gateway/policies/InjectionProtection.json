@@ -1,27 +1,29 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "enforcement_mode": {
+          "type": "string",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "description": "Enforcement mode of the security policy.",
+          "default": "block"
+        },
+        "error_status_code": {
+          "type": "integer",
+          "maximum": 499,
+          "minimum": 400,
+          "description": "The response status code when validation fails.",
+          "default": 400
+        },
+        "error_message": {
+          "type": "string",
+          "description": "The response message when validation fails",
+          "default": "Bad Request"
+        },
         "injection_types": {
           "type": "array",
           "items": {
@@ -78,29 +80,27 @@
             ]
           },
           "description": "Custom regexes to check for."
-        },
-        "enforcement_mode": {
-          "type": "string",
-          "enum": [
-            "block",
-            "log_only"
-          ],
-          "description": "Enforcement mode of the security policy.",
-          "default": "block"
-        },
-        "error_status_code": {
-          "type": "integer",
-          "maximum": 499,
-          "minimum": 400,
-          "description": "The response status code when validation fails.",
-          "default": 400
-        },
-        "error_message": {
-          "type": "string",
-          "description": "The response message when validation fails",
-          "default": "Bad Request"
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",

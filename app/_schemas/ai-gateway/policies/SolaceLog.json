@@ -1,34 +1,60 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "log_sanitization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
+              "default": []
+            },
+            "body_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "PCRE patterns to redact from the AI request and response payloads.",
+              "default": []
+            },
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
+            }
+          }
+        },
         "session": {
           "type": "object",
           "properties": {
+            "generate_rcv_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "default": true
+            },
+            "generate_send_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "generate_sequence_number": {
+              "type": "boolean",
+              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
             "authentication": {
               "type": "object",
               "properties": {
@@ -77,21 +103,11 @@
                 "id_token": {
                   "type": "string",
                   "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 }
               },
               "description": "Session authentication related configuration."
-            },
-            "ssl_validate_certificate": {
-              "type": "boolean",
-              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
-              "default": true
-            },
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
             },
             "generate_sender_id": {
               "type": "boolean",
@@ -124,19 +140,14 @@
               "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
               "default": 3000
             },
+            "ssl_validate_certificate": {
+              "type": "boolean",
+              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "default": true
+            },
             "calculate_message_expiry": {
               "type": "boolean",
               "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
-              "default": true
-            },
-            "generate_rcv_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a receive timestamp is recorded for each message.",
-              "default": true
-            },
-            "generate_sequence_number": {
-              "type": "boolean",
-              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
               "default": true
             }
           },
@@ -148,17 +159,38 @@
         "message": {
           "type": "object",
           "properties": {
+            "dmq_eligible": {
+              "type": "boolean",
+              "description": "Sets the dead message queue (DMQ) eligible property on the log message.",
+              "default": false
+            },
+            "custom_fields_by_lua": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "A key-value map that dynamically modifies log fields using Lua code."
+            },
+            "tracing": {
+              "type": "boolean",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
+              "default": false
+            },
+            "sender_id": {
+              "type": "string",
+              "description": "Allows the application to set the sender identifier."
+            },
+            "ttl": {
+              "type": "integer",
+              "description": "Sets the time to live (TTL) in milliseconds for the log message. Setting the time to live to zero disables the TTL for the log message.",
+              "default": 0
+            },
             "ack_timeout": {
               "type": "integer",
               "maximum": 100000,
               "minimum": 1,
               "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the log message acknowledgement timeout (waiting time).",
               "default": 2000
-            },
-            "tracing": {
-              "type": "boolean",
-              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
-              "default": false
             },
             "tracing_sampled": {
               "type": "boolean",
@@ -170,10 +202,6 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`)."
-                  },
                   "type": {
                     "type": "string",
                     "enum": [
@@ -182,6 +210,10 @@
                     ],
                     "description": "The type of the destination.",
                     "default": "QUEUE"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`)."
                   }
                 },
                 "required": [
@@ -190,22 +222,6 @@
               },
               "minLength": 1,
               "description": "The log message destinations."
-            },
-            "sender_id": {
-              "type": "string",
-              "description": "Allows the application to set the sender identifier."
-            },
-            "ttl": {
-              "type": "integer",
-              "description": "Sets the time to live (TTL) in milliseconds for the log message. Setting the time to live to zero disables the TTL for the log message.",
-              "default": 0
-            },
-            "custom_fields_by_lua": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              },
-              "description": "A key-value map that dynamically modifies log fields using Lua code."
             },
             "delivery_mode": {
               "type": "string",
@@ -222,11 +238,6 @@
               "minimum": 0,
               "description": "Sets the log message priority.",
               "default": 4
-            },
-            "dmq_eligible": {
-              "type": "boolean",
-              "description": "Sets the dead message queue (DMQ) eligible property on the log message.",
-              "default": false
             }
           },
           "required": [
@@ -238,6 +249,29 @@
       "required": [
         "message",
         "session"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
       ]
     },
     "route": {
