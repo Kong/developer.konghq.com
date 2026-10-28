@@ -110,15 +110,21 @@ Both authentication methods work with the `runtime` and `mantle` endpoints.
 Use `mantle` when your clients already send OpenAI or Anthropic API requests and you want Bedrock Mantle to handle them natively, for example, to run the OpenAI Codex CLI against models on Bedrock.
 Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that doesn't support Mantle.
 
-Mantle supports only chat and Responses requests, in the `openai` or `anthropic` format. For embeddings, the `bedrock` format, and Bedrock-specific APIs such as Rerank, async invoke, and batch, use `runtime`.
+Mantle only supports chat, Responses, and files requests, in the `openai` or `anthropic` format. For embeddings, the `bedrock` format, and Bedrock-specific APIs such as Rerank, async invoke, and batch, use `runtime`.
+
+The format and capability of the AI Model determine which Mantle API receives the request:
+
+| Format | Capability | Request type |
+|--------|------------|--------------|
+| `openai` | `generate` | Chat Completions |
+| `openai` | `agentic` | Responses |
+| `openai` | `files` | Files |
+| `anthropic` | `generate` | Messages |
+
+The `files` capability is available only on an AI Model with `type: api`. The other capabilities are set on an AI Model with `type: model`.
 
 For Anthropic requests, {{site.ai_gateway}} sets the `anthropic-version` header to `2023-06-01` unless the client sends one.
 If you set `upstream_url` on a Mantle target, {{site.ai_gateway}} keeps that URL's path.
-
-{% comment %}
-TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combination that maps to Responses
-(for example, `openai` + `agentic`).
-{% endcomment %}
 
 The following AI Model sends OpenAI Chat Completions requests to Bedrock Mantle:
 
@@ -173,6 +179,7 @@ The rest of the request behaves as it does with the public endpoint:
   Set `region` to the region of the VPC endpoint.
 * If the VPC endpoint is unreachable, the request fails.
   {{site.ai_gateway}} doesn't fall back to the public endpoint.
+* `vpc_endpoint` also applies to a Bedrock embeddings model, such as the one set in `config.balancer.embeddings.config` for semantic load balancing.
 
 {% entity_example %}
 type: model
