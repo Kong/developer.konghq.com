@@ -353,7 +353,7 @@ You can use it with the following {{site.ai_gateway}} Policies:
 > - A [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network)
 > - An {{site.ai_gateway}} control plane with a Dedicated Cloud Gateway configuration. See [{{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways).
 
-To create a managed cache, do the following:
+To create a managed cache, use the following steps:
 
 1. Export the ID of your {{site.ai_gateway}} control plane:
 
@@ -393,7 +393,7 @@ To create a managed cache, do the following:
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
+1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use. This can take about 15 minutes:
 
    {% capture get_ai_addon %}
    <!--vale off-->
