@@ -354,7 +354,7 @@ To set up the Token Vault:
 1. Enable it on the directory.
 1. Add a trusted IdP.
 1. Add your first provider (see [Get started with the {{site.identity}} Token Vault](/how-to/get-started-with-token-vault/)).
-1. Register a vault key to start using the provider.
+1. [Register a vault key](/how-to/get-started-with-token-vault/#register-a-vault-key) to start using the provider.
 
 To disable a provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`.
 
