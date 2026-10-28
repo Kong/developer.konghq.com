@@ -51,7 +51,7 @@ related_resources:
 A budget in {{site.ai_cost_management}} tracks AI spend against a limit and sends alerts as spend approaches it.
 If a team's AI usage can run past what your organization planned to spend, budgets give you an early signal while there's still time to react.
 
-Budgets observe spend and send alerts. They don't enforce spend limits, so requests continue after spend reaches the limit.
+Budgets only observe spend and send alerts, so requests continue after spend reaches the limit.
 
 You can send budget alerts to [notification channels](/ai-cost-management/notification-channels/).
 
@@ -91,10 +91,10 @@ To create a provider budget that sends early warnings to a channel, follow one o
 
 ## How budgets work
 
-Here's how a budget works:
+A budget goes through the following steps from request to alert:
 1. {{site.ai_gateway}} records each AI request that passes through it, with its cost, as usage.
 1. {{site.ai_cost_management}} matches that usage against the scope of each budget.
-1. Matching usage counts toward the budget's spend in the current budget window, so the spend count increases.
+1. Matching usage counts toward the budget's spend in the current budget window.
 1. When spend reaches a threshold in the budget's notification rule, {{site.ai_cost_management}} sends an alert to the rule's [notification channels](/ai-cost-management/notification-channels/) and records a notification event.
 1. When the budget window ends, a new window starts and spend begins again at zero.
 
@@ -108,8 +108,8 @@ sequenceDiagram
 
   GW->>ACM: Report cost of each AI request as usage
   ACM->>ACM: Match usage against the scope of each budget
-  ACM->>ACM: Add the cost to the spend in current budget window
-  alt If spend reaches a threshold <br>in notification rule
+  ACM->>ACM: Add the cost to the spend in the current budget window
+  alt If spend reaches a threshold <br>in the notification rule
     ACM->>CH: Send an alert
     ACM->>ACM: Record a notification event
   end
@@ -120,7 +120,7 @@ _Figure 1: Diagram showing how a budget tracks spend and sends alerts._
 A request can match several budgets.
 The request counts toward every budget it matches, and {{site.ai_cost_management}} evaluates each budget on its own.
 
-For example, let's say you have two budgets:
+For example, you have two budgets:
 * An organization-wide budget with a $100 limit
 * A second budget for OpenAI usage with a $50 limit
 
@@ -145,7 +145,7 @@ The [subject and group fields](#schema-aicost-limit-budget-input-scope-filters-a
 A filter group combines several filters with `and` or `or`, and a group can contain further groups.
 A scope allows at most 15 conditions in total, nested at most 4 groups deep.
 
-### Limits
+### Pooled and individual limits
 
 Budgets can apply their spend limits in one of the following ways:
 
@@ -189,7 +189,8 @@ Set the limit as an amount in US dollars, for example `500` or `0.2`.
 {:.info}
 > `USD` is the only supported currency.
 
-The size of a budget window is fixed. Consecutive windows have the same length and align to an anchor.
+The size of a budget window is fixed.
+Consecutive windows have the same length and align to an anchor.
 * The [interval](#schema-aicost-limit-budget-input-window-interval) sets the length of each window, like one month or one day.
 * The [anchor](#schema-aicost-limit-budget-input-window-anchor) sets a time when a window starts, in a specific time zone.
 
@@ -224,7 +225,7 @@ rows:
   - field: "`projected`"
     description: |
       The spend expected by the end of the budget window at the current pace, rounded to the cent. The pace extrapolates `consumed` over the whole window from the share that has elapsed.
-      The share is never counted as less than one twentieth of the window.
+      The calculation uses a minimum share of one twentieth of the window.
   - field: "`latest_record_at`"
     description: |
       When the newest usage counted in the balance reached the service. The value is `null` when no usage matches.
