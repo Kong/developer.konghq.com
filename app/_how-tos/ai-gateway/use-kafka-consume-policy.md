@@ -263,7 +263,7 @@ indent: 3
 {% endvalidation %}
 
 1. Produce a message to the `ai-events` topic:
-<!--vale off-->
+   <!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C kafka-consume-test/kafkactl.yaml --context direct produce ai-events --value='{"event":"prompt_received","model":"gpt-4o"}'
