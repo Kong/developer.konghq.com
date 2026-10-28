@@ -105,8 +105,6 @@ columns:
 rows:
   - aspect: "**Where the credential lives**"
     without: |
-      Wherever that specific connector/client stores it, scoped to that one product:
-      * Its own database
       Stored separately by each connector or client, for example in its own database or encrypted configuration, and scoped to that one product.
     with: |
       Centralized in the vault, scoped to the org's {{site.identity}} directory.
@@ -364,7 +362,7 @@ A `PUT` on the same endpoint also sets `enabled` to `false` if you omit it.
 
 A provider built on the `static_secret` template doesn't run an OAuth flow. The setup steps are the following:
 
-1. You generate the credential yourself in the third-party service, for example an API key or a personal acce.ss token.
+1. You generate the credential yourself in the third-party service, for example an API key or a personal access token.
 1. You store the credential on the provider.
 
 The static credential belongs to the directory instead of to an individual principal. A `static_secret` provider only accepts `credential_type` set to `shared`.
