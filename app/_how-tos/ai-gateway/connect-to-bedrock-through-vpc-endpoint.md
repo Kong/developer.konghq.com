@@ -117,7 +117,7 @@ Leave `upstream_url` unset on this target. If both are set, `upstream_url` takes
 
 ## Validate
 
-Send a streaming chat request to the AI Model:
+Send a chat request to the AI Model:
 
 <!-- vale off -->
 {% validation request-check %}
@@ -136,4 +136,4 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-A `200` response with streamed chunks confirms that {{site.ai_gateway}} reached Bedrock through the VPC endpoint and built the streaming path. If the request fails with a connection error, check that your data plane nodes can resolve and reach the VPC endpoint.
+A `200` response confirms that {{site.ai_gateway}} reached Bedrock through the VPC endpoint. If the request fails with a connection error, check that your data plane nodes can resolve and reach the VPC endpoint.
