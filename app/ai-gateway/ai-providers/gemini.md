@@ -280,7 +280,7 @@ curl -X POST http://localhost:8000/gemini/v1beta/interactions \
 
 The same route also forwards streaming requests (`"stream": true`, relayed as server-sent events), background runs (`"background": true`), `GET /gemini/v1beta/interactions/{id}`, `POST /gemini/v1beta/interactions/{id}/cancel`, and `DELETE /gemini/v1beta/interactions/{id}`.
 
-For Gemini Enterprise, the target must set `config.gcp_environment`, and the path is `/v1beta1/projects/{project_id}/locations/{location}/interactions`. Gemini Enterprise supports the Interactions API only in the `global`, `us`, and `eu` locations.
+For Gemini Enterprise, the target must set `config.gcp_environment`, and the path is `/v1beta1/projects/{project_id}/locations/{location}/interactions`. Gemini Enterprise supports the Interactions API only in the `global`, `us`, and `eu` regions.
 
 {{site.ai_gateway}} supports the Interactions API only in the native Gemini format.
 It doesn't translate OpenAI Responses requests to Interactions, or Interactions requests to the OpenAI or Anthropic formats.
