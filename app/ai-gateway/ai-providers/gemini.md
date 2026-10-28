@@ -90,54 +90,51 @@ Gemini Enterprise requires GCP credentials instead of an API key. The AI Model P
 
 Create the provider to store your GCP credentials:
 
-{% entity_examples %}
-formats:
-  - kongctl
-  - konnect-api
-ai_gateway_model_providers:
-  - ref: my-gemini-enterprise-account
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-gemini-enterprise-account
-    display_name: "Gemini Enterprise Production"
-    type: gemini
-    config:
-      auth:
-        type: gcp
-        use_gcp_service_account: true
-        service_account_json: !env GCP_ACCOUNT_JSON
-{% endentity_examples %}
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Gemini Enterprise Production
+  name: my-gemini-enterprise-account
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      use_gcp_service_account: true
+      service_account_json: ${gcp_account_json}
+variables:
+  gcp_account_json:
+    value: $GCP_ACCOUNT_JSON
+    secret: true
+    description: The GCP service account key JSON used to authenticate to Gemini Enterprise.
+{% endentity_example %}
 
 Then attach an AI Model to it, setting `config.gcp_environment` on the target to route to Gemini Enterprise:
 
-{% entity_examples %}
-formats:
-  - kongctl
-  - konnect-api
-ai_gateway_models:
-  - ref: my-gemini-enterprise-model
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-gemini-enterprise-model
-    display_name: "my-gemini-enterprise-model"
-    type: model
-    capabilities:
-      - generate
-    formats:
-      - type: openai
-    config:
-      route:
-        paths:
-          - /v1
-    targets:
-      - name: gemini-3.5-flash
-        provider: my-gemini-enterprise-account
-        config:
-          type: gemini
-          gcp_environment:
-            api_endpoint: aiplatform.googleapis.com
-            location_id: global
-            project_id: my-gcp-project-id
-    policies: []
-{% endentity_examples %}
+{% entity_example %}
+type: model
+data:
+  name: my-gemini-enterprise-model
+  display_name: my-gemini-enterprise-model
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  config:
+    route:
+      paths:
+        - /v1
+  targets:
+    - name: gemini-3.5-flash
+      provider: my-gemini-enterprise-account
+      config:
+        type: gemini
+        gcp_environment:
+          api_endpoint: aiplatform.googleapis.com
+          location_id: global
+          project_id: my-gcp-project-id
+  policies: []
+{% endentity_example %}
 
 `targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id`. Set `api_endpoint` to the hostname for your location: `aiplatform.googleapis.com` for `global`, `{location_id}-aiplatform.googleapis.com` for a single region such as `us-east5`, or `aiplatform.{location_id}.rep.googleapis.com` for the multi-region locations `us` and `eu`. You can also set it to a Private Service Connect endpoint.
 
