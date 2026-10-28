@@ -11,13 +11,13 @@ works_on:
 tags:
   - authentication
   - kong-identity
-description: Learn how to enable the {{site.identity}} Token Vault, trust a corporate IdP, and add a GitHub provider.
+description: Learn how to enable the {{site.identity}} Token Vault, register a vault key, trust a corporate IdP, and add a GitHub provider.
 automated_tests: false
 
 tldr:
   q: How do I get started with the {{site.identity}} Token Vault?
   a: |
-    Enable the Token Vault on your {{site.identity}} directory with `vault_enabled`, add your corporate IdP as the directory's trusted IdP, and add a provider for the third-party service, such as GitHub, using a provider template.
+    Enable the Token Vault on your {{site.identity}} directory with `vault_enabled`, register a public vault key, add your corporate IdP as the directory's trusted IdP, and add a provider for the third-party service, such as GitHub, using a provider template.
 
 prereqs:
   inline:
@@ -38,10 +38,10 @@ prereqs:
       content: |
         [Create an OAuth app in GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
         
-        1. Set the following values:
+        1. Set the following values for demo purposes:
         
         * **Homepage URL:** `https://cloud.konghq.com`
-        * **Redirect URI:** `https://vault.cloud.konghq.com/v2/callback`
+        * **Redirect URI:** `http://localhost:8000/_vault/callback`
         
         2. Export its client ID and secret:
 
@@ -62,7 +62,7 @@ related_resources:
     url: /identity/auth-servers/
 ---
 
-This guide walks you through the Token Vault configuration workflow to use third-party services, such as GitHub, as upstream authentication providers for {{site.ai_gateway}}. You enable the Token Vault on a directory, trust your corporate IdP, add a provider, and validate that the provider is available.
+This guide walks you through the Token Vault configuration workflow to use third-party services, such as GitHub, as upstream authentication providers for {{site.ai_gateway}}. You enable the Token Vault on a directory, register a vault key, trust your corporate IdP, add a provider, and validate that the provider is available.
 
 ## Enable the Token Vault on a directory
 
@@ -101,7 +101,7 @@ echo $VAULT_ENABLED
 
 ## Add a trusted IdP
 
-Send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. Each directory supports one trusted IdP, so a second `POST` returns a `409`:
+Send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -183,6 +183,45 @@ The `github-prod` provider appears in the list of Token Vault providers you can 
 
 Once the provider is selected, {{site.ai_gateway}} returns an enrollment URL to any caller who hasn't enrolled with it yet. 
 For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
+
+## Register a vault key
+
+
+Before users can enroll to a AI service like MCP servers, you need to upload an encryption key to the Token Vault.
+
+The Token Vault encrypts every credential it stores with a public key that you register on the directory. {{site.identity}} keeps only the public key, and the matching private key stays with you, so {{site.identity}} can't decrypt your credentials. {{site.identity}} rejects a request to store a static secret until the directory has a vault key.
+
+1. Generate an RSA key pair. The key must be at least 2048 bits (RSA) or 256 bits (EC):
+
+   ```sh
+   openssl genrsa -out vault-private.pem 2048
+   openssl rsa -in vault-private.pem -pubout -out vault-public.pem
+   ```
+
+   Keep `vault-private.pem` safe. Don't share it or commit it to source control.
+
+1. Export the public key as a single line, with the newlines escaped so it fits in a JSON body:
+
+   ```sh
+   export VAULT_PUBLIC_KEY=$(awk 'NF {printf "%s\\n", $0}' vault-public.pem)
+   ```
+
+1. Send a `POST` request to the `/v2/directories/{directoryId}/vault/keys` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/keys
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: my-vault-key
+  public_key: $VAULT_PUBLIC_KEY
+{% endkonnect_api_request %}
+<!--vale on-->
+
+A directory can hold up to 5 vault keys, which lets you rotate keys over time.
 
 ## Next steps
 
