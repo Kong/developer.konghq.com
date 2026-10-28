@@ -37,6 +37,8 @@ tools:
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
+  - text: TLS Server policy
+    url: /event-gateway/policies/tls-server/
   - text: Productize Kafka topics with {{site.event_gateway}}
     url: /event-gateway/productize-kafka-topics/
 

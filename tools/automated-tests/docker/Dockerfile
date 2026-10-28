@@ -1,12 +1,12 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap openssl default-jre-headless
 
 # set python env
 RUN python3 -m venv /opt/myenv
 ENV PATH="/opt/myenv/bin:$PATH"
 
 RUN ARCH=$(dpkg --print-architecture) && \
-    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.68.0/deck_v1.68.0_${ARCH}.deb && \
+    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.69.0/deck_v1.69.0_${ARCH}.deb && \
     dpkg -i deck_v1.deb
 RUN apt-get update
 RUN apt-get install ca-certificates curl
@@ -98,3 +98,27 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "$CHECKSUM  yq" | sha256sum -c - && \
     install -o root -g root -m 0755 yq /usr/local/bin/yq && \
     rm yq
+
+# Install cosign v2.6.5 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="c3b4f5410e608af03a5eb0aaac84a4313d8da131248e08ff1759ac70c79d1644" ;; \
+      arm64) CHECKSUM="426193b4c5da4d4d643e822f48fe0cc8a476ca1782a272704831f5a0cef716d7" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o cosign "https://github.com/sigstore/cosign/releases/download/v2.6.5/cosign-linux-${ARCH}" && \
+    echo "$CHECKSUM  cosign" | sha256sum -c - && \
+    install -o root -g root -m 0755 cosign /usr/local/bin/cosign && \
+    rm cosign
+
+# Install regctl v0.11.7 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="3737fbbdd791e04e7a831640b681f3397a376498e80e2ad9b1b2d27296f239bc" ;; \
+      arm64) CHECKSUM="9f349bab5c407ac04f3dabf99c7c7a6b0f9e9723c23f2775380e804d02c6dbb9" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o regctl "https://github.com/regclient/regclient/releases/download/v0.11.7/regctl-linux-${ARCH}" && \
+    echo "$CHECKSUM  regctl" | sha256sum -c - && \
+    install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
+    rm regctl

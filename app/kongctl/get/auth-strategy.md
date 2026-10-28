@@ -17,6 +17,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl adopt auth-strategy
+    url: /kongctl/adopt/auth-strategy/
+  - text: kongctl list auth-strategy
+    url: /kongctl/list/auth-strategy/
 ---
 
 Get authentication strategy details.

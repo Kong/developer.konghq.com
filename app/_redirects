@@ -1,3 +1,6 @@
+# Konnect Reference Platform
+/konnect-reference-platform/how-to/ /konnect-reference-platform/patterns/
+
 # kongctl
 /kongctl/create/   /kongctl/
 /kongctl/create/*  /kongctl/
@@ -352,10 +355,17 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/konnect-reference-platform/orchestrator/ /konnect-reference-platform/
 /catalog/integrations/gateway-manager/ /catalog/integrations/api-gateway/
 /how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
 /how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
+
+# Self-managed GitLab and Dynatrace Catalog Classic integrations removed
+/how-to/install-and-map-gitlab-resources/ /catalog/integrations/gitlab/
+/catalog/integrations/dynatrace/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-api/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-ui/ /catalog-classic/
 
 # Cloud Gateways
 

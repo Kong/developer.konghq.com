@@ -104,7 +104,21 @@ or by scoping to a single product, i.e.
 
 `npm run generate-instruction-files -- --product=ai-gateway`
 
-This collects the URLs for every non-versioned how-to under `app/_how-tos/<product>` (via `collect-urls.mjs`), skipping any version snapshot folders (e.g. `v1/`) and any file missing a `permalink` in its frontmatter. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+This collects the how-to files under `app/_how-tos/<product>` (via `collect-how-to-files.mjs`), skipping any version snapshot folder (e.g. `v1/`), which holds a frozen snapshot of a previous major. The collected files then go through the same testability filtering as the full scan, so a how-to is skipped if it sets `automated_tests: false` or `published: false`, contains `@todo`, or is a non-first page of a series. Each skipped file gets a `Skipping file` log line with the reason, and a row in the skip manifest that the test report reads. A how-to with no `permalink` is tested through its derived URL.
+
+The base URL always comes from `baseUrl` in `config/tests.yaml`. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+
+### Unit tests for the tooling
+
+The scripts in this directory have their own unit tests, which use Node's built-in test
+runner. They need no docker container, no license, and no running site:
+
+`npm test`
+
+The tests cover URL selection for instruction-file generation: which how-tos each mode
+(`--urls`, `--files`, `--product`, or no argument) turns into a test target, and which ones
+it skips. They copy the how-to pages in `fixtures/how-tos` into a temporary directory, so
+they never read `app/_how-tos`. Add a fixture page there to cover a new case.
 
 ### Running the tests
 

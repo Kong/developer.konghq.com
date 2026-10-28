@@ -37,6 +37,7 @@ Available Commands:
   gateway       Manage Konnect Kong Gateway resources
   konnect       Manage Konnect resources
   me            Get current user information
+  mesh          Manage Kong Mesh control plane resources
   organization  Get current organization information
   pat           List or get Konnect personal access tokens
   portal        List or get Konnect portals

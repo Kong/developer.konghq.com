@@ -478,9 +478,13 @@ topic_aliases:
 
 [Policies](/event-gateway/entities/policy/) attached to a virtual cluster see the alias name, not the backend topic name. In a [CEL match expression](/event-gateway/expressions/), `topic.name` evaluates to the alias name. Policies that match on a backend topic name don't automatically apply to its aliases. Match the alias name explicitly:
 
+{% raw %}
+
 ```yaml
-condition: topic.name == "orders"
+condition: '{{topic.name == "orders"}}'
 ```
+
+{% endraw %}
 
 ### Consumer groups
 

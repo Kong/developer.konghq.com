@@ -68,7 +68,17 @@ rows:
       Used for text-based requests (chat, completions, embeddings).
   - property: "`ai.proxy.usage.prompt_tokens_details`"
     description: |
-      A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`).
+      A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`, `cache_write_tokens`, `cache_write_tokens_by_ttl`).
+  - property: "`ai.proxy.usage.prompt_tokens_details.cached_tokens`"
+    description: |
+      The number of prompt tokens read from the provider's prompt cache. This counts cache reads only. Cache writes are reported in `cache_write_tokens`.
+  - property: "`ai.proxy.usage.prompt_tokens_details.cache_write_tokens`"
+    description: |
+      The total number of prompt tokens written to the provider's prompt cache, across all cache TTLs.
+  - property: "`ai.proxy.usage.prompt_tokens_details.cache_write_tokens_by_ttl`"
+    description: |
+      An object that breaks `cache_write_tokens` down by cache TTL, with the keys `5m` and `1h`.
+      For example, `{"5m": 3543, "1h": 0}`.
   - property: "`ai.proxy.usage.completion_tokens`"
     description: |
       The number of tokens used for completion.
