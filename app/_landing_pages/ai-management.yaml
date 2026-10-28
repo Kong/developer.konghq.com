@@ -121,8 +121,8 @@ rows:
               description: Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller.
               icon: /assets/icons/keyring.svg
               cta:
-                text: Token Vault in access management
-                url: /ai-access-management/concepts/#token-vault
+                text: "{{site.identity}} Token Vault"
+                url: /identity/token-vault/
       - blocks:
           - type: card
             config:
