@@ -159,8 +159,7 @@ rows:
 
 Set the parent [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/)  to `reject` to use this policy.
 
-The parent policy must not use `passthrough` or `mark`.
-With these failure modes, the parent sends the record without parsing it. The Mask Fields Produce policy then never runs, and the cluster stores the fields unmasked.
+{% include_cached /knep/schema-validation-parent-note.md phase="produce" %}
 
 ## Selecting fields from schema metadata
 

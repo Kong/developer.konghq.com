@@ -87,6 +87,8 @@ rows:
 
 This policy runs during the [consume phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-consume/) has taken place.
 
+{% include_cached /knep/schema-validation-parent-note.md phase="consume" %}
+
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-fields-works.md %}
