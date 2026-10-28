@@ -68,7 +68,7 @@ rows:
 ## Model cost configuration
 
 {:.info}
-> **Note**: In {{site.ai_gateway}} 2.3 and later, a target with none of these cost fields set uses dynamic pricing from the {{site.ai_cost_management}} [Price Catalog](/ai-cost-management/price-catalog/).
+> **Note**: In {{site.ai_gateway}} 2.3 and later, a target with none of these cost fields set uses dynamic pricing from the {{site.ai_cost_management}} [price catalog](/ai-cost-management/price-catalog/).
 > If you set any cost field on a target, the target uses its own cost fields instead.
 > For the full precedence order, see [How a request is priced](/ai-cost-management/price-catalog/#how-a-request-is-priced).
 
@@ -248,7 +248,7 @@ columns:
     key: configured_on
 rows:
   - concern: "How much a request costs (pricing)"
-    configured_on: "[AI Model entity](/ai-gateway/entities/ai-model/) target config: `input_cost`, `output_cost`, and the fields in [Model cost configuration](#model-cost-configuration). Targets with no cost fields use the [Price Catalog](/ai-cost-management/price-catalog/) instead."
+    configured_on: "[AI Model entity](/ai-gateway/entities/ai-model/) target config: `input_cost`, `output_cost`, and the fields in [Model cost configuration](#model-cost-configuration). Targets with no cost fields use the [price catalog](/ai-cost-management/price-catalog/) instead."
   - concern: "Whether a request is allowed to proceed based on cost"
     configured_on: "[AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) policy, using a limit's `cost` strategy"
 {% endtable %}
