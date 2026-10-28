@@ -235,35 +235,56 @@ data:
 
 ## Failure modes
 
-Produce and consume policies have a `failure_mode` setting that controls what happens to a record when the policy fails to process it:
+Some produce and consume policies have a `failure_mode` setting that controls what happens to a record when the policy fails to process it:
 
-* `reject` (produce): Rejects the record batch that holds the record.
-* `error` (consume): Doesn't deliver the batch to the client.
-* `skip` (consume): Doesn't deliver the record to the client.
-* `passthrough`: Delivers the record even though policy execution failed.
-* `mark`: Delivers the record, and {{site.event_gateway_short}} adds a `kong/policy-failure-<id>` header whose value is the reason for the failure (truncated to 512 characters).
+{% table %}
+columns:
+  - title: Failure mode
+    key: failure_mode
+  - title: Description
+    key: description
+  - title: Policy type
+    key: policy_type
+rows:
+  - failure_mode: "`reject`"
+    description: "Rejects the record batch that holds the record."
+    policy_type: Produce
+  - failure_mode: "`error`"
+    description: "Doesn't deliver the batch to the client on consume, and rejects the record when the policy fails on produce."
+    policy_type: Consume and produce
+  - failure_mode: "`skip`"
+    description: "Doesn't deliver the record to the client."
+    policy_type: Consume
+  - failure_mode: "`passthrough`"
+    description: "Delivers the record even though policy execution failed."
+    policy_type: Consume and produce
+  - failure_mode: "`mark`"
+    description: "Delivers the record, and {{site.event_gateway_short}} adds a `kong/policy-failure-<id>` header whose value is the reason for the failure (truncated to 512 characters)."
+    policy_type: Consume and produce
+{% endtable %}
 
 See each policy for the failure modes it supports.
 
-### `mark`
+### mark
 
 The `mark` failure mode attaches the policy failure reason to the record in a `kong/policy-failure-<id>` header.
 
-On produce, the header is stored with the record in the backend cluster and stays on it.
-Every consumer of the topic sees the header, including systems that never pass through {{site.event_gateway_short}}.
-A producer with access to the topic can trigger policy failures on purpose to enumerate configuration through the failure reasons.
+On produce, {{site.event_gateway_short}} stores the header with the record in the backend cluster. 
+The header remains on the record, so every consumer of the topic sees it, including systems that never pass through {{site.event_gateway_short}}.
+
+A producer with access to the topic can trigger policy failures on purpose and read the failure reasons to learn about your policy configuration.
 
 {:.warning}
 > **Warning**: Failure reasons can contain runtime-specific information, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, and CEL expression snippets.
-> If you use `mark`, configure a [Modify Headers](/event-gateway/policies/modify-headers/) policy to remove the `kong/policy-failure-<id>` header before the record is stored in the backend cluster or delivered to a client.
+> If you use `mark`, configure a [Modify Headers](/event-gateway/policies/modify-headers/) policy that runs after the failing policy to remove the `kong/policy-failure-<id>` header before the record is stored in the backend cluster or delivered to a client.
 
-### `error`
+### error
 
 The `error` failure mode stops the delivery of the whole batch that contains the failing record.
 The client receives an error with the policy failure reason.
 
 {:.warning}
-> **Warning**: A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset, and recovery requires manual operator action.
+> **Warning**: A single record that always fails the policy, for example one written by a producer with access to the topic, blocks every consumer group at that offset, and recovery requires manual operator action.
 > Use `error` sparingly, and prefer `skip` when producers you don't trust can write to the topic.
 > `skip` stops only the failing record, so consumer groups keep making progress.
 
