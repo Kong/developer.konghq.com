@@ -122,7 +122,7 @@ formats:
 
 ## Detect without blocking
 
-{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name %}
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 ## Vector databases
 

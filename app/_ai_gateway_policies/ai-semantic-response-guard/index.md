@@ -60,10 +60,14 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 1. Extracts response text, supporting JSON parsing of multiple LLM formats and gzipped content.
 1. Generates embeddings for the extracted text.
 1. Searches the vector database (Redis or pgvector) against configured `allow_responses` or `deny_responses`.
-1. Applies the decision rules described above.
+1. Applies the decision rules described in [How it works](#how-it-works).
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 ## Vector databases
 
