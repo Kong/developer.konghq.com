@@ -91,6 +91,7 @@ rows:
       text: "Broker third-party credentials"
       description: |
         Store users' credentials for third-party services and release them to {{site.ai_gateway_name}} so agents can call those services on a user's behalf.
+  - column_count: 3
     columns:
       - blocks:
         - type: card
