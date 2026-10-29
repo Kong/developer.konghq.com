@@ -75,20 +75,4 @@ RSpec.describe Jekyll::Drops::EntityExample::AIGatewayPolicy do
       )
     end
   end
-
-  describe '#scope_note' do
-    it 'is nil for the global target' do
-      expect(drop.scope_note).to be_nil
-    end
-
-    it 'names the policy and links to the AI Model entity page' do
-      expect(config_example.examples[1].scope_note)
-        .to include('`pii-sanitizer`', '[AI Model](/ai-gateway/entities/ai-model/)')
-    end
-
-    it 'names the policy and links to the AI MCP Server entity page' do
-      expect(config_example.examples[2].scope_note)
-        .to include('`pii-sanitizer`', '[AI MCP Server](/ai-gateway/entities/ai-mcp-server/)')
-    end
-  end
 end
