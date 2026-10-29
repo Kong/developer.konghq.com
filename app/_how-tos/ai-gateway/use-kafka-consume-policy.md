@@ -263,7 +263,7 @@ indent: 3
 {% endvalidation %}
 
 1. Produce a message to the `ai-events` topic:
-
+   <!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C kafka-consume-test/kafkactl.yaml --context direct produce ai-events --value='{"event":"prompt_received","model":"gpt-4o"}'
@@ -273,9 +273,10 @@ expected:
 render_output: false
 indent: 3
 {% endvalidation %}
+<!--vale on-->
 
 1. Produce a message to the `ai-audit` topic:
-
+<!--vale off-->
 {% validation custom-command %}
 command: |
   kafkactl -C kafka-consume-test/kafkactl.yaml --context direct produce ai-audit --value='{"actor":"user","action":"policy_applied"}'
@@ -285,9 +286,10 @@ expected:
 render_output: false
 indent: 3
 {% endvalidation %}
+<!--vale on-->
 
 1. Send a second request to read the messages:
-
+<!--vale off-->
 {% validation custom-command %}
 command: |
   curl -s "$KONNECT_PROXY_URL/kafka" | jq .
@@ -297,9 +299,9 @@ expected:
 render_output: false
 indent: 3
 {% endvalidation %}
-
+<!--vale on-->
    The response groups records by topic name, then by partition:
-
+   <!--vale off-->
    ```json
    {
      "ai-events": {
@@ -341,3 +343,4 @@ indent: 3
    }
    ```
    {:.no-copy-code}
+   <!--vale on-->

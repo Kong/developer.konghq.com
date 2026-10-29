@@ -174,7 +174,7 @@ For this example, we're using the following:
     Because all of these patterns have a value of something other than `0`, if a request has any of those elements, it will not be added to the log.
 * `log_format`: Sets the log format for what {{site.ai_gateway}} keeps in the logs. The contents of the log can be customized for your needs. For the purpose of this example, you can assign the new logs with the name `show_everything` and set everything to the {{site.ai_gateway}} default standards. To see the full list of options, refer to the [Nginx core module variables reference](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
 
-Once you've adjusted the Nginx template for your environment, you need to tell {{site.ai_gateway}} to use the newly created log, `show_everything`.
+After you've adjusted the Nginx template for your environment, you need to tell {{site.ai_gateway}} to use the newly created log, `show_everything`.
 
 To do this, alter the {{site.ai_gateway}} variable `proxy_access_log` by either editing `etc/kong/kong.conf` or using the environmental variable `KONG_PROXY_ACCESS_LOG` and adjust the default location:
 
