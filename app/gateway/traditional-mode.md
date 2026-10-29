@@ -46,9 +46,9 @@ across your available nodes.
 flowchart TD
 
 A[(Database)]
-B(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+B(fa:fa-gateway {{site.base_gateway}} instance)
+C(fa:fa-gateway {{site.base_gateway}} instance)
+D(fa:fa-gateway {{site.base_gateway}} instance)
 
 A <---> B & C & D
 

@@ -8,8 +8,8 @@ A(API or service)
 B(API or service)
 C(API or service)
 
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect <br>#40;fully-managed <br>data plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect <br>#40;fully-managed <br>data plane#41;)
+G(fa:fa-konglogo-gradient-secondary Konnect <br>#40;fully-managed <br>data plane#41;)
+H(fa:fa-konglogo-gradient-secondary Konnect <br>#40;fully-managed <br>data plane#41;)
 J(Internet)
 
 subgraph 1 [User Azure Cloud]

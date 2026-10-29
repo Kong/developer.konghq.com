@@ -124,10 +124,10 @@ flowchart LR
 A(API or Service)
 B(API or Service)
 C(API or Service)
-E(<img src="/assets/icons/aws.svg" style="max-height:32px" class="no-image-expand"/> AWS VPC peering)
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
+E(fa:fa-aws AWS VPC peering)
+G(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+H(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+I(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
 J(Internet)
 
 subgraph 1 [User AWS Cloud]
@@ -198,10 +198,10 @@ flowchart LR
 A(API or Service)
 B(API or Service)
 C(API or Service)
-E(<img src="/assets/icons/aws.svg" style="max-height:32px" class="no-image-expand"/> AWS Resource Endpoint)
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
+E(fa:fa-aws AWS Resource Endpoint)
+G(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+H(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+I(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
 J(Internet)
 
 subgraph 1 [User AWS Cloud]

@@ -45,8 +45,8 @@ The figure illustrates how {{site.kic_product_name}} works:
 flowchart LR
     subgraph Kubernetes cluster
         direction LR
-        A(<img src="/assets/icons/kubernetes.svg" style="max-width:25px; display:block; margin:0 auto;" /> API server) --> |events| B(<img src="/assets/icons/KogoBlue.svg" style="max-width:25px; display:block; margin:0 auto;" />Controller)
-        B --> |configuration| C(<img src="/assets/icons/KogoBlue.svg" style="max-width:25px; display:block; margin:0 auto;"/>Kong)
+        A(fa:fa-kubernetes API server) --> |events| B(fa:fa-KogoBlue Controller)
+        B --> |configuration| C(fa:fa-KogoBlue Kong)
         C --> D(services)
     end
 
