@@ -106,6 +106,12 @@ faqs:
       which only authenticates the one-time fetch of an `upstream-server`'s tool list. See
       [Upstream authentication](#upstream-authentication).
 
+  - q: How do I give each caller their own credential for an upstream service?
+    a: |
+      Configure [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream) with `type: token_vault`.
+      {{site.ai_gateway}} exchanges a short-lived upstream credential for each caller through Token Vault.
+      A caller must enroll with the Token Vault provider before it can reach the upstream's real tools.
+      See [Token Vault](#token-vault).
   - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
     a: |
       Set [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) for a private CA.
@@ -403,6 +409,10 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Per-caller upstream credentials
+
+An `upstream-server` can use [Token Vault](#token-vault) to authenticate to its upstream, and each one can use a different Token Vault provider. A caller who hasn't enrolled with an upstream's provider sees that upstream's virtual `authenticate` and `check_authentication_status` tools, prefixed with the upstream's name (for example, `catalog-service/authenticate`), in place of its real tools. Tools from upstreams the caller is enrolled with are served normally.
+
 ### Header forwarding
 
 When your upstream services need to enforce their own access controls or apply client-specific logic based on identity, enable [`config.server.forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers) on the `listener` or `upstream-server`. This setting passes the original client's headers (authentication tokens, context) so upstreams see the actual client, not just the listener.
@@ -502,9 +512,14 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 
 ## Upstream authentication
 
-Access control and AI Auth Strategies govern who can reach the AI MCP Server. Separately, [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream) controls how {{site.ai_gateway}} authenticates itself when forwarding tool-call requests to the upstream service. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
+{{site.ai_gateway}} provides two authentication levels:
 
-This applies to the following modes that connect directly to an upstream service: `passthrough-listener`. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
+* **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
+* **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
+
+This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+
+### AWS IAM (SigV4)
 
 Some upstream services don't accept bearer tokens or API keys at all, and only accept requests signed with AWS IAM (SigV4), such as a service fronted by an IAM-protected Amazon API Gateway. For these, set `config.upstream.auth.type` to `aws`.
 
@@ -530,6 +545,43 @@ config:
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
 ```
+
+### Token Vault
+
+Some upstream services need to know who is calling, so a shared API key isn't enough. [Token Vault](/identity/token-vault/) gives each caller, whether a user or an agent, its own short-lived credential.
+
+To use the Token Vault, you need to enable it and add external services [providers](/identity/token-vault/#providers/), like GitHub or Slack. After that, the AI MCP Server **Upstream authentication** section displays the available providers you can use in your setup.
+
+This configuration example shows how to set up upstream authentication using the Token Vault:
+
+```yaml
+config:
+  url: https://mcp.example.com
+  upstream:
+    auth:
+      type: token_vault
+      token_vault:
+        directory: default
+        provider: github
+```
+
+Replace the following values:
+
+* `directory`: Your [directory](/identity/directories/) name, default name being `default`.
+* `provider`: The [provider](/identity/token-vault/#providers/) to use for authentication, for example, `github`.
+
+When using the Token Vault, {{site.ai_gateway}} checks every request to verify if the user has been enrolled. If the caller (a user or an agent) isn't enrolled in the system, it returns an enrollment URL before approving access to the MCP server.
+
+To avoid checking every request, you can set up a credential caching strategy with Redis.
+
+#### Credential caching
+
+{{site.ai_gateway}} caches exchanged credentials so it doesn't call the Token Vault on every request:
+
+* **Per node (always on).** If a caller sends several requests at once, the gateway makes one credential exchange and shares the result with all of them.
+* **Redis (optional).** When you configure Redis, {{site.ai_gateway}} caches credentials in it, encrypted. A caller enrolled through one node gets a cache hit on every other node.
+
+A cached credential lives for 5 minutes or until its own `expires_in`, whichever is shorter.
 
 ## Upstream TLS
 
@@ -804,7 +856,7 @@ features:
     description: Handling formats such as multipart/form-data or XML
     supported: false
   - title: "Advanced MCP features"
-    description: Handling structured output, active notifications on tool changes, and session sharing between instances
+    description: Handling structured output, active notifications on tool changes, and session sharing between instances. The one exception is the `tools changed` notification sent after a caller enrolls through [Token Vault](#token-vault).
     supported: false
   - title: "Non-HTTP protocols"
     description: Handling WebSocket and gRPC upstreams
