@@ -81,7 +81,7 @@ The following diagram shows how a request flows from a principal to a third-part
 1. The Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
 1. The Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal has no credential for that provider yet, the {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
 
-The IdP token only identifies the principal, it never becomes the stored credential.
+The IdP token only identifies the principal. It never becomes the stored credential.
 
 {% include diagrams/token-vault.md %}
 

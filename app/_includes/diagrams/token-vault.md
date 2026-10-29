@@ -9,6 +9,6 @@ flowchart LR
     principal -->|Request| gateway
     gateway --> vault
     vault -->|Verify| idp
-    vault -->|Release credential| providers
+    vault -->|Authorizes| providers
 {% endmermaid %}
 <!--vale on-->
