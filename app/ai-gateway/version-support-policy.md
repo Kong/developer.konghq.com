@@ -93,7 +93,7 @@ Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {% navtabs "ai-gateway-version" %}
 {% navtab "2.3" %}
-{{site.ai_gateway_name}} 2.3 was released on 2026-10-29.
+{{site.ai_gateway_name}} 2.3 was released on 2026-10-30.
 
 {{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-11-30, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
 
