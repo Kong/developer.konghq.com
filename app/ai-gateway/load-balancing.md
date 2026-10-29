@@ -78,11 +78,8 @@ rows:
       {:.info}
       > **Note**: If you don't configure any cost fields on a target, {{site.ai_gateway}} falls back to the [price catalog](/ai-cost-management/price-catalog).
       > <br><br>
-      > If dynamic pricing is off (`KONG_DYNAMIC_PRICING=off`):
-      > * {{site.konnect_short_name}} data planes have no fallback
-      > * On-prem data planes can set `KONG_DYNAMIC_PRICING_URI` to the path of a local file
-      >
-      > <br>
+      > When dynamic pricing is off (`KONG_DYNAMIC_PRICING=off`), you must configure [cost fields](/ai-gateway/model-cost-management/) directly on each target.
+      > <br><br>
       > For the full precedence order, see [How a request is priced](/ai-cost-management/price-catalog/#how-a-request-is-priced).
     considerations: |
       * Balances load based on actual consumption metrics.
