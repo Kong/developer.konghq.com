@@ -74,19 +74,14 @@ rows:
 
 ## How the token vault works
 
-The following diagram shows how the {{site.identity}} Token Vault works on top of the following setup:
-* Okta as corp IdP
-* Claude Code as the agent, configured with an {{site.ai_gateway}} MCP server
-* GitHub as the third-party service
-* {{site.identity}} Token Vault as credentials broker
-* {{site.ai_gateway}} as the token handler between Okta and the Token Vault
+The following diagram shows how a request flows from a principal to a third-party credential provider through the {{site.identity}} Token Vault:
 
-In this scenario:
-1. A user authenticates to Okta, which generates a token.
-1. The {{site.ai_gateway}} captures the token and hands it to the Token Vault.
-1. The Token Vault verifies the Okta token and uses its issuer (`iss`) and subject (`sub`) to identify the user. If the user has no GitHub credential yet, {{site.ai_gateway}} returns an enrollment URL, and asks the user to connect their GitHub account before continuing.
-1. The user approves access on GitHub's OAuth consent screen. The Token Vault exchanges the authorization code for a GitHub token and stores it for that user. The Okta token only identifies the user, it never becomes the stored credential.
-1. Claude Code can use the `tools/list` from the GitHub MCP: the user can now interact with GitHub from Claude Code.
+1. A principal (your users, agents, and applications) sends a request through the {{site.ai_gateway}}.
+1. The {{site.ai_gateway}} routes the request to the Token Vault.
+1. The Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
+1. The Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal has no credential for that provider yet, the {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
+
+The IdP token only identifies the principal, it never becomes the stored credential.
 
 {% include diagrams/token-vault.md %}
 
