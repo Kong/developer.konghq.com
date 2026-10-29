@@ -435,65 +435,17 @@
     }
   }
 
-  .mermaid svg {
-    @apply m-auto;
-
-    p, span {
-      @apply text-primary !important;
-    }
-
-    rect, circle, ellipse, polygon {
-      @apply fill-transparent stroke-[rgb(var(--color-icon-primary))] !important;
-    }
-
-    .label-container {
-      @apply fill-[rgb(var(--color-bg-secondary))] !important;
-    }
-
-    .edgeLabel {
-      @apply bg-primary !important;
-
-      p {
-        @apply bg-secondary !important;
-      }
-    }
-
-    path {
-      @apply fill-[context-stroke] stroke-[rgb(var(--color-icon-primary))] stroke-1 !important
-    }
-  }
-
-  @-moz-document url-prefix() {
-    .mermaid .flowchart-link {
-      fill: none !important;
-    }
-  }
-
-  .mermaid svg[aria-roledescription="sequence"] {
-    .actor {
-      @apply fill-[rgb(var(--color-bg-secondary))] !important;
-    }
-
-    .activation0 {
-      @apply fill-[rgb(var(--color-bg-secondary))] !important;
-    }
-
-    text {
-      @apply fill-[rgb(var(--color-text-primary))] !important;
-
-    }
-
-    text > tspan {
-      @apply fill-[rgb(var(--color-text-primary))] !important;
-    }
-
-    .messageLine0 {
-      @apply stroke-[rgb(var(--color-icon-primary))] !important;
-    }
-
-    circle {
-      @apply fill-[rgb(var(--color-bg-secondary))] !important;
-    }
+  .mermaid {
+    --pele-bg: rgb(var(--color-bg-primary));
+    --pele-fg: rgb(var(--color-text-primary));
+    --pele-muted: rgb(var(--color-text-secondary));
+    --pele-line: rgb(var(--color-icon-primary));
+    --pele-surface: rgb(var(--color-bg-secondary));
+    --pele-surface-alt: rgb(var(--color-bg-terciary));
+    --pele-border: rgb(var(--color-border-primary), var(--opacity-border-primary));
+    --pele-accent: rgb(var(--color-text-links));
+    --pele-error: rgb(var(--color-semantic-red-primary));
+    --pele-font: "Funnel Sans", system-ui, sans-serif;
   }
 
   .badge {

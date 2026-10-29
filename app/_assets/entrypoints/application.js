@@ -7,7 +7,8 @@
 import "~/stylesheets/index.css";
 
 import { datadogRum } from "@datadog/browser-rum";
-import mermaid from "mermaid";
+import { mount } from "pele";
+import icons from "@/javascripts/diagram-icons";
 import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
@@ -56,30 +57,23 @@ document.addEventListener("DOMContentLoaded", function () {
 //   });
 // }
 
-mermaid.initialize({
-  startOnLoad: true,
-  theme: "base",
-  themeVariables: {
-    primaryColor: "#fff",
-    primaryBorderColor: "rgb(var(--color-icon-primary))",
-    primaryTextColor: "#495c64",
-    secondaryColor: "#fff",
-    secondaryTextColor: "#5096f2",
-    tertiaryBorderColor: "#AAB4BB",
-    edgeLabelBackground: "#fff",
-    fontFamily: '"Inter", system-ui, sans-serif',
-    fontSize: "15px",
-    lineColor: "#99b0c0",
-    activationBorderColor: "#c2d4e0",
-    sequenceNumberColor: "#fff",
-  },
-});
+function resolveDiagramIcon(token) {
+  const name = token.replace(/^fa:fa-/, "");
+  return icons[name] ?? null;
+}
+
+for (const el of document.querySelectorAll("pre.mermaid")) {
+  mount(el, el.textContent.trim(), {
+    zoom: true,
+    icons: resolveDiagramIcon,
+  });
+}
 
 window.addEventListener("load", () => {
   const hash = window.location.hash;
   if (hash && !document.getElementById("api-spec")) {
     const escapedHash = CSS.escape(hash.slice(1));
-    // Give time for collapsibles to expand/mermaid to render
+    // Give time for collapsibles to expand/diagrams to render
     setTimeout(() => {
       const el = document.querySelector(`#${escapedHash}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
