@@ -48,7 +48,7 @@ faqs:
       Yes. A provider can have a percentage off override and custom rates for individual models at the same time.
       A model with a custom rate uses the custom rate, and the percentage off override applies to the provider's other models.
 
-  - q: Do rate overrides apply to every AI Gateway in my organization?
+  - q: Do rate overrides apply to every {{site.ai_gateway}} in my organization?
     a: |
       Yes. A rate override applies to every {{site.ai_gateway}} in your organization.
 ---
