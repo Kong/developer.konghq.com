@@ -251,40 +251,11 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
   end
 
   context 'ai-gateway product, policy type' do
-    let(:dir) { Dir.mktmpdir }
-
-    let(:file) { File.join(dir, 'sanitize-pii.yml') }
-
-    let(:example_yaml) do
-      <<~YAML
-        title: Sanitize PII
-        description: Sanitize PII from model responses.
-        weight: 100
-        name: pii-sanitizer
-        display_name: PII Sanitizer
-        type: ai-sanitizer
-        config:
-          patterns:
-            - email
-        tools:
-          - konnect-api
-      YAML
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
     end
 
-    let(:plugin) do
-      double(
-        'policy',
-        product: 'ai-gateway',
-        slug: 'ai-sanitizer',
-        scopes: %w[global ai-model],
-        unreleased?: false,
-        min_release: nil
-      )
-    end
-
-    before { File.write(file, example_yaml) }
-
-    let(:config_example) { Jekyll::Drops::PolicyConfigExample::AIGateway.new(file:, plugin:) }
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
 
     let(:presenter) do
       example = config_example.examples.detect { |e| e.target.key == target_key }
@@ -307,10 +278,27 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
                 "display_name": "PII Sanitizer",
                 "type": "ai-sanitizer",
                 "enabled": true,
+                "condition": "model.name == \"gpt-4o\"",
                 "config": {
                   "patterns": [
-                    "email"
-                  ]
+                    "email",
+                    "phone"
+                  ],
+                  "fail_on_error": true,
+                  "thresholds": {
+                    "redaction": {
+                      "score": 0.9,
+                      "actions": [
+                        "redact",
+                        "log"
+                      ]
+                    }
+                  },
+                  "providers": {
+                    "openai": {
+                      "model": "gpt-4o"
+                    }
+                  }
                 },
                 "global": true
               }
@@ -336,10 +324,27 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
                 "display_name": "PII Sanitizer",
                 "type": "ai-sanitizer",
                 "enabled": true,
+                "condition": "model.name == \"gpt-4o\"",
                 "config": {
                   "patterns": [
-                    "email"
-                  ]
+                    "email",
+                    "phone"
+                  ],
+                  "fail_on_error": true,
+                  "thresholds": {
+                    "redaction": {
+                      "score": 0.9,
+                      "actions": [
+                        "redact",
+                        "log"
+                      ]
+                    }
+                  },
+                  "providers": {
+                    "openai": {
+                      "model": "gpt-4o"
+                    }
+                  }
                 },
                 "global": false
               }

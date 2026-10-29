@@ -3,42 +3,14 @@
 RSpec.describe Jekyll::Drops::EntityExample::AIGatewayPolicy do
   before { stub_entity_examples_config! }
 
-  let(:dir) { Dir.mktmpdir }
-
-  let(:file) { File.join(dir, 'sanitize-pii.yml') }
-
-  let(:example_yaml) do
-    <<~YAML
-      title: Sanitize PII
-      description: Sanitize PII from model responses.
-      weight: 100
-      name: pii-sanitizer
-      display_name: PII Sanitizer
-      type: ai-sanitizer
-      config:
-        patterns:
-          - email
-      tools:
-        - konnect-api
-        - terraform
-        - kongctl
-    YAML
+  def example_fixture(name)
+    File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples', name)
   end
 
-  let(:plugin) do
-    double(
-      'policy',
-      product: 'ai-gateway',
-      slug: 'ai-sanitizer',
-      scopes: %w[global ai-model ai-mcp-server],
-      unreleased?: false,
-      min_release: nil
-    )
-  end
+  let(:example_file) { example_fixture('sanitize-pii.yml') }
+  let(:scopes) { %w[global ai-model ai-mcp-server] }
 
-  before { File.write(file, example_yaml) }
-
-  let(:config_example) { Jekyll::Drops::PolicyConfigExample::AIGateway.new(file:, plugin:) }
+  let(:config_example) { ai_gateway_policy_config_example(file: example_file, scopes: scopes) }
 
   subject(:drop) { config_example.examples.first }
 
@@ -71,7 +43,13 @@ RSpec.describe Jekyll::Drops::EntityExample::AIGatewayPolicy do
         'display_name' => 'PII Sanitizer',
         'type' => 'ai-sanitizer',
         'enabled' => true,
-        'config' => { 'patterns' => ['email'] }
+        'condition' => 'model.name == "gpt-4o"',
+        'config' => {
+          'patterns' => %w[email phone],
+          'fail_on_error' => true,
+          'thresholds' => { 'redaction' => { 'score' => 0.9, 'actions' => %w[redact log] } },
+          'providers' => { 'openai' => { 'model' => 'gpt-4o' } }
+        }
       )
     end
   end
