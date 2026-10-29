@@ -1,6 +1,6 @@
 ---
-title: Deploy DataPlanes on IPv6 or dual-stack clusters
-description: "Run {{ site.operator_product_name }} DataPlanes on IPv6-only, IPv4-only, and dual-stack Kubernetes clusters."
+title: Deploy data planes on an IPv6-only cluster
+description: "Run {{ site.operator_product_name }} data planes on an IPv6-only Kubernetes cluster and send traffic to them over IPv6."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/ipv6/
@@ -17,144 +17,247 @@ products:
 
 works_on:
   - on-prem
-  - konnect
 
 min_version:
   operator: '2.4'
 
 related_resources:
-  - text: Provision a Gateway
-    url: /operator/get-started/gateway-api/deploy-gateway/
+  - text: Deploy data planes on a dual-stack cluster
+    url: /operator/dataplanes/how-to/dual-stack/
+  - text: Kubernetes IPv4/IPv6 dual-stack
+    url: https://kubernetes.io/docs/concepts/services-networking/dual-stack/
 
 tldr:
-  q: How do I run a DataPlane on an IPv6-only or dual-stack Kubernetes cluster?
-  a: Set the operator's `--ip-family` flag, optionally control the ingress Service IP families with `ipFamilies` and `ipFamilyPolicy`, and on AWS use the AWS Load Balancer Controller with dual-stack annotations.
+  q: How do I run a data plane on an IPv6-only Kubernetes cluster?
+  a: Install {{ site.operator_product_name }} with the `--ip-family=ipv6` argument, then create a Gateway. The data plane's listeners bind to IPv6, and its ingress Service is a single-stack IPv6 Service.
 
 prereqs:
   skip_product: true
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: Kubernetes cluster
-      include_content: prereqs/kubernetes/cluster
-    - title: IPv6 networking
+    - title: IPv6-only Kubernetes cluster
       content: |
-        The cluster must have IPv6 networking configured. On AWS EKS, the VPC and subnets must have an IPv6 CIDR block.
+        This guide requires a Kubernetes cluster with IPv6 networking configured, and `kubectl` configured to point at it.
+        On AWS EKS, the VPC and subnets must have an IPv6 CIDR block.
+
+        If you don't have one, create a local IPv6-only cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation):
+
+        1. Create a kind configuration file that sets the cluster's IP family to `ipv6`:
+
+           ```bash
+           cat <<EOF > kind-ipv6.yaml
+           kind: Cluster
+           apiVersion: kind.x-k8s.io/v1alpha4
+           networking:
+             ipFamily: ipv6
+           EOF
+           ```
+
+        1. Create the cluster from the configuration file:
+
+           ```bash
+           kind create cluster --name kong-ipv6 --config kind-ipv6.yaml
+           ```
+
+           kind sets the current `kubectl` context to the new cluster.
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "{{site.ee_product_name}} license"
+      include_content: prereqs/gateway-license-file
+      icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: How does {{ site.operator_product_name }} detect the cluster's IP family?
+    a: |
+      By default, the `--ip-family` argument is set to `auto`.
+      With `auto`, {{ site.operator_product_name }} reads the IP family of the `default/kubernetes` Service at startup.
+      If detection fails, {{ site.operator_product_name }} exits with an error.
+      Setting `--ip-family=ipv6` skips detection, so {{ site.operator_product_name }} starts even when the `default/kubernetes` Service can't be read.
+  - q: Which data plane listeners use {{ site.operator_product_name }}'s IP family?
+    a: |
+      {{ site.operator_product_name }} binds the data plane's Kong proxy, admin, status, and stream listeners to the IP family set by `--ip-family`.
+      On an IPv6-only cluster, all of these listeners bind to IPv6 addresses.
+  - q: How do I expose a data plane outside the cluster over IPv6?
+    a: |
+      To expose a data plane outside the cluster over IPv6, set the ingress Service `type` in the `GatewayConfiguration` to `LoadBalancer`:
+
+      ```yaml
+      spec:
+        dataPlaneOptions:
+          network:
+            services:
+              ingress:
+                type: LoadBalancer
+      ```
+
+      The Gateway is programmed only after the cluster assigns an external address to the load balancer.
+      Local clusters such as kind don't assign load balancer addresses by default.
+  - q: How do I expose a data plane over IPv6 on AWS EKS?
+    a: |
+      On AWS EKS, the in-tree cloud provider only provisions IPv4-only Network Load Balancers.
+      To expose a data plane externally on an IPv6-only EKS cluster, install the [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html).
+      Then, set the ingress Service type to `LoadBalancer` and add the following annotations to the ingress Service in your `GatewayConfiguration` so the AWS Load Balancer Controller provisions a dual-stack Network Load Balancer:
+
+      ```yaml
+      spec:
+        dataPlaneOptions:
+          network:
+            services:
+              ingress:
+                type: LoadBalancer
+                annotations:
+                  service.beta.kubernetes.io/aws-load-balancer-type: external
+                  service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+                  service.beta.kubernetes.io/aws-load-balancer-ip-address-type: dualstack
+                  service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+      ```
+  - q: Can I run data planes on a dual-stack cluster?
+    a: |
+      Yes. {{ site.operator_product_name }} supports dual-stack clusters as a tech preview.
+      See [Deploy data planes on a dual-stack cluster](/operator/dataplanes/how-to/dual-stack/).
 
 ---
 
-{{ site.operator_product_name }} supports IPv4-only, IPv6-only, and dual-stack Kubernetes clusters. The operator decides which IP families the DataPlane's Kong proxy, admin, status, and stream listeners bind to. The IP families of the ingress Service that exposes the DataPlane are controlled separately.
+## Install {{ site.operator_product_name }}
 
-IPv6-only support requires {{ site.operator_product_name }} 2.4 or later. Dual-stack support is available as tech preview.
+Add the Kong Helm charts and update them:
 
-## Set the operator's IP family
-
-The operator determines the cluster's IP family with the `--ip-family` flag:
-
-| Value | Behavior |
-|-------|----------|
-| `auto` | Default. Detects the cluster's IP family from the `default/kubernetes` Service at startup. If detection fails, the operator exits with an error |
-| `ipv4` | The operator expects an IPv4 cluster |
-| `ipv6` | The operator expects an IPv6 cluster |
-| <span style="white-space: nowrap;">`dual` <a class="badge bg-semantic-yellow-secondary text-semantic-yellow-primary" href="{{ site.data.stages.tech_preview.url }}">{{ site.data.stages.tech_preview.text }}</a></span> | The operator expects a dual-stack cluster |
-
-In most clusters the default `auto` detection works and no configuration is needed. If detection fails, set the flag explicitly with the Helm chart's `args` value:
-
-```yaml
-# values.yaml
-args:
-  - --ip-family=ipv6
+```bash
+helm repo add kong https://charts.konghq.com
+helm repo update
 ```
+
+Install {{ site.operator_product_name }} with the `--ip-family=ipv6` argument.
+With this argument, {{ site.operator_product_name }} binds the data plane's listeners to IPv6 and creates IPv6 ingress Services.
+Helm passes the argument to {{ site.operator_product_name }} through the chart's `args` value:
 
 ```bash
 helm upgrade --install kong-operator kong/kong-operator -n kong-system \
   --create-namespace \
   --set image.tag={{ site.data.operator_latest.release }} \
-  -f values.yaml
+  --set 'args[0]=--ip-family=ipv6'
 ```
 
-## Control the ingress Service IP family
+Apply your {{site.ee_product_name}} license as a `KongLicense` resource:
 
-This section applies to dual-stack clusters only.
+```bash
+echo "
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongLicense
+metadata:
+  name: kong-license
+rawLicenseString: '$(cat ./license.json)'
+" | kubectl apply -f -
+```
 
-By default, when the operator's IP family is `dual`, the ingress Service is created with the `PreferDualStack` policy so that the DataPlane is exposed over both IPv4 and IPv6. You can override this with the `ipFamilies` and `ipFamilyPolicy` fields on the ingress Service of a `GatewayConfiguration`:
+{% include /k8s/kong-namespace.md %}
 
-```yaml
+## Create a Gateway
+
+Create a `GatewayConfiguration`, a `GatewayClass`, and a `Gateway`.
+
+Because the IP family is set to `ipv6`, {{ site.operator_product_name }} binds the data plane's listeners to IPv6 and creates a single-stack IPv6 ingress Service without any IP family settings in the `GatewayConfiguration`.
+The `GatewayConfiguration` sets the ingress Service type to `ClusterIP`, so the Gateway is programmed without waiting for a load balancer address:
+
+```bash
+echo '
+apiVersion: gateway-operator.konghq.com/v2beta1
+kind: GatewayConfiguration
+metadata:
+  name: ipv6
+  namespace: kong
 spec:
   dataPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        spec:
+          containers:
+            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+              name: proxy
     network:
       services:
         ingress:
-          ipFamilies:
-            - IPv4
-            - IPv6
-          ipFamilyPolicy: PreferDualStack
-```
-
-The fields behave like their [Kubernetes Service dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/) counterparts:
-
-- If neither field is set on a dual-stack cluster, the Service defaults to `PreferDualStack`
-- If `ipFamilies` names a single family, the Service stays single-stack
-- If `ipFamilies` names both families, the Service defaults to `PreferDualStack`, because the Kubernetes API server requires a dual-stack policy when two families are specified
-
-The requested settings must be supported by the cluster. For example, `ipFamilies: [IPv6]` on a cluster without IPv6 networking fails.
-
-The same fields are available on the `DataPlane` resource under `spec.network.services.ingress`.
-
-## AWS EKS requirements
-
-On AWS EKS, the in-tree cloud provider only provisions IPv4-only Network Load Balancers.
-
-To expose a DataPlane externally on an IPv6-only or dual-stack EKS cluster, you must use the [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html).
-
-Then annotate the ingress Service through the `GatewayConfiguration` so that the controller provisions a dual-stack load balancer:
-
-```yaml
+          type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: ipv6
 spec:
-  dataPlaneOptions:
-    network:
-      services:
-        ingress:
-          annotations:
-            service.beta.kubernetes.io/aws-load-balancer-type: external
-            service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-            service.beta.kubernetes.io/aws-load-balancer-ip-address-type: dualstack
-            service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+  controllerName: konghq.com/gateway-operator
+  parametersRef:
+    group: gateway-operator.konghq.com
+    kind: GatewayConfiguration
+    name: ipv6
+    namespace: kong
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong
+  namespace: kong
+spec:
+  gatewayClassName: ipv6
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP' | kubectl apply -f -
 ```
 
-## Validate
-
-Deploy a Gateway following the [Provision a Gateway](/operator/get-started/gateway-api/deploy-gateway/) guide.
-
-If you're on AWS EKS, apply the [AWS EKS requirements](#aws-eks-requirements) sections to the `GatewayConfiguration`.
-
-Wait for the Gateway to become programmed:
+Wait for the Gateway to be programmed:
 
 ```bash
 kubectl wait --for=condition=programmed gateway/kong -n kong --timeout=300s
 ```
 
+## Validate
+
+Export the name of the data plane's ingress Service:
+
+```bash
+export INGRESS_SERVICE=$(kubectl get svc -n kong \
+  -l gateway-operator.konghq.com/dataplane-service-type=ingress \
+  -o jsonpath='{.items[0].metadata.name}')
+```
+
 Check the IP families of the ingress Service:
 
 ```bash
-kubectl get svc -n kong -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.ipFamilies}{"\t"}{.spec.ipFamilyPolicy}{"\n"}{end}'
+kubectl get svc $INGRESS_SERVICE -n kong \
+  -o jsonpath='{.spec.ipFamilies}{"\t"}{.spec.ipFamilyPolicy}{"\n"}'
 ```
-An IPv6-only Service reports:
+
+The ingress Service is a single-stack IPv6 Service:
 
 ```
-{svc-name} ["IPv6"] SingleStack
+["IPv6"]	SingleStack
 ```
 {:.no-copy-code}
 
-A dual-stack Service reports both families:
-
-```
-{svc-name} ["IPv4","IPv6"] PreferDualStack
-```
-{:.no-copy-code}
-
-To test IPv6 connectivity from outside the cluster, resolve the load balancer's DNS name and connect to its `AAAA` record:
+Export the ingress Service's IPv6 cluster IP:
 
 ```bash
-dig AAAA <load-balancer-dns-name>
+export PROXY_IPV6=$(kubectl get svc $INGRESS_SERVICE -n kong -o jsonpath='{.spec.clusterIP}')
 ```
+
+Send a request to the proxy over IPv6 from a temporary Pod in the cluster:
+
+```bash
+kubectl run curl -n kong --rm -it --restart=Never --image=curlimages/curl -- \
+  curl -s -w '\nremote_ip: %{remote_ip}\n' "http://[$PROXY_IPV6]"
+```
+
+The output includes the response from {{ site.base_gateway }} and the address that curl connected to:
+
+```
+{
+  "message":"no Route matched with those values",
+  "request_id":"780b0503694882228829e12c85c46462"
+}
+remote_ip: fd00:10:96::64bb
+```
+{:.no-copy-code}
+
+{{ site.base_gateway }} returns a `no Route matched` error because the Gateway doesn't have any Routes yet.
+The `remote_ip` value is a colon-separated hexadecimal address, which means the request used IPv6.
+This response confirms that the data plane accepts connections over IPv6.
