@@ -537,15 +537,11 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 
 ## {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways 
 
-{% include_cached badges/stage.html beta=true %}
-
 [{{site.ai_gateway}}](/ai-gateway/) on Dedicated Cloud Gateways gives you a fully managed, single-tenant {{site.ai_gateway}} 2.0 deployment.
 Kong hosts the control plane and data planes for you, including scaling, upgrades, and high availability, so you don't have to run and maintain your own {{site.ai_gateway}} data planes.
 
 In addition, {{site.ai_gateway}} on Dedicated Cloud Gateways supports a fully [managed cache for Redis](/dedicated-cloud-gateways/managed-cache/) so you don't have to host Redis infrastructure.
 You can use this with any {{site.ai_gateway}} Policy that uses Redis.
-
-### {{site.ai_gateway}} and {{site.base_gateway}} Cloud Gateways
 
 If you want both {{site.base_gateway}} and {{site.ai_gateway}} to run in a Dedicated Cloud Gateway, you must use separate Dedicated Cloud Gateway control planes for them, instead of combining both on a single control plane.
 Sharing networks is best practice.
@@ -624,31 +620,6 @@ See the following for instructions:
 * [Set up an AWS resource endpoint connection](/dedicated-cloud-gateways/aws-resource-endpoints/)
 * [Private hosted zones](/dedicated-cloud-gateways/private-hosted-zones/)
 * [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/)
-
-### {{site.ai_gateway}} 2.0 managed cache
-
-To configure a {{site.ai_gateway}} 2.0 managed cache, do the following:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/cloud-gateways/add-ons
-method: POST
-region: global
-status_code: 201
-body:
-  name: managed-cache
-  owner:
-    kind: control-plane
-    control_plane_id: $AI_GATEWAY_ID
-    control_plane_geo: us
-    type: ai
-  config:
-    kind: managed-cache.v0
-    capacity_config:
-      kind: tiered
-      tier: micro
-{% endkonnect_api_request %}
-<!--vale on-->
 
 ### Limitations
 
