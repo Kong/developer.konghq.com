@@ -42,6 +42,7 @@ related_resources:
     url: /ai-gateway/model-cost-management/
 
 works_on:
+  - on-prem
   - konnect
 ---
 

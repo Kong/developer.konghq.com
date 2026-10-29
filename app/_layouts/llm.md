@@ -11,6 +11,11 @@
 {% include llm/series.md %}
 {% include llm/prereqs.md %}
 {{ content }}
+{% if page.works_on contains 'on-prem' %}
+{% if page.url contains '/ai-gateway/entities/' or page.url contains '/ai-gateway/policies/' or page.url contains '/ai-gateway/ai-providers/' %}
+{% include ai-gateway/on-prem-config.md %}
+{% endif %}
+{% endif %}
 {% include llm/cleanup.md %}
 {%- if page.faqs %}
 ## FAQs

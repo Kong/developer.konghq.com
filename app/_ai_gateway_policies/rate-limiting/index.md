@@ -3,6 +3,7 @@ description: Limit how many HTTP requests can be made in a given period of secon
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway

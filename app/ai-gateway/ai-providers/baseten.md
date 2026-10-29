@@ -10,6 +10,7 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/baseten/
 
 works_on:
+ - on-prem
  - konnect
 
 products:

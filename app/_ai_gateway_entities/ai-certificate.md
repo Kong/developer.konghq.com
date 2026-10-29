@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayCertificate
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
