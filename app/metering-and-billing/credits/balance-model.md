@@ -1,7 +1,7 @@
 ---
 title: "Credit balance model"
 content_type: reference
-description: "Understand the credit balance types available in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+description: "Understand the credit balance types available in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:
   - metering-and-billing
