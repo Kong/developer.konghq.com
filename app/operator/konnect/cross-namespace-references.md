@@ -207,7 +207,7 @@ spec:
       # name: my-service-name
 ```
 
-## Konnect authentication configuration {% new_in 2.3 %}
+## {{site.konnect_short_name}} authentication configuration {% new_in 2.3 %}
 
 When configuring a `KonnectAPIAuthConfiguration` with `spec.type: secretRef`, you can reference the `Secret` holding the {{site.konnect_short_name}} token in a different namespace.
 

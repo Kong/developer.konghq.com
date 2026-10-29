@@ -1,5 +1,5 @@
 ---
-title: "Status Fields"
+title: "Status in {{ site.konnect_short_name }}"
 description: "How do I find out why my resources aren't being reconciled against {{ site.konnect_short_name }}?"
 content_type: reference
 layout: reference
@@ -16,20 +16,20 @@ breadcrumbs:
 
 ## Status fields
 
-Each Kubernetes resource that is mapped to a {{site.konnect_short_name}} entity has several fields that indicate its status in Konnect.
+Each Kubernetes resource that is mapped to a {{site.konnect_short_name}} entity has several fields that indicate its status in {{site.konnect_short_name}}.
 
 ### {{site.konnect_short_name}} native objects
 
-Objects that are native to {{site.konnect_short_name}},they exist only in {{site.konnect_short_name}} - have the following `status` fields:
+Objects that are native to {{site.konnect_short_name}} have the following `status` fields:
 
-- `id` is the unique identifier of the Konnect entity as assigned by {{site.konnect_short_name}} API. If it's unset (empty string), it means the {{site.konnect_short_name}} entity hasn't been created yet.
+- `id` is the unique identifier of the {{site.konnect_short_name}} entity as assigned by the {{site.konnect_short_name}} API. If it's unset (empty string), it means the {{site.konnect_short_name}} entity hasn't been created yet.
 - `serverURL` is the URL of the {{site.konnect_short_name}} server in which the entity exists.
-- `organizationID` is the ID of {{site.konnect_short_name}} Org that this entity has been created in.
+- `organizationID` is the ID of {{site.konnect_short_name}} org that this entity has been created in.
 
 To inspect these fields:
 
 ```bash
-kubectl get <resource> <resource-name> -o yaml | yq '.status'
+kubectl get $RESOURCE_TYPE $RESOURCE_NAME -o yaml | yq '.status'
 ```
 
 Example output:
@@ -46,20 +46,20 @@ These objects are defined under the `konnect.konghq.com` API group.
 
 ### {{ site.base_gateway }} configuration objects
 
-Resources like `KongConsumer`, `KongService`, `KongRoute`, and `KongPlugin` configure {{ site.base_gateway }} and are **not** native to {{ site.konnect_short_name }}. These are defined under the `configuration.konghq.com` API group and may be used with other controllers, such as {{ site.kic_product_name }}.
+Resources like `KongConsumer`, `KongService`, `KongRoute`, and `KongPlugin` configure {{ site.base_gateway }} and are not native to {{ site.konnect_short_name }}. These are defined under the `configuration.konghq.com` API group and may be used with other controllers, such as {{ site.kic_product_name }}.
 
-When managed by {{ site.operator_product_name }} for {{ site.konnect_short_name }}, Konnect-specific status fields appear under `.status.konnect`:
+When managed by {{ site.operator_product_name }} for {{ site.konnect_short_name }}, {{site.konnect_short_name}}-specific status fields appear under `.status.konnect`:
 
-- `controlPlaneID`: The ID of the associated Konnect Control Plane.
+- `controlPlaneID`: The ID of the associated {{site.konnect_short_name}} control plane.
 - `id`: The unique ID assigned by the {{ site.konnect_short_name }} API. If empty, the entity hasn't been created.
 - `serverURL`: The URL of the {{ site.konnect_short_name }} server where the entity resides.
-- `organizationID`: The Org ID under which the entity was created.
+- `organizationID`: The org ID under which the entity was created.
 
 To inspect these fields:
 
 
 ```bash
-kubectl get <resource> <resource-name> -o yaml | yq '.status.konnect'
+kubectl get $RESOURCE_TYPE $RESOURCE_NAME -o yaml | yq '.status.konnect'
 ```
 
 Example output:
@@ -75,12 +75,12 @@ serverURL: https://us.api.konghq.com
 
 Resources also report `status.conditions`, where each condition carries a `reason` that explains the current state.
 
-### `ConfigStoreRefValid` on `KongVault` {% new_in 2.3 %}
+### ConfigStoreRefValid on KongVault {% new_in 2.3 %}
 
 The `KongVault` reports the outcome of the reference in the `ConfigStoreRefValid` condition:
 
 ```sh
-kubectl get kongvault <vault_prefix> -o jsonpath-as-json="{.status.conditions[?(@.type=='ConfigStoreRefValid')]}"
+kubectl get kongvault $VAULT_PREFIX -o jsonpath-as-json="{.status.conditions[?(@.type=='ConfigStoreRefValid')]}"
 ```
 
 {% table %}
@@ -110,20 +110,20 @@ rows:
 While the reference is unresolved, {{site.operator_product_name}} doesn't push the `KongVault` to
 {{site.konnect_short_name}}, so that a Vault is never created with a missing or wrong Config Store ID.
 
-### `DeletionBlocked` on `KonnectConfigStore` {% new_in 2.4 %}
+### DeletionBlocked on KonnectConfigStore {% new_in 2.4 %}
 
 A `KonnectConfigStore` that still holds secrets isn't deleted from {{site.konnect_short_name}}. It stays in
 `Terminating` and reports `Programmed=False` with reason `DeletionBlocked`:
 
 ```sh
-kubectl get konnectconfigstore <name> -n <namespace> -o jsonpath-as-json="{.status.conditions[?(@.type=='Programmed')]}"
+kubectl get konnectconfigstore $CONFIG_STORE_NAME -n $NAMESPACE -o jsonpath-as-json="{.status.conditions[?(@.type=='Programmed')]}"
 ```
 
 {{site.operator_product_name}} retries periodically, and the deletion proceeds once you remove the secrets from the
 Config Store in {{site.konnect_short_name}}. For more information, see
 [lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
 
-### `KonnectConfigStoreSync` conditions {% new_in 2.4 %}
+### KonnectConfigStoreSync conditions {% new_in 2.4 %}
 
 A `KonnectConfigStoreSync` always reports four conditions:
 
@@ -135,10 +135,10 @@ A `KonnectConfigStoreSync` always reports four conditions:
   mode.
 * `Synced`: whether every entry is up to date in the Config Store.
 
-To check why a sync isn't `Synced`:
+To check why a `KonnectConfigStoreSync` isn't `Synced`:
 
 ```sh
-kubectl get konnectconfigstoresync <name> -n <namespace> -o jsonpath-as-json="{.status.conditions[?(@.type=='Synced')]}"
+kubectl get konnectconfigstoresync $CONFIG_STORE_NAME -n $NAMESPACE -o jsonpath-as-json="{.status.conditions[?(@.type=='Synced')]}"
 ```
 
 {% table %}

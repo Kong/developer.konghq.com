@@ -102,7 +102,7 @@ rows:
 The following rules apply to a `KonnectConfigStoreSync`:
 
 * The block that matches `spec.mode` must be set, so use `combined: {}` to accept the `Combined` defaults.
-* If you don't set a store key, it's derived from the sync's namespace and name, in the format
+* If you don't set a store key, it's derived from the `KonnectConfigStoreSync` namespace and name, in the format
   `k8s-<len(namespace)>-<namespace>-<len(name)>-<name>`. In `Split` mode, the field name is appended.
   `status.references` lists the suffix to use after the Vault prefix in each vault reference.
 * `spec.mode`, `spec.configStoreRef`, and store keys are immutable once set. To change them, create a new
