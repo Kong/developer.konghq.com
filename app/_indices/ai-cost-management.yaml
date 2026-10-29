@@ -2,6 +2,5 @@ title: "{{site.ai_cost_management}} Documentation"
 description: Index containing all documentation for {{site.ai_cost_management}}.
 sections:
   - title: Overview
-    url: /ai-cost-management/
-  - title: Getting Started
-    url: /ai-cost-management/getting-started/
+    items:
+      - path: /ai-cost-management/
