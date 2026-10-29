@@ -1,20 +1,5 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "ws",
-        "wss"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
@@ -44,16 +29,16 @@
             "binary": {
               "type": "object",
               "properties": {
-                "schema": {
-                  "type": "string",
-                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
-                },
                 "type": {
                   "type": "string",
                   "enum": [
                     "draft4"
                   ],
                   "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
+                },
+                "schema": {
+                  "type": "string",
+                  "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                 }
               },
               "required": [
@@ -66,7 +51,7 @@
         "upstream": {
           "type": "object",
           "properties": {
-            "binary": {
+            "text": {
               "type": "object",
               "properties": {
                 "type": {
@@ -86,7 +71,7 @@
                 "type"
               ]
             },
-            "text": {
+            "binary": {
               "type": "object",
               "properties": {
                 "type": {
@@ -109,6 +94,21 @@
           }
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "ws",
+        "wss"
+      ]
     },
     "consumer": {
       "type": "object",

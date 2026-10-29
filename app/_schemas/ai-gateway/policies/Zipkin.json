@@ -1,44 +1,16 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "sample_ratio": {
-          "type": "number",
-          "maximum": 1,
-          "minimum": 0,
-          "description": "How often to sample requests that do not contain trace IDs. Set to `0` to turn sampling off, or to `1` to sample **all** requests. ",
-          "default": 0.001
-        },
-        "default_service_name": {
+        "local_service_name": {
           "type": "string",
-          "description": "Set a default service name to override `unknown-service-name` in the Zipkin spans."
+          "description": "The name of the service as displayed in Zipkin.",
+          "default": "kong"
+        },
+        "http_endpoint": {
+          "type": "string",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search."
         },
         "connect_timeout": {
           "type": "integer",
@@ -47,89 +19,35 @@
           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
           "default": 2000
         },
-        "http_endpoint": {
-          "type": "string",
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search."
-        },
-        "include_credential": {
-          "type": "boolean",
-          "description": "Specify whether the credential of the currently authenticated consumer should be included in metadata sent to the Zipkin server.",
-          "default": true
-        },
-        "traceid_byte_count": {
-          "type": "integer",
-          "enum": [
-            8,
-            16
-          ],
-          "description": "The length in bytes of each request's Trace ID.",
-          "default": 16
-        },
-        "header_type": {
-          "type": "string",
-          "enum": [
-            "aws",
-            "b3",
-            "b3-single",
-            "datadog",
-            "gcp",
-            "ignore",
-            "instana",
-            "jaeger",
-            "ot",
-            "preserve",
-            "w3c"
-          ],
-          "description": "All HTTP requests going through the policy are tagged with a tracing HTTP request. This property codifies what kind of tracing header the policy expects on incoming requests",
-          "default": "preserve"
-        },
-        "default_header_type": {
-          "type": "string",
-          "enum": [
-            "aws",
-            "b3",
-            "b3-single",
-            "datadog",
-            "gcp",
-            "instana",
-            "jaeger",
-            "ot",
-            "w3c"
-          ],
-          "description": "Allows specifying the type of header to be added to requests with no pre-existing tracing headers and when `config.header_type` is set to `\"preserve\"`. When `header_type` is set to any other value, `default_header_type` is ignored.",
-          "default": "b3"
-        },
-        "tags_header": {
-          "type": "string",
-          "description": "The Zipkin policy will add extra headers to the tags associated with any HTTP requests that come with a header named as configured by this property.",
-          "default": "Zipkin-Tags"
-        },
-        "http_span_name": {
-          "type": "string",
-          "enum": [
-            "method",
-            "method_path"
-          ],
-          "description": "Specify whether to include the HTTP path in the span name.",
-          "default": "method"
-        },
-        "phase_duration_flavor": {
-          "type": "string",
-          "enum": [
-            "annotations",
-            "tags"
-          ],
-          "description": "Specify whether to include the duration of each phase as an annotation or a tag.",
-          "default": "annotations"
-        },
-        "local_service_name": {
-          "type": "string",
-          "description": "The name of the service as displayed in Zipkin.",
-          "default": "kong"
+        "http_response_header_for_traceid": {
+          "type": "string"
         },
         "queue": {
           "type": "object",
           "properties": {
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
+            },
             "max_coalescing_delay": {
               "type": "number",
               "maximum": 3600,
@@ -159,35 +77,71 @@
               "minimum": 0.001,
               "description": "Time in seconds before the initial retry is made for a failing batch.",
               "default": 0.01
-            },
-            "max_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "default": 60
-            },
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
-            },
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
             }
           }
+        },
+        "tags_header": {
+          "type": "string",
+          "description": "The Zipkin policy will add extra headers to the tags associated with any HTTP requests that come with a header named as configured by this property.",
+          "default": "Zipkin-Tags"
+        },
+        "static_tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ]
+          },
+          "description": "The tags specified on this property will be added to the generated request traces."
+        },
+        "http_span_name": {
+          "type": "string",
+          "enum": [
+            "method",
+            "method_path"
+          ],
+          "description": "Specify whether to include the HTTP path in the span name.",
+          "default": "method"
+        },
+        "phase_duration_flavor": {
+          "type": "string",
+          "enum": [
+            "annotations",
+            "tags"
+          ],
+          "description": "Specify whether to include the duration of each phase as an annotation or a tag.",
+          "default": "annotations"
         },
         "propagation": {
           "type": "object",
           "properties": {
+            "extract": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "aws",
+                  "b3",
+                  "datadog",
+                  "gcp",
+                  "instana",
+                  "jaeger",
+                  "ot",
+                  "w3c"
+                ]
+              },
+              "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID."
+            },
             "clear": {
               "type": "array",
               "items": {
@@ -229,54 +183,70 @@
               ],
               "description": "The default header format to use when extractors did not match any format in the incoming headers and `inject` is configured with the value: `preserve`. This can happen when no tracing header was found in the request, or the incoming tracing header formats were not included in `extract`.",
               "default": "b3"
-            },
-            "extract": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "aws",
-                  "b3",
-                  "datadog",
-                  "gcp",
-                  "instana",
-                  "jaeger",
-                  "ot",
-                  "w3c"
-                ]
-              },
-              "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID."
             }
           },
           "default": {
             "default_format": "b3"
           }
         },
-        "static_tags": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "name",
-              "value"
-            ]
-          },
-          "description": "The tags specified on this property will be added to the generated request traces."
-        },
-        "send_timeout": {
-          "type": "integer",
-          "maximum": 2147483646,
+        "sample_ratio": {
+          "type": "number",
+          "maximum": 1,
           "minimum": 0,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-          "default": 5000
+          "description": "How often to sample requests that do not contain trace IDs. Set to `0` to turn sampling off, or to `1` to sample **all** requests. ",
+          "default": 0.001
+        },
+        "default_service_name": {
+          "type": "string",
+          "description": "Set a default service name to override `unknown-service-name` in the Zipkin spans."
+        },
+        "include_credential": {
+          "type": "boolean",
+          "description": "Specify whether the credential of the currently authenticated consumer should be included in metadata sent to the Zipkin server.",
+          "default": true
+        },
+        "header_type": {
+          "type": "string",
+          "enum": [
+            "aws",
+            "b3",
+            "b3-single",
+            "datadog",
+            "gcp",
+            "ignore",
+            "instana",
+            "jaeger",
+            "ot",
+            "preserve",
+            "w3c"
+          ],
+          "description": "All HTTP requests going through the policy are tagged with a tracing HTTP request. This property codifies what kind of tracing header the policy expects on incoming requests",
+          "default": "preserve"
+        },
+        "default_header_type": {
+          "type": "string",
+          "enum": [
+            "aws",
+            "b3",
+            "b3-single",
+            "datadog",
+            "gcp",
+            "instana",
+            "jaeger",
+            "ot",
+            "w3c"
+          ],
+          "description": "Allows specifying the type of header to be added to requests with no pre-existing tracing headers and when `config.header_type` is set to `\"preserve\"`. When `header_type` is set to any other value, `default_header_type` is ignored.",
+          "default": "b3"
+        },
+        "traceid_byte_count": {
+          "type": "integer",
+          "enum": [
+            8,
+            16
+          ],
+          "description": "The length in bytes of each request's Trace ID.",
+          "default": 16
         },
         "read_timeout": {
           "type": "integer",
@@ -285,20 +255,40 @@
           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
           "default": 5000
         },
-        "http_response_header_for_traceid": {
-          "type": "string"
+        "send_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 5000
         }
       }
     },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
       },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",
@@ -319,6 +309,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

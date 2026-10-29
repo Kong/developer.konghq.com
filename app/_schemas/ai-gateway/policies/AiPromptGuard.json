@@ -1,26 +1,51 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
+        "deny_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "maxLength": 10,
+          "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
+        },
+        "allow_all_conversation_history": {
+          "type": "boolean",
+          "description": "If true, will ignore all previous chat prompts from the conversation history.",
+          "default": false
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
+        },
         "match_all_roles": {
           "type": "boolean",
           "description": "If true, will match all roles in addition to 'user' role in conversation history.",
           "default": false
-        },
-        "llm_format": {
-          "type": "string",
-          "enum": [
-            "anthropic",
-            "bedrock",
-            "cohere",
-            "gemini",
-            "huggingface",
-            "openai",
-            "typesafe"
-          ],
-          "description": "LLM input and output format and schema to use",
-          "default": "openai"
         },
         "log_blocked_content": {
           "type": "boolean",
@@ -37,20 +62,19 @@
           "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
           "default": "none"
         },
-        "deny_patterns": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 1
-          },
-          "maxLength": 10,
-          "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
-        },
-        "allow_all_conversation_history": {
-          "type": "boolean",
-          "description": "If true, will ignore all previous chat prompts from the conversation history.",
-          "default": false
+        "llm_format": {
+          "type": "string",
+          "enum": [
+            "anthropic",
+            "bedrock",
+            "cohere",
+            "gemini",
+            "huggingface",
+            "openai",
+            "typesafe"
+          ],
+          "description": "LLM input and output format and schema to use",
+          "default": "openai"
         },
         "genai_category": {
           "type": "string",
@@ -79,32 +103,18 @@
           },
           "maxLength": 10,
           "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
         }
       }
     },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
       },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -135,16 +145,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

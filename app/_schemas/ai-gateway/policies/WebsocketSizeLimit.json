@@ -1,20 +1,5 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "ws",
-        "wss"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
@@ -29,6 +14,21 @@
           "minimum": 1
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "ws",
+        "wss"
+      ]
     },
     "consumer": {
       "type": "object",

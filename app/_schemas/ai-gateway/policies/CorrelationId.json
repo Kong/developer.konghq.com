@@ -1,5 +1,30 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "echo_downstream": {
+          "type": "boolean",
+          "description": "Whether to echo the header back to downstream (the client).",
+          "default": false
+        },
+        "header_name": {
+          "type": "string",
+          "description": "The HTTP header name to use for the correlation ID.",
+          "default": "Kong-Request-ID"
+        },
+        "generator": {
+          "type": "string",
+          "enum": [
+            "tracker",
+            "uuid",
+            "uuid#counter"
+          ],
+          "description": "The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`. See [Generators](#generators).",
+          "default": "uuid#counter"
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -18,31 +43,6 @@
         "http",
         "https"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "header_name": {
-          "type": "string",
-          "description": "The HTTP header name to use for the correlation ID.",
-          "default": "Kong-Request-ID"
-        },
-        "generator": {
-          "type": "string",
-          "enum": [
-            "tracker",
-            "uuid",
-            "uuid#counter"
-          ],
-          "description": "The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`. See [Generators](#generators).",
-          "default": "uuid#counter"
-        },
-        "echo_downstream": {
-          "type": "boolean",
-          "description": "Whether to echo the header back to downstream (the client).",
-          "default": false
-        }
-      }
     },
     "consumer": {
       "type": "object",

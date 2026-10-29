@@ -31,23 +31,37 @@
           "description": "The backing data store in which to hold cached entities. Accepted value is `memory`.",
           "default": "memory"
         },
+        "cache_control": {
+          "type": "boolean",
+          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234. The policy then ignores `cache_ttl`. It caches a response only if the upstream sets a lifetime with `s-maxage`, `max-age`, or `Expires`.",
+          "default": true
+        },
         "cache_ttl": {
           "type": "integer",
-          "description": "TTL in seconds of cache entities. Must be a value greater than 0.",
+          "description": "TTL in seconds of cache entities. Must be a value greater than 0. The policy uses it only when `cache_control` is disabled.",
           "default": 300
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "dictionary_name": {
+              "type": "string",
+              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. This dictionary currently must be defined manually in the Kong Nginx template.",
+              "default": "kong_db_cache"
+            }
+          }
         },
         "redis": {
           "type": "object",
           "properties": {
-            "port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive.",
-              "default": 6379,
-              "x-referenceable": true
-            },
             "connect_timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "read_timeout": {
               "type": "integer",
               "maximum": 2147483646,
               "minimum": 0,
@@ -59,122 +73,12 @@
               "description": "Database to use for the Redis connection when using the `redis` strategy",
               "default": 0
             },
-            "cluster_max_redirections": {
+            "keepalive_pool_size": {
               "type": "integer",
-              "description": "Maximum retry attempts for redirection.",
-              "default": 5
-            },
-            "host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com.",
-              "default": "127.0.0.1",
-              "x-referenceable": true
-            },
-            "cloud_authentication": {
-              "type": "object",
-              "properties": {
-                "aws_region": {
-                  "type": "string",
-                  "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true
-                },
-                "aws_is_serverless": {
-                  "type": "boolean",
-                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                  "default": true
-                },
-                "aws_assume_role_arn": {
-                  "type": "string",
-                  "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "gcp_service_account_json": {
-                  "type": "string",
-                  "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "azure_client_id": {
-                  "type": "string",
-                  "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "azure_client_secret": {
-                  "type": "string",
-                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_cache_name": {
-                  "type": "string",
-                  "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true
-                },
-                "aws_access_key_id": {
-                  "type": "string",
-                  "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
-                },
-                "aws_role_session_name": {
-                  "type": "string",
-                  "description": "The session name for the temporary credentials when assuming the IAM role.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "azure_tenant_id": {
-                  "type": "string",
-                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "auth_provider": {
-                  "type": "string",
-                  "enum": [
-                    "aws",
-                    "azure",
-                    "gcp"
-                  ],
-                  "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                  "x-referenceable": true
-                }
-              },
-              "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
-            },
-            "cluster_nodes": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "ip": {
-                    "type": "string",
-                    "description": "A string representing a host name, such as example.com.",
-                    "default": "127.0.0.1"
-                  },
-                  "port": {
-                    "type": "integer",
-                    "maximum": 65535,
-                    "minimum": 0,
-                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                    "default": 6379
-                  }
-                }
-              },
-              "minLength": 1,
-              "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
-            },
-            "ssl_verify": {
-              "type": "boolean",
-              "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-              "default": true
+              "maximum": 2147483646,
+              "minimum": 1,
+              "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+              "default": 256
             },
             "keepalive_backlog": {
               "type": "integer",
@@ -182,16 +86,82 @@
               "minimum": 0,
               "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
             },
-            "sentinel_master": {
-              "type": "string",
-              "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+              "default": true
             },
-            "read_timeout": {
+            "cluster_max_redirections": {
+              "type": "integer",
+              "description": "Maximum retry attempts for redirection.",
+              "default": 5
+            },
+            "port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive.",
+              "default": 6379,
+              "x-referenceable": true
+            },
+            "send_timeout": {
               "type": "integer",
               "maximum": 2147483646,
               "minimum": 0,
               "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
               "default": 2000
+            },
+            "password": {
+              "type": "string",
+              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "sentinel_nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "port": {
+                    "type": "integer",
+                    "maximum": 65535,
+                    "minimum": 0,
+                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                    "default": 6379
+                  },
+                  "host": {
+                    "type": "string",
+                    "description": "A string representing a host name, such as example.com.",
+                    "default": "127.0.0.1"
+                  }
+                }
+              },
+              "minLength": 1,
+              "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+            },
+            "host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com.",
+              "default": "127.0.0.1",
+              "x-referenceable": true
+            },
+            "sentinel_master": {
+              "type": "string",
+              "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+            },
+            "sentinel_role": {
+              "type": "string",
+              "enum": [
+                "any",
+                "master",
+                "slave"
+              ],
+              "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+            },
+            "ssl": {
+              "type": "boolean",
+              "description": "If set to true, uses SSL to connect to Redis.",
+              "default": false
             },
             "username": {
               "type": "string",
@@ -209,61 +179,106 @@
               "x-referenceable": true,
               "x-encrypted": true
             },
-            "keepalive_pool_size": {
-              "type": "integer",
-              "maximum": 2147483646,
-              "minimum": 1,
-              "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
-              "default": 256
+            "cloud_authentication": {
+              "type": "object",
+              "properties": {
+                "auth_provider": {
+                  "type": "string",
+                  "enum": [
+                    "aws",
+                    "azure",
+                    "gcp"
+                  ],
+                  "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                  "x-referenceable": true
+                },
+                "aws_is_serverless": {
+                  "type": "boolean",
+                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                  "default": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_client_secret": {
+                  "type": "string",
+                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_cache_name": {
+                  "type": "string",
+                  "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
+                },
+                "aws_region": {
+                  "type": "string",
+                  "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
+                },
+                "aws_access_key_id": {
+                  "type": "string",
+                  "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_assume_role_arn": {
+                  "type": "string",
+                  "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_role_session_name": {
+                  "type": "string",
+                  "description": "The session name for the temporary credentials when assuming the IAM role.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "gcp_service_account_json": {
+                  "type": "string",
+                  "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "azure_client_id": {
+                  "type": "string",
+                  "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_tenant_id": {
+                  "type": "string",
+                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                }
+              },
+              "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
             },
-            "ssl": {
-              "type": "boolean",
-              "description": "If set to true, uses SSL to connect to Redis.",
-              "default": false
-            },
-            "send_timeout": {
-              "type": "integer",
-              "maximum": 2147483646,
-              "minimum": 0,
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 2000
-            },
-            "password": {
-              "type": "string",
-              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
-            "sentinel_role": {
-              "type": "string",
-              "enum": [
-                "any",
-                "master",
-                "slave"
-              ],
-              "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
-            },
-            "sentinel_nodes": {
+            "cluster_nodes": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "host": {
-                    "type": "string",
-                    "description": "A string representing a host name, such as example.com.",
-                    "default": "127.0.0.1"
-                  },
                   "port": {
                     "type": "integer",
                     "maximum": 65535,
                     "minimum": 0,
                     "description": "An integer representing a port number between 0 and 65535, inclusive.",
                     "default": 6379
+                  },
+                  "ip": {
+                    "type": "string",
+                    "description": "A string representing a host name, such as example.com.",
+                    "default": "127.0.0.1"
                   }
                 }
               },
               "minLength": 1,
-              "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+              "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
             },
             "server_name": {
               "type": "string",
@@ -281,31 +296,6 @@
           "type": "boolean",
           "description": "Unhandled errors while trying to retrieve a cache entry (such as redis down) are resolved with `Bypass`, with the request going upstream.",
           "default": false
-        },
-        "content_type": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Upstream response content types considered cacheable. The policy matches each specified value's type, subtype, and parameters exactly.",
-          "default": [
-            "application/json"
-          ]
-        },
-        "cache_control": {
-          "type": "boolean",
-          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
-          "default": false
-        },
-        "memory": {
-          "type": "object",
-          "properties": {
-            "dictionary_name": {
-              "type": "string",
-              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. This dictionary currently must be defined manually in the Kong Nginx template.",
-              "default": "kong_db_cache"
-            }
-          }
         },
         "vary_headers": {
           "type": "array",
@@ -326,18 +316,18 @@
           "default": [
             200
           ]
+        },
+        "content_type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Upstream response content types considered cacheable. The policy matches each specified value's type, subtype, and parameters exactly.",
+          "default": [
+            "application/json"
+          ]
         }
       }
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -358,6 +348,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   },
   "x-supported-partials": [

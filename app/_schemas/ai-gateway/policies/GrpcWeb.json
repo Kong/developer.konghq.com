@@ -29,11 +29,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow_origin_header": {
-          "type": "string",
-          "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client.",
-          "default": "*"
-        },
         "proto": {
           "type": "string",
           "description": "If present, describes the gRPC types and methods. Required to support payload transcoding. When absent, the web client must use application/grpw-web+proto content."
@@ -41,6 +36,11 @@
         "pass_stripped_path": {
           "type": "boolean",
           "description": "If set to `true` causes the policy to pass the stripped request path to the upstream gRPC service."
+        },
+        "allow_origin_header": {
+          "type": "string",
+          "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client.",
+          "default": "*"
         }
       }
     },

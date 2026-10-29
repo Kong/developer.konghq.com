@@ -1,33 +1,45 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "producer_request_limits_bytes_per_request": {
+          "type": "integer",
+          "description": "Maximum size of a Produce request in bytes.",
+          "default": 1048576
+        },
+        "producer_request_limits_messages_per_request": {
+          "type": "integer",
+          "description": "Maximum number of messages to include into a single producer request.",
+          "default": 200
+        },
+        "producer_request_retries_backoff_timeout": {
+          "type": "integer",
+          "description": "Backoff interval between retry attempts in milliseconds.",
+          "default": 100
+        },
+        "confluent_cloud_api_secret": {
+          "type": "string",
+          "description": "The corresponding secret for the Confluent Cloud API key.",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
         "schema_registry": {
           "type": "object",
           "properties": {
             "confluent": {
               "type": "object",
               "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "The URL of the schema registry."
+                },
+                "ttl": {
+                  "type": "number",
+                  "maximum": 3600,
+                  "minimum": 0,
+                  "description": "The TTL in seconds for the schema registry cache."
+                },
                 "ssl_verify": {
                   "type": "boolean",
                   "description": "Set to false to disable SSL certificate verification when connecting to the schema registry.",
@@ -51,8 +63,8 @@
                       "properties": {
                         "username": {
                           "type": "string",
-                          "x-referenceable": true,
-                          "x-encrypted": true
+                          "x-encrypted": true,
+                          "x-referenceable": true
                         },
                         "password": {
                           "type": "string",
@@ -74,6 +86,12 @@
                           "x-referenceable": true,
                           "x-encrypted": true
                         },
+                        "password": {
+                          "type": "string",
+                          "description": "The password to use if `config.oauth.grant_type` is set to `password`.",
+                          "x-referenceable": true,
+                          "x-encrypted": true
+                        },
                         "scopes": {
                           "type": "array",
                           "items": {
@@ -84,31 +102,9 @@
                             "openid"
                           ]
                         },
-                        "password": {
-                          "type": "string",
-                          "description": "The password to use if `config.oauth.grant_type` is set to `password`.",
-                          "x-referenceable": true,
-                          "x-encrypted": true
-                        },
-                        "audience": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "description": "List of audiences passed to the IdP when obtaining a new token.",
-                          "default": []
-                        },
                         "token_endpoint": {
                           "type": "string",
                           "description": "The token endpoint URI."
-                        },
-                        "token_headers": {
-                          "type": "object",
-                          "additionalProperties": {
-                            "type": "string",
-                            "x-referenceable": true
-                          },
-                          "description": "Extra headers to be passed in the token endpoint request."
                         },
                         "token_post_args": {
                           "type": "object",
@@ -133,11 +129,27 @@
                           "x-referenceable": true,
                           "x-encrypted": true
                         },
+                        "audience": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "List of audiences passed to the IdP when obtaining a new token.",
+                          "default": []
+                        },
+                        "token_headers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true
+                          },
+                          "description": "Extra headers to be passed in the token endpoint request."
+                        },
                         "client_secret": {
                           "type": "string",
                           "description": "The client secret for the application registration in the IdP.",
-                          "x-encrypted": true,
-                          "x-referenceable": true
+                          "x-referenceable": true,
+                          "x-encrypted": true
                         }
                       },
                       "required": [
@@ -147,6 +159,23 @@
                     "oauth2_client": {
                       "type": "object",
                       "properties": {
+                        "https_proxy": {
+                          "type": "string",
+                          "description": "The proxy to use when making HTTPS requests to the IdP."
+                        },
+                        "https_proxy_authorization": {
+                          "type": "string",
+                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                        },
+                        "no_proxy": {
+                          "type": "string",
+                          "description": "A comma-separated list of hosts that should not be proxied."
+                        },
+                        "keep_alive": {
+                          "type": "boolean",
+                          "description": "Whether to use keepalive connections to the IdP.",
+                          "default": true
+                        },
                         "auth_method": {
                           "type": "string",
                           "enum": [
@@ -171,13 +200,9 @@
                           "type": "string",
                           "description": "The proxy to use when making HTTP requests to the IdP."
                         },
-                        "https_proxy": {
+                        "http_proxy_authorization": {
                           "type": "string",
-                          "description": "The proxy to use when making HTTPS requests to the IdP."
-                        },
-                        "https_proxy_authorization": {
-                          "type": "string",
-                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                          "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
                         },
                         "timeout": {
                           "type": "integer",
@@ -186,28 +211,15 @@
                           "description": "Network I/O timeout for requests to the IdP in milliseconds.",
                           "default": 10000
                         },
-                        "http_version": {
-                          "type": "number",
-                          "description": "The HTTP version used for requests made by this policy. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
-                          "default": 1.1
-                        },
-                        "http_proxy_authorization": {
-                          "type": "string",
-                          "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
-                        },
-                        "no_proxy": {
-                          "type": "string",
-                          "description": "A comma-separated list of hosts that should not be proxied."
-                        },
-                        "keep_alive": {
-                          "type": "boolean",
-                          "description": "Whether to use keepalive connections to the IdP.",
-                          "default": true
-                        },
                         "ssl_verify": {
                           "type": "boolean",
                           "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
                           "default": true
+                        },
+                        "http_version": {
+                          "type": "number",
+                          "description": "The HTTP version used for requests made by this policy. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
+                          "default": 1.1
                         }
                       }
                     }
@@ -238,73 +250,33 @@
                       "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version."
                     }
                   }
-                },
-                "url": {
-                  "type": "string",
-                  "description": "The URL of the schema registry."
-                },
-                "ttl": {
-                  "type": "number",
-                  "maximum": 3600,
-                  "minimum": 0,
-                  "description": "The TTL in seconds for the schema registry cache."
                 }
               }
             }
           },
           "description": "The plugin-global schema registry configuration. This can be overwritten by the topic configuration."
         },
-        "key_query_arg": {
-          "type": "string",
-          "description": "The request query parameter name that contains the Kafka message key. If specified, messages with the same key will be sent to the same Kafka partition, ensuring consistent ordering."
+        "allowed_topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of allowed topic names to which messages can be sent. The default topic configured in the `topic` field is always allowed, regardless of its inclusion in `allowed_topics`."
         },
         "keepalive": {
           "type": "integer",
           "description": "Keepalive timeout in milliseconds.",
           "default": 60000
         },
-        "forward_body": {
-          "type": "boolean",
-          "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": true
-        },
-        "cluster_name": {
-          "type": "string",
-          "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka policy is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these policies will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster."
-        },
         "producer_async_buffering_limits_messages_in_memory": {
           "type": "integer",
           "description": "Maximum number of messages that can be buffered in memory in asynchronous mode.",
           "default": 50000
         },
-        "keepalive_enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "forward_method": {
-          "type": "boolean",
-          "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": false
-        },
-        "security": {
-          "type": "object",
-          "properties": {
-            "ssl_verify": {
-              "type": "boolean",
-              "description": "Enables verification of the certificate presented by the server.",
-              "default": true
-            }
-          }
-        },
-        "producer_request_retries_backoff_timeout": {
+        "timeout": {
           "type": "integer",
-          "description": "Backoff interval between retry attempts in milliseconds.",
-          "default": 100
-        },
-        "forward_uri": {
-          "type": "boolean",
-          "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": false
+          "description": "Socket timeout in milliseconds.",
+          "default": 10000
         },
         "forward_headers": {
           "type": "boolean",
@@ -321,25 +293,94 @@
           "description": "The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments; 1 for only the leader; and -1 for the full ISR (In-Sync Replica set).",
           "default": 1
         },
+        "producer_request_retries_max_attempts": {
+          "type": "integer",
+          "description": "Maximum number of retry attempts per single Produce request.",
+          "default": 10
+        },
+        "producer_async_flush_timeout": {
+          "type": "integer",
+          "description": "Maximum time interval in milliseconds between buffer flushes in asynchronous mode.",
+          "default": 1000
+        },
+        "topic": {
+          "type": "string",
+          "description": "The default Kafka topic to publish to if the query parameter defined in the `topics_query_arg` does not exist in the request"
+        },
+        "forward_body": {
+          "type": "boolean",
+          "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": true
+        },
+        "cluster_name": {
+          "type": "string",
+          "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka policy is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these policies will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster."
+        },
         "producer_request_timeout": {
           "type": "integer",
           "description": "Time to wait for a Produce response in milliseconds.",
           "default": 2000
+        },
+        "producer_async": {
+          "type": "boolean",
+          "description": "Flag to enable asynchronous mode.",
+          "default": true
+        },
+        "cluster_api_secret": {
+          "type": "string",
+          "description": "Password/ApiSecret for SASL authentication.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "key_query_arg": {
+          "type": "string",
+          "description": "The request query parameter name that contains the Kafka message key. If specified, messages with the same key will be sent to the same Kafka partition, ensuring consistent ordering."
+        },
+        "keepalive_enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "message_by_lua_functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The Lua functions that manipulates the message being sent to the Kafka topic."
+        },
+        "topics_query_arg": {
+          "type": "string",
+          "description": "The request query parameter name that contains the topics to publish to"
+        },
+        "confluent_cloud_api_key": {
+          "type": "string",
+          "description": "Apikey for authentication with Confluent Cloud. This allows for management tasks such as creating topics, ACLs, etc.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "forward_uri": {
+          "type": "boolean",
+          "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "forward_method": {
+          "type": "boolean",
+          "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
         },
         "bootstrap_servers": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
+              "host": {
+                "type": "string",
+                "description": "A string representing a host name, such as example.com."
+              },
               "port": {
                 "type": "integer",
                 "maximum": 65535,
                 "minimum": 0,
                 "description": "An integer representing a port number between 0 and 65535, inclusive."
-              },
-              "host": {
-                "type": "string",
-                "description": "A string representing a host name, such as example.com."
               }
             },
             "required": [
@@ -349,81 +390,21 @@
           },
           "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format."
         },
-        "allowed_topics": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The list of allowed topic names to which messages can be sent. The default topic configured in the `topic` field is always allowed, regardless of its inclusion in `allowed_topics`."
-        },
-        "cluster_api_secret": {
-          "type": "string",
-          "description": "Password/ApiSecret for SASL authentication.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "producer_async": {
-          "type": "boolean",
-          "description": "Flag to enable asynchronous mode.",
-          "default": true
-        },
-        "producer_async_flush_timeout": {
-          "type": "integer",
-          "description": "Maximum time interval in milliseconds between buffer flushes in asynchronous mode.",
-          "default": 1000
-        },
-        "message_by_lua_functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The Lua functions that manipulates the message being sent to the Kafka topic."
-        },
-        "producer_request_limits_messages_per_request": {
-          "type": "integer",
-          "description": "Maximum number of messages to include into a single producer request.",
-          "default": 200
-        },
-        "producer_request_limits_bytes_per_request": {
-          "type": "integer",
-          "description": "Maximum size of a Produce request in bytes.",
-          "default": 1048576
-        },
-        "timeout": {
-          "type": "integer",
-          "description": "Socket timeout in milliseconds.",
-          "default": 10000
-        },
         "cluster_api_key": {
           "type": "string",
           "description": "Username/Apikey for SASL authentication.",
           "x-referenceable": true,
           "x-encrypted": true
         },
-        "producer_request_retries_max_attempts": {
-          "type": "integer",
-          "description": "Maximum number of retry attempts per single Produce request.",
-          "default": 10
-        },
-        "topics_query_arg": {
-          "type": "string",
-          "description": "The request query parameter name that contains the topics to publish to"
-        },
-        "topic": {
-          "type": "string",
-          "description": "The default Kafka topic to publish to if the query parameter defined in the `topics_query_arg` does not exist in the request"
-        },
-        "confluent_cloud_api_key": {
-          "type": "string",
-          "description": "Apikey for authentication with Confluent Cloud. This allows for management tasks such as creating topics, ACLs, etc.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "confluent_cloud_api_secret": {
-          "type": "string",
-          "description": "The corresponding secret for the Confluent Cloud API key.",
-          "x-referenceable": true,
-          "x-encrypted": true
+        "security": {
+          "type": "object",
+          "properties": {
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "Enables verification of the certificate presented by the server.",
+              "default": true
+            }
+          }
         }
       },
       "required": [
@@ -431,6 +412,35 @@
         "cluster_api_secret",
         "topic"
       ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -451,16 +461,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   },
   "required": [

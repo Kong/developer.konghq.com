@@ -1,55 +1,14 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
         "session": {
           "type": "object",
           "properties": {
-            "generate_rcv_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a receive timestamp is recorded for each message.",
-              "default": true
-            },
-            "generate_sender_id": {
-              "type": "boolean",
-              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
             "generate_sequence_number": {
               "type": "boolean",
               "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "connect_timeout": {
-              "type": "integer",
-              "maximum": 100000,
-              "minimum": 100,
-              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
-              "default": 3000
-            },
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
               "default": true
             },
             "properties": {
@@ -66,6 +25,28 @@
               "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
               "x-referenceable": true
             },
+            "connect_timeout": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 100,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "default": 3000
+            },
+            "ssl_validate_certificate": {
+              "type": "boolean",
+              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "default": true
+            },
+            "calculate_message_expiry": {
+              "type": "boolean",
+              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
+              "default": true
+            },
+            "generate_sender_id": {
+              "type": "boolean",
+              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
             "vpn_name": {
               "type": "string",
               "maxLength": 32,
@@ -74,16 +55,6 @@
             "authentication": {
               "type": "object",
               "properties": {
-                "scheme": {
-                  "type": "string",
-                  "enum": [
-                    "BASIC",
-                    "NONE",
-                    "OAUTH2"
-                  ],
-                  "description": "The client authentication scheme used when connection to an event broker.",
-                  "default": "BASIC"
-                },
                 "username": {
                   "type": "string",
                   "maxLength": 189,
@@ -95,8 +66,8 @@
                   "type": "string",
                   "maxLength": 128,
                   "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 },
                 "basic_auth_header": {
                   "type": "string",
@@ -121,18 +92,28 @@
                 "id_token_header": {
                   "type": "string",
                   "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
+                },
+                "scheme": {
+                  "type": "string",
+                  "enum": [
+                    "BASIC",
+                    "NONE",
+                    "OAUTH2"
+                  ],
+                  "description": "The client authentication scheme used when connection to an event broker.",
+                  "default": "BASIC"
                 }
               },
               "description": "Session authentication related configuration."
             },
-            "ssl_validate_certificate": {
+            "generate_rcv_timestamps": {
               "type": "boolean",
-              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "description": "When enabled, a receive timestamp is recorded for each message.",
               "default": true
             },
-            "calculate_message_expiry": {
+            "generate_send_timestamps": {
               "type": "boolean",
-              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
               "default": true
             }
           },
@@ -144,9 +125,9 @@
         "message": {
           "type": "object",
           "properties": {
-            "forward_method": {
+            "tracing": {
               "type": "boolean",
-              "description": "Include the request method in the message.",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
               "default": false
             },
             "forward_uri": {
@@ -154,10 +135,18 @@
               "description": "Include the request URI and the URI arguments (as in, query arguments) in the message.",
               "default": false
             },
-            "forward_body": {
+            "forward_body_raw_only": {
               "type": "boolean",
-              "description": "Include the request body and the body arguments in the message.",
+              "description": "Forward only the raw request body without wrapping it in a JSON payload or adding extra fields.",
               "default": false
+            },
+            "default_content": {
+              "type": "string",
+              "description": "When not using `forward_method`, `forward_uri`, `forward_headers`, `forward_body` or `forward_body_raw_only`, this sets the message content."
+            },
+            "content_encoding": {
+              "type": "string",
+              "description": "Sets the HTTP Content-Encoding applied to the Solace message payload (for example, gzip). If unset, the request Content-Encoding header is used when available."
             },
             "destinations": {
               "type": "array",
@@ -185,39 +174,6 @@
               "minLength": 1,
               "description": "The message destinations."
             },
-            "dmq_eligible": {
-              "type": "boolean",
-              "description": "Sets the dead message queue (DMQ) eligible property on the message.",
-              "default": false
-            },
-            "ttl": {
-              "type": "integer",
-              "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
-              "default": 0
-            },
-            "tracing": {
-              "type": "boolean",
-              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
-              "default": false
-            },
-            "forward_headers": {
-              "type": "boolean",
-              "description": "Include the request headers in the message.",
-              "default": false
-            },
-            "forward_body_raw_only": {
-              "type": "boolean",
-              "description": "Forward only the raw request body without wrapping it in a JSON payload or adding extra fields.",
-              "default": false
-            },
-            "default_content": {
-              "type": "string",
-              "description": "When not using `forward_method`, `forward_uri`, `forward_headers`, `forward_body` or `forward_body_raw_only`, this sets the message content."
-            },
-            "content_type": {
-              "type": "string",
-              "description": "Sets the HTTP Content-Type applied to the Solace message payload. If unset, the request Content-Type header is used when available."
-            },
             "delivery_mode": {
               "type": "string",
               "enum": [
@@ -227,21 +183,24 @@
               "description": "Sets the message delivery mode.",
               "default": "DIRECT"
             },
-            "sender_id": {
-              "type": "string",
-              "description": "Allows the application to set the content of the sender identifier."
-            },
             "tracing_sampled": {
               "type": "boolean",
               "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
               "default": false
             },
-            "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
+            "forward_method": {
+              "type": "boolean",
+              "description": "Include the request method in the message.",
+              "default": false
+            },
+            "forward_headers": {
+              "type": "boolean",
+              "description": "Include the request headers in the message.",
+              "default": false
+            },
+            "content_type": {
+              "type": "string",
+              "description": "Sets the HTTP Content-Type applied to the Solace message payload. If unset, the request Content-Type header is used when available."
             },
             "user_properties": {
               "type": "object",
@@ -257,6 +216,14 @@
                 "headers": {
                   "type": "object",
                   "properties": {
+                    "mappings": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string",
+                        "x-lua-required": true
+                      },
+                      "description": "Header-to-user_property mapping (key = HTTP header name, value = target user property name)."
+                    },
                     "include_headers": {
                       "type": "array",
                       "items": {
@@ -270,20 +237,22 @@
                         "type": "string"
                       },
                       "description": "Headers that must not be forwarded into user properties. This is used to exclude sensitive headers such as authorization from being forwarded as user properties, or to avoid duplication when a header is mapped to a user property but you don't want the original header to be included as well."
-                    },
-                    "mappings": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string",
-                        "x-lua-required": true
-                      },
-                      "description": "Header-to-user_property mapping (key = HTTP header name, value = target user property name)."
                     }
                   },
                   "description": "Header settings for user properties (mapping, inclusion and exclusion)."
                 }
               },
               "description": "User defined properties to be included in the message. Separate static properties from header mappings."
+            },
+            "dmq_eligible": {
+              "type": "boolean",
+              "description": "Sets the dead message queue (DMQ) eligible property on the message.",
+              "default": false
+            },
+            "ttl": {
+              "type": "integer",
+              "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
+              "default": 0
             },
             "ack_timeout": {
               "type": "integer",
@@ -292,9 +261,16 @@
               "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
               "default": 2000
             },
-            "content_encoding": {
+            "functions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
+            },
+            "sender_id": {
               "type": "string",
-              "description": "Sets the HTTP Content-Encoding applied to the Solace message payload (for example, gzip). If unset, the request Content-Encoding header is used when available."
+              "description": "Allows the application to set the content of the sender identifier."
             },
             "priority": {
               "type": "integer",
@@ -302,6 +278,11 @@
               "minimum": 0,
               "description": "Sets the message priority.",
               "default": 4
+            },
+            "forward_body": {
+              "type": "boolean",
+              "description": "Include the request body and the body arguments in the message.",
+              "default": false
             }
           },
           "required": [
@@ -313,6 +294,25 @@
       "required": [
         "message",
         "session"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "route": {

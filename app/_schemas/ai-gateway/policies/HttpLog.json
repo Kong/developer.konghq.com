@@ -29,16 +29,80 @@
     "config": {
       "type": "object",
       "properties": {
+        "keepalive": {
+          "type": "number",
+          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "default": 60000
+        },
         "flush_timeout": {
           "type": "number",
           "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
         },
-        "custom_fields_by_lua": {
+        "headers": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "type": "string",
+            "x-referenceable": true
           },
-          "description": "Lua code as a key-value map"
+          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
+        },
+        "queue": {
+          "type": "object",
+          "properties": {
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
+            },
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            },
+            "max_entries": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be waiting on the queue.",
+              "default": 10000
+            },
+            "max_bytes": {
+              "type": "integer",
+              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            }
+          }
         },
         "log_sanitization": {
           "type": "object",
@@ -90,20 +154,6 @@
           "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
           "default": "POST"
         },
-        "content_type": {
-          "type": "string",
-          "enum": [
-            "application/json",
-            "application/json; charset=utf-8"
-          ],
-          "description": "Indicates the type of data sent. The only available option is `application/json`.",
-          "default": "application/json"
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
-          "default": 60000
-        },
         "retry_count": {
           "type": "integer",
           "description": "Number of times to retry when sending data to the upstream server."
@@ -112,76 +162,26 @@
           "type": "integer",
           "description": "Maximum number of log entries to be sent on each message to the upstream server."
         },
-        "headers": {
+        "custom_fields_by_lua": {
           "type": "object",
           "additionalProperties": {
-            "type": "string",
-            "x-referenceable": true
+            "type": "string"
           },
-          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
-        },
-        "queue": {
-          "type": "object",
-          "properties": {
-            "max_bytes": {
-              "type": "integer",
-              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
-            },
-            "max_retry_time": {
-              "type": "number",
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "default": 60
-            },
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
-            },
-            "max_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "default": 60
-            },
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
-            },
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
-            },
-            "max_coalescing_delay": {
-              "type": "number",
-              "maximum": 3600,
-              "minimum": 0,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "default": 1
-            },
-            "max_entries": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be waiting on the queue.",
-              "default": 10000
-            }
-          }
+          "description": "Lua code as a key-value map"
         },
         "ssl_verify": {
           "type": "boolean",
           "description": "When using TLS, this option enables verification of the certificate presented by the server.",
           "default": true
+        },
+        "content_type": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/json; charset=utf-8"
+          ],
+          "description": "Indicates the type of data sent. The only available option is `application/json`.",
+          "default": "application/json"
         },
         "timeout": {
           "type": "number",
