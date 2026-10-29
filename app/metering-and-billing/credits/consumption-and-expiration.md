@@ -122,13 +122,14 @@ stable movement order asc
 This means:
 
 1. Grants with lower priority values are consumed first.
-1. For equal priority, grants restricted to specific features or plans are consumed before unrestricted grants, so shared credit stays available for other usage.
-1. Then credits that expire earlier are consumed first. Credits that never expire come last.
+1. For equal priority, grants restricted to specific features or plans are consumed before unrestricted grants. Shared credit stays available for other usage.
+1. Credits that expire earlier are consumed first. Credits that never expire come last.
 1. If all of these are equal, {{site.metering_and_billing}} uses stable movement order.
 
 Only grants whose restrictions match the charge are eligible. For example, a grant restricted to `input_tokens` is never consumed by an `output_tokens` charge.
 
-This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority and restrictions, the one expiring sooner is used first.
+This order makes the result predictable and prevents avoidable expiration. 
+If two grants have the same priority and restrictions, the one expiring sooner is used first.
 
 ## Draw-down example
 
@@ -185,13 +186,13 @@ Grant C is untouched because its priority value is higher.
 
 ## When credits are consumed
 
-Charges consume credits when they're booked, not as usage events arrive:
+Charges consume credits when they're booked. The booking time depends on the charge type:
 
 * **Usage-based charges** book their consumption as the usage is recognized, which can be after the usage occurred.
 * **Flat-fee charges** book their consumption at the start of the service period when paid in advance, and at the end when paid in arrears.
 
-Until a charge is booked, its expected consumption shows up only in the live balance, not in the settled balance or transaction history.
-Credit that expires before a charge is booked isn't available to that charge.
+Until a charge is booked, its expected consumption shows up only in the live balance.
+Credits that expire before a charge is booked aren't available to that charge.
 
 ## Credit expiration
 

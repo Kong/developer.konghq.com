@@ -111,12 +111,12 @@ T3:  +10 returned by a correction
 ```
 {:.no-copy-code}
 
-The ledger keeps the original consumption at T2 and records the 10 returned credits as a separate movement at T3, so the balance is 70 afterwards.
+The ledger keeps the original consumption at T2 and records the 10 returned credits as a separate movement at T3, so the final balance is 70.
 
 ## Safe grant retries
 
 To make grant creation safe to retry, set a `key` on the grant.
-The key is unique per customer: sending the same key again for the same customer returns a `409 Conflict` instead of creating a duplicate grant.
+The key is unique per customer. Sending the same key again for the same customer returns a `409 Conflict` instead of creating a duplicate grant.
 You can reuse the same key for different customers.
 
 ## Deterministic consumption

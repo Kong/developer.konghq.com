@@ -95,7 +95,7 @@ Priority controls which credits are consumed first when a customer has multiple 
 Priority is a number from 1 to 1000 through the API, or from 1 to 100 in the {{site.konnect_short_name}} UI. The default is 10.
 Lower priority values are consumed first.
 If two grants have the same priority, a grant restricted to specific features or plans is consumed before an unrestricted grant.
-Then credits that expire earlier are consumed first.
+Credits that expire earlier are consumed first.
 If priority, restrictions, and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
 
 Example:
@@ -170,9 +170,10 @@ For details on how feature restrictions affect balance and transaction queries, 
 Purchase terms describe how the credits are funded.
 They define the purchase currency and the cost basis used to calculate the purchase amount.
 
-The purchase currency must be a fiat currency.
-For a paid fiat-currency grant, it must be the same as the grant currency.
-For a custom-currency grant, it must be the same as the fiat currency of the grant's cost basis.
+The purchase currency must be a fiat currency:
+* For a paid fiat-currency grant, it must be the same as the grant currency.
+* For a custom-currency grant, it must be the same as the fiat currency of the grant's cost basis.
+
 The {{site.konnect_short_name}} UI uses the customer's currency as the purchase currency.
 
 When the granted credits are in a custom currency, the purchase converts the custom-currency amount into the fiat purchase amount through a cost basis:

@@ -38,9 +38,10 @@ next_steps:
 ---
 
 Changes to a customer's credit balance are recorded as movements in the transaction history.
-The history is the customer-facing view of the ledger, not a raw ledger log.
-Internal accounting movements aren't shown, and a future expiration only appears once its time has passed.
-For the authoritative current balance, read the customer's credit balance.
+The history is the customer-facing view of the ledger. 
+It omits internal accounting movements, and a future expiration appears only after its time has passed.
+
+You can get the authoritative current balance from the customer's credit balance.
 
 ## Movement types
 
@@ -109,7 +110,7 @@ rows:
 <!--vale on-->
 
 A movement doesn't carry a grant ID field.
-To relate movements to a grant or charge, use the `charge_id` label: on a `funded` movement, it's the ID of the grant.
+To relate movements to a grant or charge, use the `charge_id` label. On a `funded` movement, this is the ID of the grant.
 
 ## Filtering by feature
 
@@ -120,7 +121,11 @@ For the full reference on transaction filters, see [Feature filters](/metering-a
 
 ## Ordering and pagination
 
-Movements are returned newest first, ordered by `booked_at`, then `created_at`, then ID, so the order is stable.
+Movements are returned in the following stable order:
+1. Newest
+1. Ordered by `booked_at`
+1. Ordered by `created_at`
+1. Ordered by ID
 The API uses cursor-based pagination to ensure consistent results even when new movements are added while you're paginating.
 
 Use `page[size]` to set the page size.

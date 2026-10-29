@@ -60,7 +60,7 @@ The credit system works as follows:
 * **Credit grants** add credits to a customer balance.
 A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
 * **Balances** show how much credit the customer has.
-There is a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending amount: the total of granted credits that haven't taken effect yet.
+The balances include: a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending amount, which shows the total of granted credits that haven't taken effect yet.
 * **Charges** consume credits.
 The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
