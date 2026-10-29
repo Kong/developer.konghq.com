@@ -6,7 +6,8 @@ entity_schema: true
 {{ content }}
 
 {% if page.collection == 'ai_gateway_entities' and page.works_on contains 'on-prem' %}
-{% include ai-gateway/on-prem-config.html %}
+{% capture on_prem_config %}{% include ai-gateway/on-prem-config.md %}{% endcapture %}
+{{ on_prem_config | markdownify }}
 {% endif %}
 
 {% if page.faqs %}
