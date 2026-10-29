@@ -17,8 +17,14 @@ products:
 
 works_on:
   - on-prem
+  - konnect
+
+min_version:
+  operator: '2.4'
 
 related_resources:
+  - text: Provision a Gateway
+    url: /operator/get-started/gateway-api/deploy-gateway/
   - text: Route traffic with a Kubernetes Ingress resource
     url: /operator/dataplanes/how-to/handle-ingress/
 
@@ -63,7 +69,7 @@ args:
 ```
 
 ```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong \
+helm upgrade --install kong-operator kong/kong-operator -n kong-system \
   --create-namespace \
   --set image.tag={{ site.data.operator_latest.release }} \
   -f values.yaml
@@ -76,11 +82,6 @@ This section applies to dual-stack clusters only.
 By default, when the operator's IP family is `dual`, the ingress Service is created with the `PreferDualStack` policy so that the DataPlane is exposed over both IPv4 and IPv6. You can override this with the `ipFamilies` and `ipFamilyPolicy` fields on the ingress Service of a `GatewayConfiguration`:
 
 ```yaml
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong
-  namespace: kong
 spec:
   dataPlaneOptions:
     network:
@@ -111,11 +112,6 @@ To expose a DataPlane externally on an IPv6-only or dual-stack EKS cluster, you 
 Then annotate the ingress Service through the `GatewayConfiguration` so that the controller provisions a dual-stack load balancer:
 
 ```yaml
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong
-  namespace: kong
 spec:
   dataPlaneOptions:
     network:
@@ -130,17 +126,34 @@ spec:
 
 ## Validate
 
-After you deploy a Gateway that uses the `GatewayConfiguration`, check the IP families of the ingress Service:
+Deploy a Gateway following the [Provision a Gateway](/operator/get-started/gateway-api/deploy-gateway/) guide.
+
+If you're on AWS EKS, apply the [AWS EKS requirements](#aws-eks-requirements) sections to the `GatewayConfiguration`.
+
+Wait for the Gateway to become programmed:
+
+```bash
+kubectl wait --for=condition=programmed gateway/kong -n kong --timeout=300s
+```
+
+Check the IP families of the ingress Service:
 
 ```bash
 kubectl get svc -n kong -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.ipFamilies}{"\t"}{.spec.ipFamilyPolicy}{"\n"}{end}'
 ```
+An IPv6-only Service reports:
+
+```
+{svc-name} ["IPv6"] SingleStack
+```
+{:.no-copy-code}
 
 A dual-stack Service reports both families:
 
 ```
-kong-ingress-xxxx	["IPv4","IPv6"]	PreferDualStack
+{svc-name} ["IPv4","IPv6"] PreferDualStack
 ```
+{:.no-copy-code}
 
 To test IPv6 connectivity from outside the cluster, resolve the load balancer's DNS name and connect to its `AAAA` record:
 
