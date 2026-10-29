@@ -120,4 +120,116 @@ RSpec.describe Jekyll::Drops::PolicyConfigExample::AIGateway do
       end
     end
   end
+
+  describe 'build errors' do
+    context 'with an unsupported scope in the subset' do
+      let(:example_yaml) do
+        <<~YAML
+          title: Sanitize PII
+          description: Sanitize PII from model responses.
+          weight: 100
+          name: pii-sanitizer
+          display_name: PII Sanitizer
+          type: ai-sanitizer
+          scopes:
+            - ai-consumer-group
+          config:
+            patterns:
+              - email
+          tools:
+            - konnect-api
+            - terraform
+            - kongctl
+        YAML
+      end
+
+      it 'raises naming the file and the supported scopes' do
+        expect { drop }
+          .to raise_error(
+            ArgumentError,
+            "Invalid `scopes` in #{file}, supported scopes: ai-model, ai-consumer, global"
+          )
+      end
+    end
+
+    context 'with global set in the example' do
+      let(:example_yaml) do
+        <<~YAML
+          title: Sanitize PII
+          description: Sanitize PII from model responses.
+          weight: 100
+          name: pii-sanitizer
+          display_name: PII Sanitizer
+          type: ai-sanitizer
+          global: true
+          config:
+            patterns:
+              - email
+          tools:
+            - konnect-api
+            - terraform
+            - kongctl
+        YAML
+      end
+
+      it 'raises naming the file and stating that the target sets global' do
+        expect { drop }
+          .to raise_error(
+            ArgumentError,
+            "Invalid `global` in #{file}: the target sets `global`, remove the `global` key"
+          )
+      end
+    end
+
+    context 'with a missing display_name' do
+      let(:example_yaml) do
+        <<~YAML
+          title: Sanitize PII
+          description: Sanitize PII from model responses.
+          weight: 100
+          name: pii-sanitizer
+          type: ai-sanitizer
+          config:
+            patterns:
+              - email
+          tools:
+            - konnect-api
+            - terraform
+            - kongctl
+        YAML
+      end
+
+      it 'raises naming the file' do
+        expect { drop }
+          .to raise_error(ArgumentError, "Missing `display_name` in #{file}")
+      end
+    end
+
+    context 'with an unsupported tool' do
+      let(:example_yaml) do
+        <<~YAML
+          title: Sanitize PII
+          description: Sanitize PII from model responses.
+          weight: 100
+          name: pii-sanitizer
+          display_name: PII Sanitizer
+          type: ai-sanitizer
+          config:
+            patterns:
+              - email
+          tools:
+            - konnect-api
+            - deck
+        YAML
+      end
+
+      it 'raises naming the file and the supported tools' do
+        expect { drop }
+          .to raise_error(
+            ArgumentError,
+            "Invalid `tools` in #{file}, supported tools: konnect-api, terraform, kongctl"
+          )
+      end
+    end
+  end
 end

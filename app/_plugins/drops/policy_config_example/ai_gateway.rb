@@ -6,13 +6,20 @@ module Jekyll
   module Drops
     module PolicyConfigExample
       class AIGateway < Base
+        TOOLS = %w[konnect-api terraform kongctl].freeze
+
+        def initialize(file:, plugin:)
+          super
+          validate!
+        end
+
         def product
           'ai-gateway'
         end
 
         def targets
           @targets ||= if example.key?('scopes')
-                         example.fetch('scopes')
+                         validate_scopes(example.fetch('scopes'))
                        else
                          @plugin.scopes
                        end
@@ -27,6 +34,25 @@ module Jekyll
             'condition' => example['condition']&.chomp,
             'config' => config
           }.compact
+        end
+
+        private
+
+        def validate!
+          raise ArgumentError, "Invalid `global` in #{@file}: the target sets `global`, remove the `global` key" if example.key?('global')
+          raise ArgumentError, "Missing `display_name` in #{@file}" unless example.key?('display_name')
+
+          invalid_tools = example.fetch('tools') - TOOLS
+          raise ArgumentError, "Invalid `tools` in #{@file}, supported tools: #{TOOLS.join(', ')}" unless invalid_tools.empty?
+
+          targets
+        end
+
+        def validate_scopes(subset)
+          unsupported = subset - @plugin.scopes
+          return subset if unsupported.empty?
+
+          raise ArgumentError, "Invalid `scopes` in #{@file}, supported scopes: #{@plugin.scopes.join(', ')}"
         end
       end
     end
