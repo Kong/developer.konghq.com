@@ -250,6 +250,106 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
     end
   end
 
+  context 'ai-gateway product, policy type' do
+    let(:dir) { Dir.mktmpdir }
+
+    let(:file) { File.join(dir, 'sanitize-pii.yml') }
+
+    let(:example_yaml) do
+      <<~YAML
+        title: Sanitize PII
+        description: Sanitize PII from model responses.
+        weight: 100
+        name: pii-sanitizer
+        display_name: PII Sanitizer
+        type: ai-sanitizer
+        config:
+          patterns:
+            - email
+        tools:
+          - konnect-api
+      YAML
+    end
+
+    let(:plugin) do
+      double(
+        'policy',
+        product: 'ai-gateway',
+        slug: 'ai-sanitizer',
+        scopes: %w[global ai-model],
+        unreleased?: false,
+        min_release: nil
+      )
+    end
+
+    before { File.write(file, example_yaml) }
+
+    let(:config_example) { Jekyll::Drops::PolicyConfigExample::AIGateway.new(file:, plugin:) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == target_key }
+      example.formatted_examples.detect { |fe| fe.format == 'konnect-api' }.presenter
+    end
+
+    context 'with a global target' do
+      let(:target_key) { 'global' }
+
+      it 'renders a POST to the policies endpoint with global true' do
+        expect(rendered).to eq(<<~'MD')
+          ```bash
+          curl -X POST https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/policies \
+              --header "accept: application/json" \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $KONNECT_TOKEN" \
+              --data '
+              {
+                "name": "pii-sanitizer",
+                "display_name": "PII Sanitizer",
+                "type": "ai-sanitizer",
+                "enabled": true,
+                "config": {
+                  "patterns": [
+                    "email"
+                  ]
+                },
+                "global": true
+              }
+              '
+          ```
+        MD
+      end
+    end
+
+    context 'with an ai-model target' do
+      let(:target_key) { 'ai-model' }
+
+      it 'renders a POST to the policies endpoint with global false' do
+        expect(rendered).to eq(<<~'MD')
+          ```bash
+          curl -X POST https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/policies \
+              --header "accept: application/json" \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $KONNECT_TOKEN" \
+              --data '
+              {
+                "name": "pii-sanitizer",
+                "display_name": "PII Sanitizer",
+                "type": "ai-sanitizer",
+                "enabled": true,
+                "config": {
+                  "patterns": [
+                    "email"
+                  ]
+                },
+                "global": false
+              }
+              '
+          ```
+        MD
+      end
+    end
+  end
+
   context 'event-gateway product, no variables' do
     let(:product) { 'event-gateway' }
     let(:example) do

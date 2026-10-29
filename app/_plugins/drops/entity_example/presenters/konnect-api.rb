@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../utils/variable_replacer'
-require_relative './base'
+require_relative 'base'
 
 module Jekyll
   module Drops
@@ -147,6 +147,9 @@ module Jekyll
 
               segments.join
             end
+          end
+
+          class AIGatewayPolicy < Base
           end
         end
       end
