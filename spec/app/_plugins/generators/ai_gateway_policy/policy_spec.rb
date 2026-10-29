@@ -66,7 +66,44 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   end
 
   describe '#examples' do
-    it { expect(policy.examples).to eq([]) }
+    def example_fixture(name)
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples', name)
+    end
+
+    context 'when the overview body is empty but example files exist' do
+      before do
+        allow(Dir).to receive(:glob).with(File.join(folder, 'examples', '*'))
+                                    .and_return([example_fixture('sanitize-pii.yml')])
+      end
+
+      it { expect(policy.examples).to eq([]) }
+    end
+
+    context 'when the overview has content and example files exist' do
+      before do
+        allow(File).to receive(:read).with(File.join(folder, 'index.md'))
+                                     .and_return("---\nproducts:\n  - ai-gateway\n---\nOverview body.\n")
+        allow(Dir).to receive(:glob).with(File.join(folder, 'examples', '*'))
+                                    .and_return([example_fixture('sanitize-pii.yml'), example_fixture('enabled-false.yml')])
+      end
+
+      it 'builds one AIGateway drop per file, sorted by descending weight' do
+        expect(policy.examples.map(&:slug)).to eq(%w[enabled-false sanitize-pii])
+      end
+
+      it 'builds AIGateway drops' do
+        expect(policy.examples).to all(be_a(Jekyll::Drops::PolicyConfigExample::AIGateway))
+      end
+    end
+
+    context 'when the overview has content but no example files exist' do
+      before do
+        allow(File).to receive(:read).with(File.join(folder, 'index.md'))
+                                     .and_return("---\nproducts:\n  - ai-gateway\n---\nOverview body.\n")
+      end
+
+      it { expect(policy.examples).to eq([]) }
+    end
   end
 
   describe '#api_spec_file_path' do

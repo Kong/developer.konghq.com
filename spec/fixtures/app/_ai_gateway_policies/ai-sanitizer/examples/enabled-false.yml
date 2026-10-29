@@ -1,6 +1,6 @@
 title: Sanitize PII
 description: Sanitize PII from model responses.
-weight: 100
+weight: 300
 name: pii-sanitizer
 display_name: PII Sanitizer
 type: ai-sanitizer
