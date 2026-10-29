@@ -258,6 +258,25 @@ targets:
   service:
     label: 'Service'
 
+ai_gateway_scopes:
+  global:
+    label: 'Global'
+  ai-model:
+    label: 'AI Model'
+    url: '/ai-gateway/entities/ai-model/'
+  ai-agent:
+    label: 'AI Agent'
+    url: '/ai-gateway/entities/ai-agent/'
+  ai-mcp-server:
+    label: 'AI MCP Server'
+    url: '/ai-gateway/entities/ai-mcp-server/'
+  ai-consumer:
+    label: 'AI Consumer'
+    url: '/ai-gateway/entities/ai-consumer/'
+  ai-consumer-group:
+    label: 'AI Consumer Group'
+    url: '/ai-gateway/entities/ai-consumer-group/'
+
 phases:
   consume:
     label: 'Consume Phase'
