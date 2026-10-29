@@ -71,4 +71,57 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
       expect(data['get_started_url']).to eq('/ai-gateway/policies/ai-sanitizer/examples/enabled-false/')
     end
   end
+
+  describe 'rendered page' do
+    before do
+      JekyllSite.instance.data['entity_examples'] =
+        { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
+      stub_entity_examples_config!
+      allow(Jekyll.sites.first).to receive(:site_payload).and_return(JekyllSite.instance.site_payload)
+      allow(CodeHighlighter).to receive(:new).and_return(instance_double(CodeHighlighter, highlight: 'HIGHLIGHTED'))
+    end
+
+    after { JekyllSite.instance.data.delete('entity_examples') }
+
+    describe 'HTML output' do
+      subject(:rendered) do
+        render_liquid(page.content, page: page.data.merge('output_format' => 'html'))
+      end
+
+      let(:html) { Capybara::Node::Simple.new(rendered) }
+
+      it 'renders the attach note in the entity panel after the tool snippets' do
+        panel = html.find('[data-target="ai-model"]')
+        expect(panel).to have_css(
+          '.entity-example-target-note',
+          text: 'After creating the policy, add pii-sanitizer to the policies array of your AI Model.'
+        )
+        expect(panel).to have_link('AI Model', href: '/ai-gateway/entities/ai-model/')
+
+        children = panel.native.element_children.map { |el| el['class'] }
+        expect(children.count { |c| c.include?('entity-example-format-panel') }).to eq(3)
+        expect(children.last).to include('entity-example-target-note')
+      end
+
+      it 'renders no attach note in the global panel' do
+        expect(html).to have_css('[data-target="global"]')
+        expect(html).not_to have_css('[data-target="global"] .entity-example-target-note')
+      end
+    end
+
+    describe 'Markdown output' do
+      subject(:rendered) do
+        render_liquid(page.content, page: page.data.merge('output_format' => 'markdown'))
+      end
+
+      it 'renders the attach note under the target heading after the last tool snippet' do
+        expect(rendered).to include('#### AI Model')
+        expect(rendered).to include(
+          'After creating the policy, add `pii-sanitizer` to the `policies` array of ' \
+          'your [AI Model](/ai-gateway/entities/ai-model/).'
+        )
+        expect(rendered.index('After creating the policy')).to be > rendered.rindex('data-tool="kongctl"')
+      end
+    end
+  end
 end
