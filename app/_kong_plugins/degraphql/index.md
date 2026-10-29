@@ -58,7 +58,7 @@ flowchart LR
 A(Devices/apps)
 B(Gateway Service with 
 DeGraphQL routes)
-C(<img src="/assets/icons/graphql.svg" style="max-height:20px"/> GraphQL)
+C(fa:fa-graphql GraphQL)
 
 A<-->B
 subgraph id1 [Data center]

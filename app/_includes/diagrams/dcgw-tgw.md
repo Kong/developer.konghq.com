@@ -5,12 +5,12 @@ flowchart LR
 A(API or Service)
 B(API or Service)
 C(API or Service)
-D(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
-E(<img src="/assets/icons/third-party/aws-transit-gateway.svg" style="max-height:32px" class="no-image-expand"/> AWS Transit Gateway)
-F(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
+D(fa:fa-third-party/aws-transit-gateway-attachment AWS Transit Gateway attachment)
+E(fa:fa-third-party/aws-transit-gateway AWS Transit Gateway)
+F(fa:fa-third-party/aws-transit-gateway-attachment AWS Transit Gateway attachment)
+G(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+H(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
+I(fa:fa-konglogo-gradient-secondary Konnect #40;fully-managed Data Plane#41;)
 J(Internet)
 
 subgraph 1 [User AWS Cloud]
