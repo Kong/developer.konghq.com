@@ -2,14 +2,9 @@
 
 RSpec.describe Jekyll::EventGatewayPolicyPages::Pages::Example do
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
-    stub_entity_examples_config!
-    allow(Jekyll.sites.first).to receive(:site_payload).and_return(JekyllSite.instance.site_payload)
+    allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
     allow(CodeHighlighter).to receive(:new).and_return(instance_double(CodeHighlighter, highlight: 'HIGHLIGHTED'))
   end
-
-  after { JekyllSite.instance.data.delete('entity_examples') }
 
   let(:file) do
     File.join(PROJECT_ROOT, 'spec/fixtures/app/_event_gateway_policies/acl/examples/read-only-topic.yml')

@@ -4,14 +4,11 @@ require 'kramdown'
 
 RSpec.describe 'plugins/example.md' do
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
     stub_const('Jekyll::Drops::Plugins::Schema::SCHEMAS_BASE', fixture_schemas_base)
   end
 
   after do
-    JekyllSite.instance.data.delete('entity_examples')
     Jekyll::Drops::Plugins::Schema::FILE_INDEX
       .reject { |dir, _| dir.start_with?(fixture_schemas_base) }
       .each_key { |dir| Jekyll::Drops::Plugins::Schema::FILE_INDEX.delete(dir) }
