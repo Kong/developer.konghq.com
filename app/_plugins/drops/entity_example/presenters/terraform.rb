@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './base'
+require_relative 'base'
 
 module Jekyll
   module Drops
@@ -194,6 +194,26 @@ module Jekyll
                 data: @example_drop.data,
                 variables: variables
               )
+            end
+          end
+
+          class AIGatewayPolicy < Base
+            def provider_source
+              'konnect'
+            end
+
+            def terraform_resource_name
+              'konnect_ai_gateway_policy'
+            end
+
+            def render
+              output(data.except('config'), 1, true, "\n") + jsonencode_config
+            end
+
+            def jsonencode_config
+              s = line('config = jsonencode({', 1)
+              s += output(data['config'], 2, false, "\n")
+              s + line('})', 1)
             end
           end
         end

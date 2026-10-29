@@ -45,7 +45,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Plugin.new(example_drop: drop) }
 
     it 'declares a variable block for every declared variable, not just the last one' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -117,7 +117,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Plugin.new(example_drop: drop) }
 
     it 'renders a global plugin resource including its ordering array' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -174,7 +174,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Plugin.new(example_drop: drop) }
 
     it 'substitutes the variable as an unquoted var. reference and declares one variable block' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -233,7 +233,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Base.new(example_drop: drop) }
 
     it 'wires the target to an upstream_id reference' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
         ```hcl
         resource "konnect_gateway_target" "my_target" {
@@ -271,7 +271,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Base.new(example_drop: drop) }
 
     it 'falls through to the generic gateway resource branch and declares a variable block' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -304,7 +304,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
   context 'ca_certificate type, with a multi-line certificate value' do
     let(:product) { 'gateway' }
     let(:example) do
-      YAML.load(<<~'YAML')
+      YAML.load(<<~YAML)
         type: ca_certificate
         data:
           cert: |
@@ -320,7 +320,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Base.new(example_drop: drop) }
 
     it 'renders the multi-line value as a heredoc instead of a quoted string' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -378,7 +378,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::EventGatewayPolicy.new(example_drop: drop) }
 
     it 'names the resource with the listener policy suffix and wires an event_gateway_listener_id' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -443,7 +443,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::EventGatewayPolicy.new(example_drop: drop) }
 
     it 'names the resource with the phase and wires a virtual_cluster_id' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -493,7 +493,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Base.new(example_drop: drop) }
 
     it 'renders the generic event-gateway resource with no listener or virtual_cluster id' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -552,7 +552,7 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     let(:presenter) { Jekyll::Drops::EntityExample::Presenters::Terraform::Base.new(example_drop: drop) }
 
     it 'substitutes variables into var. references and declares a variable block for each one' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
 
 
         ```hcl
@@ -590,6 +590,102 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
           type = string
         }
         ```
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy type' do
+    let(:dir) { Dir.mktmpdir }
+
+    let(:file) { File.join(dir, 'sanitize-pii.yml') }
+
+    let(:example_yaml) do
+      <<~YAML
+        title: Sanitize PII
+        description: Sanitize PII from model responses.
+        weight: 100
+        name: pii-sanitizer
+        display_name: PII Sanitizer
+        type: ai-sanitizer
+        condition: 'model.name == "gpt-4o"'
+        config:
+          patterns:
+            - email
+            - phone
+          fail_on_error: true
+          thresholds:
+            redaction:
+              score: 0.9
+              actions:
+                - redact
+                - log
+          providers:
+            openai:
+              model: gpt-4o
+        tools:
+          - terraform
+      YAML
+    end
+
+    let(:plugin) do
+      double(
+        'policy',
+        product: 'ai-gateway',
+        slug: 'ai-sanitizer',
+        scopes: %w[global ai-model],
+        unreleased?: false,
+        min_release: nil
+      )
+    end
+
+    before { File.write(file, example_yaml) }
+
+    let(:config_example) { Jekyll::Drops::PolicyConfigExample::AIGateway.new(file:, plugin:) }
+
+    let(:presenter) do
+      example = config_example.examples.first
+      example.formatted_examples.detect { |fe| fe.format == 'terraform' }.presenter
+    end
+
+    it 'renders a konnect_ai_gateway_policy resource with a jsonencode config' do
+      expect(rendered).to eq(<<-'MD')
+
+
+```hcl
+resource "konnect_ai_gateway_policy" "my_policy" {
+  name = "pii-sanitizer"
+  display_name = "PII Sanitizer"
+  type = "ai-sanitizer"
+  enabled = true
+  condition = "model.name == \"gpt-4o\""
+  global = true
+  config = jsonencode({
+    patterns = ["email", "phone"]
+    fail_on_error = true
+
+    thresholds = {
+
+      redaction = {
+        score = 0.9
+        actions = ["redact", "log"]
+      }
+    }
+
+    providers = {
+
+      openai = {
+        model = "gpt-4o"
+      }
+    }
+  })
+
+
+  gateway_id = konnect_ai_gateway.my_ai_gateway.id
+}
+```
+
+
+
       MD
     end
   end

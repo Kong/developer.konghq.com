@@ -45,6 +45,14 @@ resource "{{ include.presenter.terraform_resource_name }}" "my_{{ include.presen
   gateway_id = konnect_event_gateway.my_event_gateway.id
 }
 ```
+{% when 'ai-gateway' %}
+```hcl
+resource "{{ include.presenter.terraform_resource_name }}" "my_{{ include.presenter.entity_type }}" {
+  {{ include.presenter }}
+
+  gateway_id = konnect_ai_gateway.my_ai_gateway.id
+}
+```
 {% else %}
 Unsupported product {{include.presenter.product}}
 {% endcase %}
