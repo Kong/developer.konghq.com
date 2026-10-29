@@ -19,6 +19,7 @@ related_resources:
   - text: "Migrate to {{site.ai_gateway}} 2.x"
     url: /ai-gateway/v2-migration-guide/
 works_on:
+  - on-prem
   - konnect
 ---
 

@@ -38,6 +38,7 @@ related_resources:
     url: /ai-gateway/monitor-ai-agent-with-opentelemetry/
 
 works_on:
+  - on-prem
   - konnect
 ---
 

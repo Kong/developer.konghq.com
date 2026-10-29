@@ -32,6 +32,7 @@ related_resources:
     url: /ai-gateway/ai-otel-metrics/
 
 works_on:
+  - on-prem
   - konnect
 ---
 

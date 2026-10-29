@@ -3,6 +3,7 @@ description: 'Consume messages from Kafka topics and make them available through
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway

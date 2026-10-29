@@ -5,6 +5,10 @@ entity_schema: true
 
 {{ content }}
 
+{% if page.collection == 'ai_gateway_entities' and page.works_on contains 'on-prem' %}
+{% include ai-gateway/on-prem-config.html %}
+{% endif %}
+
 {% if page.faqs %}
 {% include sections/faq.html %}
 {% endif %}

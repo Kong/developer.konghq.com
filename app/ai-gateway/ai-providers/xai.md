@@ -10,6 +10,7 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/xai/
 
 works_on:
+ - on-prem
  - konnect
 
 products:

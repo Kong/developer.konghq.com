@@ -27,6 +27,7 @@ related_resources:
     url: /ai-gateway/ai-audit-log-reference/
 
 works_on:
+  - on-prem
   - konnect
 ---
 

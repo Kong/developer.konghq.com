@@ -10,6 +10,7 @@ products:
   - ai-gateway
 
 works_on:
+  - on-prem
   - konnect
 
 tools:
