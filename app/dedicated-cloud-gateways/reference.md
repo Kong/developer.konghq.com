@@ -455,8 +455,9 @@ config:
 
 ### How do I set environment variables?
 
-In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Navigate to your Dedicated Cloud Gateway control plane and from the **Actions** dropdown menu, select "Edit or Resize Cluster". Click **Advanced options** and enter the environment variable key and value pairs you want to use.
-
+You can configure environment variables for Dedicated Cloud Gateway data plane nodes.
+{% navtabs "env-vars" %}
+{% navtab "API" %}
 You can add environment variables using the Cloud Gateways API. When you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
 <!--vale off -->
 {% konnect_api_request %}
@@ -480,6 +481,20 @@ body:
           value: "0.01"
 {% endkonnect_api_request %}
 <!-- vale on -->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click your Dedicated Cloud Gateway.
+1. Click the **Data plane nodes** tab.
+1. Click **Configure data plane**.
+1. In the **Gateway configuration** section, click **View advanced settings**.
+1. Click **Add environment variable**.
+1. From the **Environment variables** dropdown menu, select the variable you want to set.
+1. From the **Scope** dropdown menu, select which data planes you want this variable to apply to.
+1. Configure the **Value** field as needed.
+1. Click **Save**.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## CIDR size requirements
 
