@@ -63,10 +63,16 @@ function resolveDiagramIcon(token) {
 }
 
 for (const el of document.querySelectorAll("pre.mermaid")) {
-  mount(el, el.textContent.trim(), {
-    zoom: true,
-    icons: resolveDiagramIcon,
-  });
+  const source = el.textContent.trim();
+  try {
+    mount(el, source, {
+      zoom: true,
+      icons: resolveDiagramIcon,
+    });
+  } catch (error) {
+    console.error("Failed to render diagram:", error);
+    if (!el.firstChild) el.textContent = source;
+  }
 }
 
 window.addEventListener("load", () => {

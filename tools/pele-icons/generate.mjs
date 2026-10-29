@@ -48,11 +48,17 @@ function normalizeIcon(svg) {
   const rootStart = svg.search(/<svg\b/);
   if (rootStart === -1) throw new Error("no root <svg> element found");
   const rootTag = svg.slice(rootStart).match(/^<svg\b[^>]*>/)[0];
-  const body = svg.slice(rootStart + rootTag.length);
+  const body = svg
+    .slice(rootStart + rootTag.length)
+    .replace(/<style\b[\s\S]*?(<\/style>|$)/gi, "");
   const stripped = rootTag
     .replace(/\s(width|height)="[^"]*"/g, "")
     .replace(/\sid="[^"]*"/, "")
-    .replace(/^<svg\b/, `<svg width="${ICON_SIZE}" height="${ICON_SIZE}"`);
+    .replace(/\sstroke="[^"]*"/, "")
+    .replace(
+      /^<svg\b/,
+      `<svg width="${ICON_SIZE}" height="${ICON_SIZE}" stroke="none"`,
+    );
   return stripped + body;
 }
 
