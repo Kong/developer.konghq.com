@@ -113,6 +113,9 @@ Use YAML tags in field values to load files or reference other resources.
 - `!secret`: Defer a write-only value until execution and keep the resolved
   value out of saved plans.
 - `!ref` is intended for string fields.
+- For root-level child parent selectors such as `portal` and `api`, see
+  [parent selectors](/kongctl/declarative/#parent-selectors-and-references).
+  Use plain refs on affected releases as described in the compatibility note.
 - `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
   In declarative config, prefer `!ref` and avoid literal UUID values.
 - For reusable unmanaged resources or external parents with managed children,
@@ -850,10 +853,12 @@ portals:
 Portal identity providers and integrations can also be declared as root
 resources.
 
+{% include_cached /kongctl/parent-selector-compatibility.md %}
+
 ```yaml
 portal_identity_providers:
  - ref: string
-   portal: string required # prefer: !ref <portal-ref>
+   portal: string required # parent ref; for example, docs-portal
    type: One of (oidc | saml) required
    enabled: boolean
    config: object required
@@ -870,7 +875,7 @@ portal_identity_providers:
 
 portal_integrations:
  - ref: string
-   portal: string required # prefer: !ref <portal-ref>
+   portal: string required # parent ref; for example, docs-portal
    google_tag_manager:
      enabled: boolean required
      type: tracking
@@ -897,7 +902,7 @@ Portal IP allow lists can also be declared as root resources.
 ```yaml
 portal_ip_allow_lists:
   - ref: string
-    portal: string required # prefer: !ref <portal-ref>
+    portal: string required # parent ref; for example, docs-portal
     allowed_ips: array[string] required # IP addresses or CIDR blocks
 ```
 
@@ -909,7 +914,7 @@ Portal audit-log webhooks can also be declared as root resources.
 ```yaml
 portal_audit_log_webhooks:
   - ref: string
-    portal: string required # prefer: !ref <portal-ref>
+    portal: string required # parent ref; for example, docs-portal
     enabled: boolean
     audit_log_destination_id: string (uuid) # prefer: !ref
 ```
