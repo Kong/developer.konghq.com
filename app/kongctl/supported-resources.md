@@ -853,15 +853,7 @@ portals:
 Portal identity providers and integrations can also be declared as root
 resources.
 
-**Compatibility:** In affected releases, including v1.21.0, use plain parent
-refs such as `portal: docs-portal` for root-level portal children. Children
-using tagged parent selectors such as `portal: !ref docs-portal#id` can be
-silently omitted from plans. Sync can schedule declared live children for
-deletion.
-This also affects root-level API children using `api: !ref ...`.
-Use plain refs or nested children until you use a release containing the
-fix for [issue #2633](https://github.com/Kong/kongctl/issues/2633).
-API relationship fields such as `portal_id` should continue to use `!ref`.
+{% include_cached /kongctl/parent-selector-compatibility.md %}
 
 ```yaml
 portal_identity_providers:

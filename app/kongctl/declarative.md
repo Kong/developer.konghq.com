@@ -343,7 +343,7 @@ api_publications:
 
 Fields such as `portal` on `portal_pages` and `api` on `api_versions`
 select the parent declaration for a root-level child. They are kongctl
-configuration fields. Kongctl resolves the parent's Konnect ID for API
+configuration fields. kongctl resolves the parent's Konnect ID for API
 requests, including route parameters. When a child is nested, its parent
 is inferred and the selector can be omitted.
 
@@ -357,13 +357,7 @@ it is not a literal Konnect UUID.
 parent selectors. `!ref` defaults to `#id`, but affected releases require
 the following workaround.
 
-**Compatibility:** In affected releases, including v1.21.0, `!ref` on
-root-level portal and API child parent selectors can silently omit children
-from plans. In sync mode, this can schedule declared live children for
-deletion. Use a plain parent ref, or nest the child under its parent, until
-you use a release containing the fix for
-[issue #2633](https://github.com/Kong/kongctl/issues/2633).
-Continue using `!ref` for API relationship fields such as `portal_id`.
+{% include_cached /kongctl/parent-selector-compatibility.md %}
 
 For example, manage a root-level page under an existing external portal
 using a plain parent ref:
