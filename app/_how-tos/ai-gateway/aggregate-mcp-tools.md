@@ -131,8 +131,6 @@ ai_gateway_mcp_servers:
           - /petstore
       logging:
         payloads: false
-      server:
-        timeout: 60000
     tools:
       - name: get-pets-by-status
         description: Find pets by status
@@ -177,6 +175,8 @@ ai_gateway_mcp_servers:
       route:
         paths:
           - /mcp-aggregation
+      server:
+        timeout: 60000
     sources:
       - cards-mcp
       - petstore-mcp
