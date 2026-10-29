@@ -26,6 +26,8 @@ related_resources:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+<!--vale off-->
+
 ## 1.3.0
 
 **Release date**: 2026/10/26
