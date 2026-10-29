@@ -145,8 +145,8 @@ You can create a rate override with the **Add override** button on the [**Price 
 
 Rate overrides come in the following types:
 
-* A [percentage off override](#percentage-off-overrides) takes a percentage off the list price of every model of a provider.
-* A [custom rate override](#custom-rate-overrides) replaces the list price of one specific model.
+* A [percentage off override](#percentage-off-overrides) A discount on every model of a provider.
+* A [custom rate override](#custom-rate-overrides) A fixed price for one model.
 
 ### Percentage off overrides
 
