@@ -11,6 +11,9 @@
 {% include llm/series.md %}
 {% include llm/prereqs.md %}
 {{ content }}
+{% if page.url contains '/ai-gateway/entities/' and page.works_on contains 'on-prem' %}
+{% include ai-gateway/on-prem-config.md %}
+{% endif %}
 {% include llm/cleanup.md %}
 {%- if page.faqs %}
 ## FAQs
