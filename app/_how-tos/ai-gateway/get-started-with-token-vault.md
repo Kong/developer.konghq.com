@@ -43,7 +43,7 @@ prereqs:
         * **Homepage URL:** `https://cloud.konghq.com`
         * **Redirect URI:** `http://localhost:8000/_vault/callback`
         
-        2. Export its client ID and secret:
+        1. Export its client ID and secret:
 
         ```sh
         export GITHUB_CLIENT_ID='YOUR-CLIENT-ID'
@@ -182,7 +182,7 @@ method: GET
 ## Register a vault key
 
 
-Before users can enroll to a AI service like MCP servers, you need to upload an encryption key to the Token Vault.
+Before users can enroll to an AI service like MCP servers, you need to upload an encryption key to the Token Vault.
 
 The Token Vault encrypts every credential it stores with a public key that you register on the directory. {{site.identity}} keeps only the public key, and the matching private key stays on the {{site.ai_gateway_name}}, so {{site.identity}} can't decrypt your credentials. {{site.identity}} rejects a request to store a static secret until the directory has a vault key.
 
@@ -221,5 +221,5 @@ A directory can hold up to 5 vault keys, which lets you rotate keys over time.
 ## Next steps
 
 Users now enroll their GitHub credential the first time an agent calls GitHub through {{site.ai_gateway_name}}. For details, see [Credential enrollment](/identity/token-vault/#credential-enrollment).
-After uploading the encryption key, you can see your GitHub provider as an option for auhtenticating {{site.ai_gateway_name}} services, like MCP servers. For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
+After uploading the encryption key, you can see your GitHub provider as an option for authenticating {{site.ai_gateway_name}} services, like MCP servers. For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
 To disable the provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`.
