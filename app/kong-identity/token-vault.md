@@ -136,7 +136,7 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 
 1. Receives a caller's Okta-issued token.
 1. Presents it to the Token Vault to request a credential for a specific provider.
-1. Once it gets one back, injects the credential into the actual outbound request to the third-party service (for example, as a header, for providers that support it).
+1. After it gets one back, it injects the credential into the actual outbound request to the third-party service (for example, as a header, for providers that support it).
 
 ## Directory
 
@@ -149,7 +149,7 @@ Trusted IdPs, providers, and credentials are all scoped to the directory, so no 
 
 ## Trusted IdP
 
-The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (for example, Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
 A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. The Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on the directory. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
 
 The Token Vault verifies tokens and never queries the IdP about a user directly.
