@@ -17,6 +17,12 @@ module Jekyll
           'ai-gateway'
         end
 
+        def examples
+          @examples ||= targets.map do |target|
+            EntityExample::AIGatewayPolicy.new(example: self, target:)
+          end
+        end
+
         def targets
           @targets ||= if example.key?('scopes')
                          validate_scopes(example.fetch('scopes'))
