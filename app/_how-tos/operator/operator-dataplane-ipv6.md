@@ -25,8 +25,6 @@ min_version:
 related_resources:
   - text: Provision a Gateway
     url: /operator/get-started/gateway-api/deploy-gateway/
-  - text: Route traffic with a Kubernetes Ingress resource
-    url: /operator/dataplanes/how-to/handle-ingress/
 
 tldr:
   q: How do I run a DataPlane on an IPv6-only or dual-stack Kubernetes cluster?
