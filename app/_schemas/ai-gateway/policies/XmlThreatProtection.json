@@ -3,45 +3,21 @@
     "config": {
       "type": "object",
       "properties": {
+        "buffer": {
+          "type": "integer",
+          "description": "Maximum size of the unparsed buffer (see below).",
+          "default": 1048576
+        },
         "pidata": {
           "type": "integer",
           "description": "Maximum size of processing instruction data.",
           "default": 1024
         },
-        "allow_dtd": {
-          "type": "boolean",
-          "description": "Indicates whether an XML Document Type Definition (DTD) section is allowed.",
-          "default": false
-        },
-        "namespace_aware": {
-          "type": "boolean",
-          "description": "If not parsing namespace aware, all prefixes and namespace attributes will be counted as regular attributes and element names, and validated as such.",
-          "default": true
-        },
-        "max_namespaces": {
-          "type": "integer",
-          "description": "Maximum number of namespaces defined on a tag. This value is required if parsing is namespace-aware.",
-          "default": 20
-        },
-        "localname": {
-          "type": "integer",
-          "description": "Maximum size of the localname. This applies to tags and attributes.",
-          "default": 1024
-        },
-        "prefix": {
-          "type": "integer",
-          "description": "Maximum size of the prefix. This applies to tags and attributes. This value is required if parsing is namespace-aware.",
-          "default": 1024
-        },
-        "text": {
-          "type": "integer",
-          "description": "Maximum text inside tags (counted over all adjacent text/CDATA elements combined).",
-          "default": 1048576
-        },
-        "entity": {
-          "type": "integer",
-          "description": "Maximum size of entity values in EntityDecl.",
-          "default": 1024
+        "bla_max_amplification": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Sets the maximum allowed amplification. This protects against the Billion Laughs Attack.",
+          "default": 100
         },
         "bla_threshold": {
           "type": "integer",
@@ -57,40 +33,20 @@
           "description": "A list of Content-Type values with payloads that are allowed, but aren't validated.",
           "default": []
         },
-        "max_depth": {
-          "type": "integer",
-          "description": "Maximum depth of tags. Child elements such as Text or Comments are not counted as another level.",
-          "default": 50
+        "allow_dtd": {
+          "type": "boolean",
+          "description": "Indicates whether an XML Document Type Definition (DTD) section is allowed.",
+          "default": false
+        },
+        "namespace_aware": {
+          "type": "boolean",
+          "description": "If not parsing namespace aware, all prefixes and namespace attributes will be counted as regular attributes and element names, and validated as such.",
+          "default": true
         },
         "max_children": {
           "type": "integer",
           "description": "Maximum number of children allowed (Element, Text, Comment, ProcessingInstruction, CDATASection). Note: Adjacent text and CDATA sections are counted as one. For example, text-cdata-text-cdata is one child.",
           "default": 100
-        },
-        "comment": {
-          "type": "integer",
-          "description": "Maximum size of comments.",
-          "default": 1024
-        },
-        "namespaceuri": {
-          "type": "integer",
-          "description": "Maximum size of the namespace URI. This value is required if parsing is namespace-aware.",
-          "default": 1024
-        },
-        "attribute": {
-          "type": "integer",
-          "description": "Maximum size of the attribute value.",
-          "default": 1048576
-        },
-        "entityname": {
-          "type": "integer",
-          "description": "Maximum size of entity names in EntityDecl.",
-          "default": 1024
-        },
-        "entityproperty": {
-          "type": "integer",
-          "description": "Maximum size of systemId, publicId, or notationName in EntityDecl.",
-          "default": 1024
         },
         "max_attributes": {
           "type": "integer",
@@ -102,16 +58,45 @@
           "description": "Maximum size of the entire document.",
           "default": 10485760
         },
+        "comment": {
+          "type": "integer",
+          "description": "Maximum size of comments.",
+          "default": 1024
+        },
+        "localname": {
+          "type": "integer",
+          "description": "Maximum size of the localname. This applies to tags and attributes.",
+          "default": 1024
+        },
+        "max_namespaces": {
+          "type": "integer",
+          "description": "Maximum number of namespaces defined on a tag. This value is required if parsing is namespace-aware.",
+          "default": 20
+        },
+        "prefix": {
+          "type": "integer",
+          "description": "Maximum size of the prefix. This applies to tags and attributes. This value is required if parsing is namespace-aware.",
+          "default": 1024
+        },
+        "attribute": {
+          "type": "integer",
+          "description": "Maximum size of the attribute value.",
+          "default": 1048576
+        },
+        "text": {
+          "type": "integer",
+          "description": "Maximum text inside tags (counted over all adjacent text/CDATA elements combined).",
+          "default": 1048576
+        },
         "pitarget": {
           "type": "integer",
           "description": "Maximum size of processing instruction targets.",
           "default": 1024
         },
-        "bla_max_amplification": {
-          "type": "number",
-          "minimum": 1,
-          "description": "Sets the maximum allowed amplification. This protects against the Billion Laughs Attack.",
-          "default": 100
+        "entityname": {
+          "type": "integer",
+          "description": "Maximum size of entity names in EntityDecl.",
+          "default": 1024
         },
         "checked_content_types": {
           "type": "array",
@@ -123,10 +108,25 @@
             "application/xml"
           ]
         },
-        "buffer": {
+        "max_depth": {
           "type": "integer",
-          "description": "Maximum size of the unparsed buffer (see below).",
-          "default": 1048576
+          "description": "Maximum depth of tags. Child elements such as Text or Comments are not counted as another level.",
+          "default": 50
+        },
+        "namespaceuri": {
+          "type": "integer",
+          "description": "Maximum size of the namespace URI. This value is required if parsing is namespace-aware.",
+          "default": 1024
+        },
+        "entity": {
+          "type": "integer",
+          "description": "Maximum size of entity values in EntityDecl.",
+          "default": 1024
+        },
+        "entityproperty": {
+          "type": "integer",
+          "description": "Maximum size of systemId, publicId, or notationName in EntityDecl.",
+          "default": 1024
         }
       }
     },
@@ -149,16 +149,6 @@
         "https"
       ]
     },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
-    },
     "route": {
       "type": "object",
       "properties": {
@@ -178,6 +168,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

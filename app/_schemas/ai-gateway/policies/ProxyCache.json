@@ -51,6 +51,13 @@
           },
           "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration."
         },
+        "vary_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
+        },
         "response_headers": {
           "type": "object",
           "properties": {
@@ -68,6 +75,21 @@
             }
           },
           "description": "Caching related diagnostic headers that should be included in cached responses"
+        },
+        "response_code": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "maximum": 900,
+            "minimum": 100
+          },
+          "minLength": 1,
+          "description": "Upstream response status code considered cacheable.",
+          "default": [
+            200,
+            301,
+            404
+          ]
         },
         "request_method": {
           "type": "array",
@@ -87,17 +109,6 @@
             "HEAD"
           ]
         },
-        "content_type": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Upstream response content types considered cacheable. The policy performs an **exact match** against each specified value.",
-          "default": [
-            "application/json",
-            "text/plain"
-          ]
-        },
         "cache_control": {
           "type": "boolean",
           "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
@@ -113,31 +124,20 @@
             }
           }
         },
-        "vary_headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
-        },
         "cache_by_principal": {
           "type": "boolean",
           "description": "When enabled, use the authenticated Principal's UUID to compose the cache key.",
           "default": false
         },
-        "response_code": {
+        "content_type": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "maximum": 900,
-            "minimum": 100
+            "type": "string"
           },
-          "minLength": 1,
-          "description": "Upstream response status code considered cacheable.",
+          "description": "Upstream response content types considered cacheable. The policy performs an **exact match** against each specified value.",
           "default": [
-            200,
-            301,
-            404
+            "application/json",
+            "text/plain"
           ]
         },
         "cache_ttl": {
@@ -149,16 +149,6 @@
       "required": [
         "strategy"
       ]
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -189,6 +179,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

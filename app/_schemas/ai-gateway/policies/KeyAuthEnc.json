@@ -3,20 +3,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "key_in_body": {
-          "type": "boolean",
-          "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
-          "default": false
-        },
-        "run_on_preflight": {
-          "type": "boolean",
-          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
-          "default": true
-        },
-        "realm": {
-          "type": "string",
-          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
-        },
         "key_names": {
           "type": "array",
           "items": {
@@ -46,6 +32,20 @@
           "type": "boolean",
           "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
           "default": true
+        },
+        "key_in_body": {
+          "type": "boolean",
+          "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
+          "default": false
+        },
+        "run_on_preflight": {
+          "type": "boolean",
+          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
+          "default": true
+        },
+        "realm": {
+          "type": "string",
+          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
         }
       }
     },

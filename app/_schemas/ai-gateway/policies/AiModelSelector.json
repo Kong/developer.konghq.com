@@ -1,24 +1,5 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "model": {
       "type": "object",
       "properties": {
@@ -37,16 +18,6 @@
           "items": {
             "type": "object",
             "properties": {
-              "source": {
-                "type": "string",
-                "enum": [
-                  "body",
-                  "header",
-                  "path"
-                ],
-                "description": "Where the policy reads the request model from.",
-                "default": "body"
-              },
               "header_name": {
                 "type": "string",
                 "description": "Header to read when source is 'header'."
@@ -66,6 +37,16 @@
               "pcre_capture_name": {
                 "type": "string",
                 "description": "Named capture group in `pcre_pattern` to use as the model name. Required when `pcre_pattern` is set."
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "body",
+                  "header",
+                  "path"
+                ],
+                "description": "Where the policy reads the request model from.",
+                "default": "body"
               }
             }
           },
@@ -77,6 +58,25 @@
           "default": 8388608
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "consumer": {
       "type": "object",

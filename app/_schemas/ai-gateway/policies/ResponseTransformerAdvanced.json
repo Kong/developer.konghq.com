@@ -22,27 +22,9 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
         "transform": {
           "type": "object",
           "properties": {
-            "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "if_status": {
               "type": "array",
               "items": {
@@ -51,6 +33,13 @@
               "default": []
             },
             "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "functions": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -224,6 +213,17 @@
                 "type": "string"
               },
               "default": []
+            }
+          }
+        },
+        "allow": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         }

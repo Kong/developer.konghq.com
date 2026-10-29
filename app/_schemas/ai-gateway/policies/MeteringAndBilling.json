@@ -3,15 +3,11 @@
     "config": {
       "type": "object",
       "properties": {
-        "meter_ai_token_usage": {
-          "type": "boolean",
-          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
-          "default": true
-        },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "Verify the TLS certificate presented by the ingest endpoint.",
-          "default": true
+        "api_token": {
+          "type": "string",
+          "description": "Bearer token for authenticating with the ingest endpoint.",
+          "x-referenceable": true,
+          "x-encrypted": true
         },
         "timeout": {
           "type": "number",
@@ -23,16 +19,50 @@
           "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
           "default": 60000
         },
+        "subject": {
+          "type": "object",
+          "properties": {
+            "look_up_value_in": {
+              "type": "string",
+              "enum": [
+                "application",
+                "consumer",
+                "header",
+                "query"
+              ],
+              "description": "Where to find the customer identifier in the request.",
+              "default": "consumer"
+            },
+            "field": {
+              "type": "string",
+              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
+            }
+          },
+          "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
+        },
+        "meter_api_requests": {
+          "type": "boolean",
+          "description": "Emit a usage event for each API Gateway request.",
+          "default": true
+        },
+        "meter_ai_token_usage": {
+          "type": "boolean",
+          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "default": true
+        },
+        "ingest_endpoint": {
+          "type": "string",
+          "description": "The HTTP endpoint where usage events are sent.",
+          "x-referenceable": true
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "Verify the TLS certificate presented by the ingest endpoint.",
+          "default": true
+        },
         "queue": {
           "type": "object",
           "properties": {
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
-            },
             "max_coalescing_delay": {
               "type": "number",
               "maximum": 3600,
@@ -78,38 +108,21 @@
               ],
               "description": "The number of of queue delivery timers. -1 indicates unlimited.",
               "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
             }
           }
-        },
-        "meter_api_requests": {
-          "type": "boolean",
-          "description": "Emit a usage event for each API Gateway request.",
-          "default": true
-        },
-        "ingest_endpoint": {
-          "type": "string",
-          "description": "The HTTP endpoint where usage events are sent.",
-          "x-referenceable": true
-        },
-        "api_token": {
-          "type": "string",
-          "description": "Bearer token for authenticating with the ingest endpoint.",
-          "x-referenceable": true,
-          "x-encrypted": true
         },
         "attributes": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "look_up_value_in": {
-                "type": "string",
-                "description": "The header name or query parameter that contains the value, e.g 'x-department-id'"
-              },
-              "event_property_name": {
-                "type": "string",
-                "description": "The property name in the usage event data payload."
-              },
               "source": {
                 "type": "string",
                 "enum": [
@@ -117,6 +130,14 @@
                   "query"
                 ],
                 "description": "Where to find this attribute in the request."
+              },
+              "look_up_value_in": {
+                "type": "string",
+                "description": "The header name or query parameter that contains the value, e.g 'x-department-id'"
+              },
+              "event_property_name": {
+                "type": "string",
+                "description": "The property name in the usage event data payload."
               }
             },
             "required": [
@@ -126,27 +147,6 @@
             ]
           },
           "description": "Capture custom properties to the usage event data payload for pricing dimensions or reporting. Attributes add dimensions like provider, department or project that your billing model needs for tiered or per-dimension pricing."
-        },
-        "subject": {
-          "type": "object",
-          "properties": {
-            "field": {
-              "type": "string",
-              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
-            },
-            "look_up_value_in": {
-              "type": "string",
-              "enum": [
-                "application",
-                "consumer",
-                "header",
-                "query"
-              ],
-              "description": "Where to find the customer identifier in the request.",
-              "default": "consumer"
-            }
-          },
-          "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
         }
       },
       "required": [

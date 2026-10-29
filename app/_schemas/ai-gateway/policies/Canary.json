@@ -22,14 +22,25 @@
     "config": {
       "type": "object",
       "properties": {
-        "start": {
-          "type": "number",
-          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
+        "upstream_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
+        },
+        "upstream_fallback": {
+          "type": "boolean",
+          "description": "Specifies whether to fallback to the upstream server if the canary release fails.",
+          "default": false
         },
         "duration": {
           "type": "number",
           "description": "The duration of the canary release in seconds.",
           "default": 3600
+        },
+        "steps": {
+          "type": "number",
+          "minimum": 1,
+          "description": "The number of steps for the canary release.",
+          "default": 1000
         },
         "percentage": {
           "type": "number",
@@ -37,15 +48,16 @@
           "minimum": 0,
           "description": "The percentage of traffic to be routed to the canary release."
         },
-        "upstream_host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
-        },
         "upstream_port": {
           "type": "integer",
           "maximum": 65535,
           "minimum": 0,
           "description": "An integer representing a port number between 0 and 65535, inclusive."
+        },
+        "upstream_uri": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The URI of the upstream server to be used for the canary release."
         },
         "groups": {
           "type": "array",
@@ -57,6 +69,10 @@
         "canary_by_header_name": {
           "type": "string",
           "description": "A string representing an HTTP header name."
+        },
+        "start": {
+          "type": "number",
+          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
         },
         "hash": {
           "type": "string",
@@ -74,22 +90,6 @@
         "hash_header": {
           "type": "string",
           "description": "A string representing an HTTP header name."
-        },
-        "steps": {
-          "type": "number",
-          "minimum": 1,
-          "description": "The number of steps for the canary release.",
-          "default": 1000
-        },
-        "upstream_uri": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The URI of the upstream server to be used for the canary release."
-        },
-        "upstream_fallback": {
-          "type": "boolean",
-          "description": "Specifies whether to fallback to the upstream server if the canary release fails.",
-          "default": false
         }
       }
     },

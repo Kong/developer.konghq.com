@@ -22,6 +22,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "allowed_payload_size": {
+          "type": "integer",
+          "description": "Allowed request payload size in megabytes. Default is `128` megabytes (128000000 bytes).",
+          "default": 128
+        },
         "size_unit": {
           "type": "string",
           "enum": [
@@ -36,11 +41,6 @@
           "type": "boolean",
           "description": "Set to `true` to ensure a valid `Content-Length` header exists before reading the request body.",
           "default": false
-        },
-        "allowed_payload_size": {
-          "type": "integer",
-          "description": "Allowed request payload size in megabytes. Default is `128` megabytes (128000000 bytes).",
-          "default": 128
         }
       }
     },

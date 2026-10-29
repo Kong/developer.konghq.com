@@ -48,19 +48,6 @@
         "log_sanitization": {
           "type": "object",
           "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
-              "default": false
-            },
-            "body_json_paths": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
-              "default": []
-            },
             "body_patterns": {
               "type": "array",
               "items": {
@@ -75,6 +62,19 @@
                 "type": "string"
               },
               "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
               "default": []
             }
           }

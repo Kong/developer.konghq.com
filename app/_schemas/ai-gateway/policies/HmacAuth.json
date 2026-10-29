@@ -1,5 +1,28 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
     "model": {
       "type": "object",
       "properties": {
@@ -13,6 +36,24 @@
     "config": {
       "type": "object",
       "properties": {
+        "realm": {
+          "type": "string",
+          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
+        },
+        "hide_credentials": {
+          "type": "boolean",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service.",
+          "default": true
+        },
+        "clock_skew": {
+          "type": "number",
+          "description": "Clock skew in seconds to prevent replay attacks.",
+          "default": 300
+        },
+        "anonymous": {
+          "type": "string",
+          "description": "An optional string (Consumer UUID or username) value to use as an “anonymous” consumer if authentication fails."
+        },
         "validate_request_body": {
           "type": "boolean",
           "description": "A boolean value telling the policy to enable body validation.",
@@ -45,49 +86,8 @@
             "hmac-sha384",
             "hmac-sha512"
           ]
-        },
-        "realm": {
-          "type": "string",
-          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
-        },
-        "hide_credentials": {
-          "type": "boolean",
-          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service.",
-          "default": true
-        },
-        "clock_skew": {
-          "type": "number",
-          "description": "Clock skew in seconds to prevent replay attacks.",
-          "default": 300
-        },
-        "anonymous": {
-          "type": "string",
-          "description": "An optional string (Consumer UUID or username) value to use as an “anonymous” consumer if authentication fails."
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
-      ]
     },
     "route": {
       "type": "object",

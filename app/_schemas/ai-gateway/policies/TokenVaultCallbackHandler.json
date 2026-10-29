@@ -29,14 +29,6 @@
         "storage": {
           "type": "object",
           "properties": {
-            "backend": {
-              "type": "string",
-              "enum": [
-                "konnect"
-              ],
-              "description": "'konnect': the encrypted credential blob lives in Kong Identity, no gateway-side store.",
-              "default": "konnect"
-            },
             "current_version": {
               "type": "string",
               "description": "The version of the key in `keys` used to seal new credential envelopes. Rotation: add the new key under a new version, then point current_version at it -- older versions keep decrypting credentials sealed under them."
@@ -63,6 +55,14 @@
                 ]
               },
               "description": "Versions of the gateway's credential key pair. Only the version named by current_version seals new envelopes; every version tried when decrypting."
+            },
+            "backend": {
+              "type": "string",
+              "enum": [
+                "konnect"
+              ],
+              "description": "'konnect': the encrypted credential blob lives in Kong Identity, no gateway-side store.",
+              "default": "konnect"
             }
           },
           "required": [

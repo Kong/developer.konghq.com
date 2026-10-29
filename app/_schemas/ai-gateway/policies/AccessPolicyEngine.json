@@ -36,11 +36,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "content_type": {
-          "type": "string",
-          "description": "Content type of the raw response configured with `config.body`.",
-          "default": "application/json"
-        },
         "body": {
           "type": "string",
           "description": "The raw response body to send when a request is denied by the policy set.",
@@ -57,6 +52,11 @@
           "minimum": 100,
           "description": "The response code to send when a request is denied by the policy set. Must be an integer between 100 and 599.",
           "default": 403
+        },
+        "content_type": {
+          "type": "string",
+          "description": "Content type of the raw response configured with `config.body`.",
+          "default": "application/json"
         }
       }
     }

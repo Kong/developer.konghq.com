@@ -23,12 +23,22 @@
     "config": {
       "type": "object",
       "properties": {
-        "origins": {
+        "exposed_headers": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes. NOTE: If you don't specify any allowed domains, all origins are allowed."
+          "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed."
+        },
+        "credentials": {
+          "type": "boolean",
+          "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
+          "default": false
+        },
+        "allow_origin_absent": {
+          "type": "boolean",
+          "description": "A boolean value that skip cors response headers when origin header of request is empty",
+          "default": true
         },
         "headers": {
           "type": "array",
@@ -36,13 +46,6 @@
             "type": "string"
           },
           "description": "Value for the `Access-Control-Allow-Headers` header."
-        },
-        "exposed_headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed."
         },
         "methods": {
           "type": "array",
@@ -73,16 +76,6 @@
             "TRACE"
           ]
         },
-        "credentials": {
-          "type": "boolean",
-          "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
-          "default": false
-        },
-        "preflight_continue": {
-          "type": "boolean",
-          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
-          "default": false
-        },
         "max_age": {
           "type": "number",
           "description": "Indicates how long the results of the preflight request can be cached, in `seconds`."
@@ -92,10 +85,17 @@
           "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
           "default": false
         },
-        "allow_origin_absent": {
+        "preflight_continue": {
           "type": "boolean",
-          "description": "A boolean value that skip cors response headers when origin header of request is empty",
-          "default": true
+          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
+          "default": false
+        },
+        "origins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes. NOTE: If you don't specify any allowed domains, all origins are allowed."
         }
       }
     },
