@@ -61,7 +61,7 @@ faqs:
   - q: What happens if the control plane and data plane nodes disconnect?
     a: |
       Data plane nodes use the cached configuration until they can reconnect.
-      Once reconnected, the control plane sends the latest configuration.
+      After it reconnects, the control plane sends the latest configuration.
       The control plane does not queue or replay any older configuration changes.
   - q: Can I restart a data plane node if the control plane is down or disconnected?
     a: |
@@ -141,7 +141,7 @@ The following [geographic regions](/konnect-platform/geos/) and their hostname r
 {:.warning}
 > **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. 
 > <br><br>
-> To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend adding the values in the `ingressIPs` block for each region to an allowlist. 
+> To avoid coupling firewall rules to specific services or DNS suffixes (for example, `cp` or `tp`), we recommend adding the values in the `ingressIPs` block for each region to an allowlist. 
 > This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
 ### Shared hostnames
