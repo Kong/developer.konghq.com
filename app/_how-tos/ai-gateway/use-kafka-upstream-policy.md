@@ -86,19 +86,28 @@ EOF
 
 Run a single-node KRaft broker with two listeners:
 
-* SASL on port `9092`, advertised as `host.docker.internal`. The data plane connects to this listener.
-* Plaintext on port `9094`, advertised as `localhost`. Local tooling connects to this listener, because `host.docker.internal` doesn't resolve from the host itself.
+* SASL on port `9092`, advertised as `kafka`, the broker's service name. The data plane connects to this listener.
+* Plaintext on port `9094`, advertised as `localhost`. Local tooling connects to this listener, because the `kafka` hostname only resolves inside the Docker network.
+
+The [quickstart](https://get.konghq.com/ai) creates a Docker network named `kong-ai-quickstart-net` and attaches the data plane container to it.
+Join the broker to the same network so the data plane can reach it by its service name.
 
 ```sh
 cat <<'EOF' > kafka-upstream-test/docker-compose.yaml
 name: kafka_aigw
 
+networks:
+  quickstart:
+    name: kong-ai-quickstart-net
+    external: true
+
 services:
   kafka:
     image: apache/kafka:4.3.1
     container_name: kafka
+    networks:
+      - quickstart
     ports:
-      - "9092:9092"
       - "9094:9094"
     environment:
       KAFKA_NODE_ID: 0
@@ -106,7 +115,7 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CONTROLLER_QUORUM_VOTERS: 0@localhost:9093
       KAFKA_LISTENERS: CONTROLLER://localhost:9093,SASL_PLAINTEXT://0.0.0.0:9092,PLAINTEXT://0.0.0.0:9094
-      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://host.docker.internal:9092,PLAINTEXT://localhost:9094
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://kafka:9092,PLAINTEXT://localhost:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
@@ -126,7 +135,7 @@ docker compose -f kafka-upstream-test/docker-compose.yaml up -d
 
 ## Verify SASL authentication
 
-Run the SASL check from a separate container so it uses the same network path as the data plane:
+Run the SASL check from a separate container on the `kong-ai-quickstart-net` network so it resolves the broker the same way the data plane does:
 
 {% validation custom-command %}
 command: |
@@ -137,10 +146,11 @@ command: |
   EOF
 
   docker run --rm \
+    --network kong-ai-quickstart-net \
     -v "$PWD/kafka-upstream-test/client.properties:/tmp/client.properties" \
     apache/kafka:4.3.1 \
     /opt/kafka/bin/kafka-broker-api-versions.sh \
-      --bootstrap-server host.docker.internal:9092 \
+      --bootstrap-server kafka:9092 \
       --command-config /tmp/client.properties
 expected:
   return_code: 0
@@ -194,7 +204,7 @@ ai_gateway_policies:
     global: false
     config:
       bootstrap_servers:
-        - host: host.docker.internal
+        - host: kafka
           port: 9092
       topic: kong-upstream
       forward_body: true
