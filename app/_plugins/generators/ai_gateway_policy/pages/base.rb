@@ -5,7 +5,7 @@ require_relative '../../policies/pages/base'
 module Jekyll
   module AIGatewayPolicyPages
     module Pages
-      class Base # rubocop:disable Style/Documentation
+      class Base
         include Policies::Pages::Base
 
         def self.base_url
@@ -22,6 +22,10 @@ module Jekyll
               'schema' => @policy.schema,
               'has_overview?' => !@policy.overview_content.empty?,
               'title' => "#{@policy.metadata['title']} Policy"
+            )
+            .merge(
+              'priority' => @policy.priority,
+              'priority_doc_url' => '/ai-gateway/entities/ai-policy/#ai-policy-priority'
             )
             .merge(api_reference_data)
         end

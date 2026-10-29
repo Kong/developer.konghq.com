@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'AI Gateway version to generate changelog for (e.g., 3.10.0.2).'
+        description: 'AI Gateway version to generate changelog for (e.g., 2.3.0, it should match the kong-ee changelog folder changelog/aigw-2.3.0).'
         required: true
         type: string
       kong_ee_branch:
@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 

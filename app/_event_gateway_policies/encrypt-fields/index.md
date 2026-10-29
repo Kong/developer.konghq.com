@@ -85,6 +85,8 @@ rows:
 
 This policy runs during the [produce phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-produce/) has taken place.
 
+{% include_cached /knep/schema-validation-parent-note.md phase="produce" %}
+
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-fields-works.md %}
