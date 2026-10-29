@@ -455,6 +455,7 @@ config:
 
 ### How do I set environment variables?
 
+You can configure environment variables for Dedicated Cloud Gateway data plane nodes.
 {% navtabs "env-vars" %}
 {% navtab "API" %}
 You can add environment variables using the Cloud Gateways API. When you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
