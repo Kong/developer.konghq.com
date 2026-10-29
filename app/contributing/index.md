@@ -716,6 +716,10 @@ Use it for large diagrams that are hard to read at column width.
 
 Displays a Mermaid.js diagram on a landing page.
 
+To show an image inside a diagram label, use an `fa:fa-<name>` icon token where `<name>` is the path of an SVG file under `app/assets/icons/` or `app/assets/logos/`, without the `.svg` extension. For example, `fa:fa-gateway` renders `app/assets/icons/gateway.svg`. Don't use `<img>` tags or image URLs in labels; the diagram renderer only resolves these icon tokens.
+
+Whenever a diagram references an image that isn't in the generated icon map yet, re-run `node tools/pele-icons/generate.mjs` and commit the updated `app/_assets/javascripts/diagram-icons.js`.
+
 <!--vale off-->
 ```yaml
 - blocks:
@@ -727,13 +731,13 @@ Displays a Mermaid.js diagram on a landing page.
           Control Plane)
           B(Fully-managed
           Control Plane)
-          C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed
+          C(fa:fa-gateway Self-managed
           Data Plane nodes
           #40;locally-hosted#41;)
-          D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed
+          D(fa:fa-gateway Self-managed
           Data Plane nodes
           #40;hosted by you in cloud provider#41;)
-          E(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Fully-managed
+          E(fa:fa-gateway Fully-managed
           Data Plane nodes
           #40;hosted by Kong#41;)
 
