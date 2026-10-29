@@ -83,7 +83,7 @@ Changelog for supported {{site.event_gateway}} versions.
 
 ### Bug Fixes
 * **OAuth token validation failed when a JWKS key omitted `alg`**: Some identity providers, including Microsoft Entra ID, publish RSA keys without an `alg` field. The gateway now infers `RS256` for such keys and honors a declared algorithm when present, so these tokens validate correctly.
-* **Topic UUIDs were not checked against the virtual cluster**: When a client addressed a topic by UUID, the ID was passed to the backend unchanged. The gateway now checks if topic UUID is availble in the virtual cluster.
+* **Topic UUIDs were not checked against the virtual cluster**: When a client addressed a topic by UUID, the ID was passed to the backend unchanged. The gateway now checks whether the topic UUID is available in the virtual cluster.
 
 ## 1.2.1
 
