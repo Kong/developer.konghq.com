@@ -49,6 +49,13 @@
         {{ markdown_template | markdownify }}
       </div>
       {% endfor %}
+      {% if include.target_note %}
+      {% capture target_note %}{% include {{ include.target_note }} example=example targets=include.targets %}{% endcapture %}
+      {% assign target_note = target_note | strip %}
+      {% if target_note != empty %}
+      <div class="entity-example-target-note">{{ target_note | markdownify }}</div>
+      {% endif %}
+      {% endif %}
     </div>
     {% endfor %}
     {% endif %}

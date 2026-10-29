@@ -16,4 +16,5 @@
 {%- capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture -%}
 {{ markdown_template | rstrip }}
 {% endfor %}
+{% if include.target_note %}{% include {{ include.target_note }} example=example targets=include.targets %}{% endif %}
 {%- endfor -%}

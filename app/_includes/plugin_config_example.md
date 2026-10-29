@@ -30,7 +30,7 @@
 {% endif %}
 
 {%- if page.output_format == 'markdown' -%}
-{% include components/plugin_config_example.md plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label %}
+{% include components/plugin_config_example.md plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label target_note=include.target_note %}
 {%- else -%}
-{% include components/plugin_config_example.html plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label %}
+{% include components/plugin_config_example.html plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label target_note=include.target_note %}
 {%- endif -%}
