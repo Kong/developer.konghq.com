@@ -76,10 +76,10 @@ rows:
 
 The following diagram shows how a request flows from a principal to a third-party credential provider through the {{site.identity}} Token Vault:
 
-1. A principal (your users, agents, and applications) sends a request through the {{site.ai_gateway}}.
-1. The {{site.ai_gateway}} routes the request to an MCP server with a Token Vault provider attached for outbound authentication.
+1. A principal (your users, agents, and applications) sends a request through {{site.ai_gateway}}.
+1. {{site.ai_gateway}} routes the request to an MCP server with a Token Vault provider attached for outbound authentication.
 1. The Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
-1. The Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal has no credential for that provider yet, the {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
+1. The Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal has no credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
 
 The IdP token only identifies the principal. It never becomes the stored credential.
 
