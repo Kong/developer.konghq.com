@@ -20,10 +20,10 @@ api_specs:
 related_resources:
   - text: Get started with the {{site.identity}} Token Vault
     url: /how-to/get-started-with-token-vault/
-  - text: "{{site.identity}} authorization servers, claims, scopes, and clients"
-    url: /identity/auth-servers/
-  - text: Principals and directories
+  - text: Principals
     url: /identity/principals/
+  - text: Directories
+    url: /identity/directories/
 
 faqs:
   - q: "Why use the {{site.identity}} Token Vault instead of connectors in LLM services?"
