@@ -307,7 +307,6 @@ and sends it to {{site.konnect_short_name}}.
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/certificates
 status_code: 200
 method: GET
-indent: 3
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
@@ -316,6 +315,12 @@ indent: 3
    The `cert` and `key` fields in the response are `{vault://certvault/example-tls/certificate}` and
    `{vault://certvault/example-tls/key}`.
 
+1. Check the entry status:
+
+   ```sh
+   kubectl get konnectconfigstoresync example-tls -n kong -o jsonpath-as-json='{.status.entries}'
+   ```
+
 1. Rotate the certificate by replacing the contents of the Secret:
 
    ```sh
@@ -323,12 +328,13 @@ indent: 3
    kubectl create secret tls example-tls -n kong --cert=tls.crt --key=tls.key --dry-run=client -o yaml | kubectl apply -f -
    ```
 
-1. Check the entry status. The `hash`, `notAfter`, and `lastPushTime` fields change once the new pair is synced, while
-   the `KongCertificate` and its vault references stay the same:
+1. Check the entry status again.
 
    ```sh
    kubectl get konnectconfigstoresync example-tls -n kong -o jsonpath-as-json='{.status.entries}'
    ```
+
+   The `hash`, `notAfter`, and `lastPushTime` fields change once the new pair is synced, while the `KongCertificate` and its vault references stay the same.
 
 1. Delete the local copies of the certificate and key:
 
