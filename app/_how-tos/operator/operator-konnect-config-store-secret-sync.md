@@ -101,7 +101,7 @@ updated, for example by cert-manager, the entry is updated in place and the refe
 > The private key is still stored in the Kubernetes Secret, and therefore in the Kubernetes API and etcd. Restrict access
 > to the Secret and enable [encryption at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
 
-## Create a `KonnectConfigStore`
+## Create a KonnectConfigStore
 
 Create the Config Store container in {{site.konnect_short_name}}. It must reference the `KonnectGatewayControlPlane`
 that owns the Config Store:
@@ -127,7 +127,7 @@ name: cert-keys
 {% endvalidation %}
 <!-- vale on -->
 
-## Allow the `KongVault` to reference the Config Store
+## Allow the KongVault to reference the Config Store
 
 `KongVault` is cluster-scoped, so its references to the `KonnectConfigStore` and to the `KonnectGatewayControlPlane`
 cross a namespace boundary. Allow them with a `KongReferenceGrant` whose `from` entry sets `namespace: ""`:
@@ -151,7 +151,7 @@ spec:
       kind: KonnectGatewayControlPlane' | kubectl apply -f -
 ```
 
-## Create a `KongVault` backed by the Config Store
+## Create a KongVault backed by the Config Store
 
 Create a `KongVault` with `backend: konnect` and point `spec.configStoreRef` to the `KonnectConfigStore`:
 
@@ -262,7 +262,7 @@ kubectl get konnectconfigstoresync example-tls -n kong -o jsonpath-as-json='{.st
 ```
 {:.no-copy-code}
 
-## Create a `KongCertificate` that references the entry
+## Create a KongCertificate that references the entry
 
 Set `spec.cert` and `spec.key` to vault references of the form `{vault://PREFIX/SUFFIX}`, where `PREFIX` is the
 `spec.prefix` of the `KongVault` and `SUFFIX` comes from `status.references`:
