@@ -180,19 +180,26 @@ rows:
       - Service or Application name
       - Device ID
   - name: "Source Property (API Property: `event.source`)"
-    description: "The event's source (e.g. the service name). As events are unique by id and source, set different sources if you report the same transaction in multiple applications."
+    description: "The event's source (for example, the service name). As events are unique by id and source, set different sources if you report the same transaction in multiple applications."
     examples: |
       - `my-service-name`
       - `my-application-name`
   - name: "Choosing Event ID"
-    description: "Events are unique by `id` and `source` properties for idempotency. {{site.metering_and_billing}} deduplicates events by uniqueness. Therefore, picking an ID that makes the event unique and resilient to retries is important. For example, in the case of a metering API call, this can be the request ID. You can generate a new UUID if your application doesn't have a unique identifier."
+    description: |
+      Events are unique by `id` and `source` for idempotency.
+      {{site.metering_and_billing}} deduplicates events with the same `id` and `source` within a 24-hour window.
+      If an event with the same `id` and `source` arrives more than 24 hours after the original, it is ingested as a new event.
+      <br><br>
+      Choose an ID that is unique to the event and stays the same across retries.
+      For example, for a metered API call, you can use the request ID.
+      If your application doesn't have a unique identifier, you can generate a UUID.
     examples: |
       - HTTP Request ID, typically in headers: `Request-ID`, `X-Request-ID`
       - LLM Chat Completion ID: `id` field in ChatGPT response
       - Workflow ID: like activity ID in Temporal
       - Generate UUID: Node.js, Python, Go
   - name: "Data Property (API Property: `event.data`)"
-    description: "{{site.metering_and_billing}} uses CloudEvents format's data property to ingest values and group bys. Be sure to always include in this data property what the meter requires, like value property and group bys."
+    description: "{{site.metering_and_billing}} uses CloudEvents format's data property to ingest values and group-bys. Be sure to always include in this data property what the meter requires, like value property and group-bys."
     examples: |
         - Always include value property for non-`count` aggregations.
         - Always include group by properties.
@@ -307,7 +314,7 @@ rows:
       - Use a valid JSONPath, like `$.tokens_total`
       - Use suffixes to include the unit in your meter, like `_total`, `_seconds`, and `_ms`
       - Use plurals, like `requests` and `seconds`
-      - Report in the same unit as the meter; unit conversion is currently not supported
+      - Report in the same unit as the meter. Unit conversion is not supported.
 
       **Avoid**:
       - Using ambiguous suffixes, like `_s` (seconds)
