@@ -48,7 +48,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the ai-gateway model under a lookup-referenced ai_gateway' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         ai_gateway_models:
           - ref: my-gpt-4o
@@ -106,7 +106,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the substituted variable as an !env tag' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         ai_gateway_model_providers:
           - ref: my-openai-account
@@ -151,7 +151,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the substituted variable as a secret-wrapped !env tag' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         ai_gateway_model_providers:
           - ref: my-openai-account
@@ -167,6 +167,67 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
                   value: !secret {source: !env OPENAI_AUTH_HEADER}
         ```
         {: data-file="model-provider.yaml" data-tool="kongctl" }
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy type' do
+    let(:dir) { Dir.mktmpdir }
+
+    let(:file) { File.join(dir, 'sanitize-pii.yml') }
+
+    let(:example_yaml) do
+      <<~YAML
+        title: Sanitize PII
+        description: Sanitize PII from model responses.
+        weight: 100
+        name: pii-sanitizer
+        display_name: PII Sanitizer
+        type: ai-sanitizer
+        config:
+          patterns:
+            - email
+        tools:
+          - kongctl
+      YAML
+    end
+
+    let(:plugin) do
+      double(
+        'policy',
+        product: 'ai-gateway',
+        slug: 'ai-sanitizer',
+        scopes: %w[global ai-agent],
+        unreleased?: false,
+        min_release: nil
+      )
+    end
+
+    before { File.write(file, example_yaml) }
+
+    let(:config_example) { Jekyll::Drops::PolicyConfigExample::AIGateway.new(file:, plugin:) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-agent' }
+      example.formatted_examples.detect { |fe| fe.format == 'kongctl' }.presenter
+    end
+
+    it 'renders the ai_gateway_policies entry with the lookup and global false' do
+      expect(rendered).to eq(<<~MD)
+        ```yaml
+        ai_gateway_policies:
+          - ref: pii-sanitizer
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+            name: pii-sanitizer
+            display_name: PII Sanitizer
+            type: ai-sanitizer
+            enabled: true
+            config:
+              patterns:
+              - email
+            global: false
+        ```
+        {: data-file="policy.yaml" data-tool="kongctl" }
       MD
     end
   end
@@ -191,7 +252,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the backend cluster nested under a placeholder event gateway' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         event_gateways:
           - ref: eventGatewayName
@@ -226,7 +287,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the bare $VAR value as an !env tag' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         event_gateways:
           - ref: eventGatewayName
