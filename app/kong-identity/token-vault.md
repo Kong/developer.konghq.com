@@ -377,7 +377,7 @@ The static credential belongs to the directory instead of to an individual princ
 To store a static secret:
 
 1. Make sure the directory has a [vault key](#credential-storage-and-encryption). {{site.identity}} rejects a request to store a static secret with a `400` until you register one.
-1. Create the provider: For `static_secret`, send only:
+2. Create the provider: For `static_secret`, send only:
   * `template_name`
   * `name`
   * Optionally `credential_type` and `base_url`.
@@ -432,7 +432,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-1. Store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint.
+3. Store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint.
    {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
 <!--vale off-->
