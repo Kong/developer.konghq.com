@@ -517,10 +517,7 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 * **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
 * **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
-This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. AI MCP servers differentiate both settings:
-
-* `config.upstream.auth` to authenticate to external services.
-* [`config.server.tools_list_auth`](#tool-list-authentication) which only covers the request that fetches an upstream-server's list of tools. It doesn't cover the tool calls that follow.
+This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
 
 ### AWS IAM (SigV4)
 
@@ -549,7 +546,7 @@ config:
       role_session_name: kong-ai-gateway
 ```
 
-### Token Vault {% new_in 2.2 %}
+### Token Vault
 
 Some upstream services need to know who is calling, so a shared API key isn't enough. [Token Vault](/identity/token-vault/) gives each caller, whether a user or an agent, its own short-lived credential.
 
