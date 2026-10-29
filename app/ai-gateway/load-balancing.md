@@ -193,7 +193,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The following table maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
@@ -221,7 +221,7 @@ rows:
     action: "Set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`"
     description: |
       Route requests by considering cost, balancing model performance with budget targets.
-      In {{site.ai_gateway}} 2.3 and later, targets with no cost fields are priced from the [price catalog](/ai-cost-management/price-catalog/#how-a-request-is-priced).
+      Targets with no cost fields are priced from the [price catalog](/ai-cost-management/price-catalog/#how-a-request-is-priced).
 {% endtable %}
 <!--vale on-->
 
