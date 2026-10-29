@@ -221,5 +221,5 @@ A directory can hold up to 5 vault keys, which lets you rotate keys over time.
 ## Next steps
 
 Users now enroll their GitHub credential the first time an agent calls GitHub through {{site.ai_gateway_name}}. For details, see [Credential enrollment](/identity/token-vault/#credential-enrollment).
-After uploading the encryption key, you can see your GitHub provider as an option for auhtenticating {{site.ai_gateway_name}} services, like MCP servers. For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
+After uploading the encryption key, you can see your GitHub provider as an option for authenticating {{site.ai_gateway_name}} services, like MCP servers. For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
 To disable the provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`.
