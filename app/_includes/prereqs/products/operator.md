@@ -106,7 +106,7 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace {{ operator_flags_konnect }}
+       --create-namespace {{ operator_flags_konnect | strip }}
      ```
    indent: 3
    {% endkonnect %}
@@ -117,7 +117,7 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace {{ operator_flags_on_prem }}
+       --create-namespace {{ operator_flags_on_prem | strip }}
      ```
    indent: 3
    {% endon_prem %}
@@ -133,7 +133,7 @@ rawLicenseString: '$(cat ./license.json)'
      ```bash
      helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
        --create-namespace \
-       --set nameOverride=kong-operator {{ operator_flags_konnect }}
+       --set nameOverride=kong-operator {{ operator_flags_konnect | strip }}
      ```
    indent: 3
    {% endkonnect %}
@@ -145,7 +145,7 @@ rawLicenseString: '$(cat ./license.json)'
      ```bash
      helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
        --create-namespace \
-       --set nameOverride=kong-operator {{ operator_flags_on_prem }}
+       --set nameOverride=kong-operator {{ operator_flags_on_prem | strip }}
      ```
    indent: 3
    {% endon_prem %}
