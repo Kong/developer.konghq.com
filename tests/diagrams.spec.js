@@ -14,6 +14,16 @@ test.describe("diagram rendering", () => {
     expect(icons.database).not.toMatch(/^<svg[^>]*\bid=/);
   });
 
+  test("icon markup cannot leak global styles or unwanted strokes into the page", () => {
+    const icons = buildIconMap();
+
+    for (const [name, markup] of Object.entries(icons)) {
+      expect(markup, name).not.toMatch(/<style/i);
+      expect(markup, name).not.toMatch(/<script/i);
+      expect(markup, name).toMatch(/^<svg[^>]*\bstroke="none"/);
+    }
+  });
+
   test("flowchart page renders its diagrams through Pele", async ({ page }) => {
     await page.goto("/gateway/hybrid-mode/");
 
@@ -38,6 +48,19 @@ test.describe("diagram rendering", () => {
     ).toBeVisible();
     await expect(diagram).not.toContainText("fa:fa-");
     await expect(diagram.locator("img")).toHaveCount(0);
+  });
+
+  test("inlined icon markup cannot restyle every svg on the page", async ({
+    page,
+  }) => {
+    await page.goto("/plugins/degraphql/");
+
+    const diagram = page.locator("pre.mermaid").first();
+    await expect(diagram.locator("svg.pele")).toBeVisible();
+    await expect(
+      diagram.locator('svg.pele-icon[data-icon="fa:fa-graphql"]'),
+    ).toBeVisible();
+    await expect(diagram.locator("style")).toHaveCount(0);
   });
 
   test("diagrams follow the theme without re-rendering", async ({ page }) => {
@@ -96,6 +119,30 @@ test.describe("diagram rendering", () => {
     const diagram = page.locator("pre.mermaid").filter({ hasText: "<apiKey>" });
     await expect(diagram).toHaveCount(1);
     await expect(diagram.locator(".pele-error")).toHaveCount(0);
+  });
+
+  test("a diagram with invalid syntax shows an inline error and the page survives", async ({
+    page,
+  }) => {
+    await page.route("/gateway/hybrid-mode/", async (route) => {
+      const response = await route.fetch();
+      const body = await response.text();
+      await route.fulfill({
+        response,
+        body: body.replace(
+          "</body>",
+          '<pre class="mermaid" id="broken-diagram">this is not a diagram at all</pre></body>',
+        ),
+      });
+    });
+    await page.goto("/gateway/hybrid-mode/");
+
+    const broken = page.locator("#broken-diagram");
+    await expect(broken.locator(".pele-error")).toBeVisible();
+    await expect(
+      page.locator("pre.mermaid svg.pele").first(),
+    ).toBeVisible();
+    await expect(page.locator("h1")).toBeVisible();
   });
 
   test("doubly-escaped entities in flowchart labels decode and render", async ({
