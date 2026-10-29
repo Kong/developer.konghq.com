@@ -67,6 +67,21 @@ Changelog for supported {{site.event_gateway}} versions.
 - **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: Fixed an issue where these sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
 - Fixed an issue where the namespace UUID was left unresolved.
 
+## 1.2.2
+
+**Release date**: 2026/10/29
+
+### Security
+
+* **CA trust store vulnerability**: The runtime image now ships `ca-certificates` 20250419+deb13u1, which rejects chains presented through compromised eMudhra intermediate CA keys.
+* **Runtime `libc6` updated to 2.41-12+deb13u4**: Fixes [CVE-2026-5450](https://github.com/advisories/GHSA-v898-xg3c-w4rj) (critical) and [CVE-2026-5928](https://github.com/advisories/GHSA-829p-mc9m-7xhr) (high).
+* **`aws-smithy-json` 0.62.7**: fixes [CVE-2026-18140](https://github.com/advisories/GHSA-8ffr-xgwf-xj56) (high).
+* **`rustls-webpki` and `webpki-root-certs` updated**: addresses known certificate-validation issues in the TLS stack.
+* **`quinn-proto` 0.11.19 and `zerovec` 0.11.8**: dependency security updates.
+
+### Bug Fixes
+* **OAuth token validation failed when a JWKS key omitted `alg`**: Some identity providers, including Microsoft Entra ID, publish RSA keys without an `alg` field. The gateway now infers `RS256` for such keys and honors a declared algorithm when present, so these tokens validate correctly.
+* **Topic UUIDs were not checked against the virtual cluster**: When a client addressed a topic by UUID, the ID was passed to the backend unchanged. The gateway now checks if topic UUID is availble in the virtual cluster.
 
 ## 1.2.1
 
