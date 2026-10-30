@@ -17,6 +17,7 @@ products:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   operator: '2.4'
@@ -32,39 +33,14 @@ tldr:
   a: Install {{ site.operator_product_name }} with the `--ip-family=ipv6` argument, then create a Gateway. The data plane's listeners bind to IPv6, and its ingress Service is a single-stack IPv6 Service.
 
 prereqs:
+  show_works_on: true
   skip_product: true
   inline:
     - title: Helm
       include_content: prereqs/helm
     - title: IPv6-only Kubernetes cluster
-      content: |
-        This guide requires a Kubernetes cluster with IPv6 networking configured, and `kubectl` configured to point at it.
-        On AWS EKS, the VPC and subnets must have an IPv6 CIDR block.
-
-        If you don't have one, create a local IPv6-only cluster with [kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation):
-
-        1. Create a kind configuration file that sets the cluster's IP family to `ipv6`:
-
-           ```bash
-           cat <<EOF > kind-ipv6.yaml
-           kind: Cluster
-           apiVersion: kind.x-k8s.io/v1alpha4
-           networking:
-             ipFamily: ipv6
-           EOF
-           ```
-
-        1. Create the cluster from the configuration file:
-
-           ```bash
-           kind create cluster --name kong-ipv6 --config kind-ipv6.yaml
-           ```
-
-           kind sets the current `kubectl` context to the new cluster.
+      include_content: prereqs/operator/ipv6-cluster
       icon_url: /assets/icons/kubernetes.svg
-    - title: "{{site.ee_product_name}} license"
-      include_content: prereqs/gateway-license-file
-      icon_url: /assets/icons/gateway.svg
 
 faqs:
   - q: How does {{ site.operator_product_name }} detect the cluster's IP family?
@@ -118,6 +94,8 @@ faqs:
 
 ---
 
+{% include /k8s/kong-namespace.md %}
+
 ## Install {{ site.operator_product_name }}
 
 Add the Kong Helm charts and update them:
@@ -131,78 +109,138 @@ Install {{ site.operator_product_name }} with the `--ip-family=ipv6` argument.
 With this argument, {{ site.operator_product_name }} binds the data plane's listeners to IPv6 and creates IPv6 ingress Services.
 Helm passes the argument to {{ site.operator_product_name }} through the chart's `args` value:
 
-```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-  --create-namespace \
-  --set image.tag={{ site.data.operator_latest.release }} \
-  --set 'args[0]=--ip-family=ipv6'
-```
+{% konnect %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set env.ENABLE_CONTROLLER_KONNECT=true \
+    --set 'args[0]=--ip-family=ipv6'
+  ```
+{% endkonnect %}
 
-Apply your {{site.ee_product_name}} license as a `KongLicense` resource:
+{% on_prem %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set 'args[0]=--ip-family=ipv6'
+  ```
+{% endon_prem %}
 
-```bash
-echo "
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongLicense
-metadata:
-  name: kong-license
-rawLicenseString: '$(cat ./license.json)'
-" | kubectl apply -f -
-```
+{% include operator/kong-license.md %}
 
-{% include /k8s/kong-namespace.md %}
+{% include operator/konnect-auth.md %}
 
 ## Create a Gateway
 
-Create a `GatewayConfiguration`, a `GatewayClass`, and a `Gateway`.
+Create a `GatewayConfiguration`, a `GatewayClass`, and a `Gateway`:
 
-Because the IP family is set to `ipv6`, {{ site.operator_product_name }} binds the data plane's listeners to IPv6 and creates a single-stack IPv6 ingress Service without any IP family settings in the `GatewayConfiguration`.
-The `GatewayConfiguration` sets the ingress Service type to `ClusterIP`, so the Gateway is programmed without waiting for a load balancer address:
-
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: ipv6
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
-    network:
-      services:
-        ingress:
-          type: ClusterIP
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: ipv6
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+{% konnect %}
+content: |
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: ipv6
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong
-  namespace: kong
-spec:
-  gatewayClassName: ipv6
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP' | kubectl apply -f -
-```
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+      network:
+        services:
+          ingress:
+            type: ClusterIP
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: ipv6
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: ipv6
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+    annotations:
+      gateway-operator.konghq.com/static-naming: "true"
+  spec:
+    gatewayClassName: ipv6
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: ipv6
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+      network:
+        services:
+          ingress:
+            type: ClusterIP
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: ipv6
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: ipv6
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+  spec:
+    gatewayClassName: ipv6
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+{% endon_prem %}
+
+Because the IP family is set to `ipv6`, {{ site.operator_product_name }} binds the data plane's listeners to IPv6 and creates a single-stack IPv6 ingress Service without any IP family settings in the `GatewayConfiguration`.
+The `GatewayConfiguration` sets the ingress Service type to `ClusterIP`, so the Gateway is programmed without waiting for a load balancer address
 
 Wait for the Gateway to be programmed:
 

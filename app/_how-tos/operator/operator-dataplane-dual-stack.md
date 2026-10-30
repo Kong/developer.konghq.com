@@ -17,6 +17,7 @@ products:
 
 works_on:
   - on-prem
+  - konnect
 
 tech_preview: true
 
@@ -34,6 +35,7 @@ tldr:
   a: Install {{ site.operator_product_name }} with the `--ip-family=dual` argument, then create a Gateway. Set `ipFamilies` and `ipFamilyPolicy` on the ingress Service in the `GatewayConfiguration` to control which IP families the ingress Service uses.
 
 prereqs:
+  show_works_on: true
   skip_product: true
   inline:
     - title: Helm
@@ -63,9 +65,6 @@ prereqs:
 
            kind sets the current `kubectl` context to the new cluster.
       icon_url: /assets/icons/kubernetes.svg
-    - title: "{{site.ee_product_name}} license"
-      include_content: prereqs/gateway-license-file
-      icon_url: /assets/icons/gateway.svg
 
 faqs:
   - q: What IP family policy does the ingress Service use when `ipFamilies` and `ipFamilyPolicy` aren't set on a dual-stack cluster?
@@ -124,6 +123,8 @@ faqs:
 
 ---
 
+{% include /k8s/kong-namespace.md %}
+
 ## Install {{ site.operator_product_name }}
 
 Add the Kong Helm charts and update them:
@@ -137,81 +138,146 @@ Install {{ site.operator_product_name }} with the `--ip-family=dual` argument.
 With this argument, {{ site.operator_product_name }} can create ingress Services with both IPv4 and IPv6 addresses.
 Helm passes the argument to {{ site.operator_product_name }} through the chart's `args` value:
 
-```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-  --create-namespace \
-  --set image.tag={{ site.data.operator_latest.release }} \
-  --set 'args[0]=--ip-family=dual'
-```
+{% konnect %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set env.ENABLE_CONTROLLER_KONNECT=true \
+    --set 'args[0]=--ip-family=dual'
+  ```
+{% endkonnect %}
 
-Apply your {{site.ee_product_name}} license as a `KongLicense` resource:
+{% on_prem %}
+content: |
+  ```bash
+  helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+    --create-namespace \
+    --set image.tag={{ site.data.operator_latest.release }} \
+    --set 'args[0]=--ip-family=dual'
+  ```
+{% endon_prem %}
 
-```bash
-echo "
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongLicense
-metadata:
-  name: kong-license
-rawLicenseString: '$(cat ./license.json)'
-" | kubectl apply -f -
-```
+{% include operator/kong-license.md %}
 
-{% include /k8s/kong-namespace.md %}
+{% include operator/konnect-auth.md %}
 
 ## Create a Gateway
 
-Create a `GatewayConfiguration`, a `GatewayClass`, and a `Gateway`.
-The `GatewayConfiguration` sets `ipFamilies` to IPv4 and IPv6 with the `PreferDualStack` policy, so the data plane's ingress Service gets an IPv4 address and an IPv6 address, in that order.
-It also sets the ingress Service type to `ClusterIP`, so the Gateway is programmed without waiting for a load balancer address:
+Create a `GatewayConfiguration`, a `GatewayClass`, and a `Gateway`:
 
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: dual-stack
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
-    network:
-      services:
-        ingress:
-          type: ClusterIP
-          ipFamilies:
-            - IPv4
-            - IPv6
-          ipFamilyPolicy: PreferDualStack
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: dual-stack
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+{% konnect %}
+content: |
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: dual-stack
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong
-  namespace: kong
-spec:
-  gatewayClassName: dual-stack
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP' | kubectl apply -f -
-```
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+      network:
+        services:
+          ingress:
+            type: ClusterIP
+            ipFamilies:
+              - IPv4
+              - IPv6
+            ipFamilyPolicy: PreferDualStack
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: dual-stack
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: dual-stack
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+    annotations:
+      gateway-operator.konghq.com/static-naming: "true"
+  spec:
+    gatewayClassName: dual-stack
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: dual-stack
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+      network:
+        services:
+          ingress:
+            type: ClusterIP
+            ipFamilies:
+              - IPv4
+              - IPv6
+            ipFamilyPolicy: PreferDualStack
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: dual-stack
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: dual-stack
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+  spec:
+    gatewayClassName: dual-stack
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+{% endon_prem %}
+
+The `GatewayConfiguration` sets `ipFamilies` to IPv4 and IPv6 with the `PreferDualStack` policy, so the data plane's ingress Service gets an IPv4 address and an IPv6 address, in that order.
+It also sets the ingress Service type to `ClusterIP`, so the Gateway is programmed without waiting for a load balancer address.
 
 Wait for the Gateway to be programmed:
 
