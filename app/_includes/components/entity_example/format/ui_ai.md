@@ -45,8 +45,8 @@ The AI lens has no **Consumers** page, because Consumers are being replaced by U
 1. Select a gateway, then open the **Consumers** tab.
 1. Click **New consumer**.
 1. In **Consumer type**, select **API key** or **OAuth** (for example: `{{ include.presenter.data['type'] }}`), then click **Next**.
-1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Custom ID** (for example: `{{ include.presenter.data['custom_id'] }}`), then click **Next**.
-1. If you selected **API key**, in **Add a key**, add a key for the consumer.
+1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Custom ID** (for example: `{{ include.presenter.data['custom_id'] }}`). If you selected **OAuth**, click **Create**. The consumer is created and the wizard ends.
+1. If you selected **API key**, click **Next**. The consumer is created at this step. In **Add a key**, optionally enter a **Display name**, then enter a **Key** or click **Generate key**, and set a **TTL** (`0` means the key never expires). Click **Create key**, or click **Skip** to add keys later.
 {% when 'consumer_group' %}
 The AI lens has no consumer groups page, because Consumer Groups are being replaced by Groups. To manage existing consumer groups, use the API lens:
 
