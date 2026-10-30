@@ -355,6 +355,75 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
     end
   end
 
+  context 'ai-gateway product, policy attachment' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'konnect-api' }.presenter
+    end
+
+    it 'renders a PUT to the model update endpoint with the composed policies' do
+      expect(rendered).to eq(<<~'MD')
+        ```bash
+        curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o \
+            --header "accept: application/json" \
+            --header "Content-Type: application/json" \
+            --header "Authorization: Bearer $KONNECT_TOKEN" \
+            --data '
+            {
+              "display_name": "my-gpt-4o",
+              "name": "my-gpt-4o",
+              "type": "model",
+              "capabilities": [
+                "generate"
+              ],
+              "formats": [
+                {
+                  "type": "openai"
+                }
+              ],
+              "policies": [
+                "pii-sanitizer"
+              ],
+              "targets": [
+                {
+                  "name": "gpt-4o",
+                  "provider": "my-openai-account",
+                  "config": {
+                    "type": "openai"
+                  }
+                }
+              ],
+              "config": {
+                "route": {
+                  "paths": [
+                    "/v1"
+                  ],
+                  "model": {
+                    "body_param": "model",
+                    "values": [
+                      "my-gpt-4o"
+                    ]
+                  }
+                },
+                "logging": {
+                  "payloads": false
+                }
+              }
+            }
+            '
+        ```
+      MD
+    end
+  end
+
   context 'event-gateway product, no variables' do
     let(:product) { 'event-gateway' }
     let(:example) do

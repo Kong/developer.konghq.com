@@ -1,5 +1,5 @@
 ```bash
-curl -X POST {{ include.presenter.url }} \
+curl -X {{ include.presenter.http_method | default: 'POST' }} {{ include.presenter.url }} \
     --header "accept: application/json" \
     --header "Content-Type: application/json" \
     --header "Authorization: Bearer ${{ include.presenter.pat }}" \

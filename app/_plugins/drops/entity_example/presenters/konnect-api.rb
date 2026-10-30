@@ -151,6 +151,18 @@ module Jekyll
 
           class AIGatewayPolicy < Base
           end
+
+          class AIGatewayPolicyAttachment < Base
+            def http_method
+              'PUT'
+            end
+
+            private
+
+            def build_url
+              [[base_url, endpoint].join, @example_drop.data['name']].join('/')
+            end
+          end
         end
       end
     end
