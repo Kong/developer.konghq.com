@@ -114,6 +114,7 @@ content: |
   ```bash
   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
     --create-namespace \
+    --wait \
     --set image.tag={{ site.data.operator_latest.release }} \
     --set env.ENABLE_CONTROLLER_KONNECT=true \
     --set 'args[0]=--ip-family=ipv6'
@@ -125,6 +126,7 @@ content: |
   ```bash
   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
     --create-namespace \
+    --wait \
     --set image.tag={{ site.data.operator_latest.release }} \
     --set 'args[0]=--ip-family=ipv6'
   ```
