@@ -1,0 +1,191 @@
+metadata:
+  title: "{{site.ai_gateway}} access management"
+  content_type: landing_page
+  description: "Control who can use models and MCP servers in {{site.ai_gateway}} with users, agents, groups, identity providers, Token Vault, and virtual keys."
+  permalink: /ai-access-management/
+  products:
+    - ai-gateway
+  works_on:
+    - konnect
+  breadcrumbs:
+    - /ai-gateway/
+  tags:
+    - ai
+    - access-control
+    - authentication
+  min_version:
+    ai-gateway: '2.3'
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.ai_gateway}} access management"
+      sub_text: Control who can use your organization's models and MCP servers
+
+  - header:
+      type: h2
+      text: "Introducing access management"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Use access management features to define who can use your organization's resources in {{site.ai_gateway}}, like [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/).
+
+                    With access management, you can:
+
+                - type: unordered_list
+                  items:
+                    - Add users and agents that call {{site.ai_gateway}}.
+                    - Apply rules and spend limits to many callers at once with groups.
+                    - Let users sign in with your existing identity provider.
+                    - Keep provider credentials out of your apps with Token Vault and virtual keys.
+                    - Track and cap costs by linking users, agents, and keys to a cost center.
+
+  - header:
+      type: h2
+      text: "Core concepts"
+      description: "Learn what each access management building block is and how they relate to each other."
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Users
+            description: |
+              People who sign in to your organization. Create them manually, import an org chart, or provision them on first sign-in.
+            icon: /assets/icons/identity.svg
+            cta:
+              text: Learn about users
+              url: /ai-access-management/concepts/#users
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Agents
+            description: |
+              Identities for software that calls models or MCP servers, including service accounts such as CI jobs.
+            icon: /assets/icons/ai.svg
+            cta:
+              text: Learn about agents
+              url: /ai-access-management/concepts/#agents
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Groups
+            description: |
+              Set rules once for a list of users and agents.
+            icon: /assets/icons/group.svg
+            cta:
+              text: Learn about groups
+              url: /ai-access-management/concepts/#groups
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Identity providers
+            description: |
+              External services, like Okta or Auth0, that sign the tokens users present when they sign in.
+            icon: /assets/icons/security.svg
+            cta:
+              text: Learn about identity providers
+              url: /ai-access-management/concepts/#identity-providers
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Token Vault
+            description: |
+              Stores credentials so {{site.ai_gateway}} can call external services on behalf of a caller.
+            icon: /assets/icons/vault.svg
+            cta:
+              text: Learn about Token Vault
+              url: /identity/token-vault/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Virtual keys
+            description: |
+              API keys that let a caller use {{site.ai_gateway}}, while provider keys stay out of your apps.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn about virtual keys
+              url: /ai-access-management/concepts/#virtual-keys
+              align: end
+
+  - header:
+      type: h2
+      text: "Manage access"
+      description: "Choose the task that matches what you want to do."
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Who can call {{site.ai_gateway}}
+            description: |
+              Add users and agents, organize them into groups, and connect an identity provider for sign-in.
+            icon: /assets/icons/team.svg
+            ctas:
+              - text: Users
+                url: /ai-access-management/concepts/#users
+              - text: Agents
+                url: /ai-access-management/concepts/#agents
+              - text: Users versus agents
+                url: /ai-access-management/concepts/#users-versus-agents
+              - text: Identity providers
+                url: /ai-access-management/concepts/#identity-providers
+      - blocks:
+        - type: card
+          config:
+            title: How callers authenticate
+            description: |
+              Issue virtual keys to callers and store provider credentials in Token Vault.
+            icon: /assets/icons/lock.svg
+            ctas:
+              - text: Virtual keys
+                url: /ai-access-management/concepts/#virtual-keys
+              - text: Token Vault
+                url: /identity/token-vault/
+              - text: Roles and permissions
+                url: /ai-access-management/concepts/#roles-and-permissions
+
+  - header:
+      type: h2
+      text: "Related resources"
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Consumers
+            description: |
+              Entities that represent the callers of your {{site.ai_gateway}} resources.
+            icon: /assets/icons/ai-gateway.svg
+            cta:
+              url: /ai-gateway/entities/ai-consumer/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI Vaults
+            description: |
+              Store and reference secrets used by {{site.ai_gateway}}.
+            icon: /assets/icons/vault.svg
+            cta:
+              url: /ai-gateway/entities/ai-vault/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.identity}} principals"
+            description: |
+              The shared identity layer for authenticating across Kong products.
+            icon: /assets/icons/identity.svg
+            cta:
+              url: /identity/principals/
+              align: end
