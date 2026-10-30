@@ -137,6 +137,13 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 * For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 * For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
 
+{:.info}
+> **Metrics memory**: {{site.base_gateway}} stores metric data in the `otel_metrics` shared dictionary, which is 10 MB by default.
+> Each distinct combination of attribute values creates a new metric series. High-cardinality attributes, such as Consumer, Principal, or credential attributes, use more memory.
+> If the dictionary is full, {{site.base_gateway}} can lose new metric data.
+>
+> To increase the size, set the `nginx_http_lua_shared_dict` parameter, for example `nginx_http_lua_shared_dict = otel_metrics 20m` in `kong.conf` or `KONG_NGINX_HTTP_LUA_SHARED_DICT="otel_metrics 20m"` as an environment variable. Then restart {{site.base_gateway}}.
+
 ### Identifying requests in metrics
 
 You can attach the client's identity as attributes to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. 
