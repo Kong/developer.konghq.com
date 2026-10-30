@@ -172,7 +172,7 @@ rows:
 An AI Model can use both at once, since each caller population often needs a different credential. For example, attach `key-auth` for internal automation that you issue static keys to, and `openid-connect` for user-facing applications that already authenticate through your enterprise IdP. 
 A request from either population is authenticated if it satisfies either strategy. 
 
-AI Agents and AI MCP Servers currently accept only one AI Auth Strategy reference each.
+AI Agents and AI MCP Servers accept only one AI Auth Strategy reference each.
 
 ### API key authentication
 
@@ -255,8 +255,8 @@ access:
 {:.info}
 > **Assignment rules**
 > * Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy. You can assign both types to the same AI Model; a request is authenticated if it satisfies either strategy.
-> * Each AI Agent currently supports up to one AI Auth Strategy reference.
-> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
+> * Each AI Agent supports up to one AI Auth Strategy reference.
+> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
 > * AI Auth Strategies are the only supported way to authenticate inbound AI Consumer traffic to an AI Model, AI Agent, or AI MCP Server, and let each entity use different authentication independently. This is separate from outbound authentication to the upstream LLM, agent, or MCP server, which is configured on the AI Model Provider or the entity's own `config.upstream.auth`.
 
 If you plan to rename the AI Auth Strategy later, reference it by `id` rather than name. The ID is stable across renames.
