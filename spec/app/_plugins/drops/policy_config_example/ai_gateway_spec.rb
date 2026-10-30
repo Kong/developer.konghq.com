@@ -93,6 +93,15 @@ RSpec.describe Jekyll::Drops::PolicyConfigExample::AIGateway do
       end
     end
 
+    context 'with a nil display_name' do
+      let(:example_file) { example_fixture('nil-display-name.yml') }
+
+      it 'raises naming the file' do
+        expect { drop }
+          .to raise_error(ArgumentError, "Missing `display_name` in #{example_file}")
+      end
+    end
+
     context 'with an unsupported tool' do
       let(:example_file) { example_fixture('unsupported-tool.yml') }
 

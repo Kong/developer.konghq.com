@@ -46,7 +46,7 @@ module Jekyll
 
         def validate!
           raise ArgumentError, "Invalid `global` in #{@file}: the target sets `global`, remove the `global` key" if example.key?('global')
-          raise ArgumentError, "Missing `display_name` in #{@file}" unless example.key?('display_name')
+          raise ArgumentError, "Missing `display_name` in #{@file}" if example['display_name'].nil?
 
           invalid_tools = example.fetch('tools') - TOOLS
           raise ArgumentError, "Invalid `tools` in #{@file}, supported tools: #{TOOLS.join(', ')}" unless invalid_tools.empty?
