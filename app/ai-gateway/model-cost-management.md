@@ -30,6 +30,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Rate Limiting Advanced policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
+  - text: Price catalog and overrides
+    url: /ai-cost-management/price-catalog/
 ---
 
 Cost is one of the primary signals AI governance acts on: budget enforcement, per-consumer spend limits, and chargeback all depend on an accurate cost figure for each request. {{site.ai_gateway}} calculates that figure for every request to a large language model (LLM) provider, matching what the provider actually bills. It feeds cost reporting and any policy that enforces spend against it, such as [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/).
@@ -64,6 +66,11 @@ rows:
 <!--vale on-->
 
 ## Model cost configuration
+
+{:.info}
+> **Note**: In {{site.ai_gateway}} 2.3 and later, a target with none of these cost fields set uses dynamic pricing from the {{site.ai_cost_management}} [price catalog](/ai-cost-management/price-catalog/).
+> If you set any cost field on a target, the target uses its own cost fields instead.
+> For the full precedence order, see [How a request is priced](/ai-cost-management/price-catalog/#how-a-request-is-priced).
 
 Pricing is configured per target on the [AI Model entity](/ai-gateway/entities/ai-model/)'s [targets](/ai-gateway/entities/ai-model/#targets), using the [`input_cost`](/ai-gateway/entities/ai-model/#schema-aigateway-target-config-input-cost) and [`output_cost`](/ai-gateway/entities/ai-model/#schema-aigateway-target-config-output-cost) fields. Three optional fields extend those scalars to cover the dimensions in [Model pricing dimensions](#model-pricing-dimensions): `cache_write_cost_list`, `context_window_factor`, and `service_tier_factor`. If one of these fields is absent, the calculation falls back to the corresponding scalar. If the field is present but no entry matches a request, the calculation also falls back to the scalar.
 
@@ -230,7 +237,7 @@ The calculation proceeds in four steps:
 
 ## Relationship to AI Rate Limiting Advanced
 
-{{site.ai_gateway}} prices a request entirely within the [AI Model entity](/ai-gateway/entities/ai-model/): every field in [Model cost configuration](#model-cost-configuration) lives on a [target](/ai-gateway/entities/ai-model/#targets), not on any policy. [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) doesn't define any pricing fields of its own. It consumes the cost figure the AI Model already calculated for the request, and enforces a limit against it when a limit's strategy is set to `cost`.
+When a target has cost fields, {{site.ai_gateway}} prices a request entirely within the [AI Model entity](/ai-gateway/entities/ai-model/): every field in [Model cost configuration](#model-cost-configuration) lives on a [target](/ai-gateway/entities/ai-model/#targets), not on any policy. [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) doesn't define any pricing fields of its own. It consumes the cost figure the AI Model already calculated for the request, and enforces a limit against it when a limit's strategy is set to `cost`.
 
 <!--vale off-->
 {% table %}
@@ -241,7 +248,7 @@ columns:
     key: configured_on
 rows:
   - concern: "How much a request costs (pricing)"
-    configured_on: "[AI Model entity](/ai-gateway/entities/ai-model/) target config: `input_cost`, `output_cost`, and the fields in [Model cost configuration](#model-cost-configuration)"
+    configured_on: "[AI Model entity](/ai-gateway/entities/ai-model/) target config: `input_cost`, `output_cost`, and the fields in [Model cost configuration](#model-cost-configuration). Targets with no cost fields use the [price catalog](/ai-cost-management/price-catalog/) instead."
   - concern: "Whether a request is allowed to proceed based on cost"
     configured_on: "[AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) policy, using a limit's `cost` strategy"
 {% endtable %}
