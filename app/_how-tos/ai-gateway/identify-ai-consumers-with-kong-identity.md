@@ -239,9 +239,9 @@ indent: 3
 
 ### Confirm usage is tracked per AI Consumer
 
-1. In {{site.konnect_short_name}}, go to **Observability > Dashboards**.
+1. In {{site.konnect_short_name}}, switch to the API lens and go to **Observability > Dashboards**.
 1. From the **Create dashboard** dropdown menu, select "Create from template".
-1. Click **{{site.ai_gateway}} dashboard**.
+1. Click **{{site.ai_gateway}} 2 dashboard**.
 1. Click **Use template**.
 1. Next to **Filters**, click **Add filter**.
 1. From the dimension list, select "AI gateway consumer".
