@@ -85,7 +85,7 @@ sequenceDiagram
 
 When streaming is requested, requests proxied directly to the LLM look like this:
 
-<!--vale off-->
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
   A(client)
@@ -119,7 +119,7 @@ end
   style 3 color:#fff,stroke:#fff
   style main color:#fff,stroke:#fff
 {% endmermaid %}
-<!--vale on-->
+<!-- vale on -->
 
 The streaming framework captures each event, sends the chunk back to the client, and then exits early.
 
