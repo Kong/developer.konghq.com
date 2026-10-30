@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@810709c402f65e403a9d1e593c5feeffcf4a672e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/810709c402f65e403a9d1e593c5feeffcf4a672e'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1955,7 +1955,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -2004,7 +2003,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -2053,7 +2051,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -2102,7 +2099,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     QueryApplicationAnalytics:
       type: object
       properties:
@@ -3400,7 +3396,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NullableUUID:
       description: Contains a unique identifier for a resource.
       type: string
@@ -3768,7 +3763,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     TooManyRequestsError:
       description: standard error
       type: object
@@ -3815,7 +3809,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ApiKeyCredentialListItem:
       description: API key credential returned when listing credentials.
       type: object
@@ -4065,7 +4058,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ListAuthStrategiesResponse:
       type: object
       properties:
@@ -4205,7 +4197,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     Developer:
       description: A user who can use a developer portal
       type: object

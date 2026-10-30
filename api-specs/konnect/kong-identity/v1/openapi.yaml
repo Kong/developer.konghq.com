@@ -2,8 +2,8 @@ openapi: 3.0.3
 info:
   title: Konnect Sliver
   version: 1.9.1
-  x-oas-source: kong/platform-api@6baf65bf2db08c3c3f274b4beed22868523e48e5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6baf65bf2db08c3c3f274b4beed22868523e48e5'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1907,7 +1907,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -1956,7 +1955,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -2005,7 +2003,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     SortQuery:
       description: |
         The `asc` suffix is optional as the default sort order is ascending.
@@ -2099,7 +2096,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     LegacyStringFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
@@ -2191,7 +2187,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     ConnectedAppsResponse:
       value:

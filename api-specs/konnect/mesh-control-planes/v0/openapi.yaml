@@ -22361,7 +22361,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
