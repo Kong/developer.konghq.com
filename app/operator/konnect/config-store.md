@@ -144,7 +144,9 @@ rows:
   - location: Git repository and Kubernetes manifests
     holds: No, only the vault reference.
   - location: Kubernetes API and etcd
-    holds: No, only the vault reference.
+    holds: |
+      No, only the vault reference, when values are written directly to the Config Store.
+      With `KonnectConfigStoreSync`, the source Kubernetes Secret also contains the secret value.
   - location: "{{site.konnect_short_name}} certificate object"
     holds: No, only the vault reference.
   - location: "{{site.konnect_short_name}} Config Store"
