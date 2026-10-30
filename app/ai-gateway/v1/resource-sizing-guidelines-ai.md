@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/performance/benchmarks/
   - text: Cluster reference
     url: /gateway/traditional-mode/#about-kong-gateway-clusters
+  - text: Size memory for AI payload logging
+    url: /gateway/performance/ai-payload-logging-memory/
 major_version:
   ai-gateway: 1
 
@@ -93,6 +95,10 @@ Compute sizing is dictated by **token processing**, not request count. Memory su
 - CPU determines maximum tokens per second
 - Memory must support configuration and in-memory stream buffers
 - A baseline ratio of 1 vCPU : 2 GB memory is sufficient for typical workloads
+
+Payload logging changes this ratio.
+When the AI Proxy plugins log request and response bodies through the HTTP Log plugin, the log queue can use more memory than the baseline.
+To estimate that memory, see [Size memory for AI payload logging](/gateway/performance/ai-payload-logging-memory/).
 
 ### Use dedicated compute instance classes
 

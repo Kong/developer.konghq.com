@@ -29,6 +29,8 @@ related_resources:
     url: https://github.com/Kong/kong-gateway-performance-benchmark/tree/main
   - text: "Tuning {{site.base_gateway}} for large payloads"
     url: /gateway/performance/large-payloads/
+  - text: Size memory for AI payload logging
+    url: /gateway/performance/ai-payload-logging-memory/
 
 next_steps:
   - text: Re-run {{site.base_gateway}} benchmark
