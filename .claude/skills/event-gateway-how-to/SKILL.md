@@ -1,12 +1,22 @@
 ---
-name: author-event-gateway-guide
-description: Author a new Event Gateway how-to guide. Use when the user wants to create a new guide for Kong Event Gateway, including step-by-step instructions with API calls, kafkactl commands, and validation steps.
+name: event-gateway-how-to
+description: >
+  Author a new Kong Event Gateway how-to guide for developer.konghq.com, including
+  step-by-step instructions with Konnect API calls, kafkactl commands, and validation
+  steps. Use this skill any time someone asks to draft, write, or create a new Event
+  Gateway how-to guide, even if the request seems straightforward, and also when an
+  engineer or PM shares a design doc, raw configs, or API requests and asks for help
+  turning them into an Event Gateway how-to. Not for revising an existing how-to, and
+  not for Event Gateway guides whose focus is Kong Identity (OAuth, principals): for
+  those prefer kong-identity-how-to. For a bare skeleton only, prefer how-to-starter.
 argument-hint: <topic-description>
 ---
 
 ## Author an Event Gateway How-To Guide
 
 Create a new how-to guide for Kong Event Gateway based on the user's topic description: `$ARGUMENTS`
+
+The most important rule: **do not draft any content until you have the exact API request bodies and configs**. Guessed or placeholder fields produce guides whose validation steps won't work. If the information available for a feature is too sparse, ask the user to link the design docs and implementation pull requests instead of guessing.
 
 ### Phase 1: Build Context
 
@@ -130,11 +140,19 @@ render_output: false
 ```
 
 #### Important
-- If the information available to use a feature is too sparse do not hesitate to ask user to link the design docs and implementation pull requests.
 - Keep the guide as brief as possible
 - Use as little features as possible to showcase the demo (.e.g: don't add authentication if we don't need)
 - If the user wants to start demonstrating too many things, gently push back suggesting creating multiple guides
 
+#### Style rules to enforce (don't explain to the user, just apply them)
+- Sentence case for all headings (capitalize only the first word and proper nouns)
+- Export env vars for any value referenced in a later step
+- Active voice
+- No em dashes, use a comma, parentheses, or a period instead
+- `{:.no-copy-code}` directly under any expected-output code block
+- No screenshots of third-party UIs
+- Link text should describe the destination, not say "click here"
+- Wrap blocks that contain field names or values that Vale will flag in `<!--vale off-->` / `<!--vale on-->`
 
 #### Reusable Includes
 - Backend cluster creation: `{% include knep/create-backend-cluster.md %}` (add `insecure=true` if using anonymous virtual cluster auth)
