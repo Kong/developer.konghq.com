@@ -50,21 +50,25 @@ RSpec.describe Jekyll::EventGatewayPolicyPages::Pages::Example do
     expect(html).to have_css('[data-target="consume"] .entity-example-format-panel')
   end
 
-  it 'renders no attach note anywhere' do
+  it 'renders no attach section anywhere' do
     rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'html'))
 
     expect(rendered).not_to include('entity-example-target-note')
-    expect(rendered).not_to include('After creating the policy')
+    expect(rendered).not_to include('entity-example-target-example')
+    expect(rendered).not_to include('attach-the-policy')
+
+    html = Capybara::Node::Simple.new(rendered)
+    expect(html).to have_css('.entity-example', count: 1)
   end
 
-  it 'renders no attach snippet anywhere' do
-    rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'html'))
+  it 'renders no attach section in the markdown output' do
+    rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'markdown'))
 
-    expect(rendered).not_to include('entity-example-target-example')
+    expect(rendered).not_to include('### Attach the policy')
     expect(rendered).not_to include('!ref ')
   end
 
-  it 'keeps the markdown sections tight without the attach hook' do
+  it 'keeps the markdown sections tight' do
     rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'markdown'))
 
     expect(rendered).to include("personal access tokens.\n\n##### Terraform")

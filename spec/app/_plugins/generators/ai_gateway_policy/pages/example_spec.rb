@@ -17,6 +17,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
     ai_gateway_policy_config_example(file: example_fixture('sanitize-pii.yml'), scopes: scopes)
   end
 
+  let(:policy_examples) { [enabled_false, sanitize_pii] }
+
   let(:policy) do
     instance_double(
       Jekyll::AIGatewayPolicyPages::Policy,
@@ -24,7 +26,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
       metadata: { 'title' => 'KONG', 'faqs' => [], 'scopes' => scopes },
       overview_page_class: Jekyll::AIGatewayPolicyPages::Pages::Overview,
       reference_page_class: Jekyll::AIGatewayPolicyPages::Pages::Reference,
-      examples: [enabled_false, sanitize_pii],
+      examples: policy_examples,
       latest_release_in_range: '1.0',
       publish?: true,
       priority: 925,
@@ -84,35 +86,70 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
       end
 
       let(:html) { Capybara::Node::Simple.new(rendered) }
+      let(:attach_section) { html.all('.entity-example').last }
 
-      it 'renders the attach note in the entity panel after the tool snippets' do
-        panel = html.find('[data-target="ai-model"]')
+      it 'renders the attach block as its own section with an anchored heading' do
+        expect(html).to have_css('.entity-example', count: 2)
+        expect(html).to have_css('h3 a[href="#attach-the-policy"]', text: 'Attach the policy')
+      end
+
+      it 'renders the note directly above the attach snippet in every tool panel' do
+        panel = attach_section.find('.entity-example-target-panel[data-target="ai-model"]')
+
         expect(panel).to have_css('.entity-example-format-panel', count: 3)
-        expect(panel).to have_css(
-          '.entity-example-target-note',
-          text: 'After creating the policy, add pii-sanitizer to the policies array of your AI Model.'
-        )
-        expect(panel).to have_css('.entity-example-format-panel + .entity-example-target-note')
-        expect(panel).to have_link('AI Model', href: '/ai-gateway/entities/ai-model/')
-      end
-
-      it 'renders no attach note in the global panel' do
-        expect(html).to have_css('[data-target="global"]')
-        expect(html).not_to have_css('[data-target="global"] .entity-example-target-note')
-      end
-
-      it 'renders the attach snippet inside each format panel' do
-        panel = html.find('[data-target="ai-model"]')
-        format_panels = panel.all('.entity-example-format-panel')
-
-        format_panels.each do |format_panel|
-          expect(format_panel).to have_css('.entity-example-target-example')
+        panel.all('.entity-example-format-panel').each do |format_panel|
+          expect(format_panel).to have_css(
+            '.entity-example-target-note',
+            text: 'After creating the policy, add pii-sanitizer to the policies array of your AI Model.'
+          )
+          expect(format_panel).to have_css('.entity-example-target-note + .entity-example-target-example')
         end
-        expect(panel).to have_css('.entity-example-target-example', count: 3)
       end
 
-      it 'renders no attach snippet in the global panel' do
-        expect(html).not_to have_css('[data-target="global"] .entity-example-target-example')
+      it 'links the note to the entity reference page' do
+        expect(attach_section).to have_link('AI Model', href: '/ai-gateway/entities/ai-model/')
+      end
+
+      it 'renders no attach panel for the global target' do
+        expect(attach_section).not_to have_css('[data-target="global"]')
+      end
+
+      context 'with several non-global targets' do
+        let(:scopes) { %w[global ai-model ai-consumer] }
+
+        it 'offers only the non-global targets in the attach scope selector' do
+          expect(attach_section.all('select.select-target option').map(&:value)).to eq(%w[ai-model ai-consumer])
+          expect(attach_section.all('.entity-example-target-panel').map { |panel| panel[:'data-target'] })
+            .to eq(%w[ai-model ai-consumer])
+        end
+      end
+
+      context 'with a global-only example' do
+        let(:scopes) { %w[global] }
+
+        it 'renders no attach section' do
+          expect(html).to have_css('.entity-example', count: 1)
+          expect(html).not_to have_css('h3 a[href="#attach-the-policy"]')
+          expect(html).not_to have_css('.entity-example-target-example')
+        end
+      end
+
+      context 'when the example lists a single tool' do
+        let(:file) { example_fixture('single-tool.yml') }
+
+        let(:single_tool) do
+          ai_gateway_policy_config_example(file: example_fixture('single-tool.yml'), scopes: scopes)
+        end
+
+        let(:policy_examples) { [single_tool] }
+
+        it 'renders the attach snippet only in that tool panel' do
+          panel = attach_section.find('.entity-example-target-panel[data-target="ai-model"]')
+
+          expect(panel).to have_css('.entity-example-format-panel', count: 1)
+          expect(panel).to have_css('.entity-example-format-panel[data-format="konnect-api"]')
+          expect(panel).to have_css('.entity-example-target-example', count: 1)
+        end
       end
     end
 
@@ -121,32 +158,67 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         render_liquid(page.content, page: page.data.merge('output_format' => 'markdown'))
       end
 
-      it 'renders the attach note under the target heading after the last tool snippet' do
-        expect(rendered).to include('#### AI Model')
-        expect(rendered).to include(
+      let(:attach_section) { rendered[/### Attach the policy.*/m] }
+
+      it 'renders the attach block as its own section after the policy section' do
+        expect(rendered.index('### Attach the policy')).to be > rendered.index('### Set up the policy')
+      end
+
+      it 'nests the target and tool headings under the Attach the policy heading' do
+        expect(attach_section.scan(/^\#{1,5} .+$/)).to eq(
+          [
+            '### Attach the policy',
+            '#### AI Model',
+            '##### Konnect API',
+            '##### Terraform',
+            '##### kongctl'
+          ]
+        )
+      end
+
+      it 'renders the note directly above each tool snippet' do
+        expect(attach_section).to include(
+          "##### Konnect API\n\n" \
           'After creating the policy, add `pii-sanitizer` to the `policies` array of ' \
           'your [AI Model](/ai-gateway/entities/ai-model/).'
         )
-        expect(rendered).to include(
-          'replace the entity configuration in the example with your own, ' \
-          'as the update replaces the entire AI Model.'
-        )
-        expect(rendered.index('After creating the policy')).to be > rendered.rindex('data-tool="kongctl"')
+        expect(attach_section.index('After creating the policy')).to be < attach_section.index('curl -X PUT')
       end
 
-      it 'renders the attach snippet in every tool section after the policy snippet' do
-        expect(rendered).to include('curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o')
-        expect(rendered).to include('konnect_ai_gateway_model')
-        expect(rendered).to include("policies:\n    - !ref pii-sanitizer#name")
-        expect(rendered.index('curl -X PUT')).to be > rendered.index('curl -X POST')
+      it 'renders the attach snippet for every tool' do
+        expect(attach_section)
+          .to include('curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o')
+        expect(attach_section).to include('konnect_ai_gateway_model')
+        expect(attach_section).to include("policies:\n    - !ref pii-sanitizer#name")
       end
 
-      it 'renders no attach snippet for the global target' do
-        global_section = rendered.split('#### AI Model').first
+      context 'with a global-only example' do
+        let(:scopes) { %w[global] }
 
-        expect(global_section).not_to include('curl -X PUT')
-        expect(global_section).not_to include('konnect_ai_gateway_model')
-        expect(global_section).not_to include('!ref pii-sanitizer#name')
+        it 'renders no attach section' do
+          expect(rendered).not_to include('### Attach the policy')
+          expect(rendered).not_to include('curl -X PUT')
+        end
+      end
+
+      context 'when the example lists a single tool' do
+        let(:file) { example_fixture('single-tool.yml') }
+
+        let(:single_tool) do
+          ai_gateway_policy_config_example(file: example_fixture('single-tool.yml'), scopes: scopes)
+        end
+
+        let(:policy_examples) { [single_tool] }
+
+        it 'renders the attach section with only that tool' do
+          expect(attach_section.scan(/^\#{1,5} .+$/)).to eq(
+            [
+              '### Attach the policy',
+              '#### AI Model',
+              '##### Konnect API'
+            ]
+          )
+        end
       end
     end
   end

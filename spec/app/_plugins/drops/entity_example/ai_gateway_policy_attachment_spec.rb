@@ -43,6 +43,13 @@ RSpec.describe Jekyll::Drops::EntityExample::AIGatewayPolicyAttachment do
     end
   end
 
+  describe '#formatted_examples' do
+    it 'renders the attach snippet only in the tools the example lists' do
+      expect(attach_example(file: 'single-tool.yml').formatted_examples.map(&:format))
+        .to eq(%w[konnect-api])
+    end
+  end
+
   describe '#entity_type' do
     it 'derives the entity type from each non-global target' do
       scopes = %w[ai-model ai-agent ai-mcp-server ai-consumer ai-consumer-group]
