@@ -1,0 +1,16 @@
+display_name: KongAir Flight Booking Agent
+name: kongair-flight-booking-agent
+type: a2a
+access:
+  acls:
+    allow:
+      - internal-teams
+policies: []
+config:
+  url: https://booking-agent.internal.kongair.com
+  route:
+    paths:
+      - /kongair-flight-booking
+  logging:
+    payloads: false
+    max_payload_size: 1048576

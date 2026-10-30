@@ -31,6 +31,10 @@ module Jekyll
                        end
         end
 
+        def attach
+          @attach ||= example.fetch('attach', {})
+        end
+
         def data
           @data ||= {
             'name' => example.fetch('name'),
@@ -52,6 +56,18 @@ module Jekyll
           raise ArgumentError, "Invalid `tools` in #{@file}, supported tools: #{TOOLS.join(', ')}" unless invalid_tools.empty?
 
           targets
+          validate_attach!
+        end
+
+        def validate_attach!
+          return if attach.empty?
+
+          unknown_targets = attach.keys - targets
+          return if unknown_targets.empty?
+
+          raise ArgumentError,
+                "Invalid `attach` in #{@file}: unknown target " \
+                "#{unknown_targets.map { |t| "`#{t}`" }.join(', ')}, rendered targets: #{targets.join(', ')}"
         end
 
         def validate_scopes(subset)

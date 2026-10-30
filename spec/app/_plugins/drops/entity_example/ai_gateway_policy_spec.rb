@@ -53,4 +53,21 @@ RSpec.describe Jekyll::Drops::EntityExample::AIGatewayPolicy do
       )
     end
   end
+
+  describe '#attach_example' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    it 'returns one attachment drop per non-global target' do
+      attachments = config_example.examples
+                                  .reject { |example| example.target.key == 'global' }
+                                  .map(&:attach_example)
+
+      expect(attachments).to all(be_a(Jekyll::Drops::EntityExample::AIGatewayPolicyAttachment))
+      expect(attachments.map(&:entity_type)).to eq(%w[model mcp_server])
+    end
+
+    it 'returns nothing for the global target' do
+      expect(drop.attach_example).to be_nil
+    end
+  end
 end

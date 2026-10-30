@@ -23,6 +23,12 @@ module Jekyll
         def data
           @data ||= @example.data.merge('global' => target.key == 'global')
         end
+
+        def attach_example
+          return nil if target.key == 'global'
+
+          @attach_example ||= AIGatewayPolicyAttachment.new(example: @example, target: target.key)
+        end
       end
     end
   end
