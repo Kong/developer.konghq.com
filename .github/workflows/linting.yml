@@ -60,6 +60,7 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           fail_on_error: true
+          fail_level: any
           files: '${{ steps.changed-files.outputs.all_changed_files }}'
           filter_mode: file
           reporter: github-pr-annotations
@@ -76,6 +77,7 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           fail_on_error: true
+          fail_level: any
           files: '${{ steps.changed-files.outputs.all_changed_files }}'
           files_ignore: |
             app/_references/**
