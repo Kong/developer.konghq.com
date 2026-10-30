@@ -12,3 +12,6 @@ sections:
     items:
       - path: /ai-cost-management/budgets/
       - path: /ai-cost-management/notification-channels/
+  - title: Analytics and debugging
+    items:
+      - path: /ai-cost-management/analytics-and-debugging/
