@@ -69,14 +69,14 @@ The following creates a new model. Suggested values are shown in backticks.
 1. Click **New model**, then select **Model** for generative and embeddings requests, or **Provider API** for files and batch operations.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Target models**, select a **Provider**. If you selected **Model**, also select a **Target model**. Click **Add target model** to route requests across multiple providers.
-1. In **Capabilities**, select which AI capabilities this model supports. For **Model**, options include **Generate**, **Embeddings**, and **Image generation**. For **Provider API**, options include **Batch** and **Files**.
+1. Optional. In **Capabilities**, review the API formats the model supports, such as **OpenAI** and **Anthropic**. By default, the model supports all formats that its providers allow. To restrict them, click **Advanced fields** and clear the formats you do not want.
 1. In **Routing**, under **Route matching**, select **Base path** and enter a path to determine how the {{site.ai_gateway}} is accessed. Don't include capability-specific paths such as `/chat/completions`. Click **Add route rule** to add more rules.
 1. Optional. Under **Model matching**, enter a **Model alias** if you plan to route by request body instead of base path or hostname, and choose a **Match location** (**Request body**, **Header**, or **URL path**).
 1. Optional. In **Authentication and access**, select an **OAuth 2.0** or **API key** auth strategy under **Auth strategies**. Under **Access control**, turn on **Restrict access with an ACL** to limit who can use the model.
 1. Optional. In **Advanced configuration**, adjust additional settings.
 1. Click **Add model**.
 
-If you selected **Provider API**, the form has **General information**, **Provider**, **Capabilities** (**Batch** and **Files**), **Routing**, **Authentication and access**, and **Advanced configuration** sections, and the final button is **Add provider API**.
+If you selected **Provider API**, the form has **General information**, **Provider**, **Capabilities**, **Routing**, **Authentication and access**, and **Advanced configuration** sections, and the final button is **Add provider API**.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 
@@ -100,7 +100,7 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Configuration**, choose what the server connects to: **An existing MCP server** (a Passthrough listener), **A RESTful API** (a Conversion listener that turns API paths into MCP tools), or **Other MCP servers on this gateway**. Then enter an **Upstream URL** (for example: `https://mcp.internal.example.com`). Under **Callable** the clients call this server directly; **Source only** makes it a source for other listeners.
 1. Optional. In **Logging**, toggle **Log payloads** or **Log audits**.
-1. **Forward client headers** is enabled by default. Disable it if you don't want client headers passed upstream.
+1. **Forward client headers** is enabled by default. Disable it if you do not want client headers passed upstream.
 1. Optional. In **Configuration**, expand **Advanced fields** for additional settings.
 1. In **Route**, select **Base path** and enter a path (for example: `/`). Click **Add route rule** to add additional routing rules, or expand **Advanced fields** for further route configuration.
 1. In **Tools**, click **Add tool** to allow or deny access to specific upstream tools. If no tools are added, requests are proxied to the upstream MCP server without restriction.
