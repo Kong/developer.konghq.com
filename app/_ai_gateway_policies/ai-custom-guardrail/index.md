@@ -40,7 +40,7 @@ Here's how it works if you apply it to both requests and responses:
 To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). The key is the parameter name, and the value can be a string or a Lua expression.
 
 Additionally, the following built-in variables are available in Lua expressions. They can be used as arguments in functions, but not in the function body:
-* `$(source)`: The current phase on which the Policy is running. The value is `INPUT` if the Policy is currently inspecting the request, and `OUTPUT` if it's inspecting the response.
+* `$(source)`: The current phase on which the Policy is running. The value is `INPUT` if the Policy is inspecting the request, and `OUTPUT` if it's inspecting the response.
 * `$(conf)`: A Lua table that corresponds to the Policy's config field, meaning it has the same values as the Policy's configuration, which allows to access sub-fields under `config`.
 * `$(content)`: The text content being inspected, extracted from the request body in the `INPUT` phase and the response body in the `OUTPUT` phase.
 * `$(resp)`:  The response from the guardrail service. 

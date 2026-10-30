@@ -82,7 +82,7 @@ For {{site.ai_gateway}} traffic through an AI Model or MCP Server entity, you sh
 
 ## Proxy configuration fields
 
-AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener`. `conversion-listener` and `listener` type MCP Servers do not currently support forward proxy configuration at all.
+AI Models accept a `proxy` record at the top level of their `config` block. MCP Servers only accept it when their `type` is `passthrough-listener`. `conversion-listener` and `listener` type MCP Servers do not support forward proxy configuration at all.
 
 <!--vale off-->
 {% table %}
@@ -161,7 +161,7 @@ rows:
 
 You can use [Squid](https://www.squid-cache.org/) to create a simple forward proxy for testing.
 
-Squid runs as its own Docker container, separate from the {{site.ai_gateway}} data plane container. In the following examples, the data plane reaches Squid through `host.docker.internal`, the special hostname that Docker Desktop and OrbStack resolve to the host machine from inside any container. This works because the compose file below publishes Squid's port to the host, so any container — including the {{site.ai_gateway}} data plane, which runs in its own separate Docker network — can reach it via the host machine, without needing to share a Docker network or edit your machine's hosts file.
+Squid runs as its own Docker container, separate from the {{site.ai_gateway}} data plane container. In the following examples, the data plane reaches Squid through `host.docker.internal`, the special hostname that Docker Desktop and OrbStack resolve to the host machine from inside any container. This works because the following compose file publishes Squid's port to the host, so any container can reach it, including the {{site.ai_gateway}} data plane, which runs in its own separate Docker network, via the host machine, without needing to share a Docker network or edit your machine's hosts file.
 
 {:.warning}
 > In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this. set `auth_username` and `auth_password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
@@ -429,5 +429,5 @@ ai_gateway_models:
 
 ## Limitations
 
-- Connections to vector databases (such as pgvector, Redis Vector, or Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a forward proxy, you should handle it at the network layer.
+- Connections to vector databases (for example, pgvector, Redis Vector, or Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a forward proxy, you should handle it at the network layer.
 - The [AI Request Transformer](/ai-gateway/policies/ai-request-transformer/), [AI Response Transformer](/ai-gateway/policies/ai-response-transformer/), and [AI LLM as a Judge](/ai-gateway/policies/ai-llm-as-judge/) Policies keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy` record. They do not expose `auth_username`, `auth_password`, `proxy_scheme`, or `https_verify`, so proxy authentication and HTTPS-scheme proxies are unavailable for their traffic.

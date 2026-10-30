@@ -24,7 +24,7 @@ The JSON Threat Protection Policy validates and protects against malicious or ov
 Enabling this Policy is recommended for any [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) that accepts JSON-RPC input from MCP clients, especially ones exposing tools with attacker-controllable parameters or handling untrusted upstream responses.
 
 {:.info}
-> This Policy validates generic JSON structure rather than any LLM-specific format. That's why it applies to [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) traffic, which is JSON-RPC over HTTP, essentially API traffic. It doesn't currently apply to [AI Model](/ai-gateway/entities/ai-model/) traffic, which is processed through a separate LLM-specific pipeline.
+> This Policy validates generic JSON structure rather than any LLM-specific format. That's why it applies to [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) traffic, which is JSON-RPC over HTTP, essentially API traffic. It doesn't apply to [AI Model](/ai-gateway/entities/ai-model/) traffic, which is processed through a separate LLM-specific pipeline.
 
 ## Use cases
 

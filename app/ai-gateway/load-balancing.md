@@ -187,7 +187,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The following table maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
