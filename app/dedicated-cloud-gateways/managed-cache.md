@@ -324,7 +324,7 @@ region: global
 {% endnavtab %}
 {% endnavtabs %}
 
-For control plane managed caches, you don't need to manually configure a Redis partial. 
+For {{site.base_gateway}} control plane managed caches, you don't need to manually configure a Redis partial. 
 After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
 
@@ -355,6 +355,8 @@ You can use it with the following {{site.ai_gateway}} Policies:
 
 To create a managed cache, use the following steps:
 
+{% navtabs "managed-cache-ai-gateway" %}
+{% navtab "API" %}
 1. Export the ID of your {{site.ai_gateway}} control plane:
 
    ```sh
@@ -452,6 +454,24 @@ To create a managed cache, use the following steps:
    <!--vale on-->
    {% endcapture %}
    {{ create_policy | indent: 3}}
+
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
+1. Click the name of your {{site.ai_gateway}} control plane.
+1. Click **Data stores**.
+1. Click **New data store**.
+1. Select **Konnect managed**.
+1. Click **Next**.
+1. From the **Redis cache size** dropdown menu, select a size.
+1. Click **Create**.
+1. Click **Refresh** until the **Status** of the `managed-cache` data store is **Ready**.
+   This can take about 15 minutes.
+
+   {{site.konnect_short_name}} creates the data store for you, so you don't need to configure Redis connection details.
+   You can now use the managed cache in any Policy that supports Redis by selecting Redis as your strategy, clicking **Use shared configuration**, and selecting your managed cache.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Managed cache health
 

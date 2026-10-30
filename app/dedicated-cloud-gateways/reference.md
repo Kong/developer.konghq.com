@@ -613,6 +613,9 @@ body:
 {% endnavtabs %}
 <!--vale on-->
 
+{:.warning}
+> **Limitation:** {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS and Azure.
+
 Private networking and private DNS work the same way for {{site.ai_gateway}} control planes as they do for standard Dedicated Cloud Gateways.
 See the following for instructions:
 * [AWS VPC peering](/dedicated-cloud-gateways/aws-vpc-peering/)
@@ -620,14 +623,6 @@ See the following for instructions:
 * [Set up an AWS resource endpoint connection](/dedicated-cloud-gateways/aws-resource-endpoints/)
 * [Private hosted zones](/dedicated-cloud-gateways/private-hosted-zones/)
 * [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/)
-
-### Limitations
-
-Keep the following limitations in mind when using {{site.ai_gateway}} on Dedicated Cloud Gateways:
-
-* {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS and Azure.
-* [{{site.ai_gateway}} 2.0 managed caches](/dedicated-cloud-gateways/managed-cache/) can only be created, updated, and deleted using the [Cloud Gateways API](/api/konnect/cloud-gateways/). 
-* If you're using a managed cache, you'll need to manually input the Redis info into {{site.ai_gateway}} 2.0 Policies.
 
 ## Custom plugins
 
