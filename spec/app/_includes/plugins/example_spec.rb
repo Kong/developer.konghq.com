@@ -84,6 +84,39 @@ RSpec.describe 'plugins/example.md' do
     end
   end
 
+  context 'when the configuration section renders both selectors' do
+    let(:html) { render_example_page('with-prerequisites') }
+
+    it 'labels every panel with an element that exists on the page' do
+      expect(dangling_aria_labelledby_ids(html)).to eq([])
+    end
+
+    it 'labels each panel with the selector of its own section' do
+      config_section = html.all('.entity-example').last
+      target_panel = config_section.find('.entity-example-target-panel[data-target="global"]')
+
+      expect(target_panel[:'aria-labelledby']).to eq(config_section.find('select.select-target')[:id])
+      expect(target_panel.find('.entity-example-format-panel[data-format="terraform"]')[:'aria-labelledby'])
+        .to eq(config_section.find('select.select-format')[:id])
+    end
+  end
+
+  context 'when the configuration section renders a single target' do
+    let(:html) { render_example_page('enable-fixture-auth-route') }
+
+    it 'labels every panel with an element that exists on the page' do
+      expect(dangling_aria_labelledby_ids(html)).to eq([])
+    end
+
+    it 'labels the target panel with the section heading when there is no scope selector' do
+      config_section = html.all('.entity-example').last
+
+      expect(config_section).not_to have_css('select.select-target')
+      expect(config_section.find('.entity-example-target-panel')[:'aria-labelledby'])
+        .to eq('set-up-the-plugin')
+    end
+  end
+
   context 'when the page renders in markdown output' do
     let(:rendered) { render_example_page('enable-fixture-auth-route', output_format: 'markdown') }
 

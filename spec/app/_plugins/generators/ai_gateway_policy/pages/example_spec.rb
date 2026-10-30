@@ -114,6 +114,19 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         expect(attach_section).not_to have_css('[data-target="global"]')
       end
 
+      it 'labels each policy panel with the selector of the policy section' do
+        policy_section = html.all('.entity-example').first
+        target_panel = policy_section.find('.entity-example-target-panel[data-target="ai-model"]')
+        format_panel = target_panel.find('.entity-example-format-panel[data-format="terraform"]')
+
+        expect(target_panel[:'aria-labelledby']).to eq(policy_section.find('select.select-target')[:id])
+        expect(format_panel[:'aria-labelledby']).to eq(policy_section.find('select.select-format')[:id])
+      end
+
+      it 'resolves every aria-labelledby reference on the page' do
+        expect(dangling_aria_labelledby_ids(html)).to eq([])
+      end
+
       context 'with several non-global targets' do
         let(:scopes) { %w[global ai-model ai-consumer] }
 
@@ -149,6 +162,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
           expect(panel).to have_css('.entity-example-format-panel', count: 1)
           expect(panel).to have_css('.entity-example-format-panel[data-format="konnect-api"]')
           expect(panel).to have_css('.entity-example-target-example', count: 1)
+        end
+
+        it 'labels the panels that have no tool selector with their section heading' do
+          policy_section = html.all('.entity-example').first
+          target_panel = policy_section.find('.entity-example-target-panel[data-target="ai-model"]')
+
+          expect(target_panel.find('.entity-example-format-panel')[:'aria-labelledby']).to eq('set-up-the-policy')
+          expect(attach_section.find('.entity-example-format-panel')[:'aria-labelledby']).to eq('attach-the-policy')
         end
       end
     end
