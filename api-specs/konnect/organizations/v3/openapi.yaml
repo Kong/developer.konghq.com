@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Organizations
-  version: 3.0.4
+  version: 3.0.5
   description: Konnect Organizations API.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@1b6221f087191f00910f6623e58f57613d2a0c4b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b6221f087191f00910f6623e58f57613d2a0c4b'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -663,7 +663,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -712,7 +711,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -761,7 +759,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     SourceIPEnabled:
       description: Whether ip allow list is enabled for the organization.
       type: boolean
@@ -837,7 +834,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -886,7 +882,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     PersonalAccessTokenSettingsResponse:
       value:
