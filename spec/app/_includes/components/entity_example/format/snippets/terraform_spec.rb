@@ -607,41 +607,142 @@ RSpec.describe 'components/entity_example/format/snippets/terraform.md' do
     end
 
     it 'renders a konnect_ai_gateway_policy resource with a jsonencode config' do
-      expect(rendered).to eq(<<-'MD')
+      expect(rendered).to eq(<<~'MD')
 
 
-```hcl
-resource "konnect_ai_gateway_policy" "my_policy" {
-  name = "pii-sanitizer"
-  display_name = "PII Sanitizer"
-  type = "ai-sanitizer"
-  enabled = true
-  condition = "model.name == \"gpt-4o\""
-  global = true
-  config = jsonencode({
-    patterns = ["email", "phone"]
-    fail_on_error = true
+        ```hcl
+        resource "konnect_ai_gateway_policy" "my_policy" {
+          name = "pii-sanitizer"
+          display_name = "PII Sanitizer"
+          type = "ai-sanitizer"
+          enabled = true
+          condition = "model.name == \"gpt-4o\""
+          global = true
+          config = jsonencode({
+            patterns = ["email", "phone"]
+            fail_on_error = true
 
-    thresholds = {
+            thresholds = {
 
-      redaction = {
-        score = 0.9
-        actions = ["redact", "log"]
-      }
-    }
+              redaction = {
+                score = 0.9
+                actions = ["redact", "log"]
+              }
+            }
 
-    providers = {
+            providers = {
 
-      openai = {
-        model = "gpt-4o"
-      }
-    }
-  })
+              openai = {
+                model = "gpt-4o"
+              }
+            }
+          })
 
 
-  gateway_id = konnect_ai_gateway.my_ai_gateway.id
-}
-```
+          gateway_id = konnect_ai_gateway.my_ai_gateway.id
+        }
+        ```
+
+
+
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy attachment' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'terraform' }.presenter
+    end
+
+    it 'declares the model resource referencing the policy resource' do
+      expect(rendered).to eq(<<~MD)
+
+
+        ```hcl
+        resource "konnect_ai_gateway_model" "my_model" {
+          display_name = "my-gpt-4o"
+          name = "my-gpt-4o"
+          type = "model"
+          capabilities = ["generate"]
+          formats = [
+            {
+              type = "openai"
+            }  ]
+          targets = [
+            {
+              name = "gpt-4o"
+              provider = "my-openai-account"
+
+              config = {
+                type = "openai"
+              }
+            }  ]
+          config = jsonencode({
+
+            route = {
+              paths = ["/v1"]
+
+              model = {
+                body_param = "model"
+                values = ["my-gpt-4o"]
+              }
+            }
+
+            logging = {
+              payloads = false
+            }
+          })
+          policies = [konnect_ai_gateway_policy.my_policy.name]
+
+
+          gateway_id = konnect_ai_gateway.my_ai_gateway.id
+        }
+        ```
+
+
+
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy attachment with existing policies' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/attach-named.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'terraform' }.presenter
+    end
+
+    it 'renders the config literals followed by the policy resource reference' do
+      expect(rendered).to eq(<<~MD)
+
+
+        ```hcl
+        resource "konnect_ai_gateway_model" "my_model" {
+          display_name = "Hardened GPT-4o"
+          name = "hardened-gpt-4o"
+          type = "model"
+          policies = ["platform-rate-limit", konnect_ai_gateway_policy.my_policy.name]
+
+
+          gateway_id = konnect_ai_gateway.my_ai_gateway.id
+        }
+        ```
 
 
 
