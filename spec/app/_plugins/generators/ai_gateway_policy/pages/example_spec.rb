@@ -100,6 +100,20 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         expect(html).to have_css('[data-target="global"]')
         expect(html).not_to have_css('[data-target="global"] .entity-example-target-note')
       end
+
+      it 'renders the attach snippet inside each format panel' do
+        panel = html.find('[data-target="ai-model"]')
+        format_panels = panel.all('.entity-example-format-panel')
+
+        format_panels.each do |format_panel|
+          expect(format_panel).to have_css('.entity-example-target-example')
+        end
+        expect(panel).to have_css('.entity-example-target-example', count: 3)
+      end
+
+      it 'renders no attach snippet in the global panel' do
+        expect(html).not_to have_css('[data-target="global"] .entity-example-target-example')
+      end
     end
 
     describe 'Markdown output' do
@@ -113,7 +127,26 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
           'After creating the policy, add `pii-sanitizer` to the `policies` array of ' \
           'your [AI Model](/ai-gateway/entities/ai-model/).'
         )
+        expect(rendered).to include(
+          'replace the entity configuration in the example with your own, ' \
+          'as the update replaces the entire AI Model.'
+        )
         expect(rendered.index('After creating the policy')).to be > rendered.rindex('data-tool="kongctl"')
+      end
+
+      it 'renders the attach snippet in every tool section after the policy snippet' do
+        expect(rendered).to include('curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o')
+        expect(rendered).to include('konnect_ai_gateway_model')
+        expect(rendered).to include("policies:\n    - !ref pii-sanitizer#name")
+        expect(rendered.index('curl -X PUT')).to be > rendered.index('curl -X POST')
+      end
+
+      it 'renders no attach snippet for the global target' do
+        global_section = rendered.split('#### AI Model').first
+
+        expect(global_section).not_to include('curl -X PUT')
+        expect(global_section).not_to include('konnect_ai_gateway_model')
+        expect(global_section).not_to include('!ref pii-sanitizer#name')
       end
     end
   end

@@ -56,4 +56,18 @@ RSpec.describe Jekyll::EventGatewayPolicyPages::Pages::Example do
     expect(rendered).not_to include('entity-example-target-note')
     expect(rendered).not_to include('After creating the policy')
   end
+
+  it 'renders no attach snippet anywhere' do
+    rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'html'))
+
+    expect(rendered).not_to include('entity-example-target-example')
+    expect(rendered).not_to include('!ref ')
+  end
+
+  it 'keeps the markdown sections tight without the attach hook' do
+    rendered = render_liquid(page.content, page: page.data.merge('output_format' => 'markdown'))
+
+    expect(rendered).to include("personal access tokens.\n\n##### Terraform")
+    expect(rendered).to include("```\n\n##### kongctl")
+  end
 end

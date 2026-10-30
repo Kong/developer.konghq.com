@@ -46,7 +46,12 @@
       {% assign format = formatted_example.format %}
       <div tabindex="0" class="entity-example-format-panel {% if formats.size > 1 %} hidden {% endif %} content" aria-labelledby="select-format-{{ example.id }}" data-format="{{ format }}">
         {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
-        {{ markdown_template | markdownify }}
+        {{ markdown_template | markdownify }}{% if include.target_example %}
+        {% capture target_example %}{% include {{ include.target_example }} example=example format=format %}{% endcapture %}
+        {% assign target_example = target_example | strip %}
+        {% if target_example != empty %}
+        <div class="entity-example-target-example">{{ target_example | markdownify }}</div>
+        {% endif %}{% endif %}
       </div>
       {% endfor %}
       {% if include.target_note %}
