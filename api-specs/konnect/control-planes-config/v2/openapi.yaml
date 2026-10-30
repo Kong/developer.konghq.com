@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.16.0
-  x-oas-source: kong/platform-api@873ee7e634d5332da8bd62e6166a58c3cd3ff749
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/873ee7e634d5332da8bd62e6166a58c3cd3ff749'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -13926,7 +13926,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -13975,7 +13974,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -14024,7 +14022,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     KonnectCPLegacyErrorDetail:
       description: A field level failure on a rejected request.
       type: object
@@ -14052,7 +14049,6 @@ components:
           type: string
           example: ERROR_TYPE_FIELD
           readOnly: true
-      title: Error Detail
     KonnectCPLegacyUnauthorizedError:
       description: standard error
       type: object
@@ -14078,7 +14074,6 @@ components:
           items:
             $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
-      title: Error
     KonnectCPLegacyForbiddenError:
       description: standard error
       type: object
@@ -14104,7 +14099,6 @@ components:
           items:
             $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
-      title: Error
     KonnectCPLegacyNotFoundError:
       description: standard error
       type: object
@@ -14130,7 +14124,6 @@ components:
           items:
             $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
-      title: Error
     KonnectCPLegacyBadRequestError:
       description: standard error
       type: object
@@ -14156,7 +14149,6 @@ components:
           items:
             $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
-      title: Error
     KonnectCPLegacyConflictError:
       description: standard error
       type: object
@@ -14182,7 +14174,6 @@ components:
           items:
             $ref: '#/components/schemas/KonnectCPLegacyErrorDetail'
           readOnly: true
-      title: Error
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -14241,7 +14232,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -14290,7 +14280,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     ConfigStoreExample:
       value:

@@ -312,7 +312,7 @@ apis:
     name: "Users API"
     versions:
       - ref: v1
-        name: "v1.0.0"
+        version: "v1.0.0"
         spec: !file ./specs/users-v1.yaml
     publications:
       - ref: public
@@ -330,7 +330,7 @@ apis:
 api_versions:
   - ref: v1
     api: users-api
-    name: "v1.0.0"
+    version: "v1.0.0"
     spec: !file ./specs/users-v1.yaml
 
 api_publications:
@@ -338,6 +338,51 @@ api_publications:
     api: users-api
     portal_id: !ref main-portal
 ```
+
+#### Parent selectors and references
+
+Fields such as `portal` on `portal_pages` and `api` on `api_versions`
+select the parent declaration for a root-level child. They are kongctl
+configuration fields. kongctl resolves the parent's Konnect ID for API
+requests, including route parameters. When a child is nested, its parent
+is inferred and the selector can be omitted.
+
+Fields such as `portal_id` on API publications are API relationship fields.
+The flattened example uses `api: users-api` to select the owning API and
+`portal_id: !ref main-portal` to reference the publication's target portal.
+A plain ref such as `portal: portal-test` identifies a declaration's `ref`;
+it is not a literal Konnect UUID.
+
+`portal: !ref portal-test` and `portal: !ref portal-test#id` are also valid
+parent selectors. `!ref` defaults to `#id`, but affected releases require
+the following workaround.
+
+{% include_cached /kongctl/parent-selector-compatibility.md %}
+
+For example, manage a root-level page under an existing external portal
+using a plain parent ref:
+
+```yaml
+portals:
+  - ref: portal-test
+    _external:
+      selector:
+        matchFields:
+          name: "Docs Portal"
+
+portal_pages:
+  - ref: home
+    portal: portal-test
+    slug: /
+    title: Home
+    visibility: public
+    status: published
+    content: "# Welcome"
+```
+
+The external portal is not modified. Its declared page is managed normally.
+Review `kongctl diff --mode sync -f config.yaml` before running sync and
+confirm that declared pages are retained.
 
 ### Configuration sources
 

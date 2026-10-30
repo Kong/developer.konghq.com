@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.24
+  version: 2.2.31
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@496c046ecfdb4240e8444de437e4ae0a1434cbce
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/496c046ecfdb4240e8444de437e4ae0a1434cbce'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -15349,6 +15349,21 @@ components:
         maxLength: 63
       maxProperties: 50
       title: PublicLabels
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
     UUID:
       description: Contains a unique identifier used for this resource.
       type: string
@@ -15441,7 +15456,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -15490,7 +15504,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     TooManyRequestsError:
       description: standard error
       type: object
@@ -15537,7 +15550,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -15848,7 +15860,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -15897,7 +15908,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -15946,22 +15956,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
-    ManagedBy:
-      description: |
-        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
-
-        Keys must be 1–63 characters long and start with an alphanumeric character.
-      type: object
-      example:
-        owner: terraform
-      additionalProperties:
-        type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
-        minLength: 1
-        maxLength: 63
-      maxProperties: 5
-      title: ManagedBy
     CursorMetaPage:
       type: object
       properties:

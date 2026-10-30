@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.9.2
+  version: 3.10.0
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@10b26e90ececa4ad607aa3031be172469293b16c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/10b26e90ececa4ad607aa3031be172469293b16c'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -2720,7 +2720,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -2769,7 +2768,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -2844,7 +2842,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -2893,7 +2890,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       properties:
@@ -2978,7 +2974,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UpdateIdentityProviderEnabled:
       description: |
         Indicates whether the identity provider is enabled.

@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1611,7 +1611,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -1660,7 +1659,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -2189,7 +2187,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     AuthStrategyId:
       description: 'ID of the auth strategy to use for the application. If null or not included, the default application auth strategy will be used.'
       type: string
@@ -2314,7 +2311,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -2363,7 +2359,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     TooManyRequestsError:
       description: standard error
       type: object
@@ -2410,7 +2405,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UpdateApplicationPayload:
       description: Payload required to update an application
       type: object
@@ -2730,7 +2724,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ListAuthStrategiesResponse:
       type: object
       properties:
@@ -2870,7 +2863,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     Developer:
       description: A user who can use a developer portal
       type: object
@@ -3964,7 +3956,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     CreateRegistrationPayload:
       description: The payload to create a registration.
       type: object
