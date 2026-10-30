@@ -1,0 +1,6 @@
+title: "{{site.ai_cost_management}} Documentation"
+description: Index containing all documentation for {{site.ai_cost_management}}.
+sections:
+  - title: Overview
+    items:
+      - path: /ai-cost-management/
