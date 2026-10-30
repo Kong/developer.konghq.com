@@ -1,0 +1,21 @@
+---
+layout: with_aside
+entity_schema: true
+---
+
+{% capture banner %}{% include banners/auto_generated_reference.md %}{% endcapture %}
+{{ banner | markdownify }}
+
+{{ content }}
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
+{% endif %}
+
+{% contentfor info_box %}
+  {% include info_box/reference.html %}
+{% endcontentfor %}

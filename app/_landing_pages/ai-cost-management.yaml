@@ -1,0 +1,10 @@
+metadata:
+  title: "{{site.ai_cost_management}}"
+  content_type: landing_page
+  description: This page is an introduction to {{site.ai_cost_management}}.
+  products:
+    - ai-cost-management
+  works_on:
+    - konnect
+  tags:
+    - ai

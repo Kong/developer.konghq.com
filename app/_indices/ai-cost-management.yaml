@@ -1,0 +1,14 @@
+title: "{{site.ai_cost_management}} Documentation"
+description: Index containing all documentation for {{site.ai_cost_management}}.
+sections:
+  - title: Overview
+    items:
+      - path: /ai-cost-management/
+  - title: Get started
+    items:
+      - path: /ai-cost-management/set-up-a-budget-with-email-alerts/
+      - path: /ai-cost-management/set-up-a-budget-with-slack-alerts/
+  - title: Budgets and alerts
+    items:
+      - path: /ai-cost-management/budgets/
+      - path: /ai-cost-management/notification-channels/
