@@ -141,12 +141,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Konnect for All
-              description: Konnect for All (K4A) opens AI Management to everyone in your organization.
+              title: Roles and permissions
+              description: Every user in AI Management has a role, and the role sets what they can do.
               icon: /assets/icons/team.svg
               cta:
-                text: Konnect for All reference
-                url: /ai-management/konnect-for-all/
+                text: AI Management roles and permissions
+                url: /ai-management/roles-and-permissions/
       - blocks:
           - type: card
             config:

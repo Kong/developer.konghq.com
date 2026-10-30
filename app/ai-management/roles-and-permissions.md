@@ -1,8 +1,8 @@
 ---
-title: "Konnect for All"
+title: "AI Management roles and permissions"
 content_type: reference
 layout: reference
-permalink: /ai-management/konnect-for-all/
+permalink: /ai-management/roles-and-permissions/
 breadcrumbs:
   - /ai-management/
 products:
@@ -12,7 +12,7 @@ works_on:
 tags:
   - ai
   - access-control
-description: "Konnect for All (K4A) has three roles in AI Management. This reference lists what each role can do with models, MCP servers, agents, keys, and cost data."
+description: "What Org Admins, Team Managers, and Individual Users can do with models, MCP servers, agents, keys, and cost data in AI Management."
 related_resources:
   - text: AI Management
     url: /ai-management/
@@ -26,8 +26,8 @@ related_resources:
     url: /ai-gateway/entities/ai-agent/
 ---
 
-Konnect for All (K4A) gives every user in [AI Management](/ai-management/) a role, and the role sets what they can do.
-Admins set up models, MCP servers, and agents, and other users ask an admin for access.
+Every user in [AI Management](/ai-management/) has a role, and the role sets what they can do.
+Org Admins set up models, MCP servers, and agents, and other users ask an Org Admin for access.
 
 ## Roles
 
@@ -41,13 +41,13 @@ columns:
   - title: What the role does
     key: does
 rows:
-  - role: Admin
-    who: "A user with the {{site.konnect_short_name}} Organization Admin or Identity Admin role."
+  - role: Org Admin
+    who: "A member of the {{site.konnect_short_name}} Organization Admin or Identity Admin [team](/konnect-platform/teams-and-roles/)."
     does: "Creates and manages resources, users, and access for the whole organization."
-  - role: Team manager
+  - role: Team Manager
     who: "The owner of a Team in the org chart."
     does: "Sees spend and budgets for their teams, and requests resources and access."
-  - role: Individual
+  - role: Individual User
     who: "Any other user in the organization."
     does: "Views their own usage, and requests resources and access."
 {% endtable %}
@@ -60,18 +60,18 @@ rows:
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "Add a model"
     admin: "Yes, with **New model**"
     manager: "No"
     individual: "No"
-  - capability: "Ask an admin to add a model"
+  - capability: "Ask an Org Admin to add a model"
     admin: "No"
     manager: "Yes, with **Request a model**"
     individual: "Yes, with **Request a model**"
@@ -111,11 +111,11 @@ rows:
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "Add a provider"
@@ -144,18 +144,18 @@ rows:
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "Add an MCP server"
     admin: "Yes, with **New MCP server**"
     manager: "No"
     individual: "No"
-  - capability: "Ask an admin to add an MCP server"
+  - capability: "Ask an Org Admin to add an MCP server"
     admin: "No"
     manager: "Yes, with **Request an MCP server**"
     individual: "Yes, with **Request an MCP server**"
@@ -201,18 +201,18 @@ rows:
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "Add an agent"
     admin: "Yes, with **New agent**"
     manager: "No"
     individual: "No"
-  - capability: "Ask an admin to add an agent"
+  - capability: "Ask an Org Admin to add an agent"
     admin: "No"
     manager: "Yes, with **Request an agent**"
     individual: "Yes, with **Request an agent**"
@@ -250,11 +250,11 @@ Users and agents are [{{site.identity}} principals](/identity/principals/).
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "Open the Users, Identity Providers, and Token Vault pages"
@@ -265,7 +265,7 @@ rows:
     admin: "Yes"
     manager: "Yes"
     individual: "Yes"
-  - capability: "Ask an admin to add an agent identity"
+  - capability: "Ask an Org Admin to add an agent identity"
     admin: "No"
     manager: "Yes, with **Request an agent**"
     individual: "Yes, with **Request an agent**"
@@ -295,11 +295,11 @@ rows:
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "View their own usage on **My Usage**"
@@ -323,18 +323,18 @@ rows:
 
 ## Observability
 
-Individuals can open a dashboard's sharing settings to see who has access, but they cannot change them.
+Individual Users can open a dashboard's sharing settings to see who has access, but they cannot change them.
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: Capability
     key: capability
-  - title: Admin
+  - title: Org Admin
     key: admin
-  - title: Team manager
+  - title: Team Manager
     key: manager
-  - title: Individual
+  - title: Individual User
     key: individual
 rows:
   - capability: "View Overview, Dashboards, Explorer, and Logs"
@@ -350,8 +350,8 @@ rows:
 
 ## Requests
 
-When team managers or individuals need a resource or access that they do not have, they send a request.
-An admin decides whether to approve it.
+When Team Managers or Individual Users need a resource or access that they do not have, they send a request.
+An Org Admin decides whether to approve it.
 
 <!-- vale off -->
 {% table %}

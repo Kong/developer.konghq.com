@@ -73,7 +73,7 @@ sections:
   - title: AI Management
     items:
       - path: /ai-management/
-      - path: /ai-management/konnect-for-all/
+      - path: /ai-management/roles-and-permissions/
   - title: "{{site.ai_gateway}} providers"
     items:
       - path: /ai-gateway/ai-providers/**/*
