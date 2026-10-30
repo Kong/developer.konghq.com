@@ -184,7 +184,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
 
     it 'renders the ai_gateway_policies entry with the lookup and global false' do
-      expect(rendered).to eq(<<~'MD')
+      expect(rendered).to eq(<<~MD)
         ```yaml
         ai_gateway_policies:
           - ref: pii-sanitizer
@@ -211,6 +211,88 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
             global: false
         ```
         {: data-file="policy.yaml" data-tool="kongctl" }
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy attachment' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'kongctl' }.presenter
+    end
+
+    it 'renders the ai_gateway_models entry with the policy ref' do
+      expect(rendered).to eq(<<~MD)
+        ```yaml
+        ai_gateway_models:
+          - ref: my-gpt-4o
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+            display_name: my-gpt-4o
+            name: my-gpt-4o
+            type: model
+            capabilities:
+            - generate
+            formats:
+            - type: openai
+            targets:
+            - name: gpt-4o
+              provider: my-openai-account
+              config:
+                type: openai
+            config:
+              route:
+                paths:
+                - "/v1"
+                model:
+                  body_param: model
+                  values:
+                  - my-gpt-4o
+              logging:
+                payloads: false
+            policies:
+            - !ref pii-sanitizer#name
+        ```
+        {: data-file="model.yaml" data-tool="kongctl" }
+      MD
+    end
+  end
+
+  context 'ai-gateway product, policy attachment with existing policies' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/attach-named.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'kongctl' }.presenter
+    end
+
+    it 'renders the config policy literals followed by the policy ref' do
+      expect(rendered).to eq(<<~MD)
+        ```yaml
+        ai_gateway_models:
+          - ref: hardened-gpt-4o
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+            display_name: Hardened GPT-4o
+            name: hardened-gpt-4o
+            type: model
+            policies:
+            - platform-rate-limit
+            - !ref pii-sanitizer#name
+        ```
+        {: data-file="model.yaml" data-tool="kongctl" }
       MD
     end
   end

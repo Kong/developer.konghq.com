@@ -208,6 +208,28 @@ module Jekyll
 
           class AIGatewayPolicy < Base
           end
+
+          class AIGatewayPolicyAttachment < Base
+            private
+
+            def build_config_hash
+              entity_item = { 'ref' => yaml_data['name'],
+                              'ai_gateway' => Utils::VariableReplacer::KongctlData::AI_GATEWAY_LOOKUP_SENTINEL }
+                            .merge(yaml_data.except('ref', 'policies'))
+                            .merge('policies' => policy_refs)
+              { "ai_gateway_#{child_key}" => [entity_item] }
+            end
+
+            def policy_refs
+              yaml_data['policies'].map do |policy|
+                if policy == @example_drop.policy_name
+                  Utils::VariableReplacer::KongctlData.ref_sentinel(policy)
+                else
+                  policy
+                end
+              end
+            end
+          end
         end
       end
     end
