@@ -186,7 +186,7 @@ curl -i http://localhost:8080
 ## Create a Kafka Log Policy and an AI Agent
 
 Create a global [Kafka Log Policy](/ai-gateway/policies/kafka-log/), which logs every request, and an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies a Route to send requests through.
-The Agent's `config.url` points at the nginx container, so proxied requests return a `200`.
+The Agent's `config.url` points at the nginx container, so a `GET` request returns a `200`.
 
 This example sets `security.ssl` to `false` so the test setup doesn't need certificates.
 We don't recommend this in production because the traffic isn't encrypted.
