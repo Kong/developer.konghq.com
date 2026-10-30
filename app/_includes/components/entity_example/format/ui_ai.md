@@ -6,10 +6,10 @@ The following creates a new AI Model Provider. Suggested values are shown in bac
 1. In {{site.konnect_short_name}}, navigate to **Models** in the sidebar, then select **Providers**.
 1. Use the **Gateway** selector at the top of the list to choose a gateway.
 1. Click **New provider**.
-1. In **Provider**, select a provider (for example: `{{ include.presenter.data['type'] }}`).
-1. In **Account details**, enter an **Account name** (for example: `{{ include.presenter.data['display_name'] }}`).
-1. In **Authentication**, select **Provided by client or agent** if each caller sends its own provider key. Otherwise, select **Provided by AI gateway**, then choose a **Key source**: **Enter a key** or **Token Vault**. Enter the **Header name** and **Header value**, or the **Parameter name**, **Parameter value**, and **Parameter location**, that the provider expects.
-1. Click **Add provider**.
+1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
+1. In **Provider and authentication**, select a **Provider** (for example: `{{ include.presenter.data['type'] }}`).
+1. Under **Authentication**, select **Provided by client or agent** if each caller sends its own provider key. Otherwise, select **Provided by AI gateway**, then enter the **Header name** and **Header value**, or the **Parameter name**, **Parameter value**, and **Parameter location**, that the provider expects. Click **Look up key in vault** next to a field to reference a vault secret instead.
+1. Click **Create**.
 {% when 'auth-strategy' %}
 The following creates a new AI Auth Strategy. Suggested values are shown in backticks:
 
@@ -39,29 +39,13 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 1. Click **Create and next**.
 1. If you selected **Scoped**, in the **Add entities** step, select the entities the policy applies to.
 {% when 'consumer' %}
-The following creates a new AI Consumer. Suggested values are shown in backticks:
+Consumers are being replaced by Users and Groups in the AI lens, so the AI lens has no **Consumers** page. To manage existing consumers, switch to the API lens:
 
-1. In {{site.konnect_short_name}}, navigate to [**Gateways**](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
-1. Select a gateway.
-1. In the **Configuration** tab, select **Consumers**.
-1. Click **New consumer**.
-1. In **Consumer type**, select **Key** or **OAuth** (for example: `{{ include.presenter.data['type'] }}`).
-1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Custom ID** (for example: `{{ include.presenter.data['custom_id'] }}`). The **Custom ID** is required for **OAuth** consumers.
-1. Optional. Select one or more **Consumer groups**.
-1. If you selected **Key**, optionally configure the **First key** section: enter a **Display name** for the key, then enter a **Key** or click **Generate**. Optionally set a **TTL** in seconds (`0` means the key never expires).
-1. If you selected **OAuth**, authentication for this consumer type is handled by an OpenID Connect policy matched to the consumer's **Custom ID**, not by a key.
-1. Click **Create**.
+1. In {{site.konnect_short_name}}, navigate to **API Gateway**, then select **Consumers**.
 {% when 'consumer_group' %}
-The following creates a new AI consumer group. Suggested values are shown in backticks.
+Consumer groups are being replaced by Users and Groups in the AI lens, so the AI lens has no **Consumer groups** page. To manage existing consumer groups, switch to the API lens:
 
-1. In {{site.konnect_short_name}}, navigate to [**Gateways**](https://cloud.konghq.com/ai-manager/v2/gateways) in the sidebar.
-1. Select a gateway.
-1. In the **Configuration** tab, select **Consumer Groups**.
-1. Click **New consumer group**.
-1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
-1. Click **Create**.
-
-To add consumers to the group, select the group in the **Consumer groups** field when you create or edit a consumer.
+1. In {{site.konnect_short_name}}, navigate to **API Gateway**, then select **Consumer groups**.
 {% when 'model' %}
 The following creates a new model. Suggested values are shown in backticks.
 
@@ -70,14 +54,14 @@ The following creates a new model. Suggested values are shown in backticks.
 1. Click **New model**, then select **Model** for generative and embeddings requests, or **Provider API** for files and batch operations.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Target models**, select a **Provider**. If you selected **Model**, also select a **Target model**. Click **Add target model** to route requests across multiple providers.
-1. In **Capabilities**, review the API formats the model supports. They appear after you select a provider for a target model. Optional. To turn on passthrough, click **Advanced fields** and use **Passthrough mode**.
+1. In **Capabilities**, review the API formats the gateway translates for the target providers, such as **OpenAI** and **Anthropic**. The formats appear after you select a provider for a target model. Optional. To restrict the formats and endpoints, or to turn on **Passthrough mode**, click **Advanced fields**.
 1. In **Routing**, under **Route matching**, select **Base path** and enter a path to determine how the {{site.ai_gateway}} is accessed. Don't include capability-specific paths such as `/chat/completions`. Click **Add route rule** to add more rules.
 1. Optional. Under **Model matching**, enter a **Model alias** if you plan to route by request body instead of base path or hostname, and choose a **Custom match location**.
 1. Optional. In **Authentication and access**, select an **OAuth 2.0** or **API key** auth strategy under **Auth strategies**. Under **Access control**, turn on **Restrict access with an ACL** to limit who can use the model, then select a **Mode** (**Allow list**, **Deny list**, **Allow expression**, or **Deny expression**) and the **Values**.
 1. Optional. In **Advanced configuration**, adjust additional settings.
 1. Click **Create**.
 
-If you selected **Provider API**, the form has **General information**, **Target provider**, **Capabilities**, **Routing**, **Authentication and access**, and **Advanced configuration** sections. It has no **Model matching** block.
+If you selected **Provider API**, the form has **General information**, **Target provider**, **Capabilities**, **Routing**, **Authentication and access**, and **Advanced configuration** sections. It has no **Model matching** block. Under **Capabilities** > **Advanced fields**, the **OpenAI** format lists the **Batches** and **Files** endpoints.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 

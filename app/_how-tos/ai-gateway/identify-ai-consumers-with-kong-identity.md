@@ -243,9 +243,10 @@ indent: 3
 1. From the **Create dashboard** dropdown menu, select "Create from template".
 1. Click **{{site.ai_gateway}} dashboard**.
 1. Click **Use template**.
-1. Click **Add filter**.
-1. From the **Dimension** dropdown menu, select "Consumer".
+1. Next to **Filters**, click **Add filter**.
+1. From the dimension list, select "AI gateway consumer".
+1. Leave **Operator** set to "In".
 1. From the **Value** dropdown menu, select "CLI Tool Consumer".
-1. Click **Add filter**.
+1. Click **Apply**.
 
 You will see that the request from the previous step is attributed to `cli-tool-consumer`, not to an anonymous caller.
