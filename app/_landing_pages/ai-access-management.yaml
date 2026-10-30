@@ -32,14 +32,14 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Access management allows you to define who can use your organization's resources, like [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/), in {{site.ai_gateway}}. It answers two questions: who is making the request, and what they are allowed to do.
+                    Use access management features to define who can use your organization's resources in {{site.ai_gateway}}, like [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/).
 
-                    Use access management to:
+                    With access management, you can:
 
                 - type: unordered_list
                   items:
-                    - Represent the people and software that call {{site.ai_gateway}} as users and agents.
-                    - Apply rules and spend limits to many callers at once with groups and projects.
+                    - Add users and agents that call {{site.ai_gateway}}.
+                    - Apply rules and spend limits to many callers at once with groups.
                     - Let users sign in with your existing identity provider.
                     - Keep provider credentials out of your apps with Token Vault and virtual keys.
                     - Track and cap costs by linking users, agents, and keys to a cost center.
@@ -75,9 +75,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Groups and projects
+            title: Groups
             description: |
-              Set rules once for a list of users and agents. Projects add their own spend limit and cost center.
+              Set rules once for a list of users and agents.
             icon: /assets/icons/group.svg
             cta:
               text: Learn about groups
@@ -128,7 +128,7 @@ rows:
           config:
             title: Who can call {{site.ai_gateway}}
             description: |
-              Add users and agents, organize them into groups and projects, and connect an identity provider for sign-in.
+              Add users and agents, organize them into groups, and connect an identity provider for sign-in.
             icon: /assets/icons/team.svg
             ctas:
               - text: Users
