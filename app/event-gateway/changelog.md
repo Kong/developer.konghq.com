@@ -74,12 +74,12 @@ Changelog for supported {{site.event_gateway}} versions.
 **Release date**: 2026/10/29
 
 ### Security
-
-* **CA trust store vulnerability**: The runtime image now ships `ca-certificates` 20250419+deb13u1, which rejects chains presented through compromised eMudhra intermediate CA keys.
-* **Runtime `libc6` updated to 2.41-12+deb13u4**: Fixes [CVE-2026-5450](https://github.com/advisories/GHSA-v898-xg3c-w4rj) (critical) and [CVE-2026-5928](https://github.com/advisories/GHSA-829p-mc9m-7xhr) (high).
-* **`aws-smithy-json` 0.62.7**: fixes [CVE-2026-18140](https://github.com/advisories/GHSA-8ffr-xgwf-xj56) (high).
-* **`rustls-webpki` and `webpki-root-certs` updated**: addresses known certificate-validation issues in the TLS stack.
-* **`quinn-proto` 0.11.19 and `zerovec` 0.11.8**: dependency security updates.
+* Bumped `ca-certificates` to 20250419+deb13u1. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `libc6` to 2.41-12+deb13u4.
+* Bumped `aws-smithy-json` to 0.62.7.
+* Bumped `rustls-webpki` and `webpki-root-certs`. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `quinn-proto` to 0.11.19.
+* Bumped `zerovec` to 0.11.8.
 
 ### Bug Fixes
 * **OAuth token validation failed when a JWKS key omitted `alg`**: Some identity providers, including Microsoft Entra ID, publish RSA keys without an `alg` field. The gateway now infers `RS256` for such keys and honors a declared algorithm when present, so these tokens validate correctly.
@@ -135,6 +135,24 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **`acl_mode` hot reload had no effect**: Switching the ACL mode at runtime is now applied without a restart.
 - **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
 - **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
+
+## 1.1.3
+
+**Release date**: 2026/10/30
+
+### Security
+* Bumped `libc6` to 2.41-12+deb13u4.
+* Bumped `libssl3t64` to 3.5.7-1~deb13u3.
+* Bumped `ca-certificates` to 20250419+deb13u1. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `rustls-webpki` to 0.103.16. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `webpki-root-certs` to 1.0.10.
+* Bumped `aws-lc-rs` to 1.18.2.
+* Bumped `aws-smithy-json` to 0.62.7.
+* Bumped `aws-smithy-runtime-api` to 1.12.3.
+* Bumped `aws-smithy-types` to 1.5.0.
+* Bumped `quinn-proto` to 0.11.19.
+* Bumped `zerovec` to 0.11.8, which also updates `yoke`, and `zerovec-derive`.
+* Bumped `rand` to 0.10.1.
 
 ## 1.1.2
 
