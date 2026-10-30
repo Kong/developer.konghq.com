@@ -244,7 +244,6 @@ kongctl sync -f kafka-log.yaml --pat "$KONNECT_TOKEN"
 
 ## Validate
 
-Unlike the Kafka Consume Policy, the Kafka Log Policy publishes to Kafka.
 Send requests first, then read the topic.
 
 1. Wait a few seconds for the data plane to pick up the new configuration.
