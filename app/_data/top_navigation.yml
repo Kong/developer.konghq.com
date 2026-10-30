@@ -8,6 +8,9 @@ platform:
       text: Learn more &rarr;
 
   tools:
+    - text: Konnect MCP
+      url: /konnect-platform/konnect-mcp/
+      icon: /assets/icons/mcp.svg
     - text: decK
       url: /deck/
       icon: /assets/icons/codeblock.svg
