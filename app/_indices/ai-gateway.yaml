@@ -131,6 +131,7 @@ sections:
       - path: /ai-gateway/configuration/
       - path: /ai-gateway/configure-on-prem/
       - path: /ai-gateway/v2-migration-guide/
+      - path: /ai-gateway/on-prem-migration/
   - title: How-tos
     items:
       - type: how-to
