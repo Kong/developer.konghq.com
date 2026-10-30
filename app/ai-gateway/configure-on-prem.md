@@ -48,7 +48,7 @@ This page is for self-managed {{site.base_gateway}} 3.x deployments that run {{s
 Self-hosted {{site.base_gateway}} doesn't have these objects. 
 This page shows you how to configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
 
-{:.success}
+{:.info}
 > If you want to move from a 3.x on-prem deployment to an on-prem {{site.ai_gateway}} 2.x deployment, see [Migrate to {{site.ai_gateway}} 2.x on-prem](/ai-gateway/on-prem-migration/). This guide allows you to specify your configuration in the {{site.ai_gateway}} 2.x entity and policy format and it applies that configuration as supported {{site.base_gateway}} 3.x primitives.
 
 There are two ways to bridge that gap:
