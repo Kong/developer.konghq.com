@@ -6,10 +6,6 @@ Usage:
 Aliases:
   konnect, k, K
 
-Examples:
-  # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
-
 Available Commands:
   ai-gateway    Adopt an existing Konnect AI Gateway into namespace management
   analytics     Adopt Konnect Analytics resources into namespace management

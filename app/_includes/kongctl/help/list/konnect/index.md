@@ -8,18 +8,19 @@ Aliases:
 
 Examples:
   # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
+  kongctl list konnect gateway control-planes
 
 Available Commands:
-  ai-gateway    List or get Konnect AI Gateways
-  analytics     Manage Konnect Analytics resources
-  api           List or get Konnect APIs
-  auth-strategy List or get Konnect authentication strategies
-  dcr-provider  List or get Konnect DCR providers
-  event-gateway List or get Konnect Event Gateways
-  gateway       Manage Konnect Kong Gateway resources
-  organization  Get current organization information
-  portal        List or get Konnect portals
+  ai-cost-management Manage regional AI cost capture
+  ai-gateway         List or get Konnect AI Gateways
+  analytics          Manage Konnect Analytics resources
+  api                List or get Konnect APIs
+  auth-strategy      List or get Konnect authentication strategies
+  dcr-provider       List or get Konnect DCR providers
+  event-gateway      List or get Konnect Event Gateways
+  gateway            Manage Konnect Kong Gateway resources
+  organization       Get current organization information
+  portal             List or get Konnect portals
 
 
 Flags:

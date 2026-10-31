@@ -43,7 +43,7 @@ Flags:
   -p, --profile string             Specify the profile to use for this command. (default "default")
       --region string              Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                    - Config path: [ konnect.region ]
-      --resources string           Comma separated list of resource types to dump (ai_gateways, analytics.dashboards, apis, application_auth_strategies, control_planes, dcr_providers, event_gateways, organization.teams, portals).
+      --resources string           Comma separated list of resource types to dump (ai_cost_management_tags, ai_gateways, analytics.dashboards, apis, application_auth_strategies, control_planes, dcr_providers, event_gateways, organization.teams, portals).
       --skip-defaults              Omit fields whose values match defaults declared by the Konnect API.
       --text-id-format string      Configure UUID rendering in static text-table ID columns.
                                    - Config path: [ text.id-format ]

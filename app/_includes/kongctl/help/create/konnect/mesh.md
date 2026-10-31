@@ -4,20 +4,14 @@ Usage:
   kongctl create konnect mesh [command]
 
 Examples:
-  # List the resource types a control plane serves
-  kongctl get mesh resource-types --control-plane-id <id>
+  # Issue a token that proves a zone's identity to the global control plane
+  kongctl create mesh zone-token --zone zone1 --valid-for 720h --control-plane-id <id>
   
-  # List dataplanes in the default mesh
-  kongctl get mesh dataplanes --control-plane-id <id>
+  # Issue a token that proves a dataplane's identity
+  kongctl create mesh dataplane-token --mesh default --name backend-01 --control-plane-id <id>
   
-  # Read one resource, by type and name
-  kongctl get mesh meshes default --control-plane-id <id>
-  
-  # Address a type by its short name, in a named mesh
-  kongctl get mesh dp -m prod --control-plane-id <id>
-  
-  # List a mesh scoped type across every mesh
-  kongctl get mesh meshtrafficpermissions --all-meshes --control-plane-id <id>
+  # Mesh resources are written with apply, since a write creates or replaces
+  kongctl apply mesh -f policy.yaml --control-plane-id <id>
 
 Available Commands:
   dataplane-token Issue a token that proves a dataplane's identity

@@ -25,6 +25,7 @@ Available Commands:
   credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
   custom-policies         List or get Custom Policies for a Konnect AI Gateway [beta]
   data-plane-certificates List or get data plane certificates for a Konnect AI Gateway
+  datastores              List or get Datastores for a Konnect AI Gateway
   mcp-servers             List or get MCP Servers for a Konnect AI Gateway
   model-providers         List or get model providers for a Konnect AI Gateway
   models                  List or get models for a Konnect AI Gateway

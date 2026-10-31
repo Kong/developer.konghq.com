@@ -6,6 +6,12 @@ Usage:
 Aliases:
   system-account, systemaccount, systemaccounts, system-accounts, system_account, system_accounts, sa, sas, SA, SAS
 
+Examples:
+  # List all system accounts
+  kongctl get organization system-accounts
+  # Get a specific system account
+  kongctl get organization system-account <id|name>
+
 Available Commands:
   roles       List organization system account role assignments
   spat        List or get Konnect system account access tokens

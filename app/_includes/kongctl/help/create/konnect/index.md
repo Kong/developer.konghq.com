@@ -7,12 +7,14 @@ Aliases:
   konnect, k, K
 
 Examples:
-  # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
+  # Create a Konnect personal access token
+  kongctl create konnect pat --name ci --expires-in 30d -o token
+  # Create a Konnect system account access token
+  kongctl create konnect spat --system-account-name ci-bot --name ci --expires-in 30d -o env
 
 Available Commands:
-  mesh         Manage Kong Mesh control plane resources
-  organization Get current organization information
+  mesh         Create Kong Mesh access tokens
+  organization Manage Konnect organization resources
   pat          Create a Konnect personal access token
   spat         Create a Konnect system account access token
 
