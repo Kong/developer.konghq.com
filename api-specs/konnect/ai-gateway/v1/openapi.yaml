@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.31
+  version: 2.3.0
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@9255a9dba387ba44a57f71e4d79c09794fc2f164
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9255a9dba387ba44a57f71e4d79c09794fc2f164'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2285,6 +2285,30 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
       tags:
         - AI Gateway Auth Strategies
+  '/ai-gateways/{gatewayId}/auth-strategies/{authStrategyIdOrName}/usage':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+      - $ref: '#/components/parameters/AIGatewayAuthStrategyIdOrName'
+    get:
+      operationId: list-ai-gateway-auth-strategy-usage
+      summary: List AI Gateway Auth Strategy Usage
+      description: |
+        Returns the entities that reference a specific AI Gateway auth strategy, so dependencies can be identified before the auth strategy is deleted.
+
+        Each entity list is limited to the first N records per entity type.
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAIGatewayAuthStrategyUsageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Auth Strategies
   '/ai-gateways/{gatewayId}/config-stores':
     parameters:
       - $ref: '#/components/parameters/AIGatewayId'
@@ -2531,6 +2555,190 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
       tags:
         - AI Gateway Config Stores
+  '/ai-gateways/{gatewayId}/datastores':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+    get:
+      operationId: list-ai-gateway-datastores
+      summary: List AI Gateway Datastores
+      description: Returns a list of Datastores associated with the AI Gateway.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAIGatewayDatastoresResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+    post:
+      operationId: create-ai-gateway-datastore
+      summary: Create an AI Gateway Datastore
+      description: Creates a new Datastore for the AI Gateway.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAIGatewayDatastoreRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateAIGatewayDatastoreResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+  '/ai-gateways/{gatewayId}/datastores/{datastoreIdOrName}':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+      - $ref: '#/components/parameters/AIGatewayDatastoreIdOrName'
+    get:
+      operationId: get-ai-gateway-datastore
+      summary: Get an AI Gateway Datastore
+      description: Returns the details of a specific AI Gateway Datastore.
+      responses:
+        '200':
+          $ref: '#/components/responses/GetAIGatewayDatastoreResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+    put:
+      operationId: update-ai-gateway-datastore
+      summary: Update an AI Gateway Datastore
+      description: |
+        Updates the configuration of an existing AI Gateway Datastore.
+
+        `name` and `type` are immutable after creation; attempting to change either is rejected.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAIGatewayDatastoreRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateAIGatewayDatastoreResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+    delete:
+      operationId: delete-ai-gateway-datastore
+      summary: Delete an AI Gateway Datastore
+      description: Deletes an AI Gateway Datastore. Rejected with a 409 if the Datastore is still referenced by a policy or model.
+      responses:
+        '204':
+          description: Datastore deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+  '/ai-gateways/{gatewayId}/datastores/{datastoreIdOrName}/usage':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+      - $ref: '#/components/parameters/AIGatewayDatastoreIdOrName'
+    get:
+      operationId: list-ai-gateway-datastore-usage
+      summary: List AI Gateway Datastore Usage
+      description: |
+        Returns the policies and models that reference this Datastore.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAIGatewayDatastoreUsageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Datastores
+  /ai-cost-management/tag-capture:
+    get:
+      operationId: get-cost-management-tags
+      summary: Get cost management tags
+      description: |
+        Returns the cost management tags configuration of the organization in this region.
+        If no configuration has been set, the defaults are returned.
+      responses:
+        '200':
+          $ref: '#/components/responses/CostManagementTagsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Cost Management Tags
+    put:
+      operationId: update-cost-management-tags
+      summary: Update cost management tags
+      description: |
+        Replaces the cost management tags configuration of the organization in this region.
+        Header names and prefixes are compared case-insensitively.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCostManagementTags'
+      responses:
+        '200':
+          $ref: '#/components/responses/CostManagementTagsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Cost Management Tags
 components:
   parameters:
     AIGatewayAgentIdOrName:
@@ -2685,6 +2893,20 @@ components:
       example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
       schema:
         $ref: '#/components/schemas/UUID'
+    AIGatewayDatastoreIdOrName:
+      name: datastoreIdOrName
+      in: path
+      required: true
+      description: The unique ID or name of the AI Gateway Datastore.
+      examples:
+        name:
+          value: my-entity-name
+          summary: The name of the entity.
+        id:
+          value: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+          summary: The id of the entity.
+      schema:
+        $ref: '#/components/schemas/AIGatewayEntityIdentifier'
     AIGatewayId:
       name: gatewayId
       in: path
@@ -2827,6 +3049,11 @@ components:
       maxLength: 256
       minLength: 1
       pattern: '^[A-Za-z0-9._:@-]{1,256}$'
+    AIGatewayKonnectManagedEntityFlag:
+      description: An immutable read-only flag to identify resource managed by Konnect services.
+      type: boolean
+      example: true
+      readOnly: true
     AIGatewayVaultName:
       description: An immutable user-defined identifier for this resource.
       type: string
@@ -2841,6 +3068,22 @@ components:
       maxLength: 255
       minLength: 2
       pattern: '^[a-z][a-z0-9-]*[a-z0-9]+$'
+    AIGatewayDatastoreName:
+      description: An immutable user-defined identifier for this resource.
+      type: string
+      example: shared-redis
+      maxLength: 255
+      minLength: 2
+      pattern: '^[a-z][a-z0-9-]*[a-z0-9]+$'
+    AIGatewayDatastoreRef:
+      description: A reference to an existing datastore
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/AIGatewayDatastoreName'
+      additionalProperties: false
+      required:
+        - name
     AIGatewayProxyURL:
       description: Proxy URL associated with reaching the data-planes connected to a control-plane.
       type: object
@@ -2933,6 +3176,8 @@ components:
           format: set
         labels:
           $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
       required:
         - display_name
@@ -2970,6 +3215,8 @@ components:
           format: set
         labels:
           $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
       required:
         - display_name
@@ -3001,6 +3248,8 @@ components:
           $ref: '#/components/schemas/AIGatewayRuntimeAutoUpgrade'
         labels:
           $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
       title: PatchAIGatewayRequest
     AIGateway:
@@ -3032,6 +3281,8 @@ components:
           format: set
         labels:
           $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
         id:
           $ref: '#/components/schemas/UUID'
         min_runtime_version:
@@ -3080,6 +3331,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
       required:
         - display_name
         - name
@@ -3180,6 +3433,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
       additionalProperties: false
       required:
         - name
@@ -3350,6 +3605,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
       additionalProperties: false
       required:
         - name
@@ -3362,6 +3619,14 @@ components:
       description: 'A reference to the certificate with which to associate the SNI hostname, by certificate name. The certificate must have a valid private key to be used by the SNI.'
       type: string
       example: my-certificate
+    AIGatewayCertificateReference:
+      description: 'A reference to an AI Certificate on the same AI Gateway, by certificate name. The certificate must have a valid private key to be presented as a client certificate to an upstream.'
+      type: string
+      example: my-certificate
+    AIGatewayCACertificateReference:
+      description: 'A reference to an AI CA Certificate on the same AI Gateway, by CA certificate name.'
+      type: string
+      example: my-ca-certificate
     AIGatewayHostname:
       description: A hostname used for TLS Server Name Indication (SNI) matching. Supports an optional wildcard segment at either end of the hostname (for example `*.example.com` or `example.*`).
       type: string
@@ -3518,6 +3783,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
       additionalProperties: false
       required:
         - name
@@ -3575,6 +3842,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
         metadata:
           description: Metadata extracted from the certificate.
           type: object
@@ -3867,7 +4136,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AIGatewayModelFormat'
-          maxItems: 1
+          default:
+            - type: '*'
           minItems: 1
         targets:
           description: One or more backend models that this model entry routes to.
@@ -3881,6 +4151,13 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          description: Names of the Datastores this model references.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: kong-managed
         type:
           type: string
           enum:
@@ -3889,11 +4166,17 @@ components:
         config:
           $ref: '#/components/schemas/AIGatewayModelModelConfig'
         capabilities:
-          description: List of AI capabilities enabled for this model.
+          description: |
+            The capabilities this model supports. Set to a specific capability to
+            restrict the model to that capability only, or to `*` to allow all
+            capabilities that the targets support at the gateway's
+            min_runtime_version. A capability that needs a newer
+            min_runtime_version is left out of `*`.
           type: array
           items:
             type: string
             enum:
+              - '*'
               - generate
               - agentic
               - realtime
@@ -3908,6 +4191,8 @@ components:
             x-enum-min-runtime-version:
               decisions: '2.2'
             description: '**`decisions` requires a minimum runtime version of `2.2`**.'
+          default:
+            - '*'
       required:
         - display_name
         - name
@@ -3943,7 +4228,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AIGatewayModelFormat'
-          maxItems: 1
+          default:
+            - type: '*'
           minItems: 1
         targets:
           description: One or more backend models that this model entry routes to.
@@ -3957,6 +4243,13 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          description: Names of the Datastores this model references.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: kong-managed
         type:
           type: string
           enum:
@@ -3965,17 +4258,25 @@ components:
         config:
           $ref: '#/components/schemas/AIGatewayModelAPIConfig'
         capabilities:
-          description: List of AI capabilities enabled for this API model.
+          description: |
+            The capabilities this model supports. Set to a specific capability to
+            restrict the model to that capability only, or to `*` to allow all
+            capabilities that the targets support at the gateway's
+            min_runtime_version. A capability that needs a newer
+            min_runtime_version is left out of `*`.
           type: array
           items:
             type: string
             enum:
+              - '*'
               - batches
               - files
               - skills
             x-enum-min-runtime-version:
               skills: '2.2'
             description: '**`skills` requires a minimum runtime version of `2.2`**.'
+          default:
+            - '*'
       required:
         - display_name
         - name
@@ -4239,16 +4540,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4313,16 +4663,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4383,16 +4782,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4461,16 +4909,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4542,16 +5039,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4612,16 +5158,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4682,16 +5277,65 @@ components:
             type: string
             enum:
               - error
+              - http_400
+              - http_401
+              - http_402
               - http_403
               - http_404
+              - http_405
+              - http_408
+              - http_409
+              - http_413
+              - http_415
+              - http_422
               - http_429
               - http_500
               - http_502
               - http_503
               - http_504
+              - http_522
+              - http_529
+              - http_5xx
               - invalid_header
               - non_idempotent
               - timeout
+            x-enum-min-runtime-version:
+              http_400: '2.3'
+              http_401: '2.3'
+              http_402: '2.3'
+              http_405: '2.3'
+              http_408: '2.3'
+              http_409: '2.3'
+              http_413: '2.3'
+              http_415: '2.3'
+              http_422: '2.3'
+              http_522: '2.3'
+              http_529: '2.3'
+              http_5xx: '2.3'
+            description: |-
+              **`http_400` requires a minimum runtime version of `2.3`**.
+
+              **`http_401` requires a minimum runtime version of `2.3`**.
+
+              **`http_402` requires a minimum runtime version of `2.3`**.
+
+              **`http_405` requires a minimum runtime version of `2.3`**.
+
+              **`http_408` requires a minimum runtime version of `2.3`**.
+
+              **`http_409` requires a minimum runtime version of `2.3`**.
+
+              **`http_413` requires a minimum runtime version of `2.3`**.
+
+              **`http_415` requires a minimum runtime version of `2.3`**.
+
+              **`http_422` requires a minimum runtime version of `2.3`**.
+
+              **`http_522` requires a minimum runtime version of `2.3`**.
+
+              **`http_529` requires a minimum runtime version of `2.3`**.
+
+              **`http_5xx` requires a minimum runtime version of `2.3`**.
           default:
             - error
             - timeout
@@ -4831,6 +5475,14 @@ components:
         video_output_s3_uri:
           description: S3 URI for storing video generation outputs.
           type: string
+        vpc_endpoint:
+          description: |-
+            Hostname of an AWS PrivateLink VPC endpoint to use instead of the public Bedrock endpoint.
+            Ignored if `upstream_url` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: string
+          x-min-runtime-version: '2.3'
       additionalProperties: false
       required:
         - type
@@ -5224,7 +5876,7 @@ components:
       properties:
         type:
           description: |-
-            The format type.
+            The request and response format this model supports. Set to a specific format to restrict the model to that format only, or to `*` to allow all formats that the targets support at the gateway's min_runtime_version. A format that needs a newer min_runtime_version is left out of `*`. The `*` format never includes passthrough.
 
             **`passthrough` requires a minimum runtime version of `2.2`**.
 
@@ -5232,6 +5884,7 @@ components:
           type: string
           example: openai
           enum:
+            - '*'
             - anthropic
             - bedrock
             - cohere
@@ -5285,6 +5938,7 @@ components:
         mapping:
           anthropic: '#/components/schemas/AIGatewayTargetAnthropicConfig'
           azure: '#/components/schemas/AIGatewayTargetAzureConfig'
+          baseten: '#/components/schemas/AIGatewayTargetBasetenConfig'
           bedrock: '#/components/schemas/AIGatewayTargetBedrockConfig'
           cerebras: '#/components/schemas/AIGatewayTargetCerebrasConfig'
           cohere: '#/components/schemas/AIGatewayTargetCohereConfig'
@@ -5306,6 +5960,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AIGatewayTargetAnthropicConfig'
         - $ref: '#/components/schemas/AIGatewayTargetAzureConfig'
+        - $ref: '#/components/schemas/AIGatewayTargetBasetenConfig'
         - $ref: '#/components/schemas/AIGatewayTargetBedrockConfig'
         - $ref: '#/components/schemas/AIGatewayTargetCerebrasConfig'
         - $ref: '#/components/schemas/AIGatewayTargetCohereConfig'
@@ -5624,6 +6279,114 @@ components:
             - /anthropic/v1
       required:
         - type
+    AIGatewayTargetBasetenConfig:
+      description: |-
+        Baseten-specific configuration for a model. Requests are sent to Baseten Model APIs at
+        `https://inference.baseten.co/v1` by default, and the target `name` is the Baseten model
+        slug (for example, `deepseek-ai/DeepSeek-V4-Pro-0813`). To route to a dedicated Baseten
+        deployment, set `upstream_url` to the deployment's full OpenAI-compatible endpoint (for
+        example, `https://model-{model_id}.api.baseten.co/environments/{environment}/sync/v1/chat/completions`) or use passthrough format.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        embeddings_dimensions:
+          description: The number of dimensions for embedding outputs.
+          type: integer
+          exclusiveMinimum: true
+          maximum: 2147483646
+          minimum: 0
+        max_tokens:
+          description: The maximum number of tokens to generate in the response.
+          type: integer
+          maximum: 2147483646
+          minimum: 0
+        input_cost:
+          description: Cost per 1M input tokens for billing and cost tracking.
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        output_cost:
+          description: Cost per 1M output tokens for billing and cost tracking.
+          type: number
+          minimum: 0
+        cache_read_cost:
+          description: Cost per 1M cache-read (cached) prompt tokens for billing and cost tracking.
+          type: number
+          minimum: 0
+        cache_write_cost:
+          description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
+          type: number
+          minimum: 0
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_write_cost_list:
+          description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCacheWriteCost'
+        context_window_factor:
+          description: 'Above an input-token threshold, scale input and output pricing by the corresponding factor.'
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayContextWindowFactor'
+        service_tier_factor:
+          description: Multiplier applied to the whole request for a service tier. The default factor is 1.0 when no tier matches.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayServiceTierFactor'
+        temperature:
+          description: Controls randomness in the model output. Higher values produce more varied responses.
+          type: number
+          maximum: 5
+          minimum: 0
+        top_k:
+          description: Limits the number of highest-probability tokens considered during generation.
+          type: integer
+          maximum: 500
+          minimum: 0
+        top_p:
+          description: Nucleus sampling probability mass. Tokens with cumulative probability up to top_p are considered.
+          type: number
+          maximum: 1
+          minimum: 0
+        upstream_url:
+          description: The upstream URL for the model endpoint.
+          type: string
+          format: uri
+        type:
+          type: string
+          enum:
+            - baseten
+          x-terraform-transform-const: true
+      required:
+        - type
+      x-min-runtime-version: '2.3'
     AIGatewayTargetBedrockConfig:
       description: AWS Bedrock-specific configuration for a model.
       type: object
@@ -5740,6 +6503,33 @@ components:
         video_output_s3_uri:
           description: S3 URI for storing video generation outputs.
           type: string
+        vpc_endpoint:
+          description: |-
+            Hostname of an AWS PrivateLink VPC endpoint to use instead of the public Bedrock endpoint.
+            Ignored if `upstream_url` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: string
+          x-min-runtime-version: '2.3'
+        endpoint_type:
+          description: |-
+            The AWS Bedrock inference endpoint that requests to this target are sent to.
+            `runtime` sends requests to the Bedrock Runtime endpoint
+            (`bedrock-runtime.{region}.amazonaws.com`). `mantle` sends requests to the
+            Bedrock Mantle endpoint (`bedrock-mantle.{region}.api.aws`), which accepts
+            OpenAI and Anthropic request formats natively.
+
+            A target with `endpoint_type` set to `mantle` is rejected if its model
+            includes a format with `type` set to `bedrock`, because the Mantle endpoint
+            does not support the Bedrock Converse or InvokeModel APIs.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: string
+          example: runtime
+          enum:
+            - runtime
+            - mantle
+          x-min-runtime-version: '2.3'
       additionalProperties: false
       required:
         - type
@@ -7621,11 +8411,41 @@ components:
           type: array
           items:
             type: string
+        allow_when:
+          description: |-
+            Allow the request if it matches any of these CEL boolean expressions evaluated against the request context.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+            x-expression:
+              type: boolean
+          x-min-runtime-version: '2.3'
+        deny_when:
+          description: |-
+            Deny the request if it matches any of these CEL boolean expressions evaluated against the request context.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+            x-expression:
+              type: boolean
+          x-min-runtime-version: '2.3'
       example:
         allow:
           - gold-partner
         deny:
           - bronze-partner
+        allow_when:
+          - has(principal.metadata.tier) && principal.metadata.tier == 'partner'
+        deny_when:
+          - has(principal.metadata.role) && principal.metadata.role != 'admin'
     AIGatewayPolicyReferences:
       description: List of policy references.
       type: array
@@ -9128,6 +9948,592 @@ components:
         - id
         - created_at
         - updated_at
+    DatastoreRedisCloudAuthentication:
+      description: Cloud-managed Redis authentication. Only the fields relevant to the chosen `auth_provider` need to be set.
+      type: object
+      properties:
+        auth_provider:
+          oneOf:
+            - type: string
+              nullable: true
+              enum:
+                - aws
+                - gcp
+                - azure
+            - type: string
+              example: '{vault://hcv/redis/auth_provider}'
+          x-referenceable: true
+        aws_cache_name:
+          type: string
+          nullable: true
+          x-referenceable: true
+        aws_region:
+          type: string
+          nullable: true
+          x-referenceable: true
+        aws_is_serverless:
+          type: boolean
+          nullable: true
+        aws_access_key_id:
+          type: string
+          nullable: true
+        aws_secret_access_key:
+          type: string
+          nullable: true
+          writeOnly: true
+        aws_assume_role_arn:
+          type: string
+          nullable: true
+          x-referenceable: true
+        aws_role_session_name:
+          type: string
+          nullable: true
+        gcp_service_account_json:
+          type: string
+          nullable: true
+          writeOnly: true
+        azure_client_id:
+          type: string
+          nullable: true
+        azure_client_secret:
+          type: string
+          nullable: true
+          writeOnly: true
+        azure_tenant_id:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RedisCEDatastore:
+      type: object
+      properties:
+        name:
+          description: |
+            A user-defined unique identifier for this Datastore, used as a stable human-readable reference.
+            This value is immutable after creation.
+          example: shared-redis
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayDatastoreName'
+        display_name:
+          description: The display name for this Datastore.
+          type: string
+          example: Shared Redis
+          maxLength: 256
+          minLength: 1
+        description:
+          description: The description of the Datastore.
+          type: string
+          example: Redis shared by rate limiting and semantic cache
+          default: ''
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        type:
+          type: string
+          enum:
+            - redis-ce
+          x-terraform-transform-const: true
+        config:
+          $ref: '#/components/schemas/RedisCEDatastoreConfig'
+      required:
+        - name
+        - display_name
+        - type
+        - config
+    RedisCEDatastoreConfig:
+      type: object
+      properties:
+        host:
+          type: string
+          example: 127.0.0.1
+        port:
+          type: integer
+          maximum: 65535
+          minimum: 1
+        username:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+          writeOnly: true
+        database:
+          description: The Redis database index to use.
+          type: integer
+        timeout:
+          description: 'Timeout in milliseconds for connecting, reading, and writing to the Redis server.'
+          type: integer
+        ssl:
+          type: boolean
+        ssl_verify:
+          type: boolean
+        server_name:
+          description: SNI to use when connecting over SSL.
+          type: string
+          nullable: true
+        cloud_authentication:
+          $ref: '#/components/schemas/DatastoreRedisCloudAuthentication'
+      additionalProperties: false
+      required:
+        - host
+      title: RedisCEDatastoreConfig
+    RedisEEDatastore:
+      type: object
+      properties:
+        name:
+          description: |
+            A user-defined unique identifier for this Datastore, used as a stable human-readable reference.
+            This value is immutable after creation.
+          example: shared-redis
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayDatastoreName'
+        display_name:
+          description: The display name for this Datastore.
+          type: string
+          example: Shared Redis
+          maxLength: 256
+          minLength: 1
+        description:
+          description: The description of the Datastore.
+          type: string
+          example: Redis shared by rate limiting and semantic cache
+          default: ''
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        type:
+          type: string
+          enum:
+            - redis-ee
+          x-terraform-transform-const: true
+        config:
+          $ref: '#/components/schemas/RedisEEDatastoreConfig'
+      required:
+        - name
+        - display_name
+        - type
+        - config
+    RedisEEDatastoreConfig:
+      type: object
+      properties:
+        host:
+          type: string
+          example: 127.0.0.1
+          x-referenceable: true
+        port:
+          description: |
+            An integer representing a port number between 0 and 65535, inclusive.
+            This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
+          oneOf:
+            - type: integer
+              default: 6379
+              maximum: 65535
+              minimum: 0
+              example: 6379
+            - type: string
+              example: '{vault://hcv/redis/port}'
+          x-go-type: types.Referenceable
+          x-go-type-import:
+            path: github.com/kong-konnect/koko-private/internal/server/public/openapi/controlplanesconfig/types
+            name: types
+          x-referenceable: true
+        username:
+          type: string
+          nullable: true
+          x-referenceable: true
+        password:
+          type: string
+          nullable: true
+          writeOnly: true
+        database:
+          description: The Redis database index to use.
+          type: integer
+        connect_timeout:
+          type: integer
+        send_timeout:
+          type: integer
+        read_timeout:
+          type: integer
+        keepalive_pool_size:
+          type: integer
+        keepalive_backlog:
+          type: integer
+          nullable: true
+        ssl:
+          type: boolean
+        ssl_verify:
+          type: boolean
+        server_name:
+          description: SNI to use when connecting over SSL.
+          type: string
+          nullable: true
+          x-referenceable: true
+        connection_is_proxied:
+          type: boolean
+        sentinel_master:
+          type: string
+          nullable: true
+        sentinel_role:
+          type: string
+          enum:
+            - master
+            - slave
+            - any
+          nullable: true
+        sentinel_username:
+          type: string
+          nullable: true
+        sentinel_password:
+          type: string
+          nullable: true
+          writeOnly: true
+        sentinel_nodes:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - host
+              - port
+            properties:
+              host:
+                type: string
+                example: 127.0.0.1
+              port:
+                type: integer
+                example: 6379
+                maximum: 65535
+                minimum: 1
+          nullable: true
+        cluster_nodes:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - ip
+              - port
+            properties:
+              ip:
+                type: string
+                example: 127.0.0.1
+              port:
+                type: integer
+                example: 6379
+                maximum: 65535
+                minimum: 1
+          nullable: true
+        cluster_max_redirections:
+          type: integer
+        cloud_authentication:
+          $ref: '#/components/schemas/DatastoreRedisCloudAuthentication'
+      additionalProperties: false
+      required:
+        - host
+      title: RedisEEDatastoreConfig
+    VectorDBDatastore:
+      description: |
+        Carries the pgvector connection only. `strategy`, `dimensions`, `distance_metric`, and `threshold`
+        belong to the policy or model referencing this Datastore, not the Datastore itself.
+      type: object
+      properties:
+        name:
+          description: |
+            A user-defined unique identifier for this Datastore, used as a stable human-readable reference.
+            This value is immutable after creation.
+          example: shared-redis
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayDatastoreName'
+        display_name:
+          description: The display name for this Datastore.
+          type: string
+          example: Shared Redis
+          maxLength: 256
+          minLength: 1
+        description:
+          description: The description of the Datastore.
+          type: string
+          example: Redis shared by rate limiting and semantic cache
+          default: ''
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        type:
+          type: string
+          enum:
+            - vectordb
+          x-terraform-transform-const: true
+        config:
+          $ref: '#/components/schemas/VectorDBDatastoreConfig'
+      required:
+        - name
+        - display_name
+        - type
+        - config
+    VectorDBDatastoreConfig:
+      type: object
+      properties:
+        host:
+          type: string
+          example: 127.0.0.1
+        port:
+          type: integer
+          default: 5432
+          maximum: 65535
+          minimum: 1
+        user:
+          type: string
+          default: postgres
+        password:
+          type: string
+          default: null
+          nullable: true
+          writeOnly: true
+        database:
+          type: string
+          example: kong-pgvector
+        timeout:
+          description: 'Timeout in milliseconds for connecting, reading, and writing to the database.'
+          type: integer
+          default: 5000
+        ssl:
+          type: boolean
+          default: false
+        ssl_required:
+          type: boolean
+          default: false
+        ssl_verify:
+          type: boolean
+          default: true
+        ssl_version:
+          type: string
+          default: tlsv1_2
+        ssl_cert:
+          type: string
+          default: null
+          nullable: true
+        ssl_cert_key:
+          type: string
+          default: null
+          nullable: true
+          writeOnly: true
+      additionalProperties: false
+      required:
+        - host
+        - database
+      title: VectorDBDatastoreConfig
+    TokenVaultDatastore:
+      type: object
+      properties:
+        name:
+          description: |
+            A user-defined unique identifier for this Datastore, used as a stable human-readable reference.
+            This value is immutable after creation.
+          example: shared-redis
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayDatastoreName'
+        display_name:
+          description: The display name for this Datastore.
+          type: string
+          example: Shared Redis
+          maxLength: 256
+          minLength: 1
+        description:
+          description: The description of the Datastore.
+          type: string
+          example: Redis shared by rate limiting and semantic cache
+          default: ''
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        type:
+          type: string
+          enum:
+            - token-vault
+          x-terraform-transform-const: true
+        config:
+          $ref: '#/components/schemas/TokenVaultDatastoreConfig'
+      required:
+        - name
+        - display_name
+        - type
+        - config
+    TokenVaultDatastoreConfig:
+      type: object
+      properties:
+        directory:
+          description: The name of the directory in which tokens are stored.
+          type: string
+          example: my-directory
+        current_version:
+          description: The version of the encryption key used to encrypt new tokens.
+          type: string
+          example: v1
+        keys:
+          description: The encryption keys used to protect stored tokens. Keep previous versions in the list so existing tokens can still be decrypted.
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenVaultDatastoreKey'
+          minItems: 1
+      additionalProperties: false
+      required:
+        - directory
+        - current_version
+        - keys
+      title: TokenVaultDatastoreConfig
+    TokenVaultDatastoreKey:
+      type: object
+      properties:
+        version:
+          description: The identifier of this key version.
+          type: string
+          example: v1
+        key:
+          description: |
+            A [vault reference](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault) to the encryption key. A literal key value is rejected.
+          type: string
+          example: '{vault://hcv/vault-enc-key}'
+          pattern: '^\{vault://.*\}$'
+          x-referenceable: true
+      additionalProperties: false
+      required:
+        - version
+      title: TokenVaultDatastoreKey
+    CreateAIGatewayDatastoreRequest:
+      description: Configuration for an AI Gateway Datastore.
+      discriminator:
+        propertyName: type
+        mapping:
+          redis-ce: '#/components/schemas/RedisCEDatastore'
+          redis-ee: '#/components/schemas/RedisEEDatastore'
+          vectordb: '#/components/schemas/VectorDBDatastore'
+          token-vault: '#/components/schemas/TokenVaultDatastore'
+      oneOf:
+        - $ref: '#/components/schemas/RedisCEDatastore'
+        - $ref: '#/components/schemas/RedisEEDatastore'
+        - $ref: '#/components/schemas/VectorDBDatastore'
+        - $ref: '#/components/schemas/TokenVaultDatastore'
+    UpdateAIGatewayDatastoreRequest:
+      description: Configuration for an AI Gateway Datastore.
+      discriminator:
+        propertyName: type
+        mapping:
+          redis-ce: '#/components/schemas/RedisCEDatastore'
+          redis-ee: '#/components/schemas/RedisEEDatastore'
+          vectordb: '#/components/schemas/VectorDBDatastore'
+          token-vault: '#/components/schemas/TokenVaultDatastore'
+      oneOf:
+        - $ref: '#/components/schemas/RedisCEDatastore'
+        - $ref: '#/components/schemas/RedisEEDatastore'
+        - $ref: '#/components/schemas/VectorDBDatastore'
+        - $ref: '#/components/schemas/TokenVaultDatastore'
+    AIGatewayDatastore:
+      description: Configuration for an AI Gateway Datastore.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
+      discriminator:
+        propertyName: type
+        mapping:
+          redis-ce: '#/components/schemas/RedisCEDatastore'
+          redis-ee: '#/components/schemas/RedisEEDatastore'
+          vectordb: '#/components/schemas/VectorDBDatastore'
+          token-vault: '#/components/schemas/TokenVaultDatastore'
+      oneOf:
+        - $ref: '#/components/schemas/RedisCEDatastore'
+        - $ref: '#/components/schemas/RedisEEDatastore'
+        - $ref: '#/components/schemas/VectorDBDatastore'
+        - $ref: '#/components/schemas/TokenVaultDatastore'
+      required:
+        - id
+        - created_at
+        - updated_at
+    AIGatewayDatastoreSummary:
+      description: 'A trimmed view of an AI Gateway Datastore, returned by the list operation.'
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          $ref: '#/components/schemas/AIGatewayDatastoreName'
+        display_name:
+          type: string
+          example: Shared Redis
+        type:
+          type: string
+          enum:
+            - redis-ce
+            - redis-ee
+            - vectordb
+            - token-vault
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        konnect_managed:
+          $ref: '#/components/schemas/AIGatewayKonnectManagedEntityFlag'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - display_name
+        - type
+        - created_at
+        - updated_at
+    AIGatewayDatastoreUsageEntry:
+      description: Identity of an entity that references an AI Gateway Datastore.
+      type: object
+      properties:
+        type:
+          description: |-
+            The kind of entity holding the reference. A policy holds one in its `datastores` array. A
+            model holds one when its balancer is `semantic`. An MCP server, a model provider, or an
+            auth strategy holds one when it stores credentials in the Token Vault.
+
+            **`auth_strategy` requires a minimum runtime version of `2.3`**.
+
+            **`mcp_server` requires a minimum runtime version of `2.3`**.
+
+            **`model_provider` requires a minimum runtime version of `2.3`**.
+          type: string
+          enum:
+            - policy
+            - model
+            - mcp_server
+            - model_provider
+            - auth_strategy
+          x-enum-min-runtime-version:
+            auth_strategy: '2.3'
+            mcp_server: '2.3'
+            model_provider: '2.3'
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: semantic-cache
+        display_name:
+          type: string
+          example: Semantic Cache
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - name
+        - display_name
     CreateAIGatewayPolicyRequest:
       type: object
       properties:
@@ -9179,10 +10585,26 @@ components:
           maxLength: 1024
           nullable: true
           x-min-runtime-version: '2.1'
+        expressions:
+          description: |-
+            Policy config expressions
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: object
+          additionalProperties: true
+          nullable: true
+          x-min-runtime-version: '2.3'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          description: Names of the Datastores this policy references.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: kong-managed
       additionalProperties: false
       required:
         - display_name
@@ -9240,10 +10662,26 @@ components:
           maxLength: 1024
           nullable: true
           x-min-runtime-version: '2.1'
+        expressions:
+          description: |-
+            Policy config expressions
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: object
+          additionalProperties: true
+          nullable: true
+          x-min-runtime-version: '2.3'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          description: Names of the Datastores this policy references.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: kong-managed
       additionalProperties: false
       required:
         - display_name
@@ -9301,10 +10739,26 @@ components:
           maxLength: 1024
           nullable: true
           x-min-runtime-version: '2.1'
+        expressions:
+          description: |-
+            Policy config expressions
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: object
+          additionalProperties: true
+          nullable: true
+          x-min-runtime-version: '2.3'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          description: Names of the Datastores this policy references.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: kong-managed
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -9660,6 +11114,35 @@ components:
                   exclusiveMinimum: true
                   maximum: 2147483646
                   minimum: 0
+            certificates:
+              description: |
+                Client certificates used for mutual TLS (mTLS) authentication with the upstream agent
+                endpoint, referenced by name. Each entry must be the `name` of an existing AI Certificate
+                on the same AI Gateway.
+
+                The certificates are applied to the Kong Gateway Service generated for this Agent, which
+                proxies requests to `config.url`. The generated Service presents a single client
+                certificate (`client_certificate`) during the TLS handshake with the upstream, so at most
+                one certificate may be configured.
+
+                If unset, no client certificate is presented to the upstream.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCertificateReference'
+              maxItems: 1
+            ca_certificates:
+              description: |
+                CA certificates used to verify the TLS certificate of the upstream agent endpoint,
+                referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the
+                same AI Gateway.
+
+                The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+                generated for this Agent, which proxies requests to `config.url`.
+
+                If unset, the default trust store is used to verify the upstream's TLS certificate.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCACertificateReference'
           required:
             - url
         labels:
@@ -9742,6 +11225,35 @@ components:
                   exclusiveMinimum: true
                   maximum: 2147483646
                   minimum: 0
+            certificates:
+              description: |
+                Client certificates used for mutual TLS (mTLS) authentication with the upstream agent
+                endpoint, referenced by name. Each entry must be the `name` of an existing AI Certificate
+                on the same AI Gateway.
+
+                The certificates are applied to the Kong Gateway Service generated for this Agent, which
+                proxies requests to `config.url`. The generated Service presents a single client
+                certificate (`client_certificate`) during the TLS handshake with the upstream, so at most
+                one certificate may be configured.
+
+                If unset, no client certificate is presented to the upstream.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCertificateReference'
+              maxItems: 1
+            ca_certificates:
+              description: |
+                CA certificates used to verify the TLS certificate of the upstream agent endpoint,
+                referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the
+                same AI Gateway.
+
+                The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+                generated for this Agent, which proxies requests to `config.url`.
+
+                If unset, the default trust store is used to verify the upstream's TLS certificate.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCACertificateReference'
           required:
             - url
         labels:
@@ -9824,6 +11336,35 @@ components:
                   exclusiveMinimum: true
                   maximum: 2147483646
                   minimum: 0
+            certificates:
+              description: |
+                Client certificates used for mutual TLS (mTLS) authentication with the upstream agent
+                endpoint, referenced by name. Each entry must be the `name` of an existing AI Certificate
+                on the same AI Gateway.
+
+                The certificates are applied to the Kong Gateway Service generated for this Agent, which
+                proxies requests to `config.url`. The generated Service presents a single client
+                certificate (`client_certificate`) during the TLS handshake with the upstream, so at most
+                one certificate may be configured.
+
+                If unset, no client certificate is presented to the upstream.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCertificateReference'
+              maxItems: 1
+            ca_certificates:
+              description: |
+                CA certificates used to verify the TLS certificate of the upstream agent endpoint,
+                referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the
+                same AI Gateway.
+
+                The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+                generated for this Agent, which proxies requests to `config.url`.
+
+                If unset, the default trust store is used to verify the upstream's TLS certificate.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCACertificateReference'
           required:
             - url
         labels:
@@ -10209,6 +11750,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
       additionalProperties: false
       required:
         - type
@@ -10259,6 +11804,34 @@ components:
               example: 'https://mcp.internal.kongair.com'
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+            certificates:
+              description: |
+                Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
+                referenced by name. Each entry must be the `name` of an existing AI Certificate on the same
+                AI Gateway.
+
+                The certificates are applied to the Kong Gateway Service generated for this MCP Server, which
+                proxies requests to the upstream MCP server. The generated Service presents a single client
+                certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one
+                certificate may be configured.
+
+                If unset, no client certificate is presented to the upstream.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCertificateReference'
+              maxItems: 1
+            ca_certificates:
+              description: |
+                CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by
+                name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.
+
+                The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+                generated for this MCP Server, which proxies requests to the upstream MCP server.
+
+                If unset, the default trust store is used to verify the upstream's TLS certificate.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCACertificateReference'
             allowed_versions:
               description: |-
                 The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
@@ -10305,6 +11878,8 @@ components:
           minItems: 1
         access:
           $ref: '#/components/schemas/AIGatewayMCPServerListenerAccess'
+        rate_limiting:
+          $ref: '#/components/schemas/AIGatewayMCPServerRateLimiting'
         display_name:
           description: The display name for the MCP Server.
           type: string
@@ -10327,6 +11902,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
       additionalProperties: false
       required:
         - type
@@ -10438,6 +12017,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
       additionalProperties: false
       required:
         - type
@@ -10464,6 +12047,8 @@ components:
             $ref: '#/components/schemas/AIGatewayMCPPassthroughTool'
         access:
           $ref: '#/components/schemas/AIGatewayMCPServerListenerAccess'
+        rate_limiting:
+          $ref: '#/components/schemas/AIGatewayMCPServerRateLimiting'
         display_name:
           description: The display name for the MCP Server.
           type: string
@@ -10486,12 +12071,80 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
       additionalProperties: false
       required:
         - type
         - config
         - display_name
         - name
+    AIGatewayMCPServerRateLimiting:
+      description: |-
+        Rate limits applied to requests to this MCP Server, matched by MCP method or tool name.
+        Each AI Gateway node counts and enforces the limits independently.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        limits:
+          description: |
+            The rate limits to enforce. Each entry targets exactly one of `method` or `tool`. Two
+            entries cannot share the same target and `window_size`.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayMCPServerRateLimit'
+          example:
+            - method: tools/call
+              limit: 100
+              window_size: 60
+            - tool: search_flights
+              limit: 10
+              window_size: 1
+          minItems: 1
+      additionalProperties: false
+      required:
+        - limits
+      title: AIGatewayMCPServerRateLimiting
+      x-min-runtime-version: '2.3'
+    AIGatewayMCPServerRateLimit:
+      description: A rate limit on an MCP method or tool. Exactly one of `method` or `tool` must be set.
+      type: object
+      properties:
+        method:
+          description: The MCP method this limit applies to.
+          type: string
+          example: tools/call
+          pattern: '^[A-Za-z0-9._/-]+$'
+        tool:
+          description: The name of the tool this limit applies to.
+          type: string
+          example: search_flights
+          maxLength: 128
+          minLength: 1
+          pattern: '^[A-Za-z0-9._/-]+$'
+        limit:
+          description: The number of requests allowed per window.
+          type: integer
+          example: 100
+          maximum: 2147483646
+          minimum: 1
+        window_size:
+          description: 'The window size in seconds, one of a second, a minute, an hour, or a day.'
+          type: integer
+          example: 60
+          enum:
+            - 1
+            - 60
+            - 3600
+            - 86400
+      additionalProperties: false
+      required:
+        - limit
+        - window_size
+      title: AIGatewayMCPServerRateLimit
     AIGatewayMCPServerUpstreamServer:
       type: object
       properties:
@@ -10530,6 +12183,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
       additionalProperties: false
       required:
         - type
@@ -10780,6 +12437,157 @@ components:
           items:
             type: string
       title: AIGatewayMCPServerProtectedResourceMetadata
+    AIGatewayTokenVaultDatastores:
+      description: |-
+        The Token Vault Datastore holding this entity's credential storage: the directory credentials
+        are written to, and the encryption keys that seal them. Required when `token_vault` is set
+        (on an auth strategy, when its credential manager is enabled), and the referenced Datastore
+        must have type `token-vault`. Only one Datastore can be referenced.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: array
+      items:
+        $ref: '#/components/schemas/AIGatewayDatastoreRef'
+      example:
+        - name: vault-konnect-prod
+      maxItems: 1
+      minItems: 1
+      title: AIGatewayTokenVaultDatastores
+      x-min-runtime-version: '2.3'
+    AIGatewayTokenVault:
+      description: |-
+        Resolves an upstream credential per request via Kong's Token Vault instead of sending a static
+        credential. The directory credentials live in, and the keys that encrypt them, come from the
+        `token-vault` Datastore this entity references, and are returned read-only in `storage`.
+
+        Callers must enroll with the configured Token Vault provider before the credential can be
+        resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and
+        `check_authentication_status` tools that guide the caller through the enrollment flow.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        provider:
+          description: Name of the upstream credential provider registered in the Token Vault directory.
+          type: string
+        subject_token_type:
+          description: |
+            The kind of bearer token the caller presents, which the Token Vault exchanges for the
+            upstream credential. Omit it unless the request shape makes the token type ambiguous: it is
+            otherwise resolved from the request, and failing that from the token's shape (a JWS is an
+            `access_token`, anything else an `api_key`).
+          type: string
+          enum:
+            - access_token
+            - api_key
+        credential:
+          $ref: '#/components/schemas/AIGatewayTokenVaultCredential'
+        cache:
+          description: |
+            Optional best-effort cache for exchanged credentials, shared across the cluster. Losing it
+            only costs a re-exchange. Credentials are encrypted with the keys held by the Token Vault
+            Datastore before being cached.
+          type: object
+          additionalProperties: false
+          properties:
+            redis:
+              $ref: '#/components/schemas/AIGatewayRedisCloudConfiguration'
+        storage:
+          description: |
+            Read-only. The directory and encryption key versions this entity's credentials are stored
+            with, resolved from the `token-vault` Datastore referenced in `datastores`; change them on
+            the Datastore.
+          allOf:
+            - $ref: '#/components/schemas/TokenVaultDatastoreConfig'
+          readOnly: true
+      example:
+        provider: my-upstream-provider
+        subject_token_type: access_token
+        credential:
+          inbound:
+            location: header
+            name: Authorization
+            prefix: 'Bearer '
+        cache:
+          redis:
+            host: redis.internal
+            port: 6379
+      additionalProperties: false
+      required:
+        - provider
+      title: AIGatewayTokenVault
+      x-min-runtime-version: '2.3'
+    AIGatewayTokenVaultCredential:
+      description: |
+        Where the caller's subject token is read from, and where the credential the Token Vault returns
+        is placed on the upstream request.
+
+        Both placements default to `Authorization: Bearer <credential>` in a header, though an
+        `outbound` placement left unset honours whatever the provider advertises instead. Set them for
+        providers that take the credential elsewhere, such as an `x-api-key` header carrying the raw
+        credential.
+      type: object
+      properties:
+        inbound:
+          $ref: '#/components/schemas/AIGatewayTokenVaultCredentialPlacement'
+        outbound:
+          $ref: '#/components/schemas/AIGatewayTokenVaultCredentialPlacement'
+      additionalProperties: false
+      title: AIGatewayTokenVaultCredential
+    AIGatewayTokenVaultCredentialPlacement:
+      type: object
+      properties:
+        location:
+          description: 'Whether the credential travels in a header, the request body, or the query string. Defaults to `header`.'
+          type: string
+          enum:
+            - header
+            - body
+            - query
+        name:
+          description: |
+            Name of the header, query parameter, or body field carrying the credential. Defaults to
+            `Authorization` for a header, `access_token` otherwise.
+          type: string
+        prefix:
+          description: |
+            String prepended verbatim to the credential value. Defaults to `Bearer ` (with its trailing
+            space) for a header, and to no prefix otherwise. Set it to an empty string when the provider
+            expects the raw credential.
+          type: string
+          minLength: 0
+      example:
+        location: header
+        name: x-api-key
+        prefix: ''
+      additionalProperties: false
+      title: AIGatewayTokenVaultCredentialPlacement
+    AIGatewayTokenVaultCredentialManager:
+      description: |-
+        Serves the self-service enrollment UI through which end users authorize the upstream providers
+        this auth strategy authenticates against. Omit `token_vault` entirely to serve no such UI.
+
+        Requires a `token-vault` Datastore reference in `datastores`; enabling the credential manager
+        without one is rejected.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        enable_credential_manager:
+          description: Whether the self-service enrollment UI is served for this auth strategy.
+          type: boolean
+          default: false
+        storage:
+          description: |
+            Read-only. The directory and encryption key versions this entity's credentials are stored
+            with, resolved from the `token-vault` Datastore referenced in `datastores`; change them on
+            the Datastore.
+          allOf:
+            - $ref: '#/components/schemas/TokenVaultDatastoreConfig'
+          readOnly: true
+      additionalProperties: false
+      title: AIGatewayTokenVaultCredentialManager
+      x-min-runtime-version: '2.3'
     AIGatewayRedisAWSAuthentication:
       description: AWS specific configs for connecting to a Cloud Provider's redis instance.
       type: object
@@ -11235,6 +13043,34 @@ components:
           example: 'https://mcp.internal.kongair.com'
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+        certificates:
+          description: |
+            Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
+            referenced by name. Each entry must be the `name` of an existing AI Certificate on the same
+            AI Gateway.
+
+            The certificates are applied to the Kong Gateway Service generated for this MCP Server, which
+            proxies requests to the upstream MCP server. The generated Service presents a single client
+            certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one
+            certificate may be configured.
+
+            If unset, no client certificate is presented to the upstream.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCertificateReference'
+          maxItems: 1
+        ca_certificates:
+          description: |
+            CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by
+            name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.
+
+            The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+            generated for this MCP Server, which proxies requests to the upstream MCP server.
+
+            If unset, the default trust store is used to verify the upstream's TLS certificate.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCACertificateReference'
       additionalProperties: false
       required:
         - url
@@ -11327,6 +13163,34 @@ components:
           example: 'https://mcp.internal.kongair.com'
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+        certificates:
+          description: |
+            Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
+            referenced by name. Each entry must be the `name` of an existing AI Certificate on the same
+            AI Gateway.
+
+            The certificates are applied to the Kong Gateway Service generated for this MCP Server, which
+            proxies requests to the upstream MCP server. The generated Service presents a single client
+            certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one
+            certificate may be configured.
+
+            If unset, no client certificate is presented to the upstream.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCertificateReference'
+          maxItems: 1
+        ca_certificates:
+          description: |
+            CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by
+            name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.
+
+            The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+            generated for this MCP Server, which proxies requests to the upstream MCP server.
+
+            If unset, the default trust store is used to verify the upstream's TLS certificate.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCACertificateReference'
         proxy:
           $ref: '#/components/schemas/AIGatewayProxyConfig'
       additionalProperties: false
@@ -11395,6 +13259,34 @@ components:
           example: 'https://mcp.internal.kongair.com'
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+        certificates:
+          description: |
+            Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
+            referenced by name. Each entry must be the `name` of an existing AI Certificate on the same
+            AI Gateway.
+
+            The certificates are applied to the Kong Gateway Service generated for this MCP Server, which
+            proxies requests to the upstream MCP server. The generated Service presents a single client
+            certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one
+            certificate may be configured.
+
+            If unset, no client certificate is presented to the upstream.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCertificateReference'
+          maxItems: 1
+        ca_certificates:
+          description: |
+            CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by
+            name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.
+
+            The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+            generated for this MCP Server, which proxies requests to the upstream MCP server.
+
+            If unset, the default trust store is used to verify the upstream's TLS certificate.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayCACertificateReference'
         tools_cache_ttl_seconds:
           description: |
             The time-to-live (TTL) for the upstream tools cache in seconds. Set to `0` to refresh on
@@ -11746,6 +13638,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -11806,6 +13702,34 @@ components:
               example: 'https://mcp.internal.kongair.com'
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+            certificates:
+              description: |
+                Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
+                referenced by name. Each entry must be the `name` of an existing AI Certificate on the same
+                AI Gateway.
+
+                The certificates are applied to the Kong Gateway Service generated for this MCP Server, which
+                proxies requests to the upstream MCP server. The generated Service presents a single client
+                certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one
+                certificate may be configured.
+
+                If unset, no client certificate is presented to the upstream.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCertificateReference'
+              maxItems: 1
+            ca_certificates:
+              description: |
+                CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by
+                name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.
+
+                The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service
+                generated for this MCP Server, which proxies requests to the upstream MCP server.
+
+                If unset, the default trust store is used to verify the upstream's TLS certificate.
+              type: array
+              items:
+                $ref: '#/components/schemas/AIGatewayCACertificateReference'
             allowed_versions:
               description: |-
                 The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
@@ -11852,6 +13776,8 @@ components:
           minItems: 1
         access:
           $ref: '#/components/schemas/AIGatewayMCPServerListenerAccess'
+        rate_limiting:
+          $ref: '#/components/schemas/AIGatewayMCPServerRateLimiting'
         display_name:
           description: The display name for the MCP Server.
           type: string
@@ -11874,6 +13800,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -11995,6 +13925,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -12031,6 +13965,8 @@ components:
             $ref: '#/components/schemas/AIGatewayMCPPassthroughTool'
         access:
           $ref: '#/components/schemas/AIGatewayMCPServerListenerAccess'
+        rate_limiting:
+          $ref: '#/components/schemas/AIGatewayMCPServerRateLimiting'
         display_name:
           description: The display name for the MCP Server.
           type: string
@@ -12053,6 +13989,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -12107,6 +14047,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -12470,6 +14414,22 @@ components:
                 type: string
               default:
                 - sub
+            credential_claims:
+              description: |-
+                Claim paths used to derive virtual credentials when consumer mapping is not used.
+                The paths are evaluated in order. The first matching claim is used.
+
+                **Requires a minimum runtime version of `2.3`**.
+              type: array
+              items:
+                type: array
+                description: 'Path to the claim in the token payload. For example, `[ account, id ]` maps to `account.id`.'
+                minItems: 1
+                items:
+                  type: string
+              default:
+                - - sub
+              x-min-runtime-version: '2.3'
             issuer:
               description: URL that identifies the OpenID Provider
               type: string
@@ -12649,6 +14609,8 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
         type:
           type: string
           enum:
@@ -12751,11 +14713,15 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
         type:
           type: string
           enum:
             - openid-connect
           x-terraform-transform-const: true
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVaultCredentialManager'
         config:
           description: |
             Configuration for the OpenID Connect auth strategy.
@@ -12874,6 +14840,22 @@ components:
                 type: string
               default:
                 - sub
+            credential_claims:
+              description: |-
+                Claim paths used to derive virtual credentials when consumer mapping is not used.
+                The paths are evaluated in order. The first matching claim is used.
+
+                **Requires a minimum runtime version of `2.3`**.
+              type: array
+              items:
+                type: array
+                description: 'Path to the claim in the token payload. For example, `[ account, id ]` maps to `account.id`.'
+                minItems: 1
+                items:
+                  type: string
+              default:
+                - - sub
+              x-min-runtime-version: '2.3'
             issuer:
               description: URL that identifies the OpenID Provider
               type: string
@@ -13022,6 +15004,8 @@ components:
                     verification. When false, the request continues without an authenticated principal set.
                   type: boolean
                   default: true
+                jit:
+                  $ref: '#/components/schemas/AIGatewayAuthStrategyOpenIDConnectJIT'
           required:
             - cache_tokens_salt
       required:
@@ -13029,6 +15013,26 @@ components:
         - name
         - type
       title: AIGatewayAuthStrategyOpenIDConnectConfig
+    AIGatewayAuthStrategyOpenIDConnectJIT:
+      description: |-
+        Configure claims used to create and update Kong Identity principals just in time.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        all_claims:
+          description: 'When true, share all token claims when creating or updating a principal.'
+          type: boolean
+          default: false
+        claims:
+          description: |
+            Token claims to share when creating or updating a principal. Omit this field when all_claims is true.
+          type: array
+          items:
+            type: string
+            minLength: 1
+          minItems: 1
+      x-min-runtime-version: '2.3'
     AIGatewayModelProviderReference:
       description: Reference to a model provider instance by name.
       type: string
@@ -13058,6 +15062,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13072,6 +15080,52 @@ components:
         - display_name
         - name
         - config
+    AIGatewayModelProviderBaseten:
+      description: |-
+        Configuration for an upstream model provider.
+
+        **Requires a minimum runtime version of `2.3`**.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - baseten
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this model provider instance.
+          type: string
+          example: Azure AI SE
+          maxLength: 256
+          minLength: 1
+        name:
+          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          example: azure-ai-se
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
+        config:
+          description: Configuration for the model provider.
+          type: object
+          additionalProperties: false
+          properties:
+            auth:
+              $ref: '#/components/schemas/AIGatewayModelProviderConfigAuthBasic'
+          required:
+            - auth
+      required:
+        - type
+        - display_name
+        - name
+        - config
+      x-min-runtime-version: '2.3'
     AIGatewayModelProviderCerebras:
       description: |
         Configuration for an upstream model provider.
@@ -13097,6 +15151,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13136,6 +15194,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13175,6 +15237,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13214,6 +15280,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13253,6 +15323,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13292,6 +15366,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13331,6 +15409,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13370,6 +15452,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13409,6 +15495,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13448,6 +15538,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13487,6 +15581,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13526,6 +15624,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13565,6 +15667,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13604,6 +15710,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13645,6 +15755,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           description: Configuration for the model provider.
           type: object
@@ -13748,6 +15862,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           type: object
           additionalProperties: false
@@ -13917,6 +16035,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           type: object
           additionalProperties: false
@@ -14029,6 +16151,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           type: object
           additionalProperties: false
@@ -14150,6 +16276,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVault'
         config:
           type: object
           additionalProperties: false
@@ -14312,6 +16442,7 @@ components:
         mapping:
           anthropic: '#/components/schemas/AIGatewayModelProviderAnthropic'
           azure: '#/components/schemas/AIGatewayModelProviderAzure'
+          baseten: '#/components/schemas/AIGatewayModelProviderBaseten'
           bedrock: '#/components/schemas/AIGatewayModelProviderBedrock'
           cerebras: '#/components/schemas/AIGatewayModelProviderCerebras'
           cohere: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14333,6 +16464,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
+        - $ref: '#/components/schemas/AIGatewayModelProviderBaseten'
         - $ref: '#/components/schemas/AIGatewayModelProviderBedrock'
         - $ref: '#/components/schemas/AIGatewayModelProviderCerebras'
         - $ref: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14357,6 +16489,7 @@ components:
         mapping:
           anthropic: '#/components/schemas/AIGatewayModelProviderAnthropic'
           azure: '#/components/schemas/AIGatewayModelProviderAzure'
+          baseten: '#/components/schemas/AIGatewayModelProviderBaseten'
           bedrock: '#/components/schemas/AIGatewayModelProviderBedrock'
           cerebras: '#/components/schemas/AIGatewayModelProviderCerebras'
           cohere: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14378,6 +16511,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
+        - $ref: '#/components/schemas/AIGatewayModelProviderBaseten'
         - $ref: '#/components/schemas/AIGatewayModelProviderBedrock'
         - $ref: '#/components/schemas/AIGatewayModelProviderCerebras'
         - $ref: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14410,6 +16544,7 @@ components:
         mapping:
           anthropic: '#/components/schemas/AIGatewayModelProviderAnthropic'
           azure: '#/components/schemas/AIGatewayModelProviderAzure'
+          baseten: '#/components/schemas/AIGatewayModelProviderBaseten'
           bedrock: '#/components/schemas/AIGatewayModelProviderBedrock'
           cerebras: '#/components/schemas/AIGatewayModelProviderCerebras'
           cohere: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14431,6 +16566,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
+        - $ref: '#/components/schemas/AIGatewayModelProviderBaseten'
         - $ref: '#/components/schemas/AIGatewayModelProviderBedrock'
         - $ref: '#/components/schemas/AIGatewayModelProviderCerebras'
         - $ref: '#/components/schemas/AIGatewayModelProviderCohere'
@@ -14723,6 +16859,22 @@ components:
                 type: string
               default:
                 - sub
+            credential_claims:
+              description: |-
+                Claim paths used to derive virtual credentials when consumer mapping is not used.
+                The paths are evaluated in order. The first matching claim is used.
+
+                **Requires a minimum runtime version of `2.3`**.
+              type: array
+              items:
+                type: array
+                description: 'Path to the claim in the token payload. For example, `[ account, id ]` maps to `account.id`.'
+                minItems: 1
+                items:
+                  type: string
+              default:
+                - - sub
+              x-min-runtime-version: '2.3'
             issuer:
               description: URL that identifies the OpenID Provider
               type: string
@@ -14934,6 +17086,8 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
         type:
           type: string
           enum:
@@ -15045,11 +17199,15 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
+        datastores:
+          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
         type:
           type: string
           enum:
             - openid-connect
           x-terraform-transform-const: true
+        token_vault:
+          $ref: '#/components/schemas/AIGatewayTokenVaultCredentialManager'
         config:
           description: |
             Configuration for the OpenID Connect auth strategy.
@@ -15168,6 +17326,22 @@ components:
                 type: string
               default:
                 - sub
+            credential_claims:
+              description: |-
+                Claim paths used to derive virtual credentials when consumer mapping is not used.
+                The paths are evaluated in order. The first matching claim is used.
+
+                **Requires a minimum runtime version of `2.3`**.
+              type: array
+              items:
+                type: array
+                description: 'Path to the claim in the token payload. For example, `[ account, id ]` maps to `account.id`.'
+                minItems: 1
+                items:
+                  type: string
+              default:
+                - - sub
+              x-min-runtime-version: '2.3'
             issuer:
               description: URL that identifies the OpenID Provider
               type: string
@@ -15316,6 +17490,8 @@ components:
                     verification. When false, the request continues without an authenticated principal set.
                   type: boolean
                   default: true
+                jit:
+                  $ref: '#/components/schemas/AIGatewayAuthStrategyOpenIDConnectJIT'
           required:
             - cache_tokens_salt
         id:
@@ -15332,6 +17508,112 @@ components:
         - created_at
         - updated_at
       title: AIGatewayAuthStrategyOpenIDConnectConfig
+    UpdateCostManagementTags:
+      type: object
+      properties:
+        headers:
+          description: |
+            Request headers captured as cost tags. Each header is mapped to one tag key.
+            Together with `prefixes`, at most 32 entries are allowed.
+          type: array
+          items:
+            $ref: '#/components/schemas/CostTagHeader'
+          maxItems: 32
+        prefixes:
+          description: |
+            Request header prefixes. A request header matches a prefix when its name is the prefix
+            followed by `-` and a remainder, compared case-insensitively. For example, the prefix
+            `my-co` matches `my-co-region` but not `my-company`. The remainder becomes the tag key,
+            so `my-co-region` is captured as the tag `region`. Headers whose remainder is not a
+            valid tag key (see the `tag_key` pattern, at most 128 characters) produce no tag and
+            are skipped; capture continues for the remaining headers.
+            Headers starting with `ai-cost-` are always captured, in addition to any configured here.
+            Together with `headers`, at most 32 entries are allowed.
+          type: array
+          items:
+            $ref: '#/components/schemas/CostTagPrefix'
+          maxItems: 32
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      required:
+        - headers
+        - prefixes
+    CostManagementTags:
+      type: object
+      properties:
+        headers:
+          description: |
+            Request headers captured as cost tags. Each header is mapped to one tag key.
+            Together with `prefixes`, at most 32 entries are allowed.
+          type: array
+          items:
+            $ref: '#/components/schemas/CostTagHeader'
+          maxItems: 32
+        prefixes:
+          description: |
+            Request header prefixes. A request header matches a prefix when its name is the prefix
+            followed by `-` and a remainder, compared case-insensitively. For example, the prefix
+            `my-co` matches `my-co-region` but not `my-company`. The remainder becomes the tag key,
+            so `my-co-region` is captured as the tag `region`. Headers whose remainder is not a
+            valid tag key (see the `tag_key` pattern, at most 128 characters) produce no tag and
+            are skipped; capture continues for the remaining headers.
+            Headers starting with `ai-cost-` are always captured, in addition to any configured here.
+            Together with `headers`, at most 32 entries are allowed.
+          type: array
+          items:
+            $ref: '#/components/schemas/CostTagPrefix'
+          maxItems: 32
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - headers
+        - prefixes
+    CostTagHeader:
+      description: Maps a request header to a cost tag key.
+      type: object
+      properties:
+        name:
+          description: |
+            Name of the request header. Cannot be a credential header, such as `authorization`,
+            `x-api-key` or `cookie`. Names are compared case-insensitively.
+          type: string
+          example: my-tenant-id
+          pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$'
+        tag_key:
+          description: Key of the cost tag the header value is stored under.
+          type: string
+          example: tenant
+          maxLength: 128
+          minLength: 1
+          pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+      required:
+        - name
+        - tag_key
+      title: CostTagHeader
+    CostTagPrefix:
+      description: A request header prefix whose matching headers are captured as cost tags.
+      type: object
+      properties:
+        name:
+          description: |
+            Header prefix with at least two dash-separated segments. Cannot be a credential
+            header name, nor a prefix of one, such as `x-goog` for `x-goog-api-key`. Credential
+            headers are never captured, even when they match a configured prefix. Prefixes are
+            compared case-insensitively.
+          type: string
+          example: my-co
+          pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)+$'
+      required:
+        - name
+      title: CostTagPrefix
     PublicLabels:
       description: |
         Public labels store information about an entity that can be used for filtering a list of objects.
@@ -16076,6 +18358,33 @@ components:
             config_hash: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
             created_at: '2024-01-01T00:00:00.000Z'
             updated_at: '2024-01-01T00:00:00.000Z'
+    CostManagementTagsRequest:
+      summary: Capture two headers and one prefix
+      value:
+        headers:
+          - name: my-tenant-id
+            tag_key: tenant
+          - name: x-acme-tier
+            tag_key: pricing-tier
+        prefixes:
+          - name: my-co
+    CostManagementTagsResponseExample:
+      summary: Configured cost management tags
+      value:
+        headers:
+          - name: my-tenant-id
+            tag_key: tenant
+          - name: x-acme-tier
+            tag_key: pricing-tier
+        prefixes:
+          - name: my-co
+        created_at: '2026-10-01T10:00:00.000Z'
+        updated_at: '2026-10-15T09:30:00.000Z'
+    CostManagementTagsDefaults:
+      summary: Defaults when nothing has been configured
+      value:
+        headers: []
+        prefixes: []
     UnauthorizedExample:
       value:
         status: 401
@@ -16094,6 +18403,17 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+  requestBodies:
+    UpdateCostManagementTags:
+      description: The cost management tags configuration that replaces the existing one.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCostManagementTags'
+          examples:
+            CostManagementTags:
+              $ref: '#/components/examples/CostManagementTagsRequest'
   responses:
     ListAIGatewaysResponse:
       description: A paginated list of AI Gateways.
@@ -16379,6 +18699,56 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AIGatewayVault'
+    ListAIGatewayDatastoresResponse:
+      description: A paginated list of AI Gateway Datastores.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayDatastoreSummary'
+              meta:
+                $ref: '#/components/schemas/CursorMetaWithTotal'
+            required:
+              - data
+              - meta
+    CreateAIGatewayDatastoreResponse:
+      description: AI Gateway Datastore created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayDatastore'
+    GetAIGatewayDatastoreResponse:
+      description: A successful response returning an AI Gateway Datastore.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayDatastore'
+    UpdateAIGatewayDatastoreResponse:
+      description: Datastore updated successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayDatastore'
+    ListAIGatewayDatastoreUsageResponse:
+      description: A paginated list of the policies and models that reference an AI Gateway Datastore.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayDatastoreUsageEntry'
+              meta:
+                $ref: '#/components/schemas/CursorMetaWithTotal'
+            required:
+              - data
+              - meta
     CreateAIGatewayPolicyResponse:
       description: Policy created successfully.
       content:
@@ -16795,6 +19165,41 @@ components:
             required:
               - data
               - meta
+    ListAIGatewayAuthStrategyUsageResponse:
+      description: A successful response listing usage of an Auth Strategy.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              agents:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayAgent'
+              models:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayModel'
+              mcp_servers:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayMCPServer'
+            additionalProperties: false
+            required:
+              - agents
+              - models
+              - mcp_servers
+    CostManagementTagsResponse:
+      description: The cost management tags configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CostManagementTags'
+          examples:
+            CostManagementTags:
+              $ref: '#/components/examples/CostManagementTagsResponseExample'
+            Defaults:
+              $ref: '#/components/examples/CostManagementTagsDefaults'
     Unauthorized:
       description: Unauthorized
       content:
@@ -16862,6 +19267,8 @@ tags:
     description: API related to the management of AI Gateway Config Stores.
   - name: AI Gateway Vaults
     description: API related to the management of AI Gateway vaults for storing secrets.
+  - name: AI Gateway Datastores
+    description: 'Datastores that back AI Gateway policies and models, such as Redis and vector database connections.'
   - name: AI Gateway Agents
     description: AI Agents registered with the AI Gateway.
   - name: AI Gateway Consumers
@@ -16882,5 +19289,7 @@ tags:
     description: MCP Servers that expose tools for AI Gateway integrations.
   - name: AI Gateway Model Providers
     description: Model providers that define the backend AI service connections for the AI Gateway.
+  - name: AI Gateway Cost Management Tags
+    description: Configure which request headers are captured as cost tags on AI usage events. The configuration applies to the organization in the region the request is sent to.
 security:
   - konnectAccessToken: []
