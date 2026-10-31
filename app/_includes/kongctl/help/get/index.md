@@ -25,25 +25,26 @@ Examples:
   kongctl get audit-logs destinations
 
 Available Commands:
-  ai-gateway    List or get Konnect AI Gateways
-  analytics     Manage Konnect Analytics resources
-  api           List or get Konnect APIs
-  audit-logs    Get Konnect organization audit logs
-  auth-strategy List or get Konnect authentication strategies
-  catalog       Manage Konnect catalog resources
-  dcr-provider  List or get Konnect DCR providers
-  event-gateway List or get Konnect Event Gateways
-  extension     Get a kongctl CLI extension
-  gateway       Manage Konnect Kong Gateway resources
-  konnect       Manage Konnect resources
-  me            Get current user information
-  mesh          Manage Kong Mesh control plane resources
-  organization  Get current organization information
-  pat           List or get Konnect personal access tokens
-  portal        List or get Konnect portals
-  profile       Manage kongctl profiles
-  regions       List available Konnect regions
-  spat          List or get Konnect system account access tokens
+  ai-cost-management Manage regional AI cost capture
+  ai-gateway         List or get Konnect AI Gateways
+  analytics          Manage Konnect Analytics resources
+  api                List or get Konnect APIs
+  audit-logs         Get Konnect organization audit logs
+  auth-strategy      List or get Konnect authentication strategies
+  catalog            Manage Konnect catalog resources
+  dcr-provider       List or get Konnect DCR providers
+  event-gateway      List or get Konnect Event Gateways
+  extension          Get a kongctl CLI extension
+  gateway            Manage Konnect Kong Gateway resources
+  konnect            Manage Konnect resources
+  me                 Get current user information
+  mesh               Manage Kong Mesh control plane resources
+  organization       Get current organization information
+  pat                List or get Konnect personal access tokens
+  portal             List or get Konnect portals
+  profile            Manage kongctl profiles
+  regions            List available Konnect regions
+  spat               List or get Konnect system account access tokens
 
 
 Flags:

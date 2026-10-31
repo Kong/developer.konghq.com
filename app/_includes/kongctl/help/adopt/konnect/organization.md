@@ -6,12 +6,6 @@ Usage:
 Aliases:
   organization, org, orgs
 
-Examples:
-  # Get current organization information
-  kongctl get organization
-  # Get current organization information using explicit product
-  kongctl get konnect organization
-
 Available Commands:
   team        Adopt an existing Konnect team into namespace management
 

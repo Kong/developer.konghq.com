@@ -6,10 +6,6 @@ Usage:
 Aliases:
   konnect, k, K
 
-Examples:
-  # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
-
 Available Commands:
   mesh        Inspect what a control plane computed for a resource
 
