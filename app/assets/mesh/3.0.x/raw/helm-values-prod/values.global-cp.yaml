@@ -1,48 +1,76 @@
+# Production profile for a universal Global Control Plane hosted on Kubernetes.
+# Prepare an external Postgres database and all referenced Secrets in the
+# installation namespace (kong-mesh-system in the examples) before installing.
 kuma:
   controlPlane:
     mode: "global"
+    environment: "universal"
 
     tls:
       apiServer:
-        # (action): please prepare the content of this secret before installing Kong Mesh
-        # it contains the keys "tls.crt" and "tls.key", and the content items should be in "PEM" format
-        # more details on preparing certificates: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/
+        # (action): create this Secret with PEM-encoded tls.crt and tls.key.
+        # The certificate must cover the hostname used by API clients.
+        # kubectl create -n kong-mesh-system secret tls kong-mesh-apiserver-tls --cert=$API_SERVER_CERT_FILE --key=$API_SERVER_KEY_FILE
         secretName: kong-mesh-apiserver-tls
-      kdsGlobalServer:
-        # (action): please prepare the content of this secret before installing Kong Mesh
-        # it contains the keys "ca.crt", "tls.crt" and "tls.key", and the content items should be in "PEM" format
-        # more details on preparing certificates: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/
-        secretName: kong-mesh-kds-global-server-tls
-
-    apiServer:
-      corsAllowedDomains:
-        # change these values you want to access the control plane API server or Mesh GUI from a custom domain
-        - https://localhost:5682
-      # if you want to access the API server using the HTTP port, add the following line
-      # - http://localhost:5681
 
     defaults:
-      # change these values if you want to open the admin access rights of control plane API server to more groups
+      # Add the groups or users that should administer this control plane.
+      # Keep mesh-system:admin so the bootstrapped admin token can be used.
+      # Kubernetes administrator groups do not apply in universal mode.
       adminRoleGroups:
         - mesh-system:admin
-        - system:masters
-        - kubeadm:cluster-admins
 
     envVars:
-      # if you want to access the API server using the HTTP port, change the following switch to "true"
+      # Use HTTPS for API access. Configure clients with the API certificate CA.
       KUMA_API_SERVER_HTTP_ENABLED: "false"
+      # CORS stays disabled by default. Set KUMA_API_SERVER_CORS_ALLOWED_DOMAINS
+      # to explicit trusted origins only if cross-origin API access is needed.
+
+      # Each Zone CP must present a zone token and trust the KDS certificate CA.
+      # Generate tokens with kumactl generate zone-token --zone <zone-name> --scope cp.
+      KUMA_MULTIZONE_GLOBAL_KDS_AUTH_TYPE: zoneToken
+      KUMA_MULTIZONE_GLOBAL_KDS_TLS_CERT_FILE: /var/run/secrets/kuma.io/kds-global/tls.crt
+      KUMA_MULTIZONE_GLOBAL_KDS_TLS_KEY_FILE: /var/run/secrets/kuma.io/kds-global/tls.key
+
+      # (action): replace these values with the external database connection details.
+      # Create the database first and give this user permissions to run migrations;
+      # the chart runs migrations in an init container before starting the CP.
+      # The host must match the Postgres server certificate for verifyFull below.
+      KUMA_STORE_POSTGRES_HOST: postgres.example.com
+      KUMA_STORE_POSTGRES_USER: kuma
+      KUMA_STORE_POSTGRES_DB_NAME: kuma
 
     secrets:
-      # (action): please prepare the content of this secret before installing Kong Mesh
-      # to obtain this license, please contact your Kong Account Manager and import it into your cluster:
-      # kubectl create  -n kong-mesh-system secret generic kong-mesh-license --from-file license.json=$KMESH_LICENSE_FILE
+      # (action): obtain a license from your Kong Account Manager and create this Secret.
+      # kubectl create -n kong-mesh-system secret generic kong-mesh-license --from-file license.json=$KMESH_LICENSE_FILE
       - Secret: kong-mesh-license
         Key: license.json
         Env: KMESH_LICENSE_INLINE
+      # (action): create this Secret with the database user's password.
+      # kubectl create -n kong-mesh-system secret generic kong-mesh-postgres --from-file password=$POSTGRES_PASSWORD_FILE
+      - Secret: kong-mesh-postgres
+        Key: password
+        Env: KUMA_STORE_POSTGRES_PASSWORD
 
-    # please tune the resource allocation according to your actual mesh size and traffic load after Kong Mesh is installed
-    # try to make the resource limits identical to requests to make components are assigned as a QoS class of Guaranteed
-    # more details on sizing the CP: https://docs.konghq.com/mesh/latest/introduction/kuma-requirements/#sizing-your-control-plane
+    extraSecrets:
+      kdsGlobal:
+        # (action): create this Secret with PEM-encoded tls.crt and tls.key.
+        # The certificate must cover the hostname used by Zone CPs to connect.
+        # Distribute its signing CA to the Zone CPs as their KDS trusted CA.
+        # kubectl create -n kong-mesh-system secret tls kong-mesh-kds-global-tls --cert=$KDS_CERT_FILE --key=$KDS_KEY_FILE
+        name: kong-mesh-kds-global-tls
+        mountPath: /var/run/secrets/kuma.io/kds-global
+        readOnly: true
+
+    globalZoneSyncService:
+      enabled: true
+      # (action): choose how Zone CPs reach this service. Adapt the service type,
+      # annotations and allowed source ranges to your load balancer and network.
+      # Zone CPs connect to grpcs://<global-kds-hostname>:5685.
+      type: LoadBalancer
+      port: 5685
+
+    # Tune resources according to mesh size and load after installation.
     resources:
       requests:
         cpu: 1000m
@@ -51,10 +79,13 @@ kuma:
         cpu: 1000m
         memory: 1024Mi
 
+    # replicas is used when autoscaling is disabled; otherwise minReplicas applies.
     replicas: 2
     autoscaling:
+      # Requires a working Kubernetes resource metrics API (usually Metrics Server).
       enabled: true
-
+      minReplicas: 2
+      maxReplicas: 5
       metrics:
         - type: Resource
           resource:
@@ -69,6 +100,16 @@ kuma:
               type: Utilization
               averageUtilization: 50
 
-
     podDisruptionBudget:
       enabled: true
+      maxUnavailable: 1
+
+  postgres:
+    port: "5432"
+    tls:
+      mode: verifyFull
+      # (action): create this Secret with the PEM-encoded Postgres signing CA.
+      # kubectl create -n kong-mesh-system secret generic kong-mesh-postgres-ca --from-file ca.crt=$POSTGRES_CA_FILE
+      caSecretName: kong-mesh-postgres-ca
+      # If Postgres requires client certificates, create a Secret with tls.crt
+      # and tls.key and set postgres.tls.secretName to its name.
