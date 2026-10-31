@@ -68,7 +68,7 @@ rows:
             - title: Konnect UI
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
-                then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
+                then navigate to **Gateways** and click **New AI gateway**.
   - columns:
       - blocks:
         - type: card
