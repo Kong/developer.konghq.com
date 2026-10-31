@@ -32,7 +32,9 @@ related_resources:
 
 The Model Context Protocol (MCP) [2026-07-28 revision](https://modelcontextprotocol.io/specification/2026-07-28/) is the largest change to MCP since launch. 
 
-Earlier MCP revisions (`2025-06-18` and `2025-11-25`) share a session-based transport. A client establishes a session with an `initialize`/`initialized` handshake, receives an `Mcp-Session-Id`, and carries that ID on every subsequent request. The server handling that session must track its state, which in practice requires sticky routing behind a load balancer.
+Earlier MCP revisions (`2025-06-18` and `2025-11-25`) use the `initialize`/`initialized` handshake, but session IDs are optional. A server MAY assign an `Mcp-Session-Id` during initialization. If one is issued, the client MUST include it on subsequent HTTP requests. The [2025-11-25 transport specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#session-management) does not require every server to create a session ID or retain per-client session state.
+
+For deployments that do maintain server-side session state, sticky routing or a shared state store may be needed. This is an implementation consideration, not a requirement for every server using these MCP revisions.
 
 The `2026-07-28` revision removes the handshake and `Mcp-Session-Id` entirely. Every request is self-contained: the client declares its protocol revision and identity on each call instead of once at connection time. Any server instance can handle any request, and sticky routing is no longer required at the protocol layer.
 
@@ -53,7 +55,7 @@ columns:
     key: impact
 rows:
   - area: Session lifecycle
-    before: "`initialize` handshake plus `Mcp-Session-Id` on every request"
+    before: "`initialize` handshake; `Mcp-Session-Id` on subsequent requests only if issued"
     after: "No session; protocol version and client info carried in `_meta` per request"
     impact: "Stateless dispatch: no `initialize`/`initialized` exchange, no `Mcp-Session-Id` issued or expected, and an inbound `Mcp-Session-Id` header is ignored"
   - area: Capability exchange
