@@ -164,7 +164,7 @@ rows:
                   [{{site.identity}}](/identity/) principals are a centralized, region-scoped identity for clients that authenticate to a {{site.base_gateway}} hosted in {{site.konnect_short_name}}.
                   Use principals when you want to share a client identity across multiple gateways without manually syncing Consumers, or when you want to attach metadata to a client to drive plugin behavior.
 
-                  See [Principals and directories](/identity/principals/) for more information.
+                  See [Principals](/identity/principals/) and [Directories](/identity/directories/) for more information.
 
   - column_count: 3
     columns:

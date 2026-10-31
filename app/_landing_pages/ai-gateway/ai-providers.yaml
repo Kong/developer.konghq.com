@@ -5,6 +5,7 @@ metadata:
   products:
     - ai-gateway
   works_on:
+    - on-prem
     - konnect
   breadcrumbs:
     - /ai-gateway/
@@ -131,6 +132,13 @@ rows:
             icon: /assets/icons/kimi.svg
             cta:
               url: /ai-gateway/ai-providers/kimi/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Baseten
+            icon: /assets/icons/baseten.svg
+            cta:
+              url: /ai-gateway/ai-providers/baseten/
       - blocks:
         - type: icon_card
           config:

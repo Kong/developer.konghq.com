@@ -29,6 +29,7 @@ related_resources:
     url: /ai-gateway/model-cost-management/
 
 works_on:
+  - on-prem
   - konnect
 ---
 
@@ -49,7 +50,7 @@ Each {{site.ai_gateway}} Policy returns a set of tokens. Log entries include the
 {{site.ai_gateway}} logs capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
 
 {:.warning}
-> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
+> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) aren't supported.
 
 {% table %}
 columns:
@@ -65,7 +66,9 @@ rows:
   - property: "`ai.proxy.usage.prompt_tokens`"
     description: |
       The number of tokens used for prompting.
-      Used for text-based requests (chat, completions, embeddings).
+      The gateway reports this field only for text-based requests (chat, completions, embeddings).
+      This field is deprecated.
+      Use `ai.proxy.usage.input_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.prompt_tokens_details`"
     description: |
       A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`, `cache_write_tokens`, `cache_write_tokens_by_ttl`).
@@ -82,30 +85,44 @@ rows:
   - property: "`ai.proxy.usage.completion_tokens`"
     description: |
       The number of tokens used for completion.
-      Used for text-based responses (chat, completions).
+      The gateway reports this field only for text-based responses (chat, completions).
+      This field is deprecated.
+      Use `ai.proxy.usage.output_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.completion_tokens_details`"
     description: |
        A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.total_tokens`"
     description: |
       The total number of tokens used (input + output).
-      Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
-      The total number of input tokens (text + image + audio).
-      Used for non-text requests (e.g., image or audio generation).
+      The total number of input tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
-      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
+      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`, `video_tokens`).
+      The breakdown also includes the cache fields `cached_tokens`, `cache_write_tokens`, and `cache_write_tokens_by_ttl`, with the same meaning as in `ai.proxy.usage.prompt_tokens_details`.
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
-      The total number of output tokens (text + audio).
-      Used for non-text responses (e.g., image or audio generation).
+      The total number of output tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
-      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`, `image_tokens`, `video_tokens`).
   - property: "`ai.proxy.usage.cost`"
-    description: The total cost of the request.
+    description: |
+      The total cost of the request.
+      This is the sum of `input_token_cost` and `output_token_cost`.
+  - property: "`ai.proxy.usage.input_token_cost`"
+    description: |
+      The cost of the input side of the request, including cache-read, cache-write, and other input tokens.
+  - property: "`ai.proxy.usage.output_token_cost`"
+    description: |
+      The cost of the output side of the request.
+  - property: "`ai.proxy.usage.service_tier`"
+    description: |
+      The service tier the provider reported for the request, for example `flex`.
+      The gateway logs this field only when the provider returns a service tier.
   - property: "`ai.proxy.usage.time_per_token`"
     description: |
       Average time to generate an output token (ms).
@@ -120,6 +137,8 @@ rows:
     description: The name of the AI service provider.
   - property: "`ai.proxy.meta.plugin_id`"
     description: Unique identifier of the Policy instance.
+  - property: "`ai.proxy.meta.model_id`"
+    description: The ID of the [AI Model](/ai-gateway/entities/ai-model/) entity that handled the request.
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
       Time taken by the LLM provider to generate the full response (ms).
@@ -444,7 +463,33 @@ A blocked request or response also populates the shared `ai.proxy.guardrail_trig
 * `block_source`: The Policy that produced the block.
 * `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
-This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked. The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies are the exception: they don't populate this object.
+This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked.
+The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies also populate this object starting from {{site.ai_gateway}} 2.3.
+
+### AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard logs
+
+If you use the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/), or [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) Policy, {{site.ai_gateway}} 2.3 and later can log the content that the Policy blocked.
+Set `config.log_blocked_content` to `true` to enable it.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy[\"prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Semantic Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-response-guard\"].output_faulty_response`"
+    description: |
+       The raw response that the AI Semantic Response Guard Policy blocked. For streaming responses, this is the blocked chunk. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+The AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard Policies populate the shared `ai.proxy.guardrail_triggered` object starting from {{site.ai_gateway}} 2.3, including when `config.continue_on_detection` is `true`.
 
 ### AI PII Sanitizer logs
 
@@ -484,7 +529,9 @@ rows:
 
 ### AI Prompt Compressor logs 
 
-When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
+When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, the number of compressed messages, the compression time, and metadata about the compression method and model used.
+
+The following fields summarize the compression for the whole request:
 
 {% table %}
 columns:
@@ -493,22 +540,47 @@ columns:
   - title: Description
     key: description
 rows:
+  - property: "`ai.compressor.provider`"
+    description: The compression provider, `kong` or `headroom`.
   - property: "`ai.compressor.original_token_count`"
-    description: The original number of tokens before compression.
+    description: The total number of tokens before compression.
   - property: "`ai.compressor.compress_token_count`"
-    description: The number of tokens after compression.
+    description: The total number of tokens after compression.
   - property: "`ai.compressor.save_token_count`"
-    description: The number of tokens saved by compression (original minus compressed).
-  - property: "`ai.compressor.compress_value`"
-    description: The compression ratio applied.
+    description: The total number of tokens saved by compression (original minus compressed).
+  - property: "`ai.compressor.compressed_message_count`"
+    description: The number of compressed messages.
+  - property: "`ai.compressor.duration`"
+    description: The time the compressor took, in milliseconds.
   - property: "`ai.compressor.compress_type`"
+    description: The type or method of compression used. Not set when the provider is `headroom`.
+{% endtable %}
+
+The `ai.compressor.compress_items` array holds one entry for each compressed message. The `headroom` provider reports one entry for the whole request. For more information, see [Headroom compressor service](/ai-gateway/policies/ai-prompt-compressor/#headroom-compressor-service) and [Compress agent traffic with Headroom using {{site.operator_product_name}}](/operator/konnect/how-to/ai-gateway-headroom/).
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`original_token_count`"
+    description: The number of tokens before compression.
+  - property: "`compress_token_count`"
+    description: The number of tokens after compression.
+  - property: "`save_token_count`"
+    description: The number of tokens saved by compression (original minus compressed).
+  - property: "`compress_value`"
+    description: The compression ratio applied.
+  - property: "`compress_type`"
     description: The type or method of compression used.
-  - property: "`ai.compressor.compressor_model`"
+  - property: "`compressor_model`"
     description: The model used to perform the compression.
-  - property: "`ai.compressor.msg_id`"
+  - property: "`msg_id`"
     description: The identifier of the message that was compressed.
-  - property: "`ai.compressor.information`"
-    description: A summary or message describing the result of compression.
+  - property: "`information`"
+    description: A summary of the compression result. For the `headroom` provider, it lists the transforms that Headroom applied and, when the request runs in a Headroom session, the Headroom session fields. For more information, see [Headroom session fields](/ai-gateway/policies/ai-prompt-compressor/#headroom-session-fields).
 {% endtable %}
 
 ### AI RAG Injector logs
@@ -750,14 +822,25 @@ The following example shows a structured {{site.ai_gateway}} log entry:
       }
     },
     "compressor": {
+      "provider": "kong",
       "original_token_count": 845,
       "compress_token_count": 485,
       "save_token_count": 360,
-      "compress_value": 0.5,
+      "compressed_message_count": 1,
+      "duration": 120,
       "compress_type": "rate",
-      "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
-      "msg_id": 1,
-      "information": "Compression was performed and saved 360 tokens"
+      "compress_items": [
+        {
+          "original_token_count": 845,
+          "compress_token_count": 485,
+          "save_token_count": 360,
+          "compress_value": 0.5,
+          "compress_type": "rate",
+          "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
+          "msg_id": 1,
+          "information": "Compression was performed and saved 360 tokens"
+        }
+      ]
     },
     "sanitizer": {
       "pii_identified": 3,

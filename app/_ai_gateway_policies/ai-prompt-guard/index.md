@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -84,7 +85,7 @@ formats:
 
 ## Detect without blocking
 
-{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name %}
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 {% entity_example %}
 type: policy

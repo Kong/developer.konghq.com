@@ -1,8 +1,42 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
+        "header_name": {
+          "type": "string",
+          "description": "The name of the response header used to increment the counters.",
+          "default": "x-kong-limit"
+        },
+        "limit_by": {
+          "type": "string",
+          "enum": [
+            "consumer",
+            "credential",
+            "ip"
+          ],
+          "description": "The entity that will be used when aggregating the limits: `consumer`, `credential`, `ip`. If the `consumer` or the `credential` cannot be determined, the system will always fallback to `ip`.",
+          "default": "consumer"
+        },
         "policy": {
           "type": "string",
           "enum": [
@@ -21,15 +55,10 @@
         "redis": {
           "type": "object",
           "properties": {
-            "username": {
+            "host": {
               "type": "string",
-              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "description": "A string representing a host name, such as example.com.",
               "x-referenceable": true
-            },
-            "ssl": {
-              "type": "boolean",
-              "description": "If set to true, uses SSL to connect to Redis.",
-              "default": false
             },
             "port": {
               "type": "integer",
@@ -46,6 +75,11 @@
               "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
               "default": 2000
             },
+            "username": {
+              "type": "string",
+              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "x-referenceable": true
+            },
             "password": {
               "type": "string",
               "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
@@ -55,11 +89,10 @@
             "cloud_authentication": {
               "type": "object",
               "properties": {
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                "aws_is_serverless": {
+                  "type": "boolean",
+                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                  "default": true
                 },
                 "aws_assume_role_arn": {
                   "type": "string",
@@ -73,29 +106,17 @@
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
-                "aws_role_session_name": {
-                  "type": "string",
-                  "description": "The session name for the temporary credentials when assuming the IAM role.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "azure_client_id": {
                   "type": "string",
                   "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
-                "azure_client_secret": {
-                  "type": "string",
-                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "azure_tenant_id": {
                   "type": "string",
                   "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 },
                 "auth_provider": {
                   "type": "string",
@@ -107,6 +128,30 @@
                   "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
                   "x-referenceable": true
                 },
+                "aws_access_key_id": {
+                  "type": "string",
+                  "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_role_session_name": {
+                  "type": "string",
+                  "description": "The session name for the temporary credentials when assuming the IAM role.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_client_secret": {
+                  "type": "string",
+                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
                 "aws_cache_name": {
                   "type": "string",
                   "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
@@ -116,17 +161,6 @@
                   "type": "string",
                   "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
                   "x-referenceable": true
-                },
-                "aws_is_serverless": {
-                  "type": "boolean",
-                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                  "default": true
-                },
-                "aws_access_key_id": {
-                  "type": "string",
-                  "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
                 }
               },
               "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
@@ -136,6 +170,11 @@
               "description": "Database to use for the Redis connection when using the `redis` strategy",
               "default": 0
             },
+            "ssl": {
+              "type": "boolean",
+              "description": "If set to true, uses SSL to connect to Redis.",
+              "default": false
+            },
             "ssl_verify": {
               "type": "boolean",
               "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
@@ -144,11 +183,6 @@
             "server_name": {
               "type": "string",
               "description": "A string representing an SNI (server name indication) value for TLS.",
-              "x-referenceable": true
-            },
-            "host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com.",
               "x-referenceable": true
             }
           },
@@ -191,42 +225,8 @@
             }
           },
           "description": "A map that defines rate limits for the policy."
-        },
-        "header_name": {
-          "type": "string",
-          "description": "The name of the response header used to increment the counters.",
-          "default": "x-kong-limit"
-        },
-        "limit_by": {
-          "type": "string",
-          "enum": [
-            "consumer",
-            "credential",
-            "ip"
-          ],
-          "description": "The entity that will be used when aggregating the limits: `consumer`, `credential`, `ip`. If the `consumer` or the `credential` cannot be determined, the system will always fallback to `ip`.",
-          "default": "consumer"
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "consumer": {
       "type": "object",

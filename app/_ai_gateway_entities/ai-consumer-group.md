@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayConsumerGroup
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api

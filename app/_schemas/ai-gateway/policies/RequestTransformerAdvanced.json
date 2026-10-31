@@ -1,5 +1,24 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
@@ -8,14 +27,32 @@
           "description": "The maximum request body size, in bytes, that the policy reads to apply body transformations. Bodies larger than `client_body_buffer_size` are buffered by Nginx to a temporary file. `-1` (the default) disables reading such buffered bodies, so their body transformations are skipped to avoid the extra disk I/O. `0` means unlimited (still bounded by Nginx's `client_max_body_size`), and any positive value caps how much of the buffered body is read from the temporary file.",
           "default": -1
         },
-        "allow": {
+        "rename": {
           "type": "object",
           "properties": {
             "body": {
               "type": "array",
               "items": {
-                "type": "string"
-              }
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "querystring": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
             }
           }
         },
@@ -49,62 +86,9 @@
             }
           }
         },
-        "rename": {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            }
-          }
-        },
         "replace": {
           "type": "object",
           "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
             "json_types": {
               "type": "array",
               "items": {
@@ -119,12 +103,7 @@
             },
             "uri": {
               "type": "string"
-            }
-          }
-        },
-        "add": {
-          "type": "object",
-          "properties": {
+            },
             "body": {
               "type": "array",
               "items": {
@@ -133,6 +112,27 @@
               },
               "default": []
             },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "querystring": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            }
+          }
+        },
+        "add": {
+          "type": "object",
+          "properties": {
             "headers": {
               "type": "array",
               "items": {
@@ -158,6 +158,14 @@
                   "number",
                   "string"
                 ]
+              },
+              "default": []
+            },
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
               },
               "default": []
             }
@@ -204,6 +212,17 @@
             }
           }
         },
+        "allow": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "dots_in_keys": {
           "type": "boolean",
           "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects.",
@@ -211,24 +230,15 @@
         }
       }
     },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
       },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -259,16 +269,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

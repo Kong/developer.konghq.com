@@ -157,10 +157,14 @@ async function executeRequest(
       redirect: "manual",
     };
 
-    if (config.body !== undefined && options.method === "POST") {
+    const methodWithBody = ["POST", "PUT", "PATCH"].includes(
+      String(options.method).toUpperCase(),
+    );
+
+    if (config.body !== undefined && methodWithBody) {
       options.body = JSON.stringify(replaceEnvVars(config.body, env));
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
-    } else if (config.body_file !== undefined && options.method === "POST") {
+    } else if (config.body_file !== undefined && methodWithBody) {
       options.body = await readFileContent(
         container,
         config.body_file,

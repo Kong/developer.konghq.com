@@ -17,6 +17,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayVault
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -44,7 +45,7 @@ faqs:
 
   - q: Which secret backends are supported?
     a: |
-      The `type` field selects the backend: `konnect`, `env`, `aws`, `gcp`, `azure`, `conjur`, or `hcv`.
+      The `type` field selects the backend: `konnect`, `env`, `aws`, `gcp`, `azure`, `conjur`, `hcv`, or `token_vault`.
       Each type carries its own `config` shape. HashiCorp Vault (`hcv`) further selects an
       `auth_method` from `token`, `cert`, `jwt`, `approle`, `kubernetes`, `gcp_iam`, `gcp_gce`,
       `aws_ec2`, `aws_iam`, or `azure`.
@@ -92,6 +93,7 @@ For configuration examples and step-by-step setup instructions, see [Set up an A
 Each AI Vault selects one of the supported secret backends:
 
 * [{{site.konnect_short_name}} Config Store](#konnect-config-store)
+* [{{site.identity}} Token Vault](/identity/token-vault/)
 * Environment variables
 * [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
 * [Google Secret Manager](https://cloud.google.com/secret-manager)
@@ -121,7 +123,7 @@ rows:
   - entity: AI Agent
     fields: AWS IAM (SigV4) credentials for authenticating to the upstream agent when `config.upstream.auth` is set
   - entity: AI MCP Server
-    fields: Encryption keys used for client session management, and AWS IAM (SigV4) credentials for authenticating to the upstream server in `upstream-server` mode
+    fields: Encryption keys used for client session management, AWS IAM (SigV4) credentials for authenticating to the upstream server in `upstream-server` mode, and encryption secrets for cached Token Vault credentials
 {% endtable %}
 
 {:.success}
@@ -192,6 +194,8 @@ rows:
     when: Enterprises standardized on CyberArk Conjur for centralized secrets management.
   - backend: "`hcv`"
     when: Dedicated secret management with fine-grained access control. Supports token, AppRole, JWT, Kubernetes, AWS IAM, GCP, and Azure authentication.
+  - backend: "`token_vault`"
+    when: Per-caller credentials for upstream services, where each caller approves access once and {{site.ai_gateway}} exchanges short-lived credentials on their behalf.
 {% endtable %}
 <!-- vale on -->
 

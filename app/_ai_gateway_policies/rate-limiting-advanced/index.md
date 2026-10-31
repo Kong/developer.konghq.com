@@ -1,8 +1,9 @@
 ---
-description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance.
+description: Enhanced rate limiting capabilities, for example sliding window support, Redis Sentinel support, and increased performance.
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -35,7 +36,7 @@ To rate limit on LLM token usage or cost rather than request count, use the [AI 
 The Rate Limiting Advanced Policy supports the following window types, set with [`config.window_type`](./reference/#schema--config-window-type):
 
 * **Fixed window**: Fixed windows consist of buckets that are statically assigned to a definitive time range. Each request is mapped to only one fixed window based on its timestamp and will affect only that window's counters.
-* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (such as an IP address, AI Consumer, or credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
+* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (for example, an IP address, AI Consumer, or credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
 The default (and recommended) sliding window type ensures a resource is not consumed at a higher rate than what is configured.
 
 ## Multiple limits and window sizes
@@ -120,6 +121,72 @@ To key counters on a combination of values, set [`config.compound_identifier`](.
 ### Limit by IP address
 
 {% include md/ai-gateway/v2/policies/rate-limiting/limit-by-ip.md %}
+
+### AI Consumer counter key
+
+When [`config.identifier`](./reference/#schema--config-identifier) is `consumer`, use [`config.counter_key`](./reference/#schema--config-counter-key) to control which AI Consumer attribute keys the rate limit counter. By default, the counter is keyed by `consumer.id`. You can also key by `consumer.username` or `consumer.custom_id`.
+
+When you use `consumer.username` or `consumer.custom_id`, AI Consumers with identical attribute values contribute to the same rate limit counter, even if they were authenticated by different control planes. This enables consistent rate limiting across distributed deployments that share a Redis backend.
+
+`counter_key` also applies when using [`compound_identifier`](./reference/#schema--config-compound-identifier) with a Consumer segment, for example `["ip", "consumer"]`.
+
+{% entity_example %}
+type: policy
+data:
+  display_name: Rate Limiting Advanced - Consumer Username
+  name: rate-limiting-advanced-counter-key
+  type: rate-limiting-advanced
+  enabled: true
+  global: true
+  config:
+    identifier: consumer
+    counter_key: consumer.username
+    strategy: redis
+    redis:
+      host: ${redis_host}
+      port: 6379
+    sync_rate: 10
+    limit:
+      - 10
+    window_size:
+      - 60
+variables:
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance is running.
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
+This example rate limits AI Consumers with the same username to a single shared counter, regardless of which control plane processed the request.
+
+### Rate limit by Principal
+
+Set [`config.identifier`](./reference/#schema--config-identifier) to `principal` to rate limit based on the authenticated [Kong Identity Principal](/identity/principals/) instead of the AI Consumer, credential, IP address, or other supported identifiers. `principal` is also a valid segment in [`config.compound_identifier`](./reference/#schema--config-compound-identifier).
+
+{% entity_example %}
+type: policy
+data:
+  display_name: Rate Limiting Advanced - Principal
+  name: rate-limiting-advanced-principal
+  type: rate-limiting-advanced
+  enabled: true
+  global: true
+  config:
+    identifier: principal
+    limit:
+      - 10
+    window_size:
+      - 60
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
+`principal` requires an AI Auth Strategy that populates the Principal, for example, an `openid-connect` or `key-auth` AI Auth Strategy configured with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+
+[`config.custom_key`](./reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `identifier` or `compound_identifier`.
 
 ## Headers sent to the client
 

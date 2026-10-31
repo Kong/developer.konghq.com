@@ -27,12 +27,15 @@ related_resources:
     url: /ai-gateway/ai-audit-log-reference/
 
 works_on:
+  - on-prem
   - konnect
 ---
 
 {{site.ai_gateway}} calls LLM-based services according to the settings of your [AI Model Providers](/ai-gateway/entities/ai-model-provider/) and [Models](/ai-gateway/entities/ai-model/). You can use the built in logging and a [Prometheus](/ai-gateway/policies/prometheus/) Policy to aggregate the LLM provider responses to count the number of tokens sent through {{site.ai_gateway}}. If you have defined input and output costs in the models, you can also calculate aggregate costs. You can also track whether the requests have been cached by {{site.ai_gateway}}, saving the cost of contacting the LLM providers, which improves performance.
 
 In addition to LLM usage, {{site.ai_gateway}} can also log MCP server traffic. [MCP logging](/ai-gateway/entities/ai-mcp-server/#logging-and-audits) provides visibility into latency, response sizes, and error rates when AI Policies invoke external MCP tools and servers.
+
+If you use the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/), compression results are also reported to Konnect Analytics. See [Prompt compression metrics](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics) for the available metrics and response headers.
 
 Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in a [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
 

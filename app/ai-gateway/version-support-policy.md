@@ -92,6 +92,43 @@ Kong will not provide patches for software covered by this sunset period. If the
 Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {% navtabs "ai-gateway-version" %}
+{% navtab "2.3" %}
+{{site.ai_gateway_name}} 2.3 was released on 2026-10-30.
+
+{{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-11-30, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: OS
+    key: os
+  - title: Version
+    key: version
+  - title: ARM support
+    key: arm
+  - title: FIPS 140-3
+    key: fips
+  - title: EOL
+    key: eol
+rows:
+  - os: Ubuntu
+    version: "26.04"
+    arm: true
+    fips: true
+    eol: "2026-11-30"
+  - os: RHEL
+    version: "10.x"
+    arm: true
+    fips: true
+    eol: "2026-11-30"
+  - os: Distroless
+    version: "N/A"
+    arm: true
+    fips: true
+    eol: "2026-11-30"
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
 {% navtab "2.2 (stable)" %}
 {{site.ai_gateway_name}} 2.2 was released on 2026-09-30.
 
@@ -170,7 +207,7 @@ rows:
 
 {:.info .no-icon}
 > **Notes**:
-> * **OS End of Life**: If you're running a currently supported version of {{site.ai_gateway_name}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
+> * **OS End of Life**: If you're running a supported version of {{site.ai_gateway_name}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
 > * **ARM support**: Packages and Docker images are available for both AMD64 (x86_64) and ARM64 (aarch64). Docker images are multi-architecture.
 > * **FIPS mode**: FIPS 140-3 packages and Docker images are only available for AMD64. ARM64 is not supported.
 
@@ -207,11 +244,11 @@ Kong follows a structured process for addressing bugs:
     
 * **Critical bugs:** 
   
-  Fixed with **high-priority patches** to the latest rolling release and to all currently supported stable releases. This includes things such as production outages or catastrophic degradation.
+  Fixed with **high-priority patches** to the latest rolling release and to all supported stable releases. This includes things such as production outages or catastrophic degradation.
     
 * **Other bugs and feature requests:** 
   
-  Assessed for severity and impact. Fixes are generally applied only to the **latest rolling release**. Backports to a currently supported stable release are evaluated case by case.
+  Assessed for severity and impact. Fixes are generally applied only to the **latest rolling release**. Backports to a supported stable release are evaluated case by case.
 
 {:.info}
 > Customers with platinum or higher subscriptions may request fixes outside of the above and Kong will assess them at its sole discretion.
@@ -224,7 +261,7 @@ We aim to provide customers with at least 6 months' notice of the removal or pha
 We may provide less or no notice if the change is necessary for security or legal reasons, though such situations should be rare. 
 We may provide notice in our documentation, product update emails, or in-product notifications if applicable.
 
-Once we have announced that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
+After we have announced that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
 
 ## Additional terms
 
