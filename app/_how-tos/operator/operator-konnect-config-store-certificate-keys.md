@@ -32,6 +32,8 @@ related_resources:
     url: /operator/konnect/crd/gateway/certificate-ca-cert/
   - text: Config Store-backed Vaults
     url: /operator/konnect/config-store/
+  - text: Sync a Kubernetes TLS Secret to a {{site.konnect_short_name}} Config Store
+    url: /operator/konnect/how-to/config-store-secret-sync/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
   - text: Status fields
@@ -53,6 +55,10 @@ faqs:
   - q: Why isn't the secret value stored declaratively?
     a: |
       The purpose of this guide is to avoid storing the secret in etcd, which would be the case if the key was passed through a Kubernetes resource. Instead, we pass it directly to {{site.konnect_short_name}} using either the API or the UI.
+
+      {% new_in 2.4 %} If the key is already stored in a Kubernetes Secret, for example because cert-manager issues it,
+      you can sync the Secret to the Config Store with a `KonnectConfigStoreSync` instead. For more information, see
+      [Sync a Kubernetes TLS Secret to a {{site.konnect_short_name}} Config Store](/operator/konnect/how-to/config-store-secret-sync/).
   - q: Who can replace the private key once it's in the Config Store?
     a: |
       Anyone who can write secrets into the Config Store can replace the key that your listener serves, so treat
@@ -61,10 +67,15 @@ faqs:
       Config Store-backed Vault.
   - q: What happens if I delete the `KonnectConfigStore`?
     a: |
-      Deleting the `KonnectConfigStore` deletes the Config Store in {{site.konnect_short_name}} **along with every
-      secret stored in it**, including keys that other Vaults or certificates still reference. Delete it only when
-      you're sure nothing depends on its contents. For more information, see
-      [lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
+      {% new_in 2.4 %} {{site.operator_product_name}} doesn't delete a Config Store that still holds secrets. The
+      `KonnectConfigStore` stays in `Terminating` and reports `Programmed=False` with reason `DeletionBlocked` until you
+      remove the secrets from the Config Store in {{site.konnect_short_name}}.
+
+      In {{site.operator_product_name}} 2.3, deleting the `KonnectConfigStore` deletes the Config Store in
+      {{site.konnect_short_name}} **along with every secret stored in it**, including keys that other Vaults or
+      certificates still reference.
+
+      For more information, see [lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
   - q: How do I rotate a key that's stored in the Config Store?
     a: |
       Rotating a key is a Config Store operation: update the secret value in place, and the vault reference keeps
