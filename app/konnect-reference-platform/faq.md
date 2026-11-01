@@ -61,6 +61,28 @@ faqs:
       The example also uses separate Catalog API entities, Dev Portals, and application authentication strategies for development and production.
       This is the implemented topology and no organization must copy it.
       Review it again as your needs and the supported {{site.konnect_short_name}} capabilities change.
+  - q: "Should staging and production share one Catalog API?"
+    a: |
+      Use separate Catalog API entities when staging and production need independent current contracts and control-plane links.
+      The KongAirlines example implements this model for development and production.
+      Each API is published to its environment's Dev Portal and linked to its control plane.
+      Compare the Bookings [development manifest](https://github.com/KongAirlines/bookings/blob/main/konnect/dev.yaml) and [production manifest](https://github.com/KongAirlines/bookings/blob/main/konnect/prod.yaml).
+
+      Two Dev Portals alone don't require separate Catalog APIs.
+      Base the choice on the contracts and runtime environments they expose.
+      In the [documented control-plane linking model](/catalog/api-packaging/#api-package-limitations), an API can link to only one control plane at a time.
+      Separate entries let each environment select its current contract and manage application access independently.
+
+      Keep the contracts in one source repository and promote a reviewed release between environments.
+      The example retains stable specifications as versioned files and selects the production release in its manifest.
+      After platform review and production Gateway synchronization, the service workflow updates the production Catalog API and its publication from the promoted source commit.
+      The development API remains available for subsequent changes.
+      Follow the [API delivery flow](/konnect-reference-platform/apiops/) for the release and promotion sequence.
+      The example's beta naming and retention conventions are choices you can adapt.
+
+      [Specification versions](/catalog/apis/#api-specification-versions) provide documentation history within an API.
+      Selecting a specification in Dev Portal doesn't switch the runtime environment or application registration.
+      Manage registrations and credentials separately for staging and production; don't assume that staging access grants production access.
   - q: "Why retain versions instead of updating specifications in place?"
     a: |
       The example treats released contracts as immutable and development versions as append-only.
