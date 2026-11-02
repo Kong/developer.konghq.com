@@ -43,9 +43,9 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 1. Select the models, MCP servers, or agents that the policy applies to.
 {% endif %}
 {% when 'consumer' %}
-The following creates a new AI Consumer. Consumers are managed in the API Management lens of {{site.konnect_short_name}}. Suggested values are shown in backticks:
+The following creates a new AI Consumer. Consumers are managed in the API view of {{site.konnect_short_name}}. Suggested values are shown in backticks:
 
-1. In the {{site.konnect_short_name}} lens switcher on the far left, click **API**.
+1. On the far left of {{site.konnect_short_name}}, click **API** to switch to the API view.
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
 1. Select your {{site.ai_gateway}}.
 1. Click the **Consumers** tab.
@@ -55,9 +55,9 @@ The following creates a new AI Consumer. Consumers are managed in the API Manage
 1. If you selected **OAuth**, click **Create**.
 1. If you selected **API key**, click **Next**, then click **Generate key** and **Create key**, or click **Skip** to add a key later.
 {% when 'consumer_group' %}
-The following creates a new AI consumer group. Consumer groups are managed in the API Management lens of {{site.konnect_short_name}}. Suggested values are shown in backticks:
+The following creates a new AI consumer group. Consumer groups are managed in the API view of {{site.konnect_short_name}}. Suggested values are shown in backticks:
 
-1. In the {{site.konnect_short_name}} lens switcher on the far left, click **API**.
+1. On the far left of {{site.konnect_short_name}}, click **API** to switch to the API view.
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
 1. Select your {{site.ai_gateway}}.
 1. Click the **Consumers** tab.
