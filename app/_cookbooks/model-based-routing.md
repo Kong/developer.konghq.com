@@ -76,16 +76,16 @@ prereqs:
            1. Export the API key as an environment variable:
 
               ```sh
-              export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+              export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
               ```
         1. **AWS Bedrock**:
            1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for a Claude model.
            1. Export your AWS credentials:
 
               ```sh
-              export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-              export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-              export DECK_AWS_REGION='us-east-1'
+              export AWS_ACCESS_KEY_ID='your-access-key'
+              export AWS_SECRET_ACCESS_KEY='your-secret-key'
+              export AWS_REGION='us-east-1'
               ```
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
@@ -325,7 +325,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
   - ref: model-based-routing-bedrock-provider
     type: bedrock
@@ -333,8 +333,8 @@ ai_gateway_model_providers:
     config:
       auth:
         type: aws
-        access_key_id: !env DECK_AWS_ACCESS_KEY_ID
-        secret_access_key: !secret {source: !env DECK_AWS_SECRET_ACCESS_KEY}
+        access_key_id: !env AWS_ACCESS_KEY_ID
+        secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 
 ai_gateway_models:
   - ref: model-based-routing-selector
@@ -356,7 +356,7 @@ ai_gateway_models:
         paths:
           - /model-selection
     targets:
-      - name: !env DECK_OPENAI_SELECTOR_SLM
+      - name: !env OPENAI_SELECTOR_SLM
         provider: model-based-routing-openai-provider
         config:
           type: openai
@@ -525,9 +525,9 @@ demo value:
 
 ```bash
 export CONSUMER_API_KEY='demo-api-key'
-export DECK_OPENAI_SELECTOR_SLM='o3-mini'                                  # classifier model
-export DECK_OPENAI_FAST_MODEL='gpt-4o-mini'                                # fast tier
-export DECK_BEDROCK_SMART_MODEL='anthropic.claude-3-5-sonnet-20241022-v2:0'  # smart tier
+export OPENAI_SELECTOR_SLM='o3-mini'                                  # classifier model
+export OPENAI_FAST_MODEL='gpt-4o-mini'                                # fast tier
+export BEDROCK_SMART_MODEL='anthropic.claude-3-5-sonnet-20241022-v2:0'  # smart tier
 ```
 
 Apply the Kong configuration:
@@ -550,7 +550,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
   - ref: model-based-routing-bedrock-provider
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -560,8 +560,8 @@ ai_gateway_model_providers:
     config:
       auth:
         type: aws
-        access_key_id: !env DECK_AWS_ACCESS_KEY_ID
-        secret_access_key: !secret {source: !env DECK_AWS_SECRET_ACCESS_KEY}
+        access_key_id: !env AWS_ACCESS_KEY_ID
+        secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 
 ai_gateway_auth_strategies:
   - ref: model-based-routing-auth
@@ -716,7 +716,7 @@ ai_gateway_models:
           - OPTIONS
         strip_path: true
     targets:
-      - name: !env DECK_OPENAI_SELECTOR_SLM
+      - name: !env OPENAI_SELECTOR_SLM
         provider: model-based-routing-openai-provider
         config:
           type: openai
@@ -749,7 +749,7 @@ ai_gateway_models:
           - OPTIONS
         strip_path: true
     targets:
-      - name: !env DECK_OPENAI_FAST_MODEL
+      - name: !env OPENAI_FAST_MODEL
         provider: model-based-routing-openai-provider
         config:
           type: openai
@@ -782,10 +782,10 @@ ai_gateway_models:
           - OPTIONS
         strip_path: true
     targets:
-      - name: !env DECK_BEDROCK_SMART_MODEL
+      - name: !env BEDROCK_SMART_MODEL
         provider: model-based-routing-bedrock-provider
         config:
-          region: !env DECK_AWS_REGION
+          region: !env AWS_REGION
           type: bedrock
 
   - ref: model-based-routing-chat
@@ -818,7 +818,7 @@ ai_gateway_models:
           - OPTIONS
         strip_path: true
     targets:
-      - name: !env DECK_OPENAI_FAST_MODEL
+      - name: !env OPENAI_FAST_MODEL
         provider: model-based-routing-openai-provider
         config:
           type: openai

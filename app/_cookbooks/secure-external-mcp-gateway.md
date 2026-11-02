@@ -32,7 +32,7 @@ extra_services:
     env_vars: [GITHUB_OAUTH_CLIENT_ID]
     hint: "Create a GitHub OAuth Application with a redirect URI of https://app.insomnia.rest/oauth/redirect (Insomnia 12+'s built-in OAuth callback; use the redirect URI of whichever MCP client you'll test with). See the GitHub section in Prerequisites."
   - name: Identity Provider (Okta or Keycloak)
-    env_vars: [DECK_OAUTH_AUTH_SERVER, DECK_OAUTH_INTROSPECTION_URL, DECK_OAUTH_CLIENT_ID, DECK_OAUTH_CLIENT_SECRET]
+    env_vars: [OAUTH_AUTH_SERVER, OAUTH_INTROSPECTION_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET]
     hint: "Required for the {{site.konnect_short_name}} MCP pattern. Create an OAuth application for Kong. See the Identity Provider section in Prerequisites."
 
 hint: "Requires a GitHub OAuth application, an identity provider (Okta or Keycloak), a {{site.konnect_short_name}} personal access token, and Insomnia 12+ for testing."
@@ -55,7 +55,7 @@ prereqs:
         1. Export the upstream credential for the {{site.konnect_short_name}} MCP token-swap demo, as the full header string the recipe adds to every proxied request. The {{site.konnect_short_name}} MCP server accepts either a PAT or a Service Account Token (SAT); reusing your PAT here keeps the recipe to a single {{site.konnect_short_name}} credential:
 
            ```bash
-           export DECK_KONNECT_MCP_TOKEN="Authorization:Bearer ${KONNECT_TOKEN}"
+           export KONNECT_MCP_TOKEN="Authorization:Bearer ${KONNECT_TOKEN}"
            ```
 
            {:.warning}
@@ -115,7 +115,7 @@ prereqs:
         1. In the Okta Admin Console, go to **Applications → Create App Integration**.
         1. Select **API Services** (machine-to-machine).
         1. Name it `Kong MCP Gateway`.
-        1. From the **General** tab, copy the **Client ID** and **Client Secret** under **Client Credentials**. Export these as `DECK_OAUTH_CLIENT_ID` and `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. From the **General** tab, copy the **Client ID** and **Client Secret** under **Client Credentials**. Export these as `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` in the final step.
 
         **Create the MCP Client application**
 
@@ -144,10 +144,10 @@ prereqs:
         Export the authorization server URL, the introspection endpoint, and the **Kong MCP Gateway** application's Client ID and Secret. You don't export the MCP Client (SPA) Client ID here. The MCP client itself uses it at flow time.
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
-        export DECK_OAUTH_CLIENT_ID='your-kong-gateway-client-id'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
+        export OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
+        export OAUTH_CLIENT_ID='your-kong-gateway-client-id'
+        export OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
         ```
 
         {% endtab %}
@@ -167,7 +167,7 @@ prereqs:
         1. Set **Client ID** to `kong-mcp-gateway`.
         1. Set **Client authentication** to **On** (confidential client).
         1. Enable **Service accounts roles**.
-        1. From the **Credentials** tab, copy the **Client Secret**. Export the Client ID (`kong-mcp-gateway`) as `DECK_OAUTH_CLIENT_ID` and this secret as `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. From the **Credentials** tab, copy the **Client Secret**. Export the Client ID (`kong-mcp-gateway`) as `OAUTH_CLIENT_ID` and this secret as `OAUTH_CLIENT_SECRET` in the final step.
 
         **Create the MCP Client**
 
@@ -191,10 +191,10 @@ prereqs:
         Export the realm URL, the introspection endpoint, and the **Kong MCP Gateway** client's ID and Secret. You don't export the MCP Client's Client ID here. The MCP client itself uses it at flow time.
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
-        export DECK_OAUTH_CLIENT_ID='kong-mcp-gateway'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
+        export OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
+        export OAUTH_CLIENT_ID='kong-mcp-gateway'
+        export OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
         ```
 
         {% endtab %}
@@ -204,7 +204,7 @@ prereqs:
         [{{site.konnect_short_name}} MCP](/konnect-platform/konnect-mcp/) is reachable at a single global endpoint:
 
         ```bash
-        export DECK_KONNECT_MCP_HOST='https://global.mcp.konghq.com'
+        export KONNECT_MCP_HOST='https://global.mcp.konghq.com'
         ```
     - title: Insomnia 12+
       content: |
@@ -529,14 +529,12 @@ ai_gateway_mcp_servers:
           - /github-mcp
     tools:
       - name: search_repositories
-        description: Search GitHub repositories
         access:
           acls:
             allow:
               - secure-external-mcp-gateway-admin
               - secure-external-mcp-gateway-developer
       - name: push_files
-        description: Push files to a repository
         access:
           acls:
             allow:
@@ -580,11 +578,14 @@ ai_gateway_auth_strategies:
     type: openid-connect
     display_name: "secure-external-mcp-gateway Konnect OAuth2"
     config:
-      issuer: !env DECK_OAUTH_AUTH_SERVER
-      introspection_endpoint: !env DECK_OAUTH_INTROSPECTION_URL
-      client_id: !env DECK_OAUTH_CLIENT_ID
-      client_secret: !secret {source: !env DECK_OAUTH_CLIENT_SECRET}
+      issuer: !env OAUTH_AUTH_SERVER
+      introspection_endpoint: !env OAUTH_INTROSPECTION_URL
+      client_id:
+        - !env OAUTH_CLIENT_ID
+      client_secret:
+        - !secret {source: !env OAUTH_CLIENT_SECRET}
       cache_introspection: true
+      cache_tokens_salt: secure-external-mcp-gateway-oidc-cache
       ssl_verify: true
       hide_credentials: true
       consumer_claims:
@@ -609,17 +610,22 @@ ai_gateway_mcp_servers:
       metadata:
         resource: https://localhost:8443/konnect-mcp
         authorization_servers:
-          - !env DECK_OAUTH_AUTH_SERVER
+          - !env OAUTH_AUTH_SERVER
         scopes_supported:
           - openid
         endpoint: /.well-known/oauth-protected-resource/konnect-mcp
     config:
-      url: !env DECK_KONNECT_MCP_HOST
+      url: !env KONNECT_MCP_HOST
       route:
         paths:
           - /konnect-mcp
 ```
 {:.no-copy-code}
+
+**`client_id` / `client_secret` / `cache_tokens_salt`**. Kong's confidential-client credentials for
+the IdP's introspection endpoint. Both are lists, so you can configure more than one client pair.
+`cache_tokens_salt` is a required, non-secret value that keys the introspection response cache for
+this AI Auth Strategy.
 
 **`hide_credentials: true`**. Strips the caller's IdP Bearer token from the request once
 authentication succeeds, so the {{site.konnect_short_name}} MCP server never sees it. The Request Transformer
@@ -660,12 +666,12 @@ ai_gateway_policies:
     config:
       add:
         headers:
-          - !secret {source: !env DECK_KONNECT_MCP_TOKEN}
+          - !env KONNECT_MCP_TOKEN
 ```
 {:.no-copy-code}
 
 **`config.add.headers`**. A list of complete `"Name:Value"` header strings to add. This recipe
-sets `DECK_KONNECT_MCP_TOKEN` to the entire `Authorization:Bearer <token>` string (see
+sets `KONNECT_MCP_TOKEN` to the entire `Authorization:Bearer <token>` string (see
 Prerequisites), since the AI Policy field takes one combined string per header rather than separate
 name and value fields.
 
@@ -695,11 +701,11 @@ write-only AI Consumer credential fields and must come from env vars, even for t
 values:
 
 ```bash
-export DECK_ADMIN_API_KEY='admin-api-key'
-export DECK_DEV_API_KEY='dev-api-key'
+export ADMIN_API_KEY='admin-api-key'
+export DEV_API_KEY='dev-api-key'
 ```
 
-You already exported the `DECK_OAUTH_*`, `DECK_KONNECT_MCP_HOST`, and `DECK_KONNECT_MCP_TOKEN`
+You already exported the `OAUTH_*`, `KONNECT_MCP_HOST`, and `KONNECT_MCP_TOKEN`
 env vars in the prerequisites. Apply the configuration:
 
 ```bash
@@ -723,11 +729,14 @@ ai_gateway_auth_strategies:
   display_name: secure-external-mcp-gateway Konnect OAuth2
   type: openid-connect
   config:
-    issuer: !env 'DECK_OAUTH_AUTH_SERVER'
-    introspection_endpoint: !env 'DECK_OAUTH_INTROSPECTION_URL'
-    client_id: !env 'DECK_OAUTH_CLIENT_ID'
-    client_secret: !secret {source: !env 'DECK_OAUTH_CLIENT_SECRET'}
+    issuer: !env 'OAUTH_AUTH_SERVER'
+    introspection_endpoint: !env 'OAUTH_INTROSPECTION_URL'
+    client_id:
+    - !env 'OAUTH_CLIENT_ID'
+    client_secret:
+    - !secret {source: !env 'OAUTH_CLIENT_SECRET'}
     cache_introspection: true
+    cache_tokens_salt: secure-external-mcp-gateway-oidc-cache
     ssl_verify: true
     hide_credentials: true
     consumer_claims:
@@ -752,7 +761,7 @@ ai_gateway_consumers:
     name: secure-external-mcp-gateway-admin-credential
     display_name: secure-external-mcp-gateway admin API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_ADMIN_API_KEY'}
+    api_key: !secret {source: !env 'ADMIN_API_KEY'}
 - ref: secure-external-mcp-gateway-dev-user
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: secure-external-mcp-gateway-dev-user
@@ -763,7 +772,7 @@ ai_gateway_consumers:
     name: secure-external-mcp-gateway-dev-credential
     display_name: secure-external-mcp-gateway developer API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_DEV_API_KEY'}
+    api_key: !secret {source: !env 'DEV_API_KEY'}
 ai_gateway_consumer_groups:
 - ref: secure-external-mcp-gateway-admin
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -786,7 +795,7 @@ ai_gateway_policies:
   config:
     add:
       headers:
-      - !secret {source: !env 'DECK_KONNECT_MCP_TOKEN'}
+      - !env 'KONNECT_MCP_TOKEN'
 ai_gateway_mcp_servers:
 - ref: secure-external-mcp-gateway-github-mcp
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -818,73 +827,62 @@ ai_gateway_mcp_servers:
     max_request_body_size: 10485760
   tools:
   - name: search_repositories
-    description: Search GitHub repositories
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: get_file_contents
-    description: Get file contents from a repository
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: list_issues
-    description: List issues in a repository
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: list_pull_requests
-    description: List pull requests in a repository
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: search_users
-    description: Search GitHub users
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: search_code
-    description: Search code across repositories
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
         - secure-external-mcp-gateway-developer
   - name: create_issue
-    description: Create an issue in a repository
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
   - name: push_files
-    description: Push files to a repository
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
   - name: create_pull_request
-    description: Create a pull request
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
   - name: merge_pull_request
-    description: Merge a pull request
     access:
       acls:
         allow:
         - secure-external-mcp-gateway-admin
   - name: create_repository
-    description: Create a new repository
     access:
       acls:
         allow:
@@ -902,12 +900,12 @@ ai_gateway_mcp_servers:
     metadata:
       resource: https://localhost:8443/konnect-mcp
       authorization_servers:
-      - !env 'DECK_OAUTH_AUTH_SERVER'
+      - !env 'OAUTH_AUTH_SERVER'
       scopes_supported:
       - openid
       endpoint: /.well-known/oauth-protected-resource/konnect-mcp
   config:
-    url: !env 'DECK_KONNECT_MCP_HOST'
+    url: !env 'KONNECT_MCP_HOST'
     route:
       paths:
       - /konnect-mcp
@@ -1037,7 +1035,7 @@ before forwarding upstream.
    `Authorization: Bearer <idp-token>`. The OpenID Connect AI Auth Strategy introspects the token,
    maps the `sub` claim to an AI Consumer, and strips the user's `Authorization` header. The
    Request Transformer Advanced Policy then adds the stored {{site.konnect_short_name}} credential from
-   `DECK_KONNECT_MCP_TOKEN` into the now-empty `Authorization` header before the request reaches
+   `KONNECT_MCP_TOKEN` into the now-empty `Authorization` header before the request reaches
    the {{site.konnect_short_name}} MCP endpoint. The swap is invisible from the Insomnia side. It shows up
    only in the upstream {{site.konnect_short_name}} audit log and in the {{site.konnect_short_name}} MCP {{site.ai_gateway}}'s traffic analytics,
    where you can confirm Kong forwarded the request authenticated as the stored {{site.konnect_short_name}} identity,

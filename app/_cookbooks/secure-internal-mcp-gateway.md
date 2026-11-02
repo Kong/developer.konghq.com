@@ -30,7 +30,7 @@ plugins:
 requires_embeddings: false
 extra_services:
   - name: Identity Provider (Okta or Keycloak)
-    env_vars: [DECK_OAUTH_AUTH_SERVER, DECK_OAUTH_INTROSPECTION_URL, DECK_OAUTH_CLIENT_ID, DECK_OAUTH_CLIENT_SECRET]
+    env_vars: [OAUTH_AUTH_SERVER, OAUTH_INTROSPECTION_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET]
     hint: "Create an OAuth application for Kong (API Services / Client Credentials) and one for MCP clients (SPA / Authorization Code + PKCE). See the Identity Provider section in Prerequisites."
 
 hint: "Requires an OAuth 2.1 identity provider (Okta or Keycloak in this recipe) and Insomnia 12+ for testing."
@@ -74,7 +74,7 @@ prereqs:
         Set the MCP resource URL once. Both IdP tabs use the same value:
 
         ```bash
-        export DECK_MCP_RESOURCE_URL='http://localhost:8000/ecommerce-mcp'
+        export MCP_RESOURCE_URL='http://localhost:8000/ecommerce-mcp'
         ```
 
         {% navtabs "Identity Provider" %}
@@ -89,7 +89,7 @@ prereqs:
         1. In the Okta Admin Console, go to **Applications → Create App Integration**.
         1. Select **API Services** (machine-to-machine).
         1. Name it `Kong MCP Gateway`.
-        1. From the **General** tab, copy the **Client ID** and **Client Secret** under **Client Credentials**. Export these as `DECK_OAUTH_CLIENT_ID` and `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. From the **General** tab, copy the **Client ID** and **Client Secret** under **Client Credentials**. Export these as `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` in the final step.
 
         **Create the MCP Client application**
 
@@ -134,10 +134,10 @@ prereqs:
         Export the authorization server URL, the introspection endpoint, and the **{{site.base_gateway}}** application's Client ID and Secret. You don't export the MCP Client (SPA) Client ID here. The MCP client itself uses it at flow time.
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
-        export DECK_OAUTH_CLIENT_ID='your-kong-gateway-client-id'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
+        export OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
+        export OAUTH_CLIENT_ID='your-kong-gateway-client-id'
+        export OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
         ```
 
         {% endtab %}
@@ -157,7 +157,7 @@ prereqs:
         1. Set **Client ID** to `kong-mcp-gateway`.
         1. Set **Client authentication** to **On** (confidential client).
         1. Enable **Service accounts roles**.
-        1. From the **Credentials** tab, copy the **Client Secret**. Export the Client ID (`kong-mcp-gateway`) as `DECK_OAUTH_CLIENT_ID` and this secret as `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. From the **Credentials** tab, copy the **Client Secret**. Export the Client ID (`kong-mcp-gateway`) as `OAUTH_CLIENT_ID` and this secret as `OAUTH_CLIENT_SECRET` in the final step.
 
         **Create the MCP Client**
 
@@ -200,10 +200,10 @@ prereqs:
         Export the realm URL, the introspection endpoint, and the **{{site.base_gateway}}** client's ID and Secret. You don't export the MCP Client's Client ID here. The MCP client itself uses it at flow time.
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
-        export DECK_OAUTH_CLIENT_ID='kong-mcp-gateway'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
+        export OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
+        export OAUTH_CLIENT_ID='kong-mcp-gateway'
+        export OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
         ```
 
         {:.info}
@@ -489,12 +489,12 @@ ai_gateway_auth_strategies:
   display_name: secure-internal-mcp-gateway OIDC auth
   type: openid-connect
   config:
-    issuer: !env 'DECK_OAUTH_AUTH_SERVER'
-    introspection_endpoint: !env 'DECK_OAUTH_INTROSPECTION_URL'
+    issuer: !env 'OAUTH_AUTH_SERVER'
+    introspection_endpoint: !env 'OAUTH_INTROSPECTION_URL'
     client_id:
-    - !env 'DECK_OAUTH_CLIENT_ID'
+    - !env 'OAUTH_CLIENT_ID'
     client_secret:
-    - !secret {source: !env 'DECK_OAUTH_CLIENT_SECRET'}
+    - !secret {source: !env 'OAUTH_CLIENT_SECRET'}
     auth_methods:
     - introspection
     cache_introspection: true
@@ -537,7 +537,7 @@ Setting `access.metadata` on the listener, alongside this strategy, advertises t
     auth_strategies:
     - secure-internal-mcp-gateway-auth
     metadata:
-      resource: !env 'DECK_MCP_RESOURCE_URL'
+      resource: !env 'MCP_RESOURCE_URL'
       endpoint: /.well-known/oauth-protected-resource/ecommerce-mcp
 ```
 {:.no-copy-code}
@@ -545,7 +545,7 @@ Setting `access.metadata` on the listener, alongside this strategy, advertises t
 - **`resource`**: the canonical MCP resource URL {{site.ai_gateway_name}} advertises in PRM. MCP clients use this URL to confirm they're talking to the right resource.
 - **`endpoint`**: the path {{site.ai_gateway_name}} serves the PRM document at. Kong adds this path to the listener's route automatically; you don't add it to `config.route.paths` yourself. The recipe leaves `authorization_servers` and `scopes_supported` unset; both fall back to the AI Auth Strategy's `issuer` and `scopes` above, so there's nothing to repeat.
 
-Most identity providers don't yet implement RFC 8707 (Resource Indicators for OAuth 2.0), so the `aud` claim in access tokens won't match the MCP resource URL. The AI Auth Strategy's `audience_required` field lists the audiences {{site.ai_gateway_name}} should enforce, and this recipe leaves it unset entirely, which disables that check until your IdP supports RFC 8707. Set `audience_required: [http://localhost:8000/ecommerce-mcp]` (matching `DECK_MCP_RESOURCE_URL`) once it does.
+Most identity providers don't yet implement RFC 8707 (Resource Indicators for OAuth 2.0), so the `aud` claim in access tokens won't match the MCP resource URL. The AI Auth Strategy's `audience_required` field lists the audiences {{site.ai_gateway_name}} should enforce, and this recipe leaves it unset entirely, which disables that check until your IdP supports RFC 8707. Set `audience_required: [http://localhost:8000/ecommerce-mcp]` (matching `MCP_RESOURCE_URL`) once it does.
 
 **Choosing a token validation method.** With `introspection_endpoint` set, Kong calls the IdP on every request (with caching) using `client_id` + `client_secret`. Introspection is the right default for IdPs that expose an introspection endpoint (Okta, Keycloak, Ping Identity, FusionAuth, ORY Hydra). With `jwks_endpoint` instead, Kong validates signed JWTs locally against the IdP's public keys with no per-request call to the IdP. Use JWKS when your IdP doesn't implement RFC 7662 introspection: Microsoft Entra ID, Auth0, AWS Cognito, and Google OAuth2 all expose JWKS endpoints and issue signed JWTs that work directly with this mode. Pick whichever matches your IdP's capabilities and your latency budget. Introspection gives instant revocation at the cost of a network hop; JWKS is faster but tokens stay valid until they expire. See the [AI Auth Strategy schema](/ai-gateway/entities/ai-auth-strategy/#schema) for the full field list.
 
@@ -564,7 +564,7 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
 
 Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
 
-The following configuration creates three per-team AI MCP Servers (`conversion-only`) exposing eight MCP tools with per-tool ACLs, one aggregating AI MCP Server (`listener`), two AI Consumer Groups, an `openid-connect` AI Auth Strategy, and a CORS Policy. You already exported the IdP-specific `DECK_OAUTH_*` env vars and the shared `DECK_MCP_RESOURCE_URL` in the Identity Provider prerequisite, so you don't need to export them again. This same configuration applies regardless of which IdP you selected; the AI Auth Strategy resolves the IdP endpoints from those variables at apply time.
+The following configuration creates three per-team AI MCP Servers (`conversion-only`) exposing eight MCP tools with per-tool ACLs, one aggregating AI MCP Server (`listener`), two AI Consumer Groups, an `openid-connect` AI Auth Strategy, and a CORS Policy. You already exported the IdP-specific `OAUTH_*` env vars and the shared `MCP_RESOURCE_URL` in the Identity Provider prerequisite, so you don't need to export them again. This same configuration applies regardless of which IdP you selected; the AI Auth Strategy resolves the IdP endpoints from those variables at apply time.
 
 Apply the Kong configuration:
 
@@ -582,12 +582,12 @@ ai_gateway_auth_strategies:
   display_name: secure-internal-mcp-gateway OIDC auth
   type: openid-connect
   config:
-    issuer: !env 'DECK_OAUTH_AUTH_SERVER'
-    introspection_endpoint: !env 'DECK_OAUTH_INTROSPECTION_URL'
+    issuer: !env 'OAUTH_AUTH_SERVER'
+    introspection_endpoint: !env 'OAUTH_INTROSPECTION_URL'
     client_id:
-    - !env 'DECK_OAUTH_CLIENT_ID'
+    - !env 'OAUTH_CLIENT_ID'
     client_secret:
-    - !secret {source: !env 'DECK_OAUTH_CLIENT_SECRET'}
+    - !secret {source: !env 'OAUTH_CLIENT_SECRET'}
     auth_methods:
     - introspection
     cache_introspection: true
@@ -864,7 +864,7 @@ ai_gateway_mcp_servers:
     auth_strategies:
     - secure-internal-mcp-gateway-auth
     metadata:
-      resource: !env 'DECK_MCP_RESOURCE_URL'
+      resource: !env 'MCP_RESOURCE_URL'
       endpoint: /.well-known/oauth-protected-resource/ecommerce-mcp
   config:
     max_request_body_size: 1048576

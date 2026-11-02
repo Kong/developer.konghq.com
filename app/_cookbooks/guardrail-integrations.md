@@ -29,10 +29,10 @@ plugins:
 requires_embeddings: false
 extra_services:
   - name: Azure Content Safety
-    env_vars: [DECK_AZURE_CONTENT_SAFETY_URL, DECK_AZURE_CONTENT_SAFETY_KEY]
+    env_vars: [AZURE_CONTENT_SAFETY_URL, AZURE_CONTENT_SAFETY_KEY]
     hint: "Create an Azure AI Content Safety resource and note the endpoint URL and API key."
   - name: Mistral Moderation
-    env_vars: [DECK_MISTRAL_MODERATION_TOKEN]
+    env_vars: [MISTRAL_MODERATION_TOKEN]
     hint: "Get a Mistral API key from console.mistral.ai."
 
 hint: "Requires an OpenAI API key, an Azure Content Safety resource (for the Azure tab), a Mistral API key (for the Mistral tab), and Python 3.11+."
@@ -78,7 +78,7 @@ prereqs:
         1. Export the API key and the chat model:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            export CHAT_MODEL='gpt-4o'  # or gpt-4o-mini, o3
            ```
     - title: Azure Content Safety
@@ -91,8 +91,8 @@ prereqs:
         1. Export the endpoint and key:
 
            ```sh
-           export DECK_AZURE_CONTENT_SAFETY_URL='https://YOUR-RESOURCE.cognitiveservices.azure.com'
-           export DECK_AZURE_CONTENT_SAFETY_KEY='your-content-safety-key'
+           export AZURE_CONTENT_SAFETY_URL='https://YOUR-RESOURCE.cognitiveservices.azure.com'
+           export AZURE_CONTENT_SAFETY_KEY='your-content-safety-key'
            ```
     - title: Mistral Moderation
       content: |
@@ -103,7 +103,7 @@ prereqs:
         1. Export the API key:
 
            ```sh
-           export DECK_MISTRAL_MODERATION_TOKEN='your-mistral-key'
+           export MISTRAL_MODERATION_TOKEN='your-mistral-key'
            ```
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
@@ -257,8 +257,8 @@ ai_gateway_policies:
     type: ai-azure-content-safety
     display_name: "guardrail-integrations Azure Content Safety"
     config:
-      content_safety_url: !env DECK_AZURE_CONTENT_SAFETY_URL
-      content_safety_key: !secret {source: !env DECK_AZURE_CONTENT_SAFETY_KEY}
+      content_safety_url: !env AZURE_CONTENT_SAFETY_URL
+      content_safety_key: !env AZURE_CONTENT_SAFETY_KEY
       guarding_mode: INPUT
       text_source: concatenate_user_content
       categories:
@@ -310,8 +310,8 @@ The Azure custom example stores the API key and base URL as params:
 {%- raw %}
 ```yaml
 params:
-  base_url: !env DECK_AZURE_CONTENT_SAFETY_URL
-  api_key: !secret {source: !env DECK_AZURE_CONTENT_SAFETY_KEY}
+  base_url: !env AZURE_CONTENT_SAFETY_URL
+  api_key: !env AZURE_CONTENT_SAFETY_KEY
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -321,7 +321,7 @@ The Mistral example stores both the API key and the model name:
 {%- raw %}
 ```yaml
 params:
-  api_key: !secret {source: !env DECK_MISTRAL_MODERATION_TOKEN}
+  api_key: !env MISTRAL_MODERATION_TOKEN
   model: mistral-moderation-2411
 ```
 {% endraw -%}
@@ -498,7 +498,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: guardrail-integrations-model
@@ -573,7 +573,7 @@ Export the demo AI Consumer's API key. The AI Consumer credential's `api_key` fi
 export CONSUMER_API_KEY='demo-api-key'
 ```
 
-You already exported `KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, and `DECK_OPENAI_TOKEN`/`CHAT_MODEL` in the prerequisites, and every scenario below reuses them. Each tab sets only the env vars for the guardrail service it demonstrates.
+You already exported `KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, and `OPENAI_TOKEN`/`CHAT_MODEL` in the prerequisites, and every scenario below reuses them. Each tab sets only the env vars for the guardrail service it demonstrates.
 
 {% navtabs "Guardrail Service" %}
 {% tab Azure Content Safety %}
@@ -600,7 +600,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_auth_strategies:
   - ref: guardrail-integrations-auth
@@ -633,8 +633,8 @@ ai_gateway_policies:
     display_name: "guardrail-integrations Azure Content Safety"
     type: ai-azure-content-safety
     config:
-      content_safety_url: !env DECK_AZURE_CONTENT_SAFETY_URL
-      content_safety_key: !secret {source: !env DECK_AZURE_CONTENT_SAFETY_KEY}
+      content_safety_url: !env AZURE_CONTENT_SAFETY_URL
+      content_safety_key: !env AZURE_CONTENT_SAFETY_KEY
       guarding_mode: INPUT
       text_source: concatenate_user_content
       categories:
@@ -716,7 +716,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_auth_strategies:
   - ref: guardrail-integrations-auth
@@ -754,8 +754,8 @@ ai_gateway_policies:
       stop_on_error: true
       timeout: 10000
       params:
-        base_url: !env DECK_AZURE_CONTENT_SAFETY_URL
-        api_key: !secret {source: !env DECK_AZURE_CONTENT_SAFETY_KEY}
+        base_url: !env AZURE_CONTENT_SAFETY_URL
+        api_key: !env AZURE_CONTENT_SAFETY_KEY
       request:
         url: "$(conf.params.base_url)/contentsafety/text:analyze?api-version=2023-10-01"
         headers:
@@ -857,7 +857,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_auth_strategies:
   - ref: guardrail-integrations-auth
@@ -895,7 +895,7 @@ ai_gateway_policies:
       stop_on_error: true
       timeout: 10000
       params:
-        api_key: !secret {source: !env DECK_MISTRAL_MODERATION_TOKEN}
+        api_key: !env MISTRAL_MODERATION_TOKEN
         model: mistral-moderation-2411
       request:
         url: https://api.mistral.ai/v1/moderations

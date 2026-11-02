@@ -93,11 +93,11 @@ prereqs:
         1. Generate two AI Consumer credentials. These become the API key values each developer enters into the VS Code **Add Models...** wizard. Export them now so the apply step picks them up:
 
            ```bash
-           export DECK_COPILOT_KEY_ALICE="$(openssl rand -hex 24)"
-           export DECK_COPILOT_KEY_BOB="$(openssl rand -hex 24)"
+           export COPILOT_KEY_ALICE="$(openssl rand -hex 24)"
+           export COPILOT_KEY_BOB="$(openssl rand -hex 24)"
            ```
 
-           When you later paste a key into VS Code, copy it with `printf '%s' "$DECK_COPILOT_KEY_ALICE"` rather than `echo "$DECK_COPILOT_KEY_ALICE"`. zsh renders output that lacks a trailing newline with a bold `%`. That character isn't part of the key, and pasting it produces a `401 No API key found in request` from Kong.
+           When you later paste a key into VS Code, copy it with `printf '%s' "$COPILOT_KEY_ALICE"` rather than `echo "$COPILOT_KEY_ALICE"`. zsh renders output that lacks a trailing newline with a bold `%`. That character isn't part of the key, and pasting it produces a `401 No API key found in request` from Kong.
 
            In production, generate one credential per developer (or one per VS Code workstation) and distribute through your secrets manager rather than shell exports.
 
@@ -114,20 +114,20 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```bash
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-OPENAI-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-OPENAI-KEY'
            ```
         {% endnavtab %}
         {% navtab "Azure OpenAI" %}
         This tutorial uses [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/):
 
         1. Ensure you have an Azure OpenAI resource with at least one chat deployment.
-        1. Export your resource details. `DECK_AZURE_DEPLOYMENT_ID` is the deployment name you assigned in the Azure portal, not the underlying model name:
+        1. Export your resource details. `AZURE_DEPLOYMENT_ID` is the deployment name you assigned in the Azure portal, not the underlying model name:
 
            ```bash
-           export DECK_AZURE_API_KEY='YOUR-AZURE-OPENAI-KEY'
-           export DECK_AZURE_INSTANCE='your-azure-resource'
-           export DECK_AZURE_DEPLOYMENT_ID='your-deployment-name'
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='YOUR-AZURE-OPENAI-KEY'
+           export AZURE_INSTANCE='your-azure-resource'
+           export AZURE_DEPLOYMENT_ID='your-deployment-name'
+           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -137,9 +137,9 @@ prereqs:
         1. Export your AWS credentials:
 
            ```bash
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% endnavtabs %}
@@ -337,7 +337,7 @@ ai_gateway_consumers:
         name: copilot-developer-alice-credential
         display_name: "Alice's Copilot API key"
         type: api-key
-        api_key: !secret {source: !env DECK_COPILOT_KEY_ALICE}
+        api_key: !secret {source: !env COPILOT_KEY_ALICE}
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -488,7 +488,7 @@ Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
 
 The provider tabs below create an AI Model Provider holding your chosen provider's credentials, a Pre-Function Policy for header and body normalization, a Key Auth AI Auth Strategy, an AI Model for provider-key injection and OpenAI-format passthrough or translation, an AI Rate Limiting Advanced Policy for per-consumer token budgets, and two demonstration AI Consumers with API key credentials. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
 
-`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, provider credentials, and `DECK_COPILOT_KEY_ALICE`/`DECK_COPILOT_KEY_BOB` are already exported from the prerequisites, so each tab below only sets the model env var and runs the apply.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, provider credentials, and `COPILOT_KEY_ALICE`/`COPILOT_KEY_BOB` are already exported from the prerequisites, so each tab below only sets the model env var and runs the apply.
 
 {% navtabs "Providers" %}
 {% tab OpenAI %}
@@ -521,7 +521,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: github-copilot-byok-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -543,7 +543,7 @@ ai_gateway_consumers:
     name: copilot-developer-alice-credential
     display_name: Alice's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_ALICE'}
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
 - ref: copilot-developer-bob
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: copilot-developer-bob
@@ -554,7 +554,7 @@ ai_gateway_consumers:
     name: copilot-developer-bob-credential
     display_name: Bob's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_BOB'}
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
 ai_gateway_policies:
 - ref: github-copilot-byok-normalize
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -674,9 +674,9 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: api-key
-        value: !secret {source: !env 'DECK_AZURE_API_KEY'}
+        value: !secret {source: !env 'AZURE_API_KEY'}
     service: azure-openai
-    instance: !env 'DECK_AZURE_INSTANCE'
+    instance: !env 'AZURE_INSTANCE'
 ai_gateway_auth_strategies:
 - ref: github-copilot-byok-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -698,7 +698,7 @@ ai_gateway_consumers:
     name: copilot-developer-alice-credential
     display_name: Alice's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_ALICE'}
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
 - ref: copilot-developer-bob
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: copilot-developer-bob
@@ -709,7 +709,7 @@ ai_gateway_consumers:
     name: copilot-developer-bob-credential
     display_name: Bob's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_BOB'}
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
 ai_gateway_policies:
 - ref: github-copilot-byok-normalize
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -786,8 +786,8 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: github-copilot-byok-provider
     config:
-      api_version: !env 'DECK_AZURE_API_VERSION'
-      deployment_id: !env 'DECK_AZURE_DEPLOYMENT_ID'
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID'
       type: azure
       input_cost: 0.25
       output_cost: 2.0
@@ -829,8 +829,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: github-copilot-byok-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -852,7 +852,7 @@ ai_gateway_consumers:
     name: copilot-developer-alice-credential
     display_name: Alice's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_ALICE'}
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
 - ref: copilot-developer-bob
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: copilot-developer-bob
@@ -863,7 +863,7 @@ ai_gateway_consumers:
     name: copilot-developer-bob-credential
     display_name: Bob's Copilot API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_COPILOT_KEY_BOB'}
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
 ai_gateway_policies:
 - ref: github-copilot-byok-normalize
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -940,7 +940,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: github-copilot-byok-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
       input_cost: 0.25
       output_cost: 2.0
@@ -1209,7 +1209,7 @@ In VS Code:
 1. Click the **model picker** at the bottom of the Chat input.
 1. Select **Manage Language Models...**.
 1. Click **Add Models...** → **Custom Endpoint** → **Chat Completions**.
-1. When VS Code prompts for an **API key**, paste the value of `$DECK_COPILOT_KEY_ALICE`. Copy it with `printf '%s' "$DECK_COPILOT_KEY_ALICE"` (not `echo`) so a trailing zsh `%` marker is never included. That character is a prompt artifact, not part of the key, and pasting it produces a `401` from Kong.
+1. When VS Code prompts for an **API key**, paste the value of `$COPILOT_KEY_ALICE`. Copy it with `printf '%s' "$COPILOT_KEY_ALICE"` (not `echo`) so a trailing zsh `%` marker is never included. That character is a prompt artifact, not part of the key, and pasting it produces a `401` from Kong.
 
 VS Code stores the literal key in the OS keychain and opens `chatLanguageModels.json` with a generated stub entry whose `apiKey` field is already filled in with a `${input:chat.lm.secret.<id>}` placeholder. Edit the `name`, `models[].id`, `models[].name`, and `models[].url` fields to match this recipe. **Leave the `apiKey` line exactly as the wizard wrote it**:
 
@@ -1292,7 +1292,7 @@ Request failed: 429 Too Many Requests
 ```
 {:.no-copy-code}
 
-The response includes a `Retry-After` header indicating how many seconds remain in the window. Because `identifier: consumer` scopes the bucket to the developer, the other AI Consumer (`copilot-developer-bob`) still has its full budget at the same instant. Rotate VS Code's stored credential via **Manage Language Models... → Edit API Key** to the value of `$DECK_COPILOT_KEY_BOB` to verify.
+The response includes a `Retry-After` header indicating how many seconds remain in the window. Because `identifier: consumer` scopes the bucket to the developer, the other AI Consumer (`copilot-developer-bob`) still has its full budget at the same instant. Rotate VS Code's stored credential via **Manage Language Models... → Edit API Key** to the value of `$COPILOT_KEY_BOB` to verify.
 
 ### Explore in {{site.konnect_short_name}}
 
@@ -1314,7 +1314,7 @@ Kong returns this error when the `apikey` header is missing. For Copilot, a miss
 
 1. **Confirm the request reached Kong with a non-empty Bearer value.** Add the diagnostic `kong.log.notice` lines described in the [Confirm Bearer-to-apikey rewrite](#confirm-bearer-to-apikey-rewrite-and-temperature-strip) section and look for `"authorization":"Bearer <key>"`. If the value is literally `Bearer` with nothing after, VS Code didn't resolve the secret placeholder.
 1. **Re-mint the placeholder.** Open **Manage Language Models...**, remove the {{site.ai_gateway_name}} entry, run **Add Models... → Custom Endpoint → Chat Completions** again, and paste the key when prompted. A `chatLanguageModels.json` entry whose `apiKey` was hand-typed (rather than wizard-generated) is silently invalid even if its shape looks identical to a working one.
-1. **Strip stray characters from the key.** Copy the value with `printf '%s' "$DECK_COPILOT_KEY_ALICE"`. zsh's trailing `%` marker for newline-less output is a common silent-401 source.
+1. **Strip stray characters from the key.** Copy the value with `printf '%s' "$COPILOT_KEY_ALICE"`. zsh's trailing `%` marker for newline-less output is a common silent-401 source.
 1. **Check whether the Pre-Function Policy runs before authentication.** This recipe's design assumes the Pre-Function Policy's header rewrite is visible to the Key Auth AI Auth Strategy check. That ordering hasn't been confirmed against a live {{site.ai_gateway}} (see the warning in [Pre-Function: request normalization](#pre-function-request-normalization)). If step 1 shows Kong receiving a valid `Authorization: Bearer <key>` header but still rejecting with `401`, this ordering is the likely cause and needs to be reported.
 
 ### Dashboard is empty after a few minutes
@@ -1344,7 +1344,7 @@ If **Observability → Custom dashboards → `Copilot Usage`** shows no data 5+ 
 - **Add code-secret PII redaction.** Add an [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy ahead of the AI Model to redact API keys, tokens, and other secrets from prompts before they reach the LLM provider. Developers pasting `.env` snippets into Copilot Chat is a real exfiltration risk; this policy catches it server-side.
 - **Switch to monthly token budgets.** The 60-second window here is intentionally aggressive for the demo so a few prompts visibly exhaust it. Production teams usually enforce monthly budgets, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%} for a 5 million token monthly ceiling per AI Consumer. Combine multiple `limits` entries to enforce burst and sustained budgets simultaneously.
 - **Share rate-limit counters with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node clusters, switch to `strategy: redis` and point to a shared Redis instance.
-- **Move credentials into a vault.** Use [AI Vaults](/ai-gateway/entities/ai-vault/) to source provider keys and AI Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the {{site.konnect_short_name}} Config Store. Replace `!secret {source: !env DECK_OPENAI_TOKEN}` style references with `{vault://backend/key}` references.
+- **Move credentials into a vault.** Use [AI Vaults](/ai-gateway/entities/ai-vault/) to source provider keys and AI Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the {{site.konnect_short_name}} Config Store. Replace `!secret {source: !env OPENAI_TOKEN}` style references with `{vault://backend/key}` references.
 - **Cover non-Copilot OpenAI-format clients.** This recipe works for any client that speaks the OpenAI Chat Completions API and authenticates with `Authorization: Bearer`. Cursor, Continue, and similar IDE assistants can point at the same AI Model with their own AI Consumer credential.
 
 ## Cleanup

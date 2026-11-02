@@ -81,14 +81,14 @@ prereqs:
         1. Export the OpenAI key. You reuse the key for STT, TTS, and the LLM hop when you pick the OpenAI tab below:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
 
         Then configure the LLM provider you plan to use for the reasoning hop:
 
         {% navtabs "Providers" %}
         {% navtab "OpenAI" %}
-        You already exported the OpenAI key above. The recipe uses the same `DECK_OPENAI_TOKEN` for STT, TTS, and the LLM hop.
+        You already exported the OpenAI key above. The recipe uses the same `OPENAI_TOKEN` for STT, TTS, and the LLM hop.
         {% endnavtab %}
         {% navtab "Anthropic" %}
         This tutorial uses Anthropic:
@@ -98,8 +98,8 @@ prereqs:
         1. Export the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```sh
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -109,9 +109,9 @@ prereqs:
         1. Export your AWS credentials:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% navtab "Azure OpenAI" %}
@@ -122,10 +122,10 @@ prereqs:
         1. Export your credentials:
 
            ```sh
-           export DECK_AZURE_API_KEY='your-azure-api-key'
-           export DECK_AZURE_INSTANCE='your-instance-name'
-           export DECK_AZURE_DEPLOYMENT_ID='your-deployment-id'
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_DEPLOYMENT_ID='your-deployment-id'
+           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
         {% endnavtab %}
         {% navtab "Google Gemini" %}
@@ -136,9 +136,9 @@ prereqs:
         1. Export your project details:
 
            ```sh
-           export DECK_GCP_API_ENDPOINT='your-api-endpoint'
-           export DECK_GCP_PROJECT_ID='your-project-id'
-           export DECK_GCP_LOCATION_ID='us-central1'
+           export GCP_API_ENDPOINT='your-api-endpoint'
+           export GCP_PROJECT_ID='your-project-id'
+           export GCP_LOCATION_ID='us-central1'
            ```
         {% endnavtab %}
         {% navtab "Mistral" %}
@@ -149,7 +149,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_MISTRAL_TOKEN='Bearer your-mistral-key'
+           export MISTRAL_TOKEN='Bearer your-mistral-key'
            ```
         {% endnavtab %}
         {% endnavtabs %}
@@ -168,14 +168,14 @@ prereqs:
         1. Export both keys and the OTLP endpoint for the **same region** you signed up under, then derive the Basic Auth header from them:
 
            ```bash
-           export DECK_LANGFUSE_PUBLIC_KEY='pk-lf-YOUR-PUBLIC-KEY'
-           export DECK_LANGFUSE_SECRET_KEY='sk-lf-YOUR-SECRET-KEY'
+           export LANGFUSE_PUBLIC_KEY='pk-lf-YOUR-PUBLIC-KEY'
+           export LANGFUSE_SECRET_KEY='sk-lf-YOUR-SECRET-KEY'
            # Pick the endpoint that matches the region you signed up under:
            #   US:    https://us.cloud.langfuse.com/api/public/otel/v1/traces
            #   EU:    https://cloud.langfuse.com/api/public/otel/v1/traces
            #   HIPAA: https://hipaa.cloud.langfuse.com/api/public/otel/v1/traces
-           export DECK_LANGFUSE_OTLP_ENDPOINT='https://us.cloud.langfuse.com/api/public/otel/v1/traces'
-           export DECK_LANGFUSE_AUTH_HEADER="Basic $(printf '%s:%s' "$DECK_LANGFUSE_PUBLIC_KEY" "$DECK_LANGFUSE_SECRET_KEY" | base64 | tr -d '\n')"
+           export LANGFUSE_OTLP_ENDPOINT='https://us.cloud.langfuse.com/api/public/otel/v1/traces'
+           export LANGFUSE_AUTH_HEADER="Basic $(printf '%s:%s' "$LANGFUSE_PUBLIC_KEY" "$LANGFUSE_SECRET_KEY" | base64 | tr -d '\n')"
            ```
 
            The `tr -d '\n'` strips the newline that GNU `base64` inserts after 76 characters, which would otherwise corrupt the `Authorization` header. If your endpoint and key region don't match, Langfuse returns `401 Unauthorized` on every trace export.
@@ -374,7 +374,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: voice-ai-observability-stt
@@ -432,7 +432,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: voice-ai-observability-llm
@@ -534,9 +534,9 @@ ai_gateway_policies:
     display_name: "voice-ai-observability tracing"
     global: true
     config:
-      traces_endpoint: !env DECK_LANGFUSE_OTLP_ENDPOINT
+      traces_endpoint: !env LANGFUSE_OTLP_ENDPOINT
       headers:
-        Authorization: !secret {source: !env DECK_LANGFUSE_AUTH_HEADER}
+        Authorization: !env LANGFUSE_AUTH_HEADER
         x-langfuse-ingestion-version: "4"
       sampling_rate: 1
       propagation:
@@ -636,7 +636,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -647,7 +647,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: voice-ai-observability-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -678,9 +678,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -819,7 +819,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -830,7 +830,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: x-api-key
-        value: !secret {source: !env 'DECK_ANTHROPIC_TOKEN'}
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: voice-ai-observability-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -861,9 +861,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -932,7 +932,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: voice-ai-observability-llm-provider
     config:
-      version: !env 'DECK_ANTHROPIC_VERSION'
+      version: !env 'ANTHROPIC_VERSION'
       type: anthropic
 - ref: voice-ai-observability-tts
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1003,7 +1003,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -1012,8 +1012,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: voice-ai-observability-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1044,9 +1044,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -1115,7 +1115,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: voice-ai-observability-llm-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 - ref: voice-ai-observability-tts
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1161,7 +1161,7 @@ rm -f kong-recipe.yaml
 {% endtab %}
 {% tab Azure OpenAI %}
 
-Export the per-tab environment variable. It must match the model deployed at `DECK_AZURE_DEPLOYMENT_ID` from the AI Credentials prereq:
+Export the per-tab environment variable. It must match the model deployed at `AZURE_DEPLOYMENT_ID` from the AI Credentials prereq:
 
 ```bash
 export CHAT_MODEL='gpt-4o'  # matches your Azure deployment name
@@ -1186,7 +1186,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -1197,9 +1197,9 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: api-key
-        value: !secret {source: !env 'DECK_AZURE_API_KEY'}
+        value: !secret {source: !env 'AZURE_API_KEY'}
     service: azure-openai
-    instance: !env 'DECK_AZURE_INSTANCE'
+    instance: !env 'AZURE_INSTANCE'
 ai_gateway_auth_strategies:
 - ref: voice-ai-observability-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1230,9 +1230,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -1301,8 +1301,8 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: voice-ai-observability-llm-provider
     config:
-      api_version: !env 'DECK_AZURE_API_VERSION'
-      deployment_id: !env 'DECK_AZURE_DEPLOYMENT_ID'
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID'
       type: azure
 - ref: voice-ai-observability-tts
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1373,7 +1373,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -1413,9 +1413,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -1485,9 +1485,9 @@ ai_gateway_models:
     provider: voice-ai-observability-llm-provider
     config:
       gcp_environment:
-        api_endpoint: !env 'DECK_GCP_API_ENDPOINT'
-        project_id: !env 'DECK_GCP_PROJECT_ID'
-        location_id: !env 'DECK_GCP_LOCATION_ID'
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
       type: gemini
 - ref: voice-ai-observability-tts
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1558,7 +1558,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 - ref: voice-ai-observability-llm-provider
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: voice-ai-observability-llm-provider
@@ -1569,7 +1569,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_MISTRAL_TOKEN'}
+        value: !secret {source: !env 'MISTRAL_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: voice-ai-observability-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1600,9 +1600,9 @@ ai_gateway_policies:
   type: opentelemetry
   global: true
   config:
-    traces_endpoint: !env 'DECK_LANGFUSE_OTLP_ENDPOINT'
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: !secret {source: !env 'DECK_LANGFUSE_AUTH_HEADER'}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
@@ -1814,12 +1814,12 @@ CYAN   = lambda s: _c("36", s)
 RED    = lambda s: _c("31", s)
 MAGENTA= lambda s: _c("35", s)
 
-LANGFUSE_OTLP_ENDPOINT = os.environ["DECK_LANGFUSE_OTLP_ENDPOINT"]
-LANGFUSE_AUTH_HEADER = os.environ["DECK_LANGFUSE_AUTH_HEADER"]
+LANGFUSE_OTLP_ENDPOINT = os.environ["LANGFUSE_OTLP_ENDPOINT"]
+LANGFUSE_AUTH_HEADER = os.environ["LANGFUSE_AUTH_HEADER"]
 
-# DECK_OPENAI_TOKEN carries the "Bearer " prefix Kong needs; strip it for the
+# OPENAI_TOKEN carries the "Bearer " prefix Kong needs; strip it for the
 # direct OpenAI client used by the setup phase.
-RAW_OPENAI_KEY = os.environ["DECK_OPENAI_TOKEN"].removeprefix("Bearer ").strip()
+RAW_OPENAI_KEY = os.environ["OPENAI_TOKEN"].removeprefix("Bearer ").strip()
 
 
 # ---------------------------------------------------------------------------
@@ -2220,7 +2220,7 @@ For platform-wide traffic analysis across every {{site.ai_gateway}}, open the **
 
 ## Variations and next steps
 
-**Swap the OTel backend.** Replace the Langfuse endpoint with any OTLP-compatible backend. Change `DECK_LANGFUSE_OTLP_ENDPOINT` and `DECK_LANGFUSE_AUTH_HEADER` (and update the demo's exporter the same way) to point at Jaeger, Grafana Tempo, Honeycomb, Datadog, or Dynatrace. Two things to know before you migrate:
+**Swap the OTel backend.** Replace the Langfuse endpoint with any OTLP-compatible backend. Change `LANGFUSE_OTLP_ENDPOINT` and `LANGFUSE_AUTH_HEADER` (and update the demo's exporter the same way) to point at Jaeger, Grafana Tempo, Honeycomb, Datadog, or Dynatrace. Two things to know before you migrate:
 
 - **Portable across backends.** Kong's per-hop spans, the demo's `voice-turn` span tree, and the `gen_ai.*` semantic attributes (token counts, model names, provider) are all standard OpenTelemetry GenAI semantic conventions. They render correctly in any backend that supports OTLP ingestion and the GenAI semconv registry.
 - **Langfuse-specific and won't transfer.** The `langfuse.session.id`, `langfuse.trace.name`, and `langfuse.trace.tags` attributes are how Langfuse drives its Sessions UI, conversation rollups, and LLM-aware cost panels. On a generic backend `langfuse.session.id` is just a string attribute. To recreate Sessions-style grouping, you'd filter traces by that attribute, or restructure to use the backend's native session/grouping concept (for example, Datadog's `session.id` or Honeycomb's parent-id chains).

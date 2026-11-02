@@ -80,7 +80,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
         {% endnavtab %}
         {% navtab "Anthropic" %}
@@ -91,8 +91,8 @@ prereqs:
         1. Export the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```sh
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -102,9 +102,9 @@ prereqs:
         1. Export your AWS credentials:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% navtab "Azure OpenAI" %}
@@ -115,11 +115,11 @@ prereqs:
         1. Export your credentials:
 
            ```sh
-           export DECK_AZURE_API_KEY='your-azure-api-key'
-           export DECK_AZURE_INSTANCE='your-instance-name'
-           export DECK_AZURE_DEPLOYMENT_ID_1='your-fast-deployment-id'    # the "fast" alias target
-           export DECK_AZURE_DEPLOYMENT_ID_2='your-smart-deployment-id'   # the "smart" alias target
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_DEPLOYMENT_ID_1='your-fast-deployment-id'    # the "fast" alias target
+           export AZURE_DEPLOYMENT_ID_2='your-smart-deployment-id'   # the "smart" alias target
+           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
 
            If you only have one deployment available, point both variables at the same value. The recipe still applies, but both aliases route to the same upstream model.
@@ -132,9 +132,9 @@ prereqs:
         1. Export your project details:
 
            ```sh
-           export DECK_GCP_API_ENDPOINT='your-api-endpoint'
-           export DECK_GCP_PROJECT_ID='your-project-id'
-           export DECK_GCP_LOCATION_ID='us-central1'
+           export GCP_API_ENDPOINT='your-api-endpoint'
+           export GCP_PROJECT_ID='your-project-id'
+           export GCP_LOCATION_ID='us-central1'
            ```
         {% endnavtab %}
         {% navtab "Mistral" %}
@@ -145,7 +145,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_MISTRAL_TOKEN='Bearer your-mistral-key'
+           export MISTRAL_TOKEN='Bearer your-mistral-key'
            ```
         {% endnavtab %}
         {% endnavtabs %}
@@ -315,7 +315,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: basic-llm-routing-fast
@@ -476,7 +476,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: basic-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -498,7 +498,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -610,7 +610,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: x-api-key
-        value: !secret {source: !env 'DECK_ANTHROPIC_TOKEN'}
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: basic-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -632,7 +632,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -669,7 +669,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_1'
     provider: basic-llm-routing-provider
     config:
-      version: !env 'DECK_ANTHROPIC_VERSION'
+      version: !env 'ANTHROPIC_VERSION'
       type: anthropic
 - ref: basic-llm-routing-smart
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -706,7 +706,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_2'
     provider: basic-llm-routing-provider
     config:
-      version: !env 'DECK_ANTHROPIC_VERSION'
+      version: !env 'ANTHROPIC_VERSION'
       type: anthropic
 EOF
 {% endraw -%}
@@ -744,8 +744,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: basic-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -767,7 +767,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -804,7 +804,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_1'
     provider: basic-llm-routing-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 - ref: basic-llm-routing-smart
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -841,7 +841,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_2'
     provider: basic-llm-routing-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 EOF
 {% endraw -%}
@@ -858,8 +858,8 @@ rm -f kong-recipe.yaml
 Export the model env vars. Kong records the model names in the `X-Kong-LLM-Model` header for analytics, but the deployment IDs you exported in the AI Credentials prereq drive Azure's upstream selection:
 
 ```bash
-export CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias. must match the model in DECK_AZURE_DEPLOYMENT_ID_1
-export CHAT_MODEL_2='gpt-4o'        # the "smart" alias. must match the model in DECK_AZURE_DEPLOYMENT_ID_2
+export CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias. must match the model in AZURE_DEPLOYMENT_ID_1
+export CHAT_MODEL_2='gpt-4o'        # the "smart" alias. must match the model in AZURE_DEPLOYMENT_ID_2
 ```
 
 Apply the Kong configuration:
@@ -881,9 +881,9 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: api-key
-        value: !secret {source: !env 'DECK_AZURE_API_KEY'}
+        value: !secret {source: !env 'AZURE_API_KEY'}
     service: azure-openai
-    instance: !env 'DECK_AZURE_INSTANCE'
+    instance: !env 'AZURE_INSTANCE'
 ai_gateway_auth_strategies:
 - ref: basic-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -905,7 +905,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -942,8 +942,8 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_1'
     provider: basic-llm-routing-provider
     config:
-      api_version: !env 'DECK_AZURE_API_VERSION'
-      deployment_id: !env 'DECK_AZURE_DEPLOYMENT_ID_1'
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID_1'
       type: azure
 - ref: basic-llm-routing-smart
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -980,8 +980,8 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL_2'
     provider: basic-llm-routing-provider
     config:
-      api_version: !env 'DECK_AZURE_API_VERSION'
-      deployment_id: !env 'DECK_AZURE_DEPLOYMENT_ID_2'
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID_2'
       type: azure
 EOF
 {% endraw -%}
@@ -1041,7 +1041,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1079,9 +1079,9 @@ ai_gateway_models:
     provider: basic-llm-routing-provider
     config:
       gcp_environment:
-        api_endpoint: !env 'DECK_GCP_API_ENDPOINT'
-        project_id: !env 'DECK_GCP_PROJECT_ID'
-        location_id: !env 'DECK_GCP_LOCATION_ID'
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
       type: gemini
 - ref: basic-llm-routing-smart
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1119,9 +1119,9 @@ ai_gateway_models:
     provider: basic-llm-routing-provider
     config:
       gcp_environment:
-        api_endpoint: !env 'DECK_GCP_API_ENDPOINT'
-        project_id: !env 'DECK_GCP_PROJECT_ID'
-        location_id: !env 'DECK_GCP_LOCATION_ID'
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
       type: gemini
 EOF
 {% endraw -%}
@@ -1161,7 +1161,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_MISTRAL_TOKEN'}
+        value: !secret {source: !env 'MISTRAL_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: basic-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1183,7 +1183,7 @@ ai_gateway_consumers:
     name: basic-llm-routing-credential
     display_name: basic-llm-routing demo API key
     type: api-key
-    api_key: demo-api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_models:
 - ref: basic-llm-routing-fast
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1409,7 +1409,7 @@ Done.
 1. **Both aliases resolved on the same path.** The OpenAI SDK sent two `POST /basic-llm-routing` requests with identical bodies except for the `model` field (`fast` vs `smart`). The `X-Kong-LLM-Model` header on each response shows the actual upstream model Kong routed to: `openai/gpt-4o-mini` for `fast` and `openai/gpt-4o` for `smart`. No client code change, no separate endpoint, just a different value in the request body.
 2. **AI Consumer identity attached to every successful request.** Kong matched the `apikey` header to the `basic-llm-routing-consumer` AI Consumer's credential and made that identity available to downstream policies. (Kong adds `X-Consumer-Username` to the upstream request, not the downstream response. See the {{site.konnect_short_name}} {{site.observability}} views in the next subsection for per-consumer attribution.) The AI Consumer is the unit you attach rate limits, ACLs, and quota policies to.
 3. **Kong enforced auth before any upstream call.** The third request used a key that no AI Consumer holds. The Key Auth AI Auth Strategy rejected it in roughly 30 ms, well below normal upstream latency. Kong never contacted the provider, the request consumed no provider quota, and the failure surfaced as a clean `401` to the client.
-4. **Provider credentials never left Kong.** The OpenAI SDK only ever held the AI Consumer's API key. The `Bearer sk-...` provider credential lived in `DECK_OPENAI_TOKEN` on the Kong side, and the AI Model Provider injected it into the upstream call.
+4. **Provider credentials never left Kong.** The OpenAI SDK only ever held the AI Consumer's API key. The `Bearer sk-...` provider credential lived in `OPENAI_TOKEN` on the Kong side, and the AI Model Provider injected it into the upstream call.
 
 ### Explore in {{site.konnect_short_name}}
 

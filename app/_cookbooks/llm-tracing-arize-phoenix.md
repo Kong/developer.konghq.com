@@ -78,7 +78,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
     - title: Arize Phoenix
       content: |
@@ -92,8 +92,8 @@ prereqs:
         1. Export the OTLP/HTTP traces URL the data plane container can reach, and the Phoenix project name:
 
            ```bash
-           export DECK_PHOENIX_OTLP_ENDPOINT='http://host.docker.internal:6006/v1/traces'
-           export DECK_PHOENIX_PROJECT_NAME='kong-ai-gateway'
+           export PHOENIX_OTLP_ENDPOINT='http://host.docker.internal:6006/v1/traces'
+           export PHOENIX_PROJECT_NAME='kong-ai-gateway'
            ```
 
            `host.docker.internal` is the host machine from inside the local data plane container. Point at the Phoenix service name instead if Phoenix runs on the same Docker network.
@@ -104,12 +104,12 @@ prereqs:
         1. Export the endpoint, project name, and (when auth is on) the Authorization header:
 
            ```bash
-           export DECK_PHOENIX_OTLP_ENDPOINT='https://YOUR_PHOENIX_HOST/v1/traces'
-           export DECK_PHOENIX_PROJECT_NAME='kong-ai-gateway'
-           export DECK_PHOENIX_AUTH_HEADER='Bearer YOUR_PHOENIX_API_KEY'
+           export PHOENIX_OTLP_ENDPOINT='https://YOUR_PHOENIX_HOST/v1/traces'
+           export PHOENIX_PROJECT_NAME='kong-ai-gateway'
+           export PHOENIX_AUTH_HEADER='Bearer YOUR_PHOENIX_API_KEY'
            ```
 
-           A local `phoenix serve` doesn't need `DECK_PHOENIX_AUTH_HEADER`. Kong doesn't read `PHOENIX_API_KEY` from the environment unless you add it into the policy config.
+           A local `phoenix serve` doesn't need `PHOENIX_AUTH_HEADER`. Kong doesn't read `PHOENIX_API_KEY` from the environment unless you add it into the policy config.
         {% endnavtab %}
         {% endnavtabs %}
     - title: Python 3.11+
@@ -283,7 +283,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: llm-tracing-arize-phoenix-model
@@ -355,9 +355,9 @@ ai_gateway_policies:
     type: opentelemetry
     display_name: "llm-tracing-arize-phoenix OpenTelemetry export"
     config:
-      traces_endpoint: !env DECK_PHOENIX_OTLP_ENDPOINT
+      traces_endpoint: !env PHOENIX_OTLP_ENDPOINT
       headers:
-        x-project-name: !env DECK_PHOENIX_PROJECT_NAME
+        x-project-name: !env PHOENIX_PROJECT_NAME
       resource_attributes:
         service.name: kong-gateway
       sampling_rate: 1
@@ -374,7 +374,7 @@ ai_gateway_policies:
 - **`headers.x-project-name`**. Phoenix project. Traces land here even when `service.name` is set.
 - **`sampling_rate: 1`**. Sample everything while you validate the recipe. Lower this in production. This policy setting only takes effect once the data plane records exportable spans at all, which requires the `KONG_TRACING_INSTRUMENTATIONS` and `KONG_TRACING_SAMPLING_RATE` data plane settings from the {{site.konnect_product_name}} prerequisite.
 - **`propagation`**. W3C extract and inject keep an application `traceparent` when the request crosses Kong. App OpenInference spans can then parent the gateway hop.
-- **Authentication.** If Phoenix requires an API key, add `Authorization: Bearer <key>` to `headers`. Reference it from an environment variable with `!env` or `!secret`. Do not commit the key.
+- **Authentication.** If Phoenix requires an API key, add `Authorization: Bearer <key>` to `headers`. Reference it from an environment variable with `!env` (Policy config doesn't accept `!secret`). Do not commit the key.
 
 ### Post-Function: OpenInference attributes Phoenix renders
 
@@ -551,7 +551,7 @@ Export the chat model:
 export CHAT_MODEL='gpt-4o-mini'  # or gpt-4o, o3
 ```
 
-You already exported `DECK_OPENAI_TOKEN` in the OpenAI prerequisite and `KONNECT_CONTROL_PLANE_NAME` in the {{site.konnect_product_name}} prerequisite, so you don't need to export them again. If you exported `DECK_PHOENIX_AUTH_HEADER`, add it under the OpenTelemetry Policy's `headers.Authorization` in the following apply command before you run it.
+You already exported `OPENAI_TOKEN` in the OpenAI prerequisite and `KONNECT_CONTROL_PLANE_NAME` in the {{site.konnect_product_name}} prerequisite, so you don't need to export them again. If you exported `PHOENIX_AUTH_HEADER`, add it under the OpenTelemetry Policy's `headers.Authorization` in the following apply command before you run it.
 
 Apply the Kong configuration:
 
@@ -572,7 +572,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: llm-tracing-arize-phoenix-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -617,9 +617,9 @@ ai_gateway_policies:
   display_name: llm-tracing-arize-phoenix OpenTelemetry export
   type: opentelemetry
   config:
-    traces_endpoint: !env 'DECK_PHOENIX_OTLP_ENDPOINT'
+    traces_endpoint: !env 'PHOENIX_OTLP_ENDPOINT'
     headers:
-      x-project-name: !env 'DECK_PHOENIX_PROJECT_NAME'
+      x-project-name: !env 'PHOENIX_PROJECT_NAME'
     resource_attributes:
       service.name: kong-gateway
     sampling_rate: 1
@@ -823,7 +823,7 @@ This script cannot confirm what Phoenix rendered. Post-Function writes
 OpenInference attributes onto Kong's spans; whether Sessions, the user
 column, Input/Output, and Messages populated correctly is only visible in
 the Phoenix UI. Run `python demo.py`, then open the project named by
-`DECK_PHOENIX_PROJECT_NAME` in Phoenix and confirm what the printed Session
+`PHOENIX_PROJECT_NAME` in Phoenix and confirm what the printed Session
 ID and turns look like there.
 
 Requires: `pip install -r requirements.txt`. Expects `PROXY_URL` (default
@@ -845,7 +845,7 @@ PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gpt-4o-mini")
 # Matches the Consumer credential's CONSUMER_API_KEY value from the Apply section.
 PHOENIX_API_KEY = os.getenv("PHOENIX_API_KEY", "demo-api-key")
-PHOENIX_PROJECT_NAME = os.getenv("DECK_PHOENIX_PROJECT_NAME", "kong-ai-gateway")
+PHOENIX_PROJECT_NAME = os.getenv("PHOENIX_PROJECT_NAME", "kong-ai-gateway")
 SESSION_ID = os.getenv("SESSION_ID", f"phoenix-demo-{uuid.uuid4().hex[:12]}")
 
 # ANSI color codes. Disabled when stdout isn't a TTY or NO_COLOR is set.
@@ -1083,7 +1083,7 @@ Post-Function writes the request body verbatim onto `input.value` and the respon
 
 ### Verify in Phoenix
 
-Open the project named in `DECK_PHOENIX_PROJECT_NAME` (default `kong-ai-gateway`).
+Open the project named in `PHOENIX_PROJECT_NAME` (default `kong-ai-gateway`).
 
 You should see:
 

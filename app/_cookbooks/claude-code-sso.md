@@ -34,7 +34,7 @@ providers:
   - vertex
 extra_services:
   - name: Okta
-    env_vars: [DECK_OKTA_ISSUER, DECK_OKTA_AUDIENCE]
+    env_vars: [OKTA_ISSUER, OKTA_AUDIENCE]
     hint: "Create a Native Application in Okta with PKCE flow and configure an API Authorization Server with a groups claim. See the Okta section in Prerequisites."
 
 hint: "Requires an Okta organization with admin access and LLM provider credentials."
@@ -128,15 +128,15 @@ prereqs:
         You configure the audience on the authorization server itself, not per request. View or edit it at **Security → API → Authorization Servers → [server] → Settings tab → Audience**. The built-in `default` server uses `api://default`.
 
         ```bash
-        export DECK_OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
-        export DECK_OKTA_AUDIENCE='api://default'
+        export OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
+        export OKTA_AUDIENCE='api://default'
         # Salt for the openid-connect Auth Strategy's token cache key. Stable across syncs.
         # Not a credential. For production, regenerate with `openssl rand -hex 16` and
         # source from your secrets manager (or AI Vaults).
-        export DECK_OIDC_CACHE_TOKENS_SALT='claude-code-sso-dev-salt'
+        export OIDC_CACHE_TOKENS_SALT='claude-code-sso-dev-salt'
         ```
 
-        If you use a custom authorization server, set `DECK_OKTA_ISSUER` to that server's issuer URL and `DECK_OKTA_AUDIENCE` to its configured audience value.
+        If you use a custom authorization server, set `OKTA_ISSUER` to that server's issuer URL and `OKTA_AUDIENCE` to its configured audience value.
     - title: Claude Code
       content: |
         This recipe routes Claude Code through Kong using the [`apiKeyHelper`](https://docs.claude.com/en/docs/claude-code/settings) setting, which runs a script before each API call and uses its stdout as the credential.
@@ -396,7 +396,7 @@ prereqs:
         - **`ANTHROPIC_MODEL`** sets the active model from session start. Without it, the picker boots on the system default and Claude Code sends the literal placeholder `<default>`, which has no matching alias in Kong.
         - **`ANTHROPIC_DEFAULT_SONNET_MODEL`** and **`ANTHROPIC_DEFAULT_OPUS_MODEL`** control what the `sonnet` and `opus` aliases resolve to when the user runs `/model sonnet` or `/model opus` mid-session.
 
-        These three values must match the `DECK_SONNET_ALIAS` and `DECK_OPUS_ALIAS` set in the apply step. That's the alias contract Kong uses to route the request to the right tier. Whenever the platform team rolls out a new model version (for example, Sonnet 4.6 lands on Bedrock), they update the four `DECK_*` values in Kong and announce a corresponding bump for the three `ANTHROPIC_*_MODEL` values here.
+        These three values must match the `SONNET_ALIAS` and `OPUS_ALIAS` set in the apply step. That's the alias contract Kong uses to route the request to the right tier. Whenever the platform team rolls out a new model version (for example, Sonnet 4.6 lands on Bedrock), they update the four values in the apply step (`SONNET_ALIAS`, `OPUS_ALIAS`, `CHAT_MODEL_1`, `CHAT_MODEL_2`) and announce a corresponding bump for the three `ANTHROPIC_*_MODEL` values here.
 
         {:.warning}
         > On Windows, Claude Code does not expand `~` in the `apiKeyHelper` field (see the [GitHub issue on tilde expansion](https://github.com/anthropics/claude-code/issues/13013)). Substitute the absolute path, for example `C:\\Users\\you\\.claude\\okta-claude-auth.sh`. Tilde expansion works on macOS and Linux.
@@ -417,8 +417,8 @@ prereqs:
         1. Export environment variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```bash
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -428,36 +428,36 @@ prereqs:
         1. Export environment variables with your AWS credentials:
 
            ```bash
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% navtab "Azure AI Foundry" %}
         This tutorial uses [Azure AI Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/), which hosts Claude at `https://<resource>.services.ai.azure.com/anthropic/v1/messages`.
 
-        1. Ensure you have a Foundry project with Claude Sonnet 4.5 and Claude Opus 4.5 deployments. The deployment names you assigned in the portal become `DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1` and `_2`.
-        1. Export environment variables. `DECK_AZURE_FOUNDRY_UPSTREAM_URL` is the full endpoint URL Kong calls. `DECK_AZURE_FOUNDRY_TOKEN` accepts either a Foundry API key or an [Entra ID](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/rbac-azure-ai-foundry) bearer token; the AI Model Provider forwards it verbatim, so include the `Bearer ` prefix yourself if your token requires it:
+        1. Ensure you have a Foundry project with Claude Sonnet 4.5 and Claude Opus 4.5 deployments. The deployment names you assigned in the portal become `AZURE_FOUNDRY_DEPLOYMENT_ID_1` and `_2`.
+        1. Export environment variables. `AZURE_FOUNDRY_UPSTREAM_URL` is the full endpoint URL Kong calls. `AZURE_FOUNDRY_TOKEN` accepts either a Foundry API key or an [Entra ID](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/rbac-azure-ai-foundry) bearer token; the AI Model Provider forwards it verbatim, so include the `Bearer ` prefix yourself if your token requires it:
 
            ```bash
-           export DECK_AZURE_FOUNDRY_INSTANCE='your-foundry-resource'
-           export DECK_AZURE_FOUNDRY_UPSTREAM_URL="https://${DECK_AZURE_FOUNDRY_INSTANCE}.services.ai.azure.com/anthropic/v1/messages"
-           export DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1='your-sonnet-deployment'
-           export DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_2='your-opus-deployment'
-           export DECK_AZURE_FOUNDRY_TOKEN='your-foundry-token'
+           export AZURE_FOUNDRY_INSTANCE='your-foundry-resource'
+           export AZURE_FOUNDRY_UPSTREAM_URL="https://${AZURE_FOUNDRY_INSTANCE}.services.ai.azure.com/anthropic/v1/messages"
+           export AZURE_FOUNDRY_DEPLOYMENT_ID_1='your-sonnet-deployment'
+           export AZURE_FOUNDRY_DEPLOYMENT_ID_2='your-opus-deployment'
+           export AZURE_FOUNDRY_TOKEN='your-foundry-token'
            ```
         {% endnavtab %}
         {% navtab "Google Vertex AI" %}
         This tutorial uses [Google Vertex AI Model Garden](https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude), which hosts Claude on Google Cloud.
 
         1. Ensure your GCP project has the Vertex AI API enabled, Claude Sonnet 4.5 and Claude Opus 4.5 access granted in AI Model Garden, and a service account JSON key with `roles/aiplatform.user`.
-        1. Export environment variables. `DECK_VERTEX_LOCATION_ID` accepts `global` (works for every Claude variant) or a regional endpoint like `us-east5`, `europe-west1`, or `asia-southeast1`:
+        1. Export environment variables. `VERTEX_LOCATION_ID` accepts `global` (works for every Claude variant) or a regional endpoint like `us-east5`, `europe-west1`, or `asia-southeast1`:
 
            ```bash
-           export DECK_VERTEX_PROJECT_ID='your-gcp-project-id'
-           export DECK_VERTEX_LOCATION_ID='global'
-           export DECK_VERTEX_API_ENDPOINT='aiplatform.googleapis.com'
-           export DECK_VERTEX_SERVICE_ACCOUNT_JSON="$(cat path/to/service-account-key.json)"
+           export VERTEX_PROJECT_ID='your-gcp-project-id'
+           export VERTEX_LOCATION_ID='global'
+           export VERTEX_API_ENDPOINT='aiplatform.googleapis.com'
+           export VERTEX_SERVICE_ACCOUNT_JSON="$(cat path/to/service-account-key.json)"
            ```
 
            Service account JSON is one of the GCP IAM auth modes the AI Model Provider supports for Vertex. For production, prefer workload identity over a downloaded key.
@@ -654,11 +654,11 @@ ai_gateway_auth_strategies:
     type: openid-connect
     display_name: "claude-code-sso Okta OIDC"
     config:
-      issuer: !env DECK_OKTA_ISSUER
+      issuer: !env OKTA_ISSUER
       auth_methods:
         - bearer
       audience_required:
-        - !env DECK_OKTA_AUDIENCE
+        - !env OKTA_AUDIENCE
       consumer_groups_claim:
         - groups
       consumer_optional: true
@@ -671,7 +671,7 @@ ai_gateway_auth_strategies:
         - X-User-Email
       ssl_verify: true
       hide_credentials: true
-      cache_tokens_salt: !env DECK_OIDC_CACHE_TOKENS_SALT
+      cache_tokens_salt: !env OIDC_CACHE_TOKENS_SALT
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -750,7 +750,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: x-api-key
-            value: !secret {source: !env DECK_ANTHROPIC_TOKEN}
+            value: !secret {source: !env ANTHROPIC_TOKEN}
 
 ai_gateway_models:
   - ref: claude-code-sso-sonnet
@@ -778,12 +778,12 @@ ai_gateway_models:
         model:
           body_param: model
           values:
-            - !env DECK_SONNET_ALIAS
+            - !env SONNET_ALIAS
     targets:
       - name: !env CHAT_MODEL_1
         provider: claude-code-sso-provider
         config:
-          version: !env DECK_ANTHROPIC_VERSION
+          version: !env ANTHROPIC_VERSION
           type: anthropic
   - ref: claude-code-sso-opus
     type: model
@@ -809,12 +809,12 @@ ai_gateway_models:
         model:
           body_param: model
           values:
-            - !env DECK_OPUS_ALIAS
+            - !env OPUS_ALIAS
     targets:
       - name: !env CHAT_MODEL_2
         provider: claude-code-sso-provider
         config:
-          version: !env DECK_ANTHROPIC_VERSION
+          version: !env ANTHROPIC_VERSION
           type: anthropic
 ```
 {% endraw -%}
@@ -974,8 +974,8 @@ Select your provider below, export the required environment variables, and apply
 Export your environment variables:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-6'   # standard tier alias
-export DECK_OPUS_ALIAS='claude-opus-4-7'       # power tier alias
+export SONNET_ALIAS='claude-sonnet-4-6'   # standard tier alias
+export OPUS_ALIAS='claude-opus-4-7'       # power tier alias
 export CHAT_MODEL_1='claude-sonnet-4-6'   # actual upstream model behind the sonnet alias
 export CHAT_MODEL_2='claude-opus-4-7'     # actual upstream model behind the opus alias
 ```
@@ -983,7 +983,7 @@ export CHAT_MODEL_2='claude-opus-4-7'     # actual upstream model behind the opu
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, `DECK_ANTHROPIC_TOKEN`, and `DECK_ANTHROPIC_VERSION` are already exported from the prerequisites, so you don't need to re-export them per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, `ANTHROPIC_TOKEN`, and `ANTHROPIC_VERSION` are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
@@ -1004,7 +1004,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: x-api-key
-        value: !secret {source: !env 'DECK_ANTHROPIC_TOKEN'}
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: claude-code-sso-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1012,11 +1012,11 @@ ai_gateway_auth_strategies:
   display_name: claude-code-sso Okta OIDC
   type: openid-connect
   config:
-    issuer: !env 'DECK_OKTA_ISSUER'
+    issuer: !env 'OKTA_ISSUER'
     auth_methods:
     - bearer
     audience_required:
-    - !env 'DECK_OKTA_AUDIENCE'
+    - !env 'OKTA_AUDIENCE'
     consumer_groups_claim:
     - groups
     consumer_optional: true
@@ -1029,7 +1029,7 @@ ai_gateway_auth_strategies:
     - X-User-Email
     ssl_verify: true
     hide_credentials: true
-    cache_tokens_salt: !env 'DECK_OIDC_CACHE_TOKENS_SALT'
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
 ai_gateway_policies:
 - ref: claude-code-sso-standard-ratelimit
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1107,12 +1107,12 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_SONNET_ALIAS'
+        - !env 'SONNET_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: claude-code-sso-provider
     config:
-      version: !env 'DECK_ANTHROPIC_VERSION'
+      version: !env 'ANTHROPIC_VERSION'
       type: anthropic
 - ref: claude-code-sso-opus
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1147,12 +1147,12 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_OPUS_ALIAS'
+        - !env 'OPUS_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_2'
     provider: claude-code-sso-provider
     config:
-      version: !env 'DECK_ANTHROPIC_VERSION'
+      version: !env 'ANTHROPIC_VERSION'
       type: anthropic
 EOF
 {% endraw -%}
@@ -1169,8 +1169,8 @@ rm -f kong-recipe.yaml
 Export your environment variables. The defaults below pin to Sonnet 4.5 and Opus 4.6, the canonical stable versions on Bedrock. If your account has different versions enabled, update the aliases and the upstream model IDs to match:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-5'                                # standard tier alias
-export DECK_OPUS_ALIAS='claude-opus-4-6'                                    # power tier alias
+export SONNET_ALIAS='claude-sonnet-4-5'                                # standard tier alias
+export OPUS_ALIAS='claude-opus-4-6'                                    # power tier alias
 export CHAT_MODEL_1='global.anthropic.claude-sonnet-4-5-20250929-v1:0' # actual upstream model behind the sonnet alias
 export CHAT_MODEL_2='global.anthropic.claude-opus-4-6-20250930-v1:0'   # actual upstream model behind the opus alias
 ```
@@ -1178,7 +1178,7 @@ export CHAT_MODEL_2='global.anthropic.claude-opus-4-6-20250930-v1:0'   # actual 
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and the `DECK_AWS_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `AWS_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
@@ -1197,8 +1197,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: claude-code-sso-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1206,11 +1206,11 @@ ai_gateway_auth_strategies:
   display_name: claude-code-sso Okta OIDC
   type: openid-connect
   config:
-    issuer: !env 'DECK_OKTA_ISSUER'
+    issuer: !env 'OKTA_ISSUER'
     auth_methods:
     - bearer
     audience_required:
-    - !env 'DECK_OKTA_AUDIENCE'
+    - !env 'OKTA_AUDIENCE'
     consumer_groups_claim:
     - groups
     consumer_optional: true
@@ -1223,7 +1223,7 @@ ai_gateway_auth_strategies:
     - X-User-Email
     ssl_verify: true
     hide_credentials: true
-    cache_tokens_salt: !env 'DECK_OIDC_CACHE_TOKENS_SALT'
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
 ai_gateway_policies:
 - ref: claude-code-sso-standard-ratelimit
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1301,12 +1301,12 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_SONNET_ALIAS'
+        - !env 'SONNET_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: claude-code-sso-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 - ref: claude-code-sso-opus
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1341,12 +1341,12 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_OPUS_ALIAS'
+        - !env 'OPUS_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_2'
     provider: claude-code-sso-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 EOF
 {% endraw -%}
@@ -1363,8 +1363,8 @@ rm -f kong-recipe.yaml
 Export your environment variables. The defaults below pin to Sonnet 4.5 and Opus 4.5, the canonical stable Claude versions in Foundry's Model catalog. The alias values are also the Foundry deployment names you configured in the **AI Credentials** prereq:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-5'   # standard tier alias and Foundry deployment name
-export DECK_OPUS_ALIAS='claude-opus-4-5'       # power tier alias and Foundry deployment name
+export SONNET_ALIAS='claude-sonnet-4-5'   # standard tier alias and Foundry deployment name
+export OPUS_ALIAS='claude-opus-4-5'       # power tier alias and Foundry deployment name
 export CHAT_MODEL_1='claude-sonnet-4-5'   # body model name forwarded to Foundry
 export CHAT_MODEL_2='claude-opus-4-5'     # body model name forwarded to Foundry
 ```
@@ -1372,7 +1372,7 @@ export CHAT_MODEL_2='claude-opus-4-5'     # body model name forwarded to Foundry
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and the `DECK_AZURE_FOUNDRY_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `AZURE_FOUNDRY_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
@@ -1393,10 +1393,10 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_AZURE_FOUNDRY_TOKEN'}
+        value: !secret {source: !env 'AZURE_FOUNDRY_TOKEN'}
     service: azure-foundry
     foundry:
-      resource: !env 'DECK_AZURE_FOUNDRY_INSTANCE'
+      resource: !env 'AZURE_FOUNDRY_INSTANCE'
 ai_gateway_auth_strategies:
 - ref: claude-code-sso-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1404,11 +1404,11 @@ ai_gateway_auth_strategies:
   display_name: claude-code-sso Okta OIDC
   type: openid-connect
   config:
-    issuer: !env 'DECK_OKTA_ISSUER'
+    issuer: !env 'OKTA_ISSUER'
     auth_methods:
     - bearer
     audience_required:
-    - !env 'DECK_OKTA_AUDIENCE'
+    - !env 'OKTA_AUDIENCE'
     consumer_groups_claim:
     - groups
     consumer_optional: true
@@ -1421,7 +1421,7 @@ ai_gateway_auth_strategies:
     - X-User-Email
     ssl_verify: true
     hide_credentials: true
-    cache_tokens_salt: !env 'DECK_OIDC_CACHE_TOKENS_SALT'
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
 ai_gateway_policies:
 - ref: claude-code-sso-standard-ratelimit
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1499,7 +1499,7 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_SONNET_ALIAS'
+        - !env 'SONNET_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: claude-code-sso-provider
@@ -1539,7 +1539,7 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_OPUS_ALIAS'
+        - !env 'OPUS_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_2'
     provider: claude-code-sso-provider
@@ -1561,8 +1561,8 @@ rm -f kong-recipe.yaml
 Export your environment variables. Vertex requires Claude model names to carry the `@<date>` suffix matching the model variant; the bare alias is what Claude Code sends, and Kong rewrites it to the dated upstream name:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-5'          # standard tier alias (what Claude Code sends)
-export DECK_OPUS_ALIAS='claude-opus-4-5'              # power tier alias
+export SONNET_ALIAS='claude-sonnet-4-5'          # standard tier alias (what Claude Code sends)
+export OPUS_ALIAS='claude-opus-4-5'              # power tier alias
 export CHAT_MODEL_1='claude-sonnet-4-5@20250929' # actual Vertex model name behind the sonnet alias
 export CHAT_MODEL_2='claude-opus-4-5@20250929'   # actual Vertex model name behind the opus alias
 ```
@@ -1570,7 +1570,7 @@ export CHAT_MODEL_2='claude-opus-4-5@20250929'   # actual Vertex model name behi
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and the `DECK_VERTEX_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `VERTEX_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
@@ -1590,7 +1590,7 @@ ai_gateway_model_providers:
     auth:
       type: gcp
       use_gcp_service_account: true
-      service_account_json: !secret {source: !env 'DECK_VERTEX_SERVICE_ACCOUNT_JSON'}
+      service_account_json: !secret {source: !env 'VERTEX_SERVICE_ACCOUNT_JSON'}
 ai_gateway_auth_strategies:
 - ref: claude-code-sso-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1598,11 +1598,11 @@ ai_gateway_auth_strategies:
   display_name: claude-code-sso Okta OIDC
   type: openid-connect
   config:
-    issuer: !env 'DECK_OKTA_ISSUER'
+    issuer: !env 'OKTA_ISSUER'
     auth_methods:
     - bearer
     audience_required:
-    - !env 'DECK_OKTA_AUDIENCE'
+    - !env 'OKTA_AUDIENCE'
     consumer_groups_claim:
     - groups
     consumer_optional: true
@@ -1615,7 +1615,7 @@ ai_gateway_auth_strategies:
     - X-User-Email
     ssl_verify: true
     hide_credentials: true
-    cache_tokens_salt: !env 'DECK_OIDC_CACHE_TOKENS_SALT'
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
 ai_gateway_policies:
 - ref: claude-code-sso-standard-ratelimit
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1693,15 +1693,15 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_SONNET_ALIAS'
+        - !env 'SONNET_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: claude-code-sso-provider
     config:
       gcp_environment:
-        api_endpoint: !env 'DECK_VERTEX_API_ENDPOINT'
-        project_id: !env 'DECK_VERTEX_PROJECT_ID'
-        location_id: !env 'DECK_VERTEX_LOCATION_ID'
+        api_endpoint: !env 'VERTEX_API_ENDPOINT'
+        project_id: !env 'VERTEX_PROJECT_ID'
+        location_id: !env 'VERTEX_LOCATION_ID'
       type: gemini
 - ref: claude-code-sso-opus
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1736,15 +1736,15 @@ ai_gateway_models:
       model:
         body_param: model
         values:
-        - !env 'DECK_OPUS_ALIAS'
+        - !env 'OPUS_ALIAS'
   targets:
   - name: !env 'CHAT_MODEL_2'
     provider: claude-code-sso-provider
     config:
       gcp_environment:
-        api_endpoint: !env 'DECK_VERTEX_API_ENDPOINT'
-        project_id: !env 'DECK_VERTEX_PROJECT_ID'
-        location_id: !env 'DECK_VERTEX_LOCATION_ID'
+        api_endpoint: !env 'VERTEX_API_ENDPOINT'
+        project_id: !env 'VERTEX_PROJECT_ID'
+        location_id: !env 'VERTEX_LOCATION_ID'
       type: gemini
 EOF
 {% endraw -%}

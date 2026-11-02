@@ -34,10 +34,10 @@ providers:
   - azure
 extra_services:
   - name: Redis Stack
-    env_vars: [DECK_REDIS_HOST]
+    env_vars: [REDIS_HOST]
     hint: "Provide a Redis Stack instance with vector search support."
   - name: PII Anonymizer Service
-    env_vars: [DECK_PII_SERVICE_HOST]
+    env_vars: [PII_SERVICE_HOST]
     hint: "Run the Kong PII Anonymizer Docker container."
 
 hint: "Requires LLM provider credentials, a Redis Stack instance, the PII Anonymizer service, and Python 3.11+."
@@ -86,7 +86,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
 
         {% endnavtab %}
@@ -98,9 +98,9 @@ prereqs:
         1. Export your AWS credentials:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
 
         {% endnavtab %}
@@ -113,9 +113,9 @@ prereqs:
         1. Export your credentials:
 
            ```sh
-           export DECK_AZURE_API_KEY='your-azure-api-key'
-           export DECK_AZURE_INSTANCE='your-instance-name'
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
 
         {% endnavtab %}
@@ -134,7 +134,7 @@ prereqs:
         1. Export the Redis host so the policy can connect from inside the data plane container:
 
            ```sh
-           export DECK_REDIS_HOST='host.docker.internal'
+           export REDIS_HOST='host.docker.internal'
            ```
     - title: PII Anonymizer Service
       content: |
@@ -155,7 +155,7 @@ prereqs:
         1. Set the PII service host so the policy can reach the container from inside the data plane:
 
            ```sh
-           export DECK_PII_SERVICE_HOST='host.docker.internal'
+           export PII_SERVICE_HOST='host.docker.internal'
            ```
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
@@ -318,7 +318,7 @@ ai_gateway_policies:
     config:
       anonymize:
         - all_and_credentials
-      host: !env DECK_PII_SERVICE_HOST
+      host: !env PII_SERVICE_HOST
       port: 8080
       scheme: http
       redact_type: placeholder
@@ -356,17 +356,17 @@ ai_gateway_policies:
       embeddings:
         auth:
           header_name: Authorization
-          header_value: !secret {source: !env DECK_OPENAI_TOKEN}
+          header_value: !env OPENAI_TOKEN
         model:
           provider: openai
           name: !env EMBEDDINGS_MODEL
       vectordb:
         strategy: redis
-        dimensions: !env EMBEDDINGS_DIMENSIONS
+        dimensions: 3072
         distance_metric: cosine
         threshold: 0.75
         redis:
-          host: !env DECK_REDIS_HOST
+          host: !env REDIS_HOST
           port: 6379
       search:
         threshold: 0.75
@@ -385,7 +385,7 @@ ai_gateway_policies:
 
 **`embeddings`**, configures the embedding model used to vectorize both the deny rules and incoming prompts. The `auth` and `model` fields hold the credentials and model selection for whichever provider serves embeddings, using the same field names as the underlying Kong plugin schema. The model must match the `dimensions` value in the `vectordb` config.
 
-**`vectordb.dimensions`**, must exactly match the output dimensionality of your chosen embeddings model. Set this from the `EMBEDDINGS_DIMENSIONS` env var. A mismatch causes the Redis index to fail.
+**`vectordb.dimensions`**, must exactly match the output dimensionality of your chosen embeddings model. Each provider tab sets it for that tab's default embeddings model. If you change `EMBEDDINGS_MODEL`, update `dimensions` to match. A mismatch causes the Redis index to fail.
 
 **`vectordb.threshold: 0.75`** and **`search.threshold: 0.75`**, the maximum cosine distance for a stored deny-rule vector to count as a match. Lower is stricter (same convention as the [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/) Policy). Keep the two values equal unless you specifically want a wider search window than block window.
 
@@ -439,7 +439,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !secret {source: !env DECK_OPENAI_TOKEN}
+            value: !secret {source: !env OPENAI_TOKEN}
 
 ai_gateway_models:
   - ref: multi-layer-ai-guardrails-model
@@ -525,7 +525,7 @@ Export the demo AI Consumer's API key. The AI Consumer credential's `api_key` fi
 export CONSUMER_API_KEY='demo-api-key'
 ```
 
-You set provider credentials, the Redis host, and the PII service host in the prerequisites, and they remain in scope. Each tab below sets only the model env vars and runs the apply.
+You set provider credentials, the Redis host, and the PII service host in the prerequisites, and they remain in scope. Each of the following tabs sets only the model env vars and runs the apply.
 
 {% navtabs "Providers" %}
 {% tab OpenAI %}
@@ -534,8 +534,7 @@ Export the model env vars:
 
 ```bash
 export CHAT_MODEL='gpt-4o'  # or gpt-4o-mini, o3
-export EMBEDDINGS_MODEL='text-embedding-3-large'  # or text-embedding-3-small
-export EMBEDDINGS_DIMENSIONS='3072'  # 3072 for text-embedding-3-large, 1536 for text-embedding-3-small
+export EMBEDDINGS_MODEL='text-embedding-3-large'  # the configuration sets dimensions: 3072 to match
 ```
 
 Apply the Kong configuration:
@@ -557,7 +556,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: multi-layer-ai-guardrails-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -600,7 +599,7 @@ ai_gateway_policies:
   config:
     anonymize:
     - all_and_credentials
-    host: !env 'DECK_PII_SERVICE_HOST'
+    host: !env 'PII_SERVICE_HOST'
     port: 8080
     scheme: http
     redact_type: placeholder
@@ -615,17 +614,17 @@ ai_gateway_policies:
     embeddings:
       auth:
         header_name: Authorization
-        header_value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        header_value: !env 'OPENAI_TOKEN'
       model:
         provider: openai
         name: !env 'EMBEDDINGS_MODEL'
     vectordb:
       strategy: redis
-      dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+      dimensions: 3072
       distance_metric: cosine
       threshold: 0.75
       redis:
-        host: !env 'DECK_REDIS_HOST'
+        host: !env 'REDIS_HOST'
         port: 6379
     search:
       threshold: 0.75
@@ -692,7 +691,6 @@ Export the model env vars:
 ```bash
 export CHAT_MODEL='amazon.nova-pro-v1:0'  # or global.anthropic.claude-sonnet-4-5-20250929-v1:0
 export EMBEDDINGS_MODEL='amazon.titan-embed-text-v2:0'
-export EMBEDDINGS_DIMENSIONS='1024'  # 1024 for amazon.titan-embed-text-v2:0
 ```
 
 Apply the Kong configuration:
@@ -712,8 +710,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: multi-layer-ai-guardrails-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -756,7 +754,7 @@ ai_gateway_policies:
   config:
     anonymize:
     - all_and_credentials
-    host: !env 'DECK_PII_SERVICE_HOST'
+    host: !env 'PII_SERVICE_HOST'
     port: 8080
     scheme: http
     redact_type: placeholder
@@ -770,21 +768,21 @@ ai_gateway_policies:
   config:
     embeddings:
       auth:
-        aws_access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-        aws_secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+        aws_access_key_id: !env 'AWS_ACCESS_KEY_ID'
+        aws_secret_access_key: !env 'AWS_SECRET_ACCESS_KEY'
       model:
         provider: bedrock
         name: !env 'EMBEDDINGS_MODEL'
         options:
           bedrock:
-            aws_region: !env 'DECK_AWS_REGION'
+            aws_region: !env 'AWS_REGION'
     vectordb:
       strategy: redis
-      dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+      dimensions: 1024
       distance_metric: cosine
       threshold: 0.75
       redis:
-        host: !env 'DECK_REDIS_HOST'
+        host: !env 'REDIS_HOST'
         port: 6379
     search:
       threshold: 0.75
@@ -833,7 +831,7 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: multi-layer-ai-guardrails-provider
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
 EOF
 {% endraw -%}
@@ -850,11 +848,10 @@ rm -f kong-recipe.yaml
 Export the model env vars:
 
 ```bash
-export DECK_AZURE_DEPLOYMENT_ID='your-chat-deployment-id'
-export DECK_AZURE_EMBEDDINGS_DEPLOYMENT_ID='your-embeddings-deployment-id'
+export AZURE_DEPLOYMENT_ID='your-chat-deployment-id'
+export AZURE_EMBEDDINGS_DEPLOYMENT_ID='your-embeddings-deployment-id'
 export CHAT_MODEL='gpt-4o'  # matches your Azure chat deployment
 export EMBEDDINGS_MODEL='text-embedding-3-large'  # matches your Azure embeddings deployment
-export EMBEDDINGS_DIMENSIONS='3072'  # 3072 for text-embedding-3-large
 ```
 
 Apply the Kong configuration:
@@ -876,9 +873,9 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: api-key
-        value: !secret {source: !env 'DECK_AZURE_API_KEY'}
+        value: !secret {source: !env 'AZURE_API_KEY'}
     service: azure-openai
-    instance: !env 'DECK_AZURE_INSTANCE'
+    instance: !env 'AZURE_INSTANCE'
 ai_gateway_auth_strategies:
 - ref: multi-layer-ai-guardrails-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -921,7 +918,7 @@ ai_gateway_policies:
   config:
     anonymize:
     - all_and_credentials
-    host: !env 'DECK_PII_SERVICE_HOST'
+    host: !env 'PII_SERVICE_HOST'
     port: 8080
     scheme: http
     redact_type: placeholder
@@ -936,22 +933,22 @@ ai_gateway_policies:
     embeddings:
       auth:
         header_name: api-key
-        header_value: !secret {source: !env 'DECK_AZURE_API_KEY'}
+        header_value: !env 'AZURE_API_KEY'
       model:
         provider: azure
         name: !env 'EMBEDDINGS_MODEL'
         options:
           azure:
-            instance: !env 'DECK_AZURE_INSTANCE'
-            api_version: !env 'DECK_AZURE_API_VERSION'
-            deployment_id: !env 'DECK_AZURE_EMBEDDINGS_DEPLOYMENT_ID'
+            instance: !env 'AZURE_INSTANCE'
+            api_version: !env 'AZURE_API_VERSION'
+            deployment_id: !env 'AZURE_EMBEDDINGS_DEPLOYMENT_ID'
     vectordb:
       strategy: redis
-      dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+      dimensions: 3072
       distance_metric: cosine
       threshold: 0.75
       redis:
-        host: !env 'DECK_REDIS_HOST'
+        host: !env 'REDIS_HOST'
         port: 6379
     search:
       threshold: 0.75
@@ -1000,8 +997,8 @@ ai_gateway_models:
   - name: !env 'CHAT_MODEL'
     provider: multi-layer-ai-guardrails-provider
     config:
-      api_version: !env 'DECK_AZURE_API_VERSION'
-      deployment_id: !env 'DECK_AZURE_DEPLOYMENT_ID'
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID'
       type: azure
 EOF
 {% endraw -%}

@@ -79,7 +79,7 @@ prereqs:
         1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -89,9 +89,9 @@ prereqs:
         1. Export your AWS credentials:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% endnavtabs %}
@@ -109,7 +109,7 @@ prereqs:
         1. Export the Redis host so the AI Policies can connect from inside the data plane container:
 
            ```sh
-           export DECK_REDIS_HOST='host.docker.internal'
+           export REDIS_HOST='host.docker.internal'
            ```
     - title: LLMLingua Prompt Compressor
       content: |
@@ -138,7 +138,7 @@ prereqs:
         1. Set the compressor URL:
 
            ```sh
-           export DECK_COMPRESSOR_URL='http://host.docker.internal:8080'
+           export COMPRESSOR_URL='http://host.docker.internal:8080'
            ```
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
@@ -358,7 +358,7 @@ ai_gateway_consumers:
         name: llm-cost-optimization-standard-credential
         display_name: "llm-cost-optimization standard API key"
         type: api-key
-        api_key: !secret {source: !env DECK_STANDARD_API_KEY}
+        api_key: !secret {source: !env STANDARD_API_KEY}
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -375,7 +375,7 @@ provider never sees the AI Consumer's API key.
 
 **`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret`
 reference. Kong rejects a plain string here, even for a demo value like this recipe's. The
-premium-tier AI Consumer follows the identical shape with `DECK_PREMIUM_API_KEY`.
+premium-tier AI Consumer follows the identical shape with `PREMIUM_API_KEY`.
 
 **Anonymous fallback.** Set `anonymous: <consumer-id>` on the Key Auth AI Auth Strategy to let
 unauthenticated requests fall through to a designated "anonymous" AI Consumer with their own
@@ -416,17 +416,17 @@ ai_gateway_policies:
       embeddings:
         auth:
           header_name: Authorization
-          header_value: !secret {source: !env DECK_OPENAI_TOKEN}
+          header_value: !env OPENAI_TOKEN
         model:
           provider: openai
           name: !env EMBEDDINGS_MODEL
       vectordb:
-        dimensions: !env EMBEDDINGS_DIMENSIONS
+        dimensions: 1536
         distance_metric: cosine
         strategy: redis
         threshold: 0.3
         redis:
-          host: !env DECK_REDIS_HOST
+          host: !env REDIS_HOST
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -496,7 +496,7 @@ ai_gateway_policies:
     display_name: "llm-cost-optimization prompt compressor"
     config:
       compressor_type: rate
-      compressor_url: !env DECK_COMPRESSOR_URL
+      compressor_url: !env COMPRESSOR_URL
       stop_on_error: false
       compression_ranges:
         - min_tokens: 100
@@ -573,25 +573,25 @@ ai_gateway_models:
             type: openai
         vectordb:
           type: redis
-          dimensions: !env EMBEDDINGS_DIMENSIONS
+          dimensions: 1536
           distance_metric: cosine
-          threshold: !env DECK_PROXY_THRESHOLD
-          host: !env DECK_REDIS_HOST
+          threshold: 0.75
+          host: !env REDIS_HOST
     targets:
       - name: !env CHAT_MODEL_1
         provider: llm-cost-optimization-provider
         semantic_description: "CATCHALL"
         config:
           type: openai
-          input_cost: !env DECK_INPUT_COST_1
-          output_cost: !env DECK_OUTPUT_COST_1
+          input_cost: 0.15
+          output_cost: 0.60
       - name: !env CHAT_MODEL_2
         provider: llm-cost-optimization-provider
         semantic_description: "Software architecture, system design, and complex code generation."
         config:
           type: openai
-          input_cost: !env DECK_INPUT_COST_2
-          output_cost: !env DECK_OUTPUT_COST_2
+          input_cost: 2.50
+          output_cost: 10.00
 ```
 {% endraw -%}
 {: .no-copy-code .collapsible }
@@ -605,7 +605,7 @@ references the AI Model Provider entity directly by name (`provider: llm-cost-op
 rather than carrying its own inline credential. Kong reuses the AI Model Provider's already-configured
 `config.auth` for the balancer's embeddings call.
 
-**`balancer.vectordb.threshold`** (env var `DECK_PROXY_THRESHOLD`). The maximum cosine
+**`balancer.vectordb.threshold`**. The maximum cosine
 **distance** between the incoming prompt's embedding and a target's `semantic_description`
 embedding for that target to be eligible (lower is stricter, same convention as the AI Semantic
 Cache Policy). The right value depends on which embeddings model you're using; different models
@@ -821,13 +821,14 @@ Export the two tiers' demo API keys. AI Consumer credential `api_key` fields are
 come from an env var, even for these fixed demo values:
 
 ```bash
-export DECK_STANDARD_API_KEY='standard-api-key'
-export DECK_PREMIUM_API_KEY='premium-api-key'
+export STANDARD_API_KEY='standard-api-key'
+export PREMIUM_API_KEY='premium-api-key'
 ```
 
 You already exported the provider credentials, the Redis host, and the compressor URL in the
-prerequisites. Each tab below sets only the per-provider model, cost, and threshold env vars and
-runs the apply.
+prerequisites. Each of the following tabs sets only the per-provider model env vars and runs the
+apply. Each tab's configuration sets the costs, similarity threshold, and embedding dimensions for
+that provider's default models.
 
 {% navtabs "Providers" %}
 {% tab OpenAI %}
@@ -837,13 +838,7 @@ Export the per-provider env vars:
 ```bash
 export CHAT_MODEL_1='gpt-4o-mini'         # cheap: general queries
 export CHAT_MODEL_2='gpt-4o'              # expensive: complex tasks
-export DECK_INPUT_COST_1='0.15'                # gpt-4o-mini: $0.15 per 1M input tokens
-export DECK_OUTPUT_COST_1='0.60'               # gpt-4o-mini: $0.60 per 1M output tokens
-export DECK_INPUT_COST_2='2.50'                # gpt-4o: $2.50 per 1M input tokens
-export DECK_OUTPUT_COST_2='10.00'              # gpt-4o: $10.00 per 1M output tokens
 export EMBEDDINGS_MODEL='text-embedding-3-small'
-export EMBEDDINGS_DIMENSIONS='1536'
-export DECK_PROXY_THRESHOLD='0.75'             # max cosine distance, tuned for text-embedding-3-small
 ```
 
 Apply the Kong configuration:
@@ -865,7 +860,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: llm-cost-optimization-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -887,7 +882,7 @@ ai_gateway_consumers:
     name: llm-cost-optimization-standard-credential
     display_name: llm-cost-optimization standard API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_STANDARD_API_KEY'}
+    api_key: !secret {source: !env 'STANDARD_API_KEY'}
 - ref: llm-cost-optimization-premium-consumer
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: llm-cost-optimization-premium-consumer
@@ -898,7 +893,7 @@ ai_gateway_consumers:
     name: llm-cost-optimization-premium-credential
     display_name: llm-cost-optimization premium API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_PREMIUM_API_KEY'}
+    api_key: !secret {source: !env 'PREMIUM_API_KEY'}
 ai_gateway_consumer_groups:
 - ref: llm-cost-optimization-standard-tier
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -924,7 +919,7 @@ ai_gateway_policies:
   type: ai-prompt-compressor
   config:
     compressor_type: rate
-    compressor_url: !env 'DECK_COMPRESSOR_URL'
+    compressor_url: !env 'COMPRESSOR_URL'
     stop_on_error: false
     compression_ranges:
     - min_tokens: 100
@@ -970,17 +965,17 @@ ai_gateway_policies:
     embeddings:
       auth:
         header_name: Authorization
-        header_value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        header_value: !env 'OPENAI_TOKEN'
       model:
         provider: openai
         name: !env 'EMBEDDINGS_MODEL'
     vectordb:
-      dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+      dimensions: 1536
       distance_metric: cosine
       strategy: redis
       threshold: 0.3
       redis:
-        host: !env 'DECK_REDIS_HOST'
+        host: !env 'REDIS_HOST'
 ai_gateway_models:
 - ref: llm-cost-optimization-model
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1021,25 +1016,25 @@ ai_gateway_models:
           type: openai
       vectordb:
         type: redis
-        dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+        dimensions: 1536
         distance_metric: cosine
-        threshold: !env 'DECK_PROXY_THRESHOLD'
-        host: !env 'DECK_REDIS_HOST'
+        threshold: 0.75
+        host: !env 'REDIS_HOST'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: llm-cost-optimization-provider
     semantic_description: CATCHALL
     config:
       type: openai
-      input_cost: !env 'DECK_INPUT_COST_1'
-      output_cost: !env 'DECK_OUTPUT_COST_1'
+      input_cost: 0.15
+      output_cost: 0.60
   - name: !env 'CHAT_MODEL_2'
     provider: llm-cost-optimization-provider
     semantic_description: Software architecture, system design, and complex code generation.
     config:
       type: openai
-      input_cost: !env 'DECK_INPUT_COST_2'
-      output_cost: !env 'DECK_OUTPUT_COST_2'
+      input_cost: 2.50
+      output_cost: 10.00
 EOF
 {% endraw -%}
 
@@ -1057,13 +1052,7 @@ Export the per-provider env vars:
 ```bash
 export CHAT_MODEL_1='amazon.nova-lite-v1:0'                            # cheap: general queries
 export CHAT_MODEL_2='global.anthropic.claude-sonnet-4-5-20250929-v1:0' # expensive: complex tasks (uses cross-region inference profile, required for Claude 4.5)
-export DECK_INPUT_COST_1='0.06'                # Nova Lite: $0.06 per 1M input tokens
-export DECK_OUTPUT_COST_1='0.24'               # Nova Lite: $0.24 per 1M output tokens
-export DECK_INPUT_COST_2='3.00'                # Claude Sonnet: $3.00 per 1M input tokens
-export DECK_OUTPUT_COST_2='15.00'              # Claude Sonnet: $15.00 per 1M output tokens
 export EMBEDDINGS_MODEL='amazon.titan-embed-text-v2:0'
-export EMBEDDINGS_DIMENSIONS='1024'
-export DECK_PROXY_THRESHOLD='0.85'             # max cosine distance, tuned for amazon.titan-embed-text-v2:0
 ```
 
 Apply the Kong configuration:
@@ -1083,8 +1072,8 @@ ai_gateway_model_providers:
   config:
     auth:
       type: aws
-      access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-      secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
 ai_gateway_auth_strategies:
 - ref: llm-cost-optimization-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1106,7 +1095,7 @@ ai_gateway_consumers:
     name: llm-cost-optimization-standard-credential
     display_name: llm-cost-optimization standard API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_STANDARD_API_KEY'}
+    api_key: !secret {source: !env 'STANDARD_API_KEY'}
 - ref: llm-cost-optimization-premium-consumer
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
   name: llm-cost-optimization-premium-consumer
@@ -1117,7 +1106,7 @@ ai_gateway_consumers:
     name: llm-cost-optimization-premium-credential
     display_name: llm-cost-optimization premium API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_PREMIUM_API_KEY'}
+    api_key: !secret {source: !env 'PREMIUM_API_KEY'}
 ai_gateway_consumer_groups:
 - ref: llm-cost-optimization-standard-tier
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1143,7 +1132,7 @@ ai_gateway_policies:
   type: ai-prompt-compressor
   config:
     compressor_type: rate
-    compressor_url: !env 'DECK_COMPRESSOR_URL'
+    compressor_url: !env 'COMPRESSOR_URL'
     stop_on_error: false
     compression_ranges:
     - min_tokens: 100
@@ -1188,21 +1177,21 @@ ai_gateway_policies:
     stop_on_failure: false
     embeddings:
       auth:
-        aws_access_key_id: !env 'DECK_AWS_ACCESS_KEY_ID'
-        aws_secret_access_key: !secret {source: !env 'DECK_AWS_SECRET_ACCESS_KEY'}
+        aws_access_key_id: !env 'AWS_ACCESS_KEY_ID'
+        aws_secret_access_key: !env 'AWS_SECRET_ACCESS_KEY'
       model:
         provider: bedrock
         name: !env 'EMBEDDINGS_MODEL'
         options:
           bedrock:
-            aws_region: !env 'DECK_AWS_REGION'
+            aws_region: !env 'AWS_REGION'
     vectordb:
-      dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+      dimensions: 1024
       distance_metric: cosine
       strategy: redis
       threshold: 0.3
       redis:
-        host: !env 'DECK_REDIS_HOST'
+        host: !env 'REDIS_HOST'
 ai_gateway_models:
 - ref: llm-cost-optimization-model
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -1240,31 +1229,31 @@ ai_gateway_models:
         provider: llm-cost-optimization-provider
         name: !env 'EMBEDDINGS_MODEL'
         config:
-          region: !env 'DECK_AWS_REGION'
+          region: !env 'AWS_REGION'
           type: bedrock
       vectordb:
         type: redis
-        dimensions: !env 'EMBEDDINGS_DIMENSIONS'
+        dimensions: 1024
         distance_metric: cosine
-        threshold: !env 'DECK_PROXY_THRESHOLD'
-        host: !env 'DECK_REDIS_HOST'
+        threshold: 0.85
+        host: !env 'REDIS_HOST'
   targets:
   - name: !env 'CHAT_MODEL_1'
     provider: llm-cost-optimization-provider
     semantic_description: CATCHALL
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
-      input_cost: !env 'DECK_INPUT_COST_1'
-      output_cost: !env 'DECK_OUTPUT_COST_1'
+      input_cost: 0.06
+      output_cost: 0.24
   - name: !env 'CHAT_MODEL_2'
     provider: llm-cost-optimization-provider
     semantic_description: Software architecture, system design, and complex code generation.
     config:
-      region: !env 'DECK_AWS_REGION'
+      region: !env 'AWS_REGION'
       type: bedrock
-      input_cost: !env 'DECK_INPUT_COST_2'
-      output_cost: !env 'DECK_OUTPUT_COST_2'
+      input_cost: 3.00
+      output_cost: 15.00
 EOF
 {% endraw -%}
 
@@ -1305,7 +1294,7 @@ upstream call.
 
 Run with `python demo.py` after applying the recipe's Kong configuration (see README).
 Expects the two Consumers' API keys to be `standard-api-key` and `premium-api-key` (the
-recipe's default `DECK_STANDARD_API_KEY` / `DECK_PREMIUM_API_KEY` values).
+recipe's default `STANDARD_API_KEY` / `PREMIUM_API_KEY` values).
 """
 
 import os
@@ -1678,7 +1667,7 @@ For platform-wide traffic analysis, including per-consumer cost attribution acro
 ## Variations and next steps
 
 **Switch models without code changes.** Update `CHAT_MODEL_1`, `CHAT_MODEL_2`, and the
-corresponding `DECK_INPUT_COST_*` and `DECK_OUTPUT_COST_*` env vars, then re-apply. Kong handles
+corresponding `input_cost` and `output_cost` values on each target, then re-apply. Kong handles
 the rest. Check your provider's pricing page for current per-token costs. For example, switching
 the expensive target from `gpt-4o` to `o3` changes both the capability profile and the cost
 structure.
