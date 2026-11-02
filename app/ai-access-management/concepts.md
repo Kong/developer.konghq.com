@@ -154,12 +154,6 @@ A group is a list of users and agents that share the same rules. Instead of sett
 
 Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group, and doesn't have a cost center.
 
-### Projects
-
-A project is a group with its own spend limit. A project can be linked to a cost center, and it holds users and agents only. Projects can't contain other groups.
-
-You can create a virtual key for a project. Each project key is used by one member of the project, uses the project's access rules and spend limit, and is billed to the project's cost center.
-
 ## Identity providers
 
 An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. Kong trusts the providers you list and uses them to verify that those tokens are genuine.
@@ -201,7 +195,7 @@ Use virtual keys to:
 
 The gateway treats whoever holds the key as the caller.
 
-To create a key, you provide a name and choose a holder: a user, an agent, or a [project](#projects). You can also add a new user or agent inline.
+To create a key, you provide a name and choose a holder: a user or an agent. You can also add a new user or agent inline.
 
 You can create a key in two ways:
 
@@ -235,10 +229,10 @@ rows:
     admin: Create agents directly.
     manager: Request an agent. The request is sent to the platform team.
     individual: Request an agent. The request is sent to the platform team.
-  - area: Groups and projects
-    admin: View all groups and projects. Create, edit, and delete groups and projects. Add or remove members. Export groups as a CSV.
-    manager: View the groups and projects they belong to or manage.
-    individual: View the groups and projects they belong to.
+  - area: Groups
+    admin: View all groups. Create, edit, and delete groups. Add or remove members. Export groups as a CSV.
+    manager: View the groups they belong to or manage.
+    individual: View the groups they belong to.
   - area: Identity providers
     admin: Add, edit, and delete identity providers.
     manager: No access.
@@ -249,6 +243,6 @@ rows:
     individual: No access.
   - area: Virtual keys
     admin: View all keys. Create keys for any holder.
-    manager: View keys they hold, and keys held by the groups and projects they belong to or manage.
+    manager: View keys they hold, and keys held by the groups they belong to or manage.
     individual: View the keys they hold.
 {% endtable %}
