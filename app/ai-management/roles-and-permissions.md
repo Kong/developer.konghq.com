@@ -50,7 +50,7 @@ rows:
     does: "Sees spend and budgets for their teams, and requests resources and access."
   - role: Individual User
     who: "Any other user in the organization."
-    does: "Views their own usage and requests resources and access."
+    does: "Requests resources and access."
 {% endtable %}
 <!-- vale on -->
 
@@ -68,7 +68,7 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add a model with **New model**"
+  - capability: "Add a model with **New** > **Model**"
     admin: true
     manager: false
     individual: false
@@ -80,18 +80,14 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "Edit, delete, or debug a model from the **Actions** menu"
+  - capability: "Edit or delete a model from the **Actions** menu"
     admin: true
     manager: false
     individual: false
-  - capability: "View auth strategies, ACLs, and policies on a model"
+  - capability: "View a model's auth strategies, ACLs, and policies in the **Edit** form"
     admin: true
     manager: false
     individual: false
-  - capability: "View their own usage of a model for the last 7 days"
-    admin: true
-    manager: true
-    individual: true
   - capability: "Request access to call a model with **Request access**"
     admin: false
     manager: true
@@ -127,10 +123,6 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "Set a provider to get each caller's key from [Token Vault](/identity/token-vault/) with **Key source** > **Token Vault**"
-    admin: true
-    manager: false
-    individual: false
   - capability: "View a provider's authentication type and details"
     admin: true
     manager: true
@@ -152,7 +144,7 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add an MCP server with **New MCP server**"
+  - capability: "Add an MCP server with **New** > **MCP server**"
     admin: true
     manager: false
     individual: false
@@ -164,11 +156,11 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "Edit, delete, or debug an MCP server from the **Actions** menu"
-    admin: true
+  - capability: "Edit or delete an MCP server from the **Actions** menu"
+    admin: "Yes. Passthrough servers have only **Delete**."
     manager: false
     individual: false
-  - capability: "View an MCP server's tools and usage"
+  - capability: "View an MCP server's tools"
     admin: true
     manager: true
     individual: true
@@ -180,7 +172,7 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "View an MCP server's [authentication](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata), [ACLs](/ai-gateway/entities/ai-mcp-server/#acl-tool-control), and policies"
+  - capability: "View an MCP server's outbound authentication"
     admin: true
     manager: false
     individual: false
@@ -225,7 +217,7 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "Change logging for an agent with **Log payloads** and **Log audits**"
+  - capability: "Change logging for an agent with **Log payloads**"
     admin: true
     manager: false
     individual: false
@@ -242,8 +234,7 @@ rows:
 
 ## Access Management
 
-[Access Management](/ai-access-management/concepts/) has pages for users, agents, groups, and virtual keys.
-Projects are a tab on the **Groups** page.
+[Access Management](/ai-access-management/concepts/) has pages for users, groups, and virtual keys.
 Users and agents are [{{site.identity}} principals](/identity/principals/).
 
 <!-- vale off -->
@@ -258,27 +249,19 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Open the Users, Identity Providers, and Token Vault pages"
+  - capability: "Open the Users, Trusted IdPs, and Token Vault pages"
     admin: true
     manager: false
     individual: false
-  - capability: "View agent identities"
-    admin: true
-    manager: true
-    individual: true
-  - capability: "Ask an Org Admin to add an agent identity with **Request an agent**"
-    admin: false
-    manager: true
-    individual: true
-  - capability: "View groups and projects"
-    admin: "All groups and projects"
-    manager: "Only their groups and projects"
-    individual: "Only their groups and projects"
+  - capability: "View groups"
+    admin: "All groups"
+    manager: "Only their groups"
+    individual: "Only their groups"
   - capability: "View virtual keys"
     admin: "All keys"
-    manager: "Their own keys, and keys in the groups and projects that they manage"
+    manager: "Their own keys, and keys in the groups that they manage"
     individual: "Only their own keys"
-  - capability: "Create a virtual key with **New Key**"
+  - capability: "Create a virtual key with **New key**"
     admin: true
     manager: true
     individual: true
@@ -303,10 +286,6 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "View their own usage on **My Usage**"
-    admin: true
-    manager: true
-    individual: true
   - capability: "View the cost dashboard and explorer"
     admin: "Yes, for the whole organization"
     manager: "Yes, for their teams"

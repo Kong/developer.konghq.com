@@ -77,7 +77,7 @@ rows:
   - header:
       type: h2
       text: "Access Management"
-      description: "Access Management controls who can use your organization's resources, such as AI Models or AI MCP Servers, in {{site.ai_gateway}}."
+      description: "Access Management controls who can use your organization's resources, such as AI Models or AI MCP Servers, in {{site.ai_gateway}}. For more information, see [{{site.ai_gateway}} access management](/ai-access-management/)."
     column_count: 3
     columns:
       - blocks:
@@ -89,15 +89,6 @@ rows:
               cta:
                 text: Users in access management
                 url: /ai-access-management/concepts/#users
-      - blocks:
-          - type: card
-            config:
-              title: Agents
-              description: An agent is the identity record for a piece of software that calls models or MCP servers.
-              icon: /assets/icons/a2a-quickstart.svg
-              cta:
-                text: Agents in access management
-                url: /ai-access-management/concepts/#agents
       - blocks:
           - type: card
             config:
