@@ -336,10 +336,6 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 You can create a managed cache for an {{site.ai_gateway}} 2.0 control plane that runs on a Dedicated Cloud Gateway.
 You can use it with the following {{site.ai_gateway}} Policies:
 
-* [AI RAG Injector](/ai-gateway/policies/ai-rag-injector/)
-* [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
-* [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
-* [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
 * [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
 * [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/)
 * [Proxy Caching Advanced](/ai-gateway/policies/proxy-cache-advanced/)
