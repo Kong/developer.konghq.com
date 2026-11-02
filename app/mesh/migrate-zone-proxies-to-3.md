@@ -51,8 +51,7 @@ identity, permissions and observability policies operators wanted to apply.
 
 Mesh-scoped proxies bring those concerns together:
 
-- **Identity belongs to the mesh.** 
-  * Ian receive a workload identity through
+- **Identity belongs to the mesh.** Zone egress proxies receive a workload identity through
   `MeshIdentity` and authenticate callers before forwarding external traffic.
 - **Policies target the proxy directly.** You select the `Dataplane` that enforces a permission,
   records a log or applies a limit, instead of relying on separate zone-proxy configuration.
@@ -66,6 +65,11 @@ boundary, not automatic network isolation or permission to access another mesh.
 Because of this, the migration is a deployment and traffic migration, not just a resource rename.
 
 ## Choose the transition release
+
+Move every legacy `ExternalService` to [`MeshExternalService`](/mesh/meshexternalservice/)
+before you migrate to `MeshIdentity` and mesh-scoped zone proxies. Mesh-scoped zone egress only
+serves `MeshExternalService` destinations, and the egress permissions in this guide match them
+by SNI.
 
 Start by [running the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the
 complete estate. Its report identifies legacy `ZoneIngress` and `ZoneEgress` resources, related
@@ -144,9 +148,9 @@ Don't complete the application identity rollout before deploying egress. Workloa
 and validate the egress first, then switch a canary client and test its external-service calls
 before migrating the remaining clients.
 
-Use `MeshExternalService` for external destinations served by the new egress. Its listener
-generator doesn't consume legacy `ExternalService` configuration. Verify the
-destination endpoints and upstream TLS settings rather than copying only the service name.
+Check that every external destination is a `MeshExternalService`. The new egress doesn't
+serve legacy `ExternalService` configuration. Verify the destination endpoints and upstream TLS
+settings rather than copying only the service name.
 
 Prepare policies that select the new `Dataplane` resources, using the computed ingress or egress
 role labels and, where needed, a zone label and listener `sectionName`. For more information, see
@@ -154,9 +158,47 @@ role labels and, where needed, a zone label and listener `sectionName`. For more
 
 For egress, apply explicit `MeshTrafficPermission` allows for the required callers and
 destinations. Without a matching allow, egress denies traffic. A legacy mesh-wide external-access
-toggle isn't a replacement for these permissions. Review existing broad allows and denies
-too: they can make a narrow rule less restrictive than expected or prevent it from allowing
-traffic at all.
+toggle isn't a replacement for these permissions. Each destination is matched by its SNI, which
+you can read from the `snis` field of the `MeshExternalService` before the egress exists. See
+[Authorize zone proxy traffic](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic)
+for the format and examples.
+
+Review existing broad allows and denies too. A `MeshTrafficPermission` with `kind: Mesh`, or no
+`targetRef`, on the global control plane or in the system namespace also selects the egress
+listeners. A mesh-wide allow, such as the SPIFFE prefix allow from the
+[MeshIdentity migration](/mesh/migrate-mtls-to-meshidentity/#preserve-authorization-and-permissive-tls),
+then lets its callers reach every external destination, and a narrower egress allow has no
+effect. To keep a broad workload allow off the egress, scope it to the workloads:
+
+- On Kubernetes, create it in each application namespace instead of the system namespace. A
+  `workload-owner` policy only reaches proxies in its own namespace, so it doesn't select the
+  zone proxies. For more information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
+- On Universal, every policy is `system`. Select the workloads with `targetRef.kind: Dataplane`
+  and labels that zone proxies don't have.
+
+For example, this policy allows every caller in the trust domain to reach the workloads in the
+`orders` namespace, without selecting the zone proxies:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTrafficPermission
+metadata:
+  name: allow-mesh-to-orders
+  namespace: orders
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: Mesh
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.zone-1.mesh.local
+```
+
+Then allow the egress traffic you want with a separate policy that selects the egress listener.
 
 Keep permission enforcement for cross-zone workload traffic on the destination workload
 proxy. The new ingress forwards workload mTLS without terminating it; assigning ingress an
@@ -194,8 +236,24 @@ uses `MeshZoneAddress`, derived from the Service and ready endpoints. Legacy Pod
 for ingress public address and port don't configure that resource. Configure the Service's
 load balancer, NodePort or external IP as appropriate for the network.
 
-Remember that publication can switch incoming traffic immediately. Prepare firewall rules,
-DNS and backend reachability before the new address becomes discoverable.
+On Kubernetes, there's no separate publication step. The control plane creates the
+`MeshZoneAddress` as soon as the ingress Service gets an external address, and cross-zone
+traffic moves to the new ingress right away. To prepare the ingress before it receives
+traffic, deploy it with a Service that has no external address, then switch the Service type
+when it's ready:
+
+```yaml
+kuma:
+  meshes:
+    - name: default
+      ingress:
+        enabled: true
+        service:
+          type: ClusterIP
+```
+
+Prepare firewall rules, DNS and backend reachability before you set the Service type to
+`LoadBalancer` or `NodePort`.
 
 ### Universal
 
@@ -255,7 +313,7 @@ rows:
   - legacy: "`Mesh.routing.defaultForbidMeshExternalServiceAccess`"
     replacement: "Express external access with `MeshTrafficPermission`; the toggle is removed in 3.x."
   - legacy: "`Mesh.routing.zoneEgress`"
-    replacement: "Remove for 3.x. Don't use the old switch to disable or roll back the new topology."
+    replacement: "Remove for 3.x, before or together with `Mesh.mtls`. A 2.14 control plane rejects a `Mesh` that sets this field without `mtls`. Don't use the old switch to disable or roll back the new topology."
   - legacy: "Standalone zone-proxy inspection endpoints and commands"
     replacement: "Inspect the replacement as a `Dataplane`, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`."
   - legacy: "Universal `runtime.universal.zoneResourceCleanupAge`"
@@ -301,19 +359,27 @@ resources or insight endpoints.
 > {:.no-copy-code}
 >
 > The Pod stays `Running` and `Ready` while this repeats, and its listeners keep whatever
-> they last held, so the failure surfaces only as cross-zone requests returning `503`.
-> Restart the ingress and egress Deployments, then confirm the new Pods run the expected
-> image and that the SOTW gRPC config stream error has stopped. Replace `default` with the mesh
-> name:
+> they last held. The failure shows up as `503` errors, for example on external-service traffic
+> through egress.
+>
+> Workload proxies that still run the 2.x `kuma-dp` have the same problem. To avoid it, enable
+> delta xDS and restart every proxy while the zone is still on 2.14, as described in
+> [Upgrade from 2.x to 3.x](/mesh/upgrade/#upgrade-from-2-x-to-3-x).
+>
+> If a zone was upgraded without that step, restart the zone proxies first, then every workload.
+> A restarted egress Pod gets a new IP address. Until a workload restarts, it keeps the old egress
+> address and its `MeshExternalService` calls fail. Replace `default` with the mesh name:
 >
 > ```sh
 > kubectl -n {{site.mesh_namespace}} rollout restart deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
+> kubectl -n {{site.mesh_namespace}} rollout status deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
 > ```
 >
-> Then check the ingress proxy logs for the SOTW error:
+> Then confirm that the new Pods run the expected image, and that the ingress proxy logs no
+> longer show the SOTW error:
 >
 > ```sh
-> kubectl -n {{site.mesh_namespace}} logs deploy/kong-mesh-default-ingress -c kuma-sidecar | grep SOTW
+> kubectl -n {{site.mesh_namespace}} logs -l app=kong-mesh-default-ingress -c kuma-sidecar --since=5m | grep SOTW
 > ```
 
 ## Roll back while both models are supported

@@ -469,7 +469,8 @@ spec: {}
 ```
 
 Keep other `Mesh.spec` fields that your mesh uses; the example only shows that `mtls` is no
-longer present.
+longer present. If the `Mesh` still sets `routing.zoneEgress`, remove it in the same change or
+before. A 2.14 control plane rejects a `Mesh` with `routing.zoneEgress` and no `mtls`.
 
 Read the `Mesh` back from the API, repeat the allowed and denied traffic tests, and check every
 connected proxy once more. Then confirm the [completion criteria](#completion-criteria) and rerun

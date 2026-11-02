@@ -324,7 +324,7 @@ policy reference for supported protocols, fields and merge behavior.
 
 This policy selects egress proxies in `zone-a` and allows one caller to one destination.
 Replace `CLIENT_SPIFFE_ID` with the URI from the caller's workload certificate. Replace
-`DESTINATION_SNI` with the destination's server name from the egress listener configuration.
+`DESTINATION_SNI` with the destination's SNI from the `snis` field of its `MeshExternalService`.
 
 {% policy_yaml %}
 ```yaml
@@ -353,9 +353,8 @@ The `spiffeID` and `sni` in this single entry must both match. The role and zone
 the enforcing proxy; they don't identify the caller or external destination.
 
 The destination SNI is the internal name the client proxy sends to egress. It isn't necessarily
-the external server's DNS name or its upstream TLS server name. Inspect the egress's active
-Envoy configuration and copy the appropriate
-`filter_chains[].filter_chain_match.server_names[]` value for your `MeshExternalService` into `sni.value`.
+the external server's DNS name or its upstream TLS server name. To find the value, see
+[Authorize zone proxy traffic](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic).
 
 For the caller, `MeshTrust.spec.trustDomain` tells you the trust-domain part of the identity,
 but the certificate URI also includes the workload path. Matching the full URI avoids guessing
