@@ -118,7 +118,9 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. In the **Upstream URL** field, enter `{{ include.presenter.data['config']['url'] | default: 'https://mcp.example.com' }}`.
 {% endif %}
 1. In **Routing config**, in the **Base path** field, enter `{{ include.presenter.data['config']['route']['paths'][0] | default: '/' }}`.
+{% unless connection == 'Interface' %}
 1. Optional: In **Tools**, click **Add tool** to define or restrict the tools.
+{% endunless %}
 1. Optional: In **Authentication**, select an inbound auth strategy and configure outbound authentication.
 1. Optional: In **Access control**, enable **Restrict access with an ACL** and add default tool ACLs.
 1. Click **Create**.
