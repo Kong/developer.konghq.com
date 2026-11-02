@@ -39,7 +39,7 @@ faqs:
       In {{site.konnect_short_name}}, go to [**API Gateway**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
   - q: How does network peering work with Dedicated Cloud Gateway nodes?
     a: |
-      Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
+      Each Cloud Gateway node is part of a dedicated network for its region (for example, `us-east-1`). 
       You can securely peer this network with your AWS network using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
   - q: What happens if {{site.konnect_short_name}} goes down?
     a: |
@@ -50,7 +50,7 @@ faqs:
     a: |
       AWS PrivateLink offers secure and private connectivity by routing traffic through an endpoint, but it only supports unidirectional communication. 
       This means that Dedicated Cloud Gateway can send requests to your upstream services, but your upstream services cannot initiate communication back to the gateway. 
-      For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream services—this limitation is a blocker. 
+      For many use cases requiring bidirectional communication (such as callbacks or dynamic interactions between the gateway and your upstream services), this limitation is a blocker. 
       For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream services.
   - q: How do I manage custom plugins after uploading them?
     a: |
