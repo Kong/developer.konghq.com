@@ -1697,7 +1697,7 @@ spending in the same policy.
 
 **Replace Key Auth with OpenID Connect for production identity.** This recipe uses static API
 keys for simplicity, but production deployments should integrate with your identity provider
-using the [OpenID Connect](/ai-gateway/policies/openid-connect/) AI Auth Strategy. JWT claims can map
+using the [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy. JWT claims can map
 users to AI Consumer Groups automatically based on roles or team membership. See the
 [Basic LLM Routing recipe](/cookbooks/basic-llm-routing/) for a self-contained JWT pattern, or the
 [Claude Code SSO recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.

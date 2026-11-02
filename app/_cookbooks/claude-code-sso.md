@@ -583,7 +583,7 @@ rows:
     responsibility: "PKCE flow, token caching, silent refresh. Runs on the developer machine."
   - component: "Okta"
     responsibility: "Identity, MFA, group membership, JWT issuance."
-  - component: "Kong, [OpenID Connect](/ai-gateway/policies/openid-connect/) AI Auth Strategy"
+  - component: "Kong, [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy"
     responsibility: "JWT signature validation via JWKS, audience verification, Okta group to AI Consumer Group mapping."
   - component: "Kong, AI Model and AI Model Provider"
     responsibility: "Alias-based tier routing, AI Consumer Group access control, provider credential injection, format passthrough."

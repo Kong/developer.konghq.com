@@ -101,7 +101,7 @@ prereqs:
         > GitHub OAuth apps can only have **one** callback URL. If you use multiple MCP clients with different callback URLs, create a separate OAuth app for each.
     - title: Identity Provider
       content: |
-        The {{site.konnect_short_name}} MCP route authenticates callers against your organization's OAuth 2.1 identity provider using an [OpenID Connect](/ai-gateway/entities/ai-auth-strategy/) AI Auth Strategy. This recipe shows setup steps for Okta and Keycloak, both of which expose an RFC 7662 token introspection endpoint. Other IdPs (Microsoft Entra ID, Auth0, AWS Cognito, Google) work too. They expose a JWKS endpoint instead, which an OpenID Connect AI Auth Strategy validates locally without an introspection call. Select your IdP below and follow the setup steps.
+        The {{site.konnect_short_name}} MCP route authenticates callers against your organization's OAuth 2.1 identity provider using an [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy. This recipe shows setup steps for Okta and Keycloak, both of which expose an RFC 7662 token introspection endpoint. Other IdPs (Microsoft Entra ID, Auth0, AWS Cognito, Google) work too. They expose a JWKS endpoint instead, which an OpenID Connect AI Auth Strategy validates locally without an introspection call. Select your IdP below and follow the setup steps.
 
         {% navtabs "Identity Provider" %}
         {% tab Okta %}
@@ -223,7 +223,7 @@ overview: |
 
   Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. The [Secure Internal MCP Gateway](/cookbooks/secure-internal-mcp-gateway/) recipe covers that case. **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma that run their own authorization servers and issue their own (often opaque) tokens.
 
-  This recipe covers the external case with two AI MCP Server entities, demonstrated below with GitHub MCP and {{site.konnect_short_name}} MCP. The **passthrough** pattern (GitHub MCP) lets the user authenticate directly with GitHub; Kong passes the token through and uses a Key Auth AI Auth Strategy for AI Consumer identity and tool-level ACLs. The **token swap** pattern ({{site.konnect_short_name}} MCP) authenticates the user against the organization's IdP, maps the user to an AI Consumer, then swaps the user token for a stored {{site.konnect_short_name}} credential (Personal Access Token for the demo, Service Account Token in production) before forwarding.
+  This recipe covers the external case with two AI MCP Server entities: one for GitHub MCP and one for {{site.konnect_short_name}} MCP. The **passthrough** pattern (GitHub MCP) lets the user authenticate directly with GitHub; Kong passes the token through and uses a Key Auth AI Auth Strategy for AI Consumer identity and tool-level ACLs. The **token swap** pattern ({{site.konnect_short_name}} MCP) authenticates the user against the organization's IdP, maps the user to an AI Consumer, then swaps the user token for a stored {{site.konnect_short_name}} credential (Personal Access Token for the demo, Service Account Token in production) before forwarding.
 ---
 
 ## The problem
@@ -566,7 +566,7 @@ listing the AI Consumers that belong to it.
 ### OpenID Connect: authenticating {{site.konnect_short_name}} MCP through your identity provider
 
 The {{site.konnect_short_name}} MCP route swaps opaque-token passthrough for real identity: an
-[OpenID Connect](/ai-gateway/entities/ai-auth-strategy/) AI Auth Strategy validates the caller's
+[OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy validates the caller's
 token against your organization's IdP and resolves an AI Consumer and AI Consumer Group from its claims.
 Pairing the strategy with `access.metadata` on the AI MCP Server also makes Kong advertise
 protected resource metadata (RFC 9728) at this route automatically, so MCP clients can discover
@@ -1052,8 +1052,8 @@ before forwarding upstream.
 
 Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named
 `secure-external-mcp-gateway-recipe`. The recipe created two AI MCP Servers
-(`secure-external-mcp-gateway-github-mcp` and `secure-external-mcp-gateway-konnect-mcp`), two AI
-AI Auth Strategies (a Key Auth AI Auth Strategy for GitHub, an OpenID Connect strategy for {{site.konnect_short_name}}), a
+(`secure-external-mcp-gateway-github-mcp` and `secure-external-mcp-gateway-konnect-mcp`), two
+AI Auth Strategies (a Key Auth AI Auth Strategy for GitHub, an OpenID Connect AI Auth Strategy for {{site.konnect_short_name}}), a
 Request Transformer Advanced Policy for the token swap, two AI Consumers (`admin-user` and
 `dev-user`) with their API key credentials, and two AI Consumer Groups (`admin` and `developer`),
 all scoped to this recipe by the kongctl namespace applied above.
@@ -1077,7 +1077,7 @@ for the {{site.konnect_short_name}} MCP token swap, head to the **Observability*
   under `access.default_tool_acls` (denied for developers, allowed for admins).
 - **Enforce tool-level ACLs on the {{site.konnect_short_name}} MCP route.** The OpenID Connect AI Auth Strategy already
   maps an IdP `groups` claim to AI Consumer Groups. To restrict which {{site.konnect_short_name}} MCP tools each
-  group can call, pre-create the AI Consumer Groups and add `access.acls` rules to the {{site.konnect_short_name}} AI
+  group can call, pre-create the AI Consumer Groups and add `access.acls` rules to the {{site.konnect_short_name}}
   AI MCP Server's `tools` list, mirroring the GitHub MCP route. The
   [Secure Internal MCP Gateway](/cookbooks/secure-internal-mcp-gateway/) recipe shows the full
   IdP-claim-to-ACL pattern end-to-end.

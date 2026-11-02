@@ -37,23 +37,23 @@ prereqs:
   inline:
     - title: Kong Konnect
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped AI Gateway and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped AI Gateway name and run the quickstart script:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='mistral-ai-with-kong-ai-gateway-recipe'
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions an AI Gateway named `mistral-ai-with-kong-ai-gateway-recipe`, a local Data Plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`) for the rest of the session vars. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `mistral-ai-with-kong-ai-gateway-recipe`, a local data plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`) for the rest of the session vars. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
@@ -94,7 +94,7 @@ prereqs:
 
 overview: |
   Put Mistral behind {{site.ai_gateway_name}} so that application code never holds a Mistral API
-  key. By the end of this recipe you will have one `/mistral` endpoint serving two capabilities,
+  key. By the end of this recipe you'll have one `/mistral` endpoint serving two capabilities,
   chat through `mistral-small-latest` and embeddings through `mistral-embed`, both reachable only
   with a per-application key you can revoke on its own.
 
@@ -274,7 +274,7 @@ ai_gateway_consumers:
 - **To add a second application**, add another `ai_gateway_consumers` entry with its own credential. Both reference the same AI Auth Strategy, and each can be deleted independently.
 
 {:.info}
-> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
 
 ## Apply the Kong configuration
 
@@ -687,9 +687,9 @@ Done.
 5. **The invalid key never reached Mistral.** Kong rejected it in 6 ms, against the 881 ms the real call above took once it reached Mistral. No Mistral quota was spent, and no token was billed.
 6. **The Mistral key stayed in {{site.konnect_short_name}}.** The script only ever held the AI Consumer credential. The Mistral key lived on the AI Model Provider as a write-only field and was injected server-side.
 
-### Explore in Konnect
+### Explore in {{site.konnect_short_name}}
 
-Open [Konnect](https://cloud.konghq.com/) and select the `mistral-ai-with-kong-ai-gateway-recipe` {{site.ai_gateway}}. It holds five resources created by this recipe:
+Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and select the `mistral-ai-with-kong-ai-gateway-recipe` {{site.ai_gateway}}. It holds five resources created by this recipe:
 
 - One AI Model Provider, `mistral-ai-with-kong-ai-gateway-provider`, holding the Mistral credential. The key is write-only and is never displayed after creation.
 - Two AI Models, `mistral-ai-with-kong-ai-gateway-chat` and `mistral-ai-with-kong-ai-gateway-embeddings`, each with its own capability, alias rule, and target.

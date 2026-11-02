@@ -355,7 +355,7 @@ ai_gateway_consumers:
 - **`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret` reference. Kong rejects a plain string here, even for a demo value like this recipe's. You export `CONSUMER_API_KEY` once in [Apply the Kong configuration](#apply-the-kong-configuration) and reuse it across every provider tab.
 - **One AI Auth Strategy, three AI Models.** All three AI Models below reference `voice-ai-observability-auth` via `access.auth_strategies`, so one AI Consumer credential authenticates every hop.
 
-For richer identity flows (JWT-based SSO, scoped audiences, IdP integration), swap Key Auth for the [OpenID Connect](/ai-gateway/entities/ai-auth-strategy/) AI Auth Strategy. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) shows the pattern.
+For richer identity flows (JWT-based SSO, scoped audiences, IdP integration), swap Key Auth for the [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) shows the pattern.
 
 ### AI Model and AI Model Provider: speech-to-text transcription
 
@@ -2227,7 +2227,7 @@ For platform-wide traffic analysis across every {{site.ai_gateway}}, open the **
 
 **Propagate session attributes onto every span.** Kong's child spans share the `trace_id` of the demo's `voice-turn` root, but they don't carry the `langfuse.session.id` attribute themselves. For trace-level Session grouping in Langfuse this is sufficient: Langfuse only needs the attribute on the root. To filter or aggregate *individual* observations by session (for example, a per-span cost panel grouped by session), use OpenTelemetry's [`BaggageSpanProcessor`](https://opentelemetry.io/docs/languages/python/) on the demo side to copy `session.id` into baggage and propagate it on outbound HTTP.
 
-**Swap Key Auth for SSO.** Replace the Key Auth AI Auth Strategy with the [OpenID Connect](/ai-gateway/entities/ai-auth-strategy/) AI Auth Strategy when humans run voice agents on managed devices and you need per-user identity, JWT claims, or short-lived tokens. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) is an end-to-end example with Okta. Drop the `voice-agent` AI Consumer, point Kong at your IdP's issuer URL, and let a claims mapping put JWT subjects onto Kong AI Consumers automatically.
+**Swap Key Auth for SSO.** Replace the Key Auth AI Auth Strategy with the [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy when humans run voice agents on managed devices and you need per-user identity, JWT claims, or short-lived tokens. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) is an end-to-end example with Okta. Drop the `voice-agent` AI Consumer, point Kong at your IdP's issuer URL, and let a claims mapping put JWT subjects onto Kong AI Consumers automatically.
 
 **Add per-hop rate limiting.** Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to individual AI Models via their `policies` list to enforce separate token budgets for STT, LLM, and TTS. Separate budgets prevent a runaway LLM prompt from consuming the entire pipeline's token quota.
 

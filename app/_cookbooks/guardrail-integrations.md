@@ -242,7 +242,7 @@ ai_gateway_consumers:
 
 **`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret` reference. Kong rejects a plain string here, even for a demo value like this recipe's. You export `CONSUMER_API_KEY` once in [Apply the Kong configuration](#apply-the-kong-configuration).
 
-The recipe registers a single AI Consumer (`guardrail-integrations-consumer`) with one API key credential. Production deployments typically use multiple AI Consumers, often with [AI Consumer Groups](/gateway/consumer-groups/) to apply different policies per tier.
+The recipe registers a single AI Consumer (`guardrail-integrations-consumer`) with one API key credential. Production deployments typically use multiple AI Consumers, often with [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to apply different policies per tier.
 
 ### AI Azure Content Safety: dedicated guardrail policy
 

@@ -109,7 +109,7 @@ prereqs:
         {% navtab "OpenAI" %}
         This tutorial uses OpenAI:
 
-        1. [Create an OpenAI account](https://platform.openai.com/).
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
         1. Export the API key as an environment variable:
 
@@ -1340,7 +1340,7 @@ If **Observability → Custom dashboards → `Copilot Usage`** shows no data 5+ 
 
 ## Variations and next steps
 
-- **Add SSO with AI Consumer Group tiers.** Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) pointed at your IdP, and let the user's group claim drive which model they can access. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) demonstrates this pattern end-to-end.
+- **Add SSO with AI Consumer Group tiers.** Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) pointed at your IdP, and let the user's group claim drive which model they can access. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) demonstrates this pattern end-to-end.
 - **Add code-secret PII redaction.** Add an [AI Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy ahead of the AI Model to redact API keys, tokens, and other secrets from prompts before they reach the LLM provider. Developers pasting `.env` snippets into Copilot Chat is a real exfiltration risk; this policy catches it server-side.
 - **Switch to monthly token budgets.** The 60-second window here is intentionally aggressive for the demo so a few prompts visibly exhaust it. Production teams usually enforce monthly budgets, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%} for a 5 million token monthly ceiling per AI Consumer. Combine multiple `limits` entries to enforce burst and sustained budgets simultaneously.
 - **Share rate-limit counters with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node clusters, switch to `strategy: redis` and point to a shared Redis instance.
