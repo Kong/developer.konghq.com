@@ -558,7 +558,7 @@ Kong hosts the control plane and data planes for you, including scaling, upgrade
 In addition, {{site.ai_gateway}} on Dedicated Cloud Gateways supports a fully [managed cache for Redis](/dedicated-cloud-gateways/managed-cache/) so you don't have to host Redis infrastructure.
 You can use this with any {{site.ai_gateway}} Policy that uses Redis.
 
-If you want both {{site.base_gateway}} and {{site.ai_gateway}} to run in a Dedicated Cloud Gateway, you must use separate Dedicated Cloud Gateway control planes for them, instead of combining both on a single control plane.
+If you want both {{site.base_gateway}} and {{site.ai_gateway}} to run in a Dedicated Cloud Gateway, you must use separate Dedicated Cloud Gateway control planes for them.
 Sharing networks is best practice.
 
 ### Configure an {{site.ai_gateway}} control plane
