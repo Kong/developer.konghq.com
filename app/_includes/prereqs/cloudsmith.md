@@ -9,11 +9,11 @@ docker pull kong/ai-compress-service:TAG
 Replace `TAG` with the image tag you want to run, for example:
 
 ```bash
-docker pull kong/ai-compress-service:latest
+docker pull kong/ai-compress-service:v0.0.6
 ```
 
 You can run the image with:
 
 ```bash
-docker run --rm -p 8080:8080 kong/ai-compress-service:latest
+docker run --rm -p 8080:8080 kong/ai-compress-service:v0.0.6
 ```
