@@ -25,11 +25,14 @@ related_resources:
     url: /gateway/configuration/
 ---
 
-Sandboxing imposes several limitations on how custom Lua code can be executed,
-for heightened security. The Lua (or LuaJIT) language itself is not limited — only the available
-environment and the set of usable modules are restricted.
+Some [{{site.base_gateway}} plugins](/plugins/) let you run Lua code to change requests and responses, read the authenticated Consumer, or share values between plugins.
+Anyone who can create or edit one of these plugins can run code on your data planes, so sandboxing limits what that code can do.
+Sandboxing restricts the available environment and the set of modules that the code can load.
+All Lua (or LuaJIT) language features remain available.
 
-The limitations can be adjusted with the `untrusted_lua` configuration option.
+The [`untrusted_lua`](/gateway/configuration/#untrusted-lua) data plane setting controls which restrictions apply.
+Each data plane node reads this setting from its own `kong.conf` file.
+The setting applies to every {{site.base_gateway}} plugin on that node.
 
 ## Disallow custom code execution
 
@@ -92,6 +95,6 @@ is completely unrestricted, and no protections are applied.
 
 ## Notes
 
-{{site.base_gateway}} keeps rights to modify the above mentioned allow-lists of environment and modules. Most commonly,
-{{site.base_gateway}} will do additions to the allow-lists, but in case a security vulnerability is found, {{site.base_gateway}} may
+{{site.base_gateway}} keeps rights to modify the supported allowlists of environment and modules.
+Most commonly, {{site.base_gateway}} will do additions to the allowlists, but in case a security vulnerability is found, {{site.base_gateway}} may
 remove some. In such case, {{site.base_gateway}} will notify the user about the change.
