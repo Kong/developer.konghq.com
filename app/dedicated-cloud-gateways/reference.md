@@ -72,7 +72,7 @@ faqs:
     a: |
       Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
   - q: Can I use credential-less authentication (AWS workload identity or Azure managed identity) for Dedicated Cloud Gateways?
-    a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't currently supported for Dedicated Cloud Gateways. 
+    a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't supported for Dedicated Cloud Gateways. 
   - q: Can I set provider-specific Vault credentials, like `AZURE_CLIENT_SECRET`, `AWS_ACCESS_KEY_ID`, or `GCP_SERVICE_ACCOUNT`, as environment variables on a Dedicated Cloud Gateway?
     a: |
       No. Dedicated Cloud Gateways only accept environment variables prefixed with `KONG_` or `OTEL_`, so provider-specific credential env vars can't be set this way. 
@@ -260,7 +260,7 @@ Using AWS workload identities with Dedicated Cloud Gateways provides the followi
 * **Compatibility:** Native and custom Kong plugins can seamlessly use AssumeRole credentials.
 
 {:.info}
-> This is currently only available for AWS. 
+> This is only available for AWS. 
 
 ### How AWS workload identities works
 
@@ -629,7 +629,7 @@ body:
 <!--vale on-->
 
 {:.warning}
-> **Limitation:** {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS and Azure.
+> **Limitation:** {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways only supports AWS and Azure.
 
 Private networking and private DNS work the same way for {{site.ai_gateway}} control planes as they do for standard Dedicated Cloud Gateways.
 See the following for instructions:

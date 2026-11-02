@@ -49,7 +49,7 @@ tags:
 
 {% include_cached /sections/managed-cache-intro.md %}
 
-Only AWS and Azure are currently supported as providers.
+Only AWS and Azure are supported as providers.
 
 ## Managed cache sizing recommendations
 
@@ -255,7 +255,7 @@ region: global
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
+1. Check the status of the managed cache. After the `state` is marked as ready, the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->
@@ -395,7 +395,7 @@ To create a managed cache, use the following steps:
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use. This can take about 15 minutes:
+1. Check the status of the managed cache. After the `state` is marked as ready, the cache is ready to use. This can take about 15 minutes:
 
    {% capture get_ai_addon %}
    <!--vale off-->
