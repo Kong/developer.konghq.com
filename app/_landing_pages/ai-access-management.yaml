@@ -42,7 +42,6 @@ rows:
                     - Apply rules and spend limits to many callers at once with groups.
                     - Let users sign in with your existing identity provider.
                     - Keep provider credentials out of your apps with Token Vault and virtual keys.
-                    - Track and cap costs by linking users and keys to a cost center.
 
   - header:
       type: h2
