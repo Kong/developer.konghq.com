@@ -65,19 +65,13 @@ faqs:
 ---
 
 {{site.ai_cost_management}} records the cost of each AI request that passes through {{site.ai_gateway}} as a usage event.
-If you need to see where AI spend goes, or check what the gateway reported for a request, you can use the Cost management views in {{site.konnect_short_name}}.
-
-* My Usage shows the current user's own spend and projection
-* The Dashboard summarizes organization-wide spend and projects it to the end of the month
-* The Explorer breaks spend and usage down by any dimension
-* The Events debugger lists the individual usage events
+If you need to see where AI spend goes, or check what the gateway reported for a request, you can use the **Cost Management** > **Dashboard** views in {{site.konnect_short_name}}.
+They include an overview dashboard, an events explorer, and a debugger to further dig into individual events.
 
 The views read stored usage events, so a request can take a short time to appear after it finishes.
 All times in the console are in UTC.
 
-The Dashboard chart and breakdown update every minute, and **Refresh** reloads every section.
-
-An event is late when it reaches {{site.ai_cost_management}} more than one hour after its time.
+An event is considered late when it reaches {{site.ai_cost_management}} more than one hour after its time.
 {{site.ai_cost_management}} groups spend by the time of the event, so a late event changes the total for a period you've already viewed.
 
 ## How the views relate
@@ -115,18 +109,22 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+<!-- TO DO: re-add this section once we're sure it's going in.
+
 ## My usage
 
 My Usage shows the current user's own spend. It's available to all {{site.ai_gateway}} users.
 
 The view shows spend for a selected time range, a projection for the current month, and how far spend is above or below the user's budget ceiling.
 Spend is also broken down by dimension, for example a model or provider.
+-->
 
 <!--TO DO: screenshot-->
 
 ## Dashboard
 
 The Dashboard summarizes spend for a time range and shows where it goes.
+The chart and breakdown update every minute, and **Refresh** reloads every section.
 
 <!--vale off-->
 {% table %}
