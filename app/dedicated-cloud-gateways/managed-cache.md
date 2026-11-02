@@ -409,8 +409,8 @@ To create a managed cache, use the following steps:
    {% endcapture %}
    {{ get_ai_addon | indent: 3}}
 
-1. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a Redis datastore for it, so you don't need to create one yourself.
-   List the datastores in your {{site.ai_gateway}} control plane and export the `name` of the datastore where `konnect_managed` is `true`:
+1. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a Redis data store for it, so you don't need to create one yourself.
+   List the data stores in your {{site.ai_gateway}} control plane and export the `name` of the data store where `konnect_managed` is `true`:
 
    {% capture list_datastores %}
    <!--vale off-->
@@ -427,7 +427,7 @@ To create a managed cache, use the following steps:
    {% endcapture %}
    {{ list_datastores | indent: 3}}
 
-1. Reference the datastore in the `datastores` array of a [Policy that supports it](#configure-a-managed-cache-for-ai-gateway).
+1. Reference the data store in the `datastores` array of a [Policy that supports it](#configure-a-managed-cache-for-ai-gateway).
    The following example creates a Rate Limiting Advanced Policy that uses the managed cache:
 
    {% capture create_policy %}

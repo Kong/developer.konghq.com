@@ -1,4 +1,4 @@
 A managed cache for Dedicated Cloud Gateways is a Redis-compatible database that powers all Redis-enabled plugins and Policies. 
 This is fully managed by Kong in the region and provider of your choice, so you don't have to host Redis infrastructure. 
 Using a managed cache allows you to get up and running faster with [Redis-backed plugins](/gateway/entities/partial/#redis-partials) and [Redis-backed Policies](/dedicated-cloud-gateways/managed-cache/#configure-a-managed-cache-for-ai-gateway).
-{{site.base_gateway}} managed caches use a Redis partial while {{site.ai_gateway}} 2.x managed caches use a datastore.
+{{site.base_gateway}} managed caches use a Redis partial while {{site.ai_gateway}} 2.x managed caches use a data store.
