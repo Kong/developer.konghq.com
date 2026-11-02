@@ -53,9 +53,9 @@ prereqs:
     - title: Redis stack
       include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
-    - title: Kong Prompt Compressor service via Cloudsmith
+    - title: Kong Prompt Compressor service
       include_content: prereqs/cloudsmith
-      icon_url: /assets/icons/cloudsmith.svg
+      icon_url: /assets/icons/third-party/docker.svg
     - title: Langchain splitters
       include_content: prereqs/langchain
       icon_url: /assets/icons/python.svg

@@ -45,7 +45,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: AI PII Anonymizer service access
       include_content: prereqs/ai-sanitizer
-      icon_url: /assets/icons/cloudsmith.svg
+      icon_url: /assets/icons/third-party/docker.svg
 
 cleanup:
   inline:
