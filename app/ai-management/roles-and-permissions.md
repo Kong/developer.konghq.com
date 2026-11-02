@@ -12,7 +12,7 @@ works_on:
 tags:
   - ai
   - access-control
-description: "What Org Admins, Team Managers, and Individual Users can do with models, MCP servers, agents, keys, and cost data in AI Management."
+description: "Reference for what Org Admins, Team Managers, and Individual Users can do in AI Management. Covers permissions for AI Models, AI MCP Servers, AI Agents, virtual keys, and cost data."
 related_resources:
   - text: AI Management
     url: /ai-management/
@@ -26,8 +26,9 @@ related_resources:
     url: /ai-gateway/entities/ai-agent/
 ---
 
-Every user in [AI Management](/ai-management/) has a role, and the role sets what they can do.
-Org Admins set up models, MCP servers, and agents, and other users ask an Org Admin for access.
+[AI Management](/ai-management/) roles control who can create and manage models, MCP servers, agents, and virtual keys, and who can view cost data.
+Org Admins set up models, MCP servers, and agents.
+Team Managers and Individual Users ask an Org Admin for access.
 
 ## Roles
 
@@ -49,7 +50,7 @@ rows:
     does: "Sees spend and budgets for their teams, and requests resources and access."
   - role: Individual User
     who: "Any other user in the organization."
-    does: "Views their own usage, and requests resources and access."
+    does: "Views their own usage and requests resources and access."
 {% endtable %}
 <!-- vale on -->
 
@@ -67,44 +68,44 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add a model"
-    admin: "Yes, with **New model**"
-    manager: "No"
-    individual: "No"
-  - capability: "Ask an Org Admin to add a model"
-    admin: "No"
-    manager: "Yes, with **Request a model**"
-    individual: "Yes, with **Request a model**"
+  - capability: "Add a model with **New model**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Ask an Org Admin to add a model with **Request a model**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Turn a model on or off"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
-  - capability: "Edit, delete, or debug a model"
-    admin: "Yes, from the **Actions** menu"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Edit, delete, or debug a model from the **Actions** menu"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View auth strategies, ACLs, and policies on a model"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View their own usage of a model for the last 7 days"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
-  - capability: "Request access to call a model"
-    admin: "No"
-    manager: "Yes, with **Request access**"
-    individual: "Yes, with **Request access**"
+    admin: true
+    manager: true
+    individual: true
+  - capability: "Request access to call a model with **Request access**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Manage virtual keys from a model"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
 {% endtable %}
 <!-- vale on -->
 
 ## Providers
 
-[Providers](/ai-gateway/entities/ai-model-provider/) are under **Models** in the navigation.
+[Providers](/ai-gateway/entities/ai-model-provider/) are under **Models > Providers** in the sidebar.
 
 <!-- vale off -->
 {% table %}
@@ -118,22 +119,22 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add a provider"
-    admin: "Yes, with **New provider**"
-    manager: "No"
-    individual: "No"
-  - capability: "Edit or delete a provider"
-    admin: "Yes, from the **Actions** menu"
-    manager: "No"
-    individual: "No"
-  - capability: "Set a provider to get each caller's key from [Token Vault](/identity/token-vault/)"
-    admin: "Yes, with **Key source** > **Token Vault**"
-    manager: "No"
-    individual: "No"
+  - capability: "Add a provider with **New provider**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Edit or delete a provider from the **Actions** menu"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Set a provider to get each caller's key from [Token Vault](/identity/token-vault/) with **Key source** > **Token Vault**"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View a provider's authentication type and details"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
 {% endtable %}
 <!-- vale on -->
 
@@ -151,46 +152,46 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add an MCP server"
-    admin: "Yes, with **New MCP server**"
-    manager: "No"
-    individual: "No"
-  - capability: "Ask an Org Admin to add an MCP server"
-    admin: "No"
-    manager: "Yes, with **Request an MCP server**"
-    individual: "Yes, with **Request an MCP server**"
+  - capability: "Add an MCP server with **New MCP server**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Ask an Org Admin to add an MCP server with **Request an MCP server**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Turn an MCP server on or off"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
-  - capability: "Edit, delete, or debug an MCP server"
-    admin: "Yes, from the **Actions** menu"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Edit, delete, or debug an MCP server from the **Actions** menu"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View an MCP server's tools and usage"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
-  - capability: "Change logging for an MCP server"
-    admin: "Yes, with **Log payloads** and **Log audits**"
-    manager: "No"
-    individual: "No"
-  - capability: "Set an MCP server to get its upstream credential from [Token Vault](/identity/token-vault/)"
-    admin: "Yes, with **Outbound authentication** > **Use a credential provider**"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: true
+    individual: true
+  - capability: "Change logging for an MCP server with **Log payloads** and **Log audits**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Set an MCP server to get its upstream credential from [Token Vault](/identity/token-vault/) with **Outbound authentication** > **Use a credential provider**"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View an MCP server's [authentication](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata), [ACLs](/ai-gateway/entities/ai-mcp-server/#acl-tool-control), and policies"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
-  - capability: "Request access to call an MCP server"
-    admin: "No"
-    manager: "Yes, with **Request access**"
-    individual: "Yes, with **Request access**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Request access to call an MCP server with **Request access**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Manage virtual keys from an MCP server"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
 {% endtable %}
 <!-- vale on -->
 
@@ -208,34 +209,34 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Add an agent"
-    admin: "Yes, with **New agent**"
-    manager: "No"
-    individual: "No"
-  - capability: "Ask an Org Admin to add an agent"
-    admin: "No"
-    manager: "Yes, with **Request an agent**"
-    individual: "Yes, with **Request an agent**"
+  - capability: "Add an agent with **New agent**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Ask an Org Admin to add an agent with **Request an agent**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Turn an agent on or off"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
-  - capability: "Edit, delete, debug, or link an identity record to an agent"
-    admin: "Yes, from the **Actions** menu"
-    manager: "No"
-    individual: "No"
-  - capability: "Change logging for an agent"
-    admin: "Yes, with **Log payloads** and **Log audits**"
-    manager: "No"
-    individual: "No"
-  - capability: "Request access to call an agent"
-    admin: "No"
-    manager: "Yes, with **Request access**"
-    individual: "Yes, with **Request access**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Edit, delete, debug, or link an identity record to an agent from the **Actions** menu"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Change logging for an agent with **Log payloads** and **Log audits**"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Request access to call an agent with **Request access**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "Manage virtual keys from an agent"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
 {% endtable %}
 <!-- vale on -->
 
@@ -258,17 +259,17 @@ columns:
     key: individual
 rows:
   - capability: "Open the Users, Identity Providers, and Token Vault pages"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: false
+    individual: false
   - capability: "View agent identities"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
-  - capability: "Ask an Org Admin to add an agent identity"
-    admin: "No"
-    manager: "Yes, with **Request an agent**"
-    individual: "Yes, with **Request an agent**"
+    admin: true
+    manager: true
+    individual: true
+  - capability: "Ask an Org Admin to add an agent identity with **Request an agent**"
+    admin: false
+    manager: true
+    individual: true
   - capability: "View groups and projects"
     admin: "All groups and projects"
     manager: "Only their groups and projects"
@@ -277,12 +278,12 @@ rows:
     admin: "All keys"
     manager: "Their own keys, and keys in the groups and projects that they manage"
     individual: "Only their own keys"
-  - capability: "Create a virtual key"
-    admin: "Yes, with **New Key**"
-    manager: "Yes, with **New Key**"
-    individual: "Yes, with **New Key**"
+  - capability: "Create a virtual key with **New Key**"
+    admin: true
+    manager: true
+    individual: true
   - capability: "Delete a virtual key"
-    admin: "Yes"
+    admin: true
     manager: "Yes, for keys they can view"
     individual: "Yes, for their own keys"
 {% endtable %}
@@ -303,27 +304,27 @@ columns:
     key: individual
 rows:
   - capability: "View their own usage on **My Usage**"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
   - capability: "View the cost dashboard and explorer"
     admin: "Yes, for the whole organization"
     manager: "Yes, for their teams"
-    individual: "No"
+    individual: false
   - capability: "View and create budgets"
     admin: "Yes, for the whole organization"
     manager: "Yes, for their teams"
-    individual: "No"
+    individual: false
   - capability: "Use the price catalog, attribution, and exports"
-    admin: "Yes"
-    manager: "No"
-    individual: "No"
+    admin: true
+    manager: false
+    individual: false
 {% endtable %}
 <!-- vale on -->
 
 ## Observability
 
-Individual Users can open a dashboard's sharing settings to see who has access, but they cannot change them.
+Individual Users can view a dashboard's sharing settings, but only Org Admins and Team Managers can change them.
 
 <!-- vale off -->
 {% table %}
@@ -338,20 +339,20 @@ columns:
     key: individual
 rows:
   - capability: "View Overview, Dashboards, Explorer, and Logs"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "Yes"
+    admin: true
+    manager: true
+    individual: true
   - capability: "Share a dashboard with other users and teams"
-    admin: "Yes"
-    manager: "Yes"
-    individual: "No, view only"
+    admin: true
+    manager: true
+    individual: false
 {% endtable %}
 <!-- vale on -->
 
 ## Requests
 
-When Team Managers or Individual Users need a resource or access that they do not have, they send a request.
-An Org Admin decides whether to approve it.
+Team Managers and Individual Users send a request when they need a resource or access they don't have.
+An Org Admin decides whether to approve each request.
 
 <!-- vale off -->
 {% table %}
