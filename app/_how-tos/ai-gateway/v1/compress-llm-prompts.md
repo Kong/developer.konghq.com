@@ -147,7 +147,7 @@ variables:
 >
 > If you're using a model other than `text-embedding-3-large`, be sure to update the `vectordb.dimensions` value to match the model’s embedding size.
 
-Once the plugin is created, **copy its `id`** from the Deck response. Then, export it so the ingestion script can reference it later:
+After the plugin is created, **copy its `id`** from the Deck response. Then, export it so the ingestion script can reference it later:
 
 ```bash
 export PLUGIN_ID=<YOUR_PLUGIN_ID>
