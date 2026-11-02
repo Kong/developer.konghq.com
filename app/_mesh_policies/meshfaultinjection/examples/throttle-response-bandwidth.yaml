@@ -1,0 +1,23 @@
+title: 'Throttle response bandwidth'
+
+description: 'Send a proportion of responses at 50 kbps to reproduce a slow link between two services.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshFaultInjection
+  name: backend-slow-link
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          http:
+            - responseBandwidth:
+                limit: 50kbps
+                percentage: 25

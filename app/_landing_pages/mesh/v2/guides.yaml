@@ -145,7 +145,7 @@ rows:
                 See new {{site.mesh_product_name}} features and bug fixes.
               cta:
                 text: View the changelog
-                url: /mesh/v2/changelog/
+                url: /mesh/changelog/
                 align: end
       - blocks:
           - type: card

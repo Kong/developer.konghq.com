@@ -1,0 +1,23 @@
+title: 'Export traces to an OpenTelemetry collector'
+
+description: 'Reference a MeshOpenTelemetryBackend by labels. Spans leave through kuma-dp, which forwards them to the collector.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrace
+  name: otel-tracing
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      backends:
+        - type: OpenTelemetry
+          openTelemetry:
+            backendRef:
+              kind: MeshOpenTelemetryBackend
+              labels:
+                kuma.io/display-name: otel-collector

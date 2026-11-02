@@ -1,2 +1,73 @@
 title: Mesh Documentation
 description: Index containing all documentation for {{site.mesh_product_name}}.
+sections:
+  - title: Overview
+    items:
+      - path: /mesh/
+      - path: /mesh/konnect/
+      - title: Mesh policies
+        description: Bundled features for your service traffic and network configuration.
+        url: /mesh/policies/
+      - title: Mesh changelog
+        description: Changelog for supported Kong Mesh versions.
+        url: /mesh/changelog/
+
+  - title: Install & Configure
+    items:
+      - path: /mesh/validated-versions/
+      - path: /mesh/get-started/universal/install/
+      - path: /mesh/universal/
+      - path: /mesh/universal-control-plane/
+      - path: /mesh/universal-data-plane/
+      - path: /mesh/deploy-mesh-using-terraform-and-konnect/
+      - path: /mesh/license/
+
+  - title: Mesh guides
+    items:
+      - path: /mesh/connect-kubernetes-zone-to-konnect-ui/
+      - path: /mesh/connect-kubernetes-zone-to-konnect-api/
+      - path: /mesh/connect-universal-zone-to-konnect-ui/
+      - path: /mesh/connect-universal-zone-to-konnect-api/
+      - path: /mesh/zone-proxies/
+
+  - title: How Mesh Works
+    items:
+      - path: /mesh/policy-targeting/
+      - path: /mesh/mesh-scoped-zone-proxies/
+      - path: /mesh/application-ingress/
+
+  - title: Upgrade
+    items:
+      - path: /mesh/upgrade/
+      - path: /mesh/check-upgrade-readiness/
+      - path: /mesh/version-specific-upgrade-notes/
+      - path: /mesh/migrate-mtls-to-meshidentity/
+      - path: /mesh/migrate-zone-proxies-to-3/
+      - path: /mesh/migrate-policies-to-3/
+      - path: /mesh/migrate-gateways-to-3/
+
+  - title: Resource References
+    items:
+      - path: /mesh/meshservice/
+      - path: /mesh/meshmultizoneservice/
+      - path: /mesh/meshexternalservice/
+      - path: /mesh/meshopentelemetrybackend/
+
+  - title: Policies
+    items:
+      - path: /mesh/policies/**/*
+    auto_exclude: true
+
+  - title: References
+    items:
+      - path: /mesh/cli/
+      - path: /mesh/sbom/
+      - path: /mesh/vulnerability-patching-process/
+      - path: /mesh/support-policy/
+
+  - title: Hidden paths
+    hidden: true
+    items:
+      - path: /mesh/policies/*/examples/**/*
+      - path: /mesh/policies/*/reference/
+      - path: /mesh/policies/*/reference/*/

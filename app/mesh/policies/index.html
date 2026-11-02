@@ -9,4 +9,4 @@ breadcrumbs:
 description: Bundled features for your service traffic and network configuration.
 ---
 {%- assign policies = site.data.mesh_policies.latest | where_exp: "policy", "policy.published != false" | sort: "title" -%}
-{% include policies/index/mesh_hub.html policies=policies heading="Kong Mesh Policies Hub" intro_url="/mesh/policies-introduction/" %}
+{% include policies/index/mesh_hub.html policies=policies heading="Kong Mesh Policies Hub" intro_url="/mesh/policy-targeting/" %}

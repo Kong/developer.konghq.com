@@ -4,10 +4,13 @@ module Jekyll
   module PolicyYaml
     # Runs every parsed YAML document through the NodeProcessor for each Style,
     # concatenating multi-document output and collecting the Terraform rendering.
+    # v3 mode skips the legacy styles entirely: they are neither computed nor
+    # published.
     class StyleRenderer
-      def initialize(node_processor:, namespace:)
+      def initialize(node_processor:, namespace:, mode: :v2)
         @node_processor = node_processor
         @namespace = namespace
+        @mode = mode
         @styles = styles
       end
 
@@ -38,12 +41,15 @@ module Jekyll
       end
 
       def styles
-        [
+        styles = [
           Style.new(name: :uni_legacy, env: :universal, legacy_output: true, namespace: nil),
           Style.new(name: :uni, env: :universal, legacy_output: false, namespace: nil),
           Style.new(name: :kube_legacy, env: :kubernetes, legacy_output: true, namespace: @namespace),
           Style.new(name: :kube, env: :kubernetes, legacy_output: false, namespace: @namespace)
         ]
+        return styles if @mode == :v2
+
+        styles.reject { |style| style.legacy_output }
       end
     end
   end
