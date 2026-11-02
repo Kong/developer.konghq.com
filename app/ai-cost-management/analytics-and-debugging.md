@@ -90,10 +90,7 @@ columns:
   - title: Access
     key: access
 rows:
-  - view: "[**My usage**](#my-usage)"
-    shows: "The current user's spend, projection, and spend breakdown."
-    use: "To check your own spend and see how it compares with your budget."
-    access: "Individual, Team manager, Admin"
+
   - view: "[**Dashboard**](#dashboard)"
     shows: "Organization-wide spend, projected spend, budget status, and spend grouped by user, group, team, provider, model, harness, or tag."
     use: "To check overall spend, find where it goes, and see which budgets are close to their limits."
@@ -110,6 +107,11 @@ rows:
 <!--vale on-->
 
 <!-- TO DO: re-add this section once we're sure it's going in.
+Table row (move it to table):
+  - view: "[**My usage**](#my-usage)"
+    shows: "The current user's spend, projection, and spend breakdown."
+    use: "To check your own spend and see how it compares with your budget."
+    access: "Individual, Team manager, Admin"
 
 ## My usage
 
