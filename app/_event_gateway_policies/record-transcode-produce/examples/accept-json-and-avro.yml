@@ -1,0 +1,48 @@
+title: Accept JSON and Avro records and store them as Avro
+
+description: Use a schema registry with schema_type any so clients can produce either JSON or Avro, and store only Avro in the backend cluster.
+
+extended_description: |
+  Use a schema registry with `schema_type` any so clients can produce either JSON or Avro, and store only Avro in the backend cluster.
+
+  The parent Schema Validation policy validates the record value against a [schema registry](/event-gateway/entities/schema-registry/)
+  whose `schema_type` is `any`, so a client can produce records in either JSON or Avro.
+
+  With `output_format: avro`, this policy converts JSON records to Avro and leaves records that are already Avro unchanged.
+  It looks up the target Avro schema in the same registry by subject and version, and prefixes converted records with the
+  schema reference in the Confluent wire format, so any Confluent-compatible consumer can deserialize them.
+
+  This is useful while producers migrate from JSON to Avro and both formats are in flight for a period of time.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) that validates the record value against a [schema registry](/event-gateway/entities/schema-registry/) configured with `schema_type: any`."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: accept-produce-json-and-avro
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  output_format: avro
+  schema_source:
+    type: reference
+    schema_registry:
+      name: my-schema-registry
+    subject: ${context.topic.name + '-value'}
+    version: ${'latest'}
+    schema_ref_destination:
+      type: confluent_format
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

@@ -35,9 +35,10 @@ prereqs:
       content: |
         The Mocking Policy answers requests before they reach the AI Model Provider, so the credential is never sent upstream. Export a placeholder value:
 
-        ```sh
-        export FAKE_AUTH_HEADER="Bearer not-a-real-key"
-        ```
+        {% env_variables %}
+        FAKE_AUTH_HEADER: "Bearer not-a-real-key"
+        section: prereqs
+        {% endenv_variables %}
 
 related_resources:
   - text: Mocking Policy
@@ -62,7 +63,7 @@ The Policy matches the full request path, so the spec path `/v1/chat/completions
 {% entity_examples %}
 ai_gateway_policies:
   - ref: mock-chat-completions
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: mock-chat-completions
     display_name: "Mock chat completions"
     type: mocking
@@ -111,7 +112,7 @@ ai_gateway_policies:
                                   content: "Goodbye from the mock."
 ai_gateway_model_providers:
   - ref: fake-openai
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: fake-openai
     display_name: "fake-openai"
     type: openai
@@ -123,7 +124,7 @@ ai_gateway_model_providers:
             value: !env FAKE_AUTH_HEADER
 ai_gateway_models:
   - ref: my-gpt-4o
-    ai_gateway: !lookup name:ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: my-gpt-4o
     display_name: "my-gpt-4o"
     type: model

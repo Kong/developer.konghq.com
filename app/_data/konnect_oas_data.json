@@ -383,6 +383,27 @@
     ]
   },
   {
+    "id": "adc507b5-b6cf-495b-bd8e-51d62e493b37",
+    "title": "Konnect AI Cost Management",
+    "latestVersion": {
+      "name": "v1",
+      "id": "107dcfe6-0271-415a-ba05-533dd8e9ac89"
+    },
+    "description": "The AI Cost Management API reports an organization's AI usage and spend, and manages the budgets, notifications, and exports built on it.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "107dcfe6-0271-415a-ba05-533dd8e9ac89",
+        "created_at": "2026-10-21T16:21:45.528Z",
+        "updated_at": "2026-10-21T16:21:56.634Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "5e0005b9-232b-4808-8bdf-9560d4596080",
     "title": "Konnect AI Gateway",
     "latestVersion": {

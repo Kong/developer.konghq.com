@@ -41,6 +41,23 @@ RSpec.describe Jekyll::Validation do
         expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
       end
     end
+
+    context 'when section is cleanup' do
+      let(:works_on) { %w[konnect] }
+      let(:template) do
+        <<~LIQUID
+          {% validation env-variables %}
+          KONNECT_TOKEN: kpat_xxx
+          section: cleanup
+          {% endvalidation %}
+        LIQUID
+      end
+
+      it 'renders a data-test-cleanup attribute instead of data-test-step' do
+        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-cleanup]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
+      end
+    end
   end
 
   describe 'markdown output_format' do

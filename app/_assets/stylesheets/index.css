@@ -1105,3 +1105,31 @@ ol:has(code) {
 .ot-floating-button__open > svg {
   @apply justify-self-center;
 }
+
+/* Expandable images (see javascripts/expandable_image.js) */
+dialog.expandable-image-dialog {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+dialog.expandable-image-dialog.is-open {
+  opacity: 1;
+  transform: none;
+}
+
+dialog.expandable-image-dialog::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition: background 0.2s ease;
+}
+
+dialog.expandable-image-dialog.is-open::backdrop {
+  background: rgb(0 0 0 / 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.expandable-image-dialog,
+  dialog.expandable-image-dialog::backdrop {
+    transition: none;
+  }
+}

@@ -25,6 +25,7 @@ Examples:
 
 Available Commands:
   konnect     Apply configuration changes (create/update only)
+  mesh        Apply Kong Mesh resource documents
 
 
 Flags:

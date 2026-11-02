@@ -78,6 +78,21 @@ paths = [
 source_files = ["review-rules/ai-gateway.md"]
 
 [[review.packs]]
+name = "Related resources"
+paths = [
+  "app/**/*.md",
+  "app/_landing_pages/**/*.yaml",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/related-resources.md"]
+
+[[review.packs]]
 name = "Landing pages"
 paths = ["app/_landing_pages/**/*.yaml"]
 source_files = ["review-rules/landing-pages.md"]

@@ -214,7 +214,7 @@ Kong follows a structured process for addressing bugs:
   Assessed for severity and impact. Fixes are generally applied only to the **latest rolling release**. Backports to a currently supported stable release are evaluated case by case.
 
 {:.info}
-> Customers with Enterprise Platinum or higher subscriptions may request special-case fixes outside this process; such requests are evaluated at Kong's discretion.
+> Customers with platinum or higher subscriptions may request fixes outside of the above and Kong will assess them at its sole discretion.
 
 ## Deprecation guidelines
 

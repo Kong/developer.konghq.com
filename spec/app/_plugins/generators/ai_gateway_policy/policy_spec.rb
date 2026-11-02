@@ -20,12 +20,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
 
   let(:site_config) { { 'ai_gateway_policies' => { 'metadata' => { 'keep' => %w[title name description icon] } } } }
   let(:scopes_data) { [{ 'name' => slug, 'scopes' => %w[models consumers global] }] }
+  let(:priorities_data) { { slug => 925 } }
+  let(:kong_plugins_data) { { slug => api_plugin_page } }
   let(:site) do
     instance_double(
       Jekyll::Site,
       data: {
-        'kong_plugins' => { slug => api_plugin_page },
-        'policies' => { 'ai-gateway' => { 'scopes' => scopes_data } }
+        'kong_plugins' => kong_plugins_data,
+        'policies' => { 'ai-gateway' => { 'scopes' => scopes_data, 'priorities' => priorities_data } }
       },
       config: site_config
     )
@@ -82,6 +84,26 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
       before { allow(File).to receive(:exist?).with(policy.api_spec_file_path).and_return(false) }
 
       it { expect(policy.api_spec_exists?).to be(false) }
+    end
+  end
+
+  describe '#priority' do
+    it 'resolves the priority from the AI Gateway priorities data' do
+      expect(policy.priority).to eq(925)
+    end
+
+    context 'when the slug has no entry in the priorities data' do
+      let(:priorities_data) { { 'other-policy' => 100 } }
+
+      it { expect(policy.priority).to be_nil }
+    end
+
+    context 'when the policy has no backing Gateway plugin' do
+      let(:kong_plugins_data) { {} }
+
+      it 'still resolves the priority from the priorities data' do
+        expect(policy.priority).to eq(925)
+      end
     end
   end
 

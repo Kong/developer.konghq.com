@@ -40,6 +40,8 @@ related_resources:
     url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
   - text: Encrypt and decrypt Kafka message fields dynamically with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-dynamic/
+  - text: Encrypt Kafka message fields selected by schema registry tags with {{site.event_gateway}}
+    url: /event-gateway/encrypt-kafka-message-fields-from-schema/
 
 min_version:
   event-gateway: '1.2'
@@ -72,12 +74,18 @@ rows:
   - use_case: "[Encrypt a message field using a dynamic list of field paths](/event-gateway/policies/encrypt-fields/examples/encrypt-with-dynamic-paths/)"
     description: Encrypt a message field using a dynamic list of field paths
 
+  - use_case: "[Tutorial: Encrypt fields selected by schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/)"
+    description: |
+      Encrypt the fields that carry a `PII` tag in a Confluent Schema Registry, so that encryption follows schema evolution without policy changes.
+
 {% endtable %}
 <!--vale on-->
 
 ## How it works
 
 This policy runs during the [produce phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-produce/) has taken place.
+
+{% include_cached /knep/schema-validation-parent-note.md phase="produce" %}
 
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 

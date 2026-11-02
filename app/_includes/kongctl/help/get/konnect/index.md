@@ -20,6 +20,7 @@ Available Commands:
   event-gateway List or get Konnect Event Gateways
   gateway       Manage Konnect Kong Gateway resources
   me            Get current user information
+  mesh          Manage Kong Mesh control plane resources
   organization  Get current organization information
   pat           List or get Konnect personal access tokens
   portal        List or get Konnect portals

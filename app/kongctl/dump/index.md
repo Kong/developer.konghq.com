@@ -62,6 +62,9 @@ rows:
       [kongctl dump declarative](/kongctl/dump/declarative/)
     description: "Export declarative configuration."
   - command: |
+      [kongctl dump mesh](/kongctl/dump/mesh/)
+    description: "Export resources from a {{site.mesh_product_name}} control plane."
+  - command: |
       [kongctl dump tf-import](/kongctl/dump/tf-import/)
     description: "Export for Terraform import."
 {% endtable %}

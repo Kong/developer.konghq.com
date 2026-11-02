@@ -23,7 +23,7 @@ parent_policy_id: ${policy_id}
 config:
   failure_mode: reject
   encrypt_fields:
-    - paths: '${ context.topic.name.startsWith("public_") ? ["personal.ssn", "personal.name"] : [] }'
+    - paths: '{{ context.topic.name.startsWith("public_") ? ["personal.ssn", "personal.name"] : [] }}'
       encryption_key:
         type: aws
         arn: ${key_id}

@@ -226,8 +226,12 @@
                     "description": "Callout request body customizations.",
                     "properties": {
                       "custom": {
-                        "additionalProperties": true,
-                        "description": "The custom body fields to be added to the callout HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates.",
+                        "additionalProperties": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "string",
+                          "x-referenceable": true
+                        },
+                        "description": "The custom body fields to be added to the callout HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                         "type": "object"
                       },
                       "decode": {
@@ -290,8 +294,12 @@
                     "description": "Callout request header customizations.",
                     "properties": {
                       "custom": {
-                        "additionalProperties": true,
-                        "description": "The custom headers to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates.",
+                        "additionalProperties": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "string",
+                          "x-referenceable": true
+                        },
+                        "description": "The custom headers to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                         "type": "object"
                       },
                       "forward": {
@@ -375,8 +383,12 @@
                     "description": "Callout request query param customizations.",
                     "properties": {
                       "custom": {
-                        "additionalProperties": true,
-                        "description": "The custom query params to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates.",
+                        "additionalProperties": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "string",
+                          "x-referenceable": true
+                        },
+                        "description": "The custom query params to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                         "type": "object"
                       },
                       "forward": {
@@ -450,8 +462,12 @@
               "description": "Callout request body customizations.",
               "properties": {
                 "custom": {
-                  "additionalProperties": true,
-                  "description": "The custom body fields to be added in the upstream request body. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates.",
+                  "additionalProperties": {
+                    "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                    "type": "string",
+                    "x-referenceable": true
+                  },
+                  "description": "The custom body fields to be added in the upstream request body. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                   "type": "object"
                 },
                 "decode": {
@@ -475,8 +491,12 @@
               "description": "Callout request header customizations.",
               "properties": {
                 "custom": {
-                  "additionalProperties": true,
-                  "description": "The custom headers to be added in the upstream HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates.",
+                  "additionalProperties": {
+                    "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                    "type": "string",
+                    "x-referenceable": true
+                  },
+                  "description": "The custom headers to be added in the upstream HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                   "type": "object"
                 },
                 "forward": {
@@ -491,8 +511,12 @@
               "description": "Upstream request query param customizations.",
               "properties": {
                 "custom": {
-                  "additionalProperties": true,
-                  "description": "The custom query params to be added in the upstream HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates.",
+                  "additionalProperties": {
+                    "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                    "type": "string",
+                    "x-referenceable": true
+                  },
+                  "description": "The custom query params to be added in the upstream HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                   "type": "object"
                 },
                 "forward": {

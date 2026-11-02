@@ -9,7 +9,7 @@ requirements:
 
 config:
   allow_when:
-    - "has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
+    - "principal.metadata != null && has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
 
 min_version:
   gateway: '3.16'

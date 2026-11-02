@@ -565,10 +565,11 @@ rows:
       * Read and list Cloud Gateway configurations.
       * Read and list custom domains.
   - role: "`Consumer Admin`"
-    description: "This role grants full write access to administer consumers."
+    description: "This role grants full write access to administer Consumers."
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Consumers.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Consumers this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Read and list Partials.
   - role: "`Creator`"
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
@@ -607,7 +608,7 @@ rows:
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Services
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Services this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Partials.
   - role: "`Key Admin`"
     description: "Full write access to administer keys."
@@ -624,7 +625,7 @@ rows:
     description: "This role grants full write access to administer routes."
     permissions: |
       * List and read control planes.
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Routes this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Routes.
       * Create, read, edit, delete, and list Partials.
   - role: "`Serverless Cluster Admin`"
@@ -660,6 +661,16 @@ rows:
       * Read and list control planes and all configurations within them.
 {% endtable %}
 <!--vale on-->
+
+##### Plugin permissions for scoped roles
+
+Scoped roles, such as Route Admin and Gateway Service Admin, can only manage plugins on the entities they can manage. To create, edit, or delete a plugin, the user or system account needs permission on every entity the plugin is scoped to:
+
+* A Route Admin can configure plugins scoped to the Routes it can manage.
+* A Gateway Service Admin can configure plugins scoped to the Gateway Services it can manage.
+* A plugin scoped to both a Gateway Service and a Route needs permission on both. For example, a user who is Route Admin for the Route and Gateway Service Admin for the Gateway Service can configure it, but a user with only one of those roles can't.
+* Global plugins apply to every entity in a control plane, so only the Plugin Admin, control plane Admin, and control plane Deployer roles can create, edit, or delete them.
+
 
 #### Dashboards
 
@@ -1056,6 +1067,102 @@ rows:
       * List and read reports.
 {% endtable %}
 <!--vale on-->
+
+#### Workspaces
+
+[Workspaces](/gateway/entities/workspace/) let a control plane's `Admin` delegate day-to-day entity management inside a single Workspace without granting access to the rest of the control plane.
+A control plane role, like `Admin`, applies to every Workspace on the control plane, including the `default` Workspace and any created later.
+A Workspace role applies only to the Workspace it's assigned on.
+A user with any role on a control plane can see the names of every Workspace in it, so the Workspace switcher and breadcrumb work even without a role inside them.
+Grants are additive: assigning a Workspace role to a user who already has a control plane role never removes access that control plane role already grants.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Workspace Admin`"
+    description: "Full write access to all entities within a Workspace. Can't rename or delete the Workspace, and can't manage CA certificates."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list entities within the assigned Workspace.
+  - role: "`Workspace Viewer`"
+    description: "Read-only access to all entities within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Read and list entities within the assigned Workspace.
+  - role: "`Workspace Route Admin`"
+    description: "Full write access to Routes, and plugins on those Routes, within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Routes within the assigned Workspace.
+      * Create, read, edit, delete, and list plugins on those Routes.
+  - role: "`Workspace Upstream Admin`"
+    description: "Full write access to Upstreams and their Targets within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Upstreams and Targets within the assigned Workspace.
+  - role: "`Workspace Creator`"
+    description: "Creates and deletes Workspaces on a control plane. The creator becomes the Workspace Admin of any Workspace they create."
+    permissions: |
+      * Create, list, and delete Workspaces on the control plane.
+      * When creating a Workspace, grants the Workspace Admin role on that Workspace.
+  - role: "`CA Certificate Admin`"
+    description: "Full write access to CA certificates on a control plane. CA certificates apply across every Workspace on the control plane, so this role is scoped to the control plane, not a single Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list CA certificates.
+  - role: "`Workspace Gateway Service Admin`"
+    description: "Full write access to administer Gateway Services within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Services within the assigned Workspace.
+  - role: "`Workspace Plugin Admin`"
+    description: "Full write access to administer plugins within a Workspace. Can create plugin instances from an existing custom plugin schema, but can't upload a new one, since custom plugin schemas are uploaded at the control plane level only."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list plugins within the assigned Workspace.
+  - role: "`Workspace Consumer Admin`"
+    description: "Full write access to administer Consumers within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Consumers within the assigned Workspace.
+  - role: "`Workspace Certificate Admin`"
+    description: "Full write access to administer certificates within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list certificates within the assigned Workspace.
+  - role: "`Workspace SNI Admin`"
+    description: "Full write access to administer SNIs within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list SNIs within the assigned Workspace.
+  - role: "`Workspace Vault Admin`"
+    description: "Full write access to administer Vaults within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Vaults within the assigned Workspace.
+  - role: "`Workspace Key Admin`"
+    description: "Full write access to administer keys within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list keys within the assigned Workspace.
+  - role: "`Workspace Deployer`"
+    description: "Full write access to administer the Services, Routes, and plugins needed to deploy services within a Workspace."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Services, Routes, and plugins within the assigned Workspace.
+{% endtable %}
+<!--vale on-->
+
+{:.info}
+> **Note:** Custom plugin schemas are uploaded at the control plane level, into the `default` Workspace, regardless of which Workspace the plugin instance ends up in.
+> `Debug Session Admin` has no Workspace-scoped equivalent, since a debug session acts on the whole data plane rather than a single Workspace.
 
 #### API Products (Classic)
 

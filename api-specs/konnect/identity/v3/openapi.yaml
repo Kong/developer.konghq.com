@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.7.1
+  version: 3.10.0
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -490,6 +490,8 @@ paths:
                 type: object
                 additionalProperties:
                   $ref: '#/components/schemas/LegacyStringFieldFilterWithExists'
+              konnect_managed:
+                $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1796,7 +1798,7 @@ components:
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/IdentityProviderEnabled'
+          $ref: '#/components/schemas/UpdateIdentityProviderEnabled'
         login_path:
           $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
@@ -2053,11 +2055,11 @@ components:
         - $ref: '#/components/schemas/User'
         - type: object
           example:
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
           properties:
-            claim_name:
+            claim_names:
               description: An array of group claim names that gave this user membership to the team.
               type: array
               items:
@@ -2102,6 +2104,8 @@ components:
           format: date-time
           example: '2022-02-07T17:00:00.52Z'
           readOnly: true
+        konnect_managed:
+          $ref: '#/components/schemas/KonnectManaged'
       example:
         id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
         name: IDM - Developers
@@ -2111,6 +2115,7 @@ components:
           env: test
         created_at: '1992-02-07T17:46:57.52Z'
         updated_at: '2022-08-31T17:00:00.52Z'
+        konnect_managed: false
       title: Team
     TeamResponse:
       allOf:
@@ -2124,17 +2129,18 @@ components:
             - labels
             - created_at
             - updated_at
+            - konnect_managed
     UserTeamMembership:
       description: 'A team that a user belongs to, including the group claim that granted the membership.'
       allOf:
         - $ref: '#/components/schemas/TeamResponse'
         - type: object
           example:
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
           properties:
-            claim_name:
+            claim_names:
               description: An array of group claim names that gave this user membership to the team.
               type: array
               items:
@@ -2401,6 +2407,9 @@ components:
         - user_id
         - created_at
         - expires_at
+        - revoked_at
+        - revoked_by
+        - last_used_at
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -2711,7 +2720,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -2760,7 +2768,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -2835,7 +2842,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -2884,7 +2890,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       properties:
@@ -2969,7 +2974,14 @@ components:
         - title
         - instance
         - detail
-      title: Error
+    UpdateIdentityProviderEnabled:
+      description: |
+        Indicates whether the identity provider is enabled.
+        Only one identity provider can be active at a time, such as SAML or OIDC.
+        When omitted, the current value is left unchanged.
+      type: boolean
+      example: true
+      title: Identity Provider Enabled Property
     CursorMetaPage:
       type: object
       properties:
@@ -3073,6 +3085,12 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    KonnectManaged:
+      description: Whether the team's membership is managed by Konnect instead of being synced from an identity provider's team mappings. Set to `false` (default) to let identity provider team mappings keep syncing members into this team. Set to `true` to manage membership directly in Konnect and prevent identity provider team mappings from syncing to this team.
+      type: boolean
+      example: false
+      default: false
+      title: KonnectManaged
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3166,6 +3184,9 @@ components:
         - created_at
         - updated_at
         - expires_at
+        - revoked_at
+        - revoked_by
+        - last_used_at
     KonnectToken:
       description: The Konnect token used to authenticate with Konnect.
       type: string
@@ -3366,6 +3387,7 @@ components:
           service: test
         created_at: '2022-02-07T17:46:57.52Z'
         updated_at: '2022-09-25T13:00:00.00Z'
+        konnect_managed: false
     team-mapping-collection:
       value:
         meta:
@@ -3425,7 +3447,7 @@ components:
             active: true
             created_at: '2022-08-17T17:46:57.52Z'
             updated_at: '2022-10-03T17:00:00.00Z'
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
     user-team-membership-collection-example:
@@ -3444,7 +3466,8 @@ components:
               env: test
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
-            claim_name:
+            konnect_managed: false
+            claim_names:
               - GroupClaimA
               - GroupClaimB
     Get-User-Response:
@@ -3481,12 +3504,14 @@ components:
         labels:
           env: test
           service: test
+        konnect_managed: false
     Update-Team-Request:
       value:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
         labels:
           env: prod
+        konnect_managed: false
     Update-Team-Mappings:
       value:
         mappings:
@@ -3670,6 +3695,9 @@ components:
         created_at: '2023-01-01T00:00:00.000Z'
         updated_at: '2023-01-01T00:00:00.000Z'
         expires_at: '2024-01-01T00:00:00.000Z'
+        last_used_at: '2023-06-01T12:00:00.000Z'
+        revoked_at: null
+        revoked_by: null
     PersonalAccessTokenCreateResponse:
       value:
         id: 83f8380e-7798-4566-99e3-2edf2b57d289
@@ -3680,6 +3708,9 @@ components:
         created_at: '2023-01-01T00:00:00.000Z'
         updated_at: '2023-01-01T00:00:00.000Z'
         expires_at: '2024-01-01T00:00:00.000Z'
+        last_used_at: null
+        revoked_at: null
+        revoked_by: null
     PersonalAccessTokenListResponse:
       summary: List Personal Access Token Response
       value:
@@ -3695,13 +3726,19 @@ components:
             created_at: '2023-01-01T00:00:00.000Z'
             updated_at: '2023-01-01T00:00:00.000Z'
             expires_at: '2024-01-01T00:00:00.000Z'
+            last_used_at: '2023-06-01T12:00:00.000Z'
+            revoked_at: null
+            revoked_by: null
           - id: 84f8380e-7798-4566-99e3-2edf2b57d287
             name: Development Token
-            state: EXPIRED
+            state: REVOKED
             user_id: 84f8380e-7798-4566-99e3-2edf2b57d288
             created_at: '2023-01-01T00:00:00.000Z'
             updated_at: '2023-01-01T00:00:00.000Z'
             expires_at: '2023-02-01T00:00:00.000Z'
+            last_used_at: '2023-01-10T08:30:00.000Z'
+            revoked_at: '2023-01-15T09:00:00.000Z'
+            revoked_by: 84f8380e-7798-4566-99e3-2edf2b57d288
     CreatePersonalAccessTokenRequest:
       value:
         name: Token
@@ -3825,6 +3862,8 @@ components:
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/Labels'
+              konnect_managed:
+                $ref: '#/components/schemas/KonnectManaged'
             required:
               - name
           examples:
@@ -3854,6 +3893,8 @@ components:
                 writeOnly: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              konnect_managed:
+                $ref: '#/components/schemas/KonnectManaged'
           examples:
             Example Request Body:
               $ref: '#/components/examples/Update-Team-Request'
@@ -4393,6 +4434,7 @@ components:
                       env: test
                     created_at: '2022-02-07T17:46:57.52Z'
                     updated_at: '2022-09-25T13:00:00.00Z'
+                    konnect_managed: false
     UserTeamMembershipCollection:
       description: A paginated list response for a collection of teams that a user belongs to.
       content:
@@ -4441,6 +4483,7 @@ components:
                       env: test
                     created_at: '2022-02-07T17:46:57.52Z'
                     updated_at: '2022-09-25T13:00:00.00Z'
+                    konnect_managed: false
     TeamMappingCollection:
       description: A paginated list response for a collection of team mappings.
       content:

@@ -17,7 +17,7 @@
   {
     "@type": "ListItem",
     "position": {{ breadcrumbs_length | plus: 1 }},
-    "name": "{{ page.title | liquify }}",
+    "name": {{ page.title | liquify | jsonify }},
     "item": "{{ site.links.web | append: current_page_url }}"
   }
   ]

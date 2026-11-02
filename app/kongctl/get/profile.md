@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl list profile
+    url: /kongctl/list/profile/
 ---
 
 Get the user profiles.

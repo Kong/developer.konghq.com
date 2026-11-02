@@ -31,7 +31,7 @@ related_resources:
     url: /kongctl/declarative/
   - text: "kongctl and decK"
     url: /kongctl/kongctl-and-deck/
-  - text: "{{site.ai_gateway}} v2 migration guide"
+  - text: "{{site.ai_gateway}} v2 migration guide on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
   - text: "kongctl supported resources"
     url: /kongctl/supported-resources/
@@ -49,7 +49,7 @@ It supports two modes of operation: declarative configuration for managing resou
 > **Note**:
 > kongctl manages {{site.ai_gateway}} on {{site.konnect_product_name}}.
 > decK manages {{site.base_gateway}} entities (Services, Routes, Plugins, and so on) on self-managed deployments.
-> If you're coming from {{site.ai_gateway}} 1.x, which used decK and Gateway plugins, see the [v2 migration guide](/ai-gateway/v2-migration-guide/) for how to move to the kongctl-managed entity model.
+> If you're coming from {{site.ai_gateway}} 1.x, which used decK and Gateway plugins, see the [v2 migration guide on {{site.konnect_short_name}}](/ai-gateway/v2-migration-guide/) for how to move to the kongctl-managed entity model.
 
 {{site.ai_gateway}} resources are regional.
 Make sure your active kongctl profile's `konnect.region` matches the region where your {{site.ai_gateway}} lives (`us`, `eu`, `au`, `me`, `in`, or `sg`).

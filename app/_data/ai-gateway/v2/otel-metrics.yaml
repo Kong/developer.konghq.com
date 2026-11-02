@@ -312,7 +312,7 @@ attributes:
   gen_ai.request.model: Model name targeted by the request.
   gen_ai.response.model: Model name reported by the provider in the response.
   gen_ai.operation.name: "Operation requested, such as `chat` or `embeddings`."
-  gen_ai.token.type: "Token category: `input`, `output`, or `total`."
+  gen_ai.token.type: "Token category: `input`, `output`, `total`, `cached_tokens` (cache reads), `cache_write_tokens` (all cache writes), `cache_write_5m_tokens`, or `cache_write_1h_tokens`."
   kong.gen_ai.request.mode: "Request mode: `oneshot`, `stream`, or `realtime`."
   kong.gen_ai.cache.status: "Cache status: `hit` or empty if not cached."
   kong.gen_ai.vector_db: "Vector database used for caching, such as `redis`."

@@ -17,6 +17,9 @@ body:
   name: "kong-identity-directory"
   description: "Directory for this tutorial"
   allow_all_control_planes: true
+extract_body:
+  - name: 'id'
+    variable: DIRECTORY_ID
 capture:
   - variable: DIRECTORY_ID
     jq: ".id"
