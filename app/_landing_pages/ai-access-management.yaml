@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.ai_gateway}} access management"
   content_type: landing_page
-  description: "Control who can use models and MCP servers in {{site.ai_gateway}} with users, agents, groups, identity providers, Token Vault, and virtual keys."
+  description: "Control who can use models and MCP servers in {{site.ai_gateway}} with users, groups, identity providers, Token Vault, and virtual keys."
   permalink: /ai-access-management/
   products:
     - ai-gateway
@@ -38,11 +38,11 @@ rows:
 
                 - type: unordered_list
                   items:
-                    - Add users and agents that call {{site.ai_gateway}}.
+                    - Add users that call {{site.ai_gateway}}.
                     - Apply rules and spend limits to many callers at once with groups.
                     - Let users sign in with your existing identity provider.
                     - Keep provider credentials out of your apps with Token Vault and virtual keys.
-                    - Track and cap costs by linking users, agents, and keys to a cost center.
+                    - Track and cap costs by linking users and keys to a cost center.
 
   - header:
       type: h2
@@ -64,20 +64,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Agents
-            description: |
-              Identities for software that calls models or MCP servers, including service accounts such as CI jobs.
-            icon: /assets/icons/ai.svg
-            cta:
-              text: Learn about agents
-              url: /ai-access-management/concepts/#agents
-              align: end
-      - blocks:
-        - type: card
-          config:
             title: Groups
             description: |
-              Set rules once for a list of users and agents.
+              Set rules once for a list of users.
             icon: /assets/icons/group.svg
             cta:
               text: Learn about groups
@@ -128,15 +117,11 @@ rows:
           config:
             title: Who can call {{site.ai_gateway}}
             description: |
-              Add users and agents, organize them into groups, and connect an identity provider for sign-in.
+              Add users, organize them into groups, and connect an identity provider for sign-in.
             icon: /assets/icons/team.svg
             ctas:
               - text: Users
                 url: /ai-access-management/concepts/#users
-              - text: Agents
-                url: /ai-access-management/concepts/#agents
-              - text: Users versus agents
-                url: /ai-access-management/concepts/#users-versus-agents
               - text: Identity providers
                 url: /ai-access-management/concepts/#identity-providers
       - blocks:

@@ -18,15 +18,13 @@ tags:
 min_version:
   ai-gateway: '2.3'
 
-description: "Learn what users, agents, groups, identity providers, Token Vault, and virtual keys are in {{site.ai_gateway}} access management, and how they relate to each other."
+description: "Learn what users, groups, identity providers, Token Vault, and virtual keys are in {{site.ai_gateway}} access management, and how they relate to each other."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "Principals"
     url: /identity/principals/
-  - text: "AI Agents"
-    url: /ai-gateway/entities/ai-agent/
   - text: "AI Vaults"
     url: /ai-gateway/entities/ai-vault/
   - text: "AI Consumers"
@@ -85,72 +83,9 @@ You can view all users in one searchable table. Search matches on name, email, c
 
 You can assign users to a team. Teams can't be created manually. They are created when you import an org chart that groups users into teams. Teams can be nested under a parent team.
 
-## Agents
-
-An agent is the identity record for a piece of software that calls [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/). It might act for itself, or on behalf of users.
-
-The agent acts as the caller. Like users, it can:
-
-* Hold [virtual keys](#virtual-keys) and remote credentials.
-* Be linked to a cost center.
-
-Agents in **Access Management** aren't the same thing as an [AI Agent](/ai-gateway/entities/ai-agent/):
-
-* **AI Agents** are the resource you call through {{site.ai_gateway}}.
-* **Agents** in **Access Management** are the identity that calls {{site.ai_gateway}} resources.
-
-{:.warning}
-> Agents can't belong to teams or sign in through an identity provider.
-
-## Users versus agents
-
-Users and agents share the following capabilities:
-
-* Virtual keys
-* Cost center
-* Spend limits
-* Group membership
-
-The following table lists their differences:
-
-{% table %}
-columns:
-  - title: Aspects
-    key: aspect
-  - title: Users
-    key: users
-  - title: Agents
-    key: agents
-rows:
-  - aspect: What it represents
-    users: A person.
-    agents: Software that calls [models](/ai-gateway/entities/ai-model/), [MCP servers](/ai-gateway/entities/ai-mcp-server/), or other agents, including service accounts such as CI jobs.
-  - aspect: How it's created
-    users: Manually, through an org structure import, or through JIT provisioning on first sign-in.
-    agents: From the **Agents** section. Agents aren't included in org structure imports.
-  - aspect: Required fields
-    users: Name and email.
-    agents: Name.
-  - aspect: How it authenticates
-    users: Signs in through an [identity provider](#identity-providers), and calls the gateway with a [virtual key](#virtual-keys).
-    agents: Uses only the credentials it holds, such as virtual keys and remote credentials.
-  - aspect: Org structure
-    users: Can belong to teams, appear on the org chart, and own a team.
-    agents: Not part of teams or the org chart.
-  - aspect: Link to a gateway resource
-    users: Can't be linked to a gateway resource.
-    agents: Can be linked to the [AI Agent](/ai-gateway/entities/ai-agent/) it represents.
-  - aspect: Lifecycle
-    users: Deactivate to stop sign-in and keep history. Imported users can't be deleted, and their name and email are read-only.
-    agents: Deactivate or delete.
-  - aspect: Kong Identity API type
-    users: "`user`"
-    agents: "`agent`"
-{% endtable %}
-
 ## Groups
 
-A group is a list of users and agents that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit in the cost center.
+A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit in the cost center.
 
 Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group, and doesn't have a cost center.
 
@@ -158,7 +93,7 @@ Admins create groups manually. A group has a name, a description, labels, and me
 
 An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. Kong trusts the providers you list and uses them to verify that those tokens are genuine.
 
-Only users sign in through an identity provider. Agents can hold credentials and use [Token Vault](#token-vault), but they can't sign in.
+Users sign in through an identity provider.
 
 When you add an identity provider, you give it a display name and an issuer URL. You can also:
 
@@ -171,7 +106,7 @@ To learn more, see [Token Vault's providers](/identity/token-vault/#providers).
 
 ## Token Vault
 
-Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. When an agent calls on behalf of a user, Token Vault checks that user against a trusted identity provider before releasing credentials.
+Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. When a caller acts on behalf of a user, Token Vault checks that user against a trusted identity provider before releasing credentials.
 
 To set it up:
 
@@ -185,7 +120,7 @@ To learn more, see [Token Vault](/identity/token-vault/).
 
 ## Virtual keys
 
-A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For example, instead of adding an Anthropic API key to an agent, you generate a virtual key for the agent. The agent uses the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
+A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For example, instead of sharing an Anthropic API key with a user, you generate a virtual key for them. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
 
 Use virtual keys to:
 
@@ -195,7 +130,7 @@ Use virtual keys to:
 
 The gateway treats whoever holds the key as the caller.
 
-To create a key, you provide a name and choose a holder: a user or an agent. You can also add a new user or agent inline.
+To create a key, you provide a name and choose a user as the holder. You can also add a new user inline.
 
 You can create a key in two ways:
 
@@ -225,10 +160,6 @@ rows:
     admin: Create, import, edit, deactivate, and delete users. View the org chart.
     manager: No access.
     individual: No access.
-  - area: Agents
-    admin: Create agents directly.
-    manager: Request an agent. The request is sent to the platform team.
-    individual: Request an agent. The request is sent to the platform team.
   - area: Groups
     admin: View all groups. Create, edit, and delete groups. Add or remove members. Export groups as a CSV.
     manager: View the groups they belong to or manage.
