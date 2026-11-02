@@ -79,15 +79,29 @@ Users imported from an org structure file are managed by that file:
 
 You can view all users in one searchable table. Search matches on name, email, cost center, team, and source. You can filter the table by team, source, and status, and show or hide columns such as metadata and labels.
 
+Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the Developer Portal). For imported users, the details show when they were last imported.
+
 ### Teams
 
 You can assign users to a team. Teams can't be created manually. They are created when you import an org chart that groups users into teams. Teams can be nested under a parent team.
+
+### Import an org structure
+
+To add users and teams in bulk, upload your org structure as either:
+* A CSV file
+* A Workday export.
+
+The first upload creates all the people and teams it lists.
+
+Because teams change only through import, upload the file again whenever your org structure changes. Users that the new file no longer lists are deactivated, not deleted.
 
 ## Groups
 
 A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit in the cost center.
 
 Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group, and doesn't have a cost center.
+
+Add users to a group from the group's detail page. You can also add or remove a user from one or more groups from the user's details.
 
 ## Identity providers
 
@@ -99,6 +113,10 @@ When you add an identity provider, you give it a display name and an issuer URL.
 
 * Enable JIT provisioning, so that users are created the first time they sign in. JIT provisioning is separate from Token Vault access.
 * Choose whether Token Vault trusts the provider.
+
+The identity providers list shows each provider's display name, issuer URL, and linked identities.
+
+To stop Token Vault from relying on a provider, remove its trust. To delete a provider you no longer need, delete it from the list.
 
 [Token Vault](#token-vault) needs at least one trusted identity provider to verify callers.
 
