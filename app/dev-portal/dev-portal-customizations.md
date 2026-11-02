@@ -75,7 +75,7 @@ columns:
     key: description
 rows:
   - setting: Theme
-    description: You can choose from default light and dark options. This changes the background and text in your default template. Dark or light theme is not selectable by developers.
+    description: You can choose from default light and dark options. This changes the background and text in your default template. Dark or light theme is not selectable by developers. You can also select a theme that sets a pre-built layout and style for your {{site.dev_portal}}.
   - setting: Brand color
     description: This color is used to set the primary color in the default template.
   - setting: Portal logo
@@ -113,7 +113,7 @@ rows:
 The API specification settings allow you to control how developers can interact with your API specs in your {{site.dev_portal}}. To configure API spec settings, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. In the Portal Editor sidebar, click the code brackets icon.
 
 The following table describes the API spec settings you can configure:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Setting
@@ -126,7 +126,7 @@ rows:
   - setting: Show Try it in Insomnia
     description: Enables users to open the API spec in [Insomnia](/insomnia/) to explore and send requests with the native client.
   - setting: Continuous scroll
-    description: Display the full spec on a single, scrollable page. If disabled, documentation, endpoints, and schemas appear on separate pages.
+    description: Display the full spec on a single page. If disabled, documentation, endpoints, and schemas appear on separate pages.
   - setting: Show schemas
     description: Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints.
   - setting: Hide deprecated endpoints
@@ -134,8 +134,9 @@ rows:
   - setting: Hide internal endpoints
     description: Manage visibility of internal endpoints and models.
   - setting: Allow custom server URL
-    description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client_side only and is not saved.
+    description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
 {% endtable %}
+<!--vale on-->
 
 ## Custom forms
 
@@ -214,7 +215,7 @@ rows:
 If you want to change the from and reply-to email domains, you can configure a different domain through {{site.dev_portal}} settings.
 Navigate to your {{site.dev_portal}}, click **Settings** in the sidebar and click the **Custom domains** tab. Click **New email domain** and configure the settings.
 
-Once you've added your new domain, you must add the CNAME records to your DNS server.
+After you've added your new domain, you must add the CNAME records to your DNS server.
 
 {:.info}
 > Certain domain names are restricted. See [Domain name restrictions](/dev-portal/custom-domains/#domain-name-restrictions) for more information.
