@@ -95,6 +95,6 @@ is completely unrestricted, and no protections are applied.
 
 ## Notes
 
-{{site.base_gateway}} keeps rights to modify the above mentioned allow-lists of environment and modules. Most commonly,
-{{site.base_gateway}} will do additions to the allow-lists, but in case a security vulnerability is found, {{site.base_gateway}} may
+{{site.base_gateway}} keeps rights to modify the supported allowlists of environment and modules.
+Most commonly, {{site.base_gateway}} will do additions to the allowlists, but in case a security vulnerability is found, {{site.base_gateway}} may
 remove some. In such case, {{site.base_gateway}} will notify the user about the change.
