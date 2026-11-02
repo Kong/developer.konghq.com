@@ -87,9 +87,13 @@ You can assign users to a team. Teams can't be created manually. They are create
 
 ### Import an org structure
 
-To add users and teams in bulk, upload your org structure as either:
-* A CSV file
-* A Workday export.
+To add users and teams in bulk, upload your org structure as a CSV file that contains the required columns:
+
+* `external_id`
+* `email`
+* `given_name`: The user's first name.
+* `family_name`
+* `manager_external_id`: Identifies who the user reports to, which the importer uses to build teams.
 
 The first upload creates all the people and teams it lists.
 
@@ -97,9 +101,9 @@ Because teams change only through import, upload the file again whenever your or
 
 ## Groups
 
-A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit in the cost center.
+A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit.
 
-Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group, and doesn't have a cost center.
+Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group.
 
 Add users to a group from the group's detail page. You can also add or remove a user from one or more groups from the user's details.
 
@@ -124,7 +128,7 @@ To learn more, see [Token Vault's providers](/identity/token-vault/#providers).
 
 ## Token Vault
 
-Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. When a caller acts on behalf of a user, Token Vault checks that user against a trusted identity provider before releasing credentials.
+Token Vault stores credentials for third-party services so that {{site.ai_gateway}} can call them on behalf of a caller. When a caller acts on behalf of a user, Token Vault checks that user against a trusted identity provider before releasing credentials.
 
 To set it up:
 
@@ -143,7 +147,7 @@ A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For exam
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user's cost center and spend limits apply to that traffic.
+* **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user spend limits apply to that traffic.
 * **Gain visibility:** The key list shows when each key was last used, so you can delete stale ones.
 
 The gateway treats whoever holds the key as the caller.
