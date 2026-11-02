@@ -138,7 +138,7 @@ To learn more, see [Token Vault](/identity/token-vault/).
 
 ## Virtual keys
 
-A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For example, instead of sharing an Anthropic API key with a user, you generate a virtual key for them. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
+A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For example, for an organization that has one Anthropic API key, and wants to give access to Claude Code through {{site.ai_gateway}}: instead of sharing the real Anthropic API key to all the users, you generate a virtual key for each user. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
 
 Use virtual keys to:
 
