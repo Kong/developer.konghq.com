@@ -143,7 +143,7 @@ A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For exam
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* ** **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user's cost center and spend limits apply to that traffic.
+* **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user's cost center and spend limits apply to that traffic.
 * **Gain visibility:** The key list shows when each key was last used, so you can delete stale ones.
 
 The gateway treats whoever holds the key as the caller.
