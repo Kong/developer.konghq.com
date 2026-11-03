@@ -47,6 +47,12 @@ In contrast to other Policies that use queues, all HTTP Log Policy instances tha
 * [`config.timeout`](/ai-gateway/policies/http-log/reference/#schema--config-timeout)
 * [`config.keepalive`](/ai-gateway/policies/http-log/reference/#schema--config-keepalive)
 
+### Payload logging and memory
+
+When an [AI Model](/ai-gateway/entities/ai-model/) logs request and response payloads, each queue entry contains the full request and response bodies and can reach hundreds of kilobytes or more.
+The default queue limits count entries, not bytes, so size the queue and the data plane before you enable payload logging.
+See [Size memory for AI payload logging](/ai-gateway/performance/ai-payload-logging-memory/).
+
 ## Custom fields by Lua
 
 {% include md/ai-gateway/v2/policies/log-custom-fields-by-lua.md slug="http-log" name="HTTP Log" base_config="http_endpoint: http://my-endpoint:9999/" %}

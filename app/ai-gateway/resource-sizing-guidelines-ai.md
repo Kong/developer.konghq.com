@@ -92,6 +92,10 @@ Compute sizing is dictated by **token processing**, not request count. Memory su
 - Memory must support configuration and in-memory stream buffers
 - A baseline ratio of 1 vCPU : 2 GB memory is sufficient for typical workloads
 
+Payload logging changes this ratio.
+When an AI Model logs request and response bodies through the HTTP Log Policy, the queue can use more memory than the baseline.
+To estimate that memory and bound it with `queue.max_bytes`, see [Size memory for AI payload logging](/ai-gateway/performance/ai-payload-logging-memory/).
+
 ### Use dedicated compute instance classes
 
 Consistent CPU performance is critical for LLM token streaming. Burstable or credit-based instances can introduce token delay spikes and unstable throughput.
