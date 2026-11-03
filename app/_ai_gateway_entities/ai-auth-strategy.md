@@ -60,7 +60,7 @@ faqs:
   - q: Can an AI Agent use an AI Auth Strategy too?
     a: |
       Yes. Reference an AI Auth Strategy by `name` or `id` in the AI Agent's `access.auth_strategies`
-      array, the same field used on AI Models. An AI Agent currently accepts up to one AI Auth Strategy
+      array, the same field used on AI Models. An AI Agent accepts up to one AI Auth Strategy
       reference. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't
       supported; AI Auth Strategies are the only supported way to authenticate AI Agent traffic.
 
@@ -68,7 +68,7 @@ faqs:
     a: |
       Yes, for `conversion-listener`, `listener`, and `passthrough-listener` AI MCP Servers. Reference an AI
       Auth Strategy by `name` or `id` in the AI MCP Server's `access.auth_strategies` array. An AI MCP
-      Server currently accepts up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers
+      Server accepts up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers
       authenticate to their upstream separately, through `config.server.tools_list_auth`, and
       `conversion-only` AI MCP Servers have no `access` field since they never accept incoming MCP traffic
       directly. As with AI Agents, attaching an authentication AI Policy directly to an AI MCP Server's
