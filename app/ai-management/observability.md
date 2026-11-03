@@ -146,8 +146,6 @@ For AI traffic, use one of these data sources:
 * **LLM usage**: metrics include **Costs**, token counts, **LLM latency**, **Time to first token**, **Time per token**, and **Error rate**.
 * **Agentic usage**: metrics include **Request count**, **Active agents**, **MCP latency**, **A2A latency**, **Kong latency**, **Upstream latency**, and **Error rate**.
 
-For the full list of metrics in each data source, see [{{site.konnect_short_name}} Explorer](/observability/explorer/#metrics).
-
 To group or filter AI traffic, use these dimensions:
 
 * In both data sources: **AI gateway**, **AI gateway model**, **AI gateway MCP server**, **AI gateway agent**, **AI gateway consumer**, **AI gateway consumer group**, **Provider**, **Principal**, **Principal group**, and **Status code (grouped)**.
