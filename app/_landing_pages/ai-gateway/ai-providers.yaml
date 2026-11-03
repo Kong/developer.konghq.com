@@ -173,6 +173,27 @@ rows:
             icon: /assets/icons/typesafe.svg
             cta:
               url: /ai-gateway/ai-providers/typesafe/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Meta
+            icon: /assets/icons/metaai.svg
+            cta:
+              url: /ai-gateway/ai-providers/meta/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Fireworks AI
+            icon: /assets/icons/fireworks.svg
+            cta:
+              url: /ai-gateway/ai-providers/fireworks/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Together AI
+            icon: /assets/icons/togetherai.svg
+            cta:
+              url: /ai-gateway/ai-providers/togetherai/
   - columns:
       - blocks:
           - type: structured_text

@@ -1932,3 +1932,363 @@ providers:
     limitations:
       provider_specific: []
       statistics_logging: []
+
+  - name: Meta
+    url_patterns:
+      - 'https://api.meta.ai/v1/{capability_path}'
+    min_version: '2.4'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'muse-spark-1.3'
+        min_version: '2.4'
+        note:
+          content: "Also supports the OpenAI Responses API and the Anthropic Messages API. Models with a `-contributor` suffix let Meta train on your prompts. For self-hosted open-weight Llama models, use the [Llama2 provider](/ai-gateway/ai-providers/llama/) with `upstream_url` instead."
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/audio/transcriptions`'
+        model_example: 'muse-spark-1.3'
+        min_version: '2.4'
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/images/generations` and `/v1/images/edits`'
+        model_example: 'muse-spark-1.3'
+        min_version: '2.4'
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      general:
+        - "The Meta provider targets Meta's hosted Model API. It doesn't proxy self-hosted Llama deployments. Use the Llama2 provider for those."
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Fireworks AI
+    url_patterns:
+      - 'https://api.fireworks.ai/inference/v1/{capability_path}'
+    min_version: '2.4'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/inference/v1/chat/completions`'
+        model_example: 'accounts/fireworks/models/llama-v3p1-70b-instruct'
+        min_version: '2.4'
+        note:
+          content: "Also supports the OpenAI Responses API and the Anthropic Messages API."
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`/inference/v1/completions`'
+        model_example: 'accounts/fireworks/models/llama-v3p1-70b-instruct'
+        min_version: '2.4'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/inference/v1/embeddings`'
+        model_example: 'accounts/fireworks/models/qwen3-embedding-8b'
+        min_version: '2.4'
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: true
+        streaming: false
+        upstream_path: '`/inference/v1/rerank`'
+        model_example: 'accounts/fireworks/models/qwen3-reranker-8b'
+        min_version: '2.4'
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      general:
+        - "Fireworks AI passes upstream errors through unchanged, including errors caused by `max_tokens` truncation."
+      provider_specific: []
+      statistics_logging: []
+
+  - name: Together AI
+    url_patterns:
+      - 'https://api.together.xyz/v1/{capability_path}'
+    min_version: '2.4'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
+        min_version: '2.4'
+      completions:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/completions`'
+        model_example: 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
+        min_version: '2.4'
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/embeddings`'
+        model_example: 'BAAI/bge-base-en-v1.5'
+        min_version: '2.4'
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: BytePlus ModelArk
+    url_patterns:
+      - 'https://ark.{region}.bytepluses.com/api/v3/{capability_path}'
+    min_version: '2.4'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/api/v3/chat/completions`'
+        model_example: 'seed-1-6-250615'
+        min_version: '2.4'
+        note:
+          content: "Also supports the OpenAI Responses API and Messages. Set the target `name` to a ModelArk model ID or an inference endpoint ID, for example `ep-20250101000000-abcde`."
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: true
+        streaming: false
+        upstream_path: '`/api/v3/embeddings`'
+        model_example: 'doubao-embedding-text-240715'
+        min_version: '2.4'
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: true
+        streaming: false
+        upstream_path: '`/api/v3/images/generations`'
+        model_example: 'seedream-4-0-250828'
+        min_version: '2.4'
+      video:
+        supported: true
+        streaming: false
+        upstream_path: '`/api/v3/contents/generations/tasks`'
+        model_example: 'seedance-1-0-pro-250528'
+        min_version: '2.4'
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
