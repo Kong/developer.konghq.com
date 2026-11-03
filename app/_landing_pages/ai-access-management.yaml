@@ -64,7 +64,7 @@ rows:
           config:
             title: Groups
             description: |
-              Set rules once for a list of users.
+              Set rules once for a collection of users.
             icon: /assets/icons/group.svg
             cta:
               text: Learn about groups
@@ -119,6 +119,8 @@ rows:
             ctas:
               - text: Users
                 url: /ai-access-management/concepts/#users
+              - text: Groups
+                url: /ai-access-management/concepts/#groups
               - text: Identity providers
                 url: /ai-access-management/concepts/#identity-providers
       - blocks:
