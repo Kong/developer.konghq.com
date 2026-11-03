@@ -40,8 +40,8 @@ It doesn't change responses that come from an upstream LLM provider, an AI Agent
 ## Function syntax
 
 Define the transformation in [`config.functions`](/ai-gateway/policies/exit-transformer/reference/#schema--config-functions).
-Each entry is a string of Lua code that returns a function with three arguments: `status`, `body`, and `headers`.
-The function returns the status, body, and headers that {{site.ai_gateway}} sends to the client:
+Each entry is a string of Lua code that returns a function accepting `status`, `body`, and `headers` as parameters.
+The return values become the response {{site.ai_gateway}} sends to the client:
 
 ```lua
 return function(status, body, headers)
@@ -87,8 +87,9 @@ formats:
 By default, the Policy transforms responses that {{site.ai_gateway}} generates after it matches a request to an entity.
 To also transform responses for requests that match no route, enable [`config.handle_unknown`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unknown).
 
-The `handle_unknown` parameter only works on a globally configured Policy.
-If you attach the Policy to an entity, such as an AI Model, {{site.ai_gateway}} doesn't transform responses for unmatched routes.
+{:.warning}
+> **Caution**: The `handle_unknown` parameter only works on a globally configured Policy.
+> If you attach the Policy to an entity, such as an AI Model, {{site.ai_gateway}} doesn't transform responses for unmatched routes.
 
 The following example replaces the default `404` response with a custom message:
 
