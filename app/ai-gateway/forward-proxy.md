@@ -164,7 +164,7 @@ You can use [Squid](https://www.squid-cache.org/) to create a simple forward pro
 Squid runs as its own Docker container, separate from the {{site.ai_gateway}} data plane container. In the following examples, the data plane reaches Squid through `host.docker.internal`, the special hostname that Docker Desktop and OrbStack resolve to the host machine from inside any container. This works because the following compose file publishes Squid's port to the host, so any container (including the {{site.ai_gateway}} data plane, which runs in its own separate Docker network) can reach it via the host machine, without needing to share a Docker network or edit your machine's hosts file.
 
 {:.warning}
-> In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this. set `auth_username` and `auth_password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
+> In a production deployment your forward proxy should authenticate users, including {{site.ai_gateway}}.  To do this, set `auth.username` and `auth.password`. You can reference secrets from an [AI Vault](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets).
 
 1. Create a minimal config file for Squid:
 
