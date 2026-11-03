@@ -189,7 +189,7 @@ rows:
           - type: card
             config:
               title: "{{site.observability}}"
-              description: "Analyze traffic, latency, errors, and cost for models, MCP servers, and agents in Explorer."
+              description: "Monitor traffic, latency, errors, and cost for models, MCP servers, and agents."
               icon: /assets/icons/monitor.svg
               cta:
                 text: Observability in AI Management

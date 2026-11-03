@@ -12,12 +12,14 @@ works_on:
 tags:
   - ai
   - analytics
-description: "Use Explorer in AI Management to analyze traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents."
+description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents in AI Management."
 related_resources:
   - text: AI Management
     url: /ai-management/
   - text: "{{site.konnect_short_name}} Explorer"
     url: /observability/explorer/
+  - text: Custom Dashboards reference
+    url: /observability/custom-dashboards-reference/
   - text: "Analytics and debugging in {{site.ai_cost_management}}"
     url: /ai-cost-management/analytics-and-debugging/
   - text: AI Management roles and permissions
@@ -31,7 +33,26 @@ related_resources:
 ---
 
 Observability in [AI Management](/ai-management/) shows the traffic that passes through {{site.ai_gateway}}: calls to [models](/ai-gateway/entities/ai-model/), [MCP servers](/ai-gateway/entities/ai-mcp-server/), and [agents](/ai-gateway/entities/ai-agent/).
-In the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Explorer**.
+In the {{site.konnect_short_name}} sidebar, click **Observability** to open these pages:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Page
+    key: page
+  - title: Use it to
+    key: use
+rows:
+  - page: "[**Overview**](#overview)"
+    use: "Check the health and cost of all AI traffic for a time range."
+  - page: "[**Dashboards**](#dashboards)"
+    use: "Build and share your own dashboards from AI Gateway metrics."
+  - page: "[**Explorer**](#explorer)"
+    use: "Answer one specific question with a custom query."
+  - page: "[**Logs**](#logs)"
+    use: "Read and search the data plane logs of your gateways."
+{% endtable %}
+<!-- vale on -->
 
 ## Who can see what
 
@@ -40,6 +61,50 @@ What you see depends on your [AI Management role](/ai-management/roles-and-permi
 * Org Admins see data for the whole organization.
 * Team Managers see data for their teams.
 * Individual Users see their own usage.
+
+## Overview
+
+Overview is a prebuilt dashboard for all AI traffic.
+Use the filters at the top to narrow it to providers, models, or agents, and the time range menu to change the period.
+The default period is the last 7 days.
+
+The page has the following sections. Click a section name at the top of the page to jump to it.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Section
+    key: section
+  - title: What it shows
+    key: shows
+rows:
+  - section: "**Key metrics**"
+    shows: "LLM latency (p95), request count, total and cached token counts, error rate, and costs. Each tile compares the value with the previous period."
+  - section: "**Top consumers**"
+    shows: "The models, providers, users, and MCP servers with the most requests."
+  - section: "**Performance**"
+    shows: "Total requests, LLM latency, error rate, tokens per minute, time to first token (TTFT), and time per output token (TPOT) over time."
+  - section: "**Costs**"
+    shows: "Total costs compared with request count, and cost by model."
+  - section: "**Models**"
+    shows: "Model usage by user, error rate per model, and latency per model."
+  - section: "**MCP**"
+    shows: "MCP method calls by model, and failing method calls."
+{% endtable %}
+<!-- vale on -->
+
+TTFT is the time from sending a request to receiving the first token of the response.
+TPOT is the average time to generate each token after the first.
+
+## Dashboards
+
+Dashboards are the same [Custom Dashboards](/custom-dashboards/) that you use for API traffic, with {{site.ai_gateway}} metrics.
+Click **Manage dashboards** to see the dashboards in your organization.
+To add one, click **Create dashboard**, then create it from a template, from scratch, or from a JSON definition.
+
+The **AI gateway dashboard**, **{{site.ai_gateway}} 2 dashboard**, and **Agentic analytics dashboard** templates are built for AI traffic.
+For tiles, filters, sharing, and automation, see the [Custom Dashboards reference](/observability/custom-dashboards-reference/).
+For a walkthrough, see [Create a dashboard from a template](/how-to/create-custom-dashboards/).
 
 ## Explorer
 
@@ -157,6 +222,16 @@ rows:
     by: "**AI gateway model** or **Provider**"
 {% endtable %}
 <!-- vale on -->
+
+## Logs
+
+Logs lists the data plane logs of your gateways, newest first.
+Each row is one log entry, not a conversation.
+
+* Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
+* Use the **Filter** panel to narrow the entries by log level, service, or control plane.
+* The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
+* Click an entry to open its details: a summary, its attributes, and the full message.
 
 ## Explorer and {{site.ai_cost_management}}
 
