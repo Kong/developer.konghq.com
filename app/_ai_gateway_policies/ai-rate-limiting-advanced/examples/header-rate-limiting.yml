@@ -1,0 +1,38 @@
+title: Enable rate limiting for a header
+description: Protect your LLM services with header rate limiting.
+extended_description: |
+  Protect your LLM services with header rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+
+  In this example, we're rate limiting based on a specific header value. The header name is specified in the [`config.policies.match.key`](/ai-gateway/policies/ai-rate-limiting-advanced/reference/#schema--config-policies-match-key) field, and the values in [`config.policies.match.value`](/ai-gateway/policies/ai-rate-limiting-advanced/reference/#schema--config-policies-match-values).
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: header-rate-limiting
+display_name: Rate limiting for a header
+type: ai-rate-limiting-advanced
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+variables:
+  header_name:
+    value: $HEADER_NAME
+    description: The name of the header.
+  header_value:
+    value: $HEADER_VALUE
+    description: The value of the header to rate limit.
+config:
+  policies:
+  - match:
+    - type: header
+      key: ${header_name}
+      values:
+      - ${header_value}
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl

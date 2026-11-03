@@ -1,0 +1,31 @@
+title: Enable LLM model rate limiting
+description: Protect your LLM services with model rate limiting.
+extended_description: |
+  Protect your LLM services with model rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses GPT 5.1, but you can apply the same strategies to any LLM model.
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: llm-model-rate-limiting
+display_name: LLM model rate limiting
+type: ai-rate-limiting-advanced
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+config:
+  policies:
+  - match:
+    - type: model
+      partition_by: true
+      values:
+      - gpt-5.1
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl

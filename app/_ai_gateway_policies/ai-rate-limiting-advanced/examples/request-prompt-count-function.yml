@@ -1,0 +1,42 @@
+title: Request prompt function
+description: Protect your LLM services by rate limiting requests based on a custom token.
+extended_description: |
+  Protect your LLM services with rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses request prompt rate limiting, which lets you rate limit requests based on a custom token.
+weight: 900
+name: request-prompt-count-function
+display_name: Request prompt function
+type: ai-rate-limiting-advanced
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+- A [Redis](https://redis.io/docs/latest/) instance.
+- Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}.
+config:
+  strategy: redis
+  redis:
+    host: host.docker.internal
+    port: 16379
+  sync_rate: 0
+  policies:
+  - match:
+    - type: provider
+      partition_by: true
+      values:
+      - cohere
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+  request_prompt_count_function: |
+    local header_count = tonumber(kong.request.get_header("x-prompt-count"))
+    if header_count then
+      return header_count
+    end
+    return 0
+tools:
+- konnect-api
+- terraform
+- kongctl

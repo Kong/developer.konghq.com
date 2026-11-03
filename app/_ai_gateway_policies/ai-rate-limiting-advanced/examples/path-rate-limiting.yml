@@ -1,0 +1,28 @@
+title: Enable rate limiting for a path
+description: Protect your LLM services with path rate limiting.
+extended_description: |
+  Protect your LLM services with path rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: path-rate-limiting
+display_name: Rate limiting for a path
+type: ai-rate-limiting-advanced
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+config:
+  policies:
+  - match:
+    - type: path
+      values:
+      - /v1/chat
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl
