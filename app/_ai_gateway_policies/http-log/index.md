@@ -16,7 +16,7 @@ related_resources:
 faqs:
   - q: When does the HTTP Log Policy record log entries in a request/response timeline?
     a: The log is executed after {{site.ai_gateway}} sends the last response byte to the client.
-  - q: Can the HTTP Log Policy expose latency metrics for individual phases of the request lifecycle (such as `rewrite`, `access`, `header_filter`, and `body_filter`)?
+  - q: Can the HTTP Log Policy expose latency metrics for individual phases of the request lifecycle (for example, `rewrite`, `access`, `header_filter`, and `body_filter`)?
     a: The HTTP Log Policy doesn't provide latency metrics at this granular level. Instead, use [{{site.konnect_short_name}} Debugger](/observability/debugger/).
 ---
 
