@@ -16,6 +16,7 @@ works_on:
 
 tools:
   - konnect-api
+  - kongctl
 
 min_version:
   ai-gateway: '2.0'
@@ -176,8 +177,13 @@ The following rules apply when you change the value:
 If you don't specify a minimum when you create a control plane, the control plane uses the latest generally available version.
 If you update a control plane without specifying a minimum, the value stays unchanged.
 
-The following request raises the minimum supported data plane version to `2.3` by sending only `min_runtime_version` to the [`/v1/ai-gateways/{gatewayId}` endpoint](/api/konnect/ai-gateway/#/operations/patch-ai-gateway):
+The following examples raise the minimum supported data plane version to `2.3` by setting only `min_runtime_version`.
+The API request uses the [`/v1/ai-gateways/{gatewayId}` endpoint](/api/konnect/ai-gateway/#/operations/patch-ai-gateway):
 
+The kongctl examples require kongctl 1.23.0 or later.
+
+{% navtabs "raise-minimum" %}
+{% navtab "Konnect API" %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID
@@ -190,9 +196,21 @@ body:
   min_runtime_version: '2.3'
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "kongctl" %}
+```yaml
+ai_gateways:
+  - ref: my-ai-gateway
+    display_name: My AI Gateway
+    min_runtime_version: '2.3'
+```
+{% endnavtab %}
+{% endnavtabs %}
 
-To keep control of when the minimum changes, send `runtime_auto_upgrade` set to `false` in the same endpoint:
+To keep control of when the minimum changes, set `runtime_auto_upgrade` to `false`:
 
+{% navtabs "disable-auto-raise" %}
+{% navtab "Konnect API" %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID
@@ -205,6 +223,16 @@ body:
   runtime_auto_upgrade: false
 {% endkonnect_api_request %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "kongctl" %}
+```yaml
+ai_gateways:
+  - ref: my-ai-gateway
+    display_name: My AI Gateway
+    runtime_auto_upgrade: false
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Automatically raise the minimum supported version
 
@@ -221,7 +249,6 @@ Automatic raising behaves as follows:
 * Automatic raising only increases the minimum and never lowers it.
 * Automatic raising can replace a minimum you set manually.
 * If no data planes are connected, the minimum doesn't change.
-* Patch upgrades don't change the minimum, because it uses the `major.minor` format.
 
 If you don't want to update the minimum after every upgrade, leave automatic raising enabled.
 The minimum follows your fleet, so new features become available once all of your data planes run the newer version.
