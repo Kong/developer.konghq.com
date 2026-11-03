@@ -1,0 +1,7 @@
+title: Config is a list
+name: pii-sanitizer
+display_name: PII Sanitizer
+type: ai-sanitizer
+config:
+  - one
+  - two

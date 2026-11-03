@@ -1,0 +1,7 @@
+title: Valid
+name: pii-sanitizer
+display_name: PII Sanitizer
+type: ai-sanitizer
+config:
+  rejection_mode: return_error
+  port: 8080

@@ -1,0 +1,6 @@
+title: No schema
+name: orphan
+display_name: Orphan
+type: ai-no-schema
+config:
+  anything: goes

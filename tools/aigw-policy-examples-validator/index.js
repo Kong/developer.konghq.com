@@ -1,6 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
+import { glob } from "tinyglobby";
+import YAML from "yaml";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -145,4 +149,143 @@ export function replaceVariables(obj, fieldSchema) {
     return result;
   }
   return obj;
+}
+
+function folderSlug(filePath) {
+  const segments = filePath.split(/[\\/]/);
+  const examplesIndex = segments.lastIndexOf("examples");
+  return segments[examplesIndex - 1];
+}
+
+function compiledConfigSchema(slug, schemaPath, ajv, compiled) {
+  if (!compiled.has(slug)) {
+    const schema = JSON.parse(fs.readFileSync(schemaPath, "utf-8"));
+    const configSchema = schema.properties && schema.properties.config;
+    if (!configSchema) {
+      compiled.set(slug, {
+        error: {
+          instancePath: "/config",
+          message: `The schema for "${slug}" has no properties.config to validate examples against`,
+        },
+      });
+    } else {
+      closeObjectSchemas(configSchema, findAllOfMembers(configSchema));
+      compiled.set(slug, { configSchema, validateFn: ajv.compile(configSchema) });
+    }
+  }
+  return compiled.get(slug);
+}
+
+// Every key except `config` is documentation metadata. The returned findings
+// follow the shared output shape: one `{ file, errors }` entry per failing
+// file, each error carrying an `instancePath` into the config.
+export function validateFile(filePath, { schemaMap, ajv, compiled, root }) {
+  const file = filePath;
+  const fullPath = root ? path.resolve(root, filePath) : filePath;
+  let parsed;
+  try {
+    parsed = YAML.parse(fs.readFileSync(fullPath, "utf-8"), {
+      uniqueKeys: false,
+    });
+  } catch (e) {
+    return [
+      {
+        file,
+        errors: [{ instancePath: "/", message: `YAML parse error: ${e.message}` }],
+      },
+    ];
+  }
+
+  if (!parsed) return [];
+
+  const slug = folderSlug(filePath);
+  const errors = [];
+
+  if (parsed.type !== slug) {
+    errors.push({
+      instancePath: "/type",
+      message: `type "${parsed.type}" does not match its policy folder "${slug}"`,
+    });
+  }
+
+  const resolved = schemaForFolder(schemaMap, slug);
+  if (resolved.findings) {
+    errors.push(...resolved.findings);
+    return [{ file, errors }];
+  }
+
+  const entry = compiledConfigSchema(
+    slug,
+    resolved.schemaPath,
+    ajv,
+    compiled,
+  );
+  if (entry.error) {
+    errors.push(entry.error);
+    return [{ file, errors }];
+  }
+
+  if (parsed.config === undefined) {
+    if (errors.length > 0) return [{ file, errors }];
+    return [];
+  }
+  if (typeof parsed.config !== "object" || Array.isArray(parsed.config)) {
+    errors.push({
+      instancePath: "/config",
+      message: "config must be an object",
+    });
+    return [{ file, errors }];
+  }
+
+  const config = replaceVariables(parsed.config, entry.configSchema);
+  if (!entry.validateFn(config)) {
+    errors.push(...entry.validateFn.errors);
+  }
+
+  return errors.length > 0 ? [{ file, errors }] : [];
+}
+
+export async function run(argv = []) {
+  const rootIndex = argv.indexOf("--root");
+  const root =
+    rootIndex === -1 ? ROOT : path.resolve(argv[rootIndex + 1]);
+
+  const schemaMap = buildSchemaMap(
+    path.join(root, "app/_schemas/ai-gateway/policies"),
+  );
+  const exampleFiles = await glob(EXAMPLES_GLOB, { cwd: root });
+  console.log(`Found ${exampleFiles.length} example files`);
+
+  const ajv = new Ajv({ allErrors: true, strict: false });
+  addFormats(ajv);
+  const compiled = new Map();
+
+  const findings = [];
+  for (const filePath of exampleFiles) {
+    findings.push(...validateFile(filePath, { schemaMap, ajv, compiled, root }));
+  }
+
+  console.log(`Errors: ${findings.length}\n`);
+  if (findings.length > 0) {
+    for (const { file, errors } of findings) {
+      console.log(`--- ${file} ---`);
+      for (const error of errors) {
+        console.log(`  ${error.instancePath || "/"}: ${error.message}`);
+        if (error.params) {
+          console.log(`    ${JSON.stringify(error.params)}`);
+        }
+      }
+      console.log();
+    }
+    return 1;
+  }
+
+  console.log("All AI Gateway policy examples are valid.");
+  return 0;
+}
+
+const invokedDirectly =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  run(process.argv.slice(2)).then((code) => process.exit(code));
 }
