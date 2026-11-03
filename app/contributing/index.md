@@ -714,7 +714,7 @@ Use it for large diagrams that are hard to read at column width.
 
 ### Diagram
 
-Displays a Mermaid.js diagram on a landing page.
+Displays a Mermaid diagram, rendered in the browser by Pele.
 
 To show an image inside a diagram label, use an `fa:fa-<name>` icon token where `<name>` is the path of an SVG file under `app/assets/icons/` or `app/assets/logos/`, without the `.svg` extension. For example, `fa:fa-gateway` renders `app/assets/icons/gateway.svg`. Don't use `<img>` tags or image URLs in labels; the diagram renderer only resolves these icon tokens.
 
