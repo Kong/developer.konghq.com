@@ -104,6 +104,7 @@ Click **Manage dashboards** to see the dashboards in your organization.
 To add one, click **Create dashboard**, then create it from a template, from scratch, or from a JSON definition.
 
 The **AI gateway dashboard**, **{{site.ai_gateway}} 2 dashboard**, and **Agentic analytics dashboard** templates are built for AI traffic.
+To see cost next to latency or TTFT, add a tile for each metric to the same dashboard.
 For tiles, filters, sharing, and automation, see the [Custom Dashboards reference](/observability/custom-dashboards-reference/).
 For a walkthrough, see [Create a dashboard from a template](/how-to/create-custom-dashboards/).
 
@@ -216,6 +217,11 @@ rows:
     show: "Timeseries line"
     with: "Error rate"
     by: "**AI gateway MCP server**, **AI gateway agent**, or **MCP error**"
+  - question: "Which MCP server is slow?"
+    from: "Agentic usage"
+    show: "Timeseries line"
+    with: "**MCP latency (p95)**"
+    by: "**AI gateway MCP server**"
   - question: "Which models or providers cost the most?"
     from: "LLM usage"
     show: "Top list or Timeseries bar"
@@ -237,6 +243,7 @@ Logs lists the logs of your gateways and their control planes, newest first.
 
 {{site.ai_cost_management}} has its own [Explorer](/ai-cost-management/analytics-and-debugging/#explorer) for spend, with budgets, users, teams, and cost tags.
 Use the Observability Explorer for traffic, latency, and errors, and for cost by model or provider.
+Spend limits are set with [budgets](/ai-cost-management/budgets/) in {{site.ai_cost_management}}.
 
 ## Data retention
 
