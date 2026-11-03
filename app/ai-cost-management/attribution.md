@@ -31,18 +31,20 @@ api_specs:
 faqs:
   - q: Why is the subject absent on a usage event?
     a: |
-      No usable identity was present on the request.
+      A usage event has no subject when the request carried no usable identity.
       Check that an auth strategy is attached to the model and that the token or credential is valid for the strategy's type.
   - q: Why are groups absent or incomplete on a usage event?
     a: |
-      Groups come from JWT claims and Kong Identity group memberships, not from `ai-cost-` headers.
+      Groups on a usage event come from the request's {{site.identity}} group memberships, gateway consumer groups, and JWT claims, not from `ai-cost-` headers.
       For OIDC attribution, check that the token includes `group` or `groups` claims.
-      For principal attribution, check that the principal has the expected group memberships in Kong Identity.
+      For principal attribution, check that the principal has the expected group memberships in {{site.identity}}.
   - q: Why is a tag missing from a usage event?
     a: |
-      Check that the header name is exactly `ai-cost-` followed by a valid key, that the value is between 1 and 256 characters and contains no control characters, and that the header reached the gateway.
-      The gateway drops tags with empty or overlong values silently.
-      If you sent a header more than once in the same request, the tag is also dropped.
+      A tag could be missing from a usage event when its header doesn't meet the tag rules.
+      Check that the header name is exactly `ai-cost-` followed by a valid key, that the value is between 1 and 256 characters and contains no control characters, and that the gateway received the header.
+      
+      The gateway drops tags with empty or overlong values without an error.
+      If you sent a header more than once in the same request, the gateway also drops the tag.
   - q: Why does cost show $0 on a usage event?
     a: |
       A zero cost means the model had no price configured when the request ran.
@@ -63,7 +65,7 @@ related_resources:
 When AI requests run through your {{site.ai_gateway}}, you need to know where they came from.
 Attribution connects each request to an identity and context.
 
-With attribution in place, you can use the data in the following ways:
+When attribution is in place, you can use the data in the following ways:
 * The **cost management dashboard** breaks spend down by user, group, team, or tag so you can see where costs are concentrated.
 * The **events explorer** lets you filter and compare any of those dimensions over time.
 * **Budget limits** can target a specific user, group, or tag value, so you can enforce spend caps at whatever scope matters to your organization.
@@ -72,9 +74,10 @@ With attribution in place, you can use the data in the following ways:
 
 Attribution works in two tracks as each request passes through the gateway: identity resolution and tag capture.
 
-* **Identity resolution**: The gateway evaluates the token or credential against the auth strategy attached to the model and resolves a subject. Group and team membership follows from that subject automatically.
+* **Identity resolution**: The gateway evaluates the token or credential against the auth strategy attached to the model and resolves a subject.
+  Group and team membership follows from that subject automatically.
 * **Tag capture**: The gateway reads the request headers and records them as tags on the usage event.
-Headers prefixed with `ai-cost-` are captured automatically: the part after the prefix becomes the tag key, with no configuration needed.
+  The gateway captures headers prefixed with `ai-cost-` without configuration: the part after the prefix becomes the tag key.
 
 ## Subject
 
@@ -86,10 +89,10 @@ The subject is the primary identity attributed to a usage event.
 1. A valid [AI Consumer](/ai-gateway/entities/ai-consumer/) UUID is on the request.
 1. The auth strategy type is `openid-connect-credential-claim` and the token has a `sub` claim.
    The `sub` is the raw value from the token's `sub` claim, between 1 and 255 characters with no line break.
-1. No usable identity value present. The event is unattributed.
 
-When no usable identity is present on the request, the event has no subject and is considered unattributed.
-Unattributed events still appear in totals and are matchable by group, tag, and model, but they show as **Unattributed** in the Dashboard and Events debugger.
+When none of these applies, the event has no subject and is unattributed.
+Unattributed events still appear in totals, and you can still match them by group, tag, and model.
+In the dashboard and the events view, they show as **Unattributed**.
 
 ## Groups and teams
 
@@ -97,7 +100,7 @@ Groups and teams record the organizational context of the request's principal.
 
 {:.info}
 > Groups and teams don't come from tag headers.
-> Sending a header named `ai-cost-groups` or similar doesn't populate these fields.
+> Sending a header such as `ai-cost-groups` doesn't populate these fields.
 
 ### Groups
 
@@ -131,19 +134,22 @@ The `ai-cost-` headers follow these rules:
 - **Key:** Lowercase ASCII letters, digits, `.`, `_`, and `-`, between 1 and 128 characters.
 - **Value:** Between 1 and 256 characters, no control characters, case-sensitive.
 - Header names arrive in lowercase, so `ai-cost-Project` and `ai-cost-project` are the same header.
-- Each `ai-cost-` header must appear once per request. A duplicate header drops that tag, even when both values are equal.
-- Empty values are skipped.
-- A single event holds at most 64 tags. A request that exceeds this limit has all its tags dropped.
+- Each `ai-cost-` header must appear once per request.
+  The gateway drops the tag when a header is duplicated, even when both values are equal.
+- The gateway drops tags with empty values.
+- A single event holds at most 64 tags.
+  When a request exceeds this limit, the gateway drops all of its tags.
 - Don't put PII in a tag, for example a name, email, or username.
-User identity comes from the auth strategy on the model.
+  User identity comes from the auth strategy on the model.
 
-Some tools send native headers that the gateway maps to standard tag keys automatically, without needing `ai-cost-` prefix headers.
-See the [integrations catalog](/ai-cost-management/integrations/) for details.
+Some tools send native headers that the gateway maps to standard tag keys automatically, so you don't need `ai-cost-` headers.
+See [Attribution integrations](/ai-cost-management/integrations/) for the supported tools and the tags each one sends.
 
 ### Standard tag keys
 
 The following standard tag keys define a shared vocabulary for common dimensions.
-Any key works in a tag. These are conventional names so that tags from different tools and teams align.
+A tag can use any valid key.
+These conventional names help tags from different tools and teams align.
 
 <!--vale off-->
 {% table %}
@@ -270,8 +276,6 @@ A custom key follows the same [rules](#tag-and-header-rules) as any other tag ke
 
 To avoid conflicts with future standard keys, prefix custom keys with a namespace, for example `acme-cost-center-` or `internal-team-`.
 
-Some tools send their own attribution context through native headers that {{site.ai_gateway}} translates automatically into tag keys.
-See the [integrations catalog](/ai-cost-management/integrations/) for the full list of supported tools and what tags each one sends.
 
 ## Set up attribution
 
@@ -280,9 +284,7 @@ Attribution has two independent parts: the subject on each event and the tags.
 ### Set up subject attribution
 
 Identity attribution comes from the [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) on the AI Model.
-{{site.ai_gateway}} evaluates it on each request and resolves the subject automatically.
-
-Each request to that model is attributed to the authenticated subject automatically.
+{{site.ai_gateway}} evaluates the strategy on each request and attributes the request to the authenticated subject, so no further configuration is needed.
 
 ### Set up header-based attribution
 
