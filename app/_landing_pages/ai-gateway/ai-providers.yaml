@@ -86,6 +86,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: OpenAI-compatible and Anthropic-compatible
+            icon: /assets/icons/openai.svg
+            cta:
+              url: /ai-gateway/ai-providers/openai-anthropic-compatible/
+      - blocks:
+        - type: icon_card
+          config:
             title: Cohere
             icon: /assets/icons/cohere.svg
             cta:
