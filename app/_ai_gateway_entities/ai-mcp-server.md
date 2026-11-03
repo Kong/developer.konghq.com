@@ -530,7 +530,7 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 * **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
 * **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
-This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+This applies to the AI MCP Server modes that make requests to an upstream service. {% new_in 2.4 %} In 2.4 and later, `aws` upstream authentication is supported on `passthrough-listener`, `upstream-server`, `conversion-listener`, and `conversion-only`. In earlier versions, only `passthrough-listener` supports it. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
 
 ### AWS IAM (SigV4)
 
@@ -542,7 +542,50 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 * Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables
 * Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
 
-Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers it from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+
+{% new_in 2.4 %}
+
+<!-- TODO(AI-225 OQ3): confirm where the validation that rejects `auth` on unsupported MCP Server types or runtime versions lives (API layer or Data Plane) and adjust this wording. -->
+Upstream authentication is independent of client-side `access.auth_strategies`. For example, clients can authenticate to {{site.ai_gateway}} with OpenID Connect while {{site.ai_gateway}} signs requests to the upstream with SigV4. Setting `auth` on an AI MCP Server type or runtime version that doesn't support it is rejected at validation. It is never silently ignored.
+
+Signing happens after {{site.ai_gateway}} evaluates the client-side auth strategy. The SigV4 `Authorization` header replaces any `Authorization` header that the client forwards.
+
+### Requests signed by each mode {% new_in 2.4 %}
+
+The requests that {{site.ai_gateway}} signs depend on the AI MCP Server mode:
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: Signed requests
+    key: signed
+rows:
+  - mode: "`passthrough-listener`"
+    signed: "Every MCP request proxied to `config.url`."
+  - mode: "`upstream-server`"
+    signed: "Every request {{site.ai_gateway}} makes to the upstream MCP server, including the requests used to populate the tools cache."
+  - mode: "`conversion-listener`, `conversion-only`"
+    signed: "Each HTTP request produced by converting a tool call, after the tool's `method`, `path`, `headers`, `query`, and `request_body` are applied. If a tool's `host` or `scheme` overrides `config.url`, the request is signed against the overridden host."
+{% endtable %}
+
+A single `config.upstream.auth` block applies to all tools of the AI MCP Server. Per-tool `upstream.auth` overrides aren't supported.
+<!-- TODO(AI-225 OQ4): per-tool upstream.auth override is out of scope for 2.4. Confirm with the API team that no per-tool override is planned. -->
+
+### Service and region inference {% new_in 2.4 %}
+
+<!-- TODO(AI-225 OQ2): confirm the runtime infers service and region from the signed request host on all four upstream-making types. -->
+{{site.ai_gateway}} infers the AWS service name and region for the SigV4 signature from the host of the signed request. For example, the host `abc123.execute-api.us-east-1.amazonaws.com` yields the service `execute-api` in the region `us-east-1`.
+
+Set these fields to override the inferred values:
+
+* `service`: The service name used in the SigV4 signature, such as `execute-api` for Amazon API Gateway or `lambda` for Lambda function URLs. Set it when the upstream is reached through a host that doesn't follow the `<service>.<region>.amazonaws.com` pattern, such as an Amazon API Gateway custom domain name.
+* `region`: Overrides inference from the host or the environment. Set it for hosts that don't contain a region, such as API Gateway custom domains.
+
+### Credential sources {% new_in 2.4 %}
+
+{{site.ai_gateway}} uses static credentials (`access_key_id`, `secret_access_key`, and optionally `session_token`) if you set them. Otherwise, it uses the Data Plane's default AWS credential provider chain. In either case, you can set `assume_role_arn` to assume a role before signing.
 
 {:.info}
 > `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)
@@ -558,6 +601,26 @@ config:
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
 ```
+
+{% new_in 2.4 %}
+
+The following `conversion-listener` example calls an IAM-protected Amazon API Gateway custom domain. Clients authenticate to {{site.ai_gateway}} with OpenID Connect through an AI Auth Strategy, and {{site.ai_gateway}} signs the converted upstream requests with SigV4. Because the custom domain doesn't follow the `<service>.<region>.amazonaws.com` pattern, the example sets `service` and `region` explicitly:
+
+```yaml
+mode: conversion-listener
+access:
+  auth_strategies:
+    - oidc-strategy
+config:
+  url: https://api.example.com/prod
+  upstream:
+    auth:
+      type: aws
+      service: execute-api
+      region: us-east-1
+      assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
+```
+
 
 ### Token Vault
 
