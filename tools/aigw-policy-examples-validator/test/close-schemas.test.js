@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { findAllofMembers, closeObjectSchemas } from "../index.js";
+import { findAllOfMembers, closeObjectSchemas } from "../index.js";
 
 test("an object schema with properties and no additionalProperties is closed", () => {
   const schema = {
@@ -15,7 +15,7 @@ test("an object schema with properties and no additionalProperties is closed", (
     },
   };
 
-  closeObjectSchemas(schema, findAllofMembers(schema));
+  closeObjectSchemas(schema, findAllOfMembers(schema));
 
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.properties.config.additionalProperties, false);
@@ -35,7 +35,7 @@ test("an explicit additionalProperties: true survives", () => {
     },
   };
 
-  closeObjectSchemas(schema, findAllofMembers(schema));
+  closeObjectSchemas(schema, findAllOfMembers(schema));
 
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.properties.passthrough.additionalProperties, true);
@@ -59,7 +59,7 @@ test("oneOf branches close as normal", () => {
     ],
   };
 
-  closeObjectSchemas(schema, findAllofMembers(schema));
+  closeObjectSchemas(schema, findAllOfMembers(schema));
 
   for (const branch of schema.oneOf) {
     assert.equal(branch.additionalProperties, false);
@@ -85,7 +85,7 @@ test("allOf members stay open so their siblings' keys validate", () => {
     ],
   };
 
-  closeObjectSchemas(schema, findAllofMembers(schema));
+  closeObjectSchemas(schema, findAllOfMembers(schema));
 
   assert.equal(member.additionalProperties, undefined);
   assert.equal(schema.allOf[1].additionalProperties, undefined);
