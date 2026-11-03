@@ -4,49 +4,42 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
+  - ai-gateway
 
 works_on:
-    - on-prem
-    - konnect
-
-tools:
-    - deck
+  - konnect
+  - on-prem
 
 min_version:
-    gateway: '3.8'
+  ai-gateway: '2.0'
 
 tags:
-    - performance
-    - deployment-checklist
-    - ai-proxy
-    - logging
-    - troubleshooting
+  - performance
+  - deployment-checklist
+  - ai
+  - logging
+  - troubleshooting
 
 breadcrumbs:
-    - /gateway/
+  - /ai-gateway/
 
-description: "Estimate how much memory the HTTP Log plugin queue uses when the AI Proxy and AI Proxy Advanced plugins log request and response payloads, then set container memory limits, queue limits, alerts, and outage drills that prevent out-of-memory kills."
+description: "Estimate how much memory the HTTP Log Policy queue uses when an AI Model logs request and response payloads, then set container memory limits, queue limits, alerts, and outage drills that prevent out-of-memory kills."
 
 related_resources:
-  - text: "{{site.base_gateway}} resource sizing guidelines"
-    url: /gateway/resource-sizing-guidelines/
-  - text: "Tune {{site.base_gateway}} for large payloads"
-    url: /gateway/performance/large-payloads/
-  - text: "Optimize {{site.base_gateway}} performance"
-    url: /gateway/performance/optimize/
   - text: "{{site.ai_gateway}} resource sizing guidelines"
-    url: /ai-gateway/v1/resource-sizing-guidelines-ai/
-  - text: HTTP Log plugin
-    url: /plugins/http-log/
-  - text: AI Proxy Advanced plugin
-    url: /plugins/ai-proxy-advanced/
-  - text: "{{site.base_gateway}} logs"
-    url: /gateway/logs/
+    url: /ai-gateway/resource-sizing-guidelines-ai/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
+  - text: HTTP Log Policy
+    url: /ai-gateway/policies/http-log/
+  - text: "{{site.ai_gateway}} logs"
+    url: /ai-gateway/ai-logs/
+  - text: Configure {{site.ai_gateway}} on-prem
+    url: /ai-gateway/configure-on-prem/
 ---
 
-Logging full request and response bodies from the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins turns each log entry from a few kilobytes into hundreds of kilobytes.
-The [HTTP Log](/plugins/http-log/) plugin holds those entries in memory until the log server accepts them.
+Logging full request and response bodies from an [AI Model](/ai-gateway/entities/ai-model/) turns each log entry from a few kilobytes into hundreds of kilobytes.
+The [HTTP Log Policy](/ai-gateway/policies/http-log/) holds those entries in memory until the log server accepts them.
 When the log server is unavailable, memory use grows for as long as the outage lasts, and a container that was sized for ordinary API traffic can be killed for running out of memory (OOM) within minutes to hours.
 
 This page explains how that memory grows, how to estimate it from your traffic, how to choose a container memory limit and queue limits, and which logs and metrics warn you before an OOM kill.
@@ -55,22 +48,22 @@ Use them as a starting point and confirm them with an [outage drill](#test-with-
 
 ## How payload logging uses memory
 
-Each {{site.base_gateway}} worker process keeps its own HTTP Log queue in memory.
+Each {{site.ai_gateway}} worker process keeps its own HTTP Log Policy queue in memory.
 
 {% mermaid %}
 flowchart LR
-  A[Client request] --> B[AI Proxy or AI Proxy Advanced]
+  A[Client request] --> B[AI Model]
   B --> C[Log entry with request and response bodies]
-  C --> D[(HTTP Log queue in worker memory)]
+  C --> D[(HTTP Log Policy queue in worker memory)]
   D -->|One entry per POST| E[Log server]
 {% endmermaid %}
 
 Five behaviors determine how much memory the queue uses:
 
 * **Queue scope:** The queue lives only in the memory of each worker process.
-  HTTP Log plugin instances that use the same endpoint settings share one queue.
+  HTTP Log Policy instances that use the same endpoint settings share one queue.
   A worker that stops loses its queued entries.
-* **Entry size:** When `logging.log_payloads` is enabled, each entry contains the request and response bodies.
+* **Entry size:** When `config.logging.payloads` is enabled on the AI Model, each entry contains the request and response bodies.
   Entries averaged about 200 KB in Kong testing and reached tens of megabytes for large requests.
   Without payloads, an entry averages about 4 KB.
 * **Queue limits:** The default `queue.max_entries` of 10,000 counts entries, not bytes, and `queue.max_bytes` has no default.
@@ -112,7 +105,8 @@ rows:
   - input: "`R`"
     meaning: "Logged requests per second on the busiest worker, at your busiest hour."
     find: |
-      Rate of `kong_ai_llm_requests_total` (requires `ai_metrics`) or the request rate in your access log.
+      Rate of `kong_ai_llm_requests_total` (requires `config.ai_metrics: true` on the
+      [Prometheus Policy](/ai-gateway/policies/prometheus/)) or the request rate in your access log.
       Clients that reuse long-lived connections can send about 94% of requests to one worker, so assume that one worker receives all of them.
   - input: "`T`"
     meaning: "Longest log server outage the queue must absorb, in seconds."
@@ -125,8 +119,8 @@ rows:
   - input: "`C0`"
     meaning: "Peak memory of the pod when the queue is nearly empty."
     find: |
-      Measure the peak working set of the pod under your busiest traffic with `log_payloads` disabled.
-      Kong testing measured 1,250 MiB for two workers with a full plugin configuration, so use that value if you can't measure.
+      Measure the peak working set of the pod under your busiest traffic with `config.logging.payloads` disabled.
+      Kong testing measured 1,250 MiB for two workers with a full configuration, so use that value if you can't measure.
 {% endtable %}
 <!--vale on-->
 
@@ -220,8 +214,9 @@ Without payload logging, an entry averages about 4 KB, the default queue never h
 
 ### Recommended memory limits
 
-We recommend setting `queue.max_bytes` on every HTTP Log plugin that records AI payloads, because `queue.max_entries` doesn't bound memory when entries are large.
+We recommend setting `queue.max_bytes` on every HTTP Log Policy that records AI payloads, because `queue.max_entries` doesn't bound memory when entries are large.
 Set the container memory limit from the queue bound, not from average traffic.
+On Konnect-managed data planes, use the queue bound to check that the data plane has room for the backlog; Konnect manages the pod resources.
 
 <!--vale off-->
 {% table %}
@@ -320,11 +315,11 @@ columns:
     key: tradeoff
 rows:
   - setting: |
-      [`config.logging.log_payloads`](/plugins/ai-proxy/reference/#schema--config-logging-log-payloads) in AI Proxy, or [`config.targets[].logging.log_payloads`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-logging-log-payloads) in AI Proxy Advanced
+      [`config.logging.payloads`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-logging-payloads) on the AI Model
     default: "`false`"
     effect: "Disabling payload logging reduced peak worker memory by 82% in a single-outage test."
     tradeoff: "Prompts and responses no longer appear in logs."
-  - setting: "[`config.queue.max_bytes`](/plugins/http-log/reference/#schema--config-queue-max-bytes) in HTTP Log"
+  - setting: "[`config.queue.max_bytes`](/ai-gateway/policies/http-log/reference/#schema--config-queue-max-bytes) in the HTTP Log Policy"
     default: "No limit"
     effect: |
       A limit of 256 MiB reduced peak worker memory by 52% and pod peak memory by 38%.
@@ -333,70 +328,95 @@ rows:
       During an outage, the queue drops the oldest entries when the limit is reached.
       In the same test, about 62% of entries were dropped.
       An entry larger than the limit is rejected.
-  - setting: "[`config.queue.max_entries`](/plugins/http-log/reference/#schema--config-queue-max-entries) in HTTP Log"
+  - setting: "[`config.queue.max_entries`](/ai-gateway/policies/http-log/reference/#schema--config-queue-max-entries) in the HTTP Log Policy"
     default: "10,000"
     effect: "A limit of 1,000 reduced peak worker memory by 60%."
     tradeoff: |
       About 68% of entries were dropped in the same test.
       The limit doesn't track bytes, so we recommend `max_bytes` instead.
-  - setting: "[`config.queue.max_retry_time`](/plugins/http-log/reference/#schema--config-queue-max-retry-time) in HTTP Log"
+  - setting: "[`config.queue.max_retry_time`](/ai-gateway/policies/http-log/reference/#schema--config-queue-max-retry-time) in the HTTP Log Policy"
     default: "60 seconds"
     effect: "The queue drops one entry per retry window, so lowering the value shortens the window but doesn't bound the backlog."
     tradeoff: "A lower value discards every entry that can't be sent in time. We don't recommend it as a memory control."
-  - setting: "`config.max_request_body_size` in AI Proxy and AI Proxy Advanced"
+  - setting: "[`config.max_request_body_size`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-max-request-body-size) on the AI Model"
     default: "1,048,576 bytes (1 MiB)"
     effect: |
       Lowering the limit from 50 MiB to 5 MiB reduced peak worker memory by 3%.
       The setting bounds the largest request entries, but not the average entry or response bodies.
-      A value of `0` removes the plugin limit.
-    tradeoff: "The plugin can't process requests with larger bodies, and about 0.1% of requests returned errors in the same test."
+      A value of `0` removes the limit.
+    tradeoff: "The model can't process requests with larger bodies, and about 0.1% of requests returned errors in the same test."
   - setting: "[`nginx_worker_processes`](/gateway/configuration/#nginx-worker-processes)"
     default: "`auto`"
-    effect: "Each worker has its own queue and its own retained baseline. One worker instead of two reduced peak pod memory by 13% in a two-worker pod."
+    effect: |
+      Each worker has its own queue and its own retained baseline.
+      One worker instead of two reduced peak pod memory by 13% in a two-worker pod.
+      Konnect-managed data planes set the worker count for you. On self-managed data planes, set it explicitly and match the CPU request of the container to the number of workers.
     tradeoff: "A single worker can't isolate a failure from other traffic."
 {% endtable %}
 <!--vale on-->
 
-The following example sets a byte limit on the HTTP Log queue:
+The following examples set payload logging on an AI Model and a byte limit on its HTTP Log Policy.
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: http-log
+First, create an AI Model that logs request and response payloads:
+
+{% entity_example %}
+type: model
+formats:
+  - kongctl
+data:
+  display_name: my-gpt-4o
+  name: my-gpt-4o
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies:
+    - my-http-log
+  targets:
+    - name: gpt-4o
+      provider: my-openai-account
       config:
-        http_endpoint: http://LOG_SERVER_HOST:PORT/logs
-        queue:
-          max_bytes: 268435456
-          max_entries: 10000
-{% endentity_examples %}
+        type: openai
+  config:
+    route:
+      paths:
+        - /v1
+    logging:
+      payloads: true
+{% endentity_example %}
 
-Set the number of worker processes with any of the following methods:
+Then create the HTTP Log Policy with a byte limit on its queue:
 
-{% navtabs "worker-processes" %}
-{% navtab "kong.conf" %}
+{% entity_example %}
+type: policy
+formats:
+  - kongctl
+data:
+  display_name: HTTP Log
+  name: my-http-log
+  type: http-log
+  enabled: true
+  config:
+    http_endpoint: http://LOG_SERVER_HOST:PORT/logs
+    queue:
+      max_bytes: 268435456
+      max_entries: 10000
+{% endentity_example %}
 
-```bash
-nginx_worker_processes=1
-```
-{% endnavtab %}
-{% navtab "Environment variable" %}
+To attach the Policy, add its name to the AI Model's `policies` list, as in the first example.
 
-```bash
-KONG_NGINX_WORKER_PROCESSES=1
-```
-{% endnavtab %}
-{% navtab "Helm chart" %}
+### On self-managed data planes
 
-```yaml
-env:
-  nginx_worker_processes: "1"
-```
-{% endnavtab %}
-{% endnavtabs %}
+On a self-managed {{site.base_gateway}} data plane, {{site.ai_gateway}} renders the AI Model entity as
+[AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin configuration,
+and the HTTP Log Policy as the HTTP Log plugin.
+The queue limits, retry timing, and memory behavior in this page are the same.
+See [Configure {{site.ai_gateway}} on-prem](/ai-gateway/configure-on-prem/) for the field mapping.
 
 ## Monitor memory and queue health
 
-{{site.base_gateway}} doesn't expose the HTTP Log queue depth or queue size as a metric.
+{{site.ai_gateway}} doesn't expose the HTTP Log Policy queue depth or queue size as a metric.
 Combine the error log, memory metrics, and data from the log server to see the queue grow before an OOM kill.
 
 ### Queue log messages
@@ -455,17 +475,17 @@ rows:
     measures: "Lua heap of each worker, including garbage that the collector hasn't freed."
     limits: |
       Doesn't include memory that the allocator retains or memory outside the Lua heap.
-      On a data plane, each worker updates the value at most every 10 seconds while it processes requests.
-  - signal: "`kong_memory_workers_lua_vms_bytes` from the [Prometheus plugin](/plugins/prometheus/)"
+      On a self-managed data plane, each worker updates the value at most every 10 seconds while it processes requests.
+  - signal: "`kong_memory_workers_lua_vms_bytes` from the [Prometheus Policy](/ai-gateway/policies/prometheus/)"
     measures: "The same Lua heap value, labeled with the worker `pid`."
     limits: "Scrape the Status API `/metrics` endpoint. Has the same limits as `http_allocated_gc`."
-  - signal: "`kong.memory.workers.lua_vm` from [OpenTelemetry metrics](/gateway/otel-metrics/)"
+  - signal: "`kong.memory.workers.lua_vm` from [{{site.ai_gateway}} OpenTelemetry metrics](/ai-gateway/ai-otel-metrics/)"
     measures: "The same Lua heap value."
     limits: "Requires a configured metrics endpoint."
   - signal: "`kong_ai_llm_requests_total` and `kong_bandwidth_bytes`"
     measures: "AI request rate, and bytes received and sent."
     limits: |
-      Enable `ai_metrics` and `bandwidth_metrics` on the Prometheus plugin.
+      Set `config.ai_metrics: true` and `config.bandwidth_metrics: true` on the Prometheus Policy.
       Divide the rate of `kong_bandwidth_bytes` by the request rate to estimate `S`.
   - signal: "`request.size` and `response.size` in each log entry"
     measures: "The values of the nginx `$request_length` and `$bytes_sent` variables."
@@ -475,14 +495,14 @@ rows:
     limits: "Available only on the log server side."
   - signal: "`container_memory_working_set_bytes`, `container_memory_rss`, and `container_oom_events_total`"
     measures: "Memory of the container, including memory that the allocator retains."
-    limits: "Provided by your Kubernetes monitoring, not by {{site.base_gateway}}."
+    limits: "Provided by your Kubernetes monitoring, not by {{site.ai_gateway}}."
   - signal: "`RssAnon` and `VmHWM` in `/proc/PID/status`"
     measures: "Resident memory and its peak for each worker."
     limits: "Requires access to the node or container. Use these values to compare with the Lua heap."
 {% endtable %}
 <!--vale on-->
 
-{{site.base_gateway}} doesn't report the resident memory of each worker, the number of entries in a queue, or the bytes in a queue.
+{{site.ai_gateway}} doesn't report the resident memory of each worker, the number of entries in a queue, or the bytes in a queue.
 The difference between the resident memory of a worker and its Lua heap shows memory that the allocator retains and memory outside the Lua heap.
 
 ### Alerts
@@ -510,7 +530,7 @@ We recommend the following alerts, in this order, because the first ones react e
 * **OOM kills:** Alert on `increase(container_oom_events_total[10m]) > 0` and on the error log message `worker process PID exited on signal 9`.
 
 {:.warning}
-> To inspect what fills a worker heap during an incident, run `kong debug profiling gc-snapshot --pid WORKER_PID`.
+> To inspect what fills a worker heap during an incident on a self-managed data plane, run `kong debug profiling gc-snapshot --pid WORKER_PID`.
 > The command forces a full garbage collection and blocks that worker until it finishes.
 > The snapshot file can contain request and response text, so handle it as sensitive data.
 > See the [CLI reference](/gateway/cli/reference/) for details.
@@ -520,10 +540,10 @@ We recommend the following alerts, in this order, because the first ones react e
 An outage drill measures the memory behavior of your configuration under a log server failure.
 Run it before production and again after every change to payload logging, queue limits, or traffic.
 
-1. Use the production plugin configuration and a load that matches your busiest hour, with realistic request and response sizes.
+1. Use the production AI Model and HTTP Log Policy configuration and a load that matches your busiest hour, with realistic request and response sizes.
 1. Make the log server unavailable. Repeat the drill with each failure mode that can occur in your environment:
    * **Fast failure:** The log server port is closed, so connections fail immediately.
-   * **Timeout:** Packets to the log server are dropped, so each send attempt waits for the plugin `timeout`.
+   * **Timeout:** Packets to the log server are dropped, so each send attempt waits for the Policy `timeout`.
    * **Slow success:** The log server answers every request with a delay, so there are no retries and no log messages.
 1. Keep the failure going for `T`, the longest outage you need to absorb.
 1. Record the Lua heap and the resident memory of each worker, the peak working set of the container, and the queue messages in the error log.
@@ -553,7 +573,7 @@ rows:
     effect: "All workers lose their queued entries."
   - event: "Worker killed"
     see: |
-      The error log shows `worker process PID exited on signal 9`, and {{site.base_gateway}} starts a replacement worker. The container keeps running.
+      The error log shows `worker process PID exited on signal 9`, and {{site.ai_gateway}} starts a replacement worker. The container keeps running.
       Signal 9 alone doesn't prove an OOM kill. Check the `oom_kill` counter in the `memory.events` file of the container or the kernel log.
     effect: "The killed worker loses its queued entries and its requests in progress."
   - event: "Pod evicted"
@@ -569,36 +589,36 @@ For more information about killed workers, see [Kong worker processes exited on 
 A worker with an empty queue can hold more than 1 GiB of resident memory after an outage.
 The worker reuses this memory for new objects, so it doesn't grow without bound, but the container metric keeps counting it.
 
-To release the memory, replace the workers with a reload or a rolling restart.
+To release the memory on a self-managed data plane, replace the workers with a reload or a rolling restart.
 Entries that are still in the queue are lost, so replace workers only after the log server is healthy and the queue is empty.
 Include the retained memory in `C0` by measuring it during an outage drill.
 
 ### The queue grows without log messages
 
 A log server that returns success slowly doesn't trigger retries, so the queue produces no error log messages while it grows.
-Compare the number of requests that {{site.base_gateway}} logs with the number of entries that the log server receives, and alert on log server latency.
+Compare the number of requests that {{site.ai_gateway}} logs with the number of entries that the log server receives, and alert on log server latency.
 
 ## Operational recommendations
 
-**Action:** Decide for each route whether payload logging is necessary, and disable `log_payloads` on high-volume routes.
+**Action:** Decide for each AI Model whether payload logging is necessary, and set `config.logging.payloads: false` on high-volume models.
 
 **Explanation:** Disabling payload logging reduced peak worker memory by 82% in testing, and it removes the largest source of memory growth.
 
-**Action:** Set `queue.max_bytes` on every HTTP Log plugin that can carry payloads.
+**Action:** Set `queue.max_bytes` on every HTTP Log Policy that can carry payloads.
 
 **Explanation:** The default limit counts entries, not bytes, so a few large entries can use more memory than thousands of small ones.
 
-**Action:** Set the memory limit from the [formulas](#estimate-peak-memory) and keep the memory request equal to the limit.
+**Action:** On self-managed data planes, set the memory limit from the [formulas](#estimate-peak-memory) and keep the memory request equal to the limit.
 
 **Explanation:** The limit must cover the queue bound plus the baseline of the pod, and the retained memory of an earlier outage counts toward it.
 
-**Action:** Set `nginx_worker_processes` explicitly, and match the CPU request of the container to the number of workers.
+**Action:** On self-managed data planes, set `nginx_worker_processes` explicitly, and match the CPU request of the container to the number of workers.
 
-**Explanation:** Each worker holds its own baseline and its own queue, and each additional worker uses additional memory. See the [optimization guidance](/gateway/performance/optimize/) for how to choose the worker count.
+**Explanation:** Each worker holds its own baseline and its own queue, and each additional worker uses additional memory. See the [{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/) for how to choose the worker count.
 
 **Action:** Send logs to a node-local log forwarder that buffers to disk, and forward from there to the central log server.
 
-**Explanation:** The forwarder takes over buffering during outages of the central log server, so the memory of {{site.base_gateway}} no longer grows with the outage duration.
+**Explanation:** The forwarder takes over buffering during outages of the central log server, so the memory of {{site.ai_gateway}} no longer grows with the outage duration.
 
 **Action:** Alert on log server availability and latency, and run an outage drill after every change.
 
