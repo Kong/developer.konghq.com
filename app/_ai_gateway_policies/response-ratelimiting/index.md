@@ -60,7 +60,7 @@ formats:
   - kongctl
 {% endentity_example %}
 
-Once the upstream has reported 2 units of the `test` limit within a minute (for example, by returning `x-kong-limit: test=1` on each of its first two responses), the third request still reaches the upstream, but {{site.ai_gateway}} discards that response and rejects the request with `429 Too Many Requests` instead.
+After the upstream has reported 2 units of the `test` limit within a minute (for example, by returning `x-kong-limit: test=1` on each of its first two responses), the third request still reaches the upstream, but {{site.ai_gateway}} discards that response and rejects the request with `429 Too Many Requests` instead.
 
 ## Strategies
 

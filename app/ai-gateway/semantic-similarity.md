@@ -225,7 +225,7 @@ Euclidean distance measures the straight-line (L2) distance between vectors and 
 > _**Figure 3:** Visualization of Euclidean distance between vector points._
 
 
-### Differences between `cosine` and `euclidean`
+### Differences between cosine and euclidean
 
 The two graphs below illustrate a key difference between cosine similarity and Euclidean distance: **two vectors can have the same angle** (and thus the same cosine similarity, represented as `γ` below) **while their Euclidean distances may differ significantly**. This happens because cosine similarity measures only the direction of vectors, ignoring their length or magnitude, whereas Euclidean distance reflects the actual straight-line distance between points in space.
 
@@ -258,7 +258,7 @@ rows:
 
 ## Similarity threshold
 
-The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine (such as Redis or PostgreSQL with pgvector) and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
+The `config.vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine (for example, Redis or PostgreSQL with pgvector) and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
 
 
 The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.

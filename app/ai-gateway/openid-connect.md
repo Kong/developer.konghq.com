@@ -200,7 +200,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-### JWT access token authentication (`bearer`)
+### JWT access token authentication (bearer)
 
 For legacy reasons, stateless JWT access token authentication is named `bearer` in `config.auth_methods`.
 {{site.ai_gateway}} verifies the token's signature against the IdP's published keys and validates standard claims, such as `exp`.
@@ -588,7 +588,7 @@ ai_gateway_auth_strategies:
 ### Authorization code flow
 
 The authorization code flow is a three-legged OAuth/OpenID Connect flow, including session cookie issuance.
-The sequence diagram below describes the participants and their interactions for this usage scenario, including the use of session cookies.
+The following sequence diagram describes the participants and their interactions for this usage scenario, including the use of session cookies.
 
 {% navtabs "auth-code-auth" %}
 {% navtab "Diagram" %}
