@@ -448,6 +448,10 @@
     --pele-font: "Funnel Sans", system-ui, sans-serif;
   }
 
+  .mermaid > svg {
+    margin-inline: auto;
+  }
+
   .badge {
     @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated;
   }
