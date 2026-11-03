@@ -38,7 +38,7 @@ The AI Lakera Guard Policy inspects model traffic at three points in the LLM req
 * **Response phase (buffered)**: Inspection occurs **before** any byte is transmitted back toward the client. The AI Lakera Guard Policy buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before {{site.ai_gateway}} sends any part of the response back to the client.
 * **Response phase (per-frame)**: The AI Lakera Guard Policy runs during streaming responses like Server-Sent Events. {{site.ai_gateway}} processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the AI Lakera Guard Policy inspects that segment with Lakera Guard before forwarding the frame to the client.
 
-The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not currently support.
+The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not support.
 
 ## Inspected content
 

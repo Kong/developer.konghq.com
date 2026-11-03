@@ -51,7 +51,7 @@ You can export these attributes via a supported backend to:
 * Inspect which AI Model or AI Model Provider handled a request
 * Track A2A conversation and task identifiers across requests
 * Analyze prompt structure (system vs. user vs. tool messages)
-* Evaluate model parameters (such as temperature and max tokens)
+* Evaluate model parameters (for example, temperature and max tokens)
 * Measure tool-call behavior (which tools were invoked, and their metadata)
 * Monitor token usage (input vs. output) for cost or performance analysis
 

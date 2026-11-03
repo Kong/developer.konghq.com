@@ -232,7 +232,7 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 ## Access control and metadata filtering
 
-Once you've configured your vector database and ingested content, you can control which [AI Consumers](/ai-gateway/entities/ai-consumer/) access specific knowledge base articles and refine query results using metadata filters.
+After you've configured your vector database and ingested content, you can control which [AI Consumers](/ai-gateway/entities/ai-consumer/) access specific knowledge base articles and refine query results using metadata filters.
 
 ### Collections
 

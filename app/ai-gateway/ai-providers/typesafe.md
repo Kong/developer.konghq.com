@@ -192,4 +192,4 @@ Note the following:
   * `ai-llm-as-judge`
   * Prompt-based rate limiting
   * `model_alias`
-* {{ provider.name }}'s own API reference documents a `401` status for authentication failures, but a missing or invalid API key currently returns `403`. Error bodies arrive under a `detail` field rather than an `error` field.
+* {{ provider.name }}'s own API reference documents a `401` status for authentication failures, but a missing or invalid API key returns `403`. Error bodies arrive under a `detail` field rather than an `error` field.
