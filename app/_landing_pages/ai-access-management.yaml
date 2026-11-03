@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.ai_gateway}} access management"
+  title: "Access management"
   content_type: landing_page
   description: "Control who can use models and MCP servers in {{site.ai_gateway}} with users, groups, identity providers, Token Vault, and virtual keys."
   permalink: /ai-access-management/
