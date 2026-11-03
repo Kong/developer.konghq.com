@@ -1,3 +1,6 @@
+# Konnect Reference Platform
+/konnect-reference-platform/how-to/ /konnect-reference-platform/patterns/
+
 # kongctl
 /kongctl/create/   /kongctl/
 /kongctl/create/*  /kongctl/
@@ -352,6 +355,7 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/konnect-reference-platform/orchestrator/ /konnect-reference-platform/
 /catalog/integrations/gateway-manager/ /catalog/integrations/api-gateway/
 /how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/

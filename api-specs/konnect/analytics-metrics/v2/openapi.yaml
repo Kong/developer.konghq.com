@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@3c23421c7059945672ecca64a2b9c7dbfa8a1281
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c23421c7059945672ecca64a2b9c7dbfa8a1281'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -3344,7 +3344,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -3393,7 +3392,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     BadRequestExample:
       value:

@@ -87,6 +87,8 @@ rows:
 
 This policy runs during the [consume phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-consume/) has taken place.
 
+{% include_cached /knep/schema-validation-parent-note.md phase="consume" %}
+
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-fields-works.md %}
@@ -94,4 +96,8 @@ This policy runs during the [consume phase](/event-gateway/entities/policy/#phas
 ### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}
+
+## Security considerations
+
+If `paths` is set to an expression that reads `record.value.schema.metadata.tags` or `record.value.schema.metadata.properties`, the schema registry becomes a trusted input to this policy. Anyone with write access to the registry can change which fields get decrypted by editing a schema's tags or properties, without touching this policy's configuration at all.
 

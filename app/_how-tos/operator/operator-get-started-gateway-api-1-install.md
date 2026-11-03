@@ -27,7 +27,7 @@ entities: []
 
 tldr:
   q: How do I manage a {{ site.base_gateway }} through the {{ site.operator_product_name }}?
-  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
+  a: Install {{ site.operator_product_name }} with Helm, from the Kong Helm repository or from the OCI registry.
 
 prereqs:
   skip_product: true
@@ -46,12 +46,12 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 ```
 
 {:.warning}
-> {{ site.operator_product_name }} 2.1 enables [Combine HTTP routes](/kubernetes-ingress-controller/faq/combining-httproutes/) by default.  This will automatically reduce the number of Services with the same `backendRef`.  During an upgrade from {{ site.operator_product_name }} 2.0 to 2.1, this will mean a couple of seconds of downtime for your Services as they are automatically merged. To disable this, set the`spec.controlPlaneOptions.translation.combinedServicesFromDifferentHTTPRoutes` parameter to `disabled` in your `GatewayConfiguration`. 
+> {{ site.operator_product_name }} 2.1 enables [Combine HTTP routes](/kubernetes-ingress-controller/faq/combining-httproutes/) by default.
+> This will automatically reduce the number of Services with the same `backendRef`.  During an upgrade from {{ site.operator_product_name }} 2.0 to 2.1, this will mean a couple of seconds of downtime for your Services as they are automatically merged. To disable this, set the `spec.controlPlaneOptions.translation.combinedServicesFromDifferentHTTPRoutes` parameter to `disabled` in your `GatewayConfiguration`.
 
 ## Install {{ site.operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
-
 
 ## Validate
 

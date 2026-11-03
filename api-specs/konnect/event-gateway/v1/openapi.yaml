@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.14
+  version: 1.3.15
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9dd97a2f3c4e98b64c07f643f409f3574483bc2c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9dd97a2f3c4e98b64c07f643f409f3574483bc2c'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -9644,7 +9644,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -9693,7 +9692,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -9742,7 +9740,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     InternalError:
       description: standard error
       type: object
@@ -9787,7 +9784,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotAvailableError:
       description: standard error
       type: object
@@ -9832,7 +9828,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     StringFieldContainsFilter:
       description: Filters on the given string field value by fuzzy match.
       type: object
@@ -10003,7 +9998,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -10052,7 +10046,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     MinRuntimeVersionUpdate:
       description: |
         The minimum runtime version supported by the API. This is the lowest version of the data plane

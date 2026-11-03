@@ -159,8 +159,7 @@ rows:
 
 Set the parent [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/)  to `reject` to use this policy.
 
-The parent policy must not use `passthrough` or `mark`.
-With these failure modes, the parent sends the record without parsing it. The Mask Fields Produce policy then never runs, and the cluster stores the fields unmasked.
+{% include_cached /knep/schema-validation-parent-note.md phase="produce" %}
 
 ## Selecting fields from schema metadata
 
@@ -172,9 +171,11 @@ paths: 'record.value.schema.metadata.tags["PII"]'
 
 This is the recommended way to mask fields. The mask follows the schema, so when the schema evolves and a new field gets tagged, it is masked without any policy change.
 
-In this case, the schema becomes the input that decides which fields are masked, so anyone who can edit the schema tags can change the masking. Keep schema registry write access restricted to trusted roles.
-
 See the full walkthrough in [Mask Kafka message fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/).
+
+## Security considerations
+
+If `paths` is set to an expression that reads `record.value.schema.metadata.tags` or `record.value.schema.metadata.properties`, the schema registry becomes a trusted input to this policy. Anyone with write access to the registry can change which fields get masked by editing a schema's tags or properties, without touching this policy's configuration at all.
 
 ## Policy order
 

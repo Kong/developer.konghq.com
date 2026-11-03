@@ -35,6 +35,7 @@ apiVersion
 appendPolicies
 AppRole
 appsentinels
+Arize
 arg
 args
 ARN

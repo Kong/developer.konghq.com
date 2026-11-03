@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect AI Cost Management
-  version: 0.4.0
+  version: 0.5.0
   description: |-
     The AI Cost Management API reports an organization's AI usage and spend, and manages the budgets, notifications, and exports built on it.
 
@@ -11,8 +11,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@ca30b94a1a3dd5f11bde55d696d0f856b196594d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ca30b94a1a3dd5f11bde55d696d0f856b196594d'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -8022,7 +8022,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -8071,7 +8070,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -8120,7 +8118,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UUID:
       description: Contains a unique identifier used for this resource.
       type: string
@@ -8202,7 +8199,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -8251,7 +8247,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ExpiresAtNullable:
       description: An ISO-8601 timestamp representation of entity expiration date.
       type: string

@@ -34,6 +34,12 @@ List organizations.
 
 {% include_cached /kongctl/help/list/organization/index.md %}
 
+### kongctl list organization pats
+
+List all personal access tokens in the current organization. Requires organization administrator access.
+
+{% include_cached /kongctl/help/list/organization/pats.md %}
+
 ### kongctl list organization system-account
 
 List organization system accounts.

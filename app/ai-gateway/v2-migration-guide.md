@@ -1,5 +1,5 @@
 ---
-title: "Migrate to {{site.ai_gateway}} 2.x"
+title: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
 content_type: reference
 layout: reference
 
@@ -22,6 +22,8 @@ description: This guide walks you through moving your configuration from the {{s
 related_resources:
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
@@ -32,7 +34,8 @@ related_resources:
 
 This guide walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x in {{site.konnect_short_name}} who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server). 
+If you're migrating a self-managed, on-prem deployment instead, see [Migrate to {{site.ai_gateway}} 2.x on-prem](/ai-gateway/on-prem-migration/).
 
 ## Prerequisites 
 
@@ -58,7 +61,7 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 1. Authenticate `kongctl` with a {{site.konnect_short_name}} PAT or System Account Access Token.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
-The diagram below shows where each tool sits in the flow:
+The diagram shows where each tool sits in the flow:
 
 {% mermaid %}
 sequenceDiagram
@@ -76,7 +79,7 @@ sequenceDiagram
     D->>E: kongctl apply
 {% endmermaid %}
 
-### Step 1: Install the `kongctl-ext-aigw-converter` extension
+### Step 1: Install the kongctl-ext-aigw-converter extension
 
 The `kongctl-ext-aigw-converter` extension is used to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model.
 
@@ -84,7 +87,7 @@ Install it with `kongctl install extension Kong/kongctl-ext-aigw-converter` and 
 
 ### Step 2: Export your current configuration
 
-Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
+Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
 
 ```sh
 deck gateway dump \
@@ -174,7 +177,7 @@ auth_strategies:
 ```
 <!--vale on-->
 
-The `openid-connect` entry above shows only the fields {{site.ai_gateway}} requires at minimum. Add any other fields your identity provider actually uses (additional scopes, claims, cookie settings, and so on). Don't copy fields straight from your v1 `openid-connect` plugin config if they're unset (`null`) there. {{site.ai_gateway}} 2.x rejects explicit `null` values for most fields, so it's easier to start minimal and add only what you need.
+The `openid-connect` entry shows only the fields {{site.ai_gateway}} requires at minimum. Add any other fields your identity provider actually uses (additional scopes, claims, cookie settings, and so on). Don't copy fields straight from your v1 `openid-connect` plugin config if they're unset (`null`) there. {{site.ai_gateway}} 2.x rejects explicit `null` values for most fields, so it's easier to start minimal and add only what you need.
 
 At most two auth strategies are allowed (at most one `key-auth` and one `openid-connect`), and at most one may use the `"*"` wildcard per entity kind. The converter attaches each strategy to the listed entities via their `access.auth_strategies`. An AI Agent or AI MCP Server accepts at most **one** auth strategy, so linkage that would attach two to the same agent or MCP server fails the run; AI Models are uncapped.
 
@@ -379,7 +382,7 @@ resource ai_gateway_model_provider "openai-1" field /config/auth/headers/0/value
 is write-only and requires !secret with a deferred source
 ```
 
-After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source as shown above, then set the real value out of band:
+After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source as shown, then set the real value out of band:
 
 ```sh
 export OPENAI_API_KEY="YOUR CREDENTIAL"
@@ -427,7 +430,7 @@ rows:
     type: "`upstream-server`"
 {% endtable %}
 
-##### Authentication moves from `ai-mcp-oauth2` to an auth strategy
+##### Authentication moves from ai-mcp-oauth2 to an auth strategy
 
 The [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) plugin has no direct {{site.ai_gateway}} 2.x Policy equivalent, so the converter splits its config in two:
 
@@ -439,7 +442,7 @@ Fields with no equivalent in either destination are dropped, with a warning nami
 {:.info}
 > **Note:** If your `config/auth_strategies.yaml` linkage attaches a different (non-`openid-connect`) auth strategy to this MCP server, for example a `key-auth` wildcard, the synthesized `access.metadata` is dropped instead of being carried through: the {{site.ai_gateway}} API only accepts Protected Resource Metadata paired with an `openid-connect` auth strategy.
 
-##### Listener aggregation moves from tags to `sources`
+##### Listener aggregation moves from tags to sources
 
 In version 1.x, a `listener` plugin aggregated tool sets implicitly: `config.server.tag` named a decK plugin tag, and every `ai-mcp-proxy` plugin carrying that tag contributed its tools. Version 2.x replaces this with an explicit `sources` list of AI MCP Server names, which is **required** on a `listener`.
 
@@ -571,7 +574,7 @@ To verify your AI MCP Servers entity migration, be sure to check the following:
 - ACL mode: Version 2.x makes the ACL subject explicit. Use `acl_attribute_type: consumer` to evaluate against Consumers and Consumer Groups, or `acl_attribute_type: oauth_access_token` with `access_token_claim_field` to evaluate against a claim in an OAuth2 access token.
 - Per-tool ACLs: A per-tool `acl` replaces the default for that tool and does not merge with `default_tool_acls`. Ensure every allowed subject is listed on the tool explicitly.
 - Logging field names: `log_payloads` and `log_audits` become `payloads` and `audits` under `config.logging`. `log_statistics` has no {{site.ai_gateway}} 2.x equivalent and is dropped.
-- Authentication: Like AI Models, auth plugins on MCP routes (like the `key-auth` example above) are stripped on conversion. Declare the auth strategy manually and reference it from the server's `access.auth_strategies`.
+- Authentication: Like AI Models, auth plugins on MCP routes (like the `key-auth` example) are stripped on conversion. Declare the auth strategy manually and reference it from the server's `access.auth_strategies`.
 - `ai-mcp-oauth2` servers: Confirm the generated `openid-connect` auth strategy is attached via `access.auth_strategies` and that `access.metadata` carries the Protected Resource Metadata fields you expect. Review any converter warnings naming dropped config fields, and reconfigure proxy authorization headers manually if you used them.
 
 #### Validate AI Agents
@@ -725,7 +728,7 @@ After you apply the converted configuration, verify the new control plane before
 
 Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the original control plane if needed.
 
-Once you've successfully generated the `kongctl` config, applied it to your environment, and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
+After you've successfully generated the `kongctl` config, applied it to your environment, and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
 
 ## Troubleshooting
 

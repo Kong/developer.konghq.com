@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Notification Hub
-  version: 1.1.0
+  version: 1.1.1
   description: Notification Hub API for Konnect.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@057d37fae52988f80565a02e4d6f846d27851ed3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/057d37fae52988f80565a02e4d6f846d27851ed3'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://global.api.konghq.com/v1'
     description: Global Base URL
@@ -919,7 +919,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -968,7 +967,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -1017,7 +1015,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -1066,7 +1063,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     NotificationUpdatePayload:
       value:

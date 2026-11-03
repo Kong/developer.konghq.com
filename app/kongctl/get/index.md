@@ -35,6 +35,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl get ai-cost-management](/kongctl/get/ai-cost-management/)
+    description: "Manage regional AI cost capture."
+  - command: |
       [kongctl get ai-gateway](/kongctl/get/ai-gateway/)
     description: "Get {{site.ai_gateway}} details."
   - command: |

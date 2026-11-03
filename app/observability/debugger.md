@@ -41,6 +41,7 @@ related_resources:
 * **Troubleshoot issues:** Investigate and resolve problems during deployments or incidents with targeted, on-demand traces.
 * **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution. See [Debugger spans](/observability/debugger-spans/) for a list of spans captured.
 * **Improve performance and reliability:** Use deep insights to fine-tune configurations and resolve bottlenecks.
+* **Find CPU-intensive functions:** Use [CPU profiling](#profile-cpu-usage) to see which functions or custom plugins consume the most CPU time.
 
 {{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
 
@@ -121,6 +122,126 @@ When viewing a trace, you can click **Analyze with KAi** to send the trace to [K
 * What is the plugin execution order for this route?
 * Why does my hybrid gateway have connectivity issues with the upstream?
 
+## Profile CPU usage
+
+CPU profiling shows which functions consume CPU time during a debug session, down to the Lua, C, and OpenResty function level.
+Developers can use CPU profiling to check whether a function takes more CPU time than expected, for example by capturing a session before and after releasing a new custom plugin version.
+
+![Debugger CPU profiling view with the Top functions table and the flamegraph](/assets/images/konnect/debugger-cpu-profiling-flamegraph.png)
+
+CPU profiling is disabled by default.
+To include a CPU profile in a session, enable the toggle in the **CPU Profiling** section of the **New session** form when you [start the session](#start-your-first-debug-session).
+
+{:.warning}
+> The session must be completed to generate a CPU profile.
+If you cancel a session before it completes, the Debugger doesn't generate any CPU profiling data for it.
+
+The following terms appear in CPU profiles:
+
+{% table %}
+columns:
+  - title: Term
+    key: term
+  - title: Meaning
+    key: meaning
+rows:
+  - term: Self time
+    meaning: "The percentage of total CPU time a function spent in its own code. Self time excludes time spent in the functions it called."
+  - term: Phase
+    meaning: "The OpenResty or Kong processing phase that a frame belongs to, for example `timer`, `log`, `access`, `balancer`, `rewrite`, `header_filter`, or `body_filter`. Phases break down where CPU time went."
+  - term: Instruction Based
+    meaning: "A CPU profiling method that samples the stack after a set number of instructions, which measures CPU cycles."
+  - term: Time based
+    meaning: "A CPU profiling method that samples the stack at a set time interval, which measures elapsed time."
+  - term: Intervals
+    meaning: "The number of profiling samples captured in the session."
+{% endtable %}
+
+### CPU profiling methods
+
+When you enable CPU profiling, select a method and set its sampling interval:
+
+{% table %}
+columns:
+  - title: Method
+    key: method
+  - title: What it measures
+    key: measures
+  - title: Sampling interval
+    key: interval
+rows:
+  - method: Instruction Based
+    measures: "CPU cycles, to find code-level bottlenecks."
+    interval: "The number of instructions between each stack sample. A lower value provides higher precision. The default is `500`."
+  - method: Time based
+    measures: "Elapsed time, to find execution delays."
+    interval: "The time between samples in milliseconds. The default is `500`. The maximum duration of the profile is inherited from the **Session time** field."
+{% endtable %}
+
+### Reading the flamegraph
+
+After the session completes, the **CPU Profiling** tab shows the top functions used in the session and a flamegraph. 
+It can take a couple of minutes for the flamegraph and analysis summary to generate.
+
+* The top functions table shows every captured function, ranked by self time.
+
+   For example, the top rows of a profile might show `phase_handler` at 25%, `Lua()` at 18%, `wait()` at 10%, and `do_phase_handler` at 7%.
+
+* The flamegraph is an icicle-style chart that you can read in the following ways:
+  * **Vertically:** The children of a block are the functions that block calls. 
+  The top row is the entry point, and moving down follows the call stack deeper.
+  * **Horizontally:** The width of a block is proportional to that function's share of total CPU time at that level. 
+  A wider block means more CPU time. 
+
+Each block has a label with the function name, its source location, and its percentage of total time, for example `Lua():173 (47.8%)`.
+Scan the flamegraph for a single function or call path that uses a large share of CPU time, then decide whether that's expected or worth investigating.
+
+#### Filter by code origin
+
+You can color the flamegraph by plugin or by code origin, then filter further to a specific plugin or code origin.
+Plugin authors can use this to isolate the frames from their own plugin, instead of picking their code out of the full call tree.
+
+Each function in the flamegraph has one of the following code origins:
+
+{% table %}
+columns:
+  - title: Code origin
+    key: origin
+  - title: Color
+    key: color
+  - title: Description
+    key: description
+rows:
+  - origin: "`C`"
+    color: Red
+    description: Native code
+  - origin: "`kong`"
+    color: Blue
+    description: Kong core code
+  - origin: "`lua`"
+    color: Purple
+    description: Lua code
+  - origin: "`openresty`"
+    color: Green
+    description: The OpenResty runtime
+  - origin: "`plugin`"
+    color: Yellow
+    description: Plugin code
+{% endtable %}
+
+### Analyze a profile with KAi
+
+The **Flamegraph analysis summary** panel uses [KAi](/konnect-platform/kai/) to generate an explanation of the captured profile.
+The panel shows when the summary was generated.
+The summary contains:
+
+* **An action:** A short verdict that explains whether the profile points to something to change, with a concrete suggestion. 
+For example, if the profile shows the worker was mostly idle, the suggestion can be to start another debug session while the data plane handles representative traffic.
+* **What the profile shows:** Bullets that cover which functions and phases dominate CPU time and why. 
+For example, the bullets can report the share of time in each phase (`timer`, `balancer`, `log`, and so on), the self time of specific functions with their sample counts, and how much CPU time plugins use.
+* **Suggested follow-ups:** Clickable questions under **Try** that you can ask KAi about the profile. 
+You can also rate the summary with the thumbs up and thumbs down icons, or copy it.
+
 ## Pin traces and profiles
 
 A pin is a named snapshot of a trace or the session's CPU profile. It is stored separately from the debug session and remains available for the retention period you choose.
@@ -141,7 +262,8 @@ Pinned data uses the retention period selected when you create the pin: **7 days
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
 1. In the {{site.observability}} sidebar, click **Debugger**.
 1. Open the debug session that contains the trace or CPU profile.
-1. To save a trace, from the trace row's actions menu, select **Save trace**. To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**. CPU profiles are available after the session completes.
+  * To save a trace, from the trace row's actions menu, select **Save trace**.
+  * To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**.
 1. In the **Name** field, enter a name for the pin, such as `slow-requests-trace`. Optionally, in the **Description** field, enter a description of the pin.
 1. From the **Retention period** dropdown menu, select a retention period, such as **30 days**.
 1. Click **Save**.
@@ -163,10 +285,10 @@ Payload capture lets you configure a debug session to capture headers and/or bod
 Payload capture records the following:
 
 * The client request and response
-* {% new_in 3.14 %} The upstream request and response
-* {% new_in 3.14 %} Headers and body before and after each plugin runs, including custom plugins
-* {% new_in 3.14 %} The contents of calls {{site.base_gateway}} makes to third-party dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution
-* {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text
+* The upstream request and response
+* Headers and body before and after each plugin runs, including custom plugins
+* The contents of calls {{site.base_gateway}} makes to third-party dependencies during request processing, such as Redis for rate limiting, an identity provider for token validation, or DNS for resolution
+* Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`), automatically decompressed so they appear as readable text
 
 You can use this information to compare the sent request with the received request, and the sent response with the received response, to identify where a failure occurred.
 
@@ -197,7 +319,7 @@ Authentication and identity headers (for example, `Authorization`, API key heade
 {:.info}
 > **Note:** The log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. Matched characters are replaced with `*`.
 
-#### Custom masking rules {% new_in 3.14 %}
+#### Custom masking rules
 
 You can define custom payload masking rules to target specific sensitive data in your requests and responses.
 Custom rules let you redact data in both headers and body content.
@@ -218,7 +340,7 @@ Matched content is replaced with `*`.
 {:.info}
 > **Note:** Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
-### {{site.ai_gateway}} {% new_in 3.14 %}
+### {{site.ai_gateway}}
 
 When a Route has AI plugins configured, payload capture shows the standard payloads in addition to the {{site.ai_gateway}} details view that shows the prompt at each stage of the pipeline:
 
@@ -250,7 +372,7 @@ To begin using the Debugger, ensure the following requirements are met:
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
 * You need [Debug Session Creator](/konnect-platform/teams-and-roles/#control-planes), Control Plane Admin, or Org Admin permissions to create debug sessions or pins.
-* Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
+* Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`
   * `KONG_ACTIVE_TRACING=on`
@@ -262,10 +384,18 @@ To begin using the Debugger, ensure the following requirements are met:
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
 1. In the {{site.observability}} sidebar, click **Debugger**.
 1. Click **New session**.
-1. Define the sampling criteria.
-1. Click **Start Session**.
+1. *(Optional)* In the **Session name** field, enter a name for the session, such as `slow-requests`. If you leave this blank, the session name will be autogenerated.
+1. From the **Control plane** dropdown menu, select the control plane that contains the data plane nodes you want to debug.
+1. From the **Data plane nodes** dropdown menu, select one or more data plane nodes.
+1. In the **Session time** field, enter a duration, and from the unit dropdown menu, select a unit, such as `300` and **Seconds**.
+1. In the **Tracing** section, define the sampling criteria. For details, see [Sampling rules](#sampling-rules).
+1. *(Optional)* In the **Capture payloads and logs** section, select **Payload headers**, **Payload bodies**, or **Logs**.
+1. *(Optional)* In the **CPU Profiling** section, enable the toggle to capture a CPU profile. For details, see [Choose a CPU profiling method](#cpu-profiling-methods).
+1. Click **Create**.
 
-Once the session starts, traces will be captured for requests that match the rule. Click a trace to view it in the span viewer. To keep a trace after the session expires, [create a pin](#save-a-trace-or-profile).
+While the session runs, the Debugger captures traces for requests that match the sampling rules.
+You can click a trace to open it in the span viewer.
+To keep a trace or CPU profile after the session expires, you can [create a pin](#save-a-trace-or-profile).
 
 {:.success}
 > You can also start a debug session from the overview page of a control plane, Gateway Service, or Route by clicking the **Actions** dropdown menu and clicking **Start Debugging**. Additionally, you can use [KAi](/konnect-platform/kai/) to debug as well. 
@@ -288,7 +418,7 @@ http.response.status_code==503
 ```
 The list of all possible sampling expressions are captured here [Sampling Rules](/gateway/routing/expressions/)
 
-A sample trace is shown below. By inspecting the spans, you can see that the bulk of the latency occurs in the pre-function plugin during the access phase.
+In the following sample trace, the spans show that the bulk of the latency occurs in the pre-function plugin during the access phase.
 
 ![Debugger Spans](/assets/images/konnect/debugger-spans.png)
 

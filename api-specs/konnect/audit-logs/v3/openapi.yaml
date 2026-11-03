@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 3.1.1
+  version: 3.3.0
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@cc05198ee340cb2ed64d23affaa0fcad450b68ec
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cc05198ee340cb2ed64d23affaa0fcad450b68ec'
+  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -632,7 +632,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -681,7 +680,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -730,7 +728,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -1041,7 +1038,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -1090,7 +1086,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     LegacyStringFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object

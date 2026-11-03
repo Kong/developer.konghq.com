@@ -5,7 +5,7 @@ require_relative '../../drops/plugins/aigw_policy_schema'
 
 module Jekyll
   module AIGatewayPolicyPages
-    class Policy # rubocop:disable Style/Documentation
+    class Policy
       include Policies::Base
       include Policies::GeneratorBase
 
@@ -33,6 +33,10 @@ module Jekyll
 
       def overview_content
         @overview_content ||= Jekyll::Utils::MarkdownParser.new(index_file).content.strip
+      end
+
+      def priority
+        @priority ||= site.data.dig('policies', 'ai-gateway', 'priorities', slug)
       end
 
       private

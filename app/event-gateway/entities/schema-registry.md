@@ -65,6 +65,14 @@ data:
 {:.info}
 > **Note**: {{site.event_gateway_short}} only requires **read-only** access to the schema registry to fetch schemas for validation.
 
+## Security considerations
+
+A policy can compute its behavior straight from schema metadata, for example a [Mask Fields](/event-gateway/policies/mask-fields-consume/) or [Encrypt Fields](/event-gateway/policies/encrypt-fields/) selector built from `record.value.schema.metadata.tags`, or a condition that checks `record.value.schema.metadata.properties`. For those policies, the registry is a trusted input.
+
+That means anyone with write access to the registry can change what a policy does without touching the policy itself. For example, removing a `PII` tag stops a field from being masked or encrypted. The change takes effect for every record validated against that schema version, on every virtual cluster that uses it.
+
+Restrict write access to the registry to the same degree you'd restrict the policies it drives. Review metadata changes before they go live, and keep a registry-side audit log so changes stay traceable after the fact.
+
 ## Schema
 
 {% entity_schema %}

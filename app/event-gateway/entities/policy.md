@@ -220,7 +220,7 @@ To re-order policies using the {{site.konnect_short_name}} UI:
 See all [{{site.event_gateway_short}} policies](/event-gateway/policies/?policy-target=virtual_cluster) for their individual configurations.
 
 Here's an example configuration for the Modify Headers consume policy:
-
+<!--vale off-->
 {% entity_example %}
 type: event_gateway_policy
 policy_type: modify-headers
@@ -232,6 +232,63 @@ data:
       key: My-New-Header
       value: header_value
 {% endentity_example %}
+<!--vale on-->
+
+## Failure modes
+
+Some produce and consume policies have a `failure_mode` setting that controls what happens to a record when the policy fails to process it:
+<!--vale off-->
+{% table %}
+columns:
+  - title: Failure mode
+    key: failure_mode
+  - title: Description
+    key: description
+  - title: Policy type
+    key: policy_type
+rows:
+  - failure_mode: "`reject`"
+    description: "Rejects the record batch that holds the record."
+    policy_type: Produce
+  - failure_mode: "`error`"
+    description: "Doesn't deliver the batch to the client on consume, and rejects the record when the policy fails on produce."
+    policy_type: Consume and produce
+  - failure_mode: "`skip`"
+    description: "Doesn't deliver the record to the client."
+    policy_type: Consume
+  - failure_mode: "`passthrough`"
+    description: "Delivers the record even though policy execution failed."
+    policy_type: Consume and produce
+  - failure_mode: "`mark`"
+    description: "Delivers the record, and {{site.event_gateway_short}} adds a `kong/policy-failure-<id>` header whose value is the reason for the failure (truncated to 512 characters)."
+    policy_type: Consume and produce
+{% endtable %}
+<!--vale on-->
+
+See [each policy](/event-gateway/policies/) for the failure modes it supports.
+
+### mark
+
+The `mark` failure mode attaches the policy failure reason to the record in a `kong/policy-failure-<id>` header.
+
+On produce, {{site.event_gateway_short}} stores the header with the record in the backend cluster. 
+The header remains on the record, so every consumer of the topic sees it, including systems that never pass through {{site.event_gateway_short}}.
+
+A producer with access to the topic can trigger policy failures on purpose and read the failure reasons to learn about your policy configuration.
+
+{:.warning}
+> **Warning**: Failure reasons can contain runtime-specific information, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, and CEL expression snippets.
+> If you use `mark`, configure a [Modify Headers](/event-gateway/policies/modify-headers/) policy that runs after the failing policy to remove the `kong/policy-failure-<id>` header before the record is stored in the backend cluster or delivered to a client.
+
+### error
+
+The `error` failure mode stops the delivery of the whole batch that contains the failing record.
+The client receives an error with the policy failure reason.
+
+{:.warning}
+> **Warning**: A single record that always fails the policy, for example one written by a producer with access to the topic, blocks every consumer group at that offset, and recovery requires manual operator action.
+> Use `error` sparingly, and prefer `skip` when producers you don't trust can write to the topic.
+> `skip` stops only the failing record, so consumer groups keep making progress.
 
 ## Listener policies
 
