@@ -136,20 +136,18 @@ rows:
     team: "Created automatically when you [import an org structure](#import-an-org-structure). Can't be created manually."
   - aspect: "**Membership**"
     group: "Add or remove users from the group's detail page or from the user's details."
-    team: "Set by the org structure import. You can't manually assign a user to an existing team."
+    team: "Set by the org structure import."
   - aspect: "**Nesting**"
     group: "A group can't contain another group."
     team: "A team can be nested under a parent team."
   - aspect: "**Changes**"
     group: "Edit manually at any time."
-    team: "Change only through import. Upload the file again when your org structure changes."
+    team: "Change only through import."
 {% endtable %}
 
 ## Identity providers
 
 An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. {{site.konnect_short_name}} trusts the providers you list and uses them to verify that those tokens are genuine.
-
-Users sign in through an identity provider.
 
 When you add an identity provider, you give it a name and an issuer URL. You can also:
 
@@ -186,7 +184,7 @@ For example, an organization with one Anthropic API key can generate a virtual k
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user spend limits apply to that traffic.
+* **Attribute and control costs:** Requests made with a personal virtual key are attributed to its holder. The spend limits set on the user apply to that traffic.
 
 The gateway treats whoever holds the key as the caller.
 
