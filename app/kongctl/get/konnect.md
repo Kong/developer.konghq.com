@@ -32,6 +32,12 @@ Use the `get` verb with the `ai-gateway` command to query {{site.konnect_short_n
 
 {% include_cached /kongctl/help/get/konnect/ai-gateway.md %}
 
+### kongctl get konnect ai-cost-management
+
+Manage regional AI cost capture.
+
+{% include_cached /kongctl/help/get/konnect/ai-cost-management.md %}
+
 ### kongctl get konnect analytics
 
 The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.
