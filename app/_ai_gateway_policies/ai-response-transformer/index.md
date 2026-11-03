@@ -51,3 +51,4 @@ You can additionally instruct the LLM service to respond in the following format
 If the `parse_llm_response_json_instructions` parameter is set to `true`, {{site.ai_gateway}} will parse these instructions and set the specified response headers, response status code, and replacement response body.
 This lets you change specific headers such as `Content-Type`, or throw errors from the LLM.
 
+{% include md/ai-gateway/v2/policies/response-transformers-comparison.md %}
