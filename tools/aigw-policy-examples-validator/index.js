@@ -85,3 +85,64 @@ export function closeObjectSchemas(node, members, visited = new WeakSet()) {
     closeObjectSchemas(value, members, visited);
   }
 }
+
+// Generate a value the schema accepts for a ${...} template variable: the
+// schema's own example, then its default, then its first enum value, then a
+// safe value per type.
+export function placeholderForSchema(fieldSchema) {
+  if (!fieldSchema) return "__placeholder__";
+  if (fieldSchema.example !== undefined) return fieldSchema.example;
+  if (fieldSchema.default !== undefined) return fieldSchema.default;
+  if (fieldSchema.enum && fieldSchema.enum.length > 0) {
+    return fieldSchema.enum[0];
+  }
+  switch (fieldSchema.type) {
+    case "number":
+    case "integer":
+      return 0;
+    case "boolean":
+      return false;
+    case "array":
+      return [];
+    case "object":
+      return {};
+    default:
+      return "__placeholder__";
+  }
+}
+
+export function schemaAllowsNull(fieldSchema) {
+  if (!fieldSchema) return false;
+  if (fieldSchema.type === "null") return true;
+  if (Array.isArray(fieldSchema.type) && fieldSchema.type.includes("null")) {
+    return true;
+  }
+  return false;
+}
+
+// Recursively replace ${...} template variables with schema-appropriate
+// values, and strip nulls the schema does not allow. The resolved sub-schema
+// is passed down through the recursion so we never re-walk from the root.
+export function replaceVariables(obj, fieldSchema) {
+  if (typeof obj === "string") {
+    if (/\$\{[^}]+\}/.test(obj)) {
+      return placeholderForSchema(fieldSchema);
+    }
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    const itemSchema = fieldSchema && fieldSchema.items;
+    return obj.map((item) => replaceVariables(item, itemSchema));
+  }
+  if (obj !== null && typeof obj === "object") {
+    const props = fieldSchema && fieldSchema.properties;
+    const result = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const propSchema = props && props[key];
+      if (value === null && !schemaAllowsNull(propSchema)) continue;
+      result[key] = replaceVariables(value, propSchema);
+    }
+    return result;
+  }
+  return obj;
+}
