@@ -15,18 +15,19 @@ works_on:
   - on-prem
 
 breadcrumbs:
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "The price catalog holds the price of each model that {{site.ai_cost_management}} can price, and rate overrides let you adjust those prices to the terms you negotiated with a provider."
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
+  - text: Analytics and debugging in {{site.ai_cost_management}}
+    url: /ai-cost-management/analytics-and-debugging/
   - text: Model cost management
     url: /ai-gateway/model-cost-management/
   - text: AI Model entity
@@ -85,7 +86,7 @@ When dynamic pricing is on, {{site.ai_gateway}} prices each request in the follo
 
 Since per-target cost fields take precedence over catalog overrides, this makes them useful when different targets using the same model need different prices.
 
-For example, you a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
+For example, you have a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
 In this case, both routes use the same model, but only the premium target has cost fields set:
 
 * The standard route uses the catalog price or your negotiated override.

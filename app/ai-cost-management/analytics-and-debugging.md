@@ -17,12 +17,13 @@ tools:
   - konnect-api
 
 breadcrumbs:
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "The analytics views in {{site.ai_cost_management}} show where AI spend goes and what the gateway reported for each request."
 
@@ -30,14 +31,14 @@ api_specs:
   - konnect/ai-cost-management
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
+  - text: Attribution in {{site.ai_cost_management}}
+    url: /ai-cost-management/attribution/
   - text: Budgets in {{site.ai_cost_management}}
     url: /ai-cost-management/budgets/
   - text: Price catalog and overrides
     url: /ai-cost-management/price-catalog/
-  - text: "{{site.ai_cost_management}} API reference"
-    url: /api/konnect/ai-cost-management/
+  - text: Exports in {{site.ai_cost_management}}
+    url: /ai-cost-management/exports/
 
 faqs:
   - q: Why is the cost of my request $0?
@@ -244,7 +245,7 @@ For the full schema, see the [`/v1/ai-cost-management/events` API reference](/ap
   }
 }
 ```
-{:.collapsible}
+{:.collapsible.no-copy-code}
 
 ## Filters and dimensions
 
@@ -373,7 +374,7 @@ rows:
     check: "Check the model's price in the [price catalog](/ai-cost-management/price-catalog/), then send a new request. The Unpriced calls card counts these events."
   - symptom: "A user shows as unattributed"
     cause: "{{site.ai_gateway}} recorded no accepted identity for the request."
-    check: "Check that the request used a supported credential, for example a consumer, a principal, or an OIDC token. New requests are attributed, and earlier events stay unattributed."
+    check: "Check that the request used a supported credential, for example a consumer, a principal, or an OIDC token. New requests are attributed, and earlier events stay unattributed. See [Attribution](/ai-cost-management/attribution/) to set up identity."
   - symptom: "A total changed after you viewed it"
     cause: "A late event arrived for a period that you already viewed."
     check: "In the Events debugger, filter by [**Arrival**](#filters-and-dimensions) to find late events."

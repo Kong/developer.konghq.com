@@ -21,7 +21,11 @@ entities:
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
+
+breadcrumbs:
+  - /ai-management/
+  - /ai-cost-management/
 
 tools:
   - kongctl
@@ -72,12 +76,14 @@ related_resources:
     url: /ai-cost-management/budgets/
   - text: Notification channels in {{site.ai_cost_management}}
     url: /ai-cost-management/notification-channels/
+  - text: Analytics and debugging in {{site.ai_cost_management}}
+    url: /ai-cost-management/analytics-and-debugging/
+  - text: Set up a budget with email alerts
+    url: /ai-cost-management/set-up-a-budget-with-email-alerts/
   - text: AI Model Provider entity
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
-  - text: Set up a budget with email alerts
-    url: /ai-cost-management/set-up-a-budget-with-email-alerts/
 ---
 
 A [budget](/ai-cost-management/budgets/) tracks the AI spend of requests that pass through {{site.ai_gateway}} against a limit, then sends alerts as spend grows toward that limit.

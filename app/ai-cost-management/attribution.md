@@ -5,6 +5,7 @@ layout: reference
 
 products:
   - ai-cost-management
+  - ai-gateway
 
 min_version:
   ai-gateway: '2.3'
@@ -16,12 +17,13 @@ tools:
   - konnect-api
 
 breadcrumbs:
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "Attribution in {{site.ai_cost_management}} records who made an AI request and what context surrounded it on every usage event."
 
@@ -66,9 +68,9 @@ When AI requests run through your {{site.ai_gateway}}, you need to know where th
 Attribution connects each request to an identity and context.
 
 When attribution is in place, you can use the data in the following ways:
-* The **cost management dashboard** breaks spend down by user, group, team, or tag so you can see where costs are concentrated.
-* The **events explorer** lets you filter and compare any of those dimensions over time.
-* **Budget limits** can target a specific user, group, or tag value, so you can enforce spend caps at whatever scope matters to your organization.
+* The cost management [**Dashboard**](/ai-cost-management/analytics-and-debugging/#dashboard) breaks spend down by user, group, team, or tag so you can see where costs are concentrated.
+* The events [**Explorer**](/ai-cost-management/analytics-and-debugging/#explorer) lets you filter and compare any of those dimensions over time.
+* [**Budgets**](/ai-cost-management/budgets/) can target a specific user, group, or tag value, so you can track spend against a cap at whatever scope matters to your organization.
 
 ## How attribution works
 
@@ -92,7 +94,7 @@ The subject is the primary identity attributed to a usage event.
 
 When none of these applies, the event has no subject and is unattributed.
 Unattributed events still appear in totals, and you can still match them by group, tag, and model.
-In the dashboard and the events view, they show as **Unattributed**.
+In the [dashboard](/ai-cost-management/analytics-and-debugging/#dashboard) and the [events view](/ai-cost-management/analytics-and-debugging/#events-debugger), they show as **Unattributed**.
 
 ## Groups and teams
 
@@ -110,7 +112,7 @@ They come from any of the following sources:
 * The request consumer's gateway consumer groups (as `consumer_group/UUID`)
 * JWT `group` or `groups` claims on an `openid-connect` auth strategy (as `oidc/GROUP`)
 
-A single event holds at most 328 groups.
+A single event holds at most 64 groups.
 
 ### Teams
 

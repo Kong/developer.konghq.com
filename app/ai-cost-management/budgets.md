@@ -17,12 +17,13 @@ tools:
   - konnect-api
 
 breadcrumbs:
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "Reference for budgets in {{site.ai_cost_management}}. Covers the usage a budget tracks, how its limit and budget window work, and how notification rules and channels alert you as spend grows."
 
@@ -34,16 +35,18 @@ api_specs:
   - konnect/ai-cost-management
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
+  - text: Analytics and debugging in {{site.ai_cost_management}}
+    url: /ai-cost-management/analytics-and-debugging/
+  - text: Attribution in {{site.ai_cost_management}}
+    url: /ai-cost-management/attribution/
   - text: Notification channels in {{site.ai_cost_management}}
     url: /ai-cost-management/notification-channels/
+  - text: Price catalog and overrides
+    url: /ai-cost-management/price-catalog/
   - text: Set up a budget with email alerts
     url: /ai-cost-management/set-up-a-budget-with-email-alerts/
   - text: Set up a budget with Slack alerts
     url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
-  - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
 ---
 
 ## What is a budget?

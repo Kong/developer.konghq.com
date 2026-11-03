@@ -5,6 +5,7 @@ layout: reference
 
 products:
   - ai-cost-management
+  - ai-gateway
 
 works_on:
   - konnect
@@ -13,17 +14,20 @@ min_version:
   ai-gateway: '2.3'
 
 breadcrumbs:
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
+  - cost-management
+
+api_specs:
+  - konnect/ai-cost-management
 
 description: "Attribution integrations for {{site.ai_cost_management}} lists the tools that send standard tags automatically and those you configure with request headers."
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
 ---
