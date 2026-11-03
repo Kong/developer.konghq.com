@@ -189,8 +189,8 @@ rows:
           - type: card
             config:
               title: "{{site.observability}}"
-              description: "{{site.konnect_short_name}} {{site.observability}} provides insights into API health, performance, and usage."
+              description: "Analyze traffic, latency, errors, and cost for models, MCP servers, and agents in Explorer."
               icon: /assets/icons/monitor.svg
               cta:
-                text: "{{site.konnect_short_name}} {{site.observability}}"
-                url: /observability/
+                text: Observability in AI Management
+                url: /ai-management/observability/

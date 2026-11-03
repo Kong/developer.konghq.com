@@ -75,6 +75,7 @@ sections:
     items:
       - path: /ai-management/
       - path: /ai-management/roles-and-permissions/
+      - path: /ai-management/observability/
   - title: "{{site.ai_gateway}} providers"
     items:
       - path: /ai-gateway/ai-providers/**/*
