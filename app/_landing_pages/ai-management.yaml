@@ -125,12 +125,6 @@ rows:
               cta:
                 text: Virtual keys in access management
                 url: /ai-access-management/concepts/#virtual-keys
-
-  - header:
-      type: h2
-      text: "Related"
-    column_count: 3
-    columns:
       - blocks:
           - type: card
             config:
@@ -167,10 +161,34 @@ rows:
               cta:
                 text: AI Auth Strategy entity
                 url: /ai-gateway/entities/ai-auth-strategy/
+
+  - header:
+      type: h2
+      text: "Observability and Cost Management"
+    column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
-              title: Cost Management
+              title: "{{site.observability}}"
+              description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents in AI Management."
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: Observability in AI Management
+                url: /ai-management/observability/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_cost_management}}"
+              description: "{{site.ai_cost_management}} gives you visibility into your organization's AI model spend across users, groups, models, and teams."
+              icon: /assets/icons/money.svg
+              cta:
+                text: "{{site.ai_cost_management}} overview"
+                url: /ai-cost-management/
+      - blocks:
+          - type: card
+            config:
+              title: Budgets
               description: A budget in AI Cost Management tracks AI spend against a limit and sends alerts as spend approaches it.
               icon: /assets/icons/money.svg
               cta:
@@ -185,12 +203,3 @@ rows:
               cta:
                 text: "Model cost management in {{site.ai_gateway}}"
                 url: /ai-gateway/model-cost-management/
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.observability}}"
-              description: "Monitor traffic, latency, errors, and cost for models, MCP servers, and agents."
-              icon: /assets/icons/monitor.svg
-              cta:
-                text: Observability in AI Management
-                url: /ai-management/observability/

@@ -57,10 +57,14 @@ rows:
       This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: "{{site.ai_gateway}} 2 dashboard"
     description: |
-      Monitors {{site.ai_gateway}} 2 performance, including traffic, latency, and errors.
+      AI-focused insight into your LLM traffic and operational costs. 
+      Track request volume by model and provider, understand token usage trends, and monitor latency across different models. 
+      This dashboard helps teams operating {{site.ai_gateway}} 2 to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: Agentic analytics dashboard
     description: |
-      Monitors MCP tool and method usage patterns, response sizes, and latency.
+      Overview of agentic traffic flowing through your Kong gateway. 
+      This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time. 
+      It helps teams operating MCP-enabled services understand usage patterns and identify performance bottlenecks.
   - type: Shared services dashboard
     description: |
       Health and performance of Gateway Services managed inside your {{site.konnect_short_name}} organization. 
