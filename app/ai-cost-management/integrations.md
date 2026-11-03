@@ -14,7 +14,6 @@ min_version:
   ai-gateway: '2.3'
 
 breadcrumbs:
-  - /ai-gateway/
   - /ai-management/
   - /ai-cost-management/
 

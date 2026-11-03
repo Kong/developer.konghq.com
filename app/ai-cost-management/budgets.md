@@ -17,7 +17,6 @@ tools:
   - konnect-api
 
 breadcrumbs:
-  - /ai-gateway/
   - /ai-management/
   - /ai-cost-management/
 

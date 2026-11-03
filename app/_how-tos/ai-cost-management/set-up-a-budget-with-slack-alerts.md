@@ -24,7 +24,6 @@ tags:
   - cost-management
 
 breadcrumbs:
-  - /ai-gateway/
   - /ai-management/
   - /ai-cost-management/
 

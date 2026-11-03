@@ -19,7 +19,6 @@ entities:
   - ai-model
 
 breadcrumbs:
-  - /ai-gateway/
   - /ai-management/
   - /ai-cost-management/
 

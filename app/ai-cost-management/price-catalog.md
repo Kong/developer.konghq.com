@@ -15,7 +15,6 @@ works_on:
   - on-prem
 
 breadcrumbs:
-  - /ai-gateway/
   - /ai-management/
   - /ai-cost-management/
 
