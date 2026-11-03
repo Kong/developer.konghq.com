@@ -85,7 +85,7 @@ Users imported from an org structure file are managed by that file:
 
 You can view all users in one searchable table. Search matches on the user's name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
 
-Open a user to see their details, including the groups and teams they belong to, their virtual keys, and their remote credentials. The **Provisioned by** field shows how the user was added, for example **Imported** for users from an [org structure import](#import-an-org-structure).
+Open a user to see their details. The **Provisioned by** field shows how the user was added, for example **Imported** for users from an [org structure import](#import-an-org-structure).
 
 ### Teams
 
@@ -154,7 +154,6 @@ When you add an identity provider, you give it a name and an issuer URL. You can
 * [Enable automatic user provisioning](/identity/token-vault/#trusted-idp) so that users are created the first time they sign in. Automatic user provisioning doesn't give users access to the credentials stored in [Token Vault](/identity/token-vault/). An admin must grant that access explicitly.
 * Choose whether Token Vault trusts the provider.
 
-The identity providers list shows each provider's name, issuer URL, number of principals, Token Vault access, automatic user provisioning setting, and last update date.
 
 To stop Token Vault from relying on a provider, remove its trust. To delete a provider you no longer need, delete it from the list.
 
@@ -197,5 +196,7 @@ You can create a key in one of the following ways:
 
 In both cases, you choose an expiry of 30 days, 90 days, 1 year, or never.
 
-The key list shows each key's name, holder, type, expiry, and creation date. You can search the list by name, filter it by type, and delete keys one at a time. Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
+You can search the key list by name, filter it by type, and delete keys one at a time. 
+
+Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
 
