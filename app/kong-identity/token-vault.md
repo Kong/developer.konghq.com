@@ -26,7 +26,7 @@ related_resources:
     url: /identity/directories/
 
 faqs:
-  - q: "Why use the {{site.identity}} Token Vault instead of connectors in LLM services?"
+  - q: "Why should I use the {{site.identity}} Token Vault instead of connectors in LLM services?"
     a: |
       Connectors are client-owned: each time a user needs to connect an LLM to a service, they need to set up a connector inside each service. Token Vault makes the Gateway sit in front of any client. You can use different agents with a single credential store, with a way to revoke access locally. Using Token Vault prevents agents from accessing authorization tokens and provides a way of federating identities around corp IdP like Okta.  
 ---
@@ -79,7 +79,7 @@ The following diagram shows how a request flows from a principal to a third-part
 1. A principal (your users, agents, and applications) sends a request through {{site.ai_gateway}}.
 1. {{site.ai_gateway}} routes the request to an MCP server with a Token Vault provider attached for outbound authentication.
 1. Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
-1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal has no credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
+1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](#credential-enrollment).
 
 The IdP token only identifies the principal. It never becomes the stored credential.
 
@@ -334,7 +334,7 @@ A credential moves through the following stages, depending on the action a user 
 1. **Refresh**: For OAuth-based providers, Token Vault refreshes credentials automatically before they expire (see the provider's `refresh_buffer_seconds`), with locking, to prevent concurrent requests from consuming a refresh token. If a refresh fails while the stored token is still valid, Token Vault keeps releasing the stored token.
 1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Admins can list and delete a user's credentials with the `/v2/directories/{directoryId}/principals/{principalId}/vault-credentials` endpoints. Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
 
-Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbound calls without making the credentials accessible from any read endpoint.
+Token Vault never exposes the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbound calls without making the credentials accessible from any read endpoint.
 
 
 ## Credential enrollment
