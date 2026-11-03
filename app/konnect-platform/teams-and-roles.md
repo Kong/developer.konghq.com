@@ -256,6 +256,45 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+#### Access management
+
+The following table describes the predefined roles for [AI access management](/ai-access-management/concepts/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: This role grants full access to users, groups, identity providers, Token Vault, and virtual keys.
+    permissions: |
+      * Create, import, edit, deactivate, and delete users
+      * View the org chart
+      * View all groups
+      * Create, edit, and delete groups
+      * Add or remove group members
+      * Add, edit, and delete identity providers
+      * Set up and manage Token Vault and its credential providers
+      * View all virtual keys
+      * Create virtual keys for any holder
+  - role: "`Team manager`"
+    description: This role grants read access to the groups a user belongs to or manages, and access to the virtual keys held by the members of the teams they manage.
+    permissions: |
+      * View the groups they belong to or manage
+      * List, create, view, edit, and delete virtual keys held by members of their teams, including members of nested teams
+  - role: "`Individual user`"
+    description: This role grants read access to the groups a user belongs to, and access to the virtual keys they hold.
+    permissions: |
+      * View the groups they belong to
+      * List, create, view, edit, and delete their own virtual keys
+{% endtable %}
+<!--vale on-->
+
 #### AI Gateways
 
 The following table describes the predefined roles for [{{site.ai_gateway}}](/ai-gateway/):
