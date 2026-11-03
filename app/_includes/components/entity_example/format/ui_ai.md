@@ -53,8 +53,10 @@ The following creates a new AI Consumer. Consumers are managed in the API view o
 1. In **Consumer type**, select **API key** or **OAuth**.
 1. Click **Next**.
 1. In the **Display name** field, enter `{{ include.presenter.data['display_name'] }}`.
+1. In the **Custom ID** field, enter a unique ID.
 1. If you selected **OAuth**, click **Create**.
 1. If you selected **API key**, click **Next**.
+1. In the **Display name** field, enter a name for the key.
 1. Choose one of the following methods to create your API key:
     * Manually enter a key, save it, then click **Create key**
     * Click **Generate key**, save the generated key, then click **Create key**.
