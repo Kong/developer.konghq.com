@@ -161,6 +161,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         let(:scopes) { %w[ai-model] }
 
         it 'renders the attach section even though no scope selector exists' do
+          expect(html).not_to have_css('select.select-target')
           expect(html).to have_css('h3 a[href="#attach-the-policy"]', text: 'Attach the policy')
           expect(attach_section).to have_css('.entity-example-target-panel[data-target="ai-model"]')
           expect(attach_section[:'data-follow-target']).to eq('true')
