@@ -51,11 +51,17 @@ The following creates a new AI Consumer. Consumers are managed in the API view o
 1. Click the **Consumers** tab.
 1. Click **New consumer**.
 1. In **Consumer type**, select **API key** or **OAuth**.
+1. Click **Next**.
 1. In the **Display name** field, enter `{{ include.presenter.data['display_name'] }}`.
 1. If you selected **OAuth**, click **Create**.
-1. If you selected **API key**, click **Next**, then click **Generate key** and **Create key**, or click **Skip** to add a key later.
+1. If you selected **API key**, click **Next**.
+1. Choose one of the following methods to create your API key:
+    * Manually enter a key, save it, then click **Create key**
+    * Click **Generate key**, save the generated key, then click **Create key**.
+    * Click **Create key**. The generated key appears in a dialog. Save the key and click **Done**.
+    * Click **Skip** to add a key later.
 {% when 'consumer_group' %}
-The following creates a new AI consumer group. Consumer groups are managed in the API view of {{site.konnect_short_name}}. Suggested values are shown in backticks:
+The following creates a new AI Consumer Group. Consumer Groups are managed in the API view of {{site.konnect_short_name}}. Suggested values are shown in backticks:
 
 1. On the far left of {{site.konnect_short_name}}, click **API** to switch to the API view.
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
@@ -64,7 +70,7 @@ The following creates a new AI consumer group. Consumer groups are managed in th
 1. Click the **Groups** tab.
 1. Click **New consumer group**.
 1. In the **Display name** field, enter `{{ include.presenter.data['display_name'] }}`.
-1. Optional: Select the consumers to add to the group.
+1. Optional: Select the Consumers to add to the group.
 1. Click **Create**.
 {% when 'model' %}
 The following creates a new model. Suggested values are shown in backticks:
@@ -111,16 +117,14 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. From the **Gateway** dropdown menu, select your {{site.ai_gateway}}.
 1. From the **New** dropdown menu, select "MCP server".
 1. In the **Display name** field, enter `{{ include.presenter.data['display_name'] }}`.
-1. In **Connection**, select **{{ connection }}**.
+1. From the **Connection** options, select **{{ connection }}**.
 {% if connection == 'Interface' %}
 1. In **Configuration**, from the **Sources** dropdown menu, select the sources to expose.
 {% else %}
 1. In the **Upstream URL** field, enter `{{ include.presenter.data['config']['url'] | default: 'https://mcp.example.com' }}`.
 {% endif %}
 1. In **Routing config**, in the **Base path** field, enter `{{ include.presenter.data['config']['route']['paths'][0] | default: '/' }}`.
-{% unless connection == 'Interface' %}
 1. Optional: In **Tools**, click **Add tool** to define or restrict the tools.
-{% endunless %}
 1. Optional: In **Authentication**, select an inbound auth strategy and configure outbound authentication.
 1. Optional: In **Access control**, enable **Restrict access with an ACL** and add default tool ACLs.
 1. Click **Create**.
