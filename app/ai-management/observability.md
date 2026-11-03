@@ -140,6 +140,7 @@ To see cost next to latency or TTFT, add a tile for each metric to the same dash
 
 The Explorer in AI Management works the same as the {{site.konnect_short_name}} Explorer.
 For the full Explorer documentation, including time ranges, saving reports, and exporting to CSV, see the [{{site.konnect_short_name}} Explorer reference](/observability/explorer/).
+
 In the Explorer query bar, you can build a query **From** a data source, **Show** a chart type **with** a metric, **per** a time interval, **by** a dimension.
 
 For AI traffic, use one of these data sources:
