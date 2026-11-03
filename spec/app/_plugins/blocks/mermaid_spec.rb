@@ -74,4 +74,33 @@ RSpec.describe Jekyll::RenderMermaid do
       end
     end
   end
+
+  describe 'markdown output' do
+    let(:page) { { 'output_format' => 'markdown', 'path' => 'gateway/test.md' } }
+
+    it 'emits a mermaid fence instead of the mounting markup' do
+      expect(rendered).to start_with(<<~MARKDOWN)
+        ```mermaid
+        flowchart LR
+          A[Client] --> B[Gateway]
+        ```
+      MARKDOWN
+      expect(rendered).not_to include('<pre')
+    end
+
+    context 'when the source contains a doubly escaped entity' do
+      let(:template) do
+        <<~LIQUID
+          {% mermaid %}
+          flowchart LR
+            KIC1[fa:fa-gateway KIC &amp;lpar;Active&amp;rpar;]
+          {% endmermaid %}
+        LIQUID
+      end
+
+      it 'shows the source the renderer actually receives' do
+        expect(rendered).to include('[fa:fa-gateway KIC &lpar;Active&rpar;]')
+      end
+    end
+  end
 end
