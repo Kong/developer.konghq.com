@@ -278,21 +278,20 @@ rows:
       * View all groups
       * Create, edit, and delete groups
       * Add or remove group members
-      * Export groups as a CSV
       * Add, edit, and delete identity providers
       * Set up and manage Token Vault and its credential providers
       * View all virtual keys
       * Create virtual keys for any holder
   - role: "`Team manager`"
-    description: This role grants read access to the groups a user belongs to or manages, and to the virtual keys held by the user and those groups.
+    description: This role grants read access to the groups a user belongs to or manages, and access to the virtual keys held by the members of the teams they manage.
     permissions: |
       * View the groups they belong to or manage
-      * View virtual keys they hold, and virtual keys held by the groups they belong to or manage
+      * List, create, view, edit, and delete virtual keys held by members of their teams, including members of nested teams
   - role: "`Individual user`"
-    description: This role grants read access to the groups a user belongs to and the virtual keys they hold.
+    description: This role grants read access to the groups a user belongs to, and access to the virtual keys they hold.
     permissions: |
       * View the groups they belong to
-      * View virtual keys they hold
+      * List, create, view, edit, and delete their own virtual keys
 {% endtable %}
 <!--vale on-->
 
