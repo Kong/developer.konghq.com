@@ -245,7 +245,7 @@ For the full schema, see the [`/v1/ai-cost-management/events` API reference](/ap
   }
 }
 ```
-{:.collapsible}
+{:.collapsible.no-copy-code}
 
 ## Filters and dimensions
 

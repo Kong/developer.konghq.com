@@ -86,7 +86,7 @@ When dynamic pricing is on, {{site.ai_gateway}} prices each request in the follo
 
 Since per-target cost fields take precedence over catalog overrides, this makes them useful when different targets using the same model need different prices.
 
-For example, you a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
+For example, you have a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
 In this case, both routes use the same model, but only the premium target has cost fields set:
 
 * The standard route uses the catalog price or your negotiated override.

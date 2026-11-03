@@ -227,7 +227,6 @@ You can verify a download by comparing its size and SHA-256 checksum against tho
 ### Scheduled exports
 
 A scheduled export runs automatically at the end of each period.
-A scheduled export runs automatically at the end of each period.
 Usage events don't always arrive in real time.
 The export starts six hours after the period ends, so that events that arrive late can be stored first.
 For example, a request that happens at 11:58 PM might not be processed and stored until 1 AM.
