@@ -20,7 +20,7 @@ Examples:
 Available Commands:
   konnect      Delete Konnect tokens
   mesh         Delete a Kong Mesh resource
-  organization Get current organization information
+  organization Manage Konnect organization resources
   pat          Delete a Konnect personal access token
   spat         Delete a Konnect system account access token
 

@@ -32,6 +32,12 @@ List {{site.konnect_short_name}} {{site.ai_gateway}}s.
 
 {% include_cached /kongctl/help/list/konnect/ai-gateway.md %}
 
+### kongctl list konnect ai-cost-management
+
+Manage regional AI cost capture.
+
+{% include_cached /kongctl/help/list/konnect/ai-cost-management.md %}
+
 ### kongctl list konnect analytics
 
 The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.

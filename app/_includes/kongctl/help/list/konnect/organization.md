@@ -11,6 +11,7 @@ Examples:
   kongctl get organization
 
 Available Commands:
+  pats           List personal access tokens in the current organization
   system-account List or get Konnect system accounts
   team           List or get Konnect teams
   user           List or get Konnect organization users
