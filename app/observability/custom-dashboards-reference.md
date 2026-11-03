@@ -57,10 +57,10 @@ rows:
       This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: "{{site.ai_gateway}} 2 dashboard"
     description: |
-      Traffic, latency, and errors for {{site.ai_gateway}} 2 models, MCP servers, and agents.
+      Monitors {{site.ai_gateway}} 2 performance, including traffic, latency, and errors.
   - type: Agentic analytics dashboard
     description: |
-      MCP tool and method usage patterns, response sizes, and latency.
+      Monitors MCP tool and method usage patterns, response sizes, and latency.
   - type: Shared services dashboard
     description: |
       Health and performance of Gateway Services managed inside your {{site.konnect_short_name}} organization. 

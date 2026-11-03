@@ -50,7 +50,7 @@ rows:
   - page: "[**Explorer**](#explorer)"
     use: "Answer one specific question with a custom query."
   - page: "[**Logs**](#logs)"
-    use: "Read and search the data plane logs of your gateways."
+    use: "Read and search the logs of your gateways."
 {% endtable %}
 <!-- vale on -->
 
@@ -65,7 +65,8 @@ What you see depends on your [AI Management role](/ai-management/roles-and-permi
 ## Overview
 
 Overview is a prebuilt dashboard for all AI traffic.
-Use the filters at the top to narrow it to providers, models, or agents, and the time range menu to change the period.
+To narrow it, use the **All Providers**, **All AI gateway models**, and **All AI gateway agents** filters.
+To change the period, use the time range menu.
 The default period is the last 7 days.
 
 The page has the following sections. Click a section name at the top of the page to jump to it.
@@ -81,9 +82,9 @@ rows:
   - section: "**Key metrics**"
     shows: "LLM latency (p95), request count, total and cached token counts, error rate, and costs. Each tile compares the value with the previous period."
   - section: "**Top consumers**"
-    shows: "The models, providers, users, and MCP servers with the most requests."
+    shows: "The top five models, providers, users, and MCP servers by request count, with each one's share of requests."
   - section: "**Performance**"
-    shows: "Total requests, LLM latency, error rate, tokens per minute, time to first token (TTFT), and time per output token (TPOT) over time."
+    shows: "Total requests, LLM latency, error rate, tokens per minute, time to first token (TTFT), and time per output token (TPOT) over time. The LLM latency, TTFT, and TPOT charts show p50, p95, and p99 on the same chart."
   - section: "**Costs**"
     shows: "Total costs compared with request count, and cost by model."
   - section: "**Models**"
@@ -108,8 +109,8 @@ For a walkthrough, see [Create a dashboard from a template](/how-to/create-custo
 
 ## Explorer
 
-Explorer answers one question at a time.
-You build a query in the query bar: **From** a data source, **Show** a chart type **with** a metric, **per** a time interval, **by** a dimension.
+Explorer runs one query at a time.
+You build the query in the query bar: **From** a data source, **Show** a chart type **with** a metric, **per** a time interval, **by** a dimension.
 Use **Add filter** to narrow the requests, and the time range menu to change the period.
 
 For AI traffic, use one of these data sources:
@@ -225,18 +226,17 @@ rows:
 
 ## Logs
 
-Logs lists the data plane logs of your gateways, newest first.
-Each row is one log entry, not a conversation.
+Logs lists the logs of your gateways and their control planes, newest first.
 
 * Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
-* Use the **Filter** panel to narrow the entries by log level, service, or control plane.
+* Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (for example, the data plane or the control plane), or **Control Plane**.
 * The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
 * Click an entry to open its details: a summary, its attributes, and the full message.
 
 ## Explorer and {{site.ai_cost_management}}
 
 {{site.ai_cost_management}} has its own [Explorer](/ai-cost-management/analytics-and-debugging/#explorer) for spend, with budgets, users, teams, and cost tags.
-Use the Observability Explorer for traffic, latency, and errors, and to plot cost next to them.
+Use the Observability Explorer for traffic, latency, and errors, and for cost by model or provider.
 
 ## Data retention
 
