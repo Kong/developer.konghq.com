@@ -38,33 +38,45 @@ faqs:
 
 Access management allows you to define who can use your organization's resources, like [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/), in {{site.ai_gateway}}.
 
-Access management features answer two questions:
+Access management features define:
 
-* Who is making the request?
-* What are they allowed to do?
+* Who can make requests to your {{site.ai_gateway}} resources.
+* What they are allowed to do.
+* Which limits apply to them.
+* How your organization is structured.
 
-You can give permissions to users individually, or in bulk using groups.
+You can apply rules to users individually, or in bulk using [groups](#groups).
 
 ## Users
 
 A user is a person who is added to the system in one of the following ways:
 
-* An admin creates them manually.
-* An admin uploads a CSV file containing the org structure.
-* They sign in for the first time and are created through just-in-time (JIT) provisioning. This requires an [identity provider](#identity-providers) with JIT provisioning enabled.
-
-To create a user, you must provide the following:
-
-* A user name
-* A user email
+{% table %}
+columns:
+  - title: Method
+    key: method
+  - title: Description
+    key: description
+  - title: Requirements
+    key: requirements
+rows:
+  - method: "Manual creation"
+    description: "An admin creates the user."
+    requirements: "A user name and a user email."
+  - method: "Org structure import"
+    description: "An admin uploads a CSV file containing the org structure."
+    requirements: "A CSV file with the required columns."
+  - method: "Just-in-time (JIT) provisioning"
+    description: "The user signs in for the first time and is created automatically."
+    requirements: "An [identity provider](#identity-providers) with JIT provisioning enabled."
+{% endtable %}
 
 To stop a user from signing in while keeping their history, deactivate the user instead of deleting them.
 
 Users imported from an org structure file are managed by that file:
 
 * Their name and email are read-only.
-* If a later import no longer lists them, they are deactivated, not deleted.
-* You can't delete imported users.
+* You can't delete them. If a later import no longer lists them, they are deactivated, not deleted.
 
 {:.info}
 > To change imported users, import an updated org chart.
@@ -100,6 +112,36 @@ A group is a list of users that share the same rules. Instead of setting rules o
 Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group.
 
 Add users to a group from the group's detail page. You can also add or remove a user from one or more groups from the user's details.
+
+## Groups and teams
+
+Both groups and teams collect users, but they are created and managed differently. The following table compares them:
+
+{% table %}
+columns:
+  - title: Aspect
+    key: aspect
+  - title: Group
+    key: group
+  - title: Team
+    key: team
+rows:
+  - aspect: "**Purpose**"
+    group: "Share the same rules across a list of users, for example in a spend limit."
+    team: "Reflect your org structure."
+  - aspect: "**Creation**"
+    group: "Created manually by an admin."
+    team: "Created automatically when you [import an org structure](#import-an-org-structure). Can't be created manually."
+  - aspect: "**Membership**"
+    group: "Add or remove users from the group's detail page or from the user's details."
+    team: "Set by the org structure import. You can't manually assign a user to an existing team."
+  - aspect: "**Nesting**"
+    group: "A group can't contain another group."
+    team: "A team can be nested under a parent team."
+  - aspect: "**Changes**"
+    group: "Edit manually at any time."
+    team: "Change only through import. Upload the file again when your org structure changes."
+{% endtable %}
 
 ## Identity providers
 
