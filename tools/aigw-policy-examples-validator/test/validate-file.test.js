@@ -10,6 +10,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURES = path.join(__dirname, "fixtures");
 const EXAMPLES = path.join(FIXTURES, "app/_ai_gateway_policies/ai-sanitizer/examples");
 const ORPHAN_EXAMPLES = path.join(FIXTURES, "app/_ai_gateway_policies/ai-no-schema/examples");
+const UNCOMPILABLE_EXAMPLES = path.join(
+  FIXTURES,
+  "app/_ai_gateway_policies/ai-uncompilable/examples",
+);
 
 function context() {
   const ajv = new Ajv({ allErrors: true, strict: false });
@@ -66,6 +70,33 @@ test("a misspelled config key yields a finding naming the file and the key", () 
   assert.equal(unknownKey.instancePath, "");
 });
 
+test("an unknown config key set to null yields a finding naming the key", () => {
+  const file = path.join(EXAMPLES, "unknown-null-key.yml");
+
+  const result = validateFile(file, context());
+
+  assert.equal(result.length, 1);
+  assert.equal(result[0].file, file);
+  const unknownKey = result[0].errors.find(
+    (error) => error.params && error.params.additionalProperty === "tresholds",
+  );
+  assert.ok(unknownKey, "expected an unknown-key finding for tresholds");
+});
+
+test("a config value the schema disallows yields a finding naming the field", () => {
+  const file = path.join(EXAMPLES, "wrong-value-type.yml");
+
+  const result = validateFile(file, context());
+
+  assert.equal(result.length, 1);
+  assert.equal(result[0].file, file);
+  const wrongType = result[0].errors.find(
+    (error) => error.instancePath === "/port",
+  );
+  assert.ok(wrongType, "expected a finding at /port");
+  assert.match(wrongType.message, /integer/);
+});
+
 test("every finding error carries an instancePath", () => {
   const files = [
     path.join(EXAMPLES, "non-object-config.yml"),
@@ -81,6 +112,17 @@ test("every finding error carries an instancePath", () => {
       }
     }
   }
+});
+
+test("a schema that cannot be compiled yields a finding instead of crashing", () => {
+  const file = path.join(UNCOMPILABLE_EXAMPLES, "example.yml");
+
+  const result = validateFile(file, context());
+
+  assert.equal(result.length, 1);
+  assert.equal(result[0].file, file);
+  assert.match(result[0].errors[0].message, /AiUncompilable\.json/);
+  assert.match(result[0].errors[0].message, /nullable/);
 });
 
 test("a policy folder with no schema yields a finding naming the folder", () => {

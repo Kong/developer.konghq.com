@@ -125,8 +125,9 @@ export function schemaAllowsNull(fieldSchema) {
 }
 
 // Recursively replace ${...} template variables with schema-appropriate
-// values, and strip nulls the schema does not allow. The resolved sub-schema
-// is passed down through the recursion so we never re-walk from the root.
+// values, and strip nulls on declared fields the schema does not allow. The
+// resolved sub-schema is passed down through the recursion so we never re-walk
+// from the root.
 export function replaceVariables(obj, fieldSchema) {
   if (typeof obj === "string") {
     if (/\$\{[^}]+\}/.test(obj)) {
@@ -143,7 +144,15 @@ export function replaceVariables(obj, fieldSchema) {
     const result = {};
     for (const [key, value] of Object.entries(obj)) {
       const propSchema = props && props[key];
-      if (value === null && !schemaAllowsNull(propSchema)) continue;
+      // Only a declared field can be judged for null: dropping a key the schema
+      // never declares removes the very value the closed object must reject.
+      if (
+        value === null &&
+        propSchema !== undefined &&
+        !schemaAllowsNull(propSchema)
+      ) {
+        continue;
+      }
       result[key] = replaceVariables(value, propSchema);
     }
     return result;
@@ -159,19 +168,32 @@ function folderSlug(filePath) {
 
 function compiledConfigSchema(slug, schemaPath, ajv, compiled) {
   if (!compiled.has(slug)) {
-    const schema = JSON.parse(fs.readFileSync(schemaPath, "utf-8"));
-    const configSchema = schema.properties && schema.properties.config;
-    if (!configSchema) {
-      compiled.set(slug, {
+    let entry;
+    try {
+      const schema = JSON.parse(fs.readFileSync(schemaPath, "utf-8"));
+      const configSchema = schema.properties && schema.properties.config;
+      if (!configSchema) {
+        entry = {
+          error: {
+            instancePath: "/config",
+            message: `The schema for "${slug}" has no properties.config to validate examples against`,
+          },
+        };
+      } else {
+        closeObjectSchemas(configSchema, findAllOfMembers(configSchema));
+        entry = { configSchema, validateFn: ajv.compile(configSchema) };
+      }
+    } catch (e) {
+      // A vendored schema that cannot be read or compiled must surface as a
+      // finding: letting it throw ends the run before the other examples report.
+      entry = {
         error: {
           instancePath: "/config",
-          message: `The schema for "${slug}" has no properties.config to validate examples against`,
+          message: `Could not validate against ${schemaPath}: ${e.message}`,
         },
-      });
-    } else {
-      closeObjectSchemas(configSchema, findAllOfMembers(configSchema));
-      compiled.set(slug, { configSchema, validateFn: ajv.compile(configSchema) });
+      };
     }
+    compiled.set(slug, entry);
   }
   return compiled.get(slug);
 }

@@ -14,7 +14,8 @@ policy schemas in `app/_schemas/ai-gateway/policies/`.
 1. Globs all example files matching `app/_ai_gateway_policies/*/examples/*.{yaml,yml}`.
 1. For each example file:
    - Resolves the schema by the policy folder slug from the file path. A policy
-     folder without a matching schema is a finding, not a skip.
+     folder whose schema is missing or cannot be compiled is a finding, not a
+     skip.
    - Checks the example's `type` against the policy folder slug.
    - Closes every object schema that declares `properties` without saying what
      else it accepts (`additionalProperties`), so misspelled config keys are
@@ -22,7 +23,9 @@ policy schemas in `app/_schemas/ai-gateway/policies/`.
      `additionalProperties: true` is honored.
    - Replaces `${...}` template variables with schema-appropriate placeholder
      values (the schema's `example`, `default`, first `enum` value, or a safe
-     value per type) and strips `null` values the schema does not allow.
+     value per type) and strips `null` values the schema disallows on a field it
+     declares. A `null` on a key the schema does not declare survives, so a
+     closed config object still rejects the key.
    - Validates the example's `config` against the schema's `properties.config`
      sub-schema using [Ajv](https://ajv.js.org/).
 

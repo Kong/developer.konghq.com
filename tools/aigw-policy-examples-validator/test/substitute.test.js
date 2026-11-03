@@ -67,6 +67,22 @@ test("replaceVariables strips a null the schema does not allow", () => {
   assert.deepEqual(result, { rejection_mode: "return_error" });
 });
 
+test("replaceVariables keeps a null on a key the schema does not declare", () => {
+  const configSchema = {
+    type: "object",
+    properties: {
+      rejection_mode: { type: "string" },
+    },
+  };
+
+  const result = replaceVariables(
+    { rejection_mode: "return_error", tresholds: null },
+    configSchema,
+  );
+
+  assert.deepEqual(result, { rejection_mode: "return_error", tresholds: null });
+});
+
 test("replaceVariables keeps a null on a nullable field", () => {
   const configSchema = {
     type: "object",
