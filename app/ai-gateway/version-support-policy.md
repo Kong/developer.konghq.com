@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/vulnerabilities/
   - text: "{{site.ai_gateway}} changelog"
     url: /ai-gateway/changelog/
+  - text: "Data plane version compatibility"
+    url: /ai-gateway/data-plane-version-compatibility/
 
 works_on:
   - on-prem

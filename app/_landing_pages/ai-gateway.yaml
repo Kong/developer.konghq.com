@@ -551,6 +551,15 @@ rows:
                 text: View FIPS 140-3 compliance
                 url: /ai-gateway/fips-support/
                 align: end
+      - blocks:
+          - type: card
+            config:
+              title: Data plane version compatibility
+              description: Learn how the minimum supported data plane version controls which data planes and features work with your {{site.ai_gateway}} control plane.
+              cta:
+                text: View data plane version compatibility
+                url: /ai-gateway/data-plane-version-compatibility/
+                align: end
 
   - header:
       type: h2

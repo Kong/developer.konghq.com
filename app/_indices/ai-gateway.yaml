@@ -61,6 +61,7 @@ sections:
       - path: /ai-gateway/conditions/
       - path: /ai-gateway/changelog/
       - path: /ai-gateway/version-support-policy/
+      - path: /ai-gateway/data-plane-version-compatibility/
 
   - title: "{{site.ai_gateway}} entities"
     items:
