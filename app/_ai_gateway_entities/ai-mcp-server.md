@@ -682,7 +682,7 @@ For modes that support server-level ACL configuration (`conversion-listener`, `l
 
 ### Using AI Consumers and Groups in ACLs
 
-When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
+When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user or allow a tier-based group. Each ACL takes either an `allow` list or a `deny` list, not both. The runtime checks the authenticated AI Consumer's identity and group memberships against that list.
 
 ### CEL-based ACLs
 

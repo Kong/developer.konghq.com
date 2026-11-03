@@ -540,11 +540,9 @@ ai_gateway_mcp_servers:
     acl_attribute_type: consumer
     acls:
       allow: []
-      deny: []
     default_tool_acls:
       allow:
       - flight-operators
-      deny: []
     auth_strategies:
     - flights-key-auth
   config:
