@@ -95,7 +95,7 @@ Unattributed events still appear in totals and are matchable by group, tag, and 
 
 Groups and teams record the organizational context of the request's principal.
 
-{:.note}
+{:.info}
 > Groups and teams don't come from tag headers.
 > Sending a header named `ai-cost-groups` or similar doesn't populate these fields.
 
