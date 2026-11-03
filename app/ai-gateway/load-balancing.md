@@ -75,8 +75,12 @@ rows:
     description: |
       Routes requests to models with the lowest measured resource usage. The [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) parameter defines how usage is measured: prompt tokens, completion tokens, total tokens (the default), cost, or an LLM-accuracy score.
 
-      {:.info}
-      > **Note**: If you don't configure any cost fields on a target, {{site.ai_gateway}} falls back to the [price catalog](/ai-cost-management/price-catalog).
+      {:.warning}
+      > **Warning**: If a target has no cost fields and the model has no price in the catalog, {{site.ai_gateway}} counts its cost as `0`.
+      > With `lowest-usage` and `tokens_count_strategy: cost`, all traffic routes to any zero-priced model.
+      > Configure cost fields on the target or add a price for the model in the [price catalog](/ai-cost-management/price-catalog) to avoid this.
+      > <br><br>
+      > If you don't configure any cost fields on a target, {{site.ai_gateway}} falls back to the [price catalog](/ai-cost-management/price-catalog).
       > <br><br>
       > When dynamic pricing is off (`KONG_DYNAMIC_PRICING=off`), you must configure [cost fields](/ai-gateway/model-cost-management/) directly on each target.
       > <br><br>

@@ -12,6 +12,7 @@ min_version:
 
 works_on:
   - konnect
+  - on-prem
 
 breadcrumbs:
   - /ai-cost-management/
@@ -51,6 +52,12 @@ faqs:
   - q: Do rate overrides apply to every {{site.ai_gateway}} in my organization?
     a: |
       Yes. A rate override applies to every {{site.ai_gateway}} in your organization.
+
+  - q: Can I apply an override in my on-prem {{site.ai_gateway}} price catalog?
+    a: |
+      You can't use the {{site.konnect_short_name}} UI to apply overrides on-prem. 
+      
+      However, if you're using the `dynamic_pricing_uri` setting to provide a catalog instead of using {{site.konnect_short_name}}'s price catalog, you can set any prices you like in that file.
 ---
 
 {{site.ai_cost_management}} reports the cost of each AI request that passes through {{site.ai_gateway}}. 
@@ -76,6 +83,16 @@ When dynamic pricing is on, {{site.ai_gateway}} prices each request in the follo
 1. The provider's [percentage off override](#percentage-off-overrides), if it has one.
 1. The model's list price from the [price catalog](#price-catalog).
 
+Since per-target cost fields take precedence over catalog overrides, this makes them useful when different targets using the same model need different prices.
+
+For example, you a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
+In this case, both routes use the same model, but only the premium target has cost fields set:
+
+* The standard route uses the catalog price or your negotiated override.
+* The premium target uses its own fixed price.
+
+Catalog overrides apply across every {{site.ai_gateway}} in your organization for a given model or provider, so they are a better fit for a negotiated discount that covers all usage.
+
 You can turn dynamic pricing off to prevent {{site.ai_gateway}} from using the price catalog or overrides.
 See [Dynamic pricing settings](#dynamic-pricing-settings).
 
@@ -85,12 +102,12 @@ You can configure dynamic pricing using the following settings, which are set in
 
 * `dynamic_pricing` (`KONG_DYNAMIC_PRICING`): Turns dynamic pricing on or off. The default is `on`.
   When it's `off`, the data plane prices requests only from target cost management settings.
-* `dynamic_pricing_uri` (`KONG_DYNAMIC_PRICING_URI`): The location of the catalog that the data plane uses, as a URL or a `file://` path.
+* `dynamic_pricing_uri` (`KONG_DYNAMIC_PRICING_URI`): The location of the catalog that the data plane uses, as a URL (starting with `http://` or `https://`) or a file path (starting with `file://`).
   The data plane re-reads the catalog every 60 seconds.
-  When it's unset, a {{site.konnect_short_name}} data plane gets the catalog for its control plane.
-  
-     On-prem deployments with no access to the public catalog can use this setting to point the data plane at a local catalog file, for example `KONG_DYNAMIC_PRICING_URI=file:///path/to/catalog.json`.
-     The data plane uses the public catalog from that file, and you can configure price overrides directly in the file.
+  When it's unset, a {{site.konnect_short_name}} data plane gets the catalog from its control plane.
+
+     On-prem deployments can use this setting to point the data plane at a local copy of the price catalog, for example `KONG_DYNAMIC_PRICING_URI=file:///path/to/catalog.json`.
+     The catalog file uses the same format as the Konnect-managed catalog, and you can configure price overrides directly in the file.
      
      {:.info}
      > **Note**: The dynamic pricing URI can't contain credentials.
@@ -98,7 +115,7 @@ You can configure dynamic pricing using the following settings, which are set in
 ## Price catalog
 
 The price catalog lists the price of each model that {{site.ai_cost_management}} can price. 
-You can find it by navigating to **Cost Management** > **Price Catalog** in the AI lens.
+You can find it by navigating to the AI view, then opening **Cost Management** > **Price Catalog** from the sidebar.
 
 The price catalog shows effective rates, which include your overrides.
 All prices in the price catalog are in USD per million tokens.
@@ -111,31 +128,9 @@ You can click **Refresh** to load the latest list of effective rates.
 
 ### Model details
 
-Each model in the price catalog has a details page with its current price and price history:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Section
-    key: section
-  - title: Description
-    key: description
-rows:
-  - section: "**Override banner**"
-    description: |
-      Appears when an override applies to the model. The banner names the override and links to it.
-  - section: "**Current price**"
-    description: |
-      Every price field the model has, in USD per million tokens, with the source of the rate, the provider, and the **In force since** date. For a model with a percentage off override, the page shows only the discounted price.
-  - section: "**Rate cards**"
-    description: |
-      Appears only when the price has rate cards. Each row shows the base input, cache write, cache read, and output rates of one card. 
-      See [Rate cards](#rate-cards).
-  - section: "**Price history**"
-    description: |
-      Every version of the model's price, newest first, up to the 50 most recent. A custom rate that takes effect later appears first, marked `Scheduled`.
-{% endtable %}
-<!--vale on-->
+Each model in the price catalog has details with its current price and price history (up to the 50 most recent versions).
+For a model with a percentage off override, the current price only shows the discounted price.
+If a [rate card](#rate-cards) is applied to a model, each row shows the base input, cache write, cache read, and output rates of one card.
 
 ## Overrides
 
@@ -145,8 +140,8 @@ You can create a rate override with the **Add override** button on the [**Price 
 
 Rate overrides come in the following types:
 
-* A [percentage off override](#percentage-off-overrides) A discount on every model of a provider.
-* A [custom rate override](#custom-rate-overrides) A fixed price for one model.
+* A [percentage off override](#percentage-off-overrides): A discount on every model of a provider.
+* A [custom rate override](#custom-rate-overrides): A fixed price for one model.
 
 ### Percentage off overrides
 
@@ -156,23 +151,7 @@ This type fits a negotiated discount that covers every model of the provider.
 
 Models that have a custom rate use the custom rate instead.
 
-You set the percentage with the following parameter:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Parameter
-    key: parameter
-  - title: Required
-    key: required
-  - title: Description
-    key: description
-rows:
-  - parameter: "**Percent off (%)**"
-    required: "Yes"
-    description: "The percentage to take off the list price of every model of the provider."
-{% endtable %}
-<!--vale on-->
+Use the **Percent off (%)** field to set the percentage to take off the list price of every model of the provider.
 
 ### Custom rate overrides
 
@@ -221,7 +200,7 @@ rows:
 
 ### Rate cards
 
-A rate card sets different prices for batch requests, service tiers, long inputs, or regions.
+A rate card sets different prices for more granular categories.
 You can add multiple rate cards to a custom rate override by selecting **Add rate card**, and each card has its own prices.
 
 A custom rate includes only the rate cards you add to it, so the model's list-price rate cards don't apply.
@@ -236,16 +215,12 @@ columns:
   - title: Applies to
     key: applies_to
 rows:
-  - card: "**Batch**"
-    applies_to: "Batch requests."
   - card: "**Flex tier**"
     applies_to: "Requests on the flex service tier."
   - card: "**Priority tier**"
     applies_to: "Requests on the priority service tier."
   - card: "**Long context**"
     applies_to: "Requests with inputs above a token threshold."
-  - card: "**Region**"
-    applies_to: "Requests served in one inference region."
 {% endtable %}
 <!--vale on-->
 
@@ -280,13 +255,10 @@ rows:
   - parameter: "**Applies to**"
     card: "Long context"
     description: "The requests that the card prices, such as standard or batch requests. See the [rate card types](#rate-cards)."
-  - parameter: "**Region code**"
-    card: "Region"
-    description: "The inference geography, such as `us`, `eu`, `us-gov`, `global`, or `au`. You can also enter another code and select “Use” to confirm it."
 {% endtable %}
 <!--vale on-->
 
-For example, a custom rate can include a batch card and an `eu` region card, so batch requests and requests served in the EU region can each have their own prices.
+For example, a custom rate can include a flex tier card and a long context card, so flex requests and long-input requests can each have their own prices.
 
 ### Override limitations
 
@@ -295,7 +267,7 @@ The following limitations apply to rate overrides:
 * A percentage must be greater than 0 and at most 100.
 * A provider can have only one active percentage off override.
 * A new custom rate for a model ends the model's earlier custom rate at the time the new one takes effect.
-* A custom rate can have one batch, one flex tier, and one priority tier rate card, and one rate card per region.
+* A custom rate can have one flex tier and one priority tier rate card.
 * A custom rate can't have two long-context rate cards with the same threshold and **Applies to** value.
 * You can't edit an override, so to change one, you must delete the override and create a new one.
 
@@ -314,9 +286,9 @@ To create a rate override in the {{site.konnect_short_name}} UI:
    * For **Custom rate**, in the **Base input** and **Output** fields, enter your contracted prices in USD per million tokens. 
    Fill out the remaining fields as needed.
 1. *(Optional)* For a **Custom rate**, add a rate card. See [Rate cards](#rate-cards) for the parameters of each type:
-   * Click **Add rate card**.
-   * Select the rate card type.
-   * Enter the prices and any other parameters for the card.
+   1. Click **Add rate card**.
+   1. Select the rate card type.
+   1. Enter the prices and any other parameters for the card.
 1. *(Optional)* To schedule the override, in the **Effective from** field, pick a later date and time in UTC.
 1. Click **Add override**.
 
