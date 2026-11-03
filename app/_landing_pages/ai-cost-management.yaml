@@ -9,6 +9,7 @@ metadata:
   tags:
     - ai
     - governance
+    - cost-management
 
 rows:
 
@@ -141,7 +142,7 @@ rows:
               icon: /assets/icons/api.svg
               ctas:
                 - text: API reference
-                  url: /api/konnect/ai-cost-management/v1/
+                  url: /api/konnect/ai-cost-management/
 
 
   - header:

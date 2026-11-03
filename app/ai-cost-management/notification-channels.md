@@ -17,12 +17,14 @@ tools:
   - konnect-api
 
 breadcrumbs:
+  - /ai-gateway/
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "Reference for notification channels in {{site.ai_cost_management}}. Covers the email and Slack channel types, how to create and test a channel, and how budget alerts reach it."
 
@@ -34,8 +36,6 @@ api_specs:
   - konnect/ai-cost-management
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
   - text: Budgets in {{site.ai_cost_management}}
     url: /ai-cost-management/budgets/
   - text: Set up a budget with email alerts

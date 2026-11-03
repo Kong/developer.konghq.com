@@ -5,6 +5,7 @@ layout: reference_with_schema
 
 products:
   - ai-cost-management
+  - ai-gateway
 
 min_version:
   ai-gateway: '2.3'
@@ -16,11 +17,14 @@ tools:
   - konnect-api
 
 breadcrumbs:
+  - /ai-gateway/
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
+  - cost-management
 
 description: "Exports in {{site.ai_cost_management}} copy your organization's usage events into files you can download, either once or on a repeating schedule."
 
@@ -53,12 +57,12 @@ faqs:
 
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
   - text: Analytics and debugging in {{site.ai_cost_management}}
     url: /ai-cost-management/analytics-and-debugging/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
+  - text: Price catalog and overrides
+    url: /ai-cost-management/price-catalog/
 ---
 
 Exports in {{site.ai_cost_management}} write your stored usage events to downloadable files.

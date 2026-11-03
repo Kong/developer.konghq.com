@@ -15,18 +15,20 @@ works_on:
   - on-prem
 
 breadcrumbs:
+  - /ai-gateway/
+  - /ai-management/
   - /ai-cost-management/
 
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 description: "The price catalog holds the price of each model that {{site.ai_cost_management}} can price, and rate overrides let you adjust those prices to the terms you negotiated with a provider."
 
 related_resources:
-  - text: "{{site.ai_cost_management}}"
-    url: /ai-cost-management/
+  - text: Analytics and debugging in {{site.ai_cost_management}}
+    url: /ai-cost-management/analytics-and-debugging/
   - text: Model cost management
     url: /ai-gateway/model-cost-management/
   - text: AI Model entity

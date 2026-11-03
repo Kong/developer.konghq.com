@@ -18,10 +18,15 @@ entities:
   - ai-model-provider
   - ai-model
 
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-management/
+  - /ai-cost-management/
+
 tags:
   - ai
   - governance
-  - metering
+  - cost-management
 
 tools:
   - kongctl
