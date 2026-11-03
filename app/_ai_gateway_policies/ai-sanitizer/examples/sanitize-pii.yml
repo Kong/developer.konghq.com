@@ -6,19 +6,14 @@ display_name: PII Sanitizer
 type: ai-sanitizer
 condition: 'model.name == "gpt-4o"'
 config:
-  patterns:
+  anonymize:
     - email
     - phone
-  fail_on_error: true
-  thresholds:
-    redaction:
-      score: 0.9
-      actions:
-        - redact
-        - log
-  providers:
-    openai:
-      model: gpt-4o
+  rejection_mode: verbose
+  block_if_detected: true
+  stop_on_error: true
+  port: 8080
+  timeout: 10000
 tools:
   - konnect-api
   - terraform
