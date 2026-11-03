@@ -151,7 +151,7 @@ Users sign in through an identity provider.
 
 When you add an identity provider, you give it a display name and an issuer URL. You can also:
 
-* Enable automatic user provisioning, so that users are created the first time they sign in. Automatic user provisioning doesn't give users access to the credentials stored in [Token Vault](/identity/token-vault/). An admin must grant that access explicitly.
+* [Enable automatic user provisioning](/identity/token-vault/#trusted-idp) so that users are created the first time they sign in. Automatic user provisioning doesn't give users access to the credentials stored in [Token Vault](/identity/token-vault/). An admin must grant that access explicitly.
 * Choose whether Token Vault trusts the provider.
 
 The identity providers list shows each provider's display name, issuer URL, and linked identities.
