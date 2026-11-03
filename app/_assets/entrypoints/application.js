@@ -7,7 +7,7 @@
 import "~/stylesheets/index.css";
 
 import { datadogRum } from "@datadog/browser-rum";
-import { mount } from "pele";
+import { mountAsync } from "pele/lazy";
 import icons from "@/javascripts/diagram-icons";
 import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
@@ -62,18 +62,27 @@ function resolveDiagramIcon(token) {
   return icons[name] ?? null;
 }
 
-for (const el of document.querySelectorAll("pre.mermaid")) {
-  const source = el.textContent.trim();
-  try {
-    mount(el, source, {
-      zoom: true,
-      icons: resolveDiagramIcon,
-    });
-  } catch (error) {
-    console.error("Failed to render diagram:", error);
-    if (!el.firstChild) el.textContent = source;
-  }
+async function mountDiagrams() {
+  const diagrams = [...document.querySelectorAll("pre.mermaid")];
+
+  await Promise.all(
+    diagrams.map(async (el) => {
+      const source = el.textContent.trim();
+
+      try {
+        await mountAsync(el, source, {
+          zoom: true,
+          icons: resolveDiagramIcon,
+        });
+      } catch (error) {
+        console.error("Failed to render diagram:", error);
+        if (!el.firstChild) el.textContent = source;
+      }
+    }),
+  );
 }
+
+mountDiagrams();
 
 window.addEventListener("load", () => {
   const hash = window.location.hash;
