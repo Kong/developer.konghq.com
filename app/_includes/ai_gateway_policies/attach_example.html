@@ -1,27 +1,17 @@
 {%- assign attach_id = page.example.id | append: '-attach' -%}
-{%- assign attach_target_select_id = 'select-target-' | append: attach_id -%}
 {%- assign attach_format_select_id = 'select-format-' | append: attach_id -%}
 {%- assign attach_target_count = 0 -%}
 {%- for example in page.example.examples -%}
 {%- if example.data.global == false -%}{%- assign attach_target_count = attach_target_count | plus: 1 -%}{%- endif -%}
 {%- endfor -%}
 {%- if attach_target_count > 0 -%}
-<div class="flex flex-col gap-4 heading-section entity-example" id="{{ attach_id }}">
+<div class="flex flex-col gap-4 heading-section entity-example" id="{{ attach_id }}" data-follow-target="true">
   <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
     {% capture _attach_text %}Attach the policy{% endcapture %}
     {% assign _attach_id = _attach_text | slugify %}
     {% include anchor_heading.html tag="h3" id=_attach_id text=_attach_text %}
     <div class="flex w-full sm:w-fit sm:justify-end">
       <div class="flex gap-2 text-xs">
-        {% if attach_target_count > 1 %}
-        <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
-          <label for="{{ attach_target_select_id }}" class="sr-only">{{ include.target_label }}</label>
-          <select id="{{ attach_target_select_id }}" class="select-target bg-secondary">
-            {% for example in page.example.examples %}{% if example.data.global == false %}<option value="{{ example.target.key }}">{{ include.targets[example.target.key].label }}</option>{% endif %}{% endfor %}
-          </select>
-        </div>
-        {% endif %}
-
         {% if page.example.formats.size > 1 %}
         <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
           <label for="{{ attach_format_select_id }}" class="sr-only">Select a format</label>
@@ -38,7 +28,7 @@
 
   <div class="content">
     {% for example in page.example.examples %}{% if example.data.global == false %}
-    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="{% if attach_target_count > 1 %}{{ attach_target_select_id }}{% else %}{{ _attach_id }}{% endif %}" data-target="{{ example.target.key }}">
+    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="{{ _attach_id }}" data-target="{{ example.target.key }}">
       {% for formatted_example in example.attach_example.formatted_examples %}
       {% assign format = formatted_example.format %}
       <div tabindex="0" class="entity-example-format-panel {% if page.example.formats.size > 1 %} hidden {% endif %} content" aria-labelledby="{% if page.example.formats.size > 1 %}{{ attach_format_select_id }}{% else %}{{ _attach_id }}{% endif %}" data-format="{{ format }}">

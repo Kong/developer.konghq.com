@@ -114,6 +114,10 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         expect(attach_section).not_to have_css('[data-target="global"]')
       end
 
+      it 'declares the attach block a follower of the scope selection' do
+        expect(attach_section[:'data-follow-target']).to eq('true')
+      end
+
       it 'labels each policy panel with the selector of the policy section' do
         policy_section = html.all('.entity-example').first
         target_panel = policy_section.find('.entity-example-target-panel[data-target="ai-model"]')
@@ -130,10 +134,16 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
       context 'with several non-global targets' do
         let(:scopes) { %w[global ai-model ai-consumer] }
 
-        it 'offers only the non-global targets in the attach scope selector' do
-          expect(attach_section.all('select.select-target option').map(&:value)).to eq(%w[ai-model ai-consumer])
+        it 'renders a panel per non-global target and no scope selector of its own' do
+          expect(attach_section).not_to have_css('select.select-target')
+          expect(html).to have_css('.entity-example select.select-target', count: 1)
           expect(attach_section.all('.entity-example-target-panel').map { |panel| panel[:'data-target'] })
             .to eq(%w[ai-model ai-consumer])
+        end
+
+        it 'labels each attach panel with the section heading' do
+          expect(attach_section.all('.entity-example-target-panel').map { |panel| panel[:'aria-labelledby'] })
+            .to eq(%w[attach-the-policy attach-the-policy])
         end
       end
 
@@ -144,6 +154,16 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
           expect(html).to have_css('.entity-example', count: 1)
           expect(html).not_to have_css('h3 a[href="#attach-the-policy"]')
           expect(html).not_to have_css('.entity-example-target-example')
+        end
+      end
+
+      context 'with a single non-global target' do
+        let(:scopes) { %w[ai-model] }
+
+        it 'renders the attach section even though no scope selector exists' do
+          expect(html).to have_css('h3 a[href="#attach-the-policy"]', text: 'Attach the policy')
+          expect(attach_section).to have_css('.entity-example-target-panel[data-target="ai-model"]')
+          expect(attach_section[:'data-follow-target']).to eq('true')
         end
       end
 
@@ -211,6 +231,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
           .to include('curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o')
         expect(attach_section).to include('konnect_ai_gateway_model')
         expect(attach_section).to include("policies:\n    - !ref pii-sanitizer#name")
+      end
+
+      context 'with several non-global targets' do
+        let(:scopes) { %w[global ai-model ai-consumer] }
+
+        it 'renders every non-global target under its own heading' do
+          expect(attach_section.scan(/^#### .+$/)).to eq(['#### AI Model', '#### AI Consumer'])
+        end
       end
 
       context 'with a global-only example' do

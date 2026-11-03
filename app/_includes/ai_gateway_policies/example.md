@@ -9,5 +9,5 @@
 {%- if page.output_format == 'markdown' %}
 {% include ai_gateway_policies/attach_example.md targets=scope_labels %}
 {%- else %}
-{% include ai_gateway_policies/attach_example.html targets=scope_labels target_label='Select a scope' %}
+{% include ai_gateway_policies/attach_example.html targets=scope_labels %}
 {%- endif %}
