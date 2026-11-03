@@ -57,7 +57,7 @@ rows:
       This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: Agentic analytics dashboard
     description: |
-      Overview of agentic traffic flowing through your Kong gateway. 
+      Overview of agentic traffic flowing through your {{site.base_gateway}}. 
       This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time. 
       It helps teams operating MCP-enabled services understand usage patterns and identify performance bottlenecks.
   - type: Shared services dashboard

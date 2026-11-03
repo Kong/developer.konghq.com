@@ -12,7 +12,7 @@ works_on:
 tags:
   - ai
   - analytics
-description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents in AI Management."
+description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents."
 related_resources:
   - text: AI Management
     url: /ai-management/
@@ -46,7 +46,7 @@ columns:
   - title: Use it to
     key: use
 rows:
-  - page: "[**Overview**](#overview)"
+  - page: "[**Overview**](#overview-page)"
     use: "Review the health and cost of AI traffic."
   - page: "[**Dashboards**](#dashboards)"
     use: "Build and share your own dashboards from AI Gateway metrics."
@@ -57,7 +57,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## Overview
+## Overview page
 
 To narrow the Overview page, use the following filters:
 
@@ -105,7 +105,7 @@ The data you see in Observability depends on your [AI Management role](/ai-manag
 
 ## Dashboards
 
-Dashboards are for viewing {{site.ai_gateway}} metrics.
+Use dashboards to view {{site.ai_gateway}} metrics.
 Click **Manage dashboards** to see the dashboards in your organization.
 To add one, click **Create dashboard**, then create it from a template, from scratch, or from a JSON definition.
 
@@ -123,38 +123,117 @@ rows:
     description: |
       AI-focused insight into your LLM traffic and operational costs.
       Track request volume by model and provider, understand token usage trends, and monitor latency across different models.
-      This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
+      Teams operating {{site.ai_gateway}}s can use this dashboard to optimize performance and manage costs by monitoring traffic patterns and provider-specific behavior.
   - template: "**Agentic analytics dashboard**"
     description: |
-      Overview of agentic traffic flowing through your Kong gateway.
+      Overview of agentic traffic flowing through your {{site.ai_gateway}}.
       This dashboard highlights which tools are called most frequently, breaks down tool usage by consumer, and tracks average latency per tool over time.
       It helps teams operating MCP-enabled services understand usage patterns and identify performance bottlenecks.
 {% endtable %}
 <!-- vale on -->
 
 To see cost next to latency or TTFT, add a tile for each metric to the same dashboard.
-For tiles, filters, sharing, and automation, see the [Custom Dashboards reference](/observability/custom-dashboards-reference/).
-For a walkthrough, see [Create a dashboard from a template](/how-to/create-custom-dashboards/).
+* For tiles, filters, sharing, and automation, see the [Custom Dashboards reference](/observability/custom-dashboards-reference/).
+* For a walkthrough, see [Create a dashboard from a template](/how-to/create-custom-dashboards/).
 
 ## Explorer
 
-Explorer in AI Management is the [{{site.konnect_short_name}} Explorer](/observability/explorer/), which also covers time ranges, saving reports, and exporting to CSV.
-In the Explorer query bar, build a query: **From** a data source, **Show** a chart type **with** a metric, **per** a time interval, **by** a dimension.
+The Explorer in AI Management works the same as the {{site.konnect_short_name}} Explorer.
+For the full Explorer documentation, including time ranges, saving reports, and exporting to CSV, see the [{{site.konnect_short_name}} Explorer reference](/observability/explorer/).
+In the Explorer query bar, you can build a query **From** a data source, **Show** a chart type **with** a metric, **per** a time interval, **by** a dimension.
 
 For AI traffic, use one of these data sources:
 
-* **LLM usage**: metrics include **Costs**, token counts, **LLM latency**, **Time to first token**, **Time per token**, and **Error rate**.
-* **Agentic usage**: metrics include **Request count**, **Active agents**, **MCP latency**, **A2A latency**, **Kong latency**, **Upstream latency**, and **Error rate**.
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Data source
+    key: source
+  - title: Metrics
+    key: metrics
+rows:
+  - source: "LLM usage"
+    metrics: |
+      * Costs
+      * Token counts
+      * LLM latency
+      * Time to first token
+      * Time per token
+      * Error rate
+  - source: "Agentic usage"
+    metrics: |
+      * Request count
+      * Active agents
+      * MCP latency
+      * A2A latency
+      * Kong latency
+      * Upstream latency
+      * Error rate
+{% endtable %}
+<!-- vale on -->
 
 To group or filter AI traffic, use these dimensions:
 
-* In both data sources: **AI gateway**, **AI gateway model**, **AI gateway MCP server**, **AI gateway agent**, **AI gateway consumer**, **AI gateway consumer group**, **Provider**, **Principal**, **Principal group**, and **Status code (grouped)**.
-* In **LLM usage** only: **Request model** and **Response model**.
-* In **Agentic usage** only: **MCP tool name**, **MCP method**, and **MCP error**.
+<!-- vale off -->
+{% feature_table %}
+item_title: Dimension
+columns:
+  - title: LLM usage
+    key: llm
+  - title: Agentic usage
+    key: agentic
+features:
+  - title: AI gateway
+    llm: true
+    agentic: true
+  - title: AI gateway model
+    llm: true
+    agentic: true
+  - title: AI gateway MCP server
+    llm: true
+    agentic: true
+  - title: AI gateway agent
+    llm: true
+    agentic: true
+  - title: AI gateway consumer
+    llm: true
+    agentic: true
+  - title: AI gateway consumer group
+    llm: true
+    agentic: true
+  - title: Provider
+    llm: true
+    agentic: true
+  - title: Principal
+    llm: true
+    agentic: true
+  - title: Principal group
+    llm: true
+    agentic: true
+  - title: Status code (grouped)
+    llm: true
+    agentic: true
+  - title: Request model
+    llm: true
+    agentic: false
+  - title: Response model
+    llm: true
+    agentic: false
+  - title: MCP tool name
+    llm: false
+    agentic: true
+  - title: MCP method
+    llm: false
+    agentic: true
+  - title: MCP error
+    llm: false
+    agentic: true
+{% endfeature_table %}
+<!-- vale on -->
 
 ## Logs
 
-Logs lists the logs of your gateways and their control planes, newest first.
+The Logs page shows your {{site.ai_gateway}} data plane and control plane logs, newest first.
 
 * Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
 * Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (for example, the data plane or the control plane), or **Control Plane**.
@@ -164,4 +243,4 @@ Logs lists the logs of your gateways and their control planes, newest first.
 ## Explorer and {{site.ai_cost_management}}
 
 {{site.ai_cost_management}} has its own [Explorer](/ai-cost-management/analytics-and-debugging/#explorer), which shows spend, requests, or tokens over time for any combination of filters and group-by dimensions.
-Spend limits are set with [budgets](/ai-cost-management/budgets/) in {{site.ai_cost_management}}.
+Set spend limits using [budgets](/ai-cost-management/budgets/) in {{site.ai_cost_management}}.

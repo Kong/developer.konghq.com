@@ -171,7 +171,7 @@ rows:
           - type: card
             config:
               title: "{{site.observability}}"
-              description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents in AI Management."
+              description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents."
               icon: /assets/icons/monitor.svg
               cta:
                 text: Observability in AI Management
@@ -180,7 +180,7 @@ rows:
           - type: card
             config:
               title: "{{site.ai_cost_management}}"
-              description: "{{site.ai_cost_management}} gives you visibility into your organization's AI model spend across users, groups, models, and teams."
+              description: "Track your organization's AI model spend, budgets, and alerts across users, groups, models, and teams."
               icon: /assets/icons/money.svg
               cta:
                 text: "{{site.ai_cost_management}} overview"
