@@ -115,9 +115,9 @@ Admins create groups manually. A group has a name, a description, labels, and me
 
 Add users to a group from the group's detail page. You can also add or remove a user from one or more groups from the user's details.
 
-## Groups and teams
+### Groups vs teams
 
-Both groups and teams collect users, but they are created and managed differently. The following table compares them:
+Both groups and teams collect users, but they are created and managed differently:
 
 {% table %}
 columns:
