@@ -39,6 +39,8 @@ export KONNECT_PROXY_URL='http://localhost:8000'
 
 Copy and paste these into your terminal to configure your session.
 
+{% include md/ai-gateway/v2/fully-hosted-note.md %}
+
 {% endcapture %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/ai-gateway.svg' %}
