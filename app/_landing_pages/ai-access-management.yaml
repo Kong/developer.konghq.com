@@ -136,7 +136,7 @@ rows:
               - text: Token Vault
                 url: /identity/token-vault/
               - text: Roles and permissions
-                url: /ai-access-management/concepts/#roles-and-permissions
+                url: /konnect-platform/teams-and-roles/#access-management
 
   - header:
       type: h2
