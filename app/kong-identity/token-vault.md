@@ -159,7 +159,10 @@ When it receives a token, it:
 1. Checks the token's expiry (`exp`) and not-before (`nbf`) claims.
 1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
 
-Users don't need to exist in {{site.identity}} beforehand. When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, the Token Vault creates one just in time. Per-user credentials are stored against that principal.
+Users don't need to exist in {{site.identity}} beforehand. Token Vault supports just-in-time (JIT) provisioning, also called automatic user provisioning, on its identity providers (IdPs). When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, Token Vault creates one. Per-user credentials are stored for that principal.
+
+To enable JIT provisioning in the {{site.konnect_short_name}} UI, go to **AI** > **Access Management** > **Identity Providers**, then create a new IdP or edit an existing one, and enable **Automatic user provisioning**.
+
 
 To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The request accepts the following body parameters:
 
