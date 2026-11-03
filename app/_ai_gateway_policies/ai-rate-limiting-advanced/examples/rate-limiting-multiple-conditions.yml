@@ -1,0 +1,45 @@
+title: Enable rate limiting with multiple conditions
+description: Protect your LLM services with rate limiting based on multiple conditions.
+extended_description: |
+  Protect your LLM services with rate limiting based on multiple conditions.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+
+  In this example, we're enabling rate limiting for a specific AI Consumer using the OpenAI provider.
+  The limits specified only apply when both conditions are met.
+  When the limit is reached, the same AI Consumer may be able to send requests to a different provider.
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: rate-limiting-multiple-conditions
+display_name: Rate limiting with multiple conditions
+type: ai-rate-limiting-advanced
+scopes:
+- ai-model
+- global
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+- An existing [AI Consumer](/ai-gateway/entities/ai-consumer/)
+variables:
+  consumer_name:
+    value: $CONSUMER_USERNAME
+    description: The username of the AI Consumer to rate limit.
+config:
+  policies:
+  - match:
+    - type: provider
+      partition_by: true
+      values:
+      - openai
+    - type: consumer
+      key: username
+      values:
+      - ${consumer_name}
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl

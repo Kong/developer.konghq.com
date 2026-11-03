@@ -1,0 +1,31 @@
+title: Enable LLM provider policy-based rate limiting
+description: Protect your LLM services with rate limiting.
+extended_description: |
+  Protect your LLM services with rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses OpenAI, but you can apply the same strategies to any supported LLM provider.
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: llm-provider-policy-based-rate-limiting
+display_name: LLM provider policy-based rate limiting
+type: ai-rate-limiting-advanced
+requirements:
+- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+config:
+  policies:
+  - match:
+    - type: provider
+      partition_by: true
+      values:
+      - openai
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl
