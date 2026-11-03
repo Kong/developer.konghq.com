@@ -2,7 +2,6 @@
 title: Configure dynamic Policy config with CEL in {{site.ai_gateway}}
 permalink: /ai-gateway/configure-dynamic-plugin-config-with-cel/
 content_type: how_to
-published: false
 
 description: Learn how to set a Rate Limiting Advanced Policy's rate limit and rate limiting key per request, based on the authenticated Principal's metadata.
 products:
@@ -24,7 +23,7 @@ tags:
   - authentication
 
 tools:
-  - kongctl
+  - konnect-api
 
 min_version:
   ai-gateway: '2.3'
@@ -115,93 +114,129 @@ capture:
 
 {% include /how-tos/steps/get-directory-name.md %}
 
-## Create an AI Auth Strategy, AI Model Provider, Policy, and AI Model
+## Create an AI Auth Strategy and AI Model Provider
 
-Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping) enabled, so clients authenticate with the API key but {{site.ai_gateway}} resolves them to the Principal created earlier. 
+Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping) enabled, so clients authenticate with the API key but {{site.ai_gateway}} resolves them to the Principal created earlier.
 Principal mapping is mutually exclusive with `identity_realms`, so the strategy sets `identity_realms` to an empty list.
-Also create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for OpenAI and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) with CEL expressions.
-Then create an [AI Model](/ai-gateway/entities/ai-model/) that references both the AI Auth Strategy and the Policy.
+Also create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for OpenAI.
 
-`limit` and `custom_key` are expressible config fields on the Rate Limiting Advanced Policy. They both have parallel entries under `expressions`, alongside their static `config` values:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/auth-strategies
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: identity-principal
+  display_name: Identity Principal
+  type: key-auth
+  config:
+    identity_realms: []
+    principals:
+      enabled: true
+      directory: $DECK_DIRECTORY_NAME
+{% endkonnect_api_request %}
+<!--vale on-->
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/model-providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: generic-openai
+  display_name: generic-openai
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: $OPENAI_AUTH_HEADER
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Create a Rate Limiting Advanced Policy with CEL expressions
+
+Create a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) with CEL expressions.
+
+`limit` and `custom_key` are expressible config fields on the Rate Limiting Advanced Policy. Their CEL expressions go in the Policy's top-level `expressions` object, alongside the static values in `config`:
 
 * `identifier: principal`, so the Policy keys and limits by the authenticated Principal.
 * A static `config.limit` and `config.custom_key`, used as the fallback whenever a request's expressions can't be evaluated.
 * `expressions.limit` and `expressions.custom_key`, reading the authenticated Principal's `rate_limit` and `partner_id` metadata.
 
-<!-- vale off -->
-{% entity_examples %}
-ai_gateway_auth_strategies:
-  - ref: identity-principal
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    display_name: "Identity Principal"
-    name: identity-principal
-    type: key-auth
-    config:
-      identity_realms: []
-      principals:
-        enabled: true
-        directory: $DECK_DIRECTORY_NAME
-ai_gateway_model_providers:
-  - ref: generic-openai
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: generic-openai
-    display_name: "generic-openai"
-    type: openai
-    config:
-      auth:
-        type: basic
-        headers:
-          - name: Authorization
-            value: !secret {source: !env OPENAI_AUTH_HEADER}
-ai_gateway_policies:
-  - ref: rate-limit-by-principal
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: rate-limit-by-principal
-    display_name: "Rate Limiting Advanced - Principal Metadata"
-    type: rate-limiting-advanced
-    config:
-      identifier: principal
-      custom_key: unknown-partner
-      limit:
-        - 10
-      window_size:
-        - 60
-      strategy: local
-      expressions:
-        custom_key: principal.metadata.partner_id
-        limit:
-          - principal.metadata.rate_limit
-ai_gateway_models:
-  - ref: my-gpt-4o-mini
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    display_name: my-gpt-4o-mini
-    name: my-gpt-4o-mini
-    type: model
-    enabled: true
-    formats: [{ type: openai }]
-    access:
-      auth_strategies:
-        - !ref identity-principal#name
-    policies:
-      - !ref rate-limit-by-principal#name
-    config:
-      route:
-        paths:
-          - /
-        model:
-          body_param: model
-          values:
-            - my-gpt-4o-mini
-    capabilities: [generate]
-    targets:
-      - name: gpt-4o-mini
-        provider: generic-openai
-        config:
-          type: openai
-formats:
-  - kongctl
-{% endentity_examples %}
-<!-- vale on -->
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: rate-limit-by-principal
+  display_name: Rate Limiting Advanced - Principal Metadata
+  type: rate-limiting-advanced
+  enabled: true
+  global: false
+  config:
+    identifier: principal
+    custom_key: unknown-partner
+    limit:
+      - 10
+    window_size:
+      - 60
+    strategy: local
+  expressions:
+    custom_key: principal.metadata.partner_id
+    limit:
+      - principal.metadata.rate_limit
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Create an AI Model
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) that references the AI Auth Strategy, the AI Model Provider, and the Policy:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/models
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: my-gpt-4o-mini
+  display_name: my-gpt-4o-mini
+  type: model
+  enabled: true
+  formats:
+    - type: openai
+  access:
+    auth_strategies:
+      - identity-principal
+  policies:
+    - rate-limit-by-principal
+  config:
+    route:
+      paths:
+        - /
+      model:
+        body_param: model
+        values:
+          - my-gpt-4o-mini
+  capabilities:
+    - generate
+  targets:
+    - name: gpt-4o-mini
+      provider: generic-openai
+      config:
+        type: openai
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate
 
