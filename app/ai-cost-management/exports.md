@@ -218,7 +218,7 @@ Each URL is valid for five minutes and works with a plain `GET` request without 
 Each file in the export's `files` list has a `size_bytes` and a `sha256` field.
 The `manifest.json` file describes the export and lists each data file with its size and SHA-256 digest.
 
-The `files` list doesn't include the manifest. To download it, request a download URL with `manifest.json` as the file name.
+The `files` list doesn't include the manifest. To download it, request a download URL with `manifest.json` as the filename.
 You can verify a download by comparing its size and SHA-256 checksum against those values.
 
 ### Scheduled exports
