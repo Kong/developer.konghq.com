@@ -48,7 +48,7 @@ RSpec.describe Jekyll::RefirectsGenerator do
     expect(redirects_content).not_to include('ai-loom-rate-limit')
     expect(redirects_content).to include(
       "/ai-gateway/policies/ai-loom-guard/examples/block-requests/" \
-      "\n/event-gateway/policies/acl/examples/"
+      "\n# Redirects for the fixture site."
     )
   end
 
