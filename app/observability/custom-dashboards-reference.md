@@ -55,11 +55,6 @@ rows:
       AI-focused insight into your LLM traffic and operational costs. 
       Track request volume by model and provider, understand token usage trends, and monitor latency across different models. 
       This dashboard helps teams operating AI gateways to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
-  - type: "{{site.ai_gateway}} 2 dashboard"
-    description: |
-      AI-focused insight into your LLM traffic and operational costs. 
-      Track request volume by model and provider, understand token usage trends, and monitor latency across different models. 
-      This dashboard helps teams operating {{site.ai_gateway}} 2 to optimize performance and manage costs with visibility into traffic patterns and provider-specific behavior.
   - type: Agentic analytics dashboard
     description: |
       Overview of agentic traffic flowing through your Kong gateway. 
