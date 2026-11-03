@@ -84,8 +84,6 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: Set up a budget with Slack alerts
     url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
-
-automated_tests: false
 ---
 
 A [budget](/ai-cost-management/budgets/) tracks the AI spend of requests that pass through {{site.ai_gateway}} against a limit, then sends alerts as spend grows toward that limit.
