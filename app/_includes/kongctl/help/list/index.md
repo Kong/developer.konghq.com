@@ -21,17 +21,18 @@ Examples:
   kongctl list extensions
 
 Available Commands:
-  ai-gateway    List or get Konnect AI Gateways
-  api           List or get Konnect APIs
-  auth-strategy List or get Konnect authentication strategies
-  dcr-provider  List or get Konnect DCR providers
-  extensions    List installed kongctl CLI extensions
-  gateway       Manage Konnect Kong Gateway resources
-  konnect       Manage Konnect resources
-  organization  Get current organization information
-  portal        List or get Konnect portals
-  profile       Manage kongctl profiles
-  themes        List available color themes
+  ai-cost-management Manage regional AI cost capture
+  ai-gateway         List or get Konnect AI Gateways
+  api                List or get Konnect APIs
+  auth-strategy      List or get Konnect authentication strategies
+  dcr-provider       List or get Konnect DCR providers
+  extensions         List installed kongctl CLI extensions
+  gateway            Manage Konnect Kong Gateway resources
+  konnect            Manage Konnect resources
+  organization       Get current organization information
+  portal             List or get Konnect portals
+  profile            Manage kongctl profiles
+  themes             List available color themes
 
 
 Flags:
