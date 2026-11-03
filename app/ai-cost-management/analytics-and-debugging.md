@@ -166,6 +166,7 @@ rows:
 ## Explorer
 
 The Explorer shows spend, requests, or tokens over time for any combination of filters and group-by dimensions.
+For traffic, latency, and error metrics, use the [Observability Explorer](/ai-management/observability/#explorer).
 
 <!--vale off-->
 {% table %}
