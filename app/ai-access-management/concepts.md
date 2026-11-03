@@ -18,7 +18,7 @@ tags:
 min_version:
   ai-gateway: '2.3'
 
-description: "Learn what users, groups, identity providers, Token Vault, and virtual keys are in {{site.ai_gateway}} access management, and how they relate to each other."
+description: "Learn how to add users, create teams and groups, and manage access to {{site.ai_gateway}} resources."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -33,18 +33,10 @@ related_resources:
     url: /identity/token-vault/
 
 faqs:
-  - q: How can I create a group?
-    a: |
-      Admins create groups manually.
-
-  - q: Can a group contain another group?
-    a: |
-      No. A group can't contain another group.
+ 
 ---
 
 Access management allows you to define who can use your organization's resources, like [models](/ai-gateway/entities/ai-model/) or [MCP servers](/ai-gateway/entities/ai-mcp-server/), in {{site.ai_gateway}}.
-
-## How access management works
 
 Access management features answer two questions:
 
@@ -55,7 +47,7 @@ You can give permissions to users individually, or in bulk using groups.
 
 ## Users
 
-A user is a person who is added to the system in one of three ways:
+A user is a person who is added to the system in one of the following ways:
 
 * An admin creates them manually.
 * An admin uploads a CSV file containing the org structure.
@@ -70,20 +62,22 @@ To stop a user from signing in while keeping their history, deactivate the user 
 
 Users imported from an org structure file are managed by that file:
 
-* You can't delete them.
 * Their name and email are read-only.
 * If a later import no longer lists them, they are deactivated, not deleted.
+* You can't delete imported users.
 
 {:.info}
 > To change imported users, import an updated org chart.
 
-You can view all users in one searchable table. Search matches on user name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
+You can view all users in one searchable table. Search matches on the user's name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
 
-Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the Developer Portal). For imported users, the details show when they were last imported.
+Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the [Dev Portal](/dev-portal/). For imported users, the details show when they were last imported.
 
 ### Teams
 
-You can assign users to a team. Teams can't be created manually. They are created when you import an org chart that groups users into teams. Teams can be nested under a parent team.
+Teams are created automatically when you import an org chart that groups users into teams. They can't be created manually, and you can't manually assign a user to an existing team.
+
+Teams can be nested under a parent team.
 
 ### Import an org structure
 
@@ -142,7 +136,8 @@ To learn more, see [Token Vault](/identity/token-vault/).
 
 ## Virtual keys
 
-A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For example, for an organization that has one Anthropic API key, and wants to give access to Claude Code through {{site.ai_gateway}}: instead of sharing the real Anthropic API key to all the users, you generate a virtual key for each user. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
+A virtual key is an API key that lets a caller use {{site.ai_gateway}}.
+For example, an organization with one Anthropic API key can generate a virtual key for each Claude Code user instead of sharing the real key. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
 
 Use virtual keys to:
 
@@ -154,7 +149,7 @@ The gateway treats whoever holds the key as the caller.
 
 To create a key, you provide a name and choose a user as the holder. You can also add a new user inline.
 
-You can create a key in two ways:
+You can create a key in one of the following ways:
 
 * Have {{site.ai_gateway}} generate the key. The key is shown once, after you create it.
 * Set your own key value.
@@ -163,39 +158,3 @@ In both cases, you choose an expiry of 30 days, 90 days, 1 year, or never.
 
 The key list shows each key's name, holder, type, status, expiry, last used date, and creation date. You can filter the list by type and status, and delete one or several keys at once. Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
 
-## Roles and permissions
-
-What you can see and do in access management depends on your role. The following table lists what each role can do.
-
-{% table %}
-columns:
-  - title: Area
-    key: area
-  - title: Admin
-    key: admin
-  - title: Team manager
-    key: manager
-  - title: Individual
-    key: individual
-rows:
-  - area: Users and org chart
-    admin: Create, import, edit, deactivate, and delete users. View the org chart.
-    manager: No access.
-    individual: No access.
-  - area: Groups
-    admin: View all groups. Create, edit, and delete groups. Add or remove members. Export groups as a CSV.
-    manager: View the groups they belong to or manage.
-    individual: View the groups they belong to.
-  - area: Identity providers
-    admin: Add, edit, and delete identity providers.
-    manager: No access.
-    individual: No access.
-  - area: Token Vault
-    admin: Set up and manage Token Vault and its credential providers.
-    manager: No access.
-    individual: No access.
-  - area: Virtual keys
-    admin: View all keys. Create keys for any holder.
-    manager: View keys they hold, and keys held by the groups they belong to or manage.
-    individual: View the keys they hold.
-{% endtable %}
