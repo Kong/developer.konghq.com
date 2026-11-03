@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: "Token Vault"
     url: /identity/token-vault/
+  - text: "{{site.konnect_short_name}} teams and roles"
+    url: /konnect-platform/teams-and-roles/#access-management
 
 faqs:
  
