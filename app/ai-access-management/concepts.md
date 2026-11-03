@@ -85,7 +85,7 @@ Users imported from an org structure file are managed by that file:
 
 You can view all users in one searchable table. Search matches on the user's name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
 
-Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the [Dev Portal](/dev-portal/)). For imported users, the details show when they were last imported.
+Open a user to see their details. The **Provisioned by** field shows how the user was added, for example **Imported** for users from an [org structure import](#import-an-org-structure).
 
 ### Teams
 
@@ -136,27 +136,24 @@ rows:
     team: "Created automatically when you [import an org structure](#import-an-org-structure). Can't be created manually."
   - aspect: "**Membership**"
     group: "Add or remove users from the group's detail page or from the user's details."
-    team: "Set by the org structure import. You can't manually assign a user to an existing team."
+    team: "Set by the org structure import."
   - aspect: "**Nesting**"
     group: "A group can't contain another group."
     team: "A team can be nested under a parent team."
   - aspect: "**Changes**"
     group: "Edit manually at any time."
-    team: "Change only through import. Upload the file again when your org structure changes."
+    team: "Change only through import."
 {% endtable %}
 
 ## Identity providers
 
 An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. {{site.konnect_short_name}} trusts the providers you list and uses them to verify that those tokens are genuine.
 
-Users sign in through an identity provider.
-
-When you add an identity provider, you give it a display name and an issuer URL. You can also:
+When you add an identity provider, you give it a name and an issuer URL. You can also:
 
 * [Enable automatic user provisioning](/identity/token-vault/#trusted-idp) so that users are created the first time they sign in. Automatic user provisioning doesn't give users access to the credentials stored in [Token Vault](/identity/token-vault/). An admin must grant that access explicitly.
 * Choose whether Token Vault trusts the provider.
 
-The identity providers list shows each provider's display name, issuer URL, and linked identities.
 
 To stop Token Vault from relying on a provider, remove its trust. To delete a provider you no longer need, delete it from the list.
 
@@ -174,7 +171,7 @@ To set it up:
 1. Configure how Token Vault authenticates with this provider.
 1. Create credential providers. A credential provider uses either OAuth or a static API key.
 
-When you set up an [MCP server](/ai-gateway/entities/ai-mcp-server/), you can choose a credential provider for outbound authentication as an alternative to pass-through. You can view the credentials stored in the vault from the provider and identity provider detail pages.
+When you set up an [MCP server](/ai-gateway/entities/ai-mcp-server/), you can choose a credential provider for outbound authentication as an alternative to pass-through. To see the credentials that Token Vault holds for a user, open the user's details and go to **Remote credentials**.
 
 To learn more, see [Token Vault](/identity/token-vault/).
 
@@ -186,8 +183,7 @@ For example, an organization with one Anthropic API key can generate a virtual k
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a personal virtual key are attributed to the user who owns it. The user spend limits apply to that traffic.
-* **Gain visibility:** The key list shows when each key was last used, so you can delete stale ones.
+* **Attribute and control costs:** Requests made with a personal virtual key are attributed to its holder. The spend limits set on the user apply to that traffic.
 
 The gateway treats whoever holds the key as the caller.
 
@@ -200,5 +196,7 @@ You can create a key in one of the following ways:
 
 In both cases, you choose an expiry of 30 days, 90 days, 1 year, or never.
 
-The key list shows each key's name, holder, type, status, expiry, last used date, and creation date. You can filter the list by type and status, and delete one or several keys at once. Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
+You can search the key list by name, filter it by type, and delete keys one at a time. 
+
+Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
 
