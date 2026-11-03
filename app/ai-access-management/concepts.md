@@ -103,7 +103,7 @@ Add users to a group from the group's detail page. You can also add or remove a 
 
 ## Identity providers
 
-An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. Kong trusts the providers you list and uses them to verify that those tokens are genuine.
+An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. {{site.konnect_short_name}} trusts the providers you list and uses them to verify that those tokens are genuine.
 
 Users sign in through an identity provider.
 
