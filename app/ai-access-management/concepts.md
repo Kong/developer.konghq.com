@@ -83,7 +83,7 @@ Users imported from an org structure file are managed by that file:
 
 You can view all users in one searchable table. Search matches on the user's name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
 
-Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the [Dev Portal](/dev-portal/). For imported users, the details show when they were last imported.
+Open a user to see their details, including the groups and teams they belong to and their virtual keys. The details also show where the user came from (created manually, [imported](#import-an-org-structure), or from the [Dev Portal](/dev-portal/)). For imported users, the details show when they were last imported.
 
 ### Teams
 
