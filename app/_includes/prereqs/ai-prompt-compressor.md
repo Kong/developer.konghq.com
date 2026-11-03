@@ -17,3 +17,6 @@ You can run the image with:
 ```bash
 docker run --rm -p 8080:8080 kong/ai-compress-service:v0.0.6
 ```
+
+{:.info}
+> Check the [AI Prompt Compressor documentation](/plugins/ai-prompt-compressor/#ai-prompt-compression-service) for more detail.

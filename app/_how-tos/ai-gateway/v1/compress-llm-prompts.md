@@ -54,7 +54,7 @@ prereqs:
       include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
     - title: Kong Prompt Compressor service
-      include_content: prereqs/cloudsmith
+      include_content: prereqs/ai-prompt-compressor
       icon_url: /assets/icons/third-party/docker.svg
     - title: Langchain splitters
       include_content: prereqs/langchain
