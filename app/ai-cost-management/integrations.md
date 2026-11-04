@@ -40,6 +40,11 @@ For others, you need to configure the tools to send `ai-cost-` prefixed headers 
 * For a breakdown of automatically generated and available tags for each integration, see the [integrations tag reference table](#tag-reference).
 * For the full list of standard tag keys, see [Attribution in {{site.ai_cost_management}}](/ai-cost-management/attribution/#tags-and-headers).
 
+{:.info}
+> Tag capture requires each {{site.ai_gateway}} data plane to run with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
+> Data planes without this flag don't capture `ai-cost-` headers or native integration headers.
+> See [Set up header-based attribution](/ai-cost-management/attribution/#set-up-header-based-attribution) for details.
+
 ## Integrations
 
 The following integrations are available in {{site.ai_cost_management}}. 
@@ -63,6 +68,8 @@ Clicking a tile opens the integration in your {{site.konnect_short_name}} org, w
 
 ## Tag reference
 
+The following table lists the tags each integration sends automatically and those you can add with `ai-cost-KEY_NAME` headers.
+
 <!--vale off-->
 {% table %}
 columns:
@@ -70,7 +77,7 @@ columns:
     key: integration
   - title: Sends automatically
     key: auto
-  - title: Add with `ai-cost-<key>` headers
+  - title: Add with `ai-cost-KEY_NAME` headers
     key: headers
 rows:
   - integration: Claude Code
