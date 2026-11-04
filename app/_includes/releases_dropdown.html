@@ -2,9 +2,14 @@
     <label for="releases-dropdown{% if include.mobile %}-mobile{% endif %}" class="text-primary">Version:</label>
     <select id="releases-dropdown{% if include.mobile %}-mobile{% endif %}" class="releases-dropdown bg-secondary grow">
         {% for option in include.releases_dropdown.options %}
-            <option value="{{option.url}}" {% if option.release == include.release %}selected{% endif %}>
+            <option value="{{option.url}}" {% if include.release and option.release == include.release %}selected{% endif %}>
                 {{option.value}} {% if option.latest? %}(latest){% endif %} {% if option.lts? %} (LTS) {% endif %}
             </option>
         {% endfor %}
+        {% if page.aigw_onprem_url %}
+            <option value="{{page.aigw_onprem_url}}" {% if page.url == page.aigw_onprem_url %}selected{% endif %}>
+                AIGW v2 on-prem
+            </option>
+        {% endif %}
     </select>
 </div>
