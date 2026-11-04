@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/vulnerabilities/
   - text: "{{site.ai_gateway}} changelog"
     url: /ai-gateway/changelog/
+  - text: "Data plane version compatibility"
+    url: /ai-gateway/data-plane-version-compatibility/
 
 works_on:
   - on-prem
@@ -261,7 +263,7 @@ We aim to provide customers with at least 6 months' notice of the removal or pha
 We may provide less or no notice if the change is necessary for security or legal reasons, though such situations should be rare. 
 We may provide notice in our documentation, product update emails, or in-product notifications if applicable.
 
-After we have announced that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
+After we announce that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
 
 ## Additional terms
 

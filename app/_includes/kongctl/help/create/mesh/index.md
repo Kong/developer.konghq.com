@@ -6,10 +6,10 @@ Usage:
 Examples:
   # Issue a token that proves a zone's identity to the global control plane
   kongctl create mesh zone-token --zone zone1 --valid-for 720h --control-plane-id <id>
-
+  
   # Issue a token that proves a dataplane's identity
   kongctl create mesh dataplane-token --mesh default --name backend-01 --control-plane-id <id>
-
+  
   # Mesh resources are written with apply, since a write creates or replaces
   kongctl apply mesh -f policy.yaml --control-plane-id <id>
 

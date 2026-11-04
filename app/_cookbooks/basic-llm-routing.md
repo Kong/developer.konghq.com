@@ -1,6 +1,6 @@
 ---
 title: Basic LLM Routing
-description: Route requests to any supported LLM provider through {{site.ai_gateway_name}} with Consumer authentication and per-request model selection.
+description: Route requests to any supported LLM provider through {{site.ai_gateway_name}} with AI Consumer authentication and per-request model selection.
 url: "/cookbooks/basic-llm-routing/"
 content_type: cookbook
 layout: cookbook
@@ -13,22 +13,24 @@ works_on:
   - konnect
 min_version:
   gateway: '3.14'
+  ai-gateway: '2.0'
 categories:
   - llm
-  - llm-routing
 featured: false
 popular: false
 
 # Machine-readable fields for AI agent setup
 plugins:
   - key-auth
-  - ai-proxy-advanced
+  - ai-model
+  - ai-model-provider
 requires_embeddings: false
 providers:
   - openai
   - anthropic
   - bedrock
   - azure
+  - gemini
   - mistral
 
 hint: "Requires API credentials for your chosen LLM provider and Python 3.11+."
@@ -38,38 +40,36 @@ prereqs:
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
+        This tutorial uses {{site.konnect_product_name}}. You'll provision a recipe-scoped {{site.ai_gateway}} and local data plane via the [quickstart script](https://get.konghq.com/ai).
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped Control Plane name and run the quickstart script:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
-           curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN --deck-output
+           curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions a Konnect Control Plane named `basic-llm-routing-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK
+           This provisions an {{site.ai_gateway}} named `basic-llm-routing-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+    - title: kongctl
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
+        This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-        1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
-        1. Verify both are installed:
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Verify it's installed:
 
            ```bash
            kongctl version
-           deck version
            ```
     - title: AI Credentials
       content: |
-        Pick the provider you want to route to and export its credentials. The same credentials are reused by every apply tab below.
+        Pick the provider you want to route to and export its credentials. Every apply tab below reuses the same credentials.
 
         {% navtabs "Providers" %}
         {% navtab "OpenAI" %}
@@ -77,10 +77,10 @@ prereqs:
 
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Create a decK variable with the API key:
+        1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
         {% endnavtab %}
         {% navtab "Anthropic" %}
@@ -88,51 +88,64 @@ prereqs:
 
         1. [Create an Anthropic account](https://console.anthropic.com/).
         1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create decK variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
+        1. Export the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```sh
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
         This tutorial uses AWS Bedrock:
 
         1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-        1. Create decK variables with your AWS credentials:
+        1. Export your AWS credentials:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% navtab "Azure OpenAI" %}
-        This tutorial uses Azure OpenAI. Each Azure deployment is bound to a single model at deployment time, and the upstream model is determined by the deployment ID in the URL ([Azure OpenAI REST API reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference)). To demonstrate alias routing across two model tiers, you need **two** Azure deployments: one for the `fast` alias and one for `smart`.
+        This tutorial uses Azure OpenAI. Azure binds each deployment to a single model at deployment time, and the deployment ID determines the upstream model ([Azure OpenAI REST API reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference)). To demonstrate alias routing across two model tiers, you need **two** Azure deployments: one for the `fast` alias and one for `smart`.
 
         1. [Create an Azure OpenAI resource](https://portal.azure.com/#create/Microsoft.CognitiveServicesOpenAI).
-        1. Deploy two models in your resource (e.g. `gpt-4o-mini` for the fast tier and `gpt-4o` for the smart tier). Note both deployment IDs, plus your instance name and API version.
-        1. Create decK variables:
+        1. Deploy two models in your resource (for example, `gpt-4o-mini` for the fast tier and `gpt-4o` for the smart tier). Note both deployment IDs, plus your instance name and API version.
+        1. Export your credentials:
 
            ```sh
-           export DECK_AZURE_API_KEY='your-azure-api-key'
-           export DECK_AZURE_INSTANCE='your-instance-name'
-           export DECK_AZURE_DEPLOYMENT_ID_1='your-fast-deployment-id'    # the "fast" alias target
-           export DECK_AZURE_DEPLOYMENT_ID_2='your-smart-deployment-id'   # the "smart" alias target
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_DEPLOYMENT_ID_1='your-fast-deployment-id'    # the "fast" alias target
+           export AZURE_DEPLOYMENT_ID_2='your-smart-deployment-id'   # the "smart" alias target
+           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
            ```
 
            If you only have one deployment available, point both variables at the same value. The recipe still applies, but both aliases route to the same upstream model.
+        {% endnavtab %}
+        {% navtab "Google Gemini" %}
+        This tutorial uses Google Gemini via Vertex AI:
+
+        1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
+        1. Create a service account and mount the JSON key file in your Kong container.
+        1. Export your project details:
+
+           ```sh
+           export GCP_API_ENDPOINT='your-api-endpoint'
+           export GCP_PROJECT_ID='your-project-id'
+           export GCP_LOCATION_ID='us-central1'
+           ```
         {% endnavtab %}
         {% navtab "Mistral" %}
         This tutorial uses Mistral:
 
         1. [Create a Mistral account](https://console.mistral.ai/).
         1. [Get an API key](https://console.mistral.ai/api-keys/).
-        1. Create a decK variable with the API key:
+        1. Export the API key as an environment variable:
 
            ```sh
-           export DECK_MISTRAL_TOKEN='Bearer your-mistral-key'
+           export MISTRAL_TOKEN='Bearer your-mistral-key'
            ```
         {% endnavtab %}
         {% endnavtabs %}
@@ -149,9 +162,9 @@ prereqs:
 
 overview: |
   Route chat requests to any supported LLM provider through {{site.ai_gateway_name}}, with per-app
-  Consumer authentication and per-request model selection. By the end of this recipe, you will have
-  a single `/basic-llm-routing` endpoint that accepts OpenAI-format requests carrying a per-Consumer
-  API key, validates the key against a Consumer credential local to Kong, and routes the request to
+  AI Consumer authentication and per-request model selection. By the end of this recipe, you'll have
+  a `/basic-llm-routing` endpoint that accepts OpenAI-format requests carrying a per-consumer
+  API key, validates the key against an AI Consumer credential in Kong, and routes the request to
   one of two upstream models based on the `model` field in the request body.
 ---
 
@@ -166,7 +179,7 @@ service talking to a single provider, but breaks down as usage grows.
   coordinated redeploys across every service that holds it. There is no per-app or per-team
   credential to revoke independently.
 - **No client identity at the edge.** Without an authentication layer between the client and the
-  provider, the gateway cannot attribute usage to a tenant, enforce per-tenant quotas, or revoke
+  provider, the gateway can't attribute usage to a tenant, enforce per-tenant quotas, or revoke
   access for a single misbehaving app.
 - **Provider-specific auth and request formats.** Each provider uses a different authentication
   mechanism: OpenAI expects `Authorization: Bearer sk-...`, Anthropic uses `x-api-key: ...`, AWS
@@ -185,19 +198,20 @@ quotas, or routing policy.
 
 ## The solution
 
-{{site.ai_gateway_name}} inserts a single Service and Route between clients and providers. The Route authenticates each request against a per-app credential, picks the upstream model based on a `model` field in the request body so clients can choose between tiers without changing endpoints, and injects the provider's credentials and translates request/response formats so client apps never hold a provider key. The result is one endpoint that gives the platform team a place to enforce identity, routing, and credential policy without coupling client code to any provider.
+{{site.ai_gateway_name}} inserts an AI Model between clients and providers, backed by an AI Model Provider that holds the upstream credentials. A Key Auth AI Auth Strategy authenticates each request against a per-app credential, the AI Model picks the upstream target based on a `model` field in the request body so clients can choose between tiers without changing endpoints, and the AI Model Provider injects the provider's credentials and translates request/response formats so client apps never hold a provider key. The result is one endpoint that gives the platform team a place to enforce identity, routing, and credential policy without coupling client code to any provider.
 
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
     participant C as Client
-    participant K as {{site.ai_gateway_name}}
+    participant K as Kong AI Gateway
     participant L as LLM Provider
 
     C->>K: POST /basic-llm-routing (apikey, model: fast or smart)
     activate K
-    K->>K: key-auth — validate apikey, attach Consumer
-    K->>K: ai-proxy-advanced — match model_alias, inject provider auth
+    K->>K: key-auth Auth Strategy: validate apikey, attach Consumer
+    K->>K: AI Model: match model to a route.model.values alias
+    K->>K: AI Model Provider: inject provider auth
     K->>L: Forwarded request (translated to provider native format)
     activate L
     L-->>K: Native response
@@ -215,111 +229,146 @@ columns:
     key: responsibility
 rows:
   - component: Client application
-    responsibility: "Sends OpenAI-format requests with an `apikey` header that identifies the Consumer, plus `model: fast` or `model: smart`"
-  - component: Key Auth Plugin
-    responsibility: Looks up the API key against registered Consumer credentials, attaches the matching Kong Consumer to the request
-  - component: AI Proxy Advanced Plugin
-    responsibility: "Matches the request's `model` field to a target's `model_alias`, injects provider credentials, translates the request body, and routes to the upstream provider"
-  - component: Kong Consumer
-    responsibility: Identity attached to authenticated requests, used for rate limiting, ACLs, and analytics attribution
+    responsibility: "Sends OpenAI-format requests with an `apikey` header that identifies the AI Consumer, plus `model: fast` or `model: smart`"
+  - component: Key Auth AI Auth Strategy
+    responsibility: Looks up the API key against a registered AI Consumer credential, attaches the matching AI Consumer to the request
+  - component: AI Model
+    responsibility: "Matches the request's `model` field against its alias, applies routing and streaming settings, and selects the target that serves the request"
+  - component: AI Model Provider
+    responsibility: Holds the upstream provider credentials, injects them into the request, and translates the request/response body to and from the provider's native format
+  - component: AI Consumer
+    responsibility: Represents the identity attached to authenticated requests, used for rate limiting, ACLs, and analytics attribution
   - component: LLM provider
     responsibility: Processes the prompt and returns a completion
 {% endtable %}
 
 ## How it works
 
-A request flowing through Kong is processed in three stages: authentication, routing, and proxying.
+Kong processes each request in three stages: authentication, routing, and proxying.
 
 1. A client sends a chat completion request (OpenAI format) to `/basic-llm-routing` with an `apikey` header and a `model` field set to either `fast` or `smart`.
-2. The Key Auth Plugin reads the `apikey` header and looks the key up in Kong's Consumer credential store. If the key is missing or unknown, Kong short-circuits with `401` before any upstream call. On a match, the Plugin attaches the matching Consumer to the request, which is what downstream Plugins and analytics use to attribute usage.
-3. The AI Proxy Advanced Plugin reads the `model` field from the request body, finds the target whose `model_alias` matches, and selects that target.
-4. The Plugin strips the client's `apikey` header, injects the upstream provider's credentials from its configuration, and (if the upstream uses a different format) translates the OpenAI-format body to the provider's native format.
+2. The Key Auth strategy reads the `apikey` header and looks the key up in Kong's AI Consumer credential store. If the key is missing or unknown, Kong short-circuits with `401` before any upstream call. On a match, it attaches the matching AI Consumer to the request, which is what downstream policies and analytics use to attribute usage.
+3. Kong matches the request's `model` field against the AI Models attached to this route: one AI Model answers to `fast`, the other to `smart`. Each is a separate entity because an AI Model accepts exactly one alias in `route.model.values`.
+4. The matched AI Model's target references an AI Model Provider, which supplies the upstream credentials for the selected provider tab. Kong strips the client's `apikey` header, injects the provider credentials, and (if the upstream uses a different format) translates the OpenAI-format body to the provider's native format.
 5. Kong forwards the request to the LLM provider's API endpoint, normalizes the response back to OpenAI format, and returns it to the client with `X-Kong-LLM-Model` (the upstream model that served the request) and latency headers attached.
 
-### Key Auth: API key authentication and Consumer mapping
+### Key Auth: API key authentication and AI Consumer mapping
 
-The Key Auth Plugin sits in front of the AI Proxy Advanced Plugin and gates every request. Each Consumer is registered with one or more API keys in the `keyauth_credentials` block. When a request arrives, the Plugin reads the configured header (`apikey`), looks the key up in Kong's Consumer credential store, and attaches the matching Consumer identity to the request. That identity is what downstream Plugins like rate limiters and analytics use to attribute usage. The Plugin scales naturally to multi-tenant scenarios. Add a Consumer per app or per team, each with its own key.
-
-#### Configuration details
-
-```yaml
-- name: key-auth
-  config:
-    key_names:
-      - apikey
-    hide_credentials: true
-```
-{:.no-copy-code}
-
-**`key_names: [apikey]`**. The headers (or query parameters) the Plugin looks in for the API key. The recipe uses `apikey` because the Key Auth Plugin performs an exact string match on the header value and does not inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side; the [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) guide has the full pattern.
-
-**`hide_credentials: true`**. Strips the API key from the request before forwarding upstream. The provider never sees the Consumer's API key. This is a 3.14 default but the recipe sets it explicitly for clarity and to remain portable to older Gateway versions.
-
-**Anonymous fallback.** Set `anonymous: <consumer-id>` to let unauthenticated requests fall through to a designated "anonymous" Consumer with their own restricted policies, instead of returning `401`. Useful for public/free-tier endpoints. See the [key-auth reference](/plugins/key-auth/) for the full set of options.
-
-**Scaling to a real IdP.** When the platform is ready for end-user identity instead of static API keys, swap key-auth for [openid-connect](/plugins/openid-connect/) and map JWT claims to Consumers. Application code only changes the auth header it sends; the rest of this recipe (model aliases, ai-proxy-advanced targets, Consumer mappings) stays put. See the [claude-code-sso recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.
-
-### AI Proxy Advanced: model alias routing and provider translation
-
-The AI Proxy Advanced Plugin sits behind the Key Auth Plugin and handles everything from the model-selection decision through the upstream call. The recipe configures two targets, each tagged with a `model_alias`. When a request arrives, the Plugin reads the `model` field from the request body, finds the target whose alias matches (`fast` or `smart`), and uses that target's `model.name` and `auth` configuration. This single Plugin replaces what would otherwise require per-provider SDKs, hand-rolled credential management, and per-model client logic.
+Authentication in {{site.ai_gateway_name}} 2.0 is an AI Auth Strategy, not a policy. AI Policies are reserved for AI-specific behavior like guardrails and rate limiting. The Key Auth strategy sits in front of routing and gates every request. Each AI Consumer holds one or more API key credentials. When a request arrives, the strategy reads the configured header (`apikey`), looks the key up in Kong's AI Consumer credential store, and attaches the matching AI Consumer identity to the request. Downstream policies like rate limiters and analytics use that identity to attribute usage. The pattern scales naturally to multi-tenant scenarios: add an AI Consumer per app or per team, each with its own key.
 
 #### Configuration details
 
 {%- raw %}
 ```yaml
-- name: ai-proxy-advanced
-  config:
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
+ai_gateway_auth_strategies:
+  - ref: basic-llm-routing-auth
+    type: key-auth
+    display_name: "basic-llm-routing key auth"
+    config:
+      key_names:
+        - apikey
+      hide_credentials: true
+
+ai_gateway_consumers:
+  - ref: basic-llm-routing-consumer
+    name: basic-llm-routing-consumer
+    display_name: "basic-llm-routing demo consumer"
+    type: api-key
+    credentials:
+      - ref: basic-llm-routing-credential
+        name: basic-llm-routing-credential
+        display_name: "basic-llm-routing demo API key"
+        type: api-key
+        api_key: !secret {source: !env CONSUMER_API_KEY}
 ```
 {% endraw -%}
 {:.no-copy-code}
 
-**`model.model_alias`**. The client-facing name for the target. When the request body's `model` field equals an alias, the Plugin routes to that target. With aliases configured, Kong uses alias matching as the primary routing decision. If no alias matches, the Plugin falls back to the configured load-balancing algorithm.
+**`key_names: [apikey]`**. The headers (or query parameters) checked for the API key. The recipe uses `apikey` because this check performs an exact string match on the header value and doesn't inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side.
 
-**`route_type: llm/v1/chat`**. Selects the chat-completions translation path. Kong accepts an OpenAI-format chat-completion body and converts it to whatever the upstream provider expects (Anthropic's `messages` API, Bedrock's `invoke-model` body, etc.). The response is normalised back to OpenAI format.
+**`hide_credentials: true`**. Strips the API key from the request before forwarding upstream. The provider never sees the AI Consumer's API key.
 
-**`auth`**. Kong holds provider credentials in the Plugin config and injects them into every upstream request. Set `auth.allow_override: true` if you want client-provided credentials to pass through to the provider instead, useful when clients manage their own provider keys and Kong is purely a routing layer.
+**`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret` reference. Kong rejects a plain string here, even for a demo value like this recipe's. You export `CONSUMER_API_KEY` once in [Apply the Kong configuration](#apply-the-kong-configuration) and reuse it across every provider tab.
 
-**`logging.log_statistics`**. When enabled, Kong appends token usage data (`prompt_tokens`, `completion_tokens`, `total_tokens`) to any attached logging Plugin's output. Useful for cost attribution.
+**The AI Consumer and its credential are separate entities from the AI Auth Strategy.** An AI Consumer (`type: api-key`) represents the caller's identity; its nested `credentials` list holds the actual key values checked against incoming requests. Every AI Model in this recipe references the same `basic-llm-routing-auth` strategy via `access.auth_strategies`, so one AI Consumer credential authenticates against either alias.
 
-**`logging.log_payloads`**. When enabled, the full request and response bodies are included in the output of any attached logging Plugin. Whether to enable this depends on your organization's observability and compliance requirements.
+**Anonymous fallback.** Set `anonymous: <consumer-id>` on the Key Auth AI Auth Strategy to let unauthenticated requests fall through to a designated "anonymous" AI Consumer with their own restricted policies, instead of returning `401`. Anonymous fallback is useful for public or free-tier endpoints. See `kongctl explain ai_gateway_auth_strategies --extended` for the full set of options.
 
-**`model.name`**. The upstream model identifier. With aliases in play, this is the actual provider model that serves the request when its alias is selected. Change it and re-apply to swap models without changing client code.
+**Scaling to a real IdP.** When the platform is ready for end-user identity instead of static API keys, swap the Key Auth AI Auth Strategy for an OpenID Connect strategy and map JWT claims to AI Consumers. Application code only changes the auth header it sends; the rest of this recipe (model aliases, AI Model targets, AI Consumer mappings) stays put. See the [Claude Code SSO recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.
+
+### AI Model and AI Model Provider: alias routing and provider translation
+
+An AI Model Provider holds the credentials for one upstream account; an AI Model routes requests to targets that reference an AI Model Provider. The recipe defines one AI Model Provider per tab and two Models, `basic-llm-routing-fast` and `basic-llm-routing-smart`, both sharing the `/basic-llm-routing` path but each declaring a different value in `config.route.model.values`. When a request arrives, Kong reads the `model` field from the request body and dispatches to whichever Model declares that value, then that Model's single target uses the AI Model Provider's credentials and format translation. This combination replaces what would otherwise require per-provider SDKs, hand-rolled credential management, and per-model client logic.
+
+#### Configuration details
+
+The following example shows the OpenAI tab's configuration. Every provider tab follows the same shape; only the AI Model Provider's `type`/`config.auth` and each target's `config` differ:
+
+{%- raw %}
+```yaml
+ai_gateway_model_providers:
+  - ref: basic-llm-routing-provider
+    type: openai
+    display_name: "basic-llm-routing"
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !secret {source: !env OPENAI_TOKEN}
+
+ai_gateway_models:
+  - ref: basic-llm-routing-fast
+    type: model
+    display_name: "basic-llm-routing (fast)"
+    formats:
+      - type: openai
+    capabilities:
+      - generate
+    access:
+      auth_strategies:
+        - basic-llm-routing-auth
+    config:
+      max_request_body_size: 10485760
+      response_streaming: allow
+      logging:
+        payloads: true
+      route:
+        paths:
+          - /basic-llm-routing
+        model:
+          body_param: model
+          values:
+            - fast
+    targets:
+      - name: !env CHAT_MODEL_1
+        provider: basic-llm-routing-provider
+        config:
+          type: openai
+```
+{% endraw -%}
+{:.no-copy-code}
+
+**`config.auth`** (on the AI Model Provider). Kong holds provider credentials here and injects them into every upstream request that routes through this AI Model Provider.
+
+**`formats: [{type: openai}]`**. Declares the wire format this Model accepts and normalizes responses to. Kong accepts an OpenAI-format chat-completion body and converts it to whatever the upstream provider expects (Anthropic's `messages` API, Bedrock's `invoke-model` body, etc.).
+
+**`route.model.values`**. The alias this Model answers to. When the request body's `model` field equals this value, Kong routes to this Model. An AI Model accepts exactly one alias, so a second tier needs a second Model entity, as this recipe does for `fast` and `smart`.
+
+**`targets[].name`**. The upstream model identifier. Change it and re-apply to swap models without changing client code.
+
+**`targets[].config`**. Provider-specific target fields, for example Bedrock's `region` or Azure's `deployment_id`/`api_version`, live here, alongside the `type` discriminator matching the AI Model Provider.
 
 **`max_request_body_size`** and **`response_streaming`**. The recipe sets a 10 MB request limit (large enough for typical conversation contexts and modest RAG injections) and allows streaming responses (the natural choice for interactive chat). Tighten or relax both based on the workload you expect.
 
 **Alternative configurations worth knowing about:**
 
-- **`llm_format`**. The recipe uses the default (`openai`), which accepts OpenAI-format requests and normalizes all provider responses back to OpenAI format. Set `llm_format` to a provider's native format to pass requests through without transformation. Useful when you already have code using a provider's SDK or need provider-specific features that do not map to the OpenAI format. Native format only supports the matching provider, you cannot route across providers with different native formats on a single Plugin. See the [ai-proxy-advanced reference](/plugins/ai-proxy-advanced/) for the supported native formats.
-- **Routing strategies beyond aliases.** This recipe routes by the `model` field in the body. The same Plugin also supports routing by request header (via Route or Service-level routing in front of the Plugin), by path (separate Routes per model), and by load-balancing algorithm across targets that share an alias. See the [ai-proxy-advanced reference](/plugins/ai-proxy-advanced/) for the full set of balancer algorithms and routing strategies.
-- **Additional route types.** A single Plugin instance can have multiple targets for different route types, each with their own model and auth configuration. Beyond `llm/v1/chat`, the Plugin supports additional route types for embeddings, completions, responses, realtime, and multimodal traffic. See the [ai-proxy-advanced reference](/plugins/ai-proxy-advanced/) for the current list.
+- **Native provider formats.** The recipe uses `formats: [{type: openai}]`, which accepts OpenAI-format requests and normalizes all provider responses back to OpenAI format. Set the format to a provider's native format (for example, `anthropic`) to pass requests through without transformation. Native format only supports providers that speak that format, so you can't route across providers with different native formats on a single Model. See the [AI Model entity reference](/ai-gateway/entities/ai-model/) for the supported formats.
+- **Routing strategies beyond aliases.** This recipe routes by the `model` field in the body. The same entity also supports routing by request header, by path, and by load-balancing across multiple targets on one Model using `config.balancer`. See the [AI Model entity reference](/ai-gateway/entities/ai-model/) for the full set of balancer algorithms and routing strategies.
+- **Additional capabilities.** A single AI Model declares one or more `capabilities` (`generate`, `embeddings`, and others). This recipe uses `generate` for chat completions; see the [AI Model entity reference](/ai-gateway/entities/ai-model/) for the current list.
 
 {:.info}
-> **Production credentials.** This recipe stores the Consumer API key directly in Plugin config and the LLM provider credentials in environment variables for simplicity. In production, use [Kong Vaults](/gateway/secrets-management/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
+> **Production credentials.** This recipe stores the AI Consumer's demo API key and the LLM provider credentials directly in configuration and environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
 
 ### Example response
 
@@ -367,30 +416,36 @@ columns:
     key: description
 rows:
   - header: "`X-Kong-LLM-Model`"
-    description: "Upstream model that served the request, prefixed with the provider name and resolved from the matched `model_alias`"
+    description: "Upstream model that served the request, prefixed with the provider name and resolved from the matched AI Model target"
   - header: "`X-Kong-Upstream-Latency`"
     description: Time (ms) Kong spent waiting for the provider to respond
   - header: "`X-Kong-Proxy-Latency`"
     description: Time (ms) Kong spent processing the request (excluding upstream)
 {% endtable %}
 
-Kong attaches `X-Consumer-Username` and related headers to the **upstream** request (so the LLM provider sees who's calling) but does not echo them back to the downstream client. Per-Consumer attribution shows up in Konnect's analytics views. See "Explore in Konnect" below.
+Kong attaches `X-Consumer-Username` and related headers to the **upstream** request (so the LLM provider sees who's calling) but doesn't echo them back to the downstream client. Per-consumer attribution shows up in {{site.konnect_short_name}}'s analytics views. See "Explore in {{site.konnect_short_name}}" below.
 
 ## Apply the Kong configuration
 
-The following configuration creates a {{site.base_gateway}} Service and Route at `/basic-llm-routing`, attaches the [key-auth](/plugins/key-auth/) Plugin to identify Consumers via the `apikey` header, and attaches the [ai-proxy-advanced](/plugins/ai-proxy-advanced/) Plugin with two targets to handle alias routing, credential injection, and format translation. All resources are scoped using `select_tags` and a kongctl `namespace` so they can be cleanly torn down without affecting other configurations on the same Control Plane. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
+The following configuration creates an AI Model Provider holding your chosen provider's credentials, a Key Auth AI Auth Strategy and an AI Consumer with a demo API key, and two AI Models (`fast` and `smart`) that route to that AI Model Provider. A kongctl namespace scopes every resource, so you can tear the configuration down cleanly without affecting other configurations on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
 
-First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it.
+First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply commands can manage it.
 
 ```bash
-kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
+kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
+Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
 
-Provider credentials are exported once during Prerequisites. Each tab below only sets the model env vars (which are recipe-specific) and runs the apply.
+Export the demo AI Consumer's API key. The AI Consumer credential's `api_key` field is write-only and must come from an env var, even for this fixed demo value:
+
+```bash
+export CONSUMER_API_KEY='demo-api-key'
+```
+
+The provider credentials come from the environment variables you set in the prerequisites. Each tab below only sets the model env vars (which are recipe-specific) and runs the apply.
 
 {% navtabs "Providers" %}
 {% tab OpenAI %}
@@ -398,8 +453,8 @@ Provider credentials are exported once during Prerequisites. Each tab below only
 Export the model env vars:
 
 ```bash
-export DECK_CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias
-export DECK_CHAT_MODEL_2='gpt-4o'        # the "smart" alias
+export CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias
+export CHAT_MODEL_2='gpt-4o'        # the "smart" alias
 ```
 
 Apply the Kong configuration:
@@ -407,77 +462,120 @@ Apply the Kong configuration:
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      type: openai
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      type: openai
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
@@ -489,8 +587,8 @@ rm -f kong-recipe.yaml
 Export the model env vars:
 
 ```bash
-export DECK_CHAT_MODEL_1='claude-haiku-4-5-20251001'      # the "fast" alias
-export DECK_CHAT_MODEL_2='claude-sonnet-4-5-20250929'      # the "smart" alias
+export CHAT_MODEL_1='claude-haiku-4-5-20251001'      # the "fast" alias
+export CHAT_MODEL_2='claude-sonnet-4-5-20250929'      # the "smart" alias
 ```
 
 Apply the Kong configuration:
@@ -498,81 +596,122 @@ Apply the Kong configuration:
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: x-api-key
-          header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: anthropic
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-          options:
-            anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-      - route_type: llm/v1/chat
-        auth:
-          header_name: x-api-key
-          header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: anthropic
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-          options:
-            anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: anthropic
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: x-api-key
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      version: !env 'ANTHROPIC_VERSION'
+      type: anthropic
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      version: !env 'ANTHROPIC_VERSION'
+      type: anthropic
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
@@ -584,8 +723,8 @@ rm -f kong-recipe.yaml
 Export the model env vars:
 
 ```bash
-export DECK_CHAT_MODEL_1='amazon.nova-lite-v1:0'                                   # the "fast" alias
-export DECK_CHAT_MODEL_2='global.anthropic.claude-sonnet-4-5-20250929-v1:0'        # the "smart" alias
+export CHAT_MODEL_1='amazon.nova-lite-v1:0'                                   # the "fast" alias
+export CHAT_MODEL_2='global.anthropic.claude-sonnet-4-5-20250929-v1:0'        # the "smart" alias
 ```
 
 Apply the Kong configuration:
@@ -593,83 +732,121 @@ Apply the Kong configuration:
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: bedrock
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-          options:
-            bedrock:
-              aws_region: ${{ env "DECK_AWS_REGION" }}
-      - route_type: llm/v1/chat
-        auth:
-          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: bedrock
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-          options:
-            bedrock:
-              aws_region: ${{ env "DECK_AWS_REGION" }}
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: bedrock
+  config:
+    auth:
+      type: aws
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
@@ -678,11 +855,11 @@ rm -f kong-recipe.yaml
 {% endtab %}
 {% tab Azure OpenAI %}
 
-Export the model env vars. The model names are recorded by Kong in the `X-Kong-LLM-Model` header for analytics, but Azure's upstream selection is driven by the deployment IDs you exported in the AI Credentials prereq:
+Export the model env vars. Kong records the model names in the `X-Kong-LLM-Model` header for analytics, but the deployment IDs you exported in the AI Credentials prereq drive Azure's upstream selection:
 
 ```bash
-export DECK_CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias. must match the model in DECK_AZURE_DEPLOYMENT_ID_1
-export DECK_CHAT_MODEL_2='gpt-4o'        # the "smart" alias. must match the model in DECK_AZURE_DEPLOYMENT_ID_2
+export CHAT_MODEL_1='gpt-4o-mini'  # the "fast" alias. must match the model in AZURE_DEPLOYMENT_ID_1
+export CHAT_MODEL_2='gpt-4o'        # the "smart" alias. must match the model in AZURE_DEPLOYMENT_ID_2
 ```
 
 Apply the Kong configuration:
@@ -690,85 +867,266 @@ Apply the Kong configuration:
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: api-key
-          header_value: ${{ env "DECK_AZURE_API_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: azure
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-          options:
-            azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
-            azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID_1" }}
-            azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-      - route_type: llm/v1/chat
-        auth:
-          header_name: api-key
-          header_value: ${{ env "DECK_AZURE_API_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: azure
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-          options:
-            azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
-            azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID_2" }}
-            azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: azure
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: api-key
+        value: !secret {source: !env 'AZURE_API_KEY'}
+    service: azure-openai
+    instance: !env 'AZURE_INSTANCE'
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID_1'
+      type: azure
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID_2'
+      type: azure
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" .collapsible }
+
+{% endtab %}
+{% tab Google Gemini %}
+
+Export the model env vars:
+
+```bash
+export CHAT_MODEL_1='gemini-2.0-flash'  # the "fast" alias
+export CHAT_MODEL_2='gemini-1.5-pro'    # the "smart" alias
+```
+
+Apply the Kong configuration:
+
+```bash
+{%- raw %}
+cat <<'EOF' > kong-recipe.yaml
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      use_gcp_service_account: true
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      gcp_environment:
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
+      type: gemini
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      gcp_environment:
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
+      type: gemini
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
@@ -780,8 +1138,8 @@ rm -f kong-recipe.yaml
 Export the model env vars:
 
 ```bash
-export DECK_CHAT_MODEL_1='mistral-small-latest'  # the "fast" alias
-export DECK_CHAT_MODEL_2='mistral-large-latest'   # the "smart" alias
+export CHAT_MODEL_1='mistral-small-latest'  # the "fast" alias
+export CHAT_MODEL_2='mistral-large-latest'   # the "smart" alias
 ```
 
 Apply the Kong configuration:
@@ -789,83 +1147,122 @@ Apply the Kong configuration:
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_MISTRAL_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: mistral
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-          options:
-            mistral_format: openai
-            upstream_url: https://api.mistral.ai/v1/chat/completions
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_MISTRAL_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: mistral
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-          options:
-            mistral_format: openai
-            upstream_url: https://api.mistral.ai/v1/chat/completions
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: basic-llm-routing-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-provider
+  display_name: basic-llm-routing
+  type: mistral
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'MISTRAL_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: basic-llm-routing-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-auth
+  display_name: basic-llm-routing key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: basic-llm-routing-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-consumer
+  display_name: basic-llm-routing demo consumer
+  type: api-key
+  credentials:
+  - ref: basic-llm-routing-credential
+    name: basic-llm-routing-credential
+    display_name: basic-llm-routing demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_models:
+- ref: basic-llm-routing-fast
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-fast
+  display_name: basic-llm-routing (fast)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - fast
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: basic-llm-routing-provider
+    config:
+      format: openai
+      type: mistral
+- ref: basic-llm-routing-smart
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: basic-llm-routing-smart
+  display_name: basic-llm-routing (smart)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - basic-llm-routing-auth
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /basic-llm-routing
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - smart
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: basic-llm-routing-provider
+    config:
+      format: openai
+      type: mistral
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
@@ -879,7 +1276,7 @@ rm -f kong-recipe.yaml
 The demo script makes three calls. The first two send the same prompt with different `model` values (`fast` then `smart`) and print the `X-Kong-LLM-Model` header so you can confirm Kong routed each request to a different upstream model. The third call presents an invalid API key and shows Kong rejecting it with `401` before any upstream call.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token to the `apikey` header server-side.
 
 Create the demo script:
 
@@ -999,7 +1396,7 @@ Example output (using the OpenAI tab's model env vars):
 ======================================================================
 
 [REQUEST] model='fast' prompt='What is the capital of France?'
-[BLOCKED] 401 Error code: 401 - {'message': 'No credentials found for given apikey'}  (14ms)
+[BLOCKED] 401 Error code: 401 - {'message': 'Unauthorized'}  (30ms)
 
 ======================================================================
 Done.
@@ -1009,36 +1406,31 @@ Done.
 
 ### What happened
 
-1. **Both aliases resolved on the same Route.** The OpenAI SDK sent two `POST /basic-llm-routing` requests with identical bodies except for the `model` field (`fast` vs `smart`). The `X-Kong-LLM-Model` header on each response shows the actual upstream model Kong routed to: `openai/gpt-4o-mini` for `fast` and `openai/gpt-4o` for `smart`. No client code change, no separate endpoint, just a different value in the request body.
-2. **Consumer identity attached to every successful request.** Kong matched the `apikey` header to the `demo-app` Consumer's credential and made that identity available to downstream Plugins. (`X-Consumer-Username` is added to the upstream request, not the downstream response. See the Konnect analytics views in the next subsection for per-Consumer attribution.) The Consumer is the unit you would attach rate limits, ACLs, and quota policies to.
-3. **Kong enforced auth before any upstream call.** The third request used a key that no Consumer holds. Kong's Key Auth Plugin rejected it in roughly 5 ms, well below normal upstream latency. The provider was never contacted, no provider quota was consumed, and the failure surfaced as a clean `401` to the client.
-4. **Provider credentials never left Kong.** The OpenAI SDK only ever held the Consumer's API key. The `Bearer sk-...` provider credential lived in `DECK_OPENAI_TOKEN` on the Kong side and was injected into the upstream call by the AI Proxy Advanced Plugin.
+1. **Both aliases resolved on the same path.** The OpenAI SDK sent two `POST /basic-llm-routing` requests with identical bodies except for the `model` field (`fast` vs `smart`). The `X-Kong-LLM-Model` header on each response shows the actual upstream model Kong routed to: `openai/gpt-4o-mini` for `fast` and `openai/gpt-4o` for `smart`. No client code change, no separate endpoint, just a different value in the request body.
+2. **AI Consumer identity attached to every successful request.** Kong matched the `apikey` header to the `basic-llm-routing-consumer` AI Consumer's credential and made that identity available to downstream policies. (Kong adds `X-Consumer-Username` to the upstream request, not the downstream response. See the {{site.konnect_short_name}} {{site.observability}} views in the next subsection for per-consumer attribution.) The AI Consumer is the unit you attach rate limits, ACLs, and quota policies to.
+3. **Kong enforced auth before any upstream call.** The third request used a key that no AI Consumer holds. The Key Auth AI Auth Strategy rejected it in roughly 30 ms, well below normal upstream latency. Kong never contacted the provider, the request consumed no provider quota, and the failure surfaced as a clean `401` to the client.
+4. **Provider credentials never left Kong.** The OpenAI SDK only ever held the AI Consumer's API key. The `Bearer sk-...` provider credential lived in `OPENAI_TOKEN` on the Kong side, and the AI Model Provider injected it into the upstream call.
 
-### Explore in Konnect
+### Explore in {{site.konnect_short_name}}
 
-Open [Konnect](https://cloud.konghq.com/) and navigate to **API Gateway** → **Gateways** → **basic-llm-routing-recipe**. The recipe created the following resources on this Control Plane:
+Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `basic-llm-routing-recipe`. The recipe created an AI Model Provider holding your chosen provider's credentials, two AI Models (`basic-llm-routing-fast` and `basic-llm-routing-smart`), a Key Auth AI Auth Strategy, and an AI Consumer with a demo API key credential, all scoped to this recipe by the kongctl namespace applied above.
 
-- **Gateway services** → **basic-llm-routing**: the Service the recipe registered. Its detail page has tabs for Configuration, Routes, Plugins, and Analytics.
-  - **Routes** tab: the `/basic-llm-routing` Route, scoped by the `basic-llm-routing-recipe` `select_tags` you used at apply time.
-  - **Plugins** tab: two Plugin instances, `basic-llm-routing-auth` (key-auth) and `basic-llm-routing-proxy` (ai-proxy-advanced). Open the AI Proxy Advanced Plugin to see the two targets and their `model_alias` values.
-- **Consumers** → **demo-app**: the Consumer the API key maps to.
-
-The **Analytics** tab on the Gateway service shows analytics tied to this recipe, including request counts, error rates, average latency, and a request-over-time chart. For a deeper dive into these analytics, plus platform-wide analytics across every Control Plane, head to the **Observability** L1 menu in Konnect.
+For platform-wide traffic analysis across every {{site.ai_gateway}}, head to the **Observability** L1 menu in {{site.konnect_short_name}}.
 
 ## Variations and next steps
 
-**Swap models by changing one env var.** Update `DECK_CHAT_MODEL_1` or `DECK_CHAT_MODEL_2` to a different model on the same provider and re-apply. Client code stays the same: `model="fast"` and `model="smart"` keep working, they just resolve to different upstream models. This is the most common production use of `model_alias`: an ops team can move the `claude-sonnet` alias from a version-pinned model ID like `claude-sonnet-4-5-20250929` to a newer pinned version when it's vetted, without coordinating with every team that consumes the alias. Stay within the same model class. Swapping `fast` from a small model to a large one is a behavioural change clients should be in on.
+**Swap models by changing one env var.** Update `CHAT_MODEL_1` or `CHAT_MODEL_2` to a different model on the same provider and re-apply. Client code stays the same: `model="fast"` and `model="smart"` keep working; they just resolve to different upstream models. This is the most common production use of alias routing: an ops team can move the `claude-sonnet` alias from a version-pinned model ID like `claude-sonnet-4-5-20250929` to a newer pinned version when it's vetted, without coordinating with every team that consumes the alias. Stay within the same model class. Swapping `fast` from a small model to a large one is a behavioral change clients should be in on.
 
-**Add per-Consumer rate limits.** With key-auth mapping requests to Consumers, attach the [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) Plugin to apply token quotas per Consumer or per Consumer Group. Each app holds its own API key, so each app gets its own budget. See the [llm-cost-optimization recipe](/cookbooks/llm-cost-optimization/) for a worked example of cost-based tiered rate limiting.
+**Add per-consumer rate limits.** With the Key Auth AI Auth Strategy mapping requests to AI Consumers, attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to apply token quotas per AI Consumer or per AI Consumer Group. Each app holds its own API key, so each app gets its own budget. See the [LLM cost optimization recipe](/cookbooks/llm-cost-optimization/) for a worked example of cost-based tiered rate limiting.
 
-**Switch to OpenID Connect for production identity.** Static API keys are simple but they are not user identities. When the platform integrates Okta, Keycloak, Auth0, or another OIDC provider, swap the [key-auth](/plugins/key-auth/) Plugin for [openid-connect](/plugins/openid-connect/) and let JWT claims map users to Consumers automatically based on roles or team membership. The rest of the recipe (model aliases, ai-proxy-advanced targets, Consumer mappings) stays put. See the [claude-code-sso recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.
+**Switch to OpenID Connect for production identity.** Static API keys are simple, but they aren't user identities. When the platform integrates Okta, Keycloak, Auth0, or another OIDC provider, swap the [Key Auth AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) for an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) and let JWT claims map users to AI Consumers automatically based on roles or team membership. The rest of the recipe (model aliases, AI Model targets, AI Consumer mappings) stays put. See the [Claude Code SSO recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.
 
-**Switch providers.** Select a different provider tab above and re-apply. The client interface, including the `apikey` header auth and the `model: "fast"` / `model: "smart"` aliases, does not change. For setups that route to multiple providers from the same Plugin instance, see the [AI Proxy Advanced load balancing documentation](/plugins/ai-proxy-advanced/).
+**Switch providers.** Select a different provider tab above and re-apply. The client interface, including the `apikey` header auth and the `model: "fast"` / `model: "smart"` aliases, doesn't change. For setups that route to multiple providers from the same alias, see the [AI Model entity reference](/ai-gateway/entities/ai-model/) for load-balancing across targets.
 
 ## Cleanup
 
-The recipe scoped all resources with `select_tags` and a kongctl `namespace`, so this teardown removes only this recipe's configuration. Tear down the local Data Plane and delete the Control Plane from Konnect:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
-export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```

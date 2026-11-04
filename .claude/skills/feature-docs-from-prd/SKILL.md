@@ -31,11 +31,16 @@ adding a `skills` capability to the AI Gateway `AIGatewayModelAPI`, from
 `Kong/platform-api#3398` and its PRD). Expect to extend it as more PRDs come
 through with shapes this version hasn't seen yet.
 
-## Scope: AI Gateway 2.0 on Konnect only — Policies, not plugins
+## Scope: AI Gateway 2.0 on Konnect first — Policies, not plugins
 
 This skill documents **AI Gateway 2.0 on Konnect**. That product surface uses
 **Policies** (`app/_ai_gateway_policies/<slug>/index.md`), not self-hosted
 Gateway **plugins** (`app/_kong_plugins/<slug>/`).
+Self-hosted AI Gateway 2.x on-prem is possible, but should be documented sparingly.
+This can run the 2.x config via `deck ai sync`/`deck file
+ai2kong` conversion (see `app/ai-gateway/configure-on-prem.md`). That
+conversion path doesn't change where a new Policy gets documented: still
+`app/_ai_gateway_policies/`, never `app/_kong_plugins/`.
 
 Even when the underlying implementation PR is a `kong-ee` plugin (new Lua
 schema, `kong/plugins/<name>/`, a `changelog/unreleased/kong-aigw/*.yml`
