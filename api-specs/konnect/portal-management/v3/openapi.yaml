@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@4c0d5da661e8db998ddaa12338ca9bef68bc94cd
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4c0d5da661e8db998ddaa12338ca9bef68bc94cd'
+  x-oas-source: kong/platform-api@75f67e9c148d0225a8321c01ceabf1a53b08467c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/75f67e9c148d0225a8321c01ceabf1a53b08467c'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -436,6 +436,112 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Portal Customization
+  '/portals/{portalId}/customization/navigations':
+    get:
+      operationId: list-portal-navigations
+      summary: List Navigation configurations
+      description: Returns a paginated list of the portal's sidebar navigation configurations. Each navigation is matched to pages by its `show_on_path_prefixes` and displayed automatically when using a named page layout that supports the sidebar UX.
+      parameters:
+        - $ref: '#/components/parameters/SortPortalNavigations'
+        - $ref: '#/components/parameters/PortalId'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: filter
+          in: query
+          description: Filter navigations returned in the response.
+          required: false
+          schema:
+            $ref: '#/components/schemas/PortalNavigationsFilterParameters'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPortalNavigations'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Navigation
+    post:
+      operationId: create-portal-navigation
+      summary: Create Navigation configuration
+      description: 'Creates a sidebar navigation configuration for this portal. A navigation claims every page under its `show_on_path_prefixes`, and the longest matching entry wins when more than one navigation is configured.'
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePortalNavigation'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalNavigation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Navigation
+  '/portals/{portalId}/customization/navigations/{navigationId}':
+    get:
+      operationId: get-portal-navigation
+      summary: Get a Navigation configuration
+      description: Returns the configuration of a single sidebar navigation for this portal.
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+        - $ref: '#/components/parameters/NavigationId'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalNavigation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Navigation
+    put:
+      operationId: replace-portal-navigation
+      summary: Replace Navigation configuration
+      description: Replaces the configuration of a single sidebar navigation for this portal. This is a full replacement; partial updates are not supported.
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+        - $ref: '#/components/parameters/NavigationId'
+      requestBody:
+        $ref: '#/components/requestBodies/ReplacePortalNavigation'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalNavigation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Navigation
+    delete:
+      operationId: delete-portal-navigation
+      summary: Delete Navigation configuration
+      description: Deletes a single sidebar navigation configuration for this portal.
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+        - $ref: '#/components/parameters/NavigationId'
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Navigation
   '/portals/{portalId}/integrations':
     get:
       operationId: get-portal-integrations
@@ -2983,6 +3089,15 @@ components:
       in: path
       required: true
       description: ID of the identity provider.
+    NavigationId:
+      schema:
+        type: string
+        format: uuid
+        example: ebbac5b0-ac89-45c3-9d2e-c4542c657e79
+      name: navigationId
+      in: path
+      required: true
+      description: ID of the navigation configuration.
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
@@ -3149,6 +3264,18 @@ components:
       required: false
       schema:
         type: string
+    SortPortalNavigations:
+      name: sort
+      description: |
+        Sorts a collection of portal navigations. Supported sort attributes are:
+          - created_at
+          - updated_at
+          - name
+      in: query
+      required: false
+      schema:
+        type: string
+        default: name
     SortPortalPages:
       name: sort
       description: |
@@ -3725,7 +3852,10 @@ components:
     CreateDefaultContentRequest:
       description: Options for creating default content.
       type: object
-      properties: {}
+      properties:
+        theme_name:
+          description: 'Name of the theme to use for the default content. Must match an available theme name; if omitted or unrecognized, the default theme is used.'
+          type: string
       additionalProperties: false
       title: CreateDefaultContentRequest
     PortalPageResponse:
@@ -4847,6 +4977,183 @@ components:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       additionalProperties: false
       title: PortalSnippetsFilterParameters
+    NavigationShowOnPathPrefix:
+      description: 'A route prefix this navigation claims. Use `/` for a portal-wide navigation, or a deeper prefix such as `/guides` to override it on those routes only. Must start with `/`, contain only lowercase letters, numbers, hyphens, and slashes, and must be unique per portal.'
+      type: string
+      example: /guides
+      maxLength: 512
+      pattern: '^/[a-z0-9/-]*$'
+      title: NavigationShowOnPathPrefix
+    NavigationShowOnPathPrefixes:
+      description: Route prefixes this navigation claims. The longest matching prefix across all of a portal's navigations wins.
+      type: array
+      items:
+        $ref: '#/components/schemas/NavigationShowOnPathPrefix'
+      example:
+        - /guides
+      minItems: 1
+      title: NavigationShowOnPathPrefixes
+      uniqueItems: true
+    NavigationName:
+      description: Names the navigation in the Konnect UI. Must be unique per portal.
+      type: string
+      example: Main
+      maxLength: 512
+      title: NavigationName
+    NavigationLinkText:
+      description: The link label.
+      type: string
+      example: Overview
+      maxLength: 512
+      title: NavigationLinkText
+    NavigationLinkHref:
+      description: 'The link target: a portal path (`/guides`), an anchor (`/getting-started#section`), a query (`?tab=1`), or a full `https://` URL.'
+      type: string
+      example: /getting-started
+      maxLength: 2048
+      title: NavigationLinkHref
+    NavigationLinkVisibility:
+      description: 'Who sees the link. `public` for every visitor, `private` for signed-in developers only.'
+      type: string
+      example: public
+      enum:
+        - public
+        - private
+      title: NavigationLinkVisibility
+    NavigationLink:
+      description: 'A single navigation link, optionally with nested children.'
+      type: object
+      properties:
+        text:
+          $ref: '#/components/schemas/NavigationLinkText'
+        href:
+          $ref: '#/components/schemas/NavigationLinkHref'
+        visibility:
+          $ref: '#/components/schemas/NavigationLinkVisibility'
+        external:
+          description: 'When true, the link opens in a new tab.'
+          type: boolean
+          default: false
+        expanded:
+          description: 'When true, the link''s children start expanded.'
+          type: boolean
+          default: false
+        children:
+          description: 'Nested links, up to three levels total, including this link.'
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLink'
+          example: []
+      additionalProperties: false
+      required:
+        - text
+        - href
+        - visibility
+      title: NavigationLink
+    NavigationLinkGroup:
+      description: 'A group of navigation links, rendered in order, with an optional header.'
+      type: object
+      properties:
+        header:
+          description: Heading text displayed above the group's links. Omit it for an unlabeled group.
+          type: string
+          example: Getting started
+          maxLength: 512
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLink'
+      additionalProperties: false
+      required:
+        - links
+      title: NavigationLinkGroup
+    CreatePortalNavigationRequest:
+      description: Create a sidebar navigation configuration for a portal.
+      type: object
+      properties:
+        show_on_path_prefixes:
+          $ref: '#/components/schemas/NavigationShowOnPathPrefixes'
+        name:
+          $ref: '#/components/schemas/NavigationName'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLinkGroup'
+      additionalProperties: false
+      required:
+        - show_on_path_prefixes
+        - name
+        - groups
+      title: CreatePortalNavigationRequest
+    ReplacePortalNavigationRequest:
+      description: Replace a sidebar navigation configuration for a portal. This is a full replacement; partial updates are not supported.
+      type: object
+      properties:
+        show_on_path_prefixes:
+          $ref: '#/components/schemas/NavigationShowOnPathPrefixes'
+        name:
+          $ref: '#/components/schemas/NavigationName'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLinkGroup'
+      additionalProperties: false
+      required:
+        - show_on_path_prefixes
+        - name
+        - groups
+      title: ReplacePortalNavigationRequest
+    PortalNavigationResponse:
+      description: Details about a sidebar navigation configuration for a portal.
+      type: object
+      properties:
+        show_on_path_prefixes:
+          $ref: '#/components/schemas/NavigationShowOnPathPrefixes'
+        name:
+          $ref: '#/components/schemas/NavigationName'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLinkGroup'
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - show_on_path_prefixes
+        - name
+        - groups
+        - id
+        - created_at
+        - updated_at
+      title: PortalNavigationResponse
+    ListPortalNavigationsResponse:
+      description: A paginated list of sidebar navigation configurations for a portal.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalNavigationResponse'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListPortalNavigationsResponse
+    PortalNavigationsFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+      additionalProperties: false
+      title: PortalNavigationsFilterParameters
     PortalCustomDomain:
       type: object
       properties:
@@ -11050,6 +11357,9 @@ components:
                 description: 'When enabled, portal registration notifications include the registering developer''s identifying information (such as name and email).'
                 type: boolean
                 default: false
+              theme_name:
+                description: 'Name of the theme to use for the default content created upon creation of this portal. Must match an available theme name; if omitted or unrecognized, the default theme is used. Only applies when `create_default_content` is true.'
+                type: string
             additionalProperties: false
             required:
               - name
@@ -11228,6 +11538,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/MovePageRequestPayload'
+    CreatePortalNavigation:
+      description: Create a sidebar navigation configuration for a portal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePortalNavigationRequest'
+    ReplacePortalNavigation:
+      description: Replace a sidebar navigation configuration for a portal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplacePortalNavigationRequest'
     CreatePortalSnippet:
       description: Create a snippet in a portal.
       required: true
@@ -11975,6 +12299,18 @@ components:
           examples:
             Example 1:
               $ref: '#/components/examples/ListPortalPagesExample1'
+    ListPortalNavigations:
+      description: A paginated list of sidebar navigation configurations for a portal.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListPortalNavigationsResponse'
+    PortalNavigation:
+      description: Details about a sidebar navigation configuration for a portal.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalNavigationResponse'
     PortalSnippet:
       description: Details about a snippet in a portal.
       content:
@@ -12403,6 +12739,8 @@ tags:
     description: APIs related to Konnect Developer Portal Custom Pages.
   - name: Snippets
     description: APIs related to Konnect Developer Portal Custom Snippets.
+  - name: Portal Navigation
+    description: APIs related to Konnect Developer Portal sidebar navigation configuration.
   - name: AI Settings
     description: APIs related to Konnect Developer Portal AI Settings.
   - name: Applications
