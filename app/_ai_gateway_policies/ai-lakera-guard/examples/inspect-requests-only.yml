@@ -1,0 +1,26 @@
+description: 'Configure the AI Lakera Guard policy to inspect requests only.'
+
+title: 'Inspect requests only'
+
+weight: 900
+
+requirements: 
+  - You have a Lakera account and an API key.
+
+variables:
+  lakera_api_key:
+    description: 'The API key for your Lakera account.'
+    value: $LAKERA_API_KEY
+
+name: inspect-requests-only
+display_name: Inspect requests only
+type: ai-lakera-guard
+
+config:
+  api_key:  ${lakera_api_key}
+  guarding_mode: "INPUT"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -1,0 +1,23 @@
+title: 'Engineer a prompt with prepending'
+
+description: 'Prepends a prompt with specific instructions, such as responding in French, to control how the prompt responds.'
+
+weight: 900
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+name: engineer-a-prompt
+display_name: Engineer a prompt with prepending
+type: ai-prompt-decorator
+
+config:
+  prompts:
+    prepend:
+      - role: "system"
+        content: "You will always respond in the French (France) language."
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

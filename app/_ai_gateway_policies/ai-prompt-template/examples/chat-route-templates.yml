@@ -1,0 +1,49 @@
+description: |
+  Configure the AI Prompt Template policy with two templates to use for chat routes.
+
+title: 'Chat route templates'
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+weight: 900
+
+name: chat-route-templates
+display_name: Chat route templates
+type: ai-prompt-template
+
+config:
+  templates:
+    - name: "developer-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{program}} expert, in {{language}} programming language."
+            },
+            {
+                "role": "user",
+                "content": "Write me a {{program}} program."
+            }
+          ]
+        }
+    - name: "teacher-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{subject}} teacher."
+            },
+            {
+                "role": "user",
+                "content": "Explain to me what {{concept}} is."
+            }
+          ]
+        }
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

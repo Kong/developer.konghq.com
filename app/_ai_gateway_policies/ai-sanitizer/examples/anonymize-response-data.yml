@@ -1,0 +1,26 @@
+description: Configure the AI Sanitizer policy to use your sanitizer service to anonymize all sensitive data and credentials in LLM responses before they reach the client.
+
+title: Anonymize sensitive data in responses
+
+weight: 900
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+name: anonymize-response-data
+display_name: Anonymize sensitive data in responses
+type: ai-sanitizer
+
+config: 
+  anonymize:
+      - all_and_credentials
+  sanitization_mode: OUTPUT
+  port: 8080
+  host: example.service.com
+  redact_type: placeholder
+  recover_redacted: false
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

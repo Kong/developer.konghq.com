@@ -1,0 +1,45 @@
+title: 'Set up with Mistral and Redis'
+
+description: 'Enable AI Semantic Caching with Mistral embeddings API and a Redis vector database.'
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+
+weight: 900
+
+variables:
+  header_value:
+    value: $MISTRAL_API_KEY
+    description: Your Mistral API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
+
+name: semantic-cache-mistral
+display_name: Set up with Mistral and Redis
+type: ai-semantic-cache
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${header_value}
+    model:
+      provider: mistral
+      name: mistral-embed
+      options:
+        upstream_url: https://api.mistral.ai/v1/embeddings
+  vectordb:
+    dimensions: 1024
+    distance_metric: cosine
+    strategy: redis
+    threshold: 0.1
+    redis:
+      host: ${redis_host}
+      port: 6379
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
