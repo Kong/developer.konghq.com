@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Konnect AI Cost Management
-  version: 0.6.0
+  version: 0.7.0
   description: |-
     The AI Cost Management API reports an organization's AI usage and spend, and manages the budgets, notifications, and exports built on it.
 
@@ -12,8 +12,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@7cb78bd5d8a51bf5734ccd6f5d602d6e297b30cf
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7cb78bd5d8a51bf5734ccd6f5d602d6e297b30cf'
+  x-oas-source: kong/platform-api@d09e68544ce4c9b6f2bf790374f6529ef44d4930
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d09e68544ce4c9b6f2bf790374f6529ef44d4930'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -33,9 +33,6 @@ paths:
       operationId: list-cost-usage-events
       summary: List usage events
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the organization's usage events, newest first unless the request sets `sort`. The list includes usage from the gateway and usage reported with `POST /v1/ai-cost-management/events`, each in the `ai.usage.v1` form that producers report. For a caller whose access covers only particular principals or groups, the operation reads only the events of those principals and groups.
 
         Listed events differ from what producers send:
@@ -515,14 +512,6 @@ paths:
                               description: 'A reference in `type/id` form, such as `principal/{uuid}`. The nil UUID, `00000000-0000-0000-0000-000000000000`, isn''t accepted.'
                             maxItems: 200
                             uniqueItems: true
-                          reported_cost_usd:
-                            description: 'The invocation''s cost in US dollars, as a decimal string with the bounds of `reported_cost`''s `value`. It''s accepted during the move to `reported_cost`, and an event can''t carry both.'
-                            type: string
-                            pattern: '^(0|[1-9]\d{0,8})(\.\d{1,9})?$'
-                          reported_cache_cost_usd:
-                            description: 'The cache part of the cost in US dollars, as a decimal string with the bounds of `reported_cache_cost`''s `value`. It''s accepted during the move to `reported_cache_cost`, and an event can''t carry both.'
-                            type: string
-                            pattern: '^(0|[1-9]\d{0,8})(\.\d{1,9})?$'
                         required:
                           - quantities
                           - context
@@ -590,9 +579,6 @@ paths:
       operationId: list-cost-usage-field-values
       summary: List observed usage event field values
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the distinct values seen so far in one field of the organization's usage events, in ascending `value` order unless `sort` is `value desc`. A client can offer them as choices for usage filters.
 
         Subjects come back as subject references, such as `principal/{uuid}`, which the usage filters accept as they are. For `field=tags`, a request without `key` lists the tag keys, and a request with `key` lists the values of that tag.
@@ -740,9 +726,6 @@ paths:
       operationId: query-cost-usage-events
       summary: Query usage events
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns totals over the organization's usage events in a time range, grouped by up to 2 dimensions and optionally split into calendar buckets. Groups come largest `reported_cost` first unless the request sets `sort`. For a caller whose access covers only particular principals or groups, the operation reads only the events of those principals and groups.
 
         The operation doesn't change anything; the query goes in the body because it can be large. Each page holds `page.size` groups with their complete `series`. To read the next or previous page, a client sends the response's `meta.page.next` or `meta.page.previous` cursor back as `page.after` or `page.before` in an otherwise identical body.
@@ -1289,9 +1272,6 @@ paths:
       operationId: forecast-cost-usage-events
       summary: Get the monthly spend forecast
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns the organization's recorded and predicted spend, in US dollars, for each day of the current calendar month in `time_zone`. For a caller whose access covers only particular principals or groups, the operation reads only the events of those principals and groups. The prediction trains on up to 28 completed days, and the day in progress never counts. Each series covers at most one calendar month, so the response isn't paginated.
 
         Predictions are statistical estimates. They don't check or enforce any budget.
@@ -1479,9 +1459,6 @@ paths:
       operationId: list-cost-budgets
       summary: List budgets
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the organization's budgets, newest first unless the request sets `sort`. Filters on `name`, `effect`, `priority`, `posture`, and `labels.<key>` narrow the list.
 
         For a caller whose access covers only particular principals or groups, the list holds only the budgets whose scope lies within those principals and groups. It also holds each budget with `each` set to `subject` or `subject_id` whose scope covers one of the caller's principals.
@@ -1626,11 +1603,7 @@ paths:
     get:
       operationId: get-cost-budget
       summary: Get a budget
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns one of the organization's budgets. If the organization has no budget with this identifier that the caller can see, or the identifier isn't a valid UUID, the request fails with `404`.
+      description: 'Returns one of the organization''s budgets. If the organization has no budget with this identifier that the caller can see, or the identifier isn''t a valid UUID, the request fails with `404`.'
       parameters:
         - name: budgetId
           in: path
@@ -1740,9 +1713,6 @@ paths:
       operationId: delete-cost-budget
       summary: Delete a budget
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Deletes a budget, with its notification rule and the rule's firings and deliveries. Deleting the same budget again fails with `404`.
 
         A caller whose access covers only particular principals or groups deletes a budget that lies within its groups alone, or one within its principals and groups that it created. Deleting any other budget it can see fails with `403`. If the organization has no budget with this identifier that the caller can see, or the identifier isn't a valid UUID, the request fails with `404`.
@@ -1782,9 +1752,6 @@ paths:
       operationId: get-cost-budget-balance
       summary: Get a budget's balance
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a limit budget's spend, remaining amount, and projected spend in the budget window that contains `evaluated_at`. `derived` adds the balances of the derived budgets with the highest spend.
 
         A caller who sees only their own derived budget reads that one. Its amounts count that caller's usage alone, and `derived` holds the caller's value, or is empty without usage in the budget window.
@@ -1936,9 +1903,6 @@ paths:
       operationId: list-cost-budget-balances
       summary: List budget balances
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the balances of the organization's limit budgets, highest consumed share first unless the request sets `sort`. Exemptions have no balance.
 
         - A limit budget without `each` has one balance for its whole scope, with `value` set to `null`.
@@ -2073,7 +2037,7 @@ paths:
                         - consumed_share
                         - latest_record_at
                   meta:
-                    description: 'What every balance on the page shares: the time of the calculation, with the page links.'
+                    description: 'What every balance on the page shares: the time of the calculation, with the page links and the total.'
                     type: object
                     properties:
                       evaluated_at:
@@ -2081,7 +2045,16 @@ paths:
                         type: string
                         format: date-time
                       page:
-                        $ref: '#/components/schemas/CursorMetaPage'
+                        allOf:
+                          - $ref: '#/components/schemas/CursorMetaPage'
+                          - type: object
+                            properties:
+                              total:
+                                description: 'The number of balances on all pages together: those that the request''s filters select and the caller can see, at `evaluated_at`, from the usage stored when this page was read.'
+                                type: integer
+                                minimum: 0
+                            required:
+                              - total
                     required:
                       - evaluated_at
                       - page
@@ -2113,9 +2086,6 @@ paths:
       operationId: get-cost-notification-rule
       summary: Get a budget's notification rule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a limit budget's notification rule: the thresholds at which it fires, the channels that receive the alerts, and the wording of its messages. A budget has at most one rule.
 
         If the budget has no rule, the organization has no budget with this identifier that the caller can see, or the identifier isn't a valid UUID, the request fails with `404`. An exemption has no rule, so if the budget is an exemption, the request fails with `400`.
@@ -2164,9 +2134,6 @@ paths:
       operationId: upsert-cost-notification-rule
       summary: Create or replace a notification rule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Creates a limit budget's notification rule, or replaces its `thresholds`, `channels`, and `message`, and returns the rule. The response status is `201` when the request creates the rule and `200` when it replaces one.
 
         - The service evaluates the rule at once, so a threshold that spend in the current budget window has already reached fires right away. A threshold already recorded for this budget window, derived budget, and limit doesn't fire again. The evaluation runs after the rule is stored, so if it fails, retrying the same request completes it.
@@ -2345,9 +2312,6 @@ paths:
       operationId: delete-cost-notification-rule
       summary: Delete a budget's notification rule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Deletes a budget's notification rule, with its firings and their deliveries. The budget stays. Deleting the rule again fails with `404`.
 
         If the budget has no rule, the organization has no budget with this identifier that the caller can see, or the identifier isn't a valid UUID, the request fails with `404`. If the budget is an exemption, the request fails with `400`.
@@ -2393,9 +2357,6 @@ paths:
       operationId: list-cost-notification-rule-firings
       summary: List a notification rule's firings
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the firings of a budget's notification rule, newest first unless the request sets `sort`. A firing is a threshold crossing that the rule recorded. It has the fields of a threshold event, except that `budget` holds only the budget's `id` and there's no `kind`. Firings are kept for as long as the rule exists.
 
         A caller who sees only their own derived budget reads only that derived budget's firings, and none on a budget with `each` set to `subject_id`.
@@ -2473,7 +2434,7 @@ paths:
                           type: string
                           nullable: true
                         window:
-                          description: The budget window that contained the evaluation that recorded the crossing.
+                          description: 'The budget window the evaluation measured. A crossing recorded after its window ended, such as one that late usage causes, has a `fired_at` at or after `window.ends_at`.'
                           allOf:
                             - $ref: '#/components/schemas/AICostTimeWindow'
                         limit:
@@ -2550,11 +2511,7 @@ paths:
     get:
       operationId: list-cost-notification-channels
       summary: List notification channels
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns a page of the organization's notification channels, sorted by `name` unless the request sets `sort`. Filters on `name`, `type`, and `labels.<key>` narrow the list.
+      description: 'Returns a page of the organization''s notification channels, sorted by `name` unless the request sets `sort`. Filters on `name`, `type`, and `labels.<key>` narrow the list.'
       parameters:
         - name: filter
           in: query
@@ -2643,9 +2600,6 @@ paths:
       operationId: create-cost-notification-channel
       summary: Create a notification channel
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Creates a notification channel in the organization and returns it. The server assigns the identifier.
 
         `type` selects the kind of channel: an email channel takes its recipients in `email`, and a Slack channel takes an incoming webhook URL in `slack`. The response shows the webhook URL with its secret token replaced by `…`. If the body is invalid, such as a webhook URL that isn't a Slack incoming webhook URL, the request fails with `400`.
@@ -2693,11 +2647,7 @@ paths:
     get:
       operationId: get-cost-notification-channel
       summary: Get a notification channel
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns one of the organization's notification channels. If the organization has no notification channel with this identifier, or the identifier isn't a valid UUID, the request fails with `404`.
+      description: 'Returns one of the organization''s notification channels. If the organization has no notification channel with this identifier, or the identifier isn''t a valid UUID, the request fails with `404`.'
       parameters:
         - name: channelId
           in: path
@@ -2737,9 +2687,6 @@ paths:
       operationId: upsert-cost-notification-channel
       summary: Replace a notification channel
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Replaces a notification channel's `name`, `labels`, and settings, and returns the result. The channel keeps its identifier and type.
 
         - The request carries the full channel, so an omitted `labels` clears the channel's labels.
@@ -2804,9 +2751,6 @@ paths:
       operationId: delete-cost-notification-channel
       summary: Delete a notification channel
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Deletes a notification channel, removes it from every notification rule that lists it, and deletes its deliveries and channel tests, including any still pending.
 
         If the organization has no notification channel with this identifier, or the identifier isn't a valid UUID, the request fails with `404`. This includes deleting the same channel again.
@@ -2846,9 +2790,6 @@ paths:
       operationId: create-cost-notification-channel-test
       summary: Send a test notification
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Queues a test message for the channel and returns the notification event that records it, with `kind` set to `test`. The test is the message an alert sends, with test wording and example figures, so what arrives shows what an alert will look like.
 
         The service sends the test asynchronously through the channel's real delivery path, within seconds. A client reads the event again with `GET /v1/ai-cost-management/notification-events/{eventId}` to see the outcome. A test isn't retried, so if its first attempt fails, the event's `error` says why.
@@ -2894,9 +2835,6 @@ paths:
       operationId: list-cost-notification-events
       summary: List notification events
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a page of the organization's threshold events, newest first unless the request sets `sort`. Each event is a recorded threshold crossing of a budget's notification rule. `budget` is a reference unless the request sends `expand=budget`, which renders the full budget, so a list can show each budget's name and scope without reading the budget. Channel tests are notification events too, but this list never includes them.
 
         Events with the same `fired_at` are ordered by `budget.id`, then by `threshold.percent`, then by `value`. Filters on `deliveries.status` and `deliveries.channel.id` select events with at least one matching delivery. When both are present, they must match the same delivery.
@@ -2996,9 +2934,6 @@ paths:
       operationId: get-cost-notification-event
       summary: Get a notification event
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns one notification event of either kind: a threshold event, with `kind` set to `threshold`, or a channel test, with `kind` set to `test`. A threshold event's `budget` is a reference unless the request sends `expand=budget`, which renders the full budget. Reading a test event shows the outcome of a test sent with `POST /v1/ai-cost-management/notification-channels/{channelId}/tests`.
 
         A caller whose access covers only particular principals or groups reads only the threshold events that the event list shows them. For such a caller, any other event, including every channel test, fails with `404`. If the organization has no notification event with this identifier, or the identifier isn't a valid UUID, the request fails with `404`.
@@ -3059,11 +2994,7 @@ paths:
     get:
       operationId: list-cost-exports
       summary: List exports
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns a page of the organization's exports, newest first unless the request sets `sort`. Filters on `status`, `dataset`, `schedule.id`, and `created_at` narrow the list.
+      description: 'Returns a page of the organization''s exports, newest first unless the request sets `sort`. Filters on `status`, `dataset`, `schedule.id`, and `created_at` narrow the list.'
       parameters:
         - name: filter
           in: query
@@ -3152,9 +3083,6 @@ paths:
       operationId: create-cost-export
       summary: Create an export
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Queues a one-time export and returns it with `status` set to `pending`. The server assigns the identifier.
 
         The export runs asynchronously. A client reads it again with `GET /v1/ai-cost-management/exports/{exportId}` to follow its progress. Once it succeeds, the client requests a download URL for one file at a time with `POST /v1/ai-cost-management/exports/{exportId}/downloads`.
@@ -3205,11 +3133,7 @@ paths:
     get:
       operationId: get-cost-export
       summary: Get an export
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns one of the organization's exports. If the organization has no export with this identifier, or the identifier isn't a valid UUID, the request fails with `404`.
+      description: 'Returns one of the organization''s exports. If the organization has no export with this identifier, or the identifier isn''t a valid UUID, the request fails with `404`.'
       parameters:
         - name: exportId
           in: path
@@ -3249,9 +3173,6 @@ paths:
       operationId: delete-cost-export
       summary: Delete an export
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Deletes an export and its files before it responds, so the files can't be downloaded afterwards. Deleting a `pending` or `running` export cancels it.
 
         If the files can't be removed, the request fails with `500` and the export remains, so a retry deletes both. If the organization has no export with this identifier, or the identifier isn't a valid UUID, the request fails with `404`. This includes deleting the same export again.
@@ -3291,9 +3212,6 @@ paths:
       operationId: create-cost-export-download
       summary: Download an export file
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Returns a URL that serves one file of a `succeeded` export, either a data file or `manifest.json`, to a plain `GET` for 5 minutes. The service doesn't store the URL, and no operation returns it again.
 
         - If `file` names no file of the export, the request fails with `400`.
@@ -3383,11 +3301,7 @@ paths:
     get:
       operationId: list-cost-export-schedules
       summary: List export schedules
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns a page of the organization's export schedules, sorted by `name` unless the request sets `sort`. Filters on `name`, `status`, and `cadence` narrow the list.
+      description: 'Returns a page of the organization''s export schedules, sorted by `name` unless the request sets `sort`. Filters on `name`, `status`, and `cadence` narrow the list.'
       parameters:
         - name: filter
           in: query
@@ -3476,9 +3390,6 @@ paths:
       operationId: create-cost-export-schedule
       summary: Create an export schedule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Creates an export schedule and returns it. The server assigns the identifier.
 
         An `active` schedule creates one export of each of its periods as the period ends, starting with the period in progress.
@@ -3527,11 +3438,7 @@ paths:
     get:
       operationId: get-cost-export-schedule
       summary: Get an export schedule
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns one of the organization's export schedules. If the organization has no export schedule with this identifier, or the identifier isn't a valid UUID, the request fails with `404`.
+      description: 'Returns one of the organization''s export schedules. If the organization has no export schedule with this identifier, or the identifier isn''t a valid UUID, the request fails with `404`.'
       parameters:
         - name: scheduleId
           in: path
@@ -3571,9 +3478,6 @@ paths:
       operationId: upsert-cost-export-schedule
       summary: Replace an export schedule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Replaces an export schedule's `name`, `status`, `dataset`, `focus`, `format`, `compression`, and `filters`, and returns the result. The schedule keeps its identifier.
 
         - The request carries the full schedule, so an omitted `filters` clears the filters, and an omitted `status` resumes a paused schedule.
@@ -3633,9 +3537,6 @@ paths:
       operationId: delete-cost-export-schedule
       summary: Delete an export schedule
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Deletes an export schedule. The exports it created remain, with `schedule` set to `null`, and a `pending` one still runs.
 
         If the organization has no export schedule with this identifier, or the identifier isn't a valid UUID, the request fails with `404`. This includes deleting the same schedule again.
@@ -3674,11 +3575,7 @@ paths:
     get:
       operationId: list-cost-attribution-plugins
       summary: List attribution plugin installations
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns a page of the attribution plugin installations on the organization's AI Gateways, sorted by `gateway_id` unless the request sets `sort`. An AI Gateway without the plugin has no entry.
+      description: 'Returns a page of the attribution plugin installations on the organization''s AI Gateways, sorted by `gateway_id` unless the request sets `sort`. An AI Gateway without the plugin has no entry.'
       parameters:
         - name: sort
           in: query
@@ -3757,11 +3654,7 @@ paths:
     get:
       operationId: get-cost-attribution-plugin
       summary: Get an AI Gateway's attribution plugin
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns the attribution plugin installed on an AI Gateway, with its version, the newest version, and its configuration. The installation is what this product last installed: a change made to the gateway's policies elsewhere doesn't show here. If the gateway has no installation, or the identifier isn't a valid ID, the request fails with `404`.
+      description: 'Returns the attribution plugin installed on an AI Gateway, with its version, the newest version, and its configuration. The installation is what this product last installed: a change made to the gateway''s policies elsewhere doesn''t show here. If the gateway has no installation, or the identifier isn''t a valid ID, the request fails with `404`.'
       parameters:
         - name: gatewayId
           in: path
@@ -3801,14 +3694,12 @@ paths:
       operationId: upsert-cost-attribution-plugin
       summary: Install or replace an attribution plugin
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Installs the latest attribution plugin version on an AI Gateway with this configuration, or replaces the installed plugin and its configuration, and returns the installation.
 
         - The plugin becomes a streaming custom policy named `ai-cost-attribution` and a global policy that turns it on. The request writes both through the AI Gateway API as the caller, so the caller also needs the AI Gateways Admin role on the gateway.
         - Every request installs the latest version, so a `PUT` of the stored configuration updates an outdated installation.
         - The plugin tags requests only on data planes that run AI Gateway 2.3 or later. Each data plane must run with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`. A data plane with streaming off refuses the gateway's whole configuration while the plugin is installed.
+        - If the gateway doesn't have the plugin yet and a data plane the AI Gateway API lists reports streaming off, or doesn't report the setting because it runs an older release, the request fails with `409`, names those data planes, and changes nothing. The API lists a data plane for five minutes after its last ping, so a data plane replaced in that time can still be named. A data plane that connects later isn't checked, and neither is a gateway that already has the plugin.
         - If the request fails partway, repeating it finishes the installation.
         - If the body is invalid, the request fails with `400`. A header mapping that names a credential header, or repeats a header or tag key, counts as invalid.
         - If the gateway already has a custom policy or policy of this name that this product didn't install, the request fails with `409` and changes nothing.
@@ -3865,7 +3756,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
         '409':
-          description: 'The gateway already has a custom policy or policy of this name that this product didn''t install, or another change to its plugin is running.'
+          description: 'The gateway already has a custom policy or policy of this name that this product didn''t install, a data plane of a gateway without the plugin runs with streaming off, or another change to its plugin is running.'
           content:
             application/problem+json:
               schema:
@@ -3876,14 +3767,11 @@ paths:
       operationId: update-cost-attribution-plugin
       summary: Update an AI Gateway's attribution plugin
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Changes part of an installation's configuration with a JSON Merge Patch, installs the latest plugin version with the result, and returns the installation.
 
         - An omitted field keeps its stored value, and an array, such as `headers`, replaces the stored one whole.
         - `operator_tags` merges per key, and a key set to `null` is removed.
-        - `null` returns `headers`, `prefixes`, or `operator_tags` to its empty default. `integrations` can't be `null`.
+        - `null` returns `headers`, `prefixes`, `operator_tags`, or `group_patterns` to its empty default. `integrations` can't be `null`.
         - Like `PUT`, the request writes the plugin through the AI Gateway API as the caller, and it updates an outdated installation to the latest version.
         - If the gateway has no installation, or the identifier isn't a valid ID, the request fails with `404`. The request never installs the plugin.
         - The body is `application/merge-patch+json` or `application/json`. Any other media type fails with `415`.
@@ -3938,7 +3826,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundError'
         '409':
-          description: 'The gateway has a custom policy or policy of this name that this product didn''t install, or another change to its plugin is running.'
+          description: 'The gateway has a custom policy or policy of this name that this product didn''t install, the plugin''s policy is missing and a data plane runs with streaming off, or another change to its plugin is running.'
           content:
             application/problem+json:
               schema:
@@ -3949,9 +3837,6 @@ paths:
       operationId: delete-cost-attribution-plugin
       summary: Remove an AI Gateway's attribution plugin
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Removes the attribution plugin from an AI Gateway: the global policy that turns it on, the custom policy that holds it, and the installation. The gateway's requests stop getting the plugin's tags. The request writes through the AI Gateway API as the caller, so the caller also needs the AI Gateways Admin role on the gateway, and a policy that is already gone counts as removed.
 
         If the gateway has no installation, or the identifier isn't a valid ID, the request fails with `404`. This includes removing the plugin again. If another change to the gateway's plugin is running, the request fails with `409` and changes nothing. Repeat it once that change has finished.
@@ -5384,7 +5269,7 @@ components:
           type: string
           nullable: true
         window:
-          description: The budget window that contained the evaluation that recorded the crossing.
+          description: 'The budget window the evaluation measured. A crossing recorded after its window ended, such as one that late usage causes, has a `fired_at` at or after `window.ends_at`.'
           allOf:
             - $ref: '#/components/schemas/AICostTimeWindow'
         limit:
@@ -5442,6 +5327,10 @@ components:
               description: The data the export holds.
               allOf:
                 - $ref: '#/components/schemas/AICostExportDataset'
+            schema_version:
+              description: 'The schema version of the data files within the dataset, which fixes their columns and values.'
+              allOf:
+                - $ref: '#/components/schemas/AICostExportSchemaVersion'
             focus:
               description: |-
                 The FOCUS options of the export, with defaults applied.
@@ -5575,6 +5464,7 @@ components:
           required:
             - id
             - dataset
+            - schema_version
             - focus
             - format
             - compression
@@ -5623,6 +5513,15 @@ components:
       enum:
         - usage_events
         - focus
+    AICostExportSchemaVersion:
+      description: |-
+        A version of an export's data files within its dataset: their columns and the values those columns hold. A change to either ships as a new schema version, so the files of a schema version never change. Each dataset counts its schema versions from `1` on its own. For `focus`, a schema version applies within the chosen FOCUS version. Each dataset offers these schema versions:
+
+        - `usage_events`: `1`.
+        - `focus`: `1`.
+      type: integer
+      enum:
+        - 1
     AICostFocusOptions:
       description: 'The FOCUS options of a `focus` export or schedule, with each option''s value or its default.'
       type: object
@@ -5743,6 +5642,10 @@ components:
               description: The data that each export holds.
               allOf:
                 - $ref: '#/components/schemas/AICostExportDataset'
+            schema_version:
+              description: 'The schema version of each export''s data files within the dataset, which fixes their columns and values.'
+              allOf:
+                - $ref: '#/components/schemas/AICostExportSchemaVersion'
             focus:
               description: |-
                 The FOCUS options of each export, with defaults applied.
@@ -5785,6 +5688,7 @@ components:
             - time_zone
             - status
             - dataset
+            - schema_version
             - focus
             - format
             - compression
@@ -5872,6 +5776,11 @@ components:
           type: object
           additionalProperties:
             type: string
+        group_patterns:
+          description: PCRE regular expressions that choose which groups the plugin keeps from the caller's token.
+          type: array
+          items:
+            type: string
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -5884,6 +5793,7 @@ components:
         - headers
         - prefixes
         - operator_tags
+        - group_patterns
         - created_at
         - updated_at
     AICostAttributionPluginIntegration:
@@ -6739,6 +6649,17 @@ components:
           additionalProperties:
             type: string
             minLength: 1
+        group_patterns:
+          description: 'PCRE regular expressions that choose which groups the plugin keeps from the caller''s token. A group is kept when any pattern matches its name, case-insensitively and anywhere in the name unless the pattern anchors itself. An empty list keeps every group, and each pattern appears once.'
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 256
+            format: regex
+          default: []
+          maxItems: 32
+          uniqueItems: true
       additionalProperties: false
       required:
         - integrations
@@ -6776,6 +6697,17 @@ components:
             type: string
             minLength: 1
           nullable: true
+        group_patterns:
+          description: 'PCRE regular expressions that choose which groups the plugin keeps from the caller''s token. A group is kept when any pattern matches its name, case-insensitively and anywhere in the name unless the pattern anchors itself. An empty list keeps every group, and each pattern appears once.'
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 256
+            format: regex
+          maxItems: 32
+          nullable: true
+          uniqueItems: true
       additionalProperties: false
     AICostBudgetBalanceFilterParameters:
       description: |-
@@ -7173,6 +7105,14 @@ components:
               description: The data the export holds.
               allOf:
                 - $ref: '#/components/schemas/AICostExportDataset'
+            schema_version:
+              description: |-
+                The schema version of the data files within the dataset, which fixes their columns and values.
+
+                Defaults to `1`, also once newer schema versions exist.
+              default: 1
+              allOf:
+                - $ref: '#/components/schemas/AICostExportSchemaVersion'
             focus:
               description: |-
                 The FOCUS options of a `focus` export.
@@ -7313,6 +7253,14 @@ components:
               description: The data that each export holds.
               allOf:
                 - $ref: '#/components/schemas/AICostExportDataset'
+            schema_version:
+              description: |-
+                The schema version of each export's data files within the dataset, which fixes their columns and values. Each export that the schedule creates copies it, so a newer schema version doesn't change the schedule's exports.
+
+                Defaults to `1`, also once newer schema versions exist, so a replacement that omits `schema_version` sets `1`.
+              default: 1
+              allOf:
+                - $ref: '#/components/schemas/AICostExportSchemaVersion'
             focus:
               description: |-
                 The FOCUS options of each export.
