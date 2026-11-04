@@ -14,6 +14,7 @@ import {
   getRuntimeConfig,
   afterAll,
   beforeAll,
+  licenseRequired,
 } from "./runtimes.js";
 import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
@@ -28,7 +29,10 @@ const docker = new Dockerode({
 });
 
 function checkEnvVariables() {
-  if (!process.env.KONG_LICENSE_DATA) {
+  const deploymentModels = process.env.DEPLOYMENT_MODEL
+    ? [process.env.DEPLOYMENT_MODEL]
+    : ["on-prem", "konnect"];
+  if (deploymentModels.some(licenseRequired) && !process.env.KONG_LICENSE_DATA) {
     console.error("Missing env variable KONG_LICENSE_DATA");
     process.exit(1);
   }
