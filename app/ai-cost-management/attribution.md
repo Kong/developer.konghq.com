@@ -54,6 +54,7 @@ faqs:
       Data planes without this flag can't load the attribution plugin, so tag capture doesn't work and the toggle can't be enabled.
 
       Start new data planes with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`, then enable the toggle again.
+      `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED' is enabled by default on [{{site.ai_gateway}} 2.x on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways).
 
   - q: Why does cost show $0 on a usage event?
     a: |
@@ -92,6 +93,7 @@ Attribution works in two tracks as each request passes through the gateway: iden
    {:.info}
    > Tag capture requires each {{site.ai_gateway}} data plane to run with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
    > Data planes without this flag don't capture `ai-cost-` headers.
+   > `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED' is enabled by default on [{{site.ai_gateway}} 2.x on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways).
    > See [Set up header-based attribution](#set-up-header-based-attribution) for details.
 
 ## Subject
@@ -307,8 +309,8 @@ Header-based attribution captures `ai-cost-` headers from each request and recor
 
 #### Prerequisites
 
-Your {{site.ai_gateway}} data planes are running with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
-If you try to enable attribution on a control plane with any data planes that are missing this flag, you will see **Conflict** error when you try to enable attribution on them.
+Your {{site.ai_gateway}} data planes are running with [`KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`](/gateway/configuration/#custom-plugin-streaming-enabled).
+If you try to enable attribution on an {{site.ai_gateway}} with data planes that are missing this flag, you will see a **Conflict** error.
 
 #### Set up
 
