@@ -7,7 +7,7 @@ Aliases:
   konnect, k, K
 
 Available Commands:
-  organization Get current organization information
+  organization Manage Konnect organization resources
   pat          Delete a Konnect personal access token
   spat         Delete a Konnect system account access token
 

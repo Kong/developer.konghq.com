@@ -8,7 +8,7 @@ Aliases:
 
 Examples:
   # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
+  kongctl list konnect gateway control-planes
 
 Available Commands:
   ai-gateway    List or get Konnect AI Gateways

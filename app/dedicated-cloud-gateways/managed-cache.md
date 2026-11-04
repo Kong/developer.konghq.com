@@ -49,7 +49,7 @@ tags:
 
 {% include_cached /sections/managed-cache-intro.md %}
 
-Only AWS and Azure are currently supported as providers.
+Only AWS and Azure are supported as providers.
 
 ## Managed cache sizing recommendations
 
@@ -186,7 +186,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Configure a managed cache
+## Configure a managed cache for {{site.base_gateway}}
 
 Managed caches are either created at the control plane or control plane group-level. 
 
@@ -255,7 +255,7 @@ region: global
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
+1. Check the status of the managed cache. After the `state` is marked as ready, the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->
@@ -324,12 +324,150 @@ region: global
 {% endnavtab %}
 {% endnavtabs %}
 
-For control plane managed caches, you don't need to manually configure a Redis partial. 
+For {{site.base_gateway}} control plane managed caches, you don't need to manually configure a Redis partial. 
 After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
 
 {:.info}
 > You can’t use the Redis partial configuration in [custom plugins](#use-a-dedicated-cloud-gateway-managed-cache-in-a-custom-plugin). Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+
+## Configure a managed cache for {{site.ai_gateway}}
+
+You can create a managed cache for an {{site.ai_gateway}} 2.0 control plane that runs on a Dedicated Cloud Gateway.
+You can use it with the following {{site.ai_gateway}} Policies:
+
+* [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
+* [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/)
+* [Proxy Caching Advanced](/ai-gateway/policies/proxy-cache-advanced/)
+* [GraphQL Proxy Caching Advanced](/ai-gateway/policies/graphql-proxy-cache-advanced/)
+* [GraphQL Rate Limiting Advanced](/ai-gateway/policies/graphql-rate-limiting-advanced/)
+* [Service Protection](/ai-gateway/policies/service-protection/)
+* [Datakit](/ai-gateway/policies/datakit/)
+
+{:.warning}
+> **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created the following:
+> - A [Dedicated Cloud Gateway network](/dedicated-cloud-gateways/network-architecture/#configure-a-dedicated-cloud-gateway-network)
+> - An {{site.ai_gateway}} control plane with a Dedicated Cloud Gateway configuration. See [{{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways).
+
+To create a managed cache, use the following steps:
+
+{% navtabs "managed-cache-ai-gateway" %}
+{% navtab "API" %}
+1. Export the ID of your {{site.ai_gateway}} control plane:
+
+   ```sh
+   export AI_GATEWAY_ID='YOUR AI GATEWAY ID'
+   ```
+
+1. Create a managed cache by sending a POST request to the [`/cloud-gateways/add-ons` endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-add-on):
+
+   {% capture create_ai_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons
+   status_code: 201
+   method: POST
+   region: global
+   body:
+       name: managed-cache
+       owner:
+           kind: control-plane
+           type: ai
+           control_plane_id: $AI_GATEWAY_ID
+           control_plane_geo: us
+       config:
+           kind: managed-cache.v0
+           capacity_config:
+               kind: tiered
+               tier: micro
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ create_ai_addon | indent: 3}}
+
+1. Export the ID of your managed cache from the response:
+
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
+
+1. Check the status of the managed cache. After the `state` is marked as ready, the cache is ready to use. This can take about 15 minutes:
+
+   {% capture get_ai_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
+   status_code: 200
+   method: GET
+   region: global
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ get_ai_addon | indent: 3}}
+
+1. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a Redis data store for it, so you don't need to create one yourself.
+   List the data stores in your {{site.ai_gateway}} control plane and export the `name` of the data store where `konnect_managed` is `true`:
+
+   {% capture list_datastores %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v1/ai-gateways/$AI_GATEWAY_ID/datastores
+   status_code: 200
+   method: GET
+   region: us
+   capture:
+     - variable: DATASTORE_NAME
+       jq: ".data[] | select(.konnect_managed) | .name"
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ list_datastores | indent: 3}}
+
+1. Reference the data store in the `datastores` array of a [Policy that supports it](#configure-a-managed-cache-for-ai-gateway).
+   The following example creates a Rate Limiting Advanced Policy that uses the managed cache:
+
+   {% capture create_policy %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
+   status_code: 201
+   method: POST
+   region: us
+   body:
+     name: rate-limiting-managed-cache
+     display_name: Rate limiting with managed cache
+     type: rate-limiting-advanced
+     config:
+       limit:
+         - 5
+       window_size:
+         - 30
+       strategy: redis
+       sync_rate: 0
+     datastores:
+       - name: $DATASTORE_NAME
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ create_policy | indent: 3}}
+
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
+1. Click the name of your {{site.ai_gateway}} control plane.
+1. Click **Data stores**.
+1. Click **New data store**.
+1. Select **Konnect managed**.
+1. Click **Next**.
+1. From the **Redis cache size** dropdown menu, select a size.
+1. Click **Create**.
+1. Click **Refresh** until the **Status** of the `managed-cache` data store is **Ready**.
+   This can take about 15 minutes.
+
+   {{site.konnect_short_name}} creates the data store for you, so you don't need to configure Redis connection details.
+   You can now use the managed cache in any Policy that supports Redis by selecting Redis as your strategy, clicking **Use shared configuration**, and selecting your managed cache.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Managed cache health
 

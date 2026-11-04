@@ -67,6 +67,9 @@ rows:
       [kongctl get ai-gateway data-plane-certificates](#kongctl-get-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
+      [kongctl get ai-gateway datastores](#kongctl-get-ai-gateway-datastores)
+    description: "Use the `datastores` command to list or retrieve Datastores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
       [kongctl get ai-gateway mcp-servers](#kongctl-get-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
@@ -152,6 +155,12 @@ Use the `custom-policies` command to list or retrieve Custom Policies for a spec
 Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/get/ai-gateway/data-plane-certificates.md %}
+
+### kongctl get ai-gateway datastores
+
+Use the `datastores` command to list or retrieve Datastores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/get/ai-gateway/datastores.md %}
 
 ### kongctl get ai-gateway mcp-servers
 

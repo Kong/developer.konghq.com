@@ -16,8 +16,10 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
-  - text: "Migrate to {{site.ai_gateway}} 2.x"
+  - text: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
 works_on:
   - on-prem
   - konnect
@@ -155,7 +157,7 @@ On an upstream error or timeout, the data plane retries (5 times by default) and
 
 ## Node registration and synchronization
 
-Data plane nodes authenticate to the control plane with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/) over mTLS. When a node starts, it presents its certificate, registers, and pulls the latest configuration.
+Data plane nodes authenticate to the control plane with an [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/) over mTLS. When a node starts, it presents its certificate, registers, and pulls the latest configuration. For how the control plane decides which nodes can apply that configuration, see [Data plane version compatibility](/ai-gateway/data-plane-version-compatibility/).
 
 Configuration changes are push-triggered: the control plane notifies connected nodes as soon as a change is available, and each node pulls the update, tracked by a `config_hash`. Nodes and the control plane exchange a 30-second keepalive ping to confirm the connection is alive. If the control plane doesn't hear from a node for 45 seconds (1.5× the ping interval), it marks the node disconnected, and the node reconnects with a randomized 5-10 second backoff. Nodes apply each configuration change as soon as they receive it.
 
