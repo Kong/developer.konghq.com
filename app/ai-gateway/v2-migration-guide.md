@@ -58,7 +58,7 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 1. Authenticate `kongctl` with a {{site.konnect_short_name}} PAT or System Account Access Token.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
-The diagram below shows where each tool sits in the flow:
+The following diagram shows where each tool sits in the flow:
 
 {% mermaid %}
 sequenceDiagram
@@ -76,7 +76,7 @@ sequenceDiagram
     D->>E: kongctl apply
 {% endmermaid %}
 
-### Step 1: Install the `kongctl-ext-aigw-converter` extension
+### Step 1: Install the converter extension
 
 The `kongctl-ext-aigw-converter` extension is used to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model.
 
@@ -84,7 +84,7 @@ Install it with `kongctl install extension Kong/kongctl-ext-aigw-converter` and 
 
 ### Step 2: Export your current configuration
 
-Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that currently runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
+Use `deck` to dump the declarative configuration from the {{site.base_gateway}} control plane that runs your AI plugins. Replace the placeholders with your {{site.konnect_short_name}} PAT and the name of the source control plane.
 
 ```sh
 deck gateway dump \
@@ -379,7 +379,7 @@ resource ai_gateway_model_provider "openai-1" field /config/auth/headers/0/value
 is write-only and requires !secret with a deferred source
 ```
 
-After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source as shown above, then set the real value out of band:
+After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source, then set the real value out of band:
 
 ```sh
 export OPENAI_API_KEY="YOUR CREDENTIAL"
@@ -427,7 +427,7 @@ rows:
     type: "`upstream-server`"
 {% endtable %}
 
-##### Authentication moves from `ai-mcp-oauth2` to an auth strategy
+##### Authentication moves from the AI MCP OAuth2 plugin to an auth strategy
 
 The [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) plugin has no direct {{site.ai_gateway}} 2.x Policy equivalent, so the converter splits its config in two:
 
@@ -439,7 +439,7 @@ Fields with no equivalent in either destination are dropped, with a warning nami
 {:.info}
 > **Note:** If your `config/auth_strategies.yaml` linkage attaches a different (non-`openid-connect`) auth strategy to this MCP server, for example a `key-auth` wildcard, the synthesized `access.metadata` is dropped instead of being carried through: the {{site.ai_gateway}} API only accepts Protected Resource Metadata paired with an `openid-connect` auth strategy.
 
-##### Listener aggregation moves from tags to `sources`
+##### Listener aggregation moves from tags to sources
 
 In version 1.x, a `listener` plugin aggregated tool sets implicitly: `config.server.tag` named a decK plugin tag, and every `ai-mcp-proxy` plugin carrying that tag contributed its tools. Version 2.x replaces this with an explicit `sources` list of AI MCP Server names, which is **required** on a `listener`.
 
@@ -540,11 +540,9 @@ ai_gateway_mcp_servers:
     acl_attribute_type: consumer
     acls:
       allow: []
-      deny: []
     default_tool_acls:
       allow:
       - flight-operators
-      deny: []
     auth_strategies:
     - flights-key-auth
   config:
@@ -725,7 +723,7 @@ After you apply the converted configuration, verify the new control plane before
 
 Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the original control plane if needed.
 
-Once you've successfully generated the `kongctl` config, applied it to your environment, and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
+After you generate the `kongctl` config, apply it to your environment, and test the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
 
 ## Troubleshooting
 
