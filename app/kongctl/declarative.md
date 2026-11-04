@@ -923,11 +923,13 @@ A runnable example is available in
 
 - Deferred `!env` supports string-typed fields only.
 - Unset environment variables are treated as errors.
-- Empty-but-set environment variables are allowed.
+- Empty-but-set environment variables are allowed except for namespaces.
 - During planning, kongctl resolves the current environment value to
   calculate changes.
 - Saved plan files preserve the deferred `!env` reference instead of the
   resolved plaintext value.
+- Namespace `!env` values resolve during loading and remain fixed in saved
+  plans as ownership metadata, including when `store: false` is used.
 - During execution, kongctl performs a fresh environment lookup for each
   deferred `!env` value instead of reusing the value observed during
   planning.
