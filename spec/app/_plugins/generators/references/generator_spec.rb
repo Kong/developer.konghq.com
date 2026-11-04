@@ -65,4 +65,30 @@ RSpec.describe Jekyll::ReferencePages::Generator do
       end
     end
   end
+
+  describe '#version_docs!' do
+    let(:doc_data) { { 'content_type' => 'reference', 'skip_versioner' => true } }
+    let(:doc) { instance_double(Jekyll::Document, data: doc_data) }
+
+    before { allow(site).to receive(:documents).and_return([doc]) }
+
+    context 'when the document sets skip_versioner' do
+      it 'generates no per-release copies' do
+        expect(Jekyll::ReferencePages::Versioner).not_to receive(:new)
+
+        expect { generator.version_docs! }.not_to(change { site.pages.map(&:url) })
+      end
+    end
+
+    context 'when the document does not set skip_versioner' do
+      let(:doc_data) { { 'content_type' => 'reference' } }
+
+      it 'still runs the versioner for the document' do
+        versioner = instance_double(Jekyll::ReferencePages::Versioner, process: [])
+        expect(Jekyll::ReferencePages::Versioner).to receive(:new).with(site:, page: doc).and_return(versioner)
+
+        generator.version_docs!
+      end
+    end
+  end
 end
