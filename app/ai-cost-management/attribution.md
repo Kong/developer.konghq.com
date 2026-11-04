@@ -47,6 +47,14 @@ faqs:
       
       The gateway drops tags with empty or overlong values without an error.
       If you sent a header more than once in the same request, the gateway also drops the tag.
+  - q: Why does enabling attribution show a **Conflict** error for custom plugin streaming?
+    a: |
+      You may see a **Conflict** error if the {{site.ai_gateway}} you selected has data planes that are running without `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
+
+      Data planes without this flag can't load the attribution plugin, so tag capture doesn't work and the toggle can't be enabled.
+
+      Start new data planes with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`, then enable the toggle again.
+
   - q: Why does cost show $0 on a usage event?
     a: |
       A zero cost means the model had no price configured when the request ran.
@@ -80,6 +88,11 @@ Attribution works in two tracks as each request passes through the gateway: iden
   Group and team membership follows from that subject automatically.
 * **Tag capture**: The gateway reads the request headers and records them as tags on the usage event.
   The gateway captures headers prefixed with `ai-cost-` without configuration: the part after the prefix becomes the tag key.
+
+   {:.info}
+   > Tag capture requires each {{site.ai_gateway}} data plane to run with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
+   > Data planes without this flag don't capture `ai-cost-` headers.
+   > See [Set up header-based attribution](#set-up-header-based-attribution) for details.
 
 ## Subject
 
@@ -290,6 +303,15 @@ Identity attribution comes from the [AI Auth Strategy](/ai-gateway/entities/ai-a
 
 ### Set up header-based attribution
 
+Header-based attribution captures `ai-cost-` headers from each request and records them as tags on the usage event.
+
+#### Prerequisites
+
+Your {{site.ai_gateway}} data planes are running with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
+If you try to enable attribution on a control plane with any data planes that are missing this flag, you will see **Conflict** error when you try to enable attribution on them.
+
+#### Set up
+
 Configure tag capture via headers in the {{site.konnect_short_name}} UI:
 1. In {{site.konnect_short_name}}, switch to the AI view.
 1. In the sidebar, click **Cost Management**.
@@ -304,6 +326,6 @@ Configure tag capture via headers in the {{site.konnect_short_name}} UI:
 
 1. Click the **Integrations** tab.
 1. Click your integration, or choose **Your own code** for custom configuration.
-1. Follow the on-screen instructions to complete the setup.
-
-After setting up your provider, the {{site.ai_gateway}} captures your configured `ai-cost-` headers automatically with no additional data plane configuration needed.
+1. Follow the on-screen instructions to add headers to your integration.
+1. *Optional*: Some providers have a per-gateway toggle under **Turn it on in your gateways**. 
+Enable the toggle next to each {{site.ai_gateway}} where you want attribution active.
