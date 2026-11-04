@@ -110,7 +110,6 @@ ai_gateway_agents:
         strip_path: true
       logging:
         payloads: true
-        statistics: true
         max_payload_size: 1048576
       max_request_body_size: 8388608
 {% endentity_examples %}

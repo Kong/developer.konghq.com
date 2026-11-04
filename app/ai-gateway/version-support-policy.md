@@ -94,6 +94,43 @@ Kong will not provide patches for software covered by this sunset period. If the
 Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {% navtabs "ai-gateway-version" %}
+{% navtab "2.3" %}
+{{site.ai_gateway_name}} 2.3 was released on 2026-11-04.
+
+{{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-12-04, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: OS
+    key: os
+  - title: Version
+    key: version
+  - title: ARM support
+    key: arm
+  - title: FIPS 140-3
+    key: fips
+  - title: EOL
+    key: eol
+rows:
+  - os: Ubuntu
+    version: "26.04"
+    arm: true
+    fips: true
+    eol: "2026-12-04"
+  - os: RHEL
+    version: "10.x"
+    arm: true
+    fips: true
+    eol: "2026-12-04"
+  - os: Distroless
+    version: "N/A"
+    arm: true
+    fips: true
+    eol: "2026-12-04"
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
 {% navtab "2.2 (stable)" %}
 {{site.ai_gateway_name}} 2.2 was released on 2026-09-30.
 
@@ -226,7 +263,7 @@ We aim to provide customers with at least 6 months' notice of the removal or pha
 We may provide less or no notice if the change is necessary for security or legal reasons, though such situations should be rare. 
 We may provide notice in our documentation, product update emails, or in-product notifications if applicable.
 
-After we announce that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
+After we have announced that we will deprecate a significant feature or functionality, in general, we won’t extend or enhance the feature or functionality.
 
 ## Additional terms
 

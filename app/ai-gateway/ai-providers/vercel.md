@@ -10,6 +10,7 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/vercel/
 
 works_on:
+ - on-prem
  - konnect
 
 products:

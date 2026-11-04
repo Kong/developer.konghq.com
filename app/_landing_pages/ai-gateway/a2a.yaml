@@ -8,6 +8,7 @@ metadata:
     - ai
     - a2a
 works_on:
+  - on-prem
   - konnect
 rows:
   - header:

@@ -1,5 +1,5 @@
 ---
-title: "Principals and directories"
+title: "Principals"
 content_type: reference
 layout: reference
 permalink: /identity/principals/
@@ -17,7 +17,7 @@ breadcrumbs:
 min_version:
   gateway: '3.15'
 
-description: "Learn how {{site.identity}} principals and directories represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
+description: "Learn how {{site.identity}} principals represent authenticating entities and centralize identity, credentials, and metadata across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}."
 
 faqs:
   - q: What principal data is stored in, or sent to {{site.konnect_short_name}}?
@@ -45,6 +45,8 @@ faqs:
       Yes. Because the credentials and metadata for principals are stored in {{site.konnect_short_name}}, The first time a data plane receives a request with a particular credential or lookup key, it authenticates to {{site.konnect_short_name}} to retrieve it. This request always goes to the {{site.konnect_short_name}} region where you host the control plane. This first lookup adds latency that varies with network conditions. Kong caches principals and credentials locally for the next lookups.
   
 related_resources:
+  - text: "{{site.identity}} directories"
+    url: /identity/directories/
   - text: "{{site.identity}} auth servers"
     url: /identity/auth-servers/
   - text: "{{site.konnect_short_name}} control plane resource limits"
@@ -73,6 +75,15 @@ rows:
     description: "Scope conditional plugin execution by attributes that the principal carries, such as business unit or tier."
 {% endtable %}
 <!--vale on-->
+
+## When to use principals instead of Consumers
+
+{{site.base_gateway}} Consumers have limitations that principals can address:
+
+* **Scale beyond Consumer limits:** Users with large populations of authenticating entities can exceed the [Consumer control plane limits](/gateway/control-plane-resource-limits/). Consumers are loaded into data plane memory while principals are loaded on demand when they authenticate.
+* **Share identity across gateways without manual sync:** When the same entity needs to authenticate to multiple gateways, Consumers must be replicated. A principal lives in one directory and can be referenced from any gateway in the same region.
+* **Unify identity across Kong products:** Consumers and applications each represent the same logical entity in different ways, which makes it hard to reason about authentication, policy, and observability together. Principals replace that with one model.
+* **Attach metadata to identity:** Consumers don't support metadata, which forces custom plugins or header-injection workarounds when you want per-entity rate limits, conditional plugin behavior, or richer logs. Principals support metadata natively.
 
 ## Principal configuration
 
@@ -130,7 +141,7 @@ A single principal can have multiple identities, including multiple of the same 
 
 {:.info}
 > **Lookup caching and time-to-live (TTL):** {{site.identity}} caches principal lookups, so additional lookups don't require a connection to {{site.identity}} until it evicts the cache. For {{site.base_gateway}}, the eviction rate depends on the smallest of the following:
-> * The TTL set on the directory (10 minutes by default)
+> * The [TTL set on the directory](/identity/directories/#lookup-caching) (10 minutes by default)
 > * The TTL set on a credential
 > * The caching configuration on {{site.base_gateway}}. Cached principals are in the general cache pool which can be configured by setting `db_cache_ttl`.
 
@@ -149,15 +160,6 @@ Each product has its own representation of who is authenticating: {{site.base_ga
   
   {:.info}
   > Since application to Consumer linking uses {{site.identity}} in the backend, there may be some latency impact to the first request.
-
-#### When to use principals instead of Consumers
-
-{{site.base_gateway}} Consumers have limitations that principals can address:
-
-* **Scale beyond Consumer limits:** Users with large populations of authenticating entities can exceed the [Consumer control plane limits](/gateway/control-plane-resource-limits/). Consumers are loaded into data plane memory while principals are loaded on demand when they authenticate.
-* **Share identity across gateways without manual sync:** When the same entity needs to authenticate to multiple gateways, Consumers must be replicated. A principal lives in one directory and can be referenced from any gateway in the same region.
-* **Unify identity across Kong products:** Consumers and applications each represent the same logical entity in different ways, which makes it hard to reason about authentication, policy, and observability together. Principals replace that with one model.
-* **Attach metadata to identity:** Consumers don't support metadata, which forces custom plugins or header-injection workarounds when you want per-entity rate limits, conditional plugin behavior, or richer logs. Principals support metadata natively.
 
 ### Metadata
 
@@ -206,34 +208,9 @@ condition: context.auth.principal.metadata.team == "operators"
 For a complete walkthrough, see [Enrich Kafka SASL PLAIN connections with Kong Identity principal metadata](/event-gateway/kong-identity-metadata-integration/).
 {% endcomment %}
 
-## Create a directory
-
-{% navtabs "create-directory" %}
-{% navtab "API" %}
-
-Send a `POST` request to the `/v2/directories` endpoint:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories
-status_code: 201
-method: POST
-body:
-  name: example-directory
-  description: Example directory for principals
-  allow_all_control_planes: true
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{{site.identity}} automatically creates a default directory when you [create your first principal](#configure-a-principal) in the UI.
-
-{% endnavtab %}
-{% endnavtabs %}
-
 ## Configure a principal
+
+Principals live in a [directory](/identity/directories/). Before you configure a principal, [create a directory](/identity/directories/#create-a-directory).
 
 Configuring a principal is a multi-step process. You always create the principal first, then attach identities. Metadata is optional.
 
@@ -564,11 +541,8 @@ body:
 
 ## Principal limitations
 
-The following are default limits for principals and directories:
+The following are default limits for principals. For directory limits, see [Directory limitations](/identity/directories/#directory-limitations).
 
-* 1 directory per region.
-  Contact Kong Support if you need more than one directory.
-* 100,000 principals per directory. Contact Kong Support if you need higher limits.
 * 10 identities per principal
 * 5 of each credential type per principal
 * 50 metadata keys per principal
@@ -576,5 +550,4 @@ The following are default limits for principals and directories:
 * Usernames and API keys must be unique within a directory
 * Custom identity name and value combinations must be unique within a directory
 * OIDC identity issuer and claim combinations must be unique within a directory
-* Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
 * At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.

@@ -5,6 +5,7 @@ metadata:
   products:
     - ai-gateway
   works_on:
+    - on-prem
     - konnect
   min_version:
     ai-gateway: '2.0'
