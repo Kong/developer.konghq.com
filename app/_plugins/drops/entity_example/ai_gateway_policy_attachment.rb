@@ -25,6 +25,10 @@ module Jekyll
           @entity_type ||= TARGET_ENTITY_TYPES.fetch(target.key)
         end
 
+        def formats
+          @formats ||= super.sort_by { |format| @example.formats.index(format) }
+        end
+
         def policy_name
           @policy_name ||= @example.data['name']
         end

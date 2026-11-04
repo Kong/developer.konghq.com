@@ -109,7 +109,7 @@ RSpec.describe Jekyll::Drops::PolicyConfigExample::AIGateway do
         expect { drop }
           .to raise_error(
             ArgumentError,
-            "Invalid `tools` in #{example_file}, supported tools: konnect-api, terraform, kongctl"
+            "Invalid `tools` in #{example_file}, supported tools: kongctl, konnect-api, terraform"
           )
       end
     end

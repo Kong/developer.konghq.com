@@ -6,7 +6,7 @@ module Jekyll
   module Drops
     module PolicyConfigExample
       class AIGateway < Base
-        TOOLS = %w[konnect-api terraform kongctl].freeze
+        TOOLS = %w[kongctl konnect-api terraform].freeze
 
         def initialize(file:, plugin:)
           super
@@ -15,6 +15,10 @@ module Jekyll
 
         def product
           'ai-gateway'
+        end
+
+        def formats
+          @formats ||= example.fetch('tools').sort_by { |tool| TOOLS.index(tool) }
         end
 
         def examples

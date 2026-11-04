@@ -10,6 +10,10 @@ module Jekyll
           @entity_type ||= 'policy'
         end
 
+        def formats
+          @formats ||= super.sort_by { |format| @example.formats.index(format) }
+        end
+
         def variables
           @variables ||= @example.raw_variables
         end

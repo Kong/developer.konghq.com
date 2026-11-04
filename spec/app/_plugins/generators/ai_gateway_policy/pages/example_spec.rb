@@ -93,6 +93,30 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         expect(html).to have_css('h3 a[href="#attach-the-policy"]', text: 'Attach the policy')
       end
 
+      it 'lists the tools in the format dropdown in the canonical order' do
+        policy_section = html.all('.entity-example').first
+
+        expect(policy_section.find('select.select-format').all('option').map { |option| option[:value] })
+          .to eq(%w[kongctl konnect-api terraform])
+      end
+
+      context 'when the example lists a subset of tools in a non-canonical order' do
+        let(:file) { example_fixture('two-tools.yml') }
+
+        let(:two_tools) do
+          ai_gateway_policy_config_example(file: example_fixture('two-tools.yml'), scopes: scopes)
+        end
+
+        let(:policy_examples) { [two_tools] }
+
+        it 'restricts the dropdown to the listed tools in the canonical order' do
+          policy_section = html.all('.entity-example').first
+
+          expect(policy_section.find('select.select-format').all('option').map { |option| option[:value] })
+            .to eq(%w[konnect-api terraform])
+        end
+      end
+
       it 'renders the note directly above the attach snippet in every tool panel' do
         panel = attach_section.find('.entity-example-target-panel[data-target="ai-model"]')
 
@@ -206,14 +230,19 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
         expect(rendered.index('### Attach the policy')).to be > rendered.index('### Set up the policy')
       end
 
+      it 'presents the tool headings of the policy section in the canonical order' do
+        expect(rendered.index('##### kongctl')).to be < rendered.index('##### Konnect API')
+        expect(rendered.index('##### Konnect API')).to be < rendered.index('##### Terraform')
+      end
+
       it 'nests the target and tool headings under the Attach the policy heading' do
         expect(attach_section.scan(/^\#{1,5} .+$/)).to eq(
           [
             '### Attach the policy',
             '#### AI Model',
+            '##### kongctl',
             '##### Konnect API',
-            '##### Terraform',
-            '##### kongctl'
+            '##### Terraform'
           ]
         )
       end
