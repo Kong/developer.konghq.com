@@ -36,15 +36,6 @@ related_resources:
     url: /ai-gateway/changelog/
 
 faqs:
-  - q: Why did my data plane connect when its version is lower than the minimum supported data plane version?
-    a: |
-      A data plane below the minimum supported data plane version still connects to the {{site.ai_gateway}} control plane.
-      This is expected, because every data plane connects and appears in the {{site.konnect_short_name}} topology, whatever its version.
-
-      The data plane shows as **Compatible** when the configuration doesn't use any feature that requires a newer version, and it keeps receiving configuration.
-      This allows fast rollbacks to a lower version.
-
-      For example, if the minimum is `2.2` and a `2.1` data plane connects, the data plane is compatible when the configuration doesn't use a feature that needs a version above `2.1`.
 
   - q: What causes the control plane to reject a data plane?
     a: |
@@ -57,37 +48,6 @@ faqs:
     a: |
       No. The {{site.ai_gateway}} control plane version is decoupled from the data plane version.
       The only version setting you manage is the **Minimum supported data plane version**.
-
-  - q: Is the minimum supported data plane version raised to a minor version or a patch version?
-    a: |
-      The minimum supported data plane version uses the `major.minor` format, for example `2.2`.
-      Patch releases such as `2.2.0` and `2.2.1` count as the same version.
-      Upgrading all of your data planes from `2.2.0` to `2.2.1` doesn't change the minimum.
-      Rolling back to `2.2.0` doesn't affect configuration delivery.
-
-  - q: Can I roll back a data plane to a lower minor version?
-    a: |
-      Yes. You can roll back a data plane connected to an {{site.ai_gateway}} control plane in either of the following ways:
-
-      * Roll back only the data plane.
-        This works when your configuration doesn't use any feature that requires a newer version.
-        For example, if the control plane and all data planes run `2.3`, rolling back one data plane to `2.2` works when you don't use any `2.3` feature.
-      * Disable **Automatically raise the minimum supported version**, set the minimum supported data plane version to the lower version, and then roll back the data plane.
-
-  - q: Is automatic raising of the minimum supported data plane version enabled by default?
-    a: |
-      Yes. For a new {{site.ai_gateway}} control plane, **Automatically raise the minimum supported version** is enabled.
-      To manage the minimum manually, disable the setting.
-
-  - q: When does the control plane raise the minimum supported data plane version?
-    a: |
-      When automatic raising is enabled, the {{site.ai_gateway}} control plane raises the minimum to the lowest version among the connected data planes.
-      The raise happens after all connected data planes run the newer version and have synced their configuration correctly.
-
-  - q: What happens if no data planes are connected and automatic raising is enabled?
-    a: |
-      When no data planes are connected, the minimum supported data plane version of the {{site.ai_gateway}} control plane stays unchanged.
-      To use features from a newer version before any data plane connects, set the minimum manually.
 
   - q: Can I set the minimum supported data plane version to `latest`?
     a: |
@@ -136,7 +96,7 @@ Patch versions aren't part of the comparison.
 
 Data plane compatibility describes whether a data plane can receive the configuration and apply all of its entities and features.
 The {{site.konnect_short_name}} UI shows a compatible data plane as **Compatible**.
-Every data plane connects to the control plane and appears in the {{site.konnect_short_name}} topology, whatever its version.
+Every data plane connects to the control plane and appears in the {{site.konnect_short_name}} topology, regardless of its version.
 
 A data plane is compatible in either of the following cases:
 
@@ -178,7 +138,7 @@ If you don't specify a minimum when you create a control plane, the control plan
 If you update a control plane without specifying a minimum, the value stays unchanged.
 
 The following examples raise the minimum supported data plane version to `2.3` by setting only `min_runtime_version`.
-The API request uses the [`/v1/ai-gateways/{gatewayId}` endpoint](/api/konnect/ai-gateway/#/operations/patch-ai-gateway):
+The API request uses the [`/v1/ai-gateways/{gatewayId}` endpoint](/api/konnect/ai-gateway/#/operations/patch-ai-gateway).
 
 The kongctl examples require kongctl 1.23.0 or later.
 
@@ -250,7 +210,7 @@ Automatic raising behaves as follows:
 * Automatic raising can replace a minimum you set manually.
 * If no data planes are connected, the minimum doesn't change.
 
-If you don't want to update the minimum after every upgrade, leave automatic raising enabled.
+If you don't want to update the minimum manually after every upgrade, leave automatic raising enabled.
 The minimum follows your fleet, so new features become available once all of your data planes run the newer version.
 
 If you want to decide when new features become available, disable automatic raising and set the minimum manually.
