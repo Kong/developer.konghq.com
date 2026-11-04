@@ -100,6 +100,11 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Example do
           .to eq(%w[kongctl konnect-api terraform])
       end
 
+      it 'lists the tools in the attach section dropdown in the canonical order' do
+        expect(attach_section.find('select.select-format').all('option').map { |option| option[:value] })
+          .to eq(%w[kongctl konnect-api terraform])
+      end
+
       context 'when the example lists a subset of tools in a non-canonical order' do
         let(:file) { example_fixture('two-tools.yml') }
 
