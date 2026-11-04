@@ -5,7 +5,7 @@ require_relative 'base'
 module Jekyll
   module Data
     module Title
-      class Plugin < Base # rubocop:disable Style/Documentation
+      class Plugin < Base
         def title_sections
           return [page_title] unless @page.data['plugin?']
 
@@ -41,6 +41,8 @@ module Jekyll
           return if @page.data['example?']
 
           if @page.data['reference?']
+            return 'AI Gateway v2 on-prem Configuration Reference' if @page.data['aigw_onprem_plugin_reference?']
+
             'Configuration Reference'
           elsif @page.data['changelog?']
             'Changelog'
