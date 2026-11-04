@@ -146,7 +146,7 @@ The response also includes `"datakit_touched": true`, next to the usual `choices
 > Connect `request.body`, not `request`, to a node that writes to `service_request.body`.
 > The `request` node outputs the body together with `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`.
 > If you connect all of it, {{site.ai_gateway}} forwards these fields to the AI Model Provider as part of the chat completion body.
-> The AI Model Provider then rejects the request with a `400`, for example `Unrecognized request arguments supplied: body, headers, method, path, port, query, raw_path, scheme, version`.
+> The AI Model Provider then rejects the request with a `400`.
 
 ### Combine two APIs into one response
 
@@ -200,7 +200,7 @@ A request to an AI Model with this Policy attached returns the combined response
 
 ## How does the Datakit Policy work?
 
-Datakit executes workflows composed of **nodes**. A node represents some
+Datakit executes workflows composed of nodes. A node represents some
 task that consumes input data, produces output data, or a combination of the two. 
 Datakit nodes can:
 
@@ -598,7 +598,7 @@ columns:
     key: outputs
 rows:
   - nodetype: |
-      [Branch (`branch`)](#branch-node)
+      [`branch`](#branch-node)
     description: "Execute different nodes based on matching input conditions."
     inputs: |
       User-defined.
@@ -609,7 +609,7 @@ rows:
       * If the input is a non-boolean value, an error is raised
     outputs: none
   - nodetype: |
-      [Cache (`cache`)](#cache-node)
+      [`cache`](#cache-node)
     description: "Store and fetch cached data."
     inputs: |
       * `key` (**required**): The cache key string
@@ -621,7 +621,7 @@ rows:
       * `stored`: `true` if data was successfully stored into the cache
       * `data`: The data that was stored into the cache
   - nodetype: |
-      [Call (`call`)](#call-node)
+      [`call`](#call-node)
     description: "Send third-party HTTP calls."
     inputs: |
       * `body`: Request body
@@ -638,43 +638,43 @@ rows:
       * `status`: The HTTP status code of the response
       * `raw_body`: The raw, non-normalized response body
   - nodetype: |
-      [jq (`jq`)](#jq-node)
+      [`jq`](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
     inputs: |
       User-defined. See [jq node inputs](#jq-node-inputs) for more detail.
     outputs: |
       User-defined. See [jq node outputs](#jq-node-outputs) for more detail.
   - nodetype: |
-      [Exit (`exit`)](#exit-node)
+      [`exit`](#exit-node)
     description: "Return directly to the client without forwarding any further."
     inputs: |
       * `body`: Body to use in the early-exit response.
       * `headers`: Headers to use in the early-exit response.
     outputs: None
   - nodetype: |
-      [Property (`property`)](#property-node)
+      [`property`](#property-node)
     description: "Get and set {{site.ai_gateway}}-specific data."
     inputs: |
       Accepts `$self`. See [property node inputs](#property-node-inputs) for more detail. 
     outputs: |
       Outputs `$self`. See [property node outputs](#property-node-outputs) for more detail. 
   - nodetype: |
-      [Static (`static`)](#static-node)
+      [`static`](#static-node)
     description: "Configure static input values ahead of time."
     inputs: None
     outputs: User-defined. See [static node outputs](#static-node-outputs) for more detail.
   - nodetype: |
-      [XML to JSON (`xml_to_json`)](#xml-to-json-node)
+      [`xml_to_json`](#xml-to-json-node)
     description: "Transforms XML strings into JSON or a Lua table."
     inputs: XML formatted data
     outputs: JSON formatted data
   - nodetype: |
-      [JSON to XML (`json_to_xml`)](#json-to-xml-node)
+      [`json_to_xml`](#json-to-xml-node)
     description: "Transforms JSON or a Lua table into XML strings."
     inputs: JSON formatted data or Lua tables
     outputs: XML formatted data
   - nodetype: |
-      [JWT decode (`jwt_decode`)](#jwt-decode-node)
+      [`jwt_decode`](#jwt-decode-node)
     description: "Decode a JWT without verifying its signature."
     inputs: |
       * `$self`: JWT token string (with or without `Bearer` prefix)
@@ -683,7 +683,7 @@ rows:
       * `payload`: Decoded JWT payload (claims)
       * `signature`: Raw base64url-encoded signature
   - nodetype: |
-      [JWT sign (`jwt_sign`)](#jwt-sign-node)
+      [`jwt_sign`](#jwt-sign-node)
     description: "Create and sign a JWT."
     inputs: |
       * `claims`: Dynamic claims to include in the token
@@ -693,7 +693,7 @@ rows:
       * `claims`: All claims used when signing
       * `header`: The JWT header
   - nodetype: |
-      [JWT verify (`jwt_verify`)](#jwt-verify-node)
+      [`jwt_verify`](#jwt-verify-node)
     description: "Verify a JWT's signature and validate its claims."
     inputs: |
       * `token`: JWT token string (with or without `Bearer` prefix)
@@ -1110,7 +1110,7 @@ two objects:
     headers: merged_headers
 ```
 
-However, when dealing with a upstream service or API that isn't fully compliant
+However, when dealing with an upstream service or API that isn't fully compliant
 with the HTTP spec, it might be necessary to preserve original header name
 casing. For example:
 
@@ -1299,7 +1299,7 @@ If the retrieved value is `nil` or `null`, the Policy errors instead of continui
 
 #### Supported properties
 
-The following properties support **get** operations:
+The following properties support `get` operations:
 
 <!--vale off-->
 {% table %}
@@ -1800,7 +1800,7 @@ rows:
       * `raw_path`: The raw, non-normalized path component of the client HTTP request URL
       * `port`: The port component of the client HTTP request URL
       * `method`: The client HTTP request method
-      * `scheme`: The client request scheme, one of `http` or `https
+      * `scheme`: The client request scheme, one of `http` or `https`
       * `version`: The HTTP version of the client request
   - node: "`service_request`"
     description: Updates properties of the request that {{site.ai_gateway}} sends upstream, for example to the AI Model Provider
@@ -1931,12 +1931,14 @@ client:
   "request_id": "f5e07609d55bd66508c8315b8cf6583a"
 }
 ```
+{:.no-copy-code}
 
 You can find the entire error in the {{site.ai_gateway}} data plane error log:
 
 ```
 > 2025/06/24 10:55:32 [error] 917449#0: *1292 [lua] runtime.lua:406: handler(): node #1 (API) failed with error: "non-2XX response code: 403", client: 127.0.0.1, server: kong, request: "GET / HTTP/1.1", host: "test-010.datakit.test", request_id: "f5e07609d55bd66508c8315b8cf6583a"
 ```
+{:.no-copy-code}
 
 For quicker feedback during local development and testing, the error can also be
 passed through to the client response by enabling the `debug` option in your
@@ -1957,6 +1959,7 @@ Policy configuration):
   }
 }
 ```
+{:.no-copy-code}
 
 ### Execution debug tracing
 
@@ -2186,6 +2189,7 @@ canceled and resulted in an execution plan error (`PLAN_ERROR`):
   ]
 }
 ```
+{:.no-copy-code .collapsible}
 
 The tracing output is emitted _instead of_ any other pending client
 response body (originating from Datakit or elsewhere), so there are limits to
