@@ -25,12 +25,12 @@ related_resources:
   - text: Mocking Policy
     url: /ai-gateway/policies/mocking/
 faqs:
-  - q: Why does the AI Model Provider reject my rewritten request with `Unrecognized request arguments supplied`?
+  - q: Why does the upstream LLM provider reject my rewritten request with `Unrecognized request arguments supplied`?
     a: |
       A Datakit node that writes to `service_request.body` is receiving the whole `request` object instead of the AI request body.
       Connect `request.body` rather than `request`, as in `inputs: {req: request.body}`.
       The `request` node outputs `body`, `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`, and an implicit connection copies all of them.
-      The AI Model Provider then receives these fields as part of the chat completion body and returns a `400`.
+      The upstream LLM provider then receives these fields as part of the chat completion body and returns a `400`.
   - q: Can I declare a node with `type` set to `request`, `response`, `service_request`, or `service_response`?
     a: |
       No. In a Datakit Policy, `request`, `response`, `service_request`, and `service_response` are implicit nodes.
@@ -45,17 +45,17 @@ faqs:
 ---
 
 The Datakit Policy is a workflow engine for {{site.ai_gateway}}.
-It sends requests to external APIs, then uses the response data to rewrite the request before it reaches the [AI Model Provider](/ai-gateway/entities/ai-model-provider/), rewrite the response before it reaches the client, or answer the client directly.
+It sends requests to external APIs, then uses the response data to rewrite the request before it reaches the upstream LLM provider, rewrite the response before it reaches the client, or answer the client directly.
 
 A Datakit workflow is a graph of nodes.
-Each node takes input from the AI request, the AI Model Provider's response, or another node, and produces output for other nodes.
+Each node takes input from the AI request, the upstream LLM provider's response, or another node, and produces output for other nodes.
 A workflow can:
 
 * Make calls to third-party APIs
 * Transform or combine API responses
-* Modify the AI request that {{site.ai_gateway}} sends to the AI Model Provider
-* Modify the AI Model Provider's response before the client receives it
-* Return directly to the client instead of calling the AI Model Provider
+* Modify the AI request that {{site.ai_gateway}} sends to the upstream LLM provider
+* Modify the upstream LLM provider's response before the client receives it
+* Return directly to the client instead of calling the upstream LLM provider
 
 You can attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/), an [AI Agent](/ai-gateway/entities/ai-agent/), an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), an [AI Consumer](/ai-gateway/entities/ai-consumer/), or an [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or apply it globally.
 
@@ -72,13 +72,13 @@ columns:
     key: description
 rows:
   - usecase: "[Rewrite the AI request](#rewrite-the-ai-request-and-response)"
-    description: Add a system message, redact content, or enrich the prompt with data from an external API before the request reaches the AI Model Provider.
+    description: Add a system message, redact content, or enrich the prompt with data from an external API before the request reaches the upstream LLM provider.
   - usecase: "[Rewrite the AI response](#rewrite-the-ai-request-and-response)"
-    description: Add, remove, or reshape fields in the AI Model Provider's response before the client receives it.
+    description: Add, remove, or reshape fields in the upstream LLM provider's response before the client receives it.
   - usecase: "[Request multiplexing](#combine-two-apis-into-one-response)"
     description: Make requests to multiple APIs and combine their responses into one response.
   - usecase: Third-party auth
-    description: Use internal auth within your ecosystem to inject request headers before sending a request to the AI Model Provider.
+    description: Use internal auth within your ecosystem to inject request headers before sending a request to the upstream LLM provider.
   - usecase: Manipulate or clear request headers
     description: Dynamically adjust or clear headers before passing them to a third-party service.
   - usecase: Authentication with vault secrets
@@ -102,8 +102,8 @@ When a request uses that entity, {{site.ai_gateway}} runs the workflow.
 
 A Datakit Policy rewrites the AI request and response through four implicit nodes.
 The `request` node outputs the AI request body that the client sent.
-The `service_request` node takes the body that {{site.ai_gateway}} sends to the AI Model Provider.
-On the way back, the `service_response` node outputs the AI Model Provider's response, and the `response` node takes the body that the client receives.
+The `service_request` node takes the body that {{site.ai_gateway}} sends to the upstream LLM provider.
+On the way back, the `service_response` node outputs the upstream LLM provider's response, and the `response` node takes the body that the client receives.
 
 The following Policy prepends a system message to every request and adds a field to every response:
 
@@ -145,13 +145,13 @@ The response also includes `"datakit_touched": true`, next to the usual `choices
 {:.warning}
 > Connect `request.body`, not `request`, to a node that writes to `service_request.body`.
 > The `request` node outputs the body together with `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`.
-> If you connect all of it, {{site.ai_gateway}} forwards these fields to the AI Model Provider as part of the chat completion body.
-> The AI Model Provider then rejects the request with a `400`.
+> If you connect all of it, {{site.ai_gateway}} forwards these fields to the upstream LLM provider as part of the chat completion body.
+> The upstream LLM provider then rejects the request with a `400`.
 
 ### Combine two APIs into one response
 
 A Datakit Policy combines two APIs into one response with `call`, `jq`, and `exit` nodes.
-An `exit` node returns directly to the client, so {{site.ai_gateway}} doesn't contact the AI Model Provider.
+An `exit` node returns directly to the client, so {{site.ai_gateway}} doesn't contact the upstream LLM provider.
 
 The following Policy calls two external APIs, combines the responses with `jq`, and returns the result:
 
@@ -190,7 +190,7 @@ formats:
   - konnect-api
 {% endentity_example %}
 
-A request to an AI Model with this Policy attached returns the combined response, and {{site.ai_gateway}} doesn't contact the AI Model Provider:
+A request to an AI Model with this Policy attached returns the combined response, and {{site.ai_gateway}} doesn't contact the upstream LLM provider:
 
 ```json
 {"author":"Yours Truly","uuid":"8cd4c8d0-b287-4452-a2ec-aa9e1b05af6a"}
@@ -206,15 +206,15 @@ Datakit nodes can:
 
 * Read client request attributes
 * Send an external HTTP request
-* Modify the response from an AI Model Provider before sending it to the client
+* Modify the response from an upstream LLM provider before sending it to the client
 * Perform internal authentication
 * Execute branching conditional workflows
 
 Most of these tasks can be performed in isolation by other AI Policies. Datakit can string together an execution plan from several nodes, connecting the output from one into the input of another:
 
 * Read client request attributes _and_ use them to craft an external HTTP request
-* Send an external HTTP request _and_ use the response to augment the request before sending it to the AI Model Provider
-* Modify the response from the AI Model Provider _then_ send it to the client using a custom jq filter to enrich the response with data from a third-party API
+* Send an external HTTP request _and_ use the response to augment the request before sending it to the upstream LLM provider
+* Modify the response from the upstream LLM provider _then_ send it to the client using a custom jq filter to enrich the response with data from a third-party API
 
 The following diagram shows how Datakit can be used to combine two third-party API calls into one response:
 
@@ -319,9 +319,7 @@ on the source node to select a target node for each named output:
 Node outputs can be copied to any number of inputs, but each input may only be
 connected to one output. 
 
-{% navtabs 'input-output-example' %}
-{% navtab "Correct configuration" %}
-This configuration is correct:
+The following configuration is valid, because `GET_FOO` feeds two different inputs:
 
 ```yaml
 - name: GET_FOO
@@ -338,38 +336,13 @@ This configuration is correct:
   jq: "."
   input: GET_FOO
 ```
-{% endnavtab %}
-{% navtab "Incorrect configuration" %}
-This configuration will yield an error for `GET_BAR.output`:
 
-```yaml
-- name: GET_FOO
-  type: property
-  property: kong.ctx.shared.foo
-  output: FILTER
-
-- name: GET_BAR
-  type: property
-  property: kong.ctx.shared.bar
-  output: FILTER
-
-- name: FILTER
-  type: jq
-  jq: "."
-```
-
-Error:
-```
-invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")
-```
-{:.no-copy-code}
-
-{% endnavtab %}
-{% endnavtabs %}
+Connecting a second output to an input that already has a connection fails with an error such as `invalid connection ("GET_BAR" -> "FILTER"): conflicts with existing connection ("GET_FOO" -> "FILTER")`.
 
 The `jq` node is especially flexible, allowing you to craft an ad-hoc input
-object by defining individual input fields in your configuration. Here's an
-alternate version of that last configuration that actually works:
+object by defining individual input fields in your configuration. To combine
+the outputs of two nodes, give each one its own named input instead of
+connecting both to the same input:
 
 ```yaml
 - name: GET_FOO
@@ -763,7 +736,7 @@ cache configuration.
 
 Send an HTTP request and retrieve the response. 
 
-The `call` node can run before or after {{site.ai_gateway}} sends the request to the AI Model Provider. A `call` node that depends on the provider's response, for example through `service_response.body`, runs after the provider replies.
+The `call` node can run before or after {{site.ai_gateway}} sends the request to the upstream LLM provider. A `call` node that depends on the provider's response, for example through `service_response.body`, runs after the provider replies.
 
 See the [configuration reference](./reference/#schema--config-nodes) and select `call` from the node object dropdown to see all node attributes.
 
@@ -1186,9 +1159,6 @@ Join the output of two API calls:
   jq: "."
 ```
 
-For more detailed examples, see:
-
-
 ### Exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
@@ -1211,9 +1181,6 @@ Make an HTTP request and send the response directly to the client:
   type: exit
   input: CALL
 ```
-
-For more detailed examples, see:
-
 
 ### Property node
 
@@ -1587,8 +1554,6 @@ Set common request headers for different API requests:
     headers: HEADERS
 ```
 
-For more detailed examples, see:
-
 ### XML to JSON node
 
 Transforms XML strings to JSON or a Lua table. Empty XML tags or elements are converted into empty JSON objects. The resulting JSON won't preserve any information about the original XML element order.
@@ -1803,14 +1768,14 @@ rows:
       * `scheme`: The client request scheme, one of `http` or `https`
       * `version`: The HTTP version of the client request
   - node: "`service_request`"
-    description: Updates properties of the request that {{site.ai_gateway}} sends upstream, for example to the AI Model Provider
+    description: Updates properties of the request that {{site.ai_gateway}} sends upstream, for example to the LLM provider
     inputs: |
       * `body`: The request body
       * `headers`: The request headers
       * `query`: The request query
     outputs: none
   - node: "`service_response`"
-    description: Reads response properties from the upstream, for example the AI Model Provider
+    description: Reads response properties from the upstream, for example the LLM provider
     inputs: none
     outputs: |
       * `body`: The response body
@@ -1847,7 +1812,7 @@ decoded URL query strings.
 
 #### Body
 
-The `request.body` output is the AI request body that the client sent. The `service_request.body` input is the body that {{site.ai_gateway}} sends to the AI Model Provider. The `service_response.body` output is the AI Model Provider's response, and the `response.body` input is the body that the client receives.
+The `request.body` output is the AI request body that the client sent. The `service_request.body` input is the body that {{site.ai_gateway}} sends to the upstream LLM provider. The `service_response.body` output is the upstream LLM provider's response, and the `response.body` input is the body that the client receives.
 
 The `service_request.body` and `response.body` inputs both accept any data type.
 If the data is an object, it will automatically be JSON-encoded, and the
