@@ -100,6 +100,8 @@
     --color-observability-background: var(--color-semantic-yellow-secondary);
     --color-ai-gateway-brand: var(--color-semantic-green-primary);
     --color-ai-gateway-background: var(--color-semantic-green-secondary);
+    --color-ai-cost-management-brand: var(--color-semantic-green-primary);
+    --color-ai-cost-management-background: var(--color-semantic-green-secondary);
     --color-context-mesh-brand: var(--color-semantic-green-primary);
     --color-context-mesh-background: var(--color-semantic-green-secondary);
     --color-event-gateway-brand: var(--color-semantic-green-primary);

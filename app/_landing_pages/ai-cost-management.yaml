@@ -1,0 +1,178 @@
+metadata:
+  title: "{{site.ai_cost_management}}"
+  content_type: landing_page
+  description: "{{site.ai_cost_management}} gives you visibility into your organization's AI model spend across users, groups, models, and teams."
+  products:
+    - ai-cost-management
+  works_on:
+    - konnect
+  tags:
+    - ai
+    - governance
+    - cost-management
+
+rows:
+
+  - header:
+      type: h1
+      text: "{{site.ai_cost_management}}"
+      sub_text: Visibility and control over AI spend across your organization
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.ai_cost_management}} gives you visibility into your organization's AI model spend.
+                    It records events for every request that passes through {{site.ai_gateway}}, attributes each event to a user, group, or team, prices it against the model catalog, and surfaces the data in real-time dashboards.
+
+                    You can set up budgets with notification thresholds to alert your team before spend reaches a ceiling.
+                    Use attribution to break spend down by user, application, or any custom dimension that you want to define with tags.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/ai-cost-management/dashboard.png
+              alt_text: "AI Cost Management dashboard showing spend over time and a breakdown by model and user"
+              # this is a temporary filler image; need a good one with better data and the actual current UI
+
+  - header:
+      type: h2
+      text: "Get started with {{site.ai_cost_management}}"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Set up a budget with email alerts
+              description: |
+                Configure a model price, create a budget with a spend ceiling, and receive an email notification when your organization approaches the limit.
+              icon: /assets/icons/email.svg
+              cta:
+                url: /ai-cost-management/set-up-a-budget-with-email-alerts/
+                text: Configure a budget
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Set up a budget with Slack alerts
+              description: |
+                Configure a model price, create a budget with a spend ceiling, and send budget notifications to a Slack channel.
+              icon: /assets/icons/slack.svg
+              cta:
+                url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
+                text: Configure a budget
+                align: end
+
+  - header:
+      type: h2
+      text: "Key references"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Analytics and debugging
+              description: |
+                Explore spend on the Dashboard, break down usage by user or model in the Explorer, and inspect individual events in the Events debugger.
+              icon: /assets/icons/analytics.svg
+              ctas:
+                - text: Dashboard
+                  url: /ai-cost-management/analytics-and-debugging/#dashboard
+                - text: Explorer
+                  url: /ai-cost-management/analytics-and-debugging/#explorer
+                - text: Events debugger
+                  url: /ai-cost-management/analytics-and-debugging/#events-debugger
+      - blocks:
+          - type: card
+            config:
+              title: Budgets
+              description: |
+                Create budgets with spend ceilings and notification thresholds. Monitor how spend tracks against each budget across the organization.
+              icon: /assets/icons/money.svg
+              ctas:
+                - text: Budgets
+                  url: /ai-cost-management/budgets/
+                - text: Notification channels
+                  url: /ai-cost-management/notification-channels/
+      - blocks:
+          - type: card
+            config:
+              title: Attribution
+              description: |
+                Understand how each usage event is attributed to a subject, group, and team, and how to add custom tags for dimensions your teams care about.
+              icon: /assets/icons/profile.svg
+              ctas:
+                - text: Attribution
+                  url: /ai-cost-management/attribution/
+                - text: Integrations
+                  url: /ai-cost-management/integrations/
+      - blocks:
+          - type: card
+            config:
+              title: Price catalog
+              description: |
+                Configure model prices that {{site.ai_cost_management}} uses to calculate the cost of each request. Add organization-level overrides for negotiated rates.
+              icon: /assets/icons/money.svg
+              ctas:
+                - text: Price catalog
+                  url: /ai-cost-management/price-catalog/
+                - text: Price overrides
+                  url: /ai-cost-management/price-catalog/#overrides
+      - blocks:
+          - type: card
+            config:
+              title: Exports
+              description: |
+                Download usage events and FOCUS cost-and-usage data as CSV or Parquet files, either once for a specific range or on a repeating schedule.
+              icon: /assets/icons/download.svg
+              ctas:
+                - text: Exports
+                  url: /ai-cost-management/exports/
+                - text: Set up a one-time export
+                  url: /ai-cost-management/exports/#set-up-a-one-time-export
+                - text: Set up a scheduled export
+                  url: /ai-cost-management/exports/#set-up-a-scheduled-export
+      - blocks:
+          - type: card
+            config:
+              title: API reference
+              description: |
+                Browse the full REST API for {{site.ai_cost_management}}: list and query usage events, manage exports, budgets, notification channels, and the price catalog.
+              icon: /assets/icons/api.svg
+              ctas:
+                - text: API reference
+                  url: /api/konnect/ai-cost-management/
+
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - ai-cost-management
+              quantity: 5
+
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Does {{site.ai_cost_management}} block requests when a budget is exceeded?
+              a: |
+                No. Budgets track spend and send notifications when thresholds are crossed, but they don't block or rate-limit requests.
+                Budget enforcement is planned for a future release.
+            - q: Why does a request show $0 cost?
+              a: |
+                The model had no price configured when the request ran. An omitted cost and a reported zero cost are stored the same way.
+                To price future requests, add the model to the [price catalog](/ai-cost-management/price-catalog/) or set cost fields on the AI Model target in {{site.ai_gateway}}.
+            - q: How fresh is the data in the dashboard?
+              a: |
+                Events reach the views shortly after a request completes.
+                An event that arrives more than one hour after its recorded time is marked late and can change totals already shown.
+

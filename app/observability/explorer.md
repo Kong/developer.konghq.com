@@ -325,6 +325,7 @@ rows:
 
 Agentic usage tracks analytics data for agent-to-agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), such as agent tool use and agent MCP calls.
 You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics display in {{site.konnect_short_name}} Explorer.
+For AI MCP Servers and AI Agents, see [Observability in AI Management](/ai-management/observability/).
 
 With agentic usage reporting, you can:
 * See how many times a tool was called

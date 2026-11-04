@@ -173,6 +173,8 @@ observability: Observability
 dev_portal: Dev Portal
 identity: Kong Identity
 insomnia: Insomnia
+ai_cost_management: AI Cost Management
+
 # Company names
 openai: OpenAI
 anthropic: Anthropic

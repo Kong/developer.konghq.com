@@ -696,6 +696,7 @@ reconverge
 redis
 Redpanda
 reentrant
+reference_with_schema
 referenceable
 ReferenceGrant
 regctl
