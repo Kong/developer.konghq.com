@@ -32,12 +32,35 @@ function walkSources(dir, sources = []) {
 
 function mermaidSources(file) {
   const content = readFileSync(file, "utf8");
-  if (BLOCK_SOURCE_RE.test(file)) {
-    const blocks = [];
-    for (const match of content.matchAll(MERMAID_BLOCK_RE)) blocks.push(match[1]);
-    return blocks;
+  const blocks = [];
+  for (const match of content.matchAll(MERMAID_BLOCK_RE)) blocks.push(match[1]);
+  if (!BLOCK_SOURCE_RE.test(file)) blocks.push(...diagramScalars(content));
+  return blocks;
+}
+
+// YAML diagrams are authored in one of two shapes: a `type: mermaid` block whose
+// `diagram: |` scalar holds the source, or a `{% mermaid %}` tag inline in a
+// scalar. Scan those instead of the whole file so a token that is not part of a
+// diagram (a description, an alt text) never reaches the icon map.
+function diagramScalars(content) {
+  const lines = content.split("\n");
+  const blocks = [];
+  for (let i = 0; i < lines.length; i++) {
+    const match = lines[i].match(/^(\s*)diagram:\s*\|/);
+    if (match === null) continue;
+    const indent = match[1].length;
+    const body = [];
+    let j = i + 1;
+    for (; j < lines.length; j++) {
+      const line = lines[j];
+      const leading = line.length - line.trimStart().length;
+      if (line.trim() !== "" && leading <= indent) break;
+      body.push(line);
+    }
+    blocks.push(body.join("\n"));
+    i = j - 1;
   }
-  return [content];
+  return blocks;
 }
 
 function referencedIconNames() {
