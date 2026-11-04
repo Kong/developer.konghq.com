@@ -145,6 +145,11 @@ ai_gateway_policies:
       - premium_partner
       - support_url
 
+aigw_onprem_plugin_reference:
+  - ai-proxy-advanced
+  - ai-mcp-proxy
+  - ai-a2a-proxy
+
 insomnia_run: https://insomnia.rest/run/
 
 # product name vars

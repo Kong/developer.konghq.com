@@ -5,18 +5,22 @@ require 'json'
 module Jekyll
   module Drops
     module Plugins
-      class AIGWPolicySchema < Liquid::Drop # rubocop:disable Style/Documentation
+      class AIGWPolicySchema < Liquid::Drop
         SCHEMAS_DIR = File.expand_path('../../../_schemas/ai-gateway/policies', __dir__).freeze
         FILE_INDEX = Dir.glob(File.join(SCHEMAS_DIR, '*.json'))
                         .to_h { |f| [File.basename(f).downcase, f] }
                         .freeze
 
-        def initialize(slug:) # rubocop:disable Lint/MissingSuper
+        def initialize(slug:)
           @slug = slug
         end
 
         def as_json(*)
           @as_json ||= { 'properties' => { 'config' => schema.dig('properties', 'config') } }
+        end
+
+        def compatible_protocols
+          @compatible_protocols ||= schema.dig('properties', 'protocols', 'items', 'enum')
         end
 
         private
