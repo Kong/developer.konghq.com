@@ -124,6 +124,10 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
+export function licenseRequired(deploymentModel) {
+  return deploymentModel === "on-prem";
+}
+
 export async function setupRuntime(runtimeConfig, docker) {
   const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
