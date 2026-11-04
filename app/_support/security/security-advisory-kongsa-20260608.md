@@ -138,4 +138,35 @@ Users of {{site.ee_product_name}} or {{site.mesh_product_name}} versions that ar
 
 {{site.ee_product_name}} and {{site.ai_gateway_name}} customers who can't immediately upgrade to a patched version can temporarily disable HTTP/2 if it isn't required in their environment. Instructions are in the [Disable HTTP/2 in Kong](https://support.konghq.com/support/s/article/disable-http-2-in-kong) article.
 
-{{site.mesh_product_name}} customers who can't immediately upgrade to a patched version can temporarily disable HTTP/2 if it isn't required in their environment. Instructions are in the [{{site.mesh_product_name}} CVE-2026-47774 HTTP/2 memory exhaustion](https://support.konghq.com/support/s/article/Kong-Mesh-CVE-2026-47774---HTTP-2-memory-exhaustion) article.
+{{site.mesh_product_name}} customers who can't immediately upgrade to a patched version can temporarily disable HTTP/2 on the at-risk instances with the following [MeshProxyPatch](/mesh/policies/meshproxypatch/):
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshProxyPatch
+metadata:
+  name: edge-gateway-no-h2
+  namespace: kuma-system
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: MeshGateway
+    name: <replaceWithYourGatewayName>
+  default:
+    appendModifications:
+      - networkFilter:
+          operation: Patch
+          match:
+            origin: gateway
+            name: envoy.filters.network.http_connection_manager
+          jsonPatches:
+            - op: add
+              path: /codecType
+              value: HTTP1
+            - op: remove
+              path: /http2ProtocolOptions
+```
+
+## References
+
+* [Envoy security advisory GHSA-22m2-hvr2-xqc8](https://github.com/envoyproxy/envoy/security/advisories/GHSA-22m2-hvr2-xqc8)

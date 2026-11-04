@@ -1117,3 +1117,6 @@ tokenizer
 libjq
 multibyte
 Bleichenbacher
+libexpat
+desynchronization
+desynchronize

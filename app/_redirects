@@ -555,3 +555,6 @@
 
 # AI Access Management moved out of ai-gateway
 /ai-gateway/access-management/ /ai-access-management/ 301
+
+# Security advisories moved under /support/security/
+/support/kong-ingress-controller-is-not-affected-by-ingressnightmare/  /support/security/security-advisory-ingressnightmare/
