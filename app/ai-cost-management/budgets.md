@@ -502,7 +502,7 @@ The `PUT` request replaces the whole rule, so include the thresholds and channel
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-cost-management/budgets/$BUDGET_ID/notification-rule
-status_code: 201
+status_code: 200
 method: PUT
 headers:
   - 'Content-Type: application/json'
