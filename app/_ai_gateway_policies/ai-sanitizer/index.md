@@ -113,7 +113,7 @@ You can anonymize data in requests using the following redact modes:
 ### Custom patterns
 
 You can define an array of custom patterns on a per-request basis.
-Currently, only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
+Only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
 
 The `name` must be unique for each pattern.
 
@@ -177,7 +177,7 @@ FROM kong/ai-pii-service:v0.2.2-en
 
 ### Available language tags
 
-The following language-specific images are currently available:
+The following language-specific images are available:
 
 * `-en` (English)
 * `-es` (Spanish)

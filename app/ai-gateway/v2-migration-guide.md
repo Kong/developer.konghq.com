@@ -61,7 +61,7 @@ Migration uses the `kongctl convert ai-gateway extension` to translate your exis
 1. Authenticate `kongctl` with a {{site.konnect_short_name}} PAT or System Account Access Token.
 1. Apply the converted configuration to the new {{site.ai_gateway}} control plane.
 
-The diagram shows where each tool sits in the flow:
+The following diagram shows where each tool sits in the flow:
 
 {% mermaid %}
 sequenceDiagram
@@ -79,7 +79,7 @@ sequenceDiagram
     D->>E: kongctl apply
 {% endmermaid %}
 
-### Step 1: Install the kongctl-ext-aigw-converter extension
+### Step 1: Install the converter extension
 
 The `kongctl-ext-aigw-converter` extension is used to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model.
 
@@ -382,7 +382,7 @@ resource ai_gateway_model_provider "openai-1" field /config/auth/headers/0/value
 is write-only and requires !secret with a deferred source
 ```
 
-After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source as shown, then set the real value out of band:
+After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source, then set the real value out of band:
 
 ```sh
 export OPENAI_API_KEY="YOUR CREDENTIAL"
@@ -430,7 +430,7 @@ rows:
     type: "`upstream-server`"
 {% endtable %}
 
-##### Authentication moves from ai-mcp-oauth2 to an auth strategy
+##### Authentication moves from the AI MCP OAuth2 plugin to an auth strategy
 
 The [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) plugin has no direct {{site.ai_gateway}} 2.x Policy equivalent, so the converter splits its config in two:
 
@@ -543,11 +543,9 @@ ai_gateway_mcp_servers:
     acl_attribute_type: consumer
     acls:
       allow: []
-      deny: []
     default_tool_acls:
       allow:
       - flight-operators
-      deny: []
     auth_strategies:
     - flights-key-auth
   config:
@@ -728,7 +726,7 @@ After you apply the converted configuration, verify the new control plane before
 
 Run the old and new configurations in parallel during cutover so you can roll back by routing traffic to the original control plane if needed.
 
-After you've successfully generated the `kongctl` config, applied it to your environment, and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
+After you generate the `kongctl` config, apply it to your environment, and test the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
 
 ## Troubleshooting
 

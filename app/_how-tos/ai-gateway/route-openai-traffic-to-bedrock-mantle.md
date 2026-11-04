@@ -117,7 +117,7 @@ ai_gateway_models:
     config:
       route:
         paths:
-          - /v1
+          - /
         model:
           body_param: model
           values:

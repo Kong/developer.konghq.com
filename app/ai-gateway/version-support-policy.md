@@ -95,9 +95,9 @@ Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {% navtabs "ai-gateway-version" %}
 {% navtab "2.3" %}
-{{site.ai_gateway_name}} 2.3 was released on 2026-10-30.
+{{site.ai_gateway_name}} 2.3 was released on 2026-11-04.
 
-{{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-11-30, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+{{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-12-04, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
 
 <!--vale off-->
 {% table %}
@@ -117,17 +117,17 @@ rows:
     version: "26.04"
     arm: true
     fips: true
-    eol: "2026-11-30"
+    eol: "2026-12-04"
   - os: RHEL
     version: "10.x"
     arm: true
     fips: true
-    eol: "2026-11-30"
+    eol: "2026-12-04"
   - os: Distroless
     version: "N/A"
     arm: true
     fips: true
-    eol: "2026-11-30"
+    eol: "2026-12-04"
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}

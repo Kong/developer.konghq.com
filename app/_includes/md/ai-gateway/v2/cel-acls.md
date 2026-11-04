@@ -3,13 +3,7 @@ Use them when access depends on Consumer attributes or request context, not only
 To use them, set `allow_when` or `deny_when` on the {{include.scope}}[`access.acls`]({{include.anchor}}) object.
 Each field is an array of expressions, 1 to 1024 characters each.
 The data plane evaluates the expressions on each request, against the authenticated AI Consumer and the request. They use the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/).
-{% if include.allow_and_deny_together -%}
-`allow_when` and `deny_when` are mutually exclusive with `allow` and `deny`.
-You can set `allow_when` and `deny_when` together.
-For {{include.entity}}s, you can set `allow` and `deny` together, as described in [ACL evaluation logic](#acl-evaluation-logic).
-{%- else -%}
 Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
-{%- endif %}
 
 The following example allows requests from AI Consumers in the `internal-teams` AI Consumer Group, and from the AI Consumer `alice`:
 
