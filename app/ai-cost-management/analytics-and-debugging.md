@@ -91,13 +91,16 @@ columns:
   - title: Access
     key: access
 rows:
-
+  - view: "[**My Usage**](#my-usage)"
+    shows: "The current user's own spend."
+    use: "To check your own spend."
+    access: "Individual, Team manager, Admin"
   - view: "[**Dashboard**](#dashboard)"
     shows: "Organization-wide spend, projected spend, budget status, and spend grouped by user, group, team, provider, model, harness, or tag."
     use: "To check overall spend, find where it goes, and see which budgets are close to their limits."
     access: "Team manager, Admin"
   - view: "[**Explorer**](#explorer)"
-    shows: "Spend, requests, or tokens over time, grouped by up to two dimensions."
+    shows: "Spend, requests, or tokens over time, grouped by one dimension."
     use: "To answer a specific question, for example which model costs the most each day."
     access: "Team manager, Admin"
   - view: "[**Events debugger**](#events-debugger)"
@@ -107,20 +110,11 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-<!-- TO DO: re-add this section once we're sure it's going in.
-Table row (move it to table):
-  - view: "[**My usage**](#my-usage)"
-    shows: "The current user's spend, projection, and spend breakdown."
-    use: "To check your own spend and see how it compares with your budget."
-    access: "Individual, Team manager, Admin"
+## My Usage
 
-## My usage
+My Usage shows your own spend. To open it, click **Cost Management** > **My Usage** in the sidebar.
 
-My Usage shows the current user's own spend. It's available to all {{site.ai_gateway}} users.
-
-The view shows spend for a selected time range, a projection for the current month, and how far spend is above or below the user's budget ceiling.
-Spend is also broken down by dimension, for example a model or provider.
--->
+{{site.konnect_short_name}} links your account to your AI identity when you send your first request through {{site.ai_gateway}}. Your spend appears in My Usage after that request.
 
 <!--TO DO: screenshot-->
 
@@ -148,14 +142,14 @@ rows:
       Predicted spend for the current UTC month and how far it is above or below the ceiling, regardless of the time range you select.
       * The ceiling is the limit set by an organization-wide monthly budget.
       * The projection is an estimate and requires at least two completed days of usage. See [Budgets](/ai-cost-management/budgets/).
-  - topic: "**Where spend goes**"
+  - topic: "**Where is it going?**"
     shows: |
       Spend broken down by a primary dimension, with an optional secondary dimension.
       You can group by users, groups, teams, providers, models, harnesses, or tags.
       Usage with no user appears as **Unattributed**. 
       <br><br>
       When you group by Groups, shares can add up to more than 100% because an event counts under each of its groups.
-  - topic: "**Budgets at risk**"
+  - topic: "**Which budgets are at risk?**"
     shows: |
       Each budget ranked by the share of its limit that spend has consumed. See [Budgets](/ai-cost-management/budgets/).
 {% endtable %}
@@ -177,15 +171,15 @@ columns:
     key: does
 rows:
   - control: "**Group by**"
-    does: "One or two dimensions to split the results by."
+    does: "The dimension to split the results by."
   - control: "**Add filter**"
     does: "Narrows the events. See [Filters and dimensions](#filters-and-dimensions)."
   - control: "**Time range**"
     does: "The same presets as the Dashboard."
   - control: "**Granularity**"
     does: "The size of each chart bucket: hour, day, week, or month. The default is Day."
-  - control: "**Measure**"
-    does: "What the chart plots: Spend, Requests, Input tokens, or Output tokens."
+  - control: "**Chart**"
+    does: "What the chart plots: Spend, Requests, Input tokens, Cached input tokens, or Output tokens."
 {% endtable %}
 <!--vale on-->
 

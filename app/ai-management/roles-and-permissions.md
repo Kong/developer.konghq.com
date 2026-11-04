@@ -249,7 +249,7 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "Open the Users, Trusted IdPs, and Token Vault pages"
+  - capability: "Open the Users, Identity Providers, and Token Vault pages"
     admin: true
     manager: false
     individual: false
@@ -286,6 +286,10 @@ columns:
   - title: Individual User
     key: individual
 rows:
+  - capability: "View their own spend in **My Usage**"
+    admin: true
+    manager: true
+    individual: true
   - capability: "View the cost dashboard and explorer"
     admin: "Yes, for the whole organization"
     manager: "Yes, for their teams"

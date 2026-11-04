@@ -429,7 +429,7 @@ A lower threshold that didn't send an alert has the same shape, with an empty `d
 
 To create a sample budget:
 1. In the {{site.konnect_short_name}} sidebar, click **Cost Management**.
-1. In the Cost Management sidebar, click **Budget Policies**.
+1. In the Cost Management sidebar, click **Budgets**.
 1. Click **New budget**.
 1. Click **Express** for common presets, or **Advanced** for full customization. We'll use **Express** for this example.
 1. From the **Budget type** dropdown menu, select "Organization-wide".
@@ -502,7 +502,7 @@ The `PUT` request replaces the whole rule, so include the thresholds and channel
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-cost-management/budgets/$BUDGET_ID/notification-rule
-status_code: 201
+status_code: 200
 method: PUT
 headers:
   - 'Content-Type: application/json'
