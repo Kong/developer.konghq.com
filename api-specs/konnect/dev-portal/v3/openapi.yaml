@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@4c0d5da661e8db998ddaa12338ca9bef68bc94cd
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4c0d5da661e8db998ddaa12338ca9bef68bc94cd'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -4921,6 +4921,8 @@ components:
         canonical_domain:
           description: The canonical domain of the developer portal
           type: string
+        ai:
+          $ref: '#/components/schemas/AISettings'
       additionalProperties: false
       required:
         - portal_id
@@ -5158,6 +5160,54 @@ components:
         - created_at
         - updated_at
       title: PortalSnippet
+    AISettingsFeatures:
+      description: 'AI features configuration. When top-level `enabled` is false, every feature toggle here is automatically reset to false.'
+      type: object
+      properties:
+        ai_search:
+          description: AI Search config
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              description: Whether AI Search is enabled or not
+              type: boolean
+              default: false
+          required:
+            - enabled
+        mcp_server:
+          description: AI Features config
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              description: Whether the MCP Server is enabled or not
+              type: boolean
+              default: false
+            write_operations_enabled:
+              description: Whether write operations are enabled or not for the Portal MCP Server enabled
+              type: boolean
+              default: false
+          required:
+            - enabled
+            - write_operations_enabled
+      additionalProperties: false
+      required:
+        - mcp_server
+        - ai_search
+    AISettings:
+      type: object
+      properties:
+        enabled:
+          description: Is AI enabled?
+          type: boolean
+          default: false
+        features:
+          $ref: '#/components/schemas/AISettingsFeatures'
+      additionalProperties: false
+      required:
+        - enabled
+        - features
     SnippetName:
       description: The unique name of a snippet in a portal.
       type: string
@@ -6882,6 +6932,14 @@ components:
                 rbac_enabled: true
                 name: my portal
                 canonical_domain: portal.example.com
+                ai:
+                  enabled: true
+                  features:
+                    mcp_server:
+                      enabled: true
+                      write_operations_enabled: false
+                    ai_search:
+                      enabled: false
     PortalImageAssetResponse:
       description: An image asset
       content:
