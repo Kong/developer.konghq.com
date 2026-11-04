@@ -196,3 +196,23 @@ Don't start the dev server yourself unless the user asks.
 - A Google Doc can hold several notices, a pasted older advisory, and an internal action-item table. Convert only the notice the title names, and log everything else as skipped. Internal next steps, owners and customer lists never go on the page.
 - Don't convert incident notices (no CVE, no versions, unknown resolution status). Report them as open questions instead of publishing a possibly stale status.
 - Replace the word "blacklist" with "denylist" (Vale `base.Terms`).
+
+## Salesforce KB source
+
+Advisories sometimes live as articles in the Salesforce knowledge base (`https://support.konghq.com/support/s/article/<SLUG>`) instead of a draft.
+
+- **Fetch with `agent-browser`.** `WebFetch` returns an empty shell because the pages are rendered by JavaScript.
+
+  ```bash
+  agent-browser open "https://support.konghq.com/support/s/article/<SLUG>"
+  agent-browser wait 3500
+  agent-browser get text body | sed -n '/Article Number/,/Was this article helpful/p'
+  ```
+
+  Save each article's text to the scratchpad so you can re-read and diff it. If the `ANSWER` section comes back empty, retry with a longer wait. If it's still empty, the article has no content; report it and don't invent any.
+- **Strip the wrapper.** Remove the `QUESTION` and `ANSWER` labels, "Was this article helpful?", the "see our installation guide" and "upgrade guide" sentences, and the "(Available)" suffixes in patch tables.
+- **Published date.** The header line (for example `Jun 5, 26 • Knowledge • Article Number: 000002925`) gives the KB date. Use it as `advisory.published` (`"2026-06-05"`), except when the article is an obvious republish of an older advisory (for example a 2023 CVE with a 2025 KB date). In that case omit `published` and log it.
+- **Check for an existing page.** Before creating a page, grep `app/_support/security/` for the CVE ID. Many CVEs are already covered by a per-CVE section in a cumulative advisory page. Don't create a duplicate.
+- **Skip OSS and Kuma content.** The docs don't support Kong Gateway OSS/Community or Kuma. Drop those sections and tables, and log what you dropped.
+- **Severity and status.** Set `severity`, `cvss_score`, and `cvss_version` only when the article states them. Set `status: not_affected` only when the article explicitly says Kong isn't impacted. "Not in the default configuration" with a warning about custom templates isn't `not_affected`.
+- **Report a mapping.** Include a table of KB URL to docs URL (`/support/security/<slug>/`, with the heading anchor for a CVE section inside a cumulative page) so the KB articles can be redirected or retired.
