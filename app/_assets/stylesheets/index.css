@@ -1040,18 +1040,28 @@ body.ai-assistant-open > #wrapper {
   @apply flex flex-col md:col-span-3 md:col-start-2 col-span-3 w-full gap-16;
 }
 
-/* Reset step list styling for all Algolia ol elements */
+/* Reset step list styling for ordered lists that aren't steps: the info boxes
+   keep the plain numbered look, Algolia widgets stay unstyled. */
 ol[class*="ais-"] {
   list-style: none;
   counter-reset: none;
 }
 
+.info-box ol {
+  list-style: decimal;
+  counter-reset: none;
+  margin: 0 0 0 1rem;
+}
+
+.info-box ol > li,
 ol[class*="ais-"] > li {
   counter-increment: none;
   padding-left: 0;
   padding-bottom: 0;
 }
 
+.info-box ol > li::before,
+.info-box ol > li::after,
 ol[class*="ais-"] > li::before,
 ol[class*="ais-"] > li::after {
   content: none;
