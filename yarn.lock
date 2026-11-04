@@ -12666,7 +12666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pele@npm:^1.12.0":
+"pele@npm:1.13.0":
   version: 1.13.0
   resolution: "pele@npm:1.13.0"
   checksum: 10c0/b58ddca28f63076e7beb344ce180f0efe80dffbf4c917860a10d612a930ca8955717fce1d62e63dbb70051bf18fb8eb0d6e522f512c9db388fc5ebe6cd09e2db
@@ -13793,7 +13793,7 @@ __metadata:
     instantsearch.css: "npm:^8.5.1"
     netlify-cli: "npm:26.2.0"
     node-fetch: "npm:^3.3.2"
-    pele: "npm:^1.12.0"
+    pele: "npm:1.13.0"
     postcss: "npm:^8.4.38"
     shiki: "npm:^4.0.2"
     snowflake-sdk: "npm:3.4.1"

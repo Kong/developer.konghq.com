@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // }
 
 function resolveDiagramIcon(token) {
-  const name = token.replace(/^fa:fa-/, "");
+  const name = token.replace(/^fa[bklrs]?:fa-/, "");
   return icons[name] ?? null;
 }
 

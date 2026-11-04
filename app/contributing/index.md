@@ -716,9 +716,9 @@ Use it for large diagrams that are hard to read at column width.
 
 Displays a Mermaid diagram, rendered in the browser by Pele.
 
-To show an image inside a diagram label, use an `fa:fa-<name>` icon token where `<name>` is the path of an SVG file under `app/assets/icons/` or `app/assets/logos/`, without the `.svg` extension. For example, `fa:fa-gateway` renders `app/assets/icons/gateway.svg`. Don't use `<img>` tags or image URLs in labels; the diagram renderer only resolves these icon tokens.
+To show an image inside a diagram label, use an `fa:fa-<name>` icon token. `<name>` is the SVG file's path under `app/assets/icons/` or `app/assets/logos/`, without the `.svg` extension, with the directory separators replaced by hyphens. For example, `fa:fa-gateway` renders `app/assets/icons/gateway.svg`, and `fa:fa-third-party-aws-transit-gateway` renders `app/assets/icons/third-party/aws-transit-gateway.svg`. Don't use `<img>` tags or image URLs in labels, and don't put a `/` in the token: Pele parses the icon name as a single hyphenated segment and stops at a slash, so a nested path renders as label text instead of an icon.
 
-Whenever a diagram references an image that isn't in the generated icon map yet, re-run `node tools/pele-icons/generate.mjs` and commit the updated `app/_assets/javascripts/diagram-icons.js`.
+Whenever a diagram references an image that isn't in the generated icon map yet, re-run `node tools/pele-icons/generate.mjs` and commit the updated `app/_assets/javascripts/diagram-icons.js`. The generator fails on a token that contains a `/` and warns about a token with no matching SVG file.
 
 <!--vale off-->
 ```yaml
