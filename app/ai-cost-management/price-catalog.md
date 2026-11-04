@@ -216,12 +216,16 @@ columns:
   - title: Applies to
     key: applies_to
 rows:
+  - card: "**Batch**"
+    applies_to: "Batch requests."
   - card: "**Flex tier**"
     applies_to: "Requests on the flex service tier."
   - card: "**Priority tier**"
     applies_to: "Requests on the priority service tier."
   - card: "**Long context**"
     applies_to: "Requests with inputs above a token threshold."
+  - card: "**Region**"
+    applies_to: "Requests served in a specific region."
 {% endtable %}
 <!--vale on-->
 

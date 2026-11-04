@@ -71,7 +71,7 @@ When you replace a Slack channel, you can omit `slack.webhook_url` to keep the s
 To create an email or Slack channel:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Cost Management**.
-1. In the Cost Management sidebar, click **Budget Policies**.
+1. In the Cost Management sidebar, click **Budgets**.
 1. Click the **Channels** tab.
 1. Click **New channel**.
 1. In the **Name** field, enter a name for the channel.
