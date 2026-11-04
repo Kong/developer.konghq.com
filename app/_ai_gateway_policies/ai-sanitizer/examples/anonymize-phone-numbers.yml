@@ -1,0 +1,32 @@
+description: Configure the AI Sanitizer policy to use your sanitizer service to anonymize phone numbers in requests before they reach the upstream service.
+
+title: Explicitly anonymize phone numbers in requests
+
+weight: 900
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service)
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: anonymize-phone-numbers
+display_name: Explicitly anonymize phone numbers in requests
+type: ai-sanitizer
+
+config:
+  anonymize:
+      - phone
+  port: 8080
+  host: ${host}
+  redact_type: synthetic
+  stop_on_error: true
+  recover_redacted: false
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

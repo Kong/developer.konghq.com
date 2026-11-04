@@ -1,0 +1,35 @@
+description: Configure the policy to anonymize multiple PII types in requests, including email addresses, phone numbers, SSNs, and dates.
+
+title: Anonymize multiple PII categories
+
+weight: 910
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service)
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: anonymize-multiple-pii
+display_name: Anonymize multiple PII categories
+type: ai-sanitizer
+
+config:
+  anonymize:
+      - email
+      - phone
+      - ssn
+      - date
+  port: 8080
+  host: ${host}
+  redact_type: synthetic
+  stop_on_error: true
+  recover_redacted: false
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
