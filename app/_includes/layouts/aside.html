@@ -1,5 +1,7 @@
-{% if page.releases_dropdown and (page.versioned or page.aigw_onprem_plugin_reference?) %}
-    {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release mobile=include.mobile %}
+{% if page.releases_dropdown %}
+    {% if page.versioned or page.aigw_onprem_plugin_reference? %}
+        {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release mobile=include.mobile %}
+    {% endif %}
 {% endif %}
 
 {% ifhascontent info_box %}
