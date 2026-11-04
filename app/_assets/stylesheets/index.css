@@ -295,16 +295,66 @@
     @apply rotate-180;
   }
 
-  ol, ul {
-    @apply list-outside ml-4 flex flex-col gap-[0.4rem];
+  ul {
+    @apply list-outside list-disc ml-4 flex flex-col gap-[0.4rem];
   }
 
   ol {
-    @apply list-decimal;
+    list-style: none;
+    counter-reset: step-counter;
+    @apply flex flex-col p-0 m-0;
   }
 
-  ul {
-    @apply list-disc;
+  ol:not(li ol) {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  ol > li {
+    counter-increment: step-counter;
+    position: relative;
+    padding-left: 2.75rem;
+    padding-bottom: 1.3rem;
+  }
+
+  ol > li:last-child {
+    padding-bottom: 0;
+  }
+
+  ol > li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.625rem;
+    height: 1.625rem;
+    border-radius: 9999px;
+    background-color: rgb(var(--color-bg-terciary));
+    color: rgb(var(--color-text-primary));
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    z-index: 1;
+  }
+
+  ol > li::after {
+    content: '';
+    position: absolute;
+    left: 0.8125rem;
+    top: 1.625rem;
+    bottom: 0;
+    width: 1px;
+    background-color: rgb(var(--color-border-primary));
+  }
+
+  ol > li:last-child::after {
+    display: none;
+  }
+
+  /* Nested ol indents to show hierarchy */
+  li ol {
+    @apply ml-4 mt-2;
   }
 
   li {
@@ -992,6 +1042,34 @@ body.ai-assistant-open > #wrapper {
   @apply flex flex-col md:col-span-3 md:col-start-2 col-span-3 w-full gap-16;
 }
 
+/* Reset step list styling for ordered lists that aren't steps: the info boxes
+   keep the plain numbered look, Algolia widgets stay unstyled. */
+ol[class*="ais-"] {
+  list-style: none;
+  counter-reset: none;
+}
+
+.info-box ol {
+  list-style: decimal;
+  counter-reset: none;
+  margin: 0 0 0 1rem;
+}
+
+.info-box ol > li,
+ol[class*="ais-"] > li {
+  counter-increment: none;
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+.info-box ol > li::before,
+.info-box ol > li::after,
+ol[class*="ais-"] > li::before,
+ol[class*="ais-"] > li::after {
+  content: none;
+  display: none;
+}
+
 .ais-Pagination-list {
   @apply flex-row justify-center gap-2;
 }
@@ -1099,10 +1177,6 @@ html.dark .code-block pre.shiki span,
   @apply !bg-code-block;
 }
 
-/* How-to lists */
-ol:has(code) {
-  @apply flex flex-col gap-4;
-}
 
 .ot-floating-button__open > svg {
   @apply justify-self-center;
