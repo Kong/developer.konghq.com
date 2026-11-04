@@ -95,3 +95,7 @@ This policy runs during the [produce phase](/event-gateway/entities/policy/#phas
 
 {% include_cached /knep/key-sources.md name=page.name %}
 
+## Security considerations
+
+If `paths` is set to an expression that reads `record.value.schema.metadata.tags` or `record.value.schema.metadata.properties`, the schema registry becomes a trusted input to this policy. Anyone with write access to the registry can change which fields get encrypted by editing a schema's tags or properties, without touching this policy's configuration at all.
+

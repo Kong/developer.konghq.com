@@ -13,25 +13,28 @@ works_on:
   - konnect
 min_version:
   gateway: '3.14'
+  ai-gateway: '2.0'
 categories:
   - access-control
   - llm
-featured: true
+featured: false
 popular: false
 
 # Machine-readable fields for AI agent setup
 plugins:
   - openid-connect
-  - ai-proxy-advanced
+  - ai-model
+  - ai-model-provider
   - ai-rate-limiting-advanced
 requires_embeddings: false
 providers:
   - anthropic
   - bedrock
   - azure-foundry
+  - vertex
 extra_services:
   - name: Okta
-    env_vars: [DECK_OKTA_ISSUER, DECK_OKTA_AUDIENCE]
+    env_vars: [OKTA_ISSUER, OKTA_AUDIENCE]
     hint: "Create a Native Application in Okta with PKCE flow and configure an API Authorization Server with a groups claim. See the Okta section in Prerequisites."
 
 hint: "Requires an Okta organization with admin access and LLM provider credentials."
@@ -42,40 +45,37 @@ prereqs:
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped Control Plane name and run the quickstart script. The `-e` flags raise the data plane's nginx body buffer so Claude Code's large request payloads (full conversation context, tool definitions, file contents) stay in memory instead of spilling to disk:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The `-e` flags raise the data plane's nginx body buffer so Claude Code's large request payloads (full conversation context, tool definitions, file contents) stay in memory instead of spilling to disk:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='claude-code-sso-recipe'
-           curl -Ls https://get.konghq.com/quickstart | \
+           curl -Ls https://get.konghq.com/ai | \
              bash -s -- -k $KONNECT_TOKEN \
                -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=16m \
-               -e KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE=16m \
-               --deck-output
+               -e KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE=16m
            ```
 
-           This provisions a {{site.konnect_product_name}} Control Plane named `claude-code-sso-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK + jq
+           The script provisions an {{site.ai_gateway}} named `claude-code-sso-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+    - title: kongctl + jq
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
+        This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration, plus [jq](https://jqlang.org/) for JSON processing in the dashboard and cleanup steps.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-        2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
-        3. Install **jq** from [jqlang.org](https://jqlang.org/).
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Install **jq** from [jqlang.org](https://jqlang.org/).
 
-        You can verify all three are installed:
+        Verify that both are installed:
 
         ```bash
         kongctl version
-        deck version
         jq --version
         ```
     - title: Okta
@@ -85,28 +85,28 @@ prereqs:
 
         **Create the Native Application**
 
-        This is a public client representing Claude Code. Public clients use Authorization Code + PKCE without a client secret.
+        The Native Application is a public client representing Claude Code. Public clients use Authorization Code + PKCE without a client secret.
 
         1. In the Okta Admin Console, go to **Applications → Create App Integration**.
         1. Select **OIDC - OpenID Connect** and **Native Application**, then click **Next**.
-        1. Name it `Claude Code`.
-        1. Set the sign-in redirect URI to `http://localhost:9876/callback`. This is the local callback the helper script in the **Claude Code** prereq listens on.
+        1. Name the application `Claude Code`.
+        1. Set the sign-in redirect URI to `http://localhost:9876/callback`. The helper script in the **Claude Code** prereq listens on this local callback.
         1. On the application's **General** tab under **Client Credentials**, confirm that **Proof Key for Code Exchange (PKCE)** is checked. Okta enables it by default for Native app types.
-        1. Under **General Settings → Grant type**, check **Refresh Token** (alongside the **Authorization Code** entry that's already enabled). Without this, even when the helper script requests `offline_access`, Okta does not issue refresh tokens, and developers hit the browser PKCE flow on every token expiry.
+        1. Under **General Settings → Grant type**, check **Refresh Token** (alongside the **Authorization Code** entry that's already enabled). Without the **Refresh Token** grant, Okta doesn't issue refresh tokens even when the helper script requests `offline_access`, and developers hit the browser PKCE flow on every token expiry.
         1. Copy the **Client ID** for use in the **Claude Code** prereq.
 
         **Confirm the authorization server scopes**
 
-        The helper script requests `openid`, `profile`, `email`, and `offline_access`. Okta's `default` authorization server enables these out of the box, so no change is usually required.
+        The helper script requests `openid`, `profile`, `email`, and `offline_access`. Okta's `default` authorization server enables these out of the box, so you usually don't need to change anything.
 
         1. Go to **Security → API → Authorization Servers** and select the `default` server (or your custom server).
-        1. Open the **Scopes** tab and confirm the four scopes above are listed and enabled. If `offline_access` is missing, add it. Without it, refresh tokens are never issued.
+        1. Click the **Scopes** tab and confirm that `openid`, `profile`, `email`, and `offline_access` are listed and enabled. If `offline_access` is missing, add it. Without `offline_access`, Okta never issues refresh tokens.
 
         **Configure the groups claim**
 
-        The OpenID Connect Plugin reads the `groups` claim out of the access token and maps each value to a Kong Consumer Group with the same name. Configure the authorization server to include the claim:
+        The OpenID Connect AI Auth Strategy reads the `groups` claim out of the access token and maps each value to an AI Consumer Group with the same name. Configure the authorization server to include the claim:
 
-        1. On the same authorization server, open the **Claims** tab and add a new claim:
+        1. On the same authorization server, click the **Claims** tab and add a new claim:
            - **Name:** `groups`
            - **Include in token type:** Access Token
            - **Value type:** Groups
@@ -114,29 +114,29 @@ prereqs:
 
         **Set up an Okta group and a test user**
 
-        Create one group and assign one user to start. Kong is configured with both `claude-standard-users` and `claude-power-users` Consumer Groups, but you only need to test one tier at a time and can swap the user between groups later to exercise the other tier:
+        Create one group and assign one user to start. The Kong configuration includes both `claude-standard-users` and `claude-power-users` AI Consumer Groups, but you only need to test one tier at a time and can swap the user between groups later to exercise the other tier:
 
         1. Go to **Directory → Groups** and create `claude-standard-users`.
         1. Go to **Directory → People** and either add a new person (for example, `claude-test-user@example.com`) or pick an existing user. Make sure the user has a password set and can sign in.
-        1. Open the user, go to the **Groups** tab, and assign them to `claude-standard-users`.
-        1. Open the `Claude Code` application created above, go to the **Assignments** tab, and assign the same user. Without this, Okta blocks the OAuth flow at sign-in.
+        1. Open the user, click the **Groups** tab, and assign them to `claude-standard-users`.
+        1. Open the `Claude Code` application, click the **Assignments** tab, and assign the same user. Without this, Okta blocks the OAuth flow at sign-in.
 
         To exercise the power tier later, also create a `claude-power-users` group. The [Swap to the power tier](#swap-to-the-power-tier) section walks through swapping the user between groups to switch tiers.
 
         **Export Okta endpoints and audience**
 
-        The audience is configured on the authorization server itself, not per request. View or edit it at **Security → API → Authorization Servers → [server] → Settings tab → Audience**. The built-in `default` server uses `api://default`.
+        You configure the audience on the authorization server itself, not per request. View or edit it at **Security → API → Authorization Servers → [server] → Settings tab → Audience**. The built-in `default` server uses `api://default`.
 
         ```bash
-        export DECK_OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
-        export DECK_OKTA_AUDIENCE='api://default'
-        # Salt for the openid-connect plugin's token cache key. Stable across syncs.
+        export OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
+        export OKTA_AUDIENCE='api://default'
+        # Salt for the openid-connect Auth Strategy's token cache key. Stable across syncs.
         # Not a credential. For production, regenerate with `openssl rand -hex 16` and
-        # source from your secrets manager (or Kong Vaults).
-        export DECK_OIDC_CACHE_TOKENS_SALT='claude-code-sso-dev-salt'
+        # source from your secrets manager (or AI Vaults).
+        export OIDC_CACHE_TOKENS_SALT='claude-code-sso-dev-salt'
         ```
 
-        If you use a custom authorization server, set `DECK_OKTA_ISSUER` to that server's issuer URL and `DECK_OKTA_AUDIENCE` to its configured audience value.
+        If you use a custom authorization server, set `OKTA_ISSUER` to that server's issuer URL and `OKTA_AUDIENCE` to its configured audience value.
     - title: Claude Code
       content: |
         This recipe routes Claude Code through Kong using the [`apiKeyHelper`](https://docs.claude.com/en/docs/claude-code/settings) setting, which runs a script before each API call and uses its stdout as the credential.
@@ -149,7 +149,7 @@ prereqs:
            ```
 
         {:.warning}
-        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's credential precedence rules. If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
+        > **Claude Code bypasses `apiKeyHelper` if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's [credential precedence rules](https://code.claude.com/docs/en/iam). If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
 
         **Helper script: okta-claude-auth.sh**
 
@@ -366,25 +366,46 @@ prereqs:
         {:.info}
         > `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` is a precaution. The env var strips Anthropic's `anthropic-beta` headers and beta tool-schema fields (for example, `context_management`, `output_config.effort`) from outgoing requests. Anthropic betas are Anthropic-only by design, and non-Anthropic providers may reject requests carrying these fields with errors like `400 Extra inputs are not permitted`. Behavior varies by provider and beta, so this is a defensive default rather than a strict requirement. Leave it in place unless you have a specific reason to forward Anthropic betas to this upstream and have confirmed that path works.
         {% endnavtab %}
+        {% navtab "Google Vertex AI" %}
+        ```json
+        {
+          "apiKeyHelper": "~/.claude/okta-claude-auth.sh",
+          "env": {
+            "ANTHROPIC_BASE_URL": "http://localhost:8000/claude-code-sso",
+            "OKTA_DOMAIN": "https://your-org.okta.com",
+            "OKTA_CLIENT_ID": "0oa1b2c3d4YourClientId",
+            "OKTA_AUDIENCE": "api://default",
+            "OKTA_AUTH_SERVER": "default",
+            "ANTHROPIC_MODEL": "claude-sonnet-4-5",
+            "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-5",
+            "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5",
+            "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
+          }
+        }
+        ```
+
+        {:.info}
+        > `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` is a precaution. The env var strips Anthropic's `anthropic-beta` headers and beta tool-schema fields (for example, `context_management`, `output_config.effort`) from outgoing requests. Anthropic betas are Anthropic-only by design, and non-Anthropic providers may reject requests carrying these fields with errors like `400 Extra inputs are not permitted`. Behavior varies by provider and beta, so this is a defensive default rather than a strict requirement. Leave it in place unless you have a specific reason to forward Anthropic betas to this upstream and have confirmed that path works.
+        {% endnavtab %}
         {% endnavtabs %}
 
-        Replace `https://your-org.okta.com` and `0oa1b2c3d4YourClientId` with values from your Okta setup. Claude Code runs `apiKeyHelper` in an isolated environment without access to your shell profile, so all Okta variables must be listed in the `env` block. `ANTHROPIC_BASE_URL` points Claude Code at Kong. `OKTA_AUTH_SERVER` defaults to `default`; set it to your custom server's ID if you use one.
+        Replace `https://your-org.okta.com` and `0oa1b2c3d4YourClientId` with values from your Okta setup. Claude Code runs `apiKeyHelper` in an isolated environment without access to your shell profile, so you must list all Okta variables in the `env` block. `ANTHROPIC_BASE_URL` points Claude Code at Kong. `OKTA_AUTH_SERVER` defaults to `default`; set it to your custom server's ID if you use one.
 
-        The model env vars pin which name Claude Code sends in the request body so it always matches a `model_alias` configured in Kong:
+        The model env vars pin which name Claude Code sends in the request body so it always matches an alias configured in Kong:
 
         - **`ANTHROPIC_MODEL`** sets the active model from session start. Without it, the picker boots on the system default and Claude Code sends the literal placeholder `<default>`, which has no matching alias in Kong.
         - **`ANTHROPIC_DEFAULT_SONNET_MODEL`** and **`ANTHROPIC_DEFAULT_OPUS_MODEL`** control what the `sonnet` and `opus` aliases resolve to when the user runs `/model sonnet` or `/model opus` mid-session.
 
-        These three values must match the `DECK_SONNET_ALIAS` and `DECK_OPUS_ALIAS` set in the apply step. That's the alias contract Kong uses to route the request to the right tier. Whenever the platform team rolls out a new model version (for example, Sonnet 4.6 lands on Bedrock), they update the four `DECK_*` values in Kong and announce a corresponding bump for the three `ANTHROPIC_*_MODEL` values here.
+        These three values must match the `SONNET_ALIAS` and `OPUS_ALIAS` set in the apply step. That's the alias contract Kong uses to route the request to the right tier. Whenever the platform team rolls out a new model version (for example, Sonnet 4.6 lands on Bedrock), they update the four values in the apply step (`SONNET_ALIAS`, `OPUS_ALIAS`, `CHAT_MODEL_1`, `CHAT_MODEL_2`) and announce a corresponding bump for the three `ANTHROPIC_*_MODEL` values here.
 
         {:.warning}
-        > On Windows, Claude Code does not expand `~` in the `apiKeyHelper` field ([known issue](https://github.com/anthropics/claude-code/issues/13013)). Substitute the absolute path, for example `C:\\Users\\you\\.claude\\okta-claude-auth.sh`. Tilde expansion works on macOS and Linux.
+        > On Windows, Claude Code does not expand `~` in the `apiKeyHelper` field (see the [GitHub issue on tilde expansion](https://github.com/anthropics/claude-code/issues/13013)). Substitute the absolute path, for example `C:\\Users\\you\\.claude\\okta-claude-auth.sh`. Tilde expansion works on macOS and Linux.
 
         **Token caching and refresh cadence**
 
         Claude Code caches the helper's output and re-invokes `okta-claude-auth.sh` every 5 minutes by default, and immediately on any HTTP 401 from the upstream. The helper itself caches the access and refresh tokens in `~/.claude/okta-cache/tokens.json` and silently exchanges the refresh token for a new access token when the cached one is within 60 seconds of expiry. On Okta's default 1-hour access-token TTL, the helper refreshes well before Kong sees a stale JWT, and developers never see a browser or a 401 after the initial sign-in.
 
-        If your Okta authorization server is configured with a much shorter access-token TTL (for example, 2 minutes), set `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` in the `env` block of `~/.claude/settings.json` to match. For example, set `"CLAUDE_CODE_API_KEY_HELPER_TTL_MS": "60000"` for 60 seconds. This lowers Claude Code's helper-output cache window so the helper's refresh logic runs before each token expires, avoiding a transient 401-retry cycle on every TTL boundary. The env var has no effect on the helper's refresh-token handling, which is decided inside the script based on the cached `expires_at`. Tightening it does not speed up Okta revocation detection. The Kong OpenID Connect Plugin re-validates the JWT signature and expiry on every request and is the real revocation guard.
+        If your Okta authorization server is configured with a much shorter access-token TTL (for example, 2 minutes), set `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` in the `env` block of `~/.claude/settings.json` to match. For example, set `"CLAUDE_CODE_API_KEY_HELPER_TTL_MS": "60000"` for 60 seconds. This lowers Claude Code's helper-output cache window so the helper's refresh logic runs before each token expires, avoiding a transient 401-retry cycle on every TTL boundary. The env var has no effect on the helper's refresh-token handling, which the script decides based on the cached `expires_at`. Lowering the env var doesn't speed up Okta revocation detection. The OpenID Connect AI Auth Strategy re-validates the JWT signature and expiry on every request and is the real revocation guard.
     - title: AI Credentials
       content: |
         {% navtabs "Providers" %}
@@ -393,52 +414,66 @@ prereqs:
 
         1. [Create an Anthropic account](https://console.anthropic.com/).
         1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create decK variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
+        1. Export environment variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```bash
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
         This tutorial uses AWS Bedrock:
 
         1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-        1. Create decK variables with your AWS credentials:
+        1. Export environment variables with your AWS credentials:
 
            ```bash
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% navtab "Azure AI Foundry" %}
         This tutorial uses [Azure AI Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/), which hosts Claude at `https://<resource>.services.ai.azure.com/anthropic/v1/messages`.
 
-        1. Ensure you have a Foundry project with Claude Sonnet 4.5 and Claude Opus 4.5 deployments. The deployment names you assigned in the portal become `DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1` and `_2`.
-        1. Create decK variables. `DECK_AZURE_FOUNDRY_UPSTREAM_URL` is the full endpoint URL Kong will call. `DECK_AZURE_FOUNDRY_TOKEN` accepts either a Foundry API key or an [Entra ID](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/rbac-azure-ai-foundry) bearer token; the provider config prefixes `Bearer ` automatically:
+        1. Ensure you have a Foundry project with Claude Sonnet 4.5 and Claude Opus 4.5 deployments. The deployment names you assigned in the portal become `AZURE_FOUNDRY_DEPLOYMENT_ID_1` and `_2`.
+        1. Export environment variables. `AZURE_FOUNDRY_UPSTREAM_URL` is the full endpoint URL Kong calls. `AZURE_FOUNDRY_TOKEN` accepts either a Foundry API key or an [Entra ID](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/rbac-azure-ai-foundry) bearer token; the AI Model Provider forwards it verbatim, so include the `Bearer ` prefix yourself if your token requires it:
 
            ```bash
-           export DECK_AZURE_FOUNDRY_INSTANCE='your-foundry-resource'
-           export DECK_AZURE_FOUNDRY_UPSTREAM_URL="https://${DECK_AZURE_FOUNDRY_INSTANCE}.services.ai.azure.com/anthropic/v1/messages"
-           export DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1='your-sonnet-deployment'
-           export DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_2='your-opus-deployment'
-           export DECK_AZURE_FOUNDRY_TOKEN='your-foundry-token'
+           export AZURE_FOUNDRY_INSTANCE='your-foundry-resource'
+           export AZURE_FOUNDRY_UPSTREAM_URL="https://${AZURE_FOUNDRY_INSTANCE}.services.ai.azure.com/anthropic/v1/messages"
+           export AZURE_FOUNDRY_DEPLOYMENT_ID_1='your-sonnet-deployment'
+           export AZURE_FOUNDRY_DEPLOYMENT_ID_2='your-opus-deployment'
+           export AZURE_FOUNDRY_TOKEN='your-foundry-token'
            ```
+        {% endnavtab %}
+        {% navtab "Google Vertex AI" %}
+        This tutorial uses [Google Vertex AI Model Garden](https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude), which hosts Claude on Google Cloud.
+
+        1. Ensure your GCP project has the Vertex AI API enabled, Claude Sonnet 4.5 and Claude Opus 4.5 access granted in AI Model Garden, and a service account JSON key with `roles/aiplatform.user`.
+        1. Export environment variables. `VERTEX_LOCATION_ID` accepts `global` (works for every Claude variant) or a regional endpoint like `us-east5`, `europe-west1`, or `asia-southeast1`:
+
+           ```bash
+           export VERTEX_PROJECT_ID='your-gcp-project-id'
+           export VERTEX_LOCATION_ID='global'
+           export VERTEX_API_ENDPOINT='aiplatform.googleapis.com'
+           export VERTEX_SERVICE_ACCOUNT_JSON="$(cat path/to/service-account-key.json)"
+           ```
+
+           Service account JSON is one of the GCP IAM auth modes the AI Model Provider supports for Vertex. For production, prefer workload identity over a downloaded key.
         {% endnavtab %}
         {% endnavtabs %}
 
 overview: |
-  This recipe puts {{site.ai_gateway_name}} in front of Anthropic Console API access (or AWS Bedrock) so
-  every Claude Code request from your engineering team is authenticated via Okta SSO, routed to a
-  model tier based on the developer's Okta group membership, and subject to per-tier token rate
-  limits. No provider credentials sit on developer machines.
+  This recipe puts {{site.ai_gateway_name}} in front of Anthropic Console API access (or AWS Bedrock,
+  Azure AI Foundry, or Google Vertex AI). Okta SSO authenticates every Claude Code request from your
+  engineering team, the developer's Okta group membership selects the model tier, and per-tier token
+  rate limits cap usage. No provider credentials sit on developer machines.
 
-  The recipe uses three Kong Plugins working together: the
-  [OpenID Connect](/plugins/openid-connect/) Plugin for Okta JWT validation, the
-  [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin for Consumer-Group-scoped model routing,
-  and the [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugin for per-tier token
-  budgets.
+  The recipe combines an OpenID Connect AI Auth Strategy for Okta JWT validation, two AI Models (one
+  per tier) whose access control lists gate which AI Consumer Group can reach them, and the
+  [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy for per-tier
+  token budgets.
 
   Scope: this recipe governs Claude Code's API-key authentication path. That's the path it uses
   when configured with `apiKeyHelper`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or cloud-provider
@@ -449,11 +484,11 @@ overview: |
 ## The problem
 
 Anthropic Console API keys (and AWS Bedrock provider credentials) give engineers programmatic
-access to LLMs through Claude Code, but the access is governed at the *credential level*, not at
+access to LLMs through Claude Code, but they govern that access at the *credential level*, not at
 the *organizational identity level*. That gap creates several blind spots at scale:
 
-**Static keys are shared and untraceable.** A single Console API key (or AWS access key) is
-typically distributed across a team via shell profiles, `.env` files, or CI secrets stores. Every developer's requests are indistinguishable on the Anthropic bill. When a key leaks
+**Static keys are shared and untraceable.** Teams typically distribute a single Console API key
+(or AWS access key) via shell profiles, `.env` files, or CI secrets stores. Every developer's requests are indistinguishable on the Anthropic bill. When a key leaks
 in shell history or a commit, rotation requires touching every machine and pipeline that uses it.
 There is no per-user audit trail, no way to revoke one person's access without rotating the
 shared key, and no mechanism to assign different models or rate limits to different roles.
@@ -472,7 +507,7 @@ built-in way to say "interns get Haiku, senior engineers get Opus" or "this team
 budget is 500K." Cost controls happen retroactively through billing alerts, not proactively through
 access policy.
 
-The root issue is that trust is established at the *developer machine*, not at a server-side
+The root issue is that the *developer machine* establishes trust, not a server-side
 enforcement point your organization controls. That enforcement point is what this recipe builds.
 
 ## The solution
@@ -480,22 +515,25 @@ enforcement point your organization controls. That enforcement point is what thi
 This recipe moves the enforcement point to a {{site.base_gateway}} that your organization controls,
 with Okta as the single source of truth for identity. It applies to Claude Code's API-key path,
 the path it uses when configured with `apiKeyHelper`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`,
-or AWS provider credentials:
+or cloud-provider credentials:
 
-- **Developers never hold the provider key.** Kong holds the Console API key (or Bedrock
-  credentials) and injects it server-side after validating an Okta-issued JWT. Key rotation
-  happens in one place (Kong's config), not on every developer machine.
+- **Developers never hold the provider key.** Kong holds the Console API key (or Bedrock,
+  Azure AI Foundry, or Vertex credentials) and injects it server-side after validating an
+  Okta-issued JWT. Key rotation happens in one place (Kong's config), not on every developer machine.
 - **Okta drives identity.** Claude Code presents the developer's Okta JWT via `apiKeyHelper`.
   Kong validates the signature against Okta's JWKS keys on every request. Removing a user from
   an Okta group or disabling their account immediately blocks API access on the next call.
-- **Consumer-Group-based model routing** maps Okta groups to Kong Consumer Groups, each with
-  their own AI Proxy Advanced Plugin instance and model alias set. Standard users can request
-  only the cost-efficient model; power users can request both that model and the most capable one.
-  Changing a user's tier is an Okta group assignment, not a config change.
-- **Per-tier token budgets** apply different rate limits to each Consumer Group so the gateway
-  enforces cost ceilings at the boundary rather than reacting to billing alerts after the fact.
-- **Explicit tier enforcement.** A standard user requesting Opus is rejected at Kong with a
-  `400 model not configured`. There is no silent downgrade and no upstream provider call.
+- **AI Consumer Groups drive model routing.** Kong maps Okta groups to AI Consumer Groups. Each tier
+  is a separate model scoped to one alias, and each model's access control list decides which
+  AI Consumer Groups may reach it. Standard users can request only the cost-efficient model; power
+  users can request both that model and the most capable one. Changing a user's tier is an Okta
+  group assignment, not a config change.
+- **Each tier gets its own token budget.** Kong applies different rate limits to each AI Consumer
+  Group so the gateway enforces cost ceilings at the boundary rather than reacting to billing
+  alerts after the fact.
+- **Kong enforces tiers explicitly.** A standard user requesting Opus reaches Kong's routing layer
+  and matches the Opus alias, and that model's access control list rejects the request before any
+  upstream call. There is no silent downgrade.
 
 <!-- vale off -->
 {% mermaid %}
@@ -503,7 +541,7 @@ sequenceDiagram
     participant CC as Claude Code
     participant H as apiKeyHelper script
     participant O as Okta
-    participant K as {{site.base_gateway}}
+    participant K as Kong Gateway
     participant L as LLM Provider
 
     CC->>H: Request bearer token
@@ -521,9 +559,10 @@ sequenceDiagram
 
     CC->>K: POST /claude-code-sso (Authorization: Bearer JWT)
     activate K
-    K->>K: openid-connect (JWKS validate, Okta group to Kong Consumer Group)
-    K->>K: ai-proxy-advanced (alias check, inject provider key, Route by tier)
-    K->>K: ai-rate-limiting-advanced (per-tier token budget)
+    K->>K: OpenID Connect Auth Strategy (JWKS validate, Okta group to Kong Consumer Group)
+    K->>K: AI Model (alias match, Consumer Group ACL check)
+    K->>K: AI Model Provider (inject provider key)
+    K->>K: AI Rate Limiting Advanced (per-tier token budget, via Consumer Group)
     K->>L: Forwarded request
     activate L
     L-->>K: Provider response
@@ -544,12 +583,12 @@ rows:
     responsibility: "PKCE flow, token caching, silent refresh. Runs on the developer machine."
   - component: "Okta"
     responsibility: "Identity, MFA, group membership, JWT issuance."
-  - component: "Kong, [OpenID Connect](/plugins/openid-connect/) Plugin"
-    responsibility: "JWT signature validation via JWKS, audience verification, Okta group to Kong Consumer Group mapping."
-  - component: "Kong, [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin"
-    responsibility: "LLM provider auth injection, model alias matching for tier enforcement, format translation."
-  - component: "Kong, [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugin"
-    responsibility: "Per-Consumer-Group token rate limits with sliding windows."
+  - component: "Kong, [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy"
+    responsibility: "JWT signature validation via JWKS, audience verification, Okta group to AI Consumer Group mapping."
+  - component: "Kong, AI Model and AI Model Provider"
+    responsibility: "Alias-based tier routing, AI Consumer Group access control, provider credential injection, format passthrough."
+  - component: "Kong, [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy"
+    responsibility: "Per-consumer-group token rate limits with sliding windows, attached via each AI Consumer Group's policy list."
   - component: "LLM provider"
     responsibility: "Model inference."
 {% endtable %}
@@ -564,59 +603,62 @@ LLM provider. Here is the complete request lifecycle:
    token has expired but a refresh token exists, it silently exchanges for a new access token via
    Okta's token endpoint. If no valid tokens exist, it opens a browser to Okta's authorization
    endpoint for a full PKCE authentication flow, captures the authorization code via a local
-   callback server, and exchanges it for tokens. The resulting JWT is returned to Claude Code.
+   callback server, and exchanges it for tokens. The script returns the resulting JWT to Claude Code.
 
 2. **Request to Kong.** Claude Code sends `POST /claude-code-sso/v1/messages` with
    `Authorization: Bearer <jwt>` to Kong. The request body is in Anthropic's native message
    format and pins the model name to one of Claude Code's bare aliases (`claude-sonnet-4-6`,
    `claude-opus-4-7`) via the `ANTHROPIC_DEFAULT_*_MODEL` env vars in `~/.claude/settings.json`.
 
-3. **JWT validation and Consumer Group mapping.** The OpenID Connect Plugin validates the JWT
-   signature against Okta's cached JWKS keys, checks expiry, and verifies the `aud` claim. It
-   then reads the `groups` array from the JWT and resolves each value to a Kong Consumer Group
-   with the same name. A user in `claude-power-users` is attached to the `claude-power-users`
-   Consumer Group.
+3. **JWT validation and AI Consumer Group mapping.** The OpenID Connect AI Auth Strategy validates the
+   JWT signature against Okta's cached JWKS keys, checks expiry, and verifies the `aud` claim. It
+   then reads the `groups` array from the JWT and resolves each value to an AI Consumer Group
+   with the same name. Kong attaches a user in `claude-power-users` to the `claude-power-users`
+   AI Consumer Group.
 
-4. **Tier enforcement and credential injection.** The Consumer-Group-scoped AI Proxy Advanced
-   Plugin matches the request body's `model` value against the `model_alias` on each of its
-   targets. The standard tier registers only `claude-sonnet-4-6`; the power tier registers both
-   `claude-sonnet-4-6` and `claude-opus-4-7`. A standard user requesting Opus produces no match
-   and is rejected with `400 model not configured`. On match, Kong injects the provider API key
-   server-side and forwards the request to the configured upstream model.
+4. **Alias routing and tier enforcement.** Kong matches the request body's `model` value against
+   each AI Model's alias: one model registers the sonnet alias, the other registers the opus
+   alias, and both share the `/claude-code-sso` path. The sonnet model's access control list
+   allows both AI Consumer Groups; the opus model's list allows only `claude-power-users`. A
+   standard user's request for the opus alias still matches the opus model on alias, but the
+   access control list then rejects it because `claude-standard-users` isn't in its allow list,
+   before Kong reaches the provider.
 
-5. **Token rate limiting.** The Consumer-Group-scoped AI Rate Limiting Advanced Plugin counts
-   prompt and completion tokens against the tier's per-window budget. Rate-limit headers
-   (`X-AI-RateLimit-Remaining-*`) are added to the response. Exhaustion returns
-   `429 Too Many Requests` with a `Retry-After` header.
+5. **Credential injection.** On an allowed match, the AI Model Provider injects the provider API
+   key server-side and forwards the request to the configured upstream model.
 
-6. **Response.** The provider's response flows back through Kong to Claude Code. Subsequent
-   requests reuse the cached Okta token silently. No browser flow unless the refresh token
-   has expired.
+6. **Token rate limiting.** The AI Rate Limiting Advanced Policy attached to the caller's
+   AI Consumer Group counts prompt and completion tokens against the tier's per-window budget.
+   The policy adds rate-limit headers (`X-AI-RateLimit-Remaining-*`) to the response. Exhaustion
+   returns `429 Too Many Requests` with a `Retry-After` header.
 
-### OpenID Connect: JWT validation and Consumer Group mapping
+7. **Response.** The provider's response flows back through Kong to Claude Code. Subsequent
+   requests reuse the cached Okta token silently. The browser flow only reappears after the
+   refresh token expires.
 
-The OpenID Connect Plugin is the authentication layer. It validates every incoming JWT against
-Okta's JWKS keys, rejects tokens that have expired or were issued for a different audience, and
-attaches the developer's Okta groups to the request as Kong Consumer Groups. This Consumer Group
-attachment is the bridge between your identity provider and Kong's tier-scoped Plugins. It
-determines which AI Proxy Advanced and AI Rate Limiting Advanced instances run on the request.
+### OpenID Connect: JWT validation and AI Consumer Group mapping
+
+The OpenID Connect AI Auth Strategy is the authentication layer. It validates every incoming JWT
+against Okta's JWKS keys, rejects tokens that have expired or were issued for a different
+audience, and attaches the developer's Okta groups to the request as AI Consumer Groups. This
+AI Consumer Group attachment is the bridge between your identity provider and Kong's tier-scoped
+access control. It determines which AI Model each request can reach and which
+AI Rate Limiting Advanced Policy applies.
 
 #### Configuration details
 
 {%- raw %}
 ```yaml
-plugins:
-  - name: openid-connect
+ai_gateway_auth_strategies:
+  - ref: claude-code-sso-auth
+    type: openid-connect
+    display_name: "claude-code-sso Okta OIDC"
     config:
-      issuer: ${{ env "DECK_OKTA_ISSUER" }}
+      issuer: !env OKTA_ISSUER
       auth_methods:
         - bearer
-      bearer_token_param_type:
-        - header
-      audience_claim:
-        - aud
       audience_required:
-        - ${{ env "DECK_OKTA_AUDIENCE" }}
+        - !env OKTA_AUDIENCE
       consumer_groups_claim:
         - groups
       consumer_optional: true
@@ -629,7 +671,7 @@ plugins:
         - X-User-Email
       ssl_verify: true
       hide_credentials: true
-      cache_tokens_salt: ${{ env "DECK_OIDC_CACHE_TOKENS_SALT" }}
+      cache_tokens_salt: !env OIDC_CACHE_TOKENS_SALT
 ```
 {% endraw -%}
 {:.no-copy-code}
@@ -642,18 +684,18 @@ automatically. Kong caches the JWKS keys to avoid hitting Okta on every request.
 header. Claude Code's `apiKeyHelper` outputs a bare token, and Claude Code sends it as
 `Authorization: Bearer <token>`.
 
-**`audience_required`**. The JWT's `aud` claim must match this value exactly. This prevents
-tokens issued for other Okta applications from being accepted. Set it to the audience you
+**`audience_required`**. The JWT's `aud` claim must match one of these values. This check
+rejects tokens issued for other Okta applications. Set it to the audience you
 configured on the Okta authorization server.
 
 **`consumer_groups_claim: [groups]`** with **`consumer_optional: true`** and
-**`consumer_groups_optional: false`**. The Plugin reads the `groups` array from the validated
-JWT and resolves each value against existing Kong Consumer Group names. A JWT with
-`"groups": ["claude-power-users"]` attaches the request to the `claude-power-users` Consumer
-Group; downstream tier-scoped Plugins fire automatically. `consumer_optional: true` allows
-requests through without a per-user Consumer mapping. `consumer_groups_optional: false` blocks
-any authenticated user whose groups don't match a configured Consumer Group, so an Okta user
-without a tier assignment is rejected at the gateway.
+**`consumer_groups_optional: false`**. The AI Auth Strategy reads the `groups` array from the
+validated JWT and resolves each value against existing AI Consumer Group names. A JWT with
+`"groups": ["claude-power-users"]` attaches the request to the `claude-power-users` AI Consumer
+Group; downstream tier-scoped access control and rate limiting apply automatically.
+`consumer_optional: true` allows requests through without a per-user AI Consumer mapping.
+`consumer_groups_optional: false` blocks any authenticated user whose groups don't match a
+configured AI Consumer Group, so an Okta user without a tier assignment is rejected at the gateway.
 
 **`upstream_headers_claims`** and **`upstream_headers_names`**. Forward the JWT's `sub` and
 `email` claims as `X-Authenticated-User` and `X-User-Email` upstream. Useful for audit logging.
@@ -661,146 +703,193 @@ You can see which user made each request without decoding the JWT.
 
 **`ssl_verify: true`**. Enables TLS certificate verification when Kong connects to Okta's JWKS
 endpoint. In {{site.base_gateway}} 3.14+, this defaults to `true` as part of the Secure by
-Default initiative. Set explicitly here for clarity.
+Default initiative. The recipe sets it explicitly for clarity.
 
 **`hide_credentials: true`**. Strips the `Authorization` header from the request before
-forwarding upstream. Since the AI Proxy Advanced Plugin injects its own provider credentials,
-the Okta JWT is not needed upstream. In {{site.base_gateway}} 3.14+, this defaults to `true`.
-Set explicitly here for clarity.
+forwarding upstream. Since the AI Model Provider injects its own provider credentials, the
+upstream doesn't need the Okta JWT. In {{site.base_gateway}} 3.14+, this defaults to `true`. The
+recipe sets it explicitly for clarity.
 
-**`cache_tokens_salt`**. Salt used when deriving the cache key for token-endpoint responses.
-The Plugin requires this to be set explicitly to a stable value so cached entries survive
-`deck gateway sync`. The value is not a credential and grants no token-forgery capability, but
-treat it as mildly sensitive (it influences cache-key predictability). For production,
-regenerate with `openssl rand -hex 16` and source it from a vault.
+**`cache_tokens_salt`**. Salt used when deriving the cache key for token-endpoint responses. The
+AI Auth Strategy requires an explicit, stable value so cached entries survive
+`kongctl apply`. The value isn't a credential and grants no token-forgery capability, but treat
+it as mildly sensitive (it influences cache-key predictability). For production, regenerate with
+`openssl rand -hex 16` and source it from a vault.
 
-### AI Proxy Advanced: model alias matching and tier enforcement
+The AI Auth Strategy has no `audience_claim` or `bearer_token_param_type` field: `auth_methods:
+[bearer]` alone is enough to select the bearer-token flow, and the AI Auth Strategy checks
+`audience_required` against the standard `aud` claim.
 
-Each tier gets its own AI Proxy Advanced Plugin instance, scoped to one Consumer Group. The
-Plugin uses the `model_alias` field on each target to decide which target serves a request.
-Claude Code sends bare model names like `claude-sonnet-4-6` in the request body; the Plugin
-matches that value against the configured aliases and Routes to the matching target. A standard
-user picking Opus produces a body model of `claude-opus-4-7`, which has no matching target on
-the standard tier proxy, so AI Proxy Advanced returns `400 model not configured`. The block is
-explicit and visible to the user.
+### AI Model and AI Model Provider: alias-based tier routing and credential injection
+
+Each tier is a separate AI Model sharing the `/claude-code-sso` path, distinguished by the alias
+it registers in `config.route.model.values`. The AI Model Provider holds the actual upstream
+credentials and is shared by both Models. An AI Model's `access.auth_strategies` gates
+authentication, requiring a valid Okta JWT; its `access.acls` gates authorization, restricting
+which AI Consumer Groups may reach it. Claude Code sends bare model names like `claude-sonnet-4-6`
+in the request body; Kong matches that value against the Model that registers it, then checks
+whether the caller's mapped AI Consumer Group is on that Model's allow list.
 
 The mapping from alias to actual provider model name is what insulates developers from the
-underlying provider. The platform team controls `model.name` (the real Anthropic or Bedrock
-model ID); developers always speak in stable bare aliases.
+underlying provider. The platform team controls each target's upstream model ID; developers
+always speak in stable bare aliases.
 
 #### Configuration details
 
-The standard tier configures one target. The power tier configures two:
+The Anthropic tab's configuration (every provider tab follows the same shape, and only the
+provider's `type`/`config.auth` and each target's `config` differ):
 
 {%- raw %}
 ```yaml
-plugins:
-  - name: ai-proxy-advanced
-    consumer_group: claude-standard-users
+ai_gateway_model_providers:
+  - ref: claude-code-sso-provider
+    type: anthropic
+    display_name: "claude-code-sso"
     config:
-      llm_format: anthropic
+      auth:
+        type: basic
+        headers:
+          - name: x-api-key
+            value: !secret {source: !env ANTHROPIC_TOKEN}
+
+ai_gateway_models:
+  - ref: claude-code-sso-sonnet
+    type: model
+    display_name: "claude-code-sso (sonnet tier)"
+    formats:
+      - type: anthropic
+    capabilities:
+      - generate
+    access:
+      auth_strategies:
+        - claude-code-sso-auth
+      acls:
+        allow:
+          - claude-standard-users
+          - claude-power-users
+    config:
       max_request_body_size: 10485760
       response_streaming: allow
-      targets:
-        - route_type: llm/v1/chat
-          auth:
-            header_name: x-api-key
-            header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-          logging:
-            log_statistics: true
-            log_payloads: true
-          model:
-            model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-            provider: anthropic
-            name: ${{ env "DECK_CHAT_MODEL_1" }}
-            options:
-              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-  - name: ai-proxy-advanced
-    consumer_group: claude-power-users
+      logging:
+        payloads: true
+      route:
+        paths:
+          - /claude-code-sso
+        model:
+          body_param: model
+          values:
+            - !env SONNET_ALIAS
+    targets:
+      - name: !env CHAT_MODEL_1
+        provider: claude-code-sso-provider
+        config:
+          version: !env ANTHROPIC_VERSION
+          type: anthropic
+  - ref: claude-code-sso-opus
+    type: model
+    display_name: "claude-code-sso (opus tier)"
+    formats:
+      - type: anthropic
+    capabilities:
+      - generate
+    access:
+      auth_strategies:
+        - claude-code-sso-auth
+      acls:
+        allow:
+          - claude-power-users
     config:
-      llm_format: anthropic
       max_request_body_size: 10485760
       response_streaming: allow
-      targets:
-        - route_type: llm/v1/chat
-          auth:
-            header_name: x-api-key
-            header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-          model:
-            model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-            provider: anthropic
-            name: ${{ env "DECK_CHAT_MODEL_1" }}
-            options:
-              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-        - route_type: llm/v1/chat
-          auth:
-            header_name: x-api-key
-            header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-          model:
-            model_alias: ${{ env "DECK_OPUS_ALIAS" }}
-            provider: anthropic
-            name: ${{ env "DECK_CHAT_MODEL_2" }}
-            options:
-              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
+      logging:
+        payloads: true
+      route:
+        paths:
+          - /claude-code-sso
+        model:
+          body_param: model
+          values:
+            - !env OPUS_ALIAS
+    targets:
+      - name: !env CHAT_MODEL_2
+        provider: claude-code-sso-provider
+        config:
+          version: !env ANTHROPIC_VERSION
+          type: anthropic
 ```
 {% endraw -%}
 {: .no-copy-code .collapsible }
 
-**`llm_format: anthropic`**. Claude Code sends requests in Anthropic's native format
-(`/v1/messages` with `messages` array). For Anthropic, requests pass through natively. For AWS
-Bedrock (hosting Claude models), the Plugin translates from Anthropic format to Bedrock's
-InvokeModel API automatically. Claude Code always speaks Anthropic; Kong handles the rest.
+**`formats: [{type: anthropic}]`**. Claude Code sends requests in Anthropic's native format
+(`/v1/messages` with a `messages` array). For Anthropic, requests pass through natively. For AWS
+Bedrock and Azure AI Foundry (both hosting Claude models), Kong forwards the same
+Anthropic-native format to each provider's Claude endpoint. Claude Code always speaks Anthropic;
+Kong handles the rest.
 
 {:.warning}
-> Do not use `llm_format: openai` with Claude Code. Claude Code sends Anthropic-native tool definitions in its requests. The OpenAI format translation path mangles these structures, causing 400 errors from the LLM provider (typically `tools: Input should be a valid list`). Always use `llm_format: anthropic` when proxying Claude Code traffic.
+> Do not use `formats: [{type: openai}]` with Claude Code. Claude Code sends Anthropic-native tool definitions in its requests. The OpenAI format translation path mangles these structures, causing 400 errors from the LLM provider (typically `tools: Input should be a valid list`). Always use `formats: [{type: anthropic}]` when proxying Claude Code traffic.
 
-**`consumer_group: claude-standard-users`** (and `claude-power-users`). Scopes each Plugin
-instance to one Consumer Group. The OpenID Connect Plugin attaches the request to a Consumer
-Group based on the JWT's `groups` claim, and the matching tier-scoped Plugin instance fires.
+**`access.auth_strategies`**. References the OpenID Connect AI Auth Strategy. Every request to
+either Model must carry a valid Okta JWT.
 
-**`auth`**. Kong holds the provider API key and injects it on every upstream request. The
-developer's Okta JWT is used only for authentication at the Kong layer. It never reaches the
-LLM provider. Credential values come from environment variables via decK's
-{%raw%}`${{ env "..." }}`{%endraw%} syntax, resolved at apply time.
+**`access.acls.allow`**. The tier gate. Lists the AI Consumer Group names permitted to call this
+Model. The sonnet Model allows both tiers; the opus Model allows only `claude-power-users`.
+Kong evaluates access control lists using its established behavior for this access-control
+primitive: a caller whose mapped AI Consumer Group isn't in `allow` gets `403 Forbidden`. That
+specific status code follows Kong's long-standing access-control-list convention rather than
+a live confirmation against this exact entity, so treat it as a strong expectation, not a
+guarantee, until you've verified it against your own gateway.
 
-**`route_type: llm/v1/chat`**. Selects the chat-completions translation path. See the
-[AI Proxy Advanced reference](/plugins/ai-proxy-advanced/reference/) for the full list of
-supported Route types.
+**`route.model`**. The alias this Model answers to, via `body_param: model` and a single value
+in `values`. When the request body's `model` field equals this value, Kong routes to this
+Model. An AI Model accepts exactly one alias, so the second tier needs a second Model entity,
+as this recipe does for the sonnet and opus tiers.
 
-**`model.model_alias`**. The bare name Claude Code sends in the request body. The Plugin matches
-this string against the body's `model` field and picks the corresponding target. With one
-alias per target on the standard tier, only requests for `claude-sonnet-4-6` resolve.
-
-**`model.name`**. The actual provider model ID Kong sends upstream. For Anthropic, this is the
-same bare name (`claude-sonnet-4-6`); for Bedrock, it's the long form
+**`targets[].name`**. The actual provider model ID Kong sends upstream. For Anthropic, this is
+the same bare name (`claude-sonnet-4-6`); for Bedrock, it's the long form
 (`anthropic.claude-sonnet-4-6-20250514-v1:0`). When the platform team upgrades the underlying
-model, they change `DECK_CHAT_MODEL_1` or `DECK_CHAT_MODEL_2` and re-apply. Developers do not
+model, they change `CHAT_MODEL_1` or `CHAT_MODEL_2` and re-apply. Developers don't
 need to update anything on their side.
 
-**`logging.log_statistics`, `logging.log_payloads`**. Emit token-usage data and request/response bodies to any attached logging Plugin (for example, [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/)) for per-user cost attribution and audit; Konnect Analytics captures token usage independently of these fields.
+**`targets[].config`**. Provider-specific target fields, for example Bedrock's `region` or
+Azure AI Foundry's `foundry_path_prefix`, alongside the `type` discriminator matching the
+AI Model Provider.
+
+**`logging.payloads: true`**. Emits request and response bodies for audit purposes. {{site.konnect_short_name}}
+{{site.observability}} captures token usage and cost independently of this field.
 
 **`max_request_body_size: 10485760`**. Sets the maximum allowed request body to 10 MB. Claude
 Code conversations accumulate large context windows (100 KB or more of conversation history,
 tool results, and file contents). The default body size limit rejects these requests.
 
-**`response_streaming: allow`**. Permits the Plugin to pass Server-Sent Events streaming
+**`response_streaming: allow`**. Permits the Model to pass Server-Sent Events streaming
 responses from the provider back to Claude Code. Claude Code uses streaming for interactive
-terminal output. Without this setting, streaming responses can be buffered or rejected.
+terminal output. Without this setting, Kong can buffer or reject streaming responses.
 
-### AI Rate Limiting Advanced: per-tier token limits
+### AI Rate Limiting Advanced: per-tier token limits via AI Consumer Groups
 
-Each tier gets its own AI Rate Limiting Advanced instance with its own token budget. Unlike
-request-count rate limiting, this Plugin counts tokens (prompt + completion), which is the
-correct unit for LLM cost control. Standard users get a smaller token budget per window;
-power users get a larger one. When a tier exhausts its budget, Kong returns
-`429 Too Many Requests` until the window resets.
+Each tier's AI Consumer Group carries its own AI Rate Limiting Advanced Policy, attached through
+the AI Consumer Group's own `policies` list rather than a field on the policy itself. Unlike
+request-count rate limiting, this policy counts tokens (prompt + completion), which is the
+correct unit for LLM cost control. Standard users get a smaller token budget per window; power
+users get a larger one. When a tier exhausts its budget, Kong returns `429 Too Many Requests`
+until the window resets.
 
 #### Configuration details
 
+{%- raw %}
 ```yaml
-plugins:
-  - name: ai-rate-limiting-advanced
-    consumer_group: claude-standard-users
+ai_gateway_consumer_groups:
+  - ref: claude-standard-users
+    name: claude-standard-users
+    display_name: "Claude Code standard tier"
+    policies:
+      - claude-code-sso-standard-ratelimit
+
+ai_gateway_policies:
+  - ref: claude-code-sso-standard-ratelimit
+    type: ai-rate-limiting-advanced
+    display_name: "claude-code-sso standard tier rate limit"
     config:
       policies:
         - limits:
@@ -810,33 +899,35 @@ plugins:
       identifier: consumer-group
       tokens_count_strategy: total_tokens
       strategy: local
-      llm_format: anthropic
 ```
+{% endraw -%}
 {:.no-copy-code}
 
-**`policies`**. An array of rate-limiting policies. Each policy contains a `limits` array of
-limit/window pairs and an optional `match` array for targeting providers, models, or other
-dimensions. A policy without `match` conditions acts as a fallback that applies to all requests,
-which is what this recipe uses since each Plugin instance is already Consumer-Group-scoped.
-Standard users get 20,000 total tokens per 60-second window; power users get 100,000.
+**`ai_gateway_consumer_groups[].policies`**. Attaches a policy so it applies to every request
+Kong maps to that AI Consumer Group: the group points at the policies that govern it, rather than
+a field on the policy pointing back at a group. Adding a second tier means creating another
+AI Consumer Group with its own `policies` list, not editing an existing policy's config.
+
+**`config.policies`**. An array of rate-limiting policies. Each entry contains a `limits` array
+of limit and window-size pairs, and an optional `match` array for further targeting by provider,
+model, or other dimensions within a single policy. This recipe doesn't need `match` conditions
+because each AI Consumer Group already has its own dedicated policy. Standard users get 20,000
+total tokens per 60-second window; power users get 100,000.
 
 **`window_type: sliding`**. Uses a sliding-window algorithm for smoother rate limiting compared
-to fixed windows. The `fixed` alternative uses strict time windows and resets all counters at
-the boundary.
+to fixed windows. The `fixed` and `calendar` alternatives use strict boundaries and reset all
+counters at each window edge.
 
 **`tokens_count_strategy: total_tokens`**. Counts both prompt (input) and completion (output)
 tokens against the limit. Alternatives are `prompt_tokens`, `completion_tokens`, or `cost`.
 
-**`identifier: consumer-group`**. Tracks token usage per Kong Consumer Group. Required when
-the Plugin instance is scoped to a Consumer Group, because a user can belong to multiple groups
-and the Plugin needs to know which group's counter to increment.
+**`identifier: consumer-group`**. Tracks token usage per AI Consumer Group rather than per
+individual AI Consumer, so the budget is a shared team quota. You need this identifier because a user can
+belong to multiple groups and the policy needs to know which group's counter to increment.
 
 **`strategy: local`**. Uses in-memory counters on each Kong node. Fine for single-node or
 development deployments. For multi-node production clusters, switch to `strategy: redis` with
 a shared Redis instance so counters stay consistent across nodes.
-
-**`llm_format: anthropic`**. Must match the `llm_format` on the AI Proxy Advanced Plugin so
-the rate limiting Plugin can correctly parse token counts from the response.
 
 Kong returns token rate-limit headers with every response:
 
@@ -855,25 +946,25 @@ rows:
     description: "Seconds until the window resets."
 {% endtable %}
 
-When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After`
-header.
+When an AI Consumer Group exceeds its token limit, Kong returns `429 Too Many Requests` with a
+`Retry-After` header.
 
 {:.info}
-> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
+> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [AI Vaults](/ai-gateway/entities/ai-vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
 
 ## Apply the Kong configuration
 
-This section configures the Control Plane in two parts. First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it. The recipe's `select_tags` and the `claude-code-sso-recipe` namespace scope every resource so teardown removes only this recipe's configuration.
+This section configures the {{site.ai_gateway}} in two parts. First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply commands can manage it. The recipe's `claude-code-sso-recipe` namespace scopes every resource so teardown removes only this recipe's configuration.
 
 ```bash
-kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
+kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
+Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
 
-The provider tabs below create a Service and Route at `/claude-code-sso`, two Consumer Groups (`claude-standard-users` and `claude-power-users`), an [OpenID Connect](/plugins/openid-connect/) Plugin for Okta JWT validation, Consumer-Group-scoped [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugins for tier-based model alias routing, and Consumer-Group-scoped [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugins for per-tier token limits. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
+The provider tabs below create an AI Model Provider holding your chosen provider's credentials, an OpenID Connect AI Auth Strategy for Okta JWT validation, two AI Consumer Groups (`claude-standard-users` and `claude-power-users`) each carrying their own [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy, and two AI Models (sonnet and opus tiers) that gate access by AI Consumer Group ACL. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
 
 Select your provider below, export the required environment variables, and apply.
 
@@ -883,131 +974,68 @@ Select your provider below, export the required environment variables, and apply
 Export your environment variables:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-6'   # standard tier alias
-export DECK_OPUS_ALIAS='claude-opus-4-7'       # power tier alias
-export DECK_CHAT_MODEL_1='claude-sonnet-4-6'   # actual upstream model behind the sonnet alias
-export DECK_CHAT_MODEL_2='claude-opus-4-7'     # actual upstream model behind the opus alias
+export SONNET_ALIAS='claude-sonnet-4-6'   # standard tier alias
+export OPUS_ALIAS='claude-opus-4-7'       # power tier alias
+export CHAT_MODEL_1='claude-sonnet-4-6'   # actual upstream model behind the sonnet alias
+export CHAT_MODEL_2='claude-opus-4-7'     # actual upstream model behind the opus alias
 ```
 
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, `DECK_ANTHROPIC_TOKEN`, and `DECK_ANTHROPIC_VERSION` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, `ANTHROPIC_TOKEN`, and `ANTHROPIC_VERSION` are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - claude-code-sso-recipe
-consumer_groups:
-- name: claude-standard-users
-- name: claude-power-users
-services:
-- name: claude-code-sso
-  url: http://localhost
-  routes:
-  - name: claude-code-sso
-    paths:
-    - /claude-code-sso
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: openid-connect
-    instance_name: claude-code-sso-oidc
-    config:
-      issuer: ${{ env "DECK_OKTA_ISSUER" }}
-      auth_methods:
-      - bearer
-      bearer_token_param_type:
-      - header
-      audience_claim:
-      - aud
-      audience_required:
-      - ${{ env "DECK_OKTA_AUDIENCE" }}
-      consumer_groups_claim:
-      - groups
-      consumer_optional: true
-      consumer_groups_optional: false
-      upstream_headers_claims:
-      - sub
-      - email
-      upstream_headers_names:
-      - X-Authenticated-User
-      - X-User-Email
-      ssl_verify: true
-      hide_credentials: true
-      cache_tokens_salt: ${{ env "DECK_OIDC_CACHE_TOKENS_SALT" }}
-plugins:
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-standard-proxy
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+_defaults:
+  kongctl:
+    namespace: claude-code-sso-recipe
+ai_gateway_model_providers:
+- ref: claude-code-sso-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-provider
+  display_name: claude-code-sso
+  type: anthropic
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: x-api-key
-        header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: anthropic
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-power-proxy
-  service: claude-code-sso
-  consumer_group: claude-power-users
+    auth:
+      type: basic
+      headers:
+      - name: x-api-key
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: claude-code-sso-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-auth
+  display_name: claude-code-sso Okta OIDC
+  type: openid-connect
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: x-api-key
-        header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: anthropic
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-    - route_type: llm/v1/chat
-      auth:
-        header_name: x-api-key
-        header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_OPUS_ALIAS" }}
-        provider: anthropic
-        name: ${{ env "DECK_CHAT_MODEL_2" }}
-        options:
-          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-standard-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+    issuer: !env 'OKTA_ISSUER'
+    auth_methods:
+    - bearer
+    audience_required:
+    - !env 'OKTA_AUDIENCE'
+    consumer_groups_claim:
+    - groups
+    consumer_optional: true
+    consumer_groups_optional: false
+    upstream_headers_claims:
+    - sub
+    - email
+    upstream_headers_names:
+    - X-Authenticated-User
+    - X-User-Email
+    ssl_verify: true
+    hide_credentials: true
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
+ai_gateway_policies:
+- ref: claude-code-sso-standard-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-standard-ratelimit
+  display_name: claude-code-sso standard tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1017,11 +1045,11 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-power-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-power-users
+- ref: claude-code-sso-power-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-power-ratelimit
+  display_name: claude-code-sso power tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1031,24 +1059,107 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
+ai_gateway_consumer_groups:
+- ref: claude-standard-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-standard-users
+  display_name: Claude Code standard tier
+  policies:
+  - claude-code-sso-standard-ratelimit
+- ref: claude-power-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-power-users
+  display_name: Claude Code power tier
+  policies:
+  - claude-code-sso-power-ratelimit
+ai_gateway_models:
+- ref: claude-code-sso-sonnet
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-sonnet
+  display_name: claude-code-sso (sonnet tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-standard-users
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'SONNET_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: claude-code-sso-provider
+    config:
+      version: !env 'ANTHROPIC_VERSION'
+      type: anthropic
+- ref: claude-code-sso-opus
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-opus
+  display_name: claude-code-sso (opus tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'OPUS_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: claude-code-sso-provider
+    config:
+      version: !env 'ANTHROPIC_VERSION'
+      type: anthropic
 EOF
 {% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: claude-code-sso-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1058,134 +1169,67 @@ rm -f kong-recipe.yaml
 Export your environment variables. The defaults below pin to Sonnet 4.5 and Opus 4.6, the canonical stable versions on Bedrock. If your account has different versions enabled, update the aliases and the upstream model IDs to match:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-5'                          # standard tier alias
-export DECK_OPUS_ALIAS='claude-opus-4-6'                              # power tier alias
-export DECK_CHAT_MODEL_1='global.anthropic.claude-sonnet-4-5-20250929-v1:0'  # actual upstream model behind the sonnet alias
-export DECK_CHAT_MODEL_2='global.anthropic.claude-opus-4-6-20250930-v1:0'    # actual upstream model behind the opus alias
+export SONNET_ALIAS='claude-sonnet-4-5'                                # standard tier alias
+export OPUS_ALIAS='claude-opus-4-6'                                    # power tier alias
+export CHAT_MODEL_1='global.anthropic.claude-sonnet-4-5-20250929-v1:0' # actual upstream model behind the sonnet alias
+export CHAT_MODEL_2='global.anthropic.claude-opus-4-6-20250930-v1:0'   # actual upstream model behind the opus alias
 ```
 
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and the `DECK_AWS_*` credentials are already exported during the Prerequisites, so they do not need to be re-exported per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `AWS_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - claude-code-sso-recipe
-consumer_groups:
-- name: claude-standard-users
-- name: claude-power-users
-services:
-- name: claude-code-sso
-  url: http://localhost
-  routes:
-  - name: claude-code-sso
-    paths:
-    - /claude-code-sso
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: openid-connect
-    instance_name: claude-code-sso-oidc
-    config:
-      issuer: ${{ env "DECK_OKTA_ISSUER" }}
-      auth_methods:
-      - bearer
-      bearer_token_param_type:
-      - header
-      audience_claim:
-      - aud
-      audience_required:
-      - ${{ env "DECK_OKTA_AUDIENCE" }}
-      consumer_groups_claim:
-      - groups
-      consumer_optional: true
-      consumer_groups_optional: false
-      upstream_headers_claims:
-      - sub
-      - email
-      upstream_headers_names:
-      - X-Authenticated-User
-      - X-User-Email
-      ssl_verify: true
-      hide_credentials: true
-      cache_tokens_salt: ${{ env "DECK_OIDC_CACHE_TOKENS_SALT" }}
-plugins:
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-standard-proxy
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+_defaults:
+  kongctl:
+    namespace: claude-code-sso-recipe
+ai_gateway_model_providers:
+- ref: claude-code-sso-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-provider
+  display_name: claude-code-sso
+  type: bedrock
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-        aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: bedrock
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          bedrock:
-            aws_region: ${{ env "DECK_AWS_REGION" }}
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-power-proxy
-  service: claude-code-sso
-  consumer_group: claude-power-users
+    auth:
+      type: aws
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
+ai_gateway_auth_strategies:
+- ref: claude-code-sso-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-auth
+  display_name: claude-code-sso Okta OIDC
+  type: openid-connect
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-        aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: bedrock
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          bedrock:
-            aws_region: ${{ env "DECK_AWS_REGION" }}
-    - route_type: llm/v1/chat
-      auth:
-        aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-        aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_OPUS_ALIAS" }}
-        provider: bedrock
-        name: ${{ env "DECK_CHAT_MODEL_2" }}
-        options:
-          bedrock:
-            aws_region: ${{ env "DECK_AWS_REGION" }}
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-standard-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+    issuer: !env 'OKTA_ISSUER'
+    auth_methods:
+    - bearer
+    audience_required:
+    - !env 'OKTA_AUDIENCE'
+    consumer_groups_claim:
+    - groups
+    consumer_optional: true
+    consumer_groups_optional: false
+    upstream_headers_claims:
+    - sub
+    - email
+    upstream_headers_names:
+    - X-Authenticated-User
+    - X-User-Email
+    ssl_verify: true
+    hide_credentials: true
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
+ai_gateway_policies:
+- ref: claude-code-sso-standard-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-standard-ratelimit
+  display_name: claude-code-sso standard tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1195,11 +1239,11 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-power-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-power-users
+- ref: claude-code-sso-power-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-power-ratelimit
+  display_name: claude-code-sso power tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1209,24 +1253,107 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
+ai_gateway_consumer_groups:
+- ref: claude-standard-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-standard-users
+  display_name: Claude Code standard tier
+  policies:
+  - claude-code-sso-standard-ratelimit
+- ref: claude-power-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-power-users
+  display_name: Claude Code power tier
+  policies:
+  - claude-code-sso-power-ratelimit
+ai_gateway_models:
+- ref: claude-code-sso-sonnet
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-sonnet
+  display_name: claude-code-sso (sonnet tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-standard-users
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'SONNET_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: claude-code-sso-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
+- ref: claude-code-sso-opus
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-opus
+  display_name: claude-code-sso (opus tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'OPUS_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: claude-code-sso-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
 EOF
 {% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: claude-code-sso-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1236,137 +1363,71 @@ rm -f kong-recipe.yaml
 Export your environment variables. The defaults below pin to Sonnet 4.5 and Opus 4.5, the canonical stable Claude versions in Foundry's Model catalog. The alias values are also the Foundry deployment names you configured in the **AI Credentials** prereq:
 
 ```bash
-export DECK_SONNET_ALIAS='claude-sonnet-4-5'   # standard tier alias and Foundry deployment name
-export DECK_OPUS_ALIAS='claude-opus-4-5'       # power tier alias and Foundry deployment name
-export DECK_CHAT_MODEL_1='claude-sonnet-4-5'   # body model name forwarded to Foundry
-export DECK_CHAT_MODEL_2='claude-opus-4-5'     # body model name forwarded to Foundry
+export SONNET_ALIAS='claude-sonnet-4-5'   # standard tier alias and Foundry deployment name
+export OPUS_ALIAS='claude-opus-4-5'       # power tier alias and Foundry deployment name
+export CHAT_MODEL_1='claude-sonnet-4-5'   # body model name forwarded to Foundry
+export CHAT_MODEL_2='claude-opus-4-5'     # body model name forwarded to Foundry
 ```
 
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and the `DECK_AZURE_FOUNDRY_*` credentials are already exported during the Prerequisites, so they do not need to be re-exported per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `AZURE_FOUNDRY_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
 
 Apply the Kong configuration:
 
 ```bash
 {%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - claude-code-sso-recipe
-consumer_groups:
-- name: claude-standard-users
-- name: claude-power-users
-services:
-- name: claude-code-sso
-  url: http://localhost
-  routes:
-  - name: claude-code-sso
-    paths:
-    - /claude-code-sso
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: openid-connect
-    instance_name: claude-code-sso-oidc
-    config:
-      issuer: ${{ env "DECK_OKTA_ISSUER" }}
-      auth_methods:
-      - bearer
-      bearer_token_param_type:
-      - header
-      audience_claim:
-      - aud
-      audience_required:
-      - ${{ env "DECK_OKTA_AUDIENCE" }}
-      consumer_groups_claim:
-      - groups
-      consumer_optional: true
-      consumer_groups_optional: false
-      upstream_headers_claims:
-      - sub
-      - email
-      upstream_headers_names:
-      - X-Authenticated-User
-      - X-User-Email
-      ssl_verify: true
-      hide_credentials: true
-      cache_tokens_salt: ${{ env "DECK_OIDC_CACHE_TOKENS_SALT" }}
-plugins:
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-standard-proxy
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+_defaults:
+  kongctl:
+    namespace: claude-code-sso-recipe
+ai_gateway_model_providers:
+- ref: claude-code-sso-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-provider
+  display_name: claude-code-sso
+  type: azure
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${{ env "DECK_AZURE_FOUNDRY_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: azure
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          azure_instance: ${{ env "DECK_AZURE_FOUNDRY_INSTANCE" }}
-          azure_deployment_id: ${{ env "DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1" }}
-          upstream_url: ${{ env "DECK_AZURE_FOUNDRY_UPSTREAM_URL" }}
-- name: ai-proxy-advanced
-  instance_name: claude-code-sso-power-proxy
-  service: claude-code-sso
-  consumer_group: claude-power-users
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'AZURE_FOUNDRY_TOKEN'}
+    service: azure-foundry
+    foundry:
+      resource: !env 'AZURE_FOUNDRY_INSTANCE'
+ai_gateway_auth_strategies:
+- ref: claude-code-sso-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-auth
+  display_name: claude-code-sso Okta OIDC
+  type: openid-connect
   config:
-    llm_format: anthropic
-    max_request_body_size: 10485760
-    response_streaming: allow
-    targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${{ env "DECK_AZURE_FOUNDRY_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_SONNET_ALIAS" }}
-        provider: azure
-        name: ${{ env "DECK_CHAT_MODEL_1" }}
-        options:
-          azure_instance: ${{ env "DECK_AZURE_FOUNDRY_INSTANCE" }}
-          azure_deployment_id: ${{ env "DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_1" }}
-          upstream_url: ${{ env "DECK_AZURE_FOUNDRY_UPSTREAM_URL" }}
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${{ env "DECK_AZURE_FOUNDRY_TOKEN" }}
-      logging:
-        log_statistics: true
-        log_payloads: true
-      model:
-        model_alias: ${{ env "DECK_OPUS_ALIAS" }}
-        provider: azure
-        name: ${{ env "DECK_CHAT_MODEL_2" }}
-        options:
-          azure_instance: ${{ env "DECK_AZURE_FOUNDRY_INSTANCE" }}
-          azure_deployment_id: ${{ env "DECK_AZURE_FOUNDRY_DEPLOYMENT_ID_2" }}
-          upstream_url: ${{ env "DECK_AZURE_FOUNDRY_UPSTREAM_URL" }}
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-standard-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-standard-users
+    issuer: !env 'OKTA_ISSUER'
+    auth_methods:
+    - bearer
+    audience_required:
+    - !env 'OKTA_AUDIENCE'
+    consumer_groups_claim:
+    - groups
+    consumer_optional: true
+    consumer_groups_optional: false
+    upstream_headers_claims:
+    - sub
+    - email
+    upstream_headers_names:
+    - X-Authenticated-User
+    - X-User-Email
+    ssl_verify: true
+    hide_credentials: true
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
+ai_gateway_policies:
+- ref: claude-code-sso-standard-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-standard-ratelimit
+  display_name: claude-code-sso standard tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1376,11 +1437,11 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
-- name: ai-rate-limiting-advanced
-  instance_name: claude-code-sso-power-ratelimit
-  service: claude-code-sso
-  consumer_group: claude-power-users
+- ref: claude-code-sso-power-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-power-ratelimit
+  display_name: claude-code-sso power tier rate limit
+  type: ai-rate-limiting-advanced
   config:
     policies:
     - limits:
@@ -1390,24 +1451,307 @@ plugins:
     identifier: consumer-group
     tokens_count_strategy: total_tokens
     strategy: local
-    llm_format: anthropic
+ai_gateway_consumer_groups:
+- ref: claude-standard-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-standard-users
+  display_name: Claude Code standard tier
+  policies:
+  - claude-code-sso-standard-ratelimit
+- ref: claude-power-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-power-users
+  display_name: Claude Code power tier
+  policies:
+  - claude-code-sso-power-ratelimit
+ai_gateway_models:
+- ref: claude-code-sso-sonnet
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-sonnet
+  display_name: claude-code-sso (sonnet tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-standard-users
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'SONNET_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: claude-code-sso-provider
+    config:
+      foundry_path_prefix: /anthropic/v1
+      type: azure
+- ref: claude-code-sso-opus
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-opus
+  display_name: claude-code-sso (opus tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'OPUS_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: claude-code-sso-provider
+    config:
+      foundry_path_prefix: /anthropic/v1
+      type: azure
 EOF
 {% endraw -%}
 
-echo "
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" .collapsible }
+
+{% endnavtab %}
+{% navtab "Google Vertex AI" %}
+
+Export your environment variables. Vertex requires Claude model names to carry the `@<date>` suffix matching the model variant; the bare alias is what Claude Code sends, and Kong rewrites it to the dated upstream name:
+
+```bash
+export SONNET_ALIAS='claude-sonnet-4-5'          # standard tier alias (what Claude Code sends)
+export OPUS_ALIAS='claude-opus-4-5'              # power tier alias
+export CHAT_MODEL_1='claude-sonnet-4-5@20250929' # actual Vertex model name behind the sonnet alias
+export CHAT_MODEL_2='claude-opus-4-5@20250929'   # actual Vertex model name behind the opus alias
+```
+
+{:.warning}
+> The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
+
+`KONNECT_CONTROL_PLANE_NAME`, `AI_GATEWAY_ID`, `OKTA_ISSUER`, `OKTA_AUDIENCE`, `OIDC_CACHE_TOKENS_SALT`, and the `VERTEX_*` credentials are already exported from the prerequisites, so you don't need to re-export them per tab.
+
+Apply the Kong configuration:
+
+```bash
+{%- raw %}
+cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
     namespace: claude-code-sso-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: claude-code-sso-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-provider
+  display_name: claude-code-sso
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      use_gcp_service_account: true
+      service_account_json: !secret {source: !env 'VERTEX_SERVICE_ACCOUNT_JSON'}
+ai_gateway_auth_strategies:
+- ref: claude-code-sso-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-auth
+  display_name: claude-code-sso Okta OIDC
+  type: openid-connect
+  config:
+    issuer: !env 'OKTA_ISSUER'
+    auth_methods:
+    - bearer
+    audience_required:
+    - !env 'OKTA_AUDIENCE'
+    consumer_groups_claim:
+    - groups
+    consumer_optional: true
+    consumer_groups_optional: false
+    upstream_headers_claims:
+    - sub
+    - email
+    upstream_headers_names:
+    - X-Authenticated-User
+    - X-User-Email
+    ssl_verify: true
+    hide_credentials: true
+    cache_tokens_salt: !env 'OIDC_CACHE_TOKENS_SALT'
+ai_gateway_policies:
+- ref: claude-code-sso-standard-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-standard-ratelimit
+  display_name: claude-code-sso standard tier rate limit
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - limits:
+      - limit: 20000
+        window_size: 60
+      window_type: sliding
+    identifier: consumer-group
+    tokens_count_strategy: total_tokens
+    strategy: local
+- ref: claude-code-sso-power-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-power-ratelimit
+  display_name: claude-code-sso power tier rate limit
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - limits:
+      - limit: 100000
+        window_size: 60
+      window_type: sliding
+    identifier: consumer-group
+    tokens_count_strategy: total_tokens
+    strategy: local
+ai_gateway_consumer_groups:
+- ref: claude-standard-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-standard-users
+  display_name: Claude Code standard tier
+  policies:
+  - claude-code-sso-standard-ratelimit
+- ref: claude-power-users
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-power-users
+  display_name: Claude Code power tier
+  policies:
+  - claude-code-sso-power-ratelimit
+ai_gateway_models:
+- ref: claude-code-sso-sonnet
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-sonnet
+  display_name: claude-code-sso (sonnet tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-standard-users
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'SONNET_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_1'
+    provider: claude-code-sso-provider
+    config:
+      gcp_environment:
+        api_endpoint: !env 'VERTEX_API_ENDPOINT'
+        project_id: !env 'VERTEX_PROJECT_ID'
+        location_id: !env 'VERTEX_LOCATION_ID'
+      type: gemini
+- ref: claude-code-sso-opus
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: claude-code-sso-opus
+  display_name: claude-code-sso (opus tier)
+  type: model
+  formats:
+  - type: anthropic
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - claude-code-sso-auth
+    acls:
+      allow:
+      - claude-power-users
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /claude-code-sso
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'OPUS_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL_2'
+    provider: claude-code-sso-provider
+    config:
+      gcp_environment:
+        api_endpoint: !env 'VERTEX_API_ENDPOINT'
+        project_id: !env 'VERTEX_PROJECT_ID'
+        location_id: !env 'VERTEX_LOCATION_ID'
+      type: gemini
+EOF
+{% endraw -%}
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1416,24 +1760,26 @@ rm -f kong-recipe.yaml
 
 ### Create the Claude Code Usage dashboard
 
-Create a custom dashboard at the org level, pre-filtered to this recipe's Gateway Service. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (Consumer) usage, and latency for traffic through the `claude-code-sso` Service. The dashboard JSON is in the code block below; if a labelled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
+Create a custom dashboard at the org level. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (AI Consumer) usage, and latency for Claude Code traffic. The dashboard JSON is in the code block below; if a labeled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
 
 ```bash
-# Look up the Control Plane and Service IDs so the dashboard's gateway_service
-# preset filter resolves to the scoped UUID Konnect expects.
-CP_ID=$(kongctl get gateway control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
-  --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-SERVICE_ID=$(kongctl get gateway control-plane service claude-code-sso \
-  --control-plane-name "${KONNECT_CONTROL_PLANE_NAME}" \
-  --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-
 EXISTING_DASHBOARDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=claude-code-sso-recipe" \
   --pat "${KONNECT_TOKEN}" -o json --jq '.data | length')
 
 if [ "${EXISTING_DASHBOARDS}" -gt 0 ]; then
   echo "Claude Code Usage dashboard already exists. Reusing."
 else
-  cat <<'EOF' | jq --arg ref "${CP_ID}:${SERVICE_ID}" '.definition.preset_filters[0].value = [$ref]' > claude-code-usage-dashboard.json
+  DASHBOARD_ID=$(kongctl api post /v2/dashboards \
+    -f claude-code-usage-dashboard.json \
+    --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
+  echo "Created Claude Code Usage dashboard (id: ${DASHBOARD_ID}). Open it in Konnect at Observability → Custom dashboards → 'Claude Code Usage'."
+fi
+```
+{: data-test-step="block" .collapsible }
+
+Add `claude-code-usage-dashboard.json` alongside the import command before you run it:
+
+```json
 {
   "name": "Claude Code Usage",
   "definition": {
@@ -1441,38 +1787,15 @@ else
       {
         "id": "e3f9588a-71fd-4996-818f-33c93afe6eae",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 1
-          },
-          "position": {
-            "col": 0,
-            "row": 0
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 1 }, "position": { "col": 0, "row": 0 } },
         "definition": {
-          "chart": {
-            "type": "single_value",
-            "chart_title": "Total cost ($)"
-          },
+          "chart": { "type": "single_value", "chart_title": "Total cost ($)" },
           "query": {
             "filters": [
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "cost"
-            ],
+            "metrics": ["cost"],
             "datasource": "llm_usage",
             "dimensions": []
           }
@@ -1481,38 +1804,15 @@ else
       {
         "id": "9edab295-d705-403f-a612-59847420a195",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 1
-          },
-          "position": {
-            "col": 2,
-            "row": 0
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 1 }, "position": { "col": 2, "row": 0 } },
         "definition": {
-          "chart": {
-            "type": "single_value",
-            "chart_title": "Total Tokens"
-          },
+          "chart": { "type": "single_value", "chart_title": "Total Tokens" },
           "query": {
             "filters": [
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "total_tokens"
-            ],
+            "metrics": ["total_tokens"],
             "datasource": "llm_usage",
             "dimensions": []
           }
@@ -1521,38 +1821,15 @@ else
       {
         "id": "e5cc504e-c505-4f0b-8633-638a0e7b5833",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 1
-          },
-          "position": {
-            "col": 4,
-            "row": 0
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 1 }, "position": { "col": 4, "row": 0 } },
         "definition": {
-          "chart": {
-            "type": "single_value",
-            "chart_title": "Total Claude Code requests"
-          },
+          "chart": { "type": "single_value", "chart_title": "Total Claude Code requests" },
           "query": {
             "filters": [
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "ai_request_count"
-            ],
+            "metrics": ["ai_request_count"],
             "datasource": "llm_usage",
             "dimensions": []
           }
@@ -1561,418 +1838,174 @@ else
       {
         "id": "4ab1fb73-d60b-4f77-b915-a0c88d427263",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 3,
-            "rows": 2
-          },
-          "position": {
-            "col": 0,
-            "row": 1
-          }
-        },
+        "layout": { "size": { "cols": 3, "rows": 2 }, "position": { "col": 0, "row": 1 } },
         "definition": {
-          "chart": {
-            "type": "top_n",
-            "chart_title": "Top Claude Models by Usage"
-          },
+          "chart": { "type": "top_n", "chart_title": "Top Claude Models by Usage" },
           "query": {
             "limit": 10,
             "filters": [],
-            "metrics": [
-              "total_tokens",
-              "ai_request_count"
-            ],
+            "metrics": ["total_tokens", "ai_request_count"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model"
-            ]
+            "dimensions": ["ai_request_model"]
           }
         }
       },
       {
         "id": "e6c5fbe0-9dd2-46ac-af1c-3ba3af9ffd43",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 3,
-            "rows": 2
-          },
-          "position": {
-            "col": 3,
-            "row": 1
-          }
-        },
+        "layout": { "size": { "cols": 3, "rows": 2 }, "position": { "col": 3, "row": 1 } },
         "definition": {
-          "chart": {
-            "type": "timeseries_line",
-            "stacked": false,
-            "chart_title": "Model usage trend (top 5)"
-          },
+          "chart": { "type": "timeseries_line", "stacked": false, "chart_title": "Model usage trend (top 5)" },
           "query": {
             "limit": 5,
             "filters": [
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "total_tokens"
-            ],
+            "metrics": ["total_tokens"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model",
-              "time"
-            ]
+            "dimensions": ["ai_request_model", "time"]
           }
         }
       },
       {
         "id": "fd14bf28-0cd2-409e-9a48-2cbbd7907409",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 2
-          },
-          "position": {
-            "col": 0,
-            "row": 3
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 2 }, "position": { "col": 0, "row": 3 } },
         "definition": {
-          "chart": {
-            "type": "donut",
-            "chart_title": "Claude health check"
-          },
+          "chart": { "type": "donut", "chart_title": "Claude health check" },
           "query": {
             "filters": [
-              {
-                "field": "gateway_service",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "gateway_service", "operator": "not_empty" },
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "ai_request_count"
-            ],
+            "metrics": ["ai_request_count"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "status_code_grouped"
-            ]
+            "dimensions": ["status_code_grouped"]
           }
         }
       },
       {
         "id": "f26edaa8-56d5-49f8-8f04-ade9451c76ec",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 2
-          },
-          "position": {
-            "col": 2,
-            "row": 3
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 2 }, "position": { "col": 2, "row": 3 } },
         "definition": {
-          "chart": {
-            "type": "donut",
-            "chart_title": "Claude provider usage"
-          },
+          "chart": { "type": "donut", "chart_title": "Claude provider usage" },
           "query": {
             "filters": [
-              {
-                "field": "gateway_service",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "gateway_service", "operator": "not_empty" },
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "ai_request_count"
-            ],
+            "metrics": ["ai_request_count"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_provider"
-            ]
+            "dimensions": ["ai_provider"]
           }
         }
       },
       {
         "id": "d27037a3-7ace-49cc-affb-3b34a71ab9b1",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 2
-          },
-          "position": {
-            "col": 4,
-            "row": 3
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 2 }, "position": { "col": 4, "row": 3 } },
         "definition": {
-          "chart": {
-            "type": "timeseries_bar",
-            "stacked": true,
-            "chart_title": "LLM latency (avg)"
-          },
+          "chart": { "type": "timeseries_bar", "stacked": true, "chart_title": "LLM latency (avg)" },
           "query": {
             "filters": [
-              {
-                "field": "ai_request_model",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_request_model",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_request_model", "operator": "not_empty" },
+              { "field": "ai_request_model", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "llm_latency_average"
-            ],
+            "metrics": ["llm_latency_average"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model",
-              "time"
-            ]
+            "dimensions": ["ai_request_model", "time"]
           }
         }
       },
       {
         "id": "5f88c24b-80de-4fe1-8948-ef0bde29f948",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 3,
-            "rows": 2
-          },
-          "position": {
-            "col": 0,
-            "row": 9
-          }
-        },
+        "layout": { "size": { "cols": 3, "rows": 2 }, "position": { "col": 0, "row": 9 } },
         "definition": {
-          "chart": {
-            "type": "horizontal_bar",
-            "stacked": true,
-            "chart_title": "Claude model usage (requests)"
-          },
+          "chart": { "type": "horizontal_bar", "stacked": true, "chart_title": "Claude model usage (requests)" },
           "query": {
             "filters": [
-              {
-                "field": "ai_request_model",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_request_model",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_request_model", "operator": "not_empty" },
+              { "field": "ai_request_model", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "ai_request_count"
-            ],
+            "metrics": ["ai_request_count"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model"
-            ]
+            "dimensions": ["ai_request_model"]
           }
         }
       },
       {
         "id": "702f6291-e02d-47eb-b38b-85438c643712",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 3,
-            "rows": 2
-          },
-          "position": {
-            "col": 3,
-            "row": 9
-          }
-        },
+        "layout": { "size": { "cols": 3, "rows": 2 }, "position": { "col": 3, "row": 9 } },
         "definition": {
-          "chart": {
-            "type": "vertical_bar",
-            "stacked": true,
-            "chart_title": "Claude model usage count (tokens)"
-          },
+          "chart": { "type": "vertical_bar", "stacked": true, "chart_title": "Claude model usage count (tokens)" },
           "query": {
             "filters": [
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "total_tokens"
-            ],
+            "metrics": ["total_tokens"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model"
-            ]
+            "dimensions": ["ai_request_model"]
           }
         }
       },
       {
         "id": "2242b427-2999-4cfe-b17e-9e4ca61be362",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 2,
-            "rows": 2
-          },
-          "position": {
-            "col": 0,
-            "row": 11
-          }
-        },
+        "layout": { "size": { "cols": 2, "rows": 2 }, "position": { "col": 0, "row": 11 } },
         "definition": {
-          "chart": {
-            "type": "vertical_bar",
-            "stacked": true,
-            "chart_title": "AI security report"
-          },
+          "chart": { "type": "vertical_bar", "stacked": true, "chart_title": "AI security report" },
           "query": {
             "filters": [
-              {
-                "field": "status_code_grouped",
-                "value": [
-                  "4XX"
-                ],
-                "operator": "in"
-              },
-              {
-                "field": "ai_provider",
-                "operator": "not_empty"
-              },
-              {
-                "field": "ai_provider",
-                "value": [
-                  "UNSPECIFIED"
-                ],
-                "operator": "not_in"
-              }
+              { "field": "status_code_grouped", "value": ["4XX"], "operator": "in" },
+              { "field": "ai_provider", "operator": "not_empty" },
+              { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
-            "metrics": [
-              "ai_request_count"
-            ],
+            "metrics": ["ai_request_count"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "route",
-              "status_code"
-            ]
+            "dimensions": ["route", "status_code"]
           }
         }
       },
       {
         "id": "df1b0486-2c04-430e-a8ff-7e26c7821bf7",
         "type": "chart",
-        "layout": {
-          "size": {
-            "cols": 3,
-            "rows": 2
-          },
-          "position": {
-            "col": 2,
-            "row": 11
-          }
-        },
+        "layout": { "size": { "cols": 3, "rows": 2 }, "position": { "col": 2, "row": 11 } },
         "definition": {
-          "chart": {
-            "type": "timeseries_bar",
-            "stacked": true,
-            "chart_title": "Monthly spend trends"
-          },
+          "chart": { "type": "timeseries_bar", "stacked": true, "chart_title": "Monthly spend trends" },
           "query": {
             "limit": 10,
             "filters": [],
-            "metrics": [
-              "cost"
-            ],
+            "metrics": ["cost"],
             "datasource": "llm_usage",
-            "dimensions": [
-              "ai_request_model",
-              "time"
-            ],
-            "time_range": {
-              "type": "relative",
-              "time_range": "30d"
-            },
+            "dimensions": ["ai_request_model", "time"],
+            "time_range": { "type": "relative", "time_range": "30d" },
             "granularity": "daily"
           }
         }
       }
     ],
-    "template_id": "AI_GATEWAY",
-    "preset_filters": [
-      {
-        "field": "gateway_service",
-        "value": [],
-        "operator": "in"
-      }
-    ]
+    "template_id": "AI_GATEWAY"
   },
   "labels": {
     "recipe": "claude-code-sso-recipe"
   }
 }
-EOF
-  DASHBOARD_ID=$(kongctl api post /v2/dashboards \
-    -f claude-code-usage-dashboard.json \
-    --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-  rm -f claude-code-usage-dashboard.json
-  echo "Created Claude Code Usage dashboard (id: ${DASHBOARD_ID}). Open it in Konnect at Observability → Custom dashboards → 'Claude Code Usage'."
-fi
 ```
-{: data-test-step="block" .collapsible }
+{: .no-copy-code .collapsible }
+
+{:.info}
+> This dashboard shows account-wide Claude Code traffic by default. To scope it to just this recipe's {{site.ai_gateway}}, add a filter in the {{site.konnect_short_name}} dashboard editor after you apply the recipe configuration.
 
 ## Try it out
 
-With the configuration applied and Okta configured, Claude Code requests now flow through Kong for authentication, model alias matching, tier enforcement, and rate limiting. Verify the recipe by running Claude Code itself, the tool the recipe enables.
+With the configuration applied and Okta configured, Claude Code requests now flow through Kong for authentication, alias-based routing, tier enforcement, and rate limiting. Verify the recipe by running Claude Code itself, the tool the recipe enables.
 
 ### Launch Claude Code
 
@@ -1994,13 +2027,13 @@ On the first invocation (or when the cached token expires), a browser window ope
 ```
 {:.no-copy-code}
 
-Ask a question. Claude Code sends the request through Kong, which validates your Okta JWT, attaches the matching Consumer Group, runs the alias check, injects the provider API key, and forwards to the configured upstream model.
+Ask a question. Claude Code sends the request through Kong, which validates your Okta JWT, attaches the matching AI Consumer Group, checks the alias against each AI Model's access control list, injects the provider API key, and forwards to the configured upstream model.
 
-Subsequent invocations reuse the cached token silently. No browser flow unless the refresh token has expired.
+Subsequent invocations reuse the cached token silently. The browser flow only reappears after the refresh token expires.
 
 ### Hit the tier enforcement boundary
 
-Standard users have only the `claude-sonnet-4-6` model alias configured. Inside Claude Code, switch to Opus and send a prompt:
+Standard users have access only to the sonnet AI Model. Inside Claude Code, switch to Opus and send a prompt:
 
 ```text
 > /model opus
@@ -2008,18 +2041,18 @@ Standard users have only the `claude-sonnet-4-6` model alias configured. Inside 
 ```
 {:.no-copy-code}
 
-Claude Code sends the configured Opus alias (whatever value you set as `ANTHROPIC_DEFAULT_OPUS_MODEL`) in the request body. The standard tier's AI Proxy Advanced Plugin instance has no matching `model_alias`, so the request is rejected at Kong before any provider call:
+Claude Code sends the configured Opus alias (whatever value you set as `ANTHROPIC_DEFAULT_OPUS_MODEL`) in the request body. Kong matches the alias to the opus AI Model, but that Model's access control list doesn't include `claude-standard-users`, so Kong rejects the request before any provider call:
 
 ```text
-API Error: 400 model not configured
+API Error: 403 Forbidden
 ```
 {:.no-copy-code}
 
-This is the explicit block: a standard user cannot use Opus, regardless of what Claude Code's UI offers, and they see exactly why. Switch back to Sonnet (`/model sonnet`) and the request succeeds again.
+This is the explicit block: a standard user can't use Opus, regardless of what Claude Code's UI offers, and they see exactly why. Switch back to Sonnet (`/model sonnet`) and the request succeeds again.
 
 ### Hit the rate limit
 
-Standard tier is configured at 20,000 tokens per 60-second sliding window. A few interactive prompts that include conversation history and file context exhaust the budget quickly. Send three or four prompts in rapid succession that each carry meaningful context (for example, ask Claude Code to summarize a file in your repo). Once the budget exhausts, Kong returns:
+The standard tier allows 20,000 tokens per 60-second sliding window. A few interactive prompts that include conversation history and file context exhaust the budget quickly. Send three or four prompts in rapid succession that each carry meaningful context (for example, ask Claude Code to summarize a file in your repo). When you exhaust the budget, Kong returns:
 
 ```text
 API Error: 429 Too Many Requests
@@ -2030,60 +2063,43 @@ The response includes a `Retry-After` header indicating how many seconds remain 
 
 ### Swap to the power tier
 
-The IdP-issued `groups` claim drives the Consumer Group attachment, so changing the user's Okta group is all that's needed to switch tiers. Kong already has the `claude-power-users` Consumer Group, AI Proxy Advanced Plugin instance (with both Sonnet and Opus aliases), and AI Rate Limiting Advanced Plugin instance in place from the apply step.
+The IdP-issued `groups` claim drives the AI Consumer Group attachment, so changing the user's Okta group is all you need to switch tiers. Kong already has the `claude-power-users` AI Consumer Group, the opus AI Model that allows it, and its own AI Rate Limiting Advanced Policy in place from the apply step.
 
-1. In Okta, go to **Directory → Groups** and create `claude-power-users` if it does not already exist.
-1. Open your test user, go to the **Groups** tab, remove `claude-standard-users`, and add `claude-power-users`.
-1. Force a fresh token by clearing the helper script's cache so it does not silently reuse the old JWT (which still carries the previous `groups` claim):
+1. In Okta, go to **Directory → Groups** and create `claude-power-users` if it doesn't already exist.
+1. Open your test user, click the **Groups** tab, remove `claude-standard-users`, and add `claude-power-users`.
+1. Force a fresh token by clearing the helper script's cache so it doesn't silently reuse the old JWT (which still carries the previous `groups` claim):
 
    ```bash
    rm -rf ~/.claude/okta-cache/
    ```
 
-1. Re-launch Claude Code. The browser opens for a fresh PKCE flow, the new JWT carries `groups: ["claude-power-users"]`, and Kong now attaches the request to the power-tier Consumer Group. Run `/model opus` followed by a prompt; the request succeeds. The token budget jumps to 100,000 per 60-second window.
+1. Re-launch Claude Code. The browser opens for a fresh PKCE flow, the new JWT carries `groups: ["claude-power-users"]`, and Kong now attaches the request to the power-tier AI Consumer Group. Run `/model opus` followed by a prompt; the request succeeds. The token budget jumps to 100,000 per 60-second window.
 
 Swap back the same way: move the user between groups in Okta, clear the cache, and re-authenticate.
 
-### Explore in Konnect
+### Explore in {{site.konnect_short_name}}
 
-Open [{{site.konnect_product_name}}](https://cloud.konghq.com/) to see the recipe's resources in place.
+Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `claude-code-sso-recipe`. The recipe created an AI Model Provider holding your chosen provider's credentials, two AI Models (`claude-code-sso-sonnet` and `claude-code-sso-opus`), an OpenID Connect AI Auth Strategy, two AI Consumer Groups (`claude-standard-users` and `claude-power-users`), and two AI Rate Limiting Advanced Policies, all scoped to this recipe by the kongctl namespace applied above.
 
-**Claude Code Usage dashboard**
+**Claude Code Usage dashboard.** Navigate to **Observability → Custom dashboards → `Claude Code Usage`**. It surfaces cost, total tokens, request count, model mix and usage trend, health-check and provider-share breakdowns, average latency, and an AI security report scoped to 4XX responses.
 
-Navigate to **Observability → Custom dashboards → `Claude Code Usage`**. The dashboard is pre-filtered to the `claude-code-sso` Gateway Service and surfaces:
-
-- Total cost, total tokens, and request count for the recipe's traffic.
-- Top Claude models by token and request volume, plus a model-usage trend.
-- Health-check, provider-share, and average-latency breakdowns.
-- Per-developer (Consumer) usage, cost, and token trends, so the per-tier ceilings configured by the recipe are directly visible here.
-- An AI security report scoped to 4XX responses on the recipe's Route.
-
-**Gateway resources**
-
-Navigate to **API Gateway → Gateways → `claude-code-sso-recipe`**. The Control Plane the quickstart provisioned and `kongctl adopt` attached to this namespace surfaces:
-
-- **Gateway services → `claude-code-sso`**. The Service the apply block registered. Its detail page has tabs for Configuration, Routes, Plugins, and Analytics.
-  - **Routes** tab: the `/claude-code-sso` Route.
-  - **Plugins** tab: the OpenID Connect Plugin on the Service, plus the Consumer-Group-scoped AI Proxy Advanced and AI Rate Limiting Advanced Plugins.
-- **Consumer Groups**. The `claude-standard-users` and `claude-power-users` groups the OpenID Connect Plugin maps each Okta group to.
-
-The Gateway Service's **Analytics** tab and the **Observability** L1 menu remain available for deeper exploration beyond the curated dashboard above.
+For platform-wide traffic analysis across every {{site.ai_gateway}}, head to the **Observability** L1 menu in {{site.konnect_short_name}}.
 
 ## Variations and next steps
 
-- **Switch the underlying model.** Update `DECK_CHAT_MODEL_1` or `DECK_CHAT_MODEL_2` to a different provider model ID and re-apply. Developers see no change because the alias they send (`claude-sonnet-4-6` or `claude-opus-4-7`) stays the same.
-- **Add more tiers.** Create additional Okta groups, additional Kong Consumer Groups with matching names, and additional Consumer-Group-scoped AI Proxy Advanced and AI Rate Limiting Advanced instances. For example, an `intern` tier with only Haiku registered, or an `ml-team` tier with access to a specialized model alias.
+- **Switch the underlying model.** Update `CHAT_MODEL_1` or `CHAT_MODEL_2` to a different provider model ID and re-apply. Developers see no change because the alias they send (`claude-sonnet-4-6` or `claude-opus-4-7`) stays the same.
+- **Add more tiers.** Create additional Okta groups, additional AI Consumer Groups with matching names, an additional AI Model gated by the new group's ACL, and an additional AI Rate Limiting Advanced Policy attached to that AI Consumer Group. For example, an `intern` tier with only Haiku registered, or an `ml-team` tier with access to a specialized model alias.
 - **Adjust token budgets.** Most teams enforce monthly or daily windows in production. For example, `limits: [{limit: 5000000, window_size: 2592000}]` for a 5 million token monthly budget per tier. Combine windows with multiple `limits` entries to enforce both burst and sustained budgets simultaneously.
-- **Restrict access by IP.** Add an [IP Restriction](/plugins/ip-restriction/) Plugin to the Service or Route with `allow` set to your egress ranges (corporate VPN, CI runners). The Plugin runs before Okta JWT validation and refuses connections from unknown sources, narrowing the attack surface to authenticated traffic from approved networks.
-- **Multi-node rate limiting with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node production clusters, switch to `strategy: redis` and point to a shared Redis instance so counters stay consistent across nodes.
-- **Use a different IdP.** The OpenID Connect Plugin works with any OIDC-compliant identity provider (Microsoft Entra ID, Auth0, Keycloak, PingIdentity, others). Update the `issuer` URL and adjust the claim names to match your IdP's token format. The PKCE helper script works with any OIDC provider that supports Authorization Code + PKCE.
-- **Cover non-Claude clients.** This recipe uses `llm_format: anthropic` because Claude Code sends requests in Anthropic's native format. If your team needs broader provider support (OpenAI, Google Gemini, Mistral), see [Basic LLM Routing](/cookbooks/basic-llm-routing/) with `llm_format: openai`.
+- **Restrict access by IP.** Add an [IP Restriction](/ai-gateway/policies/ip-restriction/) Policy with `allow` set to your egress ranges (corporate VPN, CI runners). It runs before Okta JWT validation and refuses connections from unknown sources, narrowing the attack surface to authenticated traffic from approved networks.
+- **Share rate-limit counters with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node production clusters, switch to `strategy: redis` and point to a shared Redis instance so counters stay consistent across nodes.
+- **Use a different IdP.** The OpenID Connect AI Auth Strategy works with any OIDC-compliant identity provider (Microsoft Entra ID, Auth0, Keycloak, PingIdentity, others). Update the `issuer` URL and adjust the claim names to match your IdP's token format. The PKCE helper script works with any OIDC provider that supports Authorization Code + PKCE.
+- **Cover non-Claude clients.** This recipe uses `formats: [{type: anthropic}]` because Claude Code sends requests in Anthropic's native format. If your team needs broader provider support (OpenAI, Google Gemini, Mistral), see [Basic LLM Routing](/cookbooks/basic-llm-routing/) with `formats: [{type: openai}]`.
 
 ## Cleanup
 
-The recipe's `select_tags` and kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
 
-Delete the **Claude Code Usage** custom dashboard. The dashboard is an org-level resource and outlives the Control Plane, so remove it before tearing down Kong:
+Delete the **Claude Code Usage** custom dashboard. The dashboard is an org-level resource and outlives the {{site.ai_gateway}}, so remove it before tearing down Kong:
 
 ```bash
 DASHBOARD_IDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=claude-code-sso-recipe" \
@@ -2101,11 +2117,12 @@ else
   done
 fi
 ```
+{: data-test-step="block" .collapsible }
 
-Tear down Kong by deleting the local data plane and the {{site.konnect_product_name}} Control Plane:
+Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
-export KONNECT_CONTROL_PLANE_NAME='claude-code-sso-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
+export KONNECT_CONTROL_PLANE_NAME='claude-code-sso-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
 
 Remove the helper script and cached tokens:

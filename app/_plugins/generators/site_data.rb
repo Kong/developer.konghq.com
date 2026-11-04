@@ -26,17 +26,14 @@ module Jekyll
       }
     end
 
-    def product_latest_release(site) # rubocop:disable Metrics/AbcSize
-      products = site.data['products'].map do |p|
-        p[0].gsub('-', '_')
-      end
-
-      products.each do |product|
-        releases = site.data.dig('products', product, 'releases')
+    def product_latest_release(site)
+      site.data['products'].each_key do |slug|
+        releases = site.data.dig('products', slug, 'releases')
         next if releases.nil?
 
-        site.data["#{product}_latest"] = releases.detect { |r| r['latest'] }
-        site.data["#{product}_releases"] = releases
+        key = slug.gsub('-', '_')
+        site.data["#{key}_latest"] = releases.detect { |r| r['latest'] }
+        site.data["#{key}_releases"] = releases
       end
     end
 

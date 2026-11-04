@@ -55,7 +55,7 @@ Flags:
                                 - Allowed    : [ json|yaml|text ] (default "text")
   -p, --profile string          Specify the profile to use for this command. (default "default")
   -R, --recursive               Process the directory used in -f, --filename recursively
-  -r, --ruleset string          Path to a Spectral-compatible linting ruleset file (YAML or JSON)
+  -r, --ruleset string          Local YAML or JSON ruleset for vacuum (partial Spectral compatibility; no custom functions). Input tags/templates are not expanded; extends paths use the working directory (URLs allowed in extends).
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]

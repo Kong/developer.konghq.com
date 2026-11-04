@@ -34,6 +34,12 @@ Get organization details.
 
 {% include_cached /kongctl/help/get/organization/index.md %}
 
+### kongctl get organization pats
+
+List all personal access tokens in the current organization. Requires organization administrator access.
+
+{% include_cached /kongctl/help/get/organization/pats.md %}
+
 ### kongctl get organization system-account
 
 Get organization system account.
