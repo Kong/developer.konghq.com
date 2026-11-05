@@ -69,7 +69,15 @@ cleanup:
     - title: Uninstall {{site.operator_product_name}}
       icon_url: /assets/icons/kubernetes.svg
       content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
         ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/echo-route \
+          service/echo \
+          gateway/kong-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-cert-manager
         kubectl delete --ignore-not-found namespace kong
         helm uninstall kong-operator -n kong-system
         kubectl delete --ignore-not-found namespace kong-system
