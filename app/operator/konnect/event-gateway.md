@@ -118,7 +118,7 @@ There are two ways to expose {{ site.event_gateway }} with the operator:
   * you plan to front multiple virtual clusters behind one entrypoint
 
 
-### `LoadBalancer` with `portMapping`
+### LoadBalancer with portMapping
 
 This pattern suits local validation and simple deployments where exposing one port per broker is acceptable. The `KegDataPlane` exposes a `LoadBalancer` Service with one port for bootstrap traffic and one port per broker.
 
@@ -160,7 +160,7 @@ In a three-broker cluster, the data plane Service exposes:
 
 For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with port mapping](/operator/get-started/event-gateway/port-mapping/).
 
-### `Gateway` with `TLSRoute` and SNI
+### Gateway with TLSRoute and SNI
 
 This is the production-oriented pattern. A single TLS listener at the Kubernetes edge routes Kafka traffic to the correct virtual cluster by SNI:
 

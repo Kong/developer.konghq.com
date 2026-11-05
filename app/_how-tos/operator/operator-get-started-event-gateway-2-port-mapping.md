@@ -59,7 +59,7 @@ This deployment pattern is the simplest way to validate {{ site.event_gateway }}
 
 It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker. For production environments, we recommend using {{ site.base_gateway }} with {{ site.operator_product_name }} to set up a TLSRoute and an SNI wildcard.
 
-## Create the `KonnectEventGateway`
+## Create the KonnectEventGateway
 
 The `KonnectEventGateway` resource creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
 
@@ -188,7 +188,7 @@ The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clien
      --timeout=10m
    ```
 
-## Deploy the `KegDataPlane`
+## Deploy the KegDataPlane
 
 The `KegDataPlane` resource runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
@@ -226,7 +226,7 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Export the `LoadBalancer` address
+## Export the LoadBalancer address
 
 The listener policy needs an explicit `advertisedHost`. Export the `LoadBalancer` IP from the Kafka Service:
 
