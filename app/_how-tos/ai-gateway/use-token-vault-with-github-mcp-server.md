@@ -1,8 +1,9 @@
 ---
-title: Authenticate to the GitHub MCP server with the {{site.identity}} Token Vault
+title: Authenticate to a GitHub MCP server with Token Vault and Okta
 permalink: /ai-gateway/use-token-vault-with-github-mcp-server/
 content_type: how_to
 description: ""
+automated_tests: false
 
 products:
   - ai-gateway
@@ -27,25 +28,53 @@ tags:
 tldr:
   q: How do I let an AI agent call the GitHub MCP server on behalf of a user without the agent handling a GitHub credential?
   a: |
-    <!-- TODO -->
+    Add Okta as your {{site.identity}} directory's trusted IdP, enable the Token Vault, and add a GitHub provider. Then, in {{site.ai_gateway}}, create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) for Okta and an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) for GitHub, and point Claude Code at it. {{site.ai_gateway}} exchanges the user's Okta token for a GitHub token from the vault, so the agent never handles a GitHub credential.
+
 
 tools:
   - konnect-api
 
 prereqs:
-  konnect:
-    - name: TOKEN_VAULT_PRIVATE_KEY
+  skip_product: true
   inline:
+    - title: Kong Konnect
+      position: before
+      content: "{% include prereqs/products/konnect-auth-only.md raw=true %}"
+      icon_url: /assets/icons/gateway.svg
+    - title: "{{site.identity}} directory"
+      position: before
+      include_content: prereqs/kong-identity-directory
+      icon_url: /assets/icons/identity.svg
+    - title: "{{site.identity}} Token Vault"
+      position: before
+      include_content: prereqs/token-vault-directory
+      icon_url: /assets/icons/identity.svg
     - title: Vault encryption key
       position: before
       include_content: prereqs/token-vault-encryption-key
       icon_url: /assets/icons/identity.svg
-    - title: "{{site.identity}} directory"
-      include_content: prereqs/kong-identity-directory
-      icon_url: /assets/icons/identity.svg
-    - title: "{{site.identity}} Token Vault"
-      include_content: prereqs/token-vault-directory
-      icon_url: /assets/icons/identity.svg
+    - title: "{{site.ai_gateway}} running"
+      position: before
+      content: |
+        Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to provision a control plane in {{site.konnect_product_name}} and a local data plane. The `-e` flag passes the vault private key to the data plane:
+
+        ```bash
+        curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN \
+           -e TOKEN_VAULT_PRIVATE_KEY
+        ```
+
+        This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
+
+        ```bash
+        export AI_GATEWAY_ID=your-gateway-id
+        export KONNECT_TOKEN=$KONNECT_TOKEN
+        export KONNECT_CONTROL_PLANE_NAME=ai-quickstart
+        export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
+        export KONNECT_PROXY_URL='http://localhost:8000'
+        ```
+
+        Copy and paste these into your terminal to configure your session.
+      icon_url: /assets/icons/ai.svg
     - title: Okta as the user IdP
       content: |
         You need admin access to an [Okta](https://login.okta.com/) org, with a custom authorization server and a native OIDC application that the agent uses to sign users in.
@@ -124,6 +153,8 @@ faqs:
 
 ## Trust Okta as the identity provider
 
+Tell your Kong Identity directory to trust tokens that your Okta authorization server issues. For this, send a `POST` request to the directory's [`trusted-idps` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createTrustedIdp) with the issuer URL of your Okta authorization server:
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/directories/$DIRECTORY_ID/trusted-idps
@@ -140,57 +171,12 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Register a vault key
-
-1. Export the public key, with the newlines escaped so it fits in a JSON body:
-
-   ```sh
-   export VAULT_PUBLIC_KEY=$(awk 'NF {printf "%s\\n", $0}' vault-public.pem)
-   ```
-
-1. Register the key:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/vault/keys
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: my-vault-key
-  public_key: $VAULT_PUBLIC_KEY
-capture:
-  - variable: VAULT_KEY_ID
-    jq: ".id"
-  - variable: VAULT_KEY_KID
-    jq: ".kid"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-## Create a Token Vault Datastore
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/datastores
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: token-vault-datastore
-  display_name: Token Vault Datastore
-  type: token-vault
-  config:
-    directory: $DIRECTORY_NAME
-    current_version: $VAULT_KEY_KID
-    keys:
-      - version: $VAULT_KEY_KID
-        key: "{vault://env/TOKEN_VAULT_PRIVATE_KEY}"
-{% endkonnect_api_request %}
-<!--vale on-->
+* `vault_access_enabled` lets users who sign in through Okta use the Token Vault.
+* `jit_provisioning_enabled` creates a user in the directory the first time someone signs in.
 
 ## Create the GitHub provider
+
+Create a GitHub provider in the directory's Token Vault by sending a `POST` request to the [`vault/providers` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider) with the `github` provider template and your GitHub OAuth app's client ID and secret.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -209,6 +195,30 @@ body:
 capture:
   - variable: PROVIDER_ID
     jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Create a Token Vault data store
+
+Create a data store to tell AI Gateway how to conect to an outside service. In this case, the service is Token Vault. The gateway needs it to access GitHub's tokens that you store in Token Vault:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/datastores
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: token-vault-datastore
+  display_name: Token Vault Datastore
+  type: token-vault
+  config:
+    directory: $DIRECTORY_NAME
+    current_version: $VAULT_KEY_KID
+    keys:
+      - version: $VAULT_KEY_KID
+        key: "{vault://env/TOKEN_VAULT_PRIVATE_KEY}"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -299,7 +309,7 @@ body:
 
 1. Reload the tool list with `/mcp`. The GitHub MCP server's tools now appear.
 
-1. List the credentials stored for the GitHub provider:
+1. [List the credentials](/api/konnect/kong-identity-principals/v2/#/operations/listVaultProviderCredentials) stored for the GitHub provider:
 
 <!--vale off-->
 {% konnect_api_request %}
