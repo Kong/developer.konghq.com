@@ -10,6 +10,8 @@ jobs:
   ksai:
     name: run
     uses: Kong/ksai-public/.github/workflows/ksai.yml@9c577ab3273fa110d1e5a51295bdc3894ac412f0  # v5.0.0-rc.105
+    with:
+      runs_on: ubuntu-24.04  # Pin the ubuntu version to 24.04 as KSAI doesn't support v26 yet.
     permissions:
       contents: read   # checked out by every command; a push uses the token CP mints
       id-token: write  # mint the GitHub OIDC token for the Kong gateway
