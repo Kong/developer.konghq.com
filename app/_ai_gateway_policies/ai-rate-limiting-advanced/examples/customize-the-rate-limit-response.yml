@@ -1,0 +1,34 @@
+description: |
+  Configure the AI Rate Limiting Advanced policy to return your own message when a client exceeds the limit.
+  The policy also hides the limit and remaining-count headers from responses, so clients can't read your limits.
+  Rate-limited responses still include `Retry-After` and reset headers.
+
+title: Customize the rate limit response
+
+weight: 890
+
+requirements:
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+
+name: customize-the-rate-limit-response
+display_name: Customize the rate limit response
+type: ai-rate-limiting-advanced
+
+config:
+  error_message: Rate limit exceeded. Try again later.
+  hide_client_headers: true
+  policies:
+    - match:
+        - type: ip
+          values:
+            - 127.0.0.1
+            - 192.0.2.0
+      limits:
+        - limit: 100
+          window_size: 60
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

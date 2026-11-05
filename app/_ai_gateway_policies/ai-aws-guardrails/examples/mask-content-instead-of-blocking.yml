@@ -1,0 +1,45 @@
+description: |
+  Configure the AI AWS Guardrails policy to mask the content that violates your guardrail instead of blocking the request or response.
+  Streaming is disabled while masking is enabled.
+
+title: Mask content instead of blocking it
+
+weight: 840
+
+requirements:
+  - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+# variables:
+#   guardrails_id:
+#     description: The guardrail identifier to apply.
+#     value: $GUARDRAILS_ID
+#   guardrails_version:
+#     description: The guardrail version to apply.
+#     value: $GUARDRAILS_VERSION
+#   aws_region:
+#     description: The AWS region where the guardrail is deployed.
+#     value: $AWS_REGION
+#   aws_access_key_id:
+#     description: The AWS access key ID used to authenticate the request.
+#     value: $AWS_ACCESS_KEY_ID
+#   aws_secret_access_key:
+#     description: The AWS secret access key used to authenticate the request.
+#     value: $AWS_SECRET_ACCESS_KEY
+
+name: aws-guardrails-mask-content
+display_name: Mask content instead of blocking it
+type: ai-aws-guardrails
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_access_key_id: ${aws_access_key_id}
+  aws_secret_access_key: ${aws_secret_access_key}
+  allow_masking: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -1,0 +1,47 @@
+description: |
+  Configure the AI AWS Guardrails policy to evaluate streamed model responses.
+  The policy buffers the response in chunks of the configured size and sends each chunk to the guardrail.
+  A larger buffer gives the guardrail more context per check, and delays the first bytes the client receives.
+
+title: Guard streamed responses
+
+weight: 850
+
+requirements:
+  - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+# variables:
+#   guardrails_id:
+#     description: The guardrail identifier to apply.
+#     value: $GUARDRAILS_ID
+#   guardrails_version:
+#     description: The guardrail version to apply.
+#     value: $GUARDRAILS_VERSION
+#   aws_region:
+#     description: The AWS region where the guardrail is deployed.
+#     value: $AWS_REGION
+#   aws_access_key_id:
+#     description: The AWS access key ID used to authenticate the request.
+#     value: $AWS_ACCESS_KEY_ID
+#   aws_secret_access_key:
+#     description: The AWS secret access key used to authenticate the request.
+#     value: $AWS_SECRET_ACCESS_KEY
+
+name: aws-guardrails-guard-streamed-responses
+display_name: Guard streamed responses
+type: ai-aws-guardrails
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_access_key_id: ${aws_access_key_id}
+  aws_secret_access_key: ${aws_secret_access_key}
+  guarding_mode: OUTPUT
+  response_buffer_size: 500
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

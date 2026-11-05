@@ -1,0 +1,45 @@
+description: |
+  Configure the AI AWS Guardrails policy to evaluate only the responses that the model returns.
+  Requests are forwarded to the model without a guardrail check.
+
+title: Guard model responses only
+
+weight: 860
+
+requirements:
+  - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+
+# variables:
+#   guardrails_id:
+#     description: The guardrail identifier to apply.
+#     value: $GUARDRAILS_ID
+#   guardrails_version:
+#     description: The guardrail version to apply.
+#     value: $GUARDRAILS_VERSION
+#   aws_region:
+#     description: The AWS region where the guardrail is deployed.
+#     value: $AWS_REGION
+#   aws_access_key_id:
+#     description: The AWS access key ID used to authenticate the request.
+#     value: $AWS_ACCESS_KEY_ID
+#   aws_secret_access_key:
+#     description: The AWS secret access key used to authenticate the request.
+#     value: $AWS_SECRET_ACCESS_KEY
+
+name: aws-guardrails-guard-model-responses-only
+display_name: Guard model responses only
+type: ai-aws-guardrails
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_access_key_id: ${aws_access_key_id}
+  aws_secret_access_key: ${aws_secret_access_key}
+  guarding_mode: OUTPUT
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

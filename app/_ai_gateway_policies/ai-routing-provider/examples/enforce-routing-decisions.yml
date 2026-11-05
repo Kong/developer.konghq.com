@@ -1,0 +1,44 @@
+description: |
+  Configure the AI Routing Provider policy in `enforce` mode.
+  The policy sends each request to the AI Model for the target that Switchyard selects.
+  If Switchyard is slow, unreachable or returns a target you haven't listed, the policy falls back to `default_target`.
+
+title: Route requests to the model Switchyard selects
+
+weight: 890
+
+scopes:
+  - ai-model
+
+requirements:
+  - You have a running [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) decision service that the data plane can reach.
+  - You have registered the AI Routing Provider [custom policy](/ai-gateway/custom-policies/) and run the data plane with `KONG_UNTRUSTED_LUA=on`.
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/) for each target, with no policies attached, and an AI Model that clients call.
+
+name: enforce-routing-decisions
+display_name: Route requests to the model Switchyard selects
+type: ai-routing-provider
+
+config:
+  decision_api_url: http://switchyard:4000/v1/decision
+  decision_route: kong-router
+  dispatch: konnect_model
+  default_target: weak
+  mode: enforce
+  timeout_ms: 2000
+  targets:
+    weak:
+      model: z-ai/glm-5.3
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+    strong:
+      model: google/gemini-3.8-flash
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

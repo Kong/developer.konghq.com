@@ -1,0 +1,45 @@
+description: |
+  Configure the AI Routing Provider policy to send Switchyard the most recent user message.
+  By default the policy redacts every message before the decision request leaves the gateway, so Switchyard sees only roles and message sizes.
+  Share the latest user prompt when your Switchyard route needs the text to classify the request.
+
+title: Share the latest user prompt with Switchyard
+
+weight: 880
+
+scopes:
+  - ai-model
+
+requirements:
+  - You have a running [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) decision service that the data plane can reach.
+  - You have registered the AI Routing Provider [custom policy](/ai-gateway/custom-policies/) and run the data plane with `KONG_UNTRUSTED_LUA=on`.
+  - You have created an [AI Model](/ai-gateway/entities/ai-model/) for each target, with no policies attached, and an AI Model that clients call.
+
+name: share-the-latest-user-prompt
+display_name: Share the latest user prompt with Switchyard
+type: ai-routing-provider
+
+config:
+  decision_api_url: http://switchyard:4000/v1/decision
+  decision_route: kong-router
+  dispatch: konnect_model
+  default_target: weak
+  mode: enforce
+  timeout_ms: 2000
+  prompt_disclosure: latest_user_prompt
+  targets:
+    weak:
+      model: z-ai/glm-5.3
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+    strong:
+      model: google/gemini-3.8-flash
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
