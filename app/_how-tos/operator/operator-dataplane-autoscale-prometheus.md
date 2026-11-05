@@ -19,7 +19,6 @@ tools:
   - operator
 
 works_on:
-  - konnect
   - on-prem
 
 prereqs:
