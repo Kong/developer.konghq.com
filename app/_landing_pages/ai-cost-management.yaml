@@ -100,11 +100,13 @@ rows:
             config:
               title: Attribution
               description: |
-                Understand how each usage event is attributed to a subject, group, and team, and how to add custom tags for dimensions your teams care about.
+                Understand how each usage event is attributed to a subject, group, and team, and how to add custom tags for dimensions your teams care about. Upload your org chart to build teams.
               icon: /assets/icons/profile.svg
               ctas:
                 - text: Attribution
                   url: /ai-cost-management/attribution/
+                - text: Org chart
+                  url: /ai-cost-management/org-chart/
                 - text: Integrations
                   url: /ai-cost-management/integrations/
       - blocks:

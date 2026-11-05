@@ -31,6 +31,8 @@ api_specs:
   - konnect/ai-cost-management
 
 related_resources:
+  - text: Org chart in {{site.ai_cost_management}}
+    url: /ai-cost-management/org-chart/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
   - text: Budgets in {{site.ai_cost_management}}

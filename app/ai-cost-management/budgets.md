@@ -41,6 +41,8 @@ related_resources:
     url: /ai-cost-management/attribution/
   - text: Notification channels in {{site.ai_cost_management}}
     url: /ai-cost-management/notification-channels/
+  - text: Org chart in {{site.ai_cost_management}}
+    url: /ai-cost-management/org-chart/
   - text: Price catalog and overrides
     url: /ai-cost-management/price-catalog/
   - text: Set up a budget with email alerts
@@ -139,6 +141,9 @@ Each filter compares a [usage field](#schema-aicost-limit-budget-input-scope-fil
 Usage counts toward the budget only when it matches all of the filters.
 
 A budget with no filters counts all usage in your organization.
+
+To limit a team or a person, filter on the `team` or `subject` field with a reference such as `principal/UUID`.
+You can also set a monthly limit on a team or person from the [org chart](/ai-cost-management/org-chart/#set-a-spend-limit-on-a-team-or-user).
 
 ### Filter operators and groups
 
