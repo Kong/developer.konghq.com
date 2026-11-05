@@ -195,6 +195,7 @@ kubectl wait gateway/kong -n kong \
   --for=condition=DataPlaneReady=True \
   --timeout=5m
 kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+kubectl wait --for=jsonpath='{.status.addresses[0].value}' gateway/kong -n kong --timeout=5m
 ```
 {: data-test-step="block" }
 
