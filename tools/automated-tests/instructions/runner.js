@@ -12,6 +12,14 @@ import { logResult } from "../reporting.js";
 
 const log = debug("tests:runner");
 
+// Cleanup is best-effort, so a command that hangs (not just fails) must be
+// abandoned too: `kubectl delete` of a namespace wedged in Terminating by a
+// stuck finalizer never returns and would block the whole run forever.
+// Five minutes is far above any healthy cleanup command. Overridable for
+// debugging a slow environment.
+const CLEANUP_COMMAND_TIMEOUT_MS =
+  Number(process.env.CLEANUP_COMMAND_TIMEOUT_MS) || 5 * 60 * 1000;
+
 export class ExitOnFailure extends Error {
   constructor(message) {
     super(message);
@@ -109,7 +117,12 @@ async function runCleanup(cleanup, container, runtimeConfig) {
       for (const command of config.commands) {
         try {
           if (typeof command === "string") {
-            await executeCommand(container, command);
+            await executeCommand(
+              container,
+              command,
+              command,
+              CLEANUP_COMMAND_TIMEOUT_MS
+            );
           } else {
             await validate(container, command, runtimeConfig);
           }
