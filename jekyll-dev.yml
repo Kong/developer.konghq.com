@@ -5,7 +5,6 @@ links:
 # Site variables
 context_mesh: Context Mesh
 context_mesh_product_name: Kong Context Mesh
-kong_harnesses: kong-harnesses
 
 # skip generators to speed up dev builds, the name matches the generator's name
 skip:
