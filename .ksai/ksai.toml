@@ -67,7 +67,7 @@ paths = [
   "!app/_how-tos/**",
   "!app/_kong_plugins/**",
   "!app/_event_gateway_policies/**",
-  "!app/_ai_policies/**",
+  "!app/_ai_gateway_policies/**",
   "!app/_mesh_policies/**",
   "!app/_references/**",
   "!app/_changelogs/**",
