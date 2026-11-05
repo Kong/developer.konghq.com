@@ -146,5 +146,4 @@ Removing the Policy sends all traffic back to the primary upstream immediately.
 
 ## Limitations
 
-- The Policy ignores [`config.upstream_fallback`](/ai-gateway/policies/canary/reference/#schema--config-upstream-fallback). When the canary upstream is unreachable, the request fails with a `502` status code.
 - The policy doesn't health check the canary upstream. Monitor it separately before you increase the percentage.
