@@ -12,7 +12,7 @@ The service downloads and loads its model on the first request, so the first com
 Verify the service is running:
 
 ```bash
-curl http://localhost:8080/status
+curl --fail-with-body http://localhost:8080/status
 ```
 {:data-test-prereq="block"}
 
