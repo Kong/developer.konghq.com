@@ -113,6 +113,10 @@ sections:
       - path: /ai-gateway/kongctl/
       - path: /kongctl/supported-resources/#ai-gateway
       - path: /kongctl/declarative/
+  - title: "Manage with {{site.surfaces_cli}}"
+    items:
+      - path: /surfaces-cli/
+      - path: /surfaces-cli/get-started/
 
   - title: Observability
     items:

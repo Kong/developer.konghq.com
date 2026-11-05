@@ -65,6 +65,7 @@
           "inso-cli",
           "kic",
           "kongctl",
+          "surfaces-cli",
           "operator",
           "terraform",
           "admin-api",

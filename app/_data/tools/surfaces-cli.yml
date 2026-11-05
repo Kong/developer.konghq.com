@@ -1,0 +1,12 @@
+name: Surfaces CLI
+icon: /assets/icons/code.svg
+
+# Add releases here when the CLI ships, newest first, in the same shape as
+# app/_data/tools/kongctl.yml. The site then exposes the latest release as
+# site.data.surfaces_cli_latest. Leave the list out until a real release exists.
+#
+# releases:
+#   - release: "1.0"
+#     version: "1.0.0"
+#     latest: true
+#     released: YYYY-MM-DD
