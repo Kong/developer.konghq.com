@@ -1,0 +1,14 @@
+{
+  "name": "agent-auth-cli-versions",
+  "version": "1.0.0",
+  "description": "Automation to sync agent-auth-cli versions and help text",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "extract-help": "node extract-help.js",
+    "fetch-versions": "node fetch-versions.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
