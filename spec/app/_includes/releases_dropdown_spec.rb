@@ -33,9 +33,9 @@ RSpec.describe 'releases_dropdown' do
   end
 
   shared_examples 'the AIGW option appended after the release options' do
-    it 'appends the AIGW v2 on-prem option after the release options' do
+    it 'appends the AIGW 2.x on-prem option after the release options' do
       expect(option_values).to eq([latest_url, old_url, aigw_url])
-      expect(html.all('select.releases-dropdown option').last.text.strip).to eq('AIGW v2 on-prem')
+      expect(html.all('select.releases-dropdown option').last.text.strip).to eq('AIGW 2.x on-prem')
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe 'releases_dropdown' do
 
     it 'renders only the release options' do
       expect(option_values).to eq([latest_url, old_url])
-      expect(html).not_to have_css('option', text: 'AIGW v2 on-prem')
+      expect(html).not_to have_css('option', text: 'AIGW 2.x on-prem')
     end
   end
 end
