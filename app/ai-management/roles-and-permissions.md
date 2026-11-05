@@ -58,7 +58,7 @@ rows:
 <!-- vale on -->
 
 A {{site.konnect_short_name}} user with no matching principal has no AI Management role.
-The match works in either order: the principal can exist before the user, or the user before the principal.
+The match works in either order. An org chart import or automatic user provisioning can create the principal before or after the user exists.
 
 ### Invite a user to AI Management
 
