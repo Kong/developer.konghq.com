@@ -61,6 +61,7 @@ groups:
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/faq/license/
           - path: /operator/konnect/event-gateway/
+          - path: /operator/konnect/event-gateway-production/
           - path: /operator/konnect/ai-gateway/
       - title: How-To
         items:
