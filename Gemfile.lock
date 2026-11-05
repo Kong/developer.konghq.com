@@ -113,6 +113,7 @@ GEM
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nokolexbor (0.8.0)
+    ostruct (0.6.3)
     parallel (1.28.0)
     parser (3.3.13.0)
       ast (~> 2.4.1)
@@ -216,6 +217,7 @@ DEPENDENCIES
   nodo
   nokogiri
   nokolexbor
+  ostruct
   pry
   puma
   rouge (~> 4.3)
