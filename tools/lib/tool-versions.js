@@ -33,6 +33,10 @@ export function writeHelpTree({ tree, includesDir, fence }) {
 }
 
 export function pruneStalePages({ docsDir, includesDir, includePattern }) {
+  if (!fs.existsSync(docsDir)) {
+    return 0;
+  }
+
   const docs = listFilesRecursive(docsDir).filter((filePath) => filePath.endsWith('.md'));
   let removedPages = 0;
 

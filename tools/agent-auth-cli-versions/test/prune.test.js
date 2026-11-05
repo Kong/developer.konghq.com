@@ -69,3 +69,11 @@ test('removes a directory left empty by pruning', () => {
   assert.equal(removed, 1);
   assert.equal(fs.existsSync(path.join(docsDir, 'profile')), false);
 });
+
+test('returns zero when the docs directory does not exist yet', () => {
+  const { root, includesDir } = setupDirs();
+
+  const removed = pruneStalePages({ docsDir: path.join(root, 'missing-docs'), includesDir, includePattern });
+
+  assert.equal(removed, 0);
+});
