@@ -62,6 +62,29 @@ formats:
   - kongctl
 {% endentity_example %}
 
+## Use cases
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: How the Correlation ID Policy helps
+    key: help
+rows:
+  - use_case: Trace a request across systems
+    help: The upstream service receives the same ID as the client, so you can find the matching log entries in each system.
+  - use_case: Give clients an ID for support requests
+    help: Set [`config.echo_downstream`](/ai-gateway/policies/correlation-id/reference/#schema--config-echo-downstream) to `true` so the client receives the ID in the response and can quote it in a support request.
+  - use_case: Continue an ID from your own application
+    help: The policy keeps the value of a header that the client already sends, so an ID that your application or front door creates stays the same through {{site.ai_gateway}}.
+  - use_case: Match the header name your stack expects
+    help: Set [`config.header_name`](/ai-gateway/policies/correlation-id/reference/#schema--config-header-name) to the name that your upstream service or log pipeline uses, for example `X-Correlation-ID`.
+  - use_case: Choose the ID format
+    help: Set [`config.generator`](/ai-gateway/policies/correlation-id/reference/#schema--config-generator) to `uuid`, `uuid#counter`, or `tracker`. See [Generators](#generators).
+{% endtable %}
+<!--vale on-->
+
 ## Generators
 
 The generator determines the format of the ID.
@@ -143,3 +166,7 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 
 To limit a global policy to specific requests, add a [`condition`](/ai-gateway/entities/ai-policy/#conditional-ai-policy-execution) to the policy.
 For example, the condition `http.headers.x_trace == "1"` adds the ID only to requests that carry the header `x-trace: 1`.
+
+## Limitations
+
+- When a client calls a tool on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} doesn't add the header to the request that it sends to the upstream service. With `config.echo_downstream` set to `true`, the client still receives the header in the response.
