@@ -1,0 +1,50 @@
+metadata:
+  title: "{{site.kong_harnesses}}"
+  content_type: landing_page
+  description: "This page is an introduction to {{site.kong_harnesses}}, Kong's command-line tool for TODO."
+  tools:
+    - kong-harnesses
+  tags:
+    - cli
+  breadcrumbs:
+    - /tools/
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.kong_harnesses}}"
+      sub_text: |
+        TODO: One sentence that says what {{site.kong_harnesses}} is for.
+
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "What is {{site.kong_harnesses}}?"
+        blocks:
+        - type: text
+          config: |
+            TODO: Describe {{site.kong_harnesses}}.
+
+            {{site.kong_harnesses}} works with [{{site.ai_gateway}}](/ai-gateway/) and [AI Management](/ai-management/).
+
+      - header:
+          type: h2
+          text: "When should I use {{site.kong_harnesses}}?"
+        blocks:
+        - type: text
+          config: |
+            You should use {{site.kong_harnesses}} if one or more of the following is true:
+            - TODO: First reason
+            - TODO: Second reason
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Get started
+          description: Learn how to use {{site.kong_harnesses}} for the first time.
+          cta:
+            text: Get started
+            url: /kong-harnesses/get-started/
+            align: end
