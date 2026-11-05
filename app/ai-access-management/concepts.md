@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: "Token Vault"
     url: /identity/token-vault/
+  - text: "Org chart in {{site.ai_cost_management}}"
+    url: /ai-cost-management/org-chart/
   - text: "{{site.konnect_short_name}} teams and roles"
     url: /konnect-platform/teams-and-roles/#access-management
 
@@ -95,17 +97,11 @@ Teams can be nested under a parent team.
 
 ### Import an org structure
 
-To add users and teams in bulk, upload your org structure as a CSV file that contains the required columns:
-
-* `external_id`
-* `email`
-* `given_name`: The user's first name.
-* `family_name`
-* `manager_external_id`: Identifies who the user reports to, which the importer uses to build teams.
-
-The first upload creates all the people and teams it lists.
+To add users and teams in bulk, upload your org structure as a CSV file from the org chart: in the {{site.konnect_short_name}} sidebar, click **Cost Management**, then click **Org Chart**.
 
 Because teams change only through import, upload the file again whenever your org structure changes. Users that the new file no longer lists are deactivated, not deleted.
+
+See [Org chart in {{site.ai_cost_management}}](/ai-cost-management/org-chart/) for the file format, the upload steps, and how to set spend limits on teams and people.
 
 ## Groups
 

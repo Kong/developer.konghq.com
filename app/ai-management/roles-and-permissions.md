@@ -296,7 +296,7 @@ rows:
     individual: false
   - capability: "View and create budgets"
     admin: "Yes, for the whole organization"
-    manager: "Yes, for their teams"
+    manager: "View only"
     individual: false
   - capability: "Use the price catalog, attribution, and exports"
     admin: true

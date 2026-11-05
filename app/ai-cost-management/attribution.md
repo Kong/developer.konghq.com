@@ -69,6 +69,8 @@ related_resources:
     url: /ai-cost-management/analytics-and-debugging/
   - text: Budgets in {{site.ai_cost_management}}
     url: /ai-cost-management/budgets/
+  - text: Org chart in {{site.ai_cost_management}}
+    url: /ai-cost-management/org-chart/
   - text: Price catalog in {{site.ai_cost_management}}
     url: /ai-cost-management/price-catalog/
 ---
@@ -79,7 +81,7 @@ Attribution connects each request to an identity and context.
 When attribution is in place, you can use the data in the following ways:
 * The cost management [**Dashboard**](/ai-cost-management/analytics-and-debugging/#dashboard) breaks spend down by user, group, team, or tag so you can see where costs are concentrated.
 * The events [**Explorer**](/ai-cost-management/analytics-and-debugging/#explorer) lets you filter and compare any of those dimensions over time.
-* [**Budgets**](/ai-cost-management/budgets/) can target a specific user, group, or tag value, so you can track spend against a cap at whatever scope matters to your organization.
+* [**Budgets**](/ai-cost-management/budgets/) can target a specific user, group, team, or tag value, so you can track spend against a cap at whatever scope matters to your organization.
 
 ## How attribution works
 
@@ -134,6 +136,8 @@ A single event holds at most 64 groups.
 Teams appear in the event's `teams` field as an array of `principal/UUID` references.
 They come from {{site.identity}} team membership of the request's principal only.
 A single event can hold a maximum of 200 teams.
+
+Teams are created when you upload your org structure. See [Org chart in {{site.ai_cost_management}}](/ai-cost-management/org-chart/).
 
 ## Tags and headers
 

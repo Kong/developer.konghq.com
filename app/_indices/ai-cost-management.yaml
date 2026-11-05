@@ -12,6 +12,7 @@ sections:
     items:
       - path: /ai-cost-management/analytics-and-debugging/
       - path: /ai-cost-management/attribution/
+      - path: /ai-cost-management/org-chart/
       - path: /ai-cost-management/integrations/
       - path: /ai-cost-management/budgets/
       - path: /ai-cost-management/notification-channels/
