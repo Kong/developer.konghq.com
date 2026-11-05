@@ -16,6 +16,8 @@ related_resources:
     url: /event-gateway/entities/listener/
   - text: "How-to: Configure topic aliases"
     url: /event-gateway/configure-topic-aliases/
+  - text: "How-to: Fail over to a standby Kafka cluster"
+    url: /event-gateway/fail-over-kafka-clusters/
 
 tools:
     - konnect-api
@@ -93,6 +95,10 @@ rows:
   - use_case: "Infrastructure planning"
     description: |
       Through logical isolation, virtual clusters help organizations reduce Kafka infrastructure costs, as they eliminate the need to maintain multiple physical Kafka clusters for environment or team separation.
+  - use_case: "Cluster failover"
+    description: |
+      Clients connect to the virtual cluster, not to the backend brokers, so you can move them to a standby Kafka cluster by changing the virtual cluster's `destination`, without changing or restarting the clients.
+      See [Fail over to a standby Kafka cluster](/event-gateway/fail-over-kafka-clusters/).
 {% endtable %}
 <!--vale on-->
 
