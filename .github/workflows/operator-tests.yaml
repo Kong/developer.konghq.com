@@ -1,29 +1,22 @@
 name: Operator Automated Tests
-
-# Placeholder for the default branch only. GitHub exposes the "Run workflow"
-# button, and `gh workflow run` resolves the workflow, only when the file exists
-# on the default branch. A dispatch run uses the version of this file on the ref
-# it is dispatched against, so this stub never does the real work:
-#
-#   gh workflow run operator-tests.yaml --ref feat/operator-tests
-#
-# The real workflow lives on the feature branch and replaces this file on merge.
 on:
   workflow_dispatch:
     inputs:
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
+  schedule:
+  - cron: '0 0 * * FRI'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
 
 permissions:
+  actions: read
   contents: read
+  checks: write
+  statuses: write
 
-jobs:
-  placeholder:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Placeholder
-        run: |
-          echo "Placeholder on the default branch."
-          echo "Dispatch against another ref to run that branch's version:"
-          echo "  gh workflow run operator-tests.yaml --ref <branch>"
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
