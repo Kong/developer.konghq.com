@@ -48,3 +48,12 @@ rows:
             text: Get started
             url: /kong-harnesses/get-started/
             align: end
+    - blocks:
+      - type: card
+        config:
+          title: Reference
+          description: "TODO: What the reader finds in this reference."
+          cta:
+            text: Read the reference
+            url: /kong-harnesses/example-reference/
+            align: end
