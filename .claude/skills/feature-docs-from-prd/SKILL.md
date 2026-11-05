@@ -94,6 +94,17 @@ disagree or the spec is narrower than the PRD's ambition, document the
 spec's actual surface and flag the gap rather than documenting the PRD's
 aspiration as if it were shipped.
 
+**Don't restate the schema.** When documenting, do not duplicate what is
+already in the schema. Decide what needs to be documented that isn't already
+in the schema. The docs site renders the schema, so prose that restates it
+is redundant and goes stale. Before writing a sentence about a field, check
+whether the rendered schema already conveys it (name, type, default,
+required, enum values, one-line description); if so, don't write it.
+Document only what the schema doesn't say: when and why to use a setting,
+how fields interact, constraints that span fields, runtime behavior,
+gotchas, and examples. If a field's schema description is wrong or unclear,
+flag it to the writer instead of covering for it in prose.
+
 ## Step 4: Flag dev/internal-gated specs before drafting public docs
 
 If the spec change marks the new surface as internal-only or dev-only
