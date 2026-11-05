@@ -41,12 +41,52 @@ def derived_ports(offset)
   }
 end
 
+# TCPServer sets SO_REUSEADDR, which on macOS lets the probe bind a specific
+# address even while a wildcard listener holds the port, so probe with a raw
+# socket that fails loudly with EADDRINUSE instead.
+def port_free?(port)
+  [Addrinfo.tcp("127.0.0.1", port), Addrinfo.tcp("::1", port)].all? do |address|
+    socket = Socket.new(address.afamily, :STREAM)
+    begin
+      socket.bind(address)
+      true
+    rescue Errno::EADDRINUSE
+      false
+    rescue Errno::EADDRNOTAVAIL
+      true
+    ensure
+      socket.close
+    end
+  end
+end
+
+def live_worktree_paths
+  git("worktree", "list", "--porcelain").each_line.filter_map { |line| line[/\Aworktree (.+)\z/, 1] }
+end
+
+def reclaim_stale_claims(claims_dir)
+  live_paths = live_worktree_paths
+  Dir.children(claims_dir).each do |name|
+    marker = File.join(claims_dir, name)
+    next unless File.file?(marker)
+
+    claimed_path = File.read(marker).strip
+    File.unlink(marker) if claimed_path.empty? || !live_paths.include?(claimed_path)
+  end
+end
+
 def allocate_offset(claims_dir, worktree_root)
+  reclaim_stale_claims(claims_dir)
   (OFFSET_STEP..MAX_OFFSET).step(OFFSET_STEP) do |offset|
     marker = File.join(claims_dir, offset.to_s)
     begin
       File.open(marker, File::CREAT | File::EXCL | File::WRONLY) { |file| file.write(worktree_root) }
     rescue Errno::EEXIST
+      next
+    end
+
+    unless derived_ports(offset).values.all? { |port| port_free?(port) }
+      File.unlink(marker)
       next
     end
 
