@@ -37,7 +37,7 @@ Export the env variables:
 
 ```bash
 {% for cap in include.config.capture -%}
-export {{ cap.variable }}=$(echo "$_response" | {% if cap.jq %}jq -r "{{ cap.jq | strip }}"{% elsif cap.command %}{{ cap.command | strip }}{% endif %})
+export {{ cap.variable }}=$(printf '%s' "$_response" | {% if cap.jq %}jq -r "{{ cap.jq | strip }}"{% elsif cap.command %}{{ cap.command | strip }}{% endif %})
 {% endfor -%}
 ```
 {% endif %}

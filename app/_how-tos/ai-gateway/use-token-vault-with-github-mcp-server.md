@@ -33,9 +33,18 @@ tools:
   - konnect-api
 
 prereqs:
+  konnect:
+    - name: TOKEN_VAULT_PRIVATE_KEY
   inline:
+    - title: Vault encryption key
+      position: before
+      include_content: prereqs/token-vault-encryption-key
+      icon_url: /assets/icons/identity.svg
     - title: "{{site.identity}} directory"
       include_content: prereqs/kong-identity-directory
+      icon_url: /assets/icons/identity.svg
+    - title: "{{site.identity}} Token Vault"
+      include_content: prereqs/token-vault-directory
       icon_url: /assets/icons/identity.svg
     - title: Okta as the user IdP
       content: |
@@ -91,35 +100,52 @@ cleanup:
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
     - title: Clean up {{site.identity}} resources
-      include_content: md/identity/delete_directory
+      content: |
+        Delete the GitHub provider, the trusted IdP, and the vault key from your directory:
+
+        ```sh
+        curl -X DELETE "https://us.api.konghq.com/v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        curl -X DELETE "https://us.api.konghq.com/v2/directories/$DIRECTORY_ID/trusted-idps/$TRUSTED_IDP_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        curl -X DELETE "https://us.api.konghq.com/v2/directories/$DIRECTORY_ID/vault/keys/$VAULT_KEY_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        rm vault-private.pem vault-public.pem
+        ```
+        {: data-test-cleanup="block" }
+
+faqs:
+  - q: Why does `claude mcp login` send me to `http://localhost:8000/authorize` and return `no Route matched`?
+    a: |
+      The `claude mcp login` command doesn't use the authorization server that the AI MCP Server advertises in its protected resource metadata. It sends you to `http://localhost:8000/authorize`, which the data plane doesn't serve.
+
+      Sign in from a Claude Code session instead. Run `/mcp` and select the server, and Claude Code redirects you to Okta.
 ---
 
-## Enable the Token Vault on the directory
+## Trust Okta as the identity provider
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID
-status_code: 200
-method: PATCH
+url: /v2/directories/$DIRECTORY_ID/trusted-idps
+status_code: 201
+method: POST
 body:
-  vault_enabled: true
+  issuer_url: $OKTA_ISSUER
+  display_name: Okta
+  vault_access_enabled: true
+  jit_provisioning_enabled: true
+capture:
+  - variable: TRUSTED_IDP_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
 ## Register a vault key
 
-1. Generate a key pair:
-
-   ```sh
-   openssl genrsa -out vault-private.pem 2048
-   openssl rsa -in vault-private.pem -pubout -out vault-public.pem
-   ```
-
-1. Export the public key:
+1. Export the public key, with the newlines escaped so it fits in a JSON body:
 
    ```sh
    export VAULT_PUBLIC_KEY=$(awk 'NF {printf "%s\\n", $0}' vault-public.pem)
-   export VAULT_PRIVATE_KEY=$(cat vault-private.pem)
    ```
 
 1. Register the key:
@@ -134,21 +160,33 @@ headers:
 body:
   name: my-vault-key
   public_key: $VAULT_PUBLIC_KEY
+capture:
+  - variable: VAULT_KEY_ID
+    jq: ".id"
+  - variable: VAULT_KEY_KID
+    jq: ".kid"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Trust Okta as the identity provider
+## Create a Token Vault Datastore
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/trusted-idps
+url: /v1/ai-gateways/$AI_GATEWAY_ID/datastores
 status_code: 201
 method: POST
+headers:
+  - 'Content-Type: application/json'
 body:
-  issuer_url: $OKTA_ISSUER
-  display_name: Okta
-  vault_access_enabled: true
-  jit_provisioning_enabled: true
+  name: token-vault-datastore
+  display_name: Token Vault Datastore
+  type: token-vault
+  config:
+    directory: $DIRECTORY_NAME
+    current_version: $VAULT_KEY_KID
+    keys:
+      - version: $VAULT_KEY_KID
+        key: "{vault://env/TOKEN_VAULT_PRIVATE_KEY}"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -171,51 +209,6 @@ body:
 capture:
   - variable: PROVIDER_ID
     jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-## Expose the private key to the data plane
-
-{% env_variables %}
-KONG_VAULT_ENC_KEY: $VAULT_PRIVATE_KEY
-{% endenv_variables %}
-
-## Create an AI Vault for the private key
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/vaults
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: token-vault-env
-  type: env
-  config:
-    prefix: KONG_
-{% endkonnect_api_request %}
-<!--vale on-->
-
-## Create a Token Vault Datastore
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/datastores
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: token-vault-datastore
-  display_name: Token Vault Datastore
-  type: token-vault
-  config:
-    directory: kong-identity-directory
-    current_version: v1
-    keys:
-      - version: v1
-        key: "{vault://token-vault-env/vault_enc_key}"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -294,11 +287,7 @@ body:
      github-vault-demo "http://localhost:8000/github"
    ```
 
-1. Sign in with Okta: run `/mcp` in a Claude Code session, or run the following command from your shell:
-
-   ```sh
-   claude mcp login github-vault-demo
-   ```
+1. Start a Claude Code session, run `/mcp`, and select `github-vault-demo` to sign in with Okta.
 
 ## Validate the setup
 
@@ -309,3 +298,15 @@ body:
 1. Call `check_authentication_status`.
 
 1. Reload the tool list with `/mcp`. The GitHub MCP server's tools now appear.
+
+1. List the credentials stored for the GitHub provider:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+   The response contains one `user` credential with `status: active` for the Okta user's principal.
