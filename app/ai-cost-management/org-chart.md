@@ -131,7 +131,7 @@ An upload applies the following changes:
   To reactivate a user, click **Reactivate** in the users table or on the user's details page.
 * Teams and team memberships follow the reporting lines in the file.
 
-An upload can delete teams and replace every imported team.
+An upload can delete existing teams witho no members in the new upload. An upload can also replace existing items, for example: the manager's name change, so the upload only renames the team, which keeps the same ID. 
 
 You can't delete the whole org chart.
 
