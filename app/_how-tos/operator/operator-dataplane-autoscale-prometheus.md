@@ -254,14 +254,14 @@ helm upgrade --install --create-namespace -n prometheus --values values.yaml pro
    ```
    {: data-test-step="block" }
 
-1. To trigger autoscaling, run the following command. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value. The loop sends 100 requests, which builds up enough latency data over the 60 seconds window that the metric uses:
+1. To trigger autoscaling, start sending traffic in the background. Each request makes the underlying deployment sleep for 100ms, which raises the average response time to that value. Leave it running while you work through the rest of this guide: the 60-second average that the autoscaler reads only stays above its target while requests are flowing, and the metric can take a couple of minutes to be populated. The loop stops on its own after 15 minutes:
 
 {% validation custom-command %}
 command: |
-  for _ in {1..100}; do
+  for _ in {1..900}; do
     curl -k --no-progress-meter --fail-with-body "http://$PROXY_IP/command/shell?cmd=sleep%200.1"
     sleep 1
-  done
+  done > /dev/null 2>&1 &
 expected:
   return_code: 0
 render_output: false
@@ -386,7 +386,7 @@ If everything went well we should see the `SuccessfulRescale` events:
 ```
 {:.no-copy-code}
 
-Then when latency drops (when you stop sending traffic with the `curl` command) you should observe the `SuccessfulRescale` events scaling your workloads down:
+Then when latency drops (when the traffic loop finishes, or when you stop it) you should observe the `SuccessfulRescale` events scaling your workloads down:
 
 ```bash
 4s          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 1; reason: All metrics below target
