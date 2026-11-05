@@ -147,6 +147,7 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
+/ai-gateway/access-management/ /ai-cost-management/org-chart/
 /mesh/requirements/ /mesh/validated-versions/
 /mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
