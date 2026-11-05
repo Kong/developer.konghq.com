@@ -17,6 +17,9 @@ platform:
     - text: kongctl
       url: /kongctl/
       icon: /assets/icons/code.svg
+    - text: agent-auth-cli
+      url: /agent-auth-cli/
+      icon: /assets/icons/code.svg
     - text: Inso CLI
       url: /inso-cli/
       icon: /assets/icons/code.svg
