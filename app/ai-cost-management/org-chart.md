@@ -130,7 +130,8 @@ An upload applies the following changes:
   The preview shows a warning for each of these users.
   To reactivate a user, click **Reactivate** in the users table or on the user's details page.
 * Teams and team memberships follow the reporting lines in the file.
-  Managers get the Team Manager role for their team. See [How roles are assigned](/ai-management/roles-and-permissions/#how-roles-are-assigned).
+  Managers get the Team Manager role for their team. See [AI Management roles](/ai-management/roles-and-permissions/#roles).
+* An upload doesn't invite anyone to {{site.konnect_short_name}}. To give people access, [invite them](/ai-management/roles-and-permissions/#invite-a-user-to-ai-management).
 
 An upload deletes a team that has no members in the new file.
 An upload doesn't delete a team that only changed.

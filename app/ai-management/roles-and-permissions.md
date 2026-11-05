@@ -32,51 +32,50 @@ Team Managers and Individual Users ask an Org Admin for access.
 
 ## Roles
 
+{{site.konnect_short_name}} assigns Team Manager and Individual User for you.
+They do not appear in any role dropdown, and you cannot assign them manually.
+
 <!-- vale off -->
 {% table %}
 columns:
   - title: Role
     key: role
-  - title: Who has it
+  - title: How a user gets it
     key: who
   - title: What the role does
     key: does
 rows:
   - role: Org Admin
-    who: "A member of the {{site.konnect_short_name}} Organization Admin or Identity Admin [team](/konnect-platform/teams-and-roles/)."
+    who: "You add them to the {{site.konnect_short_name}} Organization Admin or Identity Admin [team](/konnect-platform/teams-and-roles/)."
     does: "Creates and manages resources, users, and access for the whole organization."
   - role: Team Manager
-    who: "The owner of a Team in the org chart."
+    who: "{{site.konnect_short_name}} assigns it to a user who manages a team in the [org chart](/ai-cost-management/org-chart/). The role applies to that team only."
     does: "Sees spend and budgets for their teams, and requests resources and access."
   - role: Individual User
-    who: "Any other user in the organization."
+    who: "{{site.konnect_short_name}} assigns it to a user whose email address matches a {{site.identity}} [principal](/identity/principals/) of type `User`."
     does: "Requests resources and access."
 {% endtable %}
 <!-- vale on -->
 
-### How roles are assigned
+A {{site.konnect_short_name}} user with no matching principal has no AI Management role.
+The match works in either order: the principal can exist before the user, or the user before the principal.
 
-Org Admin comes from {{site.konnect_short_name}} team membership.
-{{site.konnect_short_name}} assigns Team Manager and Individual User for you, so they do not appear in role dropdowns and you cannot assign them manually.
-The invite flow under **Manage organization** also cannot assign them, because you must pick a role from that list.
+### Invite a user to AI Management
 
-To give someone these roles, invite them as a {{site.konnect_short_name}} user from AI Management:
+AI Management has its own invite, which assigns these roles automatically.
+An [org chart import](/ai-cost-management/org-chart/) adds users to AI Management but does not invite them, so invite each user after you import.
+To invite a user:
 
-* In **Access management** > **Users**, open the actions menu for a user and click **Invite user**.
-* When you create a user, select **Invite this user to view their usage on Konnect**.
+1. In the {{site.konnect_short_name}} sidebar, click **Access Management**, then click **Users**.
+1. Do one of the following:
+   * For an existing user, open the user's actions menu and click **Invite user**.
+   * For a new user, click **New user**, fill in the form, and select **Invite this user to view their usage on Konnect**.
 
-When the person accepts the invite and signs in, {{site.konnect_short_name}} looks for a {{site.identity}} [principal](/identity/principals/) of type `User` with the same email address.
-If it finds one, it assigns the person Individual User.
-If the person manages a team in the [org chart](/ai-cost-management/org-chart/), they also get Team Manager for that team.
-
-The match also works in the other order.
-If the {{site.konnect_short_name}} user already exists, a new matching principal assigns the roles.
-An org chart import or automatic user provisioning can create that principal.
-
+When the user accepts the invite and signs in, they get their roles.
 Users who sign in with single sign-on (SSO) do not need an invite.
-They get the roles the first time they sign in.
+They get their roles the first time they sign in.
 
-To see the assigned roles, open the user's **Role Assignments** tab under **Manage organization** and select **All roles**.
+To check a user's roles, open the user's **Role Assignments** tab under **Manage organization** and select **All roles**.
 
 ## Models
 
