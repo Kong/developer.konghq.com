@@ -30,7 +30,7 @@ type: ai-rag-injector
 
 config:
   inject_template: |
-    Only use the following information surrounded by <RAG></RAG>to and your existing knowledge to provide the best possible answer to the user.
+    Only use the following information surrounded by <RAG></RAG> and your existing knowledge to provide the best possible answer to the user.
     <RAG><CONTEXT></RAG>
     User's question: <PROMPT>
   embeddings:
