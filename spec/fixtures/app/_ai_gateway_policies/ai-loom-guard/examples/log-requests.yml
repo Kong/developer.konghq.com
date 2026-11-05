@@ -1,0 +1,10 @@
+title: Log loom requests
+description: Log requests that match a loom pattern.
+weight: 100
+name: loom-guard
+display_name: Loom Guard
+type: ai-loom-guard
+config:
+  action: log
+tools:
+  - konnect-api
