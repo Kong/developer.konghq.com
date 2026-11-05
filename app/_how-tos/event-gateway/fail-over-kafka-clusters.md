@@ -586,7 +586,7 @@ The client configuration in the `vc` context never changed. The record that you 
 
 ## Consumer offsets
 
-{{site.event_gateway_short}} doesn't copy or translate consumer group offsets. A consumer group's committed offsets are stored on the Kafka cluster where the group committed them, and the virtual cluster forwards offset requests to whichever backend cluster it currently points at.
+{{site.event_gateway_short}} doesn't copy or translate consumer group offsets. A consumer group's committed offsets are stored on the Kafka cluster where the group committed them, and the virtual cluster forwards offset requests to the backend cluster in its `destination` at the time of the request.
 
 You can see this with the `payments-app` consumer group, which committed its offset before the failover. Describe the group through the virtual cluster again:
 
