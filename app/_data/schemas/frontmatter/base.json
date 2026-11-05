@@ -70,7 +70,8 @@
           "terraform",
           "admin-api",
           "konnect-api",
-          "kong-cli"
+          "kong-cli",
+          "agent-auth-cli"
         ]
       }
     },
