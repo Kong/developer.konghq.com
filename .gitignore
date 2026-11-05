@@ -21,6 +21,9 @@ node_modules
 
 .DS_Store
 
+/tmp
+/.dev-ports
+
 # Local Netlify folder
 .netlify
 
