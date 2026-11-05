@@ -89,7 +89,7 @@ Before removing a plugin note about a `kong.conf` setting (for example `untruste
 Remove, do not port (these describe Gateway mechanics that do not exist on AI Gateway):
 - Forward Proxy interaction, dynamic plugin ordering, Service/Route/Consumer wording.
 - Links to how-tos and to `/plugins/...` pages.
-- The plugin's "use cases" table with `?format=deck&target=...` links. Keep use cases to what the policy does, unless the user supplies real scenarios.
+- The plugin's "use cases" table with `?format=deck&target=...` links. Keep use cases to what the policy does, unless the user supplies real scenarios. A `## Use cases` section is an editorial choice: check whether other policy pages have one, and add it only when the user asks. When asked, use a two-column `{% table %}` (in `<!--vale off-->`), a one-sentence lead-in, and rows that name the reader's problem ("A user reports a failed request"), not the setting ("Set `echo_downstream`"). Scope each row to the entity types you verified, so no row promises behavior that a Limitations bullet takes back.
 
 Port and adapt:
 - The opener: "The X [AI Policy](/ai-gateway/entities/ai-policy/) ..." with `{{site.ai_gateway}}`. Entity names use "AI {Name}".
@@ -151,6 +151,7 @@ Suspected product bugs or unclear intent (an option that silently does nothing, 
 - Do not publish them on the page as notes or warnings, and do not publish first and ask afterward. One failed setup does not prove the feature is unsupported, and behavior may change.
 - Report them to the user with the exact repro and a draft engineering message in question form (template in `assets/results-table.md`).
 - Options confirmed not to work that are only a Gateway-only leftover (for example `upstream_fallback` needing an Upstream entity) can go in a short Limitations list when the user agrees.
+- If the user explicitly asks to publish a suspected bug as a Limitations bullet (for example, the header missing on AI MCP Server tool calls), do it, but say in the Step 5 accuracy section that engineering has not confirmed it. Write it in positive phrasing, one sentence per line, and name the exact entity type or mode you tested (for example, an AI MCP Server that converts REST APIs to tools), not all of them. Then reconcile the opener and scope sections so they don't contradict the bullet.
 - Surface editorial choices (keep a note or drop it, add a section) as questions. Do not decide them silently.
 
 **Gate 3:** present the results table, the contradicted and untested claims, suspected bugs, and the proposed page content. In test-only mode, stop after the report and Gate 4.
@@ -176,7 +177,7 @@ Checks that mattered:
 - No em dashes, no "once" (use "when"), positive phrasing ("The default status code is `503`", not "If you don't set...").
 - Every example has a lead-in saying what it shows.
 - Add the interpretive layer: which scope to choose, what global scope risks, what runs before the policy.
-- Use cases framed by problem, but only real ones.
+- Use cases framed by problem, but only real ones. Flag rows phrased as settings, jargon such as "front door", and rows that overstate a scope the Limitations section restricts. Examples with names you never ran (a custom header name) are illustrative, so say so in the accuracy section.
 
 Then run `rtk vale <file>` and fix findings. If frontmatter changed, run `node tools/frontmatter-validator/index.js <file>`.
 
