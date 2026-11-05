@@ -14,22 +14,22 @@ requirements:
 - A running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
 - Port `10000`, or your custom Redis port is open and reachable from {{site.ai_gateway}}.
 - Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
-variables:
-  cluster_address:
-    value: $CLUSTER_ADDRESS
-    description: The Azure Managed Redis cluster address.
-  cluster_username:
-    value: $CLUSTER_USERNAME
-    description: The object (principal) ID of the Principal/Identity with essential access.
-  azure_client_id:
-    value: $AZURE_CLIENT_ID
-    description: The client ID of the Principal/Identity.
-  azure_client_secret:
-    value: $AZURE_CLIENT_SECRET
-    description: (Optional) The client secret of the Principal/Identity.
-  azure_tenant_id:
-    value: $AZURE_TENANT_ID
-    description: (Optional) The tenant ID of the Principal/Identity.
+# variables:
+#   cluster_address:
+#     value: $CLUSTER_ADDRESS
+#     description: The Azure Managed Redis cluster address.
+#   cluster_username:
+#     value: $CLUSTER_USERNAME
+#     description: The object (principal) ID of the Principal/Identity with essential access.
+#   azure_client_id:
+#     value: $AZURE_CLIENT_ID
+#     description: The client ID of the Principal/Identity.
+#   azure_client_secret:
+#     value: $AZURE_CLIENT_SECRET
+#     description: (Optional) The client secret of the Principal/Identity.
+#   azure_tenant_id:
+#     value: $AZURE_TENANT_ID
+#     description: (Optional) The tenant ID of the Principal/Identity.
 config:
   strategy: redis
   redis:

@@ -12,13 +12,13 @@ requirements:
   - You have a Mistral AI account.
   - You have created an [AI Model](/ai-gateway/entities/ai-model/)
 
-variables:
-  key:
-    value: $MISTRAL_API_KEY
-    description: The API key to access Mistral AI.
-  model:
-    value: $MISTRAL_MODEL
-    description: The Mistral AI model to use for moderation.
+# variables:
+#   key:
+#     value: $MISTRAL_API_KEY
+#     description: The API key to access Mistral AI.
+#   model:
+#     value: $MISTRAL_MODEL
+#     description: The Mistral AI model to use for moderation.
   
 
 name: mistral-moderation

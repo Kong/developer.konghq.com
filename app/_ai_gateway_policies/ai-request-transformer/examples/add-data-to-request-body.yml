@@ -6,10 +6,10 @@ weight: 900
 requirements:
   - You have an OpenAI subscription.
 
-variables:
-  openai_key:
-    value: $OPENAI_API_KEY
-    description: An API key to connect to the OpenAI API.
+# variables:
+#   openai_key:
+#     value: $OPENAI_API_KEY
+#     description: An API key to connect to the OpenAI API.
 
 name: add-data-to-request-body
 display_name: Add data to a request body

@@ -3,19 +3,19 @@ description: "Configuration for enforcing content safety policies on LLM request
 
 weight: 900
 
-variables:
-  gcp_service_account_json:
-    description: GCP service account credentials in JSON format
-    value: $GCP_SERVICE_ACCOUNT_JSON
-  project_id:
-    description: GCP project identifier
-    value: $GCP_PROJECT_ID
-  location_id:
-    description: GCP location identifier
-    value: $GCP_LOCATION_ID
-  template_id:
-    description: Guardrail template identifier
-    value: $GCP_TEMPLATE_ID
+# variables:
+#   gcp_service_account_json:
+#     description: GCP service account credentials in JSON format
+#     value: $GCP_SERVICE_ACCOUNT_JSON
+#   project_id:
+#     description: GCP project identifier
+#     value: $GCP_PROJECT_ID
+#   location_id:
+#     description: GCP location identifier
+#     value: $GCP_LOCATION_ID
+#   template_id:
+#     description: Guardrail template identifier
+#     value: $GCP_TEMPLATE_ID
 
 name: configure-gcp-model-armor
 display_name: AI GCP Model Armor configuration

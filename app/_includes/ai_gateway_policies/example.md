@@ -5,7 +5,7 @@
 
 {% assign scope_labels = site.data.entity_examples.config.ai_gateway_scopes %}
 
-{% include plugin_config_example.md title=title entity='policy' targets=scope_labels target_label='Select a scope' %}
+{% include plugin_config_example.md title=title entity='policy' targets=scope_labels target_label='Select a scope' hide_variables=true %}
 {%- if page.output_format == 'markdown' %}
 {% include ai_gateway_policies/attach_example.md targets=scope_labels %}
 {%- else %}

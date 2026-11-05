@@ -13,7 +13,7 @@
 * {{ requirement | liquify }}
 {%- endfor -%}
 {%- endunless -%}
-{% unless page.example.variables == empty %}
+{% unless page.example.variables == empty or include.hide_variables %}
 ### Environment variables
 
 {% for variable in page.example.variables %}

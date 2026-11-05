@@ -8,13 +8,13 @@ requirements:
 
 weight: 900
 
-variables:
-  header_value:
-    value: $MISTRAL_API_KEY
-    description: Your Mistral API key
-  redis_host:
-    value: $REDIS_HOST
-    description: The host where your Redis instance runs
+# variables:
+#   header_value:
+#     value: $MISTRAL_API_KEY
+#     description: Your Mistral API key
+#   redis_host:
+#     value: $REDIS_HOST
+#     description: The host where your Redis instance runs
 
 name: semantic-cache-mistral
 display_name: Set up with Mistral and Redis
