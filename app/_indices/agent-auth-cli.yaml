@@ -1,0 +1,20 @@
+title: agent-auth-cli Documentation
+groups:
+  - title: About agent-auth-cli
+    sections:
+      - items:
+          - path: /agent-auth-cli/
+
+  - title: CLI References
+    sections:
+      - items:
+          - path: /agent-auth-cli/credential/
+          - path: /agent-auth-cli/doctor/
+          - path: /agent-auth-cli/login/
+          - path: /agent-auth-cli/logout/
+          - path: /agent-auth-cli/profile/
+          - path: /agent-auth-cli/profile/*/**
+          - path: /agent-auth-cli/setup/
+          - path: /agent-auth-cli/status/
+          - path: /agent-auth-cli/statusline/
+          - path: /agent-auth-cli/token/
