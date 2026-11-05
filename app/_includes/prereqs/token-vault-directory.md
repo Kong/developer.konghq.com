@@ -1,4 +1,4 @@
-The Token Vault must be enabled on your {{site.identity}} directory. Enable it, or check if it's already enabled.
+You must enable [Token Vault](/identity/token-vault/) must on your {{site.identity}} directory. Enable it, or check if it's already enabled.
 
 {% navtabs 'token-vault' %}
 {% navtab "Enable Token Vault" %}
