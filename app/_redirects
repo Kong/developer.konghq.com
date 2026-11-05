@@ -551,3 +551,6 @@
 /how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
 /how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
 /how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301
+
+# Security advisories moved under /support/security/
+/support/kong-ingress-controller-is-not-affected-by-ingressnightmare/  /support/security/security-advisory-ingressnightmare/
