@@ -110,9 +110,10 @@ async function runCleanup(cleanup, container, runtimeConfig) {
   if (cleanup) {
     const config = await processCleanup(cleanup);
     if (config.commands) {
-      // Cleanup is best-effort: a command that fails (e.g. deleting a
-      // resource an earlier failed step never created) must not skip the
-      // remaining ones, or later resources leak.
+      // A command that fails (e.g. deleting a resource an earlier failed step
+      // never created) must not skip the remaining ones, or later resources
+      // leak, but it does mean state was left behind: run them all, then fail
+      // the run so a leaked resource is not reported as a pass.
       const errors = [];
       for (const command of config.commands) {
         try {
@@ -135,9 +136,9 @@ async function runCleanup(cleanup, container, runtimeConfig) {
         for (const error of errors) {
           log(`     ${error}`);
         }
-      } else {
-        log(`   cleanup ✅ .`);
+        throw new Error(`Cleanup failed: ${errors.join("; ")}`);
       }
+      log(`   cleanup ✅ .`);
     }
   }
 }
