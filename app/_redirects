@@ -551,3 +551,6 @@
 /how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
 /how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
 /how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301
+
+# AI Access Management moved out of ai-gateway
+/ai-gateway/access-management/ /ai-access-management/ 301
