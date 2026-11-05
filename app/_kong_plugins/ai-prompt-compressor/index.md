@@ -111,7 +111,7 @@ docker pull kong/ai-compress-service:TAG
 Replace `TAG` with the appropriate version, such as:
 
 ```bash
-docker pull kong/ai-compress-service:v0.6.0
+docker pull kong/ai-compress-service:latest
 ```
 
 ### Image configuration options
