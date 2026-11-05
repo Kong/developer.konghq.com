@@ -161,6 +161,7 @@ rows:
 
 The following diagram shows how those pieces relate:
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
   client(["Client (API key)"])
@@ -203,6 +204,7 @@ flowchart TB
     feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
+<!--vale on-->
 
 ## Create a Consumer
 
@@ -389,7 +391,7 @@ capture:
 <!--vale on-->
 
 {:.info}
-> The `limit` is expressed in the meter's own unit, which is tokens here. A short chat request like the one in the validation step below costs roughly 20 prompt tokens, so 100 tokens is spent after about five requests: long enough to see traffic pass, short enough to see it blocked. `usage_period` is set to `PT1H` because one hour is the shortest usage period the API accepts.
+> The `limit` is expressed in the meter's own unit, which is tokens here. A short chat request like the one in [Validate](#validate) costs roughly 20 prompt tokens, so 100 tokens is spent after about five requests: long enough to see traffic pass, short enough to see it blocked. `usage_period` is set to `PT1H` because one hour is the shortest usage period the API accepts.
 
 Publish the plan so you can subscribe customers to it:
 

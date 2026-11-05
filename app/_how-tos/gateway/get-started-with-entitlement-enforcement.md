@@ -148,6 +148,7 @@ rows:
 
 The following diagram shows how those pieces relate:
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
   client(["Client (API key)"])
@@ -186,6 +187,7 @@ flowchart TB
     feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
+<!--vale on-->
 
 ## Create a Consumer
 

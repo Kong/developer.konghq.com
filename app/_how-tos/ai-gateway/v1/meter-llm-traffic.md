@@ -71,7 +71,7 @@ major_version:
 
 ---
 
-This getting-started guide shows how to meter LLM traffic—such as token consumption or model-specific usage—from {{site.base_gateway}} and convert that raw LLM activity into billable usage with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
+This getting-started guide shows how to meter LLM traffic, such as token consumption or model-specific usage, from {{site.base_gateway}} and convert that raw LLM activity into billable usage with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 
 
 ## Create a Consumer

@@ -92,6 +92,7 @@ In this guide, you'll:
 
 The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
   subgraph gateway["<b>Kong Gateway</b>"]
@@ -120,6 +121,7 @@ flowchart TB
     subscription --> plan
 
 {% endmermaid %}
+<!--vale on-->
 
 
 ## Create a Consumer
