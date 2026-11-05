@@ -41,8 +41,8 @@ faqs:
       Fix the listed errors and choose the file again.
   - q: Why is the cost center **Unattributed**?
     a: |
-      Cost centers are set per user, and the org structure file doesn't include them.
-      Spend stays unattributed until you set a cost center on the user.
+      A user's spend stays unattributed until the user has a cost center.
+      Add a `cost_center` column to the org structure file, or set the cost center in the user's details.
 
 related_resources:
   - text: Attribution in {{site.ai_cost_management}}
@@ -70,7 +70,7 @@ Only organization admins can upload an org structure or set spend limits.
 
 ## Org structure file
 
-The org structure file is a CSV file of up to 10 MB with one row per user.
+The org structure file is a CSV file of up to 10 MB and 50,000 rows, with one row per user.
 The first row is a header with the following columns:
 
 {% table %}
@@ -90,6 +90,8 @@ rows:
     description: "The user's last name."
   - column: "`manager_external_id`"
     description: "The `external_id` of the person this user reports to. {{site.konnect_short_name}} uses it to build the teams."
+  - column: "`cost_center` (optional)"
+    description: "The user's [cost center](#cost-centers)."
 {% endtable %}
 
 {{site.konnect_short_name}} matches column names without regard to case, and ignores any other column.
@@ -123,7 +125,10 @@ An upload applies the following changes:
   If it doesn't match, the upload creates a new user.
 * {{site.konnect_short_name}} deactivates users that the file no longer lists.
   They're not deleted.
-  A user you deactivated manually stays inactive.
+* An upload never reactivates an inactive user, even if the file lists them.
+  This applies whether you deactivated the user manually or an earlier upload deactivated them.
+  The preview shows a warning for each of these users.
+  To reactivate a user, click **Reactivate** in the users table or on the user's details page.
 * Teams and team memberships follow the reporting lines in the file.
 
 An upload can delete teams and replace every imported team.
@@ -143,9 +148,15 @@ Select a team or user to see its details:
 ### Cost centers
 
 A cost center is where a user's spend is charged.
-You set it per user in the [user's details](/ai-access-management/concepts/#users), and the org structure file doesn't include it.
-Until you set one, the user's spend shows as **Unattributed**.
+You set it per user, either with the optional `cost_center` column in the org structure file or in the [user's details](/ai-access-management/concepts/#users).
+Until a user has one, the user's spend shows as **Unattributed**.
 Teams don't have cost centers, only individual users.
+
+The `cost_center` column works as follows:
+* If a row matches an existing user, the upload replaces that user's cost center with the value in the file.
+  This includes a cost center you set in the user's details.
+* If the cell is blank, the upload clears the user's cost center.
+* If the file has no `cost_center` column, the upload leaves every cost center as it is.
 
 ## Set a spend limit on a team or user
 
@@ -202,6 +213,6 @@ See [Groups and teams](/ai-cost-management/attribution/#groups-and-teams) to lea
 
 The org chart has the following limitations:
 * You can't create teams or change team membership manually. Teams change only when you upload a file.
-* The file supports only the five columns listed in [Org structure file](#org-structure-file).
+* The file supports only the columns listed in [Org structure file](#org-structure-file).
 * An organization has one org chart.
 * The org chart doesn't roll up spend or member counts from sub-teams into a parent team.
