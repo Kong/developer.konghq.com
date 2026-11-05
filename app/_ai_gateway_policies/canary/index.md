@@ -34,13 +34,13 @@ This lets you try the new upstream on a small group of clients first, then incre
 ## How does the Canary Release Policy work?
 
 The Canary Release Policy leaves the upstream configured on the entity in place as the primary upstream.
-You define the canary upstream in the policy with [`config.upstream_host`](/ai-gateway/policies/canary/reference/#schema--config-upstream-host) and [`config.upstream_port`](/ai-gateway/policies/canary/reference/#schema--config-upstream-port).
+You define the canary upstream in the Policy with [`config.upstream_host`](/ai-gateway/policies/canary/reference/#schema--config-upstream-host) and [`config.upstream_port`](/ai-gateway/policies/canary/reference/#schema--config-upstream-port).
 To replace the request path, set [`config.upstream_uri`](/ai-gateway/policies/canary/reference/#schema--config-upstream-uri).
-For each request, the policy selects the primary or the canary upstream.
+For each request, the Policy selects the primary or the canary upstream.
 
 You can control the share of requests that use the canary upstream in two ways:
 - **Fixed percentage:** set [`config.percentage`](/ai-gateway/policies/canary/reference/#schema--config-percentage) to the share of requests that use the canary upstream. Use this for a trial at a steady share, such as 10% for a week.
-- **Time-based rollout:** set [`config.start`](/ai-gateway/policies/canary/reference/#schema--config-start) to a Unix timestamp and [`config.duration`](/ai-gateway/policies/canary/reference/#schema--config-duration) to a number of seconds. Use this to ramp up without manual changes. All requests use the primary upstream until `start`, and the share that uses the canary upstream then increases over the duration. The policy ignores `start` when `percentage` is set.
+- **Time-based rollout:** set [`config.start`](/ai-gateway/policies/canary/reference/#schema--config-start) to a Unix timestamp and [`config.duration`](/ai-gateway/policies/canary/reference/#schema--config-duration) to a number of seconds. Use this to ramp up without manual changes. All requests use the primary upstream until `start`, and the share that uses the canary upstream then increases over the duration. The Policy ignores `start` when `percentage` is set.
 
 The following example sends 20% of requests to a canary upstream. Setting `hash` to `none` selects the upstream for each request, so even a single client sees about 20% on the canary:
 
@@ -66,7 +66,7 @@ For details, see [Choose how requests are grouped](#choose-how-requests-are-grou
 
 ## Choose how requests are grouped
 
-The policy assigns each request to one of [`config.steps`](/ai-gateway/policies/canary/reference/#schema--config-steps) buckets.
+The Policy assigns each request to one of [`config.steps`](/ai-gateway/policies/canary/reference/#schema--config-steps) buckets.
 Each bucket uses either the primary or the canary upstream.
 [`config.hash`](/ai-gateway/policies/canary/reference/#schema--config-hash) controls which requests share a bucket:
 
@@ -95,13 +95,13 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-With `consumer`, `header`, or `ip`, the policy assigns a client to the same upstream on every request.
+With `consumer`, `header`, or `ip`, the Policy assigns a client to the same upstream on every request.
 When a bucket moves to the canary upstream, every client in that bucket moves with it.
 The split is by client, so a client that sends more traffic than average skews the request split.
 For example, a 50% rollout moves about half of the clients, which can be more or less than half of the requests.
 With a single client or one IP address, all requests use the same upstream.
 
-If the policy can't identify the AI Consumer, IP address, or header value for a request, it falls back to the AI Consumer, then the IP address, then `none`.
+If the Policy can't identify the AI Consumer, IP address, or header value for a request, it falls back to the AI Consumer, then the IP address, then `none`.
 
 {:.warning}
 > **IP address grouping:** {{site.ai_gateway}} reads the client IP from a forwarded header only when the sender is listed in the [`trusted_ips`](/ai-gateway/configuration/#trusted-ips) Nginx property.
@@ -116,7 +116,7 @@ To test a canary upstream before any live traffic uses it, set `percentage` to `
 
 ## What changes on a canary request
 
-The policy replaces only the destination host and port, plus the path when you set `upstream_uri`.
+The Policy replaces only the destination host and port, plus the path when you set `upstream_uri`.
 The rest of the request depends on the entity:
 
 - **AI Model:** the request keeps the provider's hostname in the `Host` header and TLS server name, for example `api.openai.com`. It also keeps the provider's path, for example `/v1/chat/completions`, unless you set `upstream_uri`.
@@ -140,11 +140,11 @@ Streaming responses from the canary upstream work the same way as streaming resp
 
 ## Finish or roll back the rollout
 
-When the canary share reaches 100% and you're satisfied with the new upstream, point the entity at the new upstream and remove the policy.
-To roll back at any time, remove the policy or set `percentage` to `0`.
-Removing the policy sends all traffic back to the primary upstream immediately.
+When the canary share reaches 100% and you're satisfied with the new upstream, point the entity at the new upstream and remove the Policy.
+To roll back at any time, remove the Policy or set `percentage` to `0`.
+Removing the Policy sends all traffic back to the primary upstream immediately.
 
 ## Limitations
 
-- The policy ignores [`config.upstream_fallback`](/ai-gateway/policies/canary/reference/#schema--config-upstream-fallback). When the canary upstream is unreachable, the request fails with a `502` status code.
+- The Policy ignores [`config.upstream_fallback`](/ai-gateway/policies/canary/reference/#schema--config-upstream-fallback). When the canary upstream is unreachable, the request fails with a `502` status code.
 - The policy doesn't health check the canary upstream. Monitor it separately before you increase the percentage.
