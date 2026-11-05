@@ -56,6 +56,7 @@ cleanup:
         ```bash
         docker rm -f compress-service
         ```
+        {: data-test-cleanup="block" }
       icon_url: /assets/icons/third-party/docker.svg
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -261,6 +262,7 @@ The following output for the long document shows the token counts before and aft
   "original_token_count": 147
 }
 ```
+{:.no-copy-code}
 
 The top-level `original_token_count`, `compress_token_count`, and `save_token_count` fields total the tokens across all compressed messages.
 The prompt shrank from 147 to 44 tokens, a saving of 103 tokens.
