@@ -17,6 +17,14 @@ Do not move a label between bold and backticks. One-sentence inline UI summaries
 
 A fenced `curl` or raw HTTP example for a Konnect or Admin API call could use `{% konnect_api_request %}` or `{% control_plane_request %}`. Suggest the tag, in prose. Not a violation: pages with no on-prem and Konnect toggle for `control_plane_request`, or examples that pass a JSON file the tag parser would unescape.
 
+## Command and API-call lead-ins
+
+The sentence before a `curl`, `deck`, `kongctl`, `terraform` or API block names the resource it creates or changes and, briefly, why. Flag "Run the following:", "Run this command:" and "Use the following request:" when the block shows what to name. Suggest the lead-in, for example "Create an auth server using the [`/v1/auth-servers` endpoint](...):". Not a violation: a lead-in that already names the resource.
+
+## Branching
+
+A how-to is linear. Raise as a question, never a suggestion, any "Option 1 / Option 2", "Alternatively" or "If you prefer X, do Y instead" inside numbered steps. Ask whether the alternative belongs on the reference page's "Configure" section, or as a note or FAQ. Not a violation: a tool switch that the page's `tools` frontmatter renders as tabs, and a prerequisite choice made once.
+
 ## Validation
 
 A how-to ends with a validation step that shows the reader how to confirm the result. Flag a how-to that adds a configuration or command change and has none.
