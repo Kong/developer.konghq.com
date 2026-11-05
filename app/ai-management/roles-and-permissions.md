@@ -32,8 +32,8 @@ Team Managers and Individual Users ask an Org Admin for access.
 
 ## Roles
 
-{{site.konnect_short_name}} assigns Team Manager and Individual User for you.
-They do not appear in any role dropdown, and you cannot assign them manually.
+{{site.konnect_short_name}} assigns Team Manager and Individual User for you automatically.
+They don't appear in any role dropdown, and you can't assign them manually.
 
 <!-- vale off -->
 {% table %}
@@ -63,7 +63,7 @@ The match works in either order. An org chart import or automatic user provision
 ### Invite a user to AI Management
 
 AI Management has its own invite, which assigns these roles automatically.
-An [org chart import](/ai-cost-management/org-chart/) adds users to AI Management but does not invite them, so invite each user after you import.
+An [org chart import](/ai-cost-management/org-chart/) adds users to AI Management but doesn't invite them, so invite each user after you import.
 To invite a user:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Access Management**, then click **Users**.
@@ -75,7 +75,7 @@ When the user accepts the invite and signs in, they get their roles.
 Users who sign in with single sign-on (SSO) do not need an invite.
 They get their roles the first time they sign in.
 
-To check a user's roles, open the user's **Role Assignments** tab under **Manage organization** and select **All roles**.
+To check a user's roles, go to **Manage organization**, open the user's **Role Assignments** tab,  and select **All roles**.
 
 ## Models
 
