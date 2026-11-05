@@ -9,6 +9,8 @@ NETLIFY_BASE_PORT = 8888
 JEKYLL_BASE_PORT = 4000
 VITE_BASE_PORT = 3036
 LIVERELOAD_BASE_PORT = 35729
+OFFSET_STEP = 10
+MAX_OFFSET = 190
 
 CLAIMS_DIR_NAME = "dev-port-claims"
 PORT_FILE_NAME = ".dev-ports"
@@ -39,9 +41,22 @@ def derived_ports(offset)
   }
 end
 
-def allocate_offset(_claims_dir, _worktree_root)
-  raise NotImplementedError,
-        "port allocation is not implemented yet; set PORT_OFFSET or create #{PORT_FILE_NAME}"
+def allocate_offset(claims_dir, worktree_root)
+  (OFFSET_STEP..MAX_OFFSET).step(OFFSET_STEP) do |offset|
+    marker = File.join(claims_dir, offset.to_s)
+    begin
+      File.open(marker, File::CREAT | File::EXCL | File::WRONLY) { |file| file.write(worktree_root) }
+    rescue Errno::EEXIST
+      next
+    end
+
+    File.write(File.join(worktree_root, PORT_FILE_NAME), "#{offset}\n")
+    warn "exe/dev-ports: claimed port offset #{offset} for #{worktree_root}"
+    return offset
+  end
+
+  abort "exe/dev-ports: no free port offset between #{OFFSET_STEP} and #{MAX_OFFSET}; " \
+        "set PORT_OFFSET for this run or remove unused worktrees"
 end
 
 git_dir = File.expand_path(git("rev-parse", "--git-dir"))
