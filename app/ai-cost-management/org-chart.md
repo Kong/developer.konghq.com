@@ -131,7 +131,15 @@ An upload applies the following changes:
   To reactivate a user, click **Reactivate** in the users table or on the user's details page.
 * Teams and team memberships follow the reporting lines in the file.
 
-An upload can delete existing teams witho no members in the new upload. An upload can also replace existing items, for example: the manager's name change, so the upload only renames the team, which keeps the same ID. 
+An upload deletes a team that has no members in the new file.
+An upload doesn't delete a team that only changed.
+For example, if a manager's name changes, the upload renames the team and keeps its ID.
+
+Deleting a team doesn't change your budget list.
+Budgets that you set on a deleted team still appear in **Cost Management** > **Budgets**.
+You can keep them for your records, or [delete them manually](/ai-cost-management/budgets/).
+You can't change a budget's scope, so a budget can't move to a different team.
+To limit a new team, [create a new budget](/ai-cost-management/budgets/#set-up-a-budget).
 
 You can't delete the whole org chart.
 
