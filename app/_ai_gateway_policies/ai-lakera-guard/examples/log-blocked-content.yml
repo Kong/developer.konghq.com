@@ -13,10 +13,10 @@ requirements:
   - You have created an [AI Model](/ai-gateway/entities/ai-model/)
   - You have created a logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
 
-variables:
-  lakera_api_key:
-    description: The API key for your Lakera account.
-    value: $LAKERA_API_KEY
+# variables:
+#   lakera_api_key:
+#     description: The API key for your Lakera account.
+#     value: $LAKERA_API_KEY
 
 name: lakera-guard-log-blocked-content
 display_name: Log blocked request and response content

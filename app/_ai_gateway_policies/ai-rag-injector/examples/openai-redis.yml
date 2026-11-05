@@ -16,13 +16,13 @@ requirements:
   - "A [Redis](https://redis.io/docs/latest/) instance."
   - "Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}."
 
-variables:
-  key:
-    value: $OPENAI_API_KEY
-    description: The API key to use to connect to OpenAI.
-  redis:
-    value: $REDIS_HOST
-    description: The Redis server's host
+# variables:
+#   key:
+#     value: $OPENAI_API_KEY
+#     description: The API key to use to connect to OpenAI.
+#   redis:
+#     value: $REDIS_HOST
+#     description: The Redis server's host
 
 name: rag-injector-openai-redis
 display_name: RAG injection with OpenAI and Redis

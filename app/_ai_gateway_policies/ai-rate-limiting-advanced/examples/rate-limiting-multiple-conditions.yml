@@ -19,10 +19,10 @@ scopes:
 requirements:
 - You have created an [AI Model](/ai-gateway/entities/ai-model/)
 - An existing [AI Consumer](/ai-gateway/entities/ai-consumer/)
-variables:
-  consumer_name:
-    value: $CONSUMER_USERNAME
-    description: The username of the AI Consumer to rate limit.
+# variables:
+#   consumer_name:
+#     value: $CONSUMER_USERNAME
+#     description: The username of the AI Consumer to rate limit.
 config:
   policies:
   - match:

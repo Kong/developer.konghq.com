@@ -33,25 +33,25 @@ requirements:
     ]
   }
   ```
-variables:
-  instance_address:
-    value: $INSTANCE_ADDRESS
-    description: The ElastiCache instance address.
-  instance_username:
-    value: $INSTANCE_USERNAME
-    description: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
-  aws_cache:
-    value: $AWS_CACHE_NAME
-    description: Name of your AWS ElastiCache instance.
-  aws_region:
-    value: $AWS_REGION
-    description: Your AWS ElastiCache instance region.
-  aws_key_id:
-    value: $AWS_ACCESS_KEY_ID
-    description: (Optional) Your AWS access key ID.
-  aws_secret_key:
-    value: $AWS_ACCESS_SECRET_KEY
-    description: (Optional) Your AWS secret access key.
+# variables:
+#   instance_address:
+#     value: $INSTANCE_ADDRESS
+#     description: The ElastiCache instance address.
+#   instance_username:
+#     value: $INSTANCE_USERNAME
+#     description: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
+#   aws_cache:
+#     value: $AWS_CACHE_NAME
+#     description: Name of your AWS ElastiCache instance.
+#   aws_region:
+#     value: $AWS_REGION
+#     description: Your AWS ElastiCache instance region.
+#   aws_key_id:
+#     value: $AWS_ACCESS_KEY_ID
+#     description: (Optional) Your AWS access key ID.
+#   aws_secret_key:
+#     value: $AWS_ACCESS_SECRET_KEY
+#     description: (Optional) Your AWS secret access key.
 config:
   strategy: redis
   redis:

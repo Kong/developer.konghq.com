@@ -9,22 +9,22 @@ requirements:
   - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
   - You have created an [AI Model](/ai-gateway/entities/ai-model/)
 
-variables:
-  guardrails_id:
-    description: The guardrail identifier used in the request to apply the guardrail
-    value: $GUARDRAILS_ID
-  guardrails_version:
-    description: The guardrail version used in the request to apply the guardrail
-    value: $GUARDRAILS_VERSION
-  aws_region:
-    description: The AWS region where the guardrail is deployed
-    value: $AWS_REGION
-  aws_access_key_id:
-    description: The AWS access key ID used to authenticate the request
-    value: $AWS_ACCESS_KEY_ID
-  aws_secret_access_key:
-    description: The AWS secret access key used to authenticate the request
-    value: $AWS_SECRET_ACCESS_KEY
+# variables:
+#   guardrails_id:
+#     description: The guardrail identifier used in the request to apply the guardrail
+#     value: $GUARDRAILS_ID
+#   guardrails_version:
+#     description: The guardrail version used in the request to apply the guardrail
+#     value: $GUARDRAILS_VERSION
+#   aws_region:
+#     description: The AWS region where the guardrail is deployed
+#     value: $AWS_REGION
+#   aws_access_key_id:
+#     description: The AWS access key ID used to authenticate the request
+#     value: $AWS_ACCESS_KEY_ID
+#   aws_secret_access_key:
+#     description: The AWS secret access key used to authenticate the request
+#     value: $AWS_SECRET_ACCESS_KEY
 
 name: block-requests-that-violate-guardrail-policies
 display_name: Block requests or responses that violate guardrails policies

@@ -18,13 +18,13 @@ requirements:
   - "A [Valkey](https://valkey.io/) 8.x instance."
   - "Port `6379`, or your custom Valkey port is open and reachable from {{site.ai_gateway}}."
 
-variables:
-  key:
-    value: $OPENAI_API_KEY
-    description: The API key to use to connect to OpenAI.
-  valkey:
-    value: $VALKEY_HOST
-    description: The Valkey server's host
+# variables:
+#   key:
+#     value: $OPENAI_API_KEY
+#     description: The API key to use to connect to OpenAI.
+#   valkey:
+#     value: $VALKEY_HOST
+#     description: The Valkey server's host
 
 name: rag-injector-openai-valkey
 display_name: RAG injection with OpenAI and Valkey

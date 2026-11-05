@@ -14,13 +14,13 @@ requirements:
 - A running Redis instance on an [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
 - Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}.
 - "Assign the principal to the corresponding role: \n* [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster\n* [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey\n"
-variables:
-  cluster_address:
-    value: $CLUSTER_ADDRESS
-    description: The Memorystore cluster address.
-  service_account:
-    value: $GCP_SERVICE_ACCOUNT
-    description: The GCP service account JSON.
+# variables:
+#   cluster_address:
+#     value: $CLUSTER_ADDRESS
+#     description: The Memorystore cluster address.
+#   service_account:
+#     value: $GCP_SERVICE_ACCOUNT
+#     description: The GCP service account JSON.
 config:
   strategy: redis
   redis:
