@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "open3"
+require "socket"
+
+NETLIFY_BASE_PORT = 8888
+JEKYLL_BASE_PORT = 4000
+VITE_BASE_PORT = 3036
+LIVERELOAD_BASE_PORT = 35729
+
+CLAIMS_DIR_NAME = "dev-port-claims"
+PORT_FILE_NAME = ".dev-ports"
+URL_FILE_RELATIVE = "tmp/dev-url"
+
+def git(*args)
+  out, _err, status = Open3.capture3("git", *args)
+  raise "`git #{args.join(' ')}` failed" unless status.success?
+
+  out.strip
+end
+
+def parse_offset(value, source)
+  offset = Integer(value, 10)
+  return offset unless offset.negative?
+
+  raise ArgumentError
+rescue ArgumentError, TypeError
+  abort "exe/dev-ports: #{source} must be a non-negative integer, got #{value.inspect}"
+end
+
+def derived_ports(offset)
+  {
+    "NETLIFY_PORT" => NETLIFY_BASE_PORT + offset,
+    "JEKYLL_PORT" => JEKYLL_BASE_PORT + offset,
+    "VITE_RUBY_PORT" => VITE_BASE_PORT + offset,
+    "LIVERELOAD_PORT" => LIVERELOAD_BASE_PORT + offset
+  }
+end
+
+def allocate_offset(_claims_dir, _worktree_root)
+  raise NotImplementedError,
+        "port allocation is not implemented yet; set PORT_OFFSET or create #{PORT_FILE_NAME}"
+end
+
+git_dir = File.expand_path(git("rev-parse", "--git-dir"))
+git_common_dir = File.expand_path(git("rev-parse", "--git-common-dir"))
+worktree_root = File.expand_path(git("rev-parse", "--show-toplevel"))
+claims_dir = File.join(git_common_dir, CLAIMS_DIR_NAME)
+FileUtils.mkdir_p(claims_dir)
+
+port_file = File.join(worktree_root, PORT_FILE_NAME)
+env_offset = ENV["PORT_OFFSET"].to_s.strip
+file_offset = File.exist?(port_file) ? File.read(port_file).strip : nil
+file_offset = nil if file_offset&.empty?
+
+offset =
+  if !env_offset.empty?
+    parse_offset(env_offset, "PORT_OFFSET")
+  elsif file_offset
+    parse_offset(file_offset, "#{PORT_FILE_NAME} in #{worktree_root}")
+  elsif git_dir == git_common_dir
+    0
+  else
+    allocate_offset(claims_dir, worktree_root)
+  end
+
+ports = derived_ports(offset)
+ports.each { |name, port| puts "export #{name}=#{port}" }
+
+url = "http://localhost:#{ports.fetch('NETLIFY_PORT')}"
+url_file = File.join(worktree_root, URL_FILE_RELATIVE)
+FileUtils.mkdir_p(File.dirname(url_file))
+File.write(url_file, "#{url}\n")
