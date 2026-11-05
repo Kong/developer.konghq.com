@@ -95,7 +95,7 @@ The subject model is intentionally generic, enabling flexible application across
 
 #### Subject kinds
 
-{{site.metering_and_billing}} recognizes the following kinds of subjects. The **Include usage from** dropdown in the {{site.metering_and_billing}} UI groups subjects by these kinds:
+The **Include usage from** dropdown in the {{site.metering_and_billing}} UI groups subjects by kinds. {{site.metering_and_billing}} recognizes the following kinds of subjects:
 
 {% table %}
 columns:
@@ -158,7 +158,7 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 1. Review the **Key** field.
 
    {{site.metering_and_billing}} generates the key from the customer's name. The key is always part of the customer's usage attribution: events whose `subject` equals the key are attributed to this customer.
-1. In the **Usage Attribution** section, use the **Include usage from** dropdown to search for and select the usage sources that belong to this customer. The dropdown groups them by [subject kind](#subject-kinds): **Gateway Consumers**, **{{site.ai_gateway}} Consumers**, **Dev Portal Applications**, and **Generic Subjects**.
+1. In the **Usage Attribution** section, use the **Include usage from** dropdown to search for and select the usage sources that belong to this customer. The dropdown groups sources by [subject kind](#subject-kinds).
 
    To attribute a subject that isn't listed yet, type its key and select the **Create** option.
 1. Click **Save**.
