@@ -91,3 +91,52 @@ test('throws an error naming the token requirement when the request fails', asyn
   );
   assert.equal(writes.length, 0);
 });
+
+test('accepts releases tagged without a leading v', async () => {
+  const { fetchImpl } = fakeFetch([
+    { tag_name: '0.5.2', published_at: '2026-10-05T12:00:00Z', draft: false, prerelease: false },
+    { tag_name: '0.5.10', published_at: '2026-10-06T12:00:00Z', draft: false, prerelease: false },
+    { tag_name: '0.5.9', published_at: '2026-10-05T18:00:00Z', draft: false, prerelease: false },
+  ]);
+  const { writeFile, writes } = fakeWriter();
+
+  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+
+  assert.equal(
+    writes[0].content,
+    'name: agent-auth-cli\n\nreleases:\n' +
+      '  - release: "0.5"\n' +
+      '    version: "0.5.10"\n' +
+      '    latest: true\n' +
+      '    released: 2026-10-06\n',
+  );
+});
+
+test('derives the released date from published_at', async () => {
+  const { fetchImpl } = fakeFetch([
+    { tag_name: 'v0.4.1', published_at: '2026-10-01T10:15:30Z', draft: false, prerelease: false },
+  ]);
+  const { writeFile, writes } = fakeWriter();
+
+  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+
+  assert.equal(writes[0].content, 'name: agent-auth-cli\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
+});
+
+test('consumes whatever the API returned without paginating', async () => {
+  const releases = [1, 2, 3, 4, 5, 6].map((minor) => ({
+    tag_name: `v0.${minor}.0`,
+    published_at: `2026-09-0${minor}T10:00:00Z`,
+    draft: false,
+    prerelease: false,
+  }));
+  const { fetchImpl, calls } = fakeFetch(releases);
+  const { writeFile, writes } = fakeWriter();
+
+  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+
+  assert.equal(calls.length, 1);
+  assert.ok(!calls[0].url.includes('?'), 'the sync must not request further pages');
+  const releaseLines = writes[0].content.split('\n').filter((line) => line.trim().startsWith('- release:'));
+  assert.equal(releaseLines.length, releases.length);
+});
