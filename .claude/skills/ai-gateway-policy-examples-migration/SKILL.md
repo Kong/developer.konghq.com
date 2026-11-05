@@ -24,7 +24,7 @@ At each gate, stop, present the listed items, and wait for an answer. Do not con
 |---|---|---|
 | 0 | Before anything | Confirmation to run, and the mode |
 | 1 | After triage | One outcome per plugin, with the reason |
-| 2 | Before writing files | One decision per example (convert, convert with changes, skip), the rewrites you propose, and your questions |
+| 2 | Before writing files | One decision per example (convert, convert with changes, skip), the rewrites you propose, your questions, and a separate grouping approval when groups are supported |
 | 3 | After validation | Validator result, files written and skipped, and the preview checklist |
 
 Nothing is committed or pushed unless the user gives an explicit instruction each time.
@@ -70,6 +70,14 @@ Present the plan in plain language, one example per line, with a short reason. A
 - Which `scopes:` subset, if the example only makes sense on some scopes (the default is all scopes of the policy).
 - Whether a non-default `attach:` config is needed. A new file under `app/_data/entity_examples/ai-gateway/` is a shared change, so ask before creating one.
 - Whether to keep a `min_version` (see `references/field-mapping.md`).
+- Whether to group examples. This is its own approval, see "Grouping approval" below.
+
+### Grouping approval
+
+Read "Example groups" in `references/field-mapping.md`. Never add `group` or `examples_groups` without the user's approval for that policy.
+- If `app/_layouts/policies/example.html` has no group support, tell the user grouping is not available and do not ask.
+- Otherwise, when a policy has enough examples that groups would help, ask with `AskUserQuestion` whether to add groups. Show the proposed `examples_groups` (slug and heading) and which example goes in each group. Offer "no groups" as an option. Wait for the answer, and write groups only if the user approves.
+- Ask once per policy. An approval for one policy does not cover another.
 
 Every AI MCP Server in an example is the Petstore server from the 2.x MCP how-tos (`references/field-mapping.md`). Ask before using any tool or API beyond it.
 
@@ -113,6 +121,7 @@ Present the final result: files written, files skipped with reasons, validator o
 - [ ] No variables on numeric or boolean fields
 - [ ] The `variables:` block is commented out, not removed, and listed for the user
 - [ ] Each example was read for 2.x meaning (prerequisites, provider and model, defaults, variable descriptions)
+- [ ] No `group` or `examples_groups` unless the policy example layout supports groups and the user approved them for that policy (see `references/field-mapping.md`)
 - [ ] Gateway-only wording rewritten; no `/plugins/` links
 - [ ] Validator passes
 - [ ] The summary says what is not tested (API acceptance, behavior)
