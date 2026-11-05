@@ -20,3 +20,66 @@ permissions:
 
 env:
   VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deployment_model: [on-prem, konnect]
+    env:
+      KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          submodules: 'recursive'
+
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
+
+      - name: Run site
+        uses: './.github/reusable-steps/run-site'
+        with:
+          konnect-domain: ${{ env.KONNECT_DOMAIN }}
+
+      - name: Generate instruction files
+        uses: './.github/reusable-steps/generate-instruction-files'
+        with:
+          product: operator
+
+      - name: Download Kong License
+        if: matrix.deployment_model == 'on-prem'
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        shell: bash
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          DEPLOYMENT_MODEL: ${{ matrix.deployment_model }}
+          PRODUCTS: operator
+          CONTINUE_ON_ERROR: true
+          KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
+          TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
+        run: |
+          DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: './.github/reusable-steps/publish-test-report'
+        if: always()
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
