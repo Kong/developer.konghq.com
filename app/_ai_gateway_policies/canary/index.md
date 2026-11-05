@@ -42,7 +42,7 @@ You can control the share of requests that use the canary upstream in two ways:
 - **Fixed percentage:** set [`config.percentage`](/ai-gateway/policies/canary/reference/#schema--config-percentage) to the share of requests that use the canary upstream. Use this for a trial at a steady share, such as 10% for a week.
 - **Time-based rollout:** set [`config.start`](/ai-gateway/policies/canary/reference/#schema--config-start) to a Unix timestamp and [`config.duration`](/ai-gateway/policies/canary/reference/#schema--config-duration) to a number of seconds. Use this to ramp up without manual changes. All requests use the primary upstream until `start`, and the share that uses the canary upstream then increases over the duration. The policy ignores `start` when `percentage` is set.
 
-The following example sends 20% of requests to a canary upstream:
+The following example sends 20% of requests to a canary upstream. Setting `hash` to `none` selects the upstream for each request, so even a single client sees about 20% on the canary:
 
 {% entity_example %}
 type: policy
@@ -52,12 +52,17 @@ data:
   type: canary
   config:
     percentage: 20
+    hash: none
     upstream_host: canary.example.com
     upstream_port: 443
 formats:
   - konnect-api
   - kongctl
 {% endentity_example %}
+
+The default `hash` value is `consumer`, which assigns each client to one upstream.
+A single client, or all clients behind one IP address, then always use the same upstream.
+For details, see [Choose how requests are grouped](#choose-how-requests-are-grouped).
 
 ## Choose how requests are grouped
 
@@ -86,7 +91,7 @@ rows:
     use: Requests aren't authenticated.
   - value: "`none`"
     grouped: Nothing, requests are spread evenly
-    use: The same client can use either upstream on consecutive requests.
+    use: The same client can use either upstream on consecutive requests, for example when you test with a single client.
 {% endtable %}
 <!--vale on-->
 
@@ -94,6 +99,7 @@ With `consumer`, `header`, or `ip`, the policy assigns a client to the same upst
 When a bucket moves to the canary upstream, every client in that bucket moves with it.
 The split is by client, so a client that sends more traffic than average skews the request split.
 For example, a 50% rollout moves about half of the clients, which can be more or less than half of the requests.
+With a single client or one IP address, all requests use the same upstream.
 
 If the policy can't identify the AI Consumer, IP address, or header value for a request, it falls back to the AI Consumer, then the IP address, then `none`.
 
