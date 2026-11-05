@@ -179,6 +179,7 @@ dev_portal: Dev Portal
 identity: Kong Identity
 insomnia: Insomnia
 ai_cost_management: AI Cost Management
+kong_harnesses: kong-harnesses
 
 # Company names
 openai: OpenAI
