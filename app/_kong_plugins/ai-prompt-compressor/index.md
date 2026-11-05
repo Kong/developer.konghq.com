@@ -60,15 +60,15 @@ search_aliases:
 
 The **Kong AI Prompt Compressor** plugin compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The plugin supports:
 
-* **Ratio-based or target token compression** — for example, reduce a message to 80% of the original length or compress to 150 tokens.
-* **Configurable compression ranges** — for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
+* **Ratio-based or target token compression**, for example, reduce a message to 80% of the original length or compress to 150 tokens.
+* **Configurable compression ranges**, for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 * **Selective compression** using `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector plugin](/plugins/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor**.
 
 ## Why use prompt compression
 
-Efficient prompt compression helps you manage token limits, cut costs, and speed up LLM requests — all while keeping sensitive data safe and your prompts focused.
+Efficient prompt compression helps you manage token limits, cut costs, and speed up LLM requests, all while keeping sensitive data safe and your prompts focused.
 
-The table below outlines common use cases for the plugin and the configuration options available to tailor its behavior.
+The following table outlines common use cases for the plugin and the configuration options available to tailor its behavior.
 
 <!-- vale off -->
 {% table %}
@@ -100,7 +100,7 @@ rows:
 
 Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in {{site.ai_gateway}}.
 
-{% include prereqs/cloudsmith.md %}
+{% include prereqs/ai-prompt-compressor.md %}
 
 ### Image configuration options
 
@@ -177,12 +177,12 @@ rows:
 1. The plugin checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
     - If tags are found, only the tagged sections are sent to LLMLingua 2 for compression.
     - If no tags are found, the entire prompt is sent to LLMLingua 2 for compression.
-1. Compression is applied based on configured rules—by ratio, target token count, or conditional length-based rules.
+1. Compression is applied based on configured rules, including ratio, target token count, or conditional length-based rules.
 1. The compressed prompt is returned to the plugin.
 1. The plugin sends the compressed prompt to the Large Language Model (LLM).
 1. The LLM processes the prompt and returns the response to the user.
 
-The diagram below illustrates how the AI Prompt Compressor plugin processes and compresses incoming prompts based on tagging and configured rules.
+The following diagram illustrates how the AI Prompt Compressor plugin processes and compresses incoming prompts based on tagging and configured rules.
 
 <!-- vale off -->
 {% mermaid %}

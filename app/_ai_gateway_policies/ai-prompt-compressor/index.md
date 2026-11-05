@@ -71,7 +71,27 @@ Prompt compression is a powerful lever to reduce costs by shrinking the number o
 
 Kong provides a Docker image for a compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The compressor service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
 
-{% include prereqs/cloudsmith.md %}
+### Access the Docker image
+
+Kong distributes the compressor service publicly on Docker Hub, under the `kong/ai-compress-service` repository. No authentication is required to pull it.
+
+To pull an image:
+
+```bash
+docker pull kong/ai-compress-service:TAG
+```
+
+Replace `TAG` with the image tag you want to run, for example:
+
+```bash
+docker pull kong/ai-compress-service:v0.0.6
+```
+
+To run the image as a standalone container:
+
+```bash
+docker run --rm -p 8080:8080 kong/ai-compress-service:v0.0.6
+```
 
 ### Image configuration options
 
