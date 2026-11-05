@@ -405,7 +405,7 @@ method: POST
 A [customer](/metering-and-billing/customer/) is the entity whose access is enforced. The customer's usage-attribution subject key must match the subject the Entitlement Enforcement plugin sends, which is `consumer:` followed by the Consumer ID you set earlier.
 
 {:.info}
-> This guide creates the customer through the API so that the subject key can be set to the exact `consumer:<consumer-id>` value. In the {{site.metering_and_billing}} UI, the **Include usage from** dropdown only lists subjects that have already sent events, so a freshly created subject key isn't selectable yet.
+> This guide creates the customer through the API so that the subject key is set to the exact `consumer:<consumer-id>` value. To do this in the {{site.metering_and_billing}} UI instead, select the Consumer from the **Gateway Consumers** group of the **Include usage from** dropdown when you create the customer.
 
 Create the customer with the matching subject key:
 
