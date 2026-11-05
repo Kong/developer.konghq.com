@@ -56,6 +56,8 @@ here, check there before assuming it's undocumented.
   - Positional language ("below," "above") is also a style-guide rule
     — see that file's Links section for the fix (link directly instead).
   - "Genuinely" as a filler intensifier.
+  - A trailing "no" ("receives no X," "with no X"). See the Negation bullet
+    below for the fix.
   - Semicolon overuse — prefer two sentences, or a comma/colon where it
     actually fits.
   - Never use em dashes.
@@ -73,8 +75,18 @@ here, check there before assuming it's undocumented.
     becomes a real reader-facing note or gets fixed upstream in the
     schema/UI. Trigger phrase to watch for: "confirmed," "verified," or
     "demonstrated in this documentation" as a sentence's subject.
-- **Negation and conditional clauses**: avoid an awkward negative like
-  "requires no X" — prefer the direct negative, "doesn't require X." Avoid a
+- **Negation and conditional clauses**: don't put a trailing "no" after a
+  clause that reads as positive. The reader parses the first half as
+  positive and only learns at "no" that the thing is absent, which reads
+  like a double negative. Two patterns to catch, in every permutation:
+  - Verb + "no" + noun ("receives no signal," "requires no X," "has no Y"):
+    negate the verb instead. "A control plane receives no signal" → "A
+    control plane doesn't receive a signal." "Requires no X" → "doesn't
+    require X."
+  - Noun + "with no" + noun ("a model with no target"): use "without."
+    "A model with no target" → "a model without a target."
+
+  Avoid a
   fragment or adjective-led conditional opener like "With X enabled," or
   "Disabled, it does Y" — write the full clause: "When X is enabled, ..." /
   "When it's disabled, ...".
