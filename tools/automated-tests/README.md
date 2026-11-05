@@ -163,7 +163,7 @@ By default, it will run all the instruction files, but it also supports running 
 
 Operator how-tos are testable on-prem and on Konnect: the generator extracts operator pages into `on-prem/operator.yaml` and `konnect/operator.yaml` instruction files. The `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply.
 
-Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Because operator extracts instructions as blocks, validation blocks run as plain commands: an expected non-2xx response (for example a 404 isolation check) must be documented as a `custom-command`, since a `request-check`'s copied curl always fails on non-2xx responses.
+Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Operator is extracted in `default` mode, so each element's own `data-test-step` decides how it runs: a `block` fence is copied as a bash command, and a `{% validation %}` block is extracted as a JSON assertion (a `request-check` assertion carries its `status_code`). Document an expected non-2xx response (for example a 404 isolation check) as a `custom-command` rather than a `request-check`: the `request-check` snippet renders a copyable curl with `--fail-with-body`, which exits non-zero as soon as the response is not 2xx.
 
 #### Run konnect operator tests
 
