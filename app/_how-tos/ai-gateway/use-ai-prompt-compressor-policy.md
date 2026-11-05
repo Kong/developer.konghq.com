@@ -57,12 +57,9 @@ cleanup:
         docker rm -f compress-service
         ```
       icon_url: /assets/icons/third-party/docker.svg
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
+      icon_url: /assets/icons/ai-gateway.svg
 
 ---
 
