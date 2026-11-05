@@ -16,9 +16,27 @@ Behavior marked "rendered" was checked on a preview of the dummy `ai-sanitizer/e
 | (none) | `scopes` | Optional subset of the policy's scopes. Default is all scopes in `scopes.json`. An unsupported scope raises an error. |
 | (none) | `attach` | Optional map of scope to config name under `app/_data/entity_examples/ai-gateway/<scope>/<name>.yml`. Default is `basic`. |
 | `min_version` (`gateway: '3.x'`) | Drop by default | Plugin Gateway versions do not map to AI Gateway versions. If the feature is newer than AI Gateway 2.0, ask the user and use `ai-gateway: '<version>'`. The preview showed no visible output for it. |
-| `group` | Keep if present | The preview showed no visible output for it, so its effect is unverified. |
+| `group` | Do not carry over | Grouping needs `examples_groups` in the policy's `index.md` and platform support. AI Gateway policy example pages have neither yet. See "Example groups" below. |
 | `global` | Never set | The page sets `global` for the selected scope. Setting it raises an error. |
 | `targets`, `expressions`, `consumer_credential`, `search_aliases` | Drop | Plugin-only. Seen on a few plugin examples. If dropping one changes what the example shows, mark it "convert with changes" and ask. |
+
+## Example groups
+
+A group puts examples under a heading in the example navigation, next to "Basic use cases".
+
+What a group needs:
+1. The policy's `index.md` frontmatter defines it: `examples_groups:` with `- slug: <slug>` and `text: <heading>`.
+2. Each grouped example sets `group: <slug>`. A slug missing from `examples_groups` fails the build with a nil error.
+3. The page layout renders groups. On plugin pages `_layouts/plugins/example.html` does, from `examples_by_group` in `app/_plugins/generators/plugins/plugin.rb`.
+
+State on the branch this skill was written on: `app/_layouts/policies/example.html` (used by AI Gateway policy pages) lists every example under "Basic use cases" and has no group support. `Policy#examples` in `app/_plugins/generators/ai_gateway_policy/policy.rb` has no `examples_by_group`. So a `group` key on a policy example is read and then ignored.
+
+None of the migrated plugins had `group` on their examples. Only `ai-proxy-advanced` and `ai-mcp-proxy` do, and they are not AI Policies.
+
+What to do:
+- Before grouping, check that `app/_layouts/policies/example.html` references `examples_by_group`. If it does not, do not add `group` or `examples_groups`. Tell the user the platform does not support it.
+- Never edit `index.md` or the layout from this skill. Both are out of scope.
+- If support exists and a policy has many examples (`ai-rate-limiting-advanced` has 15), ask for approval at Gate 2 (see "Grouping approval" in `SKILL.md`) with the slugs, the headings, and which example goes where. Do not group by default. Basic examples stay ungrouped.
 
 ## Variables
 
