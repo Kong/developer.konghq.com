@@ -94,6 +94,57 @@ function pruneEmptyDirectories(rootDir, currentDir = rootDir) {
   }
 }
 
+export function extractCobraCommands(stdout) {
+  const availableCommands = [];
+  const lines = stdout.split('\n');
+  let inCommandsSection = false;
+
+  for (const line of lines) {
+    if (line.startsWith('Available Commands:')) {
+      inCommandsSection = true;
+      continue;
+    }
+
+    if (inCommandsSection) {
+      if (line.trim() === '' || line.startsWith('Flags:')) {
+        break;
+      }
+
+      if (!line.includes('[deprecated]')) {
+        const command = line.trim().split(/\s+/)[0];
+        if (['help', 'completion', 'version'].includes(command)) {
+          continue;
+        }
+        availableCommands.push(command);
+      }
+    }
+  }
+
+  return availableCommands;
+}
+
+export function extractCobraHelp(stdout) {
+  const help = [];
+  const lines = stdout.split('\n');
+
+  let isInFlags = false;
+  for (const line of lines) {
+    if (line.startsWith('Global Flags:')) {
+      break;
+    }
+
+    if (line.startsWith("Usage:")) {
+      isInFlags = true;
+    }
+
+    if (isInFlags) {
+      help.push(line);
+    }
+  }
+
+  return help.join("\n");
+}
+
 export async function syncReleases({
   repo,
   dataFile,
