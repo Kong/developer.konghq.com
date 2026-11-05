@@ -22,7 +22,7 @@ tags:
   - governance
   - cost-management
 
-description: "The org chart in {{site.ai_cost_management}} gives you the teams and people that spend is attributed to. Upload an org structure as a CSV file, then set spend limits on teams and people."
+description: "The org chart in {{site.ai_cost_management}} lists the teams and people that AI spend is attributed to. Learn how to upload an org structure CSV file, browse teams and users, and set spend limits on them."
 
 faqs:
   - q: Why can't I edit a team or add a user to a team?
@@ -54,9 +54,12 @@ related_resources:
 ---
 
 The org chart is the structure of your organization in {{site.konnect_short_name}}: the people in it, the teams they belong to, and who reports to whom.
-{{site.ai_cost_management}} uses it to attribute AI spend to teams and people. You can set a [spend limit](#set-a-spend-limit-on-a-team-or-user) on any team or user from the org chart.
+{{site.ai_cost_management}} uses it to attribute AI spend to teams and people.
+You can set a [spend limit](#set-a-spend-limit-on-a-team-or-user) on any team or user from the org chart.
 
-You build the org chart by uploading your org structure as a CSV file. {{site.konnect_short_name}} creates teams from the reporting lines in the file, so you can't create them or assign members manually.
+You build the org chart by uploading your org structure as a CSV file.
+{{site.konnect_short_name}} creates teams from the reporting lines in the file.
+Teams and team membership change only when you upload a file.
 
 To open the org chart:
 
@@ -102,20 +105,24 @@ You can download a sample file from the upload dialog by clicking **Download sam
    {{site.konnect_short_name}} checks the file and shows a preview without changing anything.
 1. Review the summary:
    * The number of users and teams to create, update, deactivate, or delete.
-   * Any errors, listed by row and column. Fix them and choose the file again.
-   * Any warnings. For example, if a team name is already taken, the new team gets a number after its name, like "Platform (2)".
+   * Any errors, listed by row and column.
+     Fix them and choose the file again.
+   * Any warnings.
+     For example, if a team name is already taken, the new team gets a number after its name, like "Platform (2)".
 1. Click **Import**.
 
 If the org structure changes between the preview and the import, {{site.konnect_short_name}} rejects the file and applies nothing.
 
 ### Update an org chart
 
-Upload a new org chart file when your organization changes. An upload makes the org structure match the file, so upload the file again whenever people or reporting lines change:
+An upload makes the org structure match the file, so upload an updated org structure file whenever people or reporting lines change.
+An upload applies the following changes:
 
 * {{site.konnect_short_name}} uses `external_id` to find each person who is already in the org chart.
   If a row's `external_id` matches an existing user, the upload replaces that person's email, name, and manager with the values in the file.
   If it doesn't match, the upload creates a new user.
-* {{site.konnect_short_name}} deactivates users that the file no longer lists. They're not deleted.
+* {{site.konnect_short_name}} deactivates users that the file no longer lists.
+  They're not deleted.
   A user you deactivated manually stays inactive.
 * Teams and team memberships follow the reporting lines in the file.
 
@@ -125,7 +132,7 @@ You can't delete the whole org chart.
 
 ## Browse the org chart
 
-The org chart shows each team and user in a table with **Name**, **Email**, and **Cost center** columns.
+The org chart shows each team and user in a table.
 Expand a team to see its people and sub-teams.
 Deactivated users have an **Inactive** badge.
 
@@ -142,7 +149,7 @@ Teams don't have cost centers, only individual users.
 
 ## Set a spend limit on a team or user
 
-A spend limit is a [budget](/ai-cost-management/budgets/) with a limit on a single team or user.
+A spend limit is a [budget](/ai-cost-management/budgets/) scoped to a single team or user.
 
 To set a spend limit from the org chart:
 
@@ -156,7 +163,9 @@ To change the amount later, click **Edit spend limit**, then click **Save limit*
 
 The following rules apply to limits set from the org chart:
 * The limit uses a monthly [budget window](/ai-cost-management/budgets/#limit-and-budget-window).
-* The org chart can't remove a limit or change its period. Use the details page of the user or [group](/ai-access-management/concepts/#groups), which offer daily, weekly, and monthly periods and **Remove limit**.
+* The org chart can't remove a limit or change its period.
+  Use the details page of the user or [group](/ai-access-management/concepts/#groups) instead.
+  Both pages offer daily, weekly, and monthly periods and **Remove limit**.
 * The org chart shows only the limit set directly on the selected team or user. It doesn't show limits that apply through a parent team, a group, or an organization-wide budget.
 * If several limits apply to a user, the lowest limit applies.
 * Like any budget, a spend limit tracks spend and sends notifications, but it doesn't block requests. See [Budgets in {{site.ai_cost_management}}](/ai-cost-management/budgets/).
@@ -183,7 +192,7 @@ rows:
     value: "`principal/UUID`, where `UUID` is the user's ID"
 {% endtable %}
 
-The scope doesn't split the budget, so the budget has one [pooled limit](/ai-cost-management/budgets/#pooled-and-individual-limits) for all the usage that matches the filter.
+The budget has one [pooled limit](/ai-cost-management/budgets/#pooled-and-individual-limits) shared by all the usage that matches the filter.
 You can create the same budget with the [API](/api/konnect/ai-cost-management/).
 
 A usage event counts toward a team's budget when the event lists that team in its `teams` field.
@@ -193,6 +202,6 @@ See [Groups and teams](/ai-cost-management/attribution/#groups-and-teams) to lea
 
 The org chart has the following limitations:
 * You can't create teams or change team membership manually. Teams change only when you upload a file.
-* The file has no columns for teams, cost centers, departments, or levels.
+* The file supports only the five columns listed in [Org structure file](#org-structure-file).
 * An organization has one org chart.
 * The org chart doesn't roll up spend or member counts from sub-teams into a parent team.
