@@ -1,5 +1,5 @@
 
-This guide requires and OIDC provider. In this example, we'll use Okta, but the steps are similar in any standard OIDC provider. See [Microsoft Entra ID](/how-to/configure-oidc-with-azure/), or run [Keycloak locally](https://www.keycloak.org/getting-started/getting-started-docker) and expose it with a tunnel.
+This guide requires and OIDC provider. In this example, we'll use Okta, but the steps are similar in any standard OIDC provider. You can also run [Keycloak locally](https://www.keycloak.org/getting-started/getting-started-docker) and expose it with a tunnel.
 
 You need an [Okta](https://login.okta.com/) admin account with a developer organization. If you prefer a different provider, 
 
