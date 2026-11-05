@@ -32,6 +32,68 @@ export function writeHelpTree({ tree, includesDir, fence }) {
   }
 }
 
+export function pruneStalePages({ docsDir, includesDir, includePattern }) {
+  const docs = listFilesRecursive(docsDir).filter((filePath) => filePath.endsWith('.md'));
+  let removedPages = 0;
+
+  for (const docPath of docs) {
+    const content = fs.readFileSync(docPath, 'utf8');
+    const includeMatches = [...content.matchAll(includePattern)];
+
+    if (includeMatches.length === 0) {
+      continue;
+    }
+
+    const hasMissingInclude = includeMatches.some(
+      (match) => !fs.existsSync(path.resolve(includesDir, match[1])),
+    );
+
+    if (hasMissingInclude) {
+      fs.unlinkSync(docPath);
+      removedPages += 1;
+      console.log(`Removed stale page: ${docPath}`);
+    }
+  }
+
+  pruneEmptyDirectories(docsDir);
+  return removedPages;
+}
+
+function listFilesRecursive(rootDir) {
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursive(entryPath));
+    } else if (entry.isFile()) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
+function pruneEmptyDirectories(rootDir, currentDir = rootDir) {
+  const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    pruneEmptyDirectories(rootDir, path.join(currentDir, entry.name));
+  }
+
+  if (currentDir === rootDir) {
+    return;
+  }
+
+  if (fs.readdirSync(currentDir).length === 0) {
+    fs.rmdirSync(currentDir);
+  }
+}
+
 export async function syncReleases({
   repo,
   dataFile,
