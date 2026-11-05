@@ -1,4 +1,36 @@
 import fs from 'fs';
+import path from 'path';
+
+export function escapeLiquid(text) {
+  return text.replace(/\$\{\{[^}]*\}\}/g, '{% raw %}$&{% endraw %}');
+}
+
+export function writeHelpTree({ tree, includesDir, fence }) {
+  const closingFence = fence.match(/^`+/)?.[0] ?? fence;
+
+  fs.rmSync(includesDir, { recursive: true, force: true });
+  fs.mkdirSync(includesDir, { recursive: true });
+
+  for (const command of tree) {
+    const commandDir = path.join(includesDir, command.name);
+    fs.mkdirSync(commandDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(commandDir, 'index.md'),
+      `${fence}\n${escapeLiquid(command.help)}\n${closingFence}`,
+      'utf8',
+    );
+    console.log(`Wrote help for '${command.name}' to ${command.name}/index.md`);
+
+    for (const subcommand of command.subcommands ?? []) {
+      fs.writeFileSync(
+        path.join(commandDir, `${subcommand.name}.md`),
+        `${fence}\n${escapeLiquid(subcommand.help)}\n${closingFence}`,
+        'utf8',
+      );
+      console.log(`Wrote help for '${command.name} ${subcommand.name}' to ${command.name}/${subcommand.name}.md`);
+    }
+  }
+}
 
 export async function syncReleases({
   repo,
