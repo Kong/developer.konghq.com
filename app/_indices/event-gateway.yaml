@@ -10,6 +10,7 @@ sections:
   - title: Installation and Upgrade
     items:
       - path: /event-gateway/#install-event-gateway
+      - path: /operator/konnect/event-gateway-production/
       - path: /event-gateway/upgrade/
       - path: /event-gateway/breaking-changes/
     auto_exclude: true

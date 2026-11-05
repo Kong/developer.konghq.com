@@ -54,6 +54,10 @@ When the data plane receives configuration updates, it restarts the proxy servic
 
 The Kafka client is designed to handle short-lived connection drops.
 
+Because the data plane is stateless, you scale it by adding replicas, and you can run replicas across availability zones for high availability.
+To run {{site.event_gateway_short}} on Kubernetes, use {{site.operator_product_name}}.
+For the recommended production setup, see [Run {{site.event_gateway}} in production with {{site.operator_product_name}}](/operator/konnect/event-gateway-production/).
+
 The following diagram illustrates the high-level architecture:
 
 <!--vale off-->

@@ -95,7 +95,14 @@ rows:
                 1. After the data plane is connected and the control plane recognizes it, click **Done**.
 
                 You can adjust data plane node settings using bootstrap [configuration parameters](/event-gateway/configuration/) at start time.
-            
+            - title: Kubernetes ({{ site.operator_product_name }})
+              content: |
+                To run {{ site.event_gateway_short }} on Kubernetes, use {{ site.operator_product_name }}.
+                The operator creates the control plane in {{ site.konnect_short_name }}, manages {{ site.event_gateway_short }} configuration as Kubernetes resources, and deploys the data plane as a `KegDataPlane`.
+
+                * To deploy {{ site.event_gateway_short }} on Kubernetes for the first time, follow the [getting started guide](/operator/get-started/event-gateway/install/).
+                * For the recommended production architecture, see [Run {{ site.event_gateway }} in production with {{ site.operator_product_name }}](/operator/konnect/event-gateway-production/).
+
   - header:
       type: h2
       text: "Get started with {{site.event_gateway}}"
