@@ -135,7 +135,7 @@ Concepts that carry the design:
 
 ## Testing
 
-The dev server runs on `http://localhost:8888` (see the repo `CLAUDE.md`). Use the `agent-browser` skill with a named session at 1440×900.
+The dev server runs on `http://localhost:8888` (see the repo `CLAUDE.md`). When the stack runs in a worktree or with `PORT_OFFSET` set, read the actual entry URL from `tmp/dev-url` and export it as `BASE_URL` for tooling. Use the `agent-browser` skill with a named session at 1440×900.
 
 In dev, the running game is `window.__arcade`, so state can be read and driven directly (`__arcade.world`, `__arcade.player`, `__arcade.agents.orbs`, `__arcade.enable(terminal)`, `__arcade.spreadDelay = 1e9` to freeze corruption, `__arcade.player.invulnerable = 1e9`). Wrap `agent-browser eval` code in an IIFE, because eval shares a global scope across calls. `agent-browser keydown` sends an empty `event.code`; the game falls back to `event.key` for that reason.
 
@@ -145,7 +145,8 @@ Boot helper (open a page, type the code, skip the intro, start):
 #!/usr/bin/env bash
 # usage: arcade-boot.sh <path>
 export AGENT_BROWSER_SESSION=${AGENT_BROWSER_SESSION:-arcade}
-agent-browser open "http://localhost:8888$1" >/dev/null
+BASE_URL="${BASE_URL:-http://localhost:8888}"
+agent-browser open "$BASE_URL$1" >/dev/null
 agent-browser wait 1500 >/dev/null
 for k in 0 4 5 1; do agent-browser press $k >/dev/null; done
 for i in $(seq 1 20); do
