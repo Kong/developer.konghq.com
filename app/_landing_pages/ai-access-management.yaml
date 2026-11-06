@@ -135,6 +135,8 @@ rows:
                 url: /ai-access-management/concepts/#virtual-keys
               - text: Token Vault
                 url: /identity/token-vault/
+              - text: Authenticate to a GitHub MCP server with Token Vault and Okta
+                url: /ai-gateway/use-token-vault-with-github-mcp-server/
               - text: Roles and permissions
                 url: /konnect-platform/teams-and-roles/#access-management
 
