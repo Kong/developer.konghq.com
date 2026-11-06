@@ -7,6 +7,9 @@ import path from "node:path";
 import {
   testeableUrlsFromFiles,
   selectRunnableGroups,
+  isNumericVersion,
+  compareVersions,
+  effectiveVersionUnderTest,
 } from "../instructions-file.js";
 
 const config = {
@@ -110,4 +113,32 @@ test("selectRunnableGroups returns an empty result the caller can detect when no
   const selected = selectRunnableGroups(groups, ["operator"], "on-prem");
 
   assert.deepEqual(Object.keys(selected), []);
+});
+
+test("isNumericVersion accepts a value only when every dotted segment is an integer", () => {
+  assert.equal(isNumericVersion("1.3"), true);
+  assert.equal(isNumericVersion("1.1.0"), true);
+  assert.equal(isNumericVersion("latest"), false);
+  assert.equal(isNumericVersion("next"), false);
+  assert.equal(isNumericVersion(""), false);
+  assert.equal(isNumericVersion(undefined), false);
+});
+
+test("compareVersions pads shorter versions with implicit zero segments", () => {
+  assert.equal(compareVersions("1.3", "1.3.0"), 0);
+  assert.ok(compareVersions("1.3", "1.1.0") > 0);
+  assert.ok(compareVersions("1.3", "1.3.1") < 0);
+});
+
+test("effectiveVersionUnderTest is the minimum of the numeric version inputs", () => {
+  assert.equal(effectiveVersionUnderTest("1.3", "1.1"), "1.1");
+  assert.equal(effectiveVersionUnderTest("1.1", "1.3"), "1.1");
+  assert.equal(effectiveVersionUnderTest("1.1", "latest"), "1.1");
+  assert.equal(effectiveVersionUnderTest("1.1", "next"), "1.1");
+  assert.equal(effectiveVersionUnderTest("1.1", undefined), "1.1");
+  assert.equal(effectiveVersionUnderTest("latest", "1.1.0"), "1.1.0");
+  assert.equal(effectiveVersionUnderTest("", "1.3"), "1.3");
+  assert.equal(effectiveVersionUnderTest("latest", "next"), null);
+  assert.equal(effectiveVersionUnderTest(undefined, undefined), null);
+  assert.equal(effectiveVersionUnderTest("", ""), null);
 });
