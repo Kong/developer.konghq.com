@@ -28,6 +28,18 @@ groups:
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
+          - path: /kongctl/declarative/configuration/
+          - path: /kongctl/declarative/ownership/
+          - path: /kongctl/declarative/planning/
+          - path: /kongctl/declarative/sync/
+          - path: /kongctl/declarative/references/
+          - path: /kongctl/declarative/templates/
+          - path: /kongctl/declarative/files/
+          - path: /kongctl/declarative/environment-values/
+          - path: /kongctl/declarative/secrets/
+          - path: /kongctl/declarative/environments/
+          - path: /kongctl/declarative/resource-behavior/
+          - path: /kongctl/declarative/patching/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
       - title: CI/CD
