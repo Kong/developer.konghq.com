@@ -2,6 +2,7 @@ import { chromium } from "playwright";
 import fs from "fs/promises";
 import path from "path";
 import { dump } from "js-yaml";
+import { visitedOrigins } from "../dev-server-target.js";
 
 import { prependProxyIpExport } from "./proxy-ip.js";
 import { parseRetryCount } from "./retry.js";
@@ -451,6 +452,10 @@ export async function generateInstructionFiles(
   config,
   { haltOnSeriesError = true } = {},
 ) {
+  // Computed before the browser launches, so a malformed --urls value
+  // fails before any browser work.
+  const origins = visitedOrigins(urlsToTest);
+
   const browser = await chromium.launch({
     args: [
       "--no-sandbox",
@@ -462,10 +467,13 @@ export async function generateInstructionFiles(
   });
 
   try {
-    const context = await browser.newContext({
-      permissions: ["clipboard-read", "clipboard-write"],
-      origin: new URL(config.baseUrl).origin,
-    });
+    const context = await browser.newContext();
+    for (const origin of origins) {
+      await context.grantPermissions(
+        ["clipboard-read", "clipboard-write"],
+        { origin },
+      );
+    }
 
     for (const uri of urlsToTest) {
       try {
