@@ -24,11 +24,9 @@ loading local and remote sources.
 
 Resources can have multiple identifiers:
 
-- **ref**: `kongctl` declarative engine identifier. `ref` is used to identify
-  the resource uniquely within a given set of declarative configurations. `ref`
-  is not written to the remote Konnect system and must be unique across all
-  resources in a given set of input configuration files. This value is used to
-  create inter-configuration references between resources.
+- **ref**: `kongctl` declarative engine identifier. It must be unique across
+  all resources in a given set of input configuration files and is used to
+  create references between resources in that configuration.
 - **id**: *Most* Konnect resources have an `id` field which is a Konnect
   assigned UUID. This field is not stored in declarative configuration files but
   will be used internally by the declarative engine.
