@@ -69,6 +69,19 @@ RSpec.describe Jekyll::RenderEntitySchema do
         ```
       MARKDOWN
     end
+
+    it 'renders null instead of raising when the component is missing from the spec' do
+      rendered = render_liquid(
+        '{% entity_schema %}',
+        page: {
+          'output_format' => 'markdown',
+          'schema' => { 'api' => 'konnect/test-api', 'path' => '/schemas/Missing' },
+          'release' => release
+        }
+      )
+
+      expect(rendered).to eq("```json\nnull\n```")
+    end
   end
 
   describe 'html output' do

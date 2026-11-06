@@ -18,13 +18,7 @@ module Jekyll
       end
 
       def json_schema
-        @json_schema ||= begin
-          document = YAML.load_file(api_file)
-          subtree = document.dig('components', *@schema['path'].split('/').reject(&:empty?))
-          Jekyll::Utils::JsonSchemaDeref
-            .new(subtree.merge('$defs' => document.dig('components', 'schemas') || {}))
-            .resolve
-        end
+        @json_schema ||= flatten_refs(schema_component)
       end
 
       def path
@@ -74,6 +68,19 @@ module Jekyll
         else
           @release.release_hash['name']
         end
+      end
+
+      def schema_component
+        document = YAML.load_file(api_file)
+        document
+          .dig('components', *@schema['path'].split('/').reject(&:empty?))
+          &.merge('$defs' => document.dig('components', 'schemas') || {})
+      end
+
+      def flatten_refs(schema)
+        return nil unless schema
+
+        Jekyll::Utils::JsonSchemaDeref.new(schema).resolve
       end
     end
   end
