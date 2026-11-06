@@ -51,17 +51,6 @@ jobs:
         with:
           konnect-domain: ${{ env.KONNECT_DOMAIN }}
 
-      - name: Generate instruction files
-        uses: './.github/reusable-steps/generate-instruction-files'
-        with:
-          product: event-gateway
-
-      - name: Download Kong License
-        uses: Kong/kong-license@master
-        id: getLicense
-        with:
-          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-
       - name: Set Event Gateway Image and Tag
         run: |
           INPUT_IMAGE="${{ inputs.event_gateway_image }}"
@@ -73,6 +62,17 @@ jobs:
         env:
           MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
         run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
+      - name: Generate instruction files
+        uses: './.github/reusable-steps/generate-instruction-files'
+        with:
+          product: event-gateway
+
+      - name: Download Kong License
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
       - name: Run tests
         working-directory: tools/automated-tests
