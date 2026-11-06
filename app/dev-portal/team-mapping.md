@@ -58,7 +58,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 {% endnavtab %}
 {% navtab "Auth0" %}
-1. In Auth0, create a [new team of developers](https://auth0.com/docs/get-started/tenant-settings/auth0-teams) that you want to map to Konnect. Make sure to add your test developer account. 
+1. In Auth0, create a [new team of developers](https://auth0.com/docs/get-started/auth0-teams#auth0-teams) that you want to map to Konnect. Make sure to add your test developer account. 
 
 1. [Configure a groups claim](https://auth0.com/docs/secure/tokens/json-web-tokens/create-custom-claims).
 {% endnavtab %}
