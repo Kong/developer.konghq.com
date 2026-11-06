@@ -49,7 +49,7 @@ Skip this section in convert mode.
 3. Gate 2 for new mode: present one proposed example per line with its title, the use case in one sentence, the config fields it sets, and the requirements it needs. Show features you propose to skip, and why. Ask for anything the source does not say. Wait for the user.
 4. Then continue at Step 3. In Step 3, write new files instead of copying a plugin example's file name stem, and follow "Names and order" in `references/new-examples.md`.
 
-Every example must be a meaningful use case, not a field demo. Do not write an example whose behavior you cannot state from the source.
+Every example must be a meaningful use case. Do not write an example whose behavior you cannot state from the source.
 
 ## Step 1: Triage (Gate 1)
 

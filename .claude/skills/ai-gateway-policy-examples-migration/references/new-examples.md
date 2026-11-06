@@ -17,7 +17,7 @@ Each example answers one question a reader has: "How do I do X with this policy?
 
 - **Title:** the outcome, as an imperative phrase. "Detect guardrail violations without blocking", "Return the score in a response header", "Block content with blocklists". Not "Use `continue_on_detection`".
 - **`description`:** one or two sentences. Say what the example does, what the default would do instead, and when to use it ("Use this to test a guardrail against real traffic before you enforce it").
-- **`config`:** the feature field, plus every other field the scenario needs to be true. If the title promises blocking responses, set the guarding field explicitly. Do not leave out a field the feature depends on, and do not add fields the scenario does not need.
+- **`config`:** the feature field, plus every other field the scenario needs to be true. If the title promises blocking responses, set the guarding field explicitly. Do not leave out a field the feature depends on, and do not add fields the scenario does not need, unless it's a required field in the schema.
 - **`requirements`:** list what the scenario needs beyond the entity: an external service, an account, or another policy. A feature that writes to logs needs a logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) in the requirements.
 - **One feature per example.** Two features that matter together (a feature and the field that makes it visible) can share one example. Unrelated features get separate examples.
 - **No duplicates.** If an existing example already shows the scenario, extend nothing and skip the new one.
