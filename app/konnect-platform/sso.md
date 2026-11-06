@@ -398,6 +398,8 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
+{:.warning}
+> If IdP mapping is enabled and a team is active but no IdP group is mapped to it, {{site.konnect_short_name}} treats the team as an empty IdP group. Users are removed from the team at their next login, even if they were added manually in {{site.konnect_short_name}}. To manage a team's membership manually, disable **Active** for that team.
 
 ## {{site.konnect_short_name}} Dev Portal Editor considerations
 
