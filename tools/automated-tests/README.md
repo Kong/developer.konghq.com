@@ -98,7 +98,9 @@ From the root of the repo run:
 
 By default, it will iterate over all the how-tos, but it also supports generating instruction files for a subset of how-tos by passing their urls, i.e.
 
-`npm run generate-instruction-files -- --urls='http://localhost:8888/how-to/x/' --urls='http://localhost:8888/how-to/y/'`
+`npm run generate-instruction-files -- --urls="${BASE_URL:-http://localhost:8888}/how-to/x/" --urls="${BASE_URL:-http://localhost:8888}/how-to/y/"`
+
+`BASE_URL` is only needed when the dev server is not at `http://localhost:8888` (a worktree claims its own port offset automatically; the resolved entry URL is in `tmp/dev-url`). Only `--urls` values are used as given: `--files` and `--product` prefix the `baseUrl` from `config/tests.yaml`.
 
 or by passing the corresponding files, i.e.
 
