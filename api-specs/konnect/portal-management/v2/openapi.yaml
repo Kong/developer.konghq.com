@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@8106b8178c4d25130510ea0313d1910be238a8f9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8106b8178c4d25130510ea0313d1910be238a8f9'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -5596,22 +5596,20 @@ components:
     UpdateSAMLIdentityProviderConfig:
       description: |
         The properties of a SAML identity provider to update. Exactly one of `idp_metadata_url` or
-        `idp_metadata_xml` must be provided.
+        `idp_metadata_xml` must be provided with a non-empty value. An empty string is treated as not provided.
       type: object
       properties:
         idp_metadata_url:
           description: The identity provider's metadata URL where the identity provider's metadata can be obtained.
           type: string
           example: 'https://mocksaml.com/api/saml/metadata'
-          minLength: 1
-          pattern: '^https?://\S+$'
+          pattern: '^(https?://\S+)?$'
         idp_metadata_xml:
           description: |
             The identity provider's SAML metadata. If the identity provider supports a metadata URL, you can use the `idp_metadata_url` field instead.
           type: string
-          minLength: 1
       additionalProperties: false
-      maxProperties: 1
+      maxProperties: 2
       minProperties: 1
       title: Update SAML Identity Provider Config
     PortalUpdateIdentityProvider:
