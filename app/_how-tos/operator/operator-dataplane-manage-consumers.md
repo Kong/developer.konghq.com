@@ -23,7 +23,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -33,6 +32,28 @@ related_resources:
     url: /gateway/entities/consumer/
   - text: Key Authentication plugin
     url: /plugins/key-auth/
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongconsumer/test-user \
+          secret/test-user-apikey \
+          kongplugin/key-auth \
+          httproute/echo-route \
+          service/echo \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Create the echo Service
@@ -41,6 +62,7 @@ Run the following command to create a sample echo Service:
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Configure the Key Authentication plugin
 
@@ -59,6 +81,7 @@ config:
   - apikey
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the HTTPRoute
 
@@ -89,6 +112,7 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a Secret
 
@@ -108,6 +132,7 @@ stringData:
   key: secret-api-key
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 For more information on how {{site.operator_product_name}} handles Secrets, please refer to the [Secrets reference](/operator/reference/secrets)
 
@@ -131,6 +156,7 @@ content: |
   - test-user-apikey
   ' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 {% konnect %}
@@ -149,37 +175,58 @@ content: |
     controlPlaneRef:
       type: konnectNamespacedRef
       konnectNamespacedRef:
-        name: gateway-control-plane
+        name: kong
   credentials:
   - test-user-apikey
   ' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 
   {:.info}
-  > To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
+  > The `Gateway` you created in the prerequisites uses the `gateway-operator.konghq.com/static-naming` annotation, so the `KonnectGatewayControlPlane` {{ site.operator_product_name }} creates for it is named after the `Gateway`, `kong`. See [static naming](/operator/konnect/how-to/static-naming/).
 {% endkonnect %}
 
 
 ## Validate
+
+1. Wait for the `Gateway` to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
    
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 1. Try to access the Route without a key:
 
-   ```bash
-   curl -i http://$PROXY_IP/echo
-   ```
+{% validation request-check %}
+url: /echo
+status_code: 401
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+display_headers: true
+indent: 3
+{% endvalidation %}
 
    You should receive a `401 Unauthorized` response.
 
 2. Access the route with the API key in the `apikey` header:
 
-   ```bash
-   curl -i -H "apikey: secret-api-key" http://$PROXY_IP/echo
-   ```
+{% validation request-check %}
+url: /echo
+status_code: 200
+headers:
+  - 'apikey: secret-api-key'
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+display_headers: true
+indent: 3
+{% endvalidation %}
 
    You should receive a `200 OK` response from the echo service.

@@ -3,6 +3,7 @@
    ```bash
    kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
    ```
+   {: data-test-prereq="block" }
 
 1. Create an `HTTPRoute` resource:
 
@@ -25,4 +26,5 @@
            - name: echo
              kind: Service
              port: 1027' | kubectl apply -f -
-   ``` 
+   ```
+   {: data-test-prereq="block" }

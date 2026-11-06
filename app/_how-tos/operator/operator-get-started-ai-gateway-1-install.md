@@ -71,6 +71,7 @@ Create the namespace used throughout this series:
 ```bash
 kubectl create namespace kong
 ```
+{: data-test-step="block" }
 
 ## Install {{site.operator_product_name}}
 
@@ -85,5 +86,6 @@ Confirm the {{ site.ai_gateway }} CRDs are registered in the cluster:
 ```bash
 kubectl get crd | grep -E "aigateway|aigatewaydataplane"
 ```
+{: data-test-step="block" }
 
 You should see entries for `konnectaigateways`, `aigatewaymodelproviders`, `aigatewaymodels`, `aigatewaypolicies`, `aigatewayauthstrategies`, `aigatewayconsumers`, `aigatewayconsumercredentials`, `aigatewayconsumergroups`, `aigatewayagents`, `aigatewaydataplanecertificates`, and `aigatewaydataplanes`.

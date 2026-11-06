@@ -1,29 +1,85 @@
 name: Operator Automated Tests
-
-# Placeholder for the default branch only. GitHub exposes the "Run workflow"
-# button, and `gh workflow run` resolves the workflow, only when the file exists
-# on the default branch. A dispatch run uses the version of this file on the ref
-# it is dispatched against, so this stub never does the real work:
-#
-#   gh workflow run operator-tests.yaml --ref feat/operator-tests
-#
-# The real workflow lives on the feature branch and replaces this file on merge.
 on:
   workflow_dispatch:
     inputs:
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
+  schedule:
+  - cron: '0 0 * * FRI'
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}
 
 permissions:
+  actions: read
   contents: read
+  checks: write
+  statuses: write
+
+env:
+  VITE_PORTAL_API_URL: ${{ vars.VITE_PORTAL_API_URL }}
 
 jobs:
-  placeholder:
+  run:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deployment_model: [on-prem, konnect]
+    env:
+      KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
     steps:
-      - name: Placeholder
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          submodules: 'recursive'
+
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
+
+      - name: Run site
+        uses: './.github/reusable-steps/run-site'
+        with:
+          konnect-domain: ${{ env.KONNECT_DOMAIN }}
+
+      - name: Generate instruction files
+        uses: './.github/reusable-steps/generate-instruction-files'
+        with:
+          product: operator
+
+      - name: Download Kong License
+        if: matrix.deployment_model == 'on-prem'
+        uses: Kong/kong-license@master
+        id: getLicense
+        with:
+          op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      - name: Run tests
+        working-directory: tools/automated-tests
+        shell: bash
+        env:
+          KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
+          DEPLOYMENT_MODEL: ${{ matrix.deployment_model }}
+          PRODUCTS: operator
+          CONTINUE_ON_ERROR: true
+          KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
+          TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
         run: |
-          echo "Placeholder on the default branch."
-          echo "Dispatch against another ref to run that branch's version:"
-          echo "  gh workflow run operator-tests.yaml --ref <branch>"
+          DEBUG=tests:*,debug npm run run-tests
+
+      - name: Publish Test Report
+        uses: './.github/reusable-steps/publish-test-report'
+        if: always()
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}

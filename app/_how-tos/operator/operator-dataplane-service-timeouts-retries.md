@@ -26,7 +26,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -41,6 +40,25 @@ tldr:
 related_resources:
   - text: Service annotations reference
     url: /operator/dataplanes/reference/service-annotations/
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/httpbin-route \
+          service/httpbin \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 Timeout and retry settings control how long {{site.base_gateway}} waits for responses from your upstream services and how many times it retries failed requests. You configure these settings by annotating the Kubernetes `Service` that your `HTTPRoute` routes traffic to.
@@ -56,6 +74,7 @@ kubectl annotate service httpbin -n kong \
   konghq.com/write-timeout="5000" \
   konghq.com/retries="3"
 ```
+{: data-test-step="block" }
 
 The annotations have the following effects:
 
@@ -86,24 +105,44 @@ All timeout values are in milliseconds.
 
 ## Validate
 
+1. Wait for the `Gateway` to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
+
 1. Get the Gateway's external IP address:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 1. Send a request that completes within the read timeout. The `/delay/1` endpoint waits 1 second before responding:
 
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/1
-   ```
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/1
+expected:
+  return_code: 0
+  message: '200'
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The response code should be `200`.
 
 1. Send a request that exceeds the read timeout. The `/delay/10` endpoint waits 10 seconds:
 
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/10
-   ```
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/10
+expected:
+  return_code: 0
+  message: '504'
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The response code should be `504`, indicating that the upstream did not respond within the configured `read-timeout`.

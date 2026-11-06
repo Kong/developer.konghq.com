@@ -4,13 +4,14 @@
 <!-- vale off -->
 {% konnect_crd %}
 create_namespace: kong
+section: prereqs
 kind: KonnectAPIAuthConfiguration
 metadata:
   name: konnect-api-auth
 spec:
   type: token
   token: '$KONNECT_TOKEN'
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 {% endcapture %}
 <!-- vale on -->

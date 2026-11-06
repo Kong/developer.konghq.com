@@ -28,6 +28,51 @@ works_on:
 prereqs:
   skip_product: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the {{ site.event_gateway }} resources, the `Gateway` resources, and the {{ site.konnect_short_name }} authentication configuration:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          tlsroute/keg-tls \
+          service/keg-tls-dp-kafka \
+          gateway/kong-keg \
+          gatewayconfiguration/kong-configuration \
+          eventgatewaylistenerpolicy/sni-tls-server \
+          eventgatewaylistenerpolicy/sni-forward \
+          eventgatewaylistenerpolicy/example-listener-policy \
+          eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-tls-consume-policy \
+          eventgatewayvirtualclusterconsumepolicy/example-virtual-cluster-consume-policy \
+          eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-tls-produce-policy \
+          eventgatewayvirtualclusterproducepolicy/example-virtual-cluster-produce-policy \
+          eventgatewayvirtualcluster/example-virtual-cluster-tls \
+          eventgatewayvirtualcluster/example-virtual-cluster \
+          eventgatewaylistener/sni-listener \
+          eventgatewaylistener/example-listener \
+          eventgatewaybackendcluster/default-backend-cluster-tls \
+          eventgatewaybackendcluster/default-backend-cluster \
+          kegdataplane/keg-tls-dp \
+          kegdataplane/my-event-gateway-dp \
+          secret/sni-listener-tls \
+          konnecteventgateway/cp-event-tls \
+          konnecteventgateway/cp-event-1 \
+          konnectapiauthconfiguration/konnect-api-auth
+
+        kubectl delete --ignore-not-found gatewayclass/kong
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kafka kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 tldr:
   q: How do I deploy {{ site.event_gateway }} in a production-oriented topology?
   a: Front {{ site.event_gateway_short }} with a `Gateway` and `TLSRoute`, terminate TLS in {{ site.event_gateway_short }}, and route virtual clusters with SNI.
@@ -59,7 +104,7 @@ Use this pattern when you want:
 - TLS passthrough at the Kubernetes `Gateway`
 - broker metadata advertised as DNS names on a single port
 
-## Create a `GatewayConfiguration` and `GatewayClass`
+## Create a GatewayConfiguration and GatewayClass
 
 Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the [prerequisites](/operator/get-started/event-gateway/port-mapping/#create-a-konnectapiauthconfiguration-resource).
 
@@ -106,7 +151,7 @@ Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is pro
      --timeout=5m
    ```
 
-## Create a second `KonnectEventGateway`
+## Create a second KonnectEventGateway
 
 This guide uses a separate control plane so that it can run alongside the `portMapping` example.
 
@@ -391,7 +436,7 @@ These policies add a marker header to consumed and produced records so you can v
      --timeout=10m
    ```
 
-## Deploy the `KegDataPlane`
+## Deploy the KegDataPlane
 
 For the TLSRoute pattern, the `KegDataPlane` stays internal to the cluster. The Kafka listener is exposed as a `ClusterIP` Service because the Kubernetes `Gateway` will be the public entrypoint.
 
@@ -420,7 +465,7 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Create the Kubernetes `Gateway`
+## Create the Kubernetes Gateway
 
 Create a `Gateway` that listens for TLS traffic on port `19092`. It uses TLS passthrough so that {{ site.event_gateway }} still terminates TLS with the certificate you configured earlier.
 
@@ -458,7 +503,7 @@ Create a `Gateway` that listens for TLS traffic on port `19092`. It uses TLS pas
    kubectl wait gateway/kong-keg -n kong --for=condition=Accepted=True --timeout=5m
    ```
 
-## Attach a `TLSRoute` to the `Gateway`
+## Attach a TLSRoute to the Gateway
 
 The `TLSRoute` binds the wildcard Kafka hostnames to the internal Kafka Service exposed by the `KegDataPlane`.
 

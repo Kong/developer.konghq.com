@@ -7,6 +7,7 @@
 Create the `KonnectCloudGatewayNetwork` resource:
 <!-- vale off -->
 {% konnect_crd %}
+section: prereqs
 kind: KonnectCloudGatewayNetwork
 apiVersion: konnect.konghq.com/v1alpha1
 metadata:

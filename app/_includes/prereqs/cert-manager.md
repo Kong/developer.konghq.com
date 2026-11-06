@@ -10,3 +10,4 @@ helm upgrade --install \
   --set crds.enabled=true
 kubectl wait -n cert-manager --for=condition=ready pod --all --timeout=90s
 ```
+{: data-test-prereq="block" }
