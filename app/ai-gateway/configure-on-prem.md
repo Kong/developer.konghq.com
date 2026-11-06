@@ -32,11 +32,11 @@ related_resources:
   - text: deck ai dump
     url: /deck/ai/dump/
   - text: AI Proxy Advanced plugin
-    url: /plugins/ai-proxy-advanced/
+    url: /plugins/ai-proxy-advanced/ai-gateway/v2/on-prem/reference/
   - text: AI MCP Proxy plugin
-    url: /plugins/ai-mcp-proxy/
+    url: /plugins/ai-mcp-proxy/ai-gateway/v2/on-prem/reference/
   - text: AI A2A Proxy plugin
-    url: /plugins/ai-a2a-proxy/
+    url: /plugins/ai-a2a-proxy/ai-gateway/v2/on-prem/reference/
 ---
 
 {:.success}
@@ -120,23 +120,23 @@ flowchart LR
 
 ## AI Models
 
-Use the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) (`ai-proxy-advanced`) plugin to transform and proxy requests to multiple AI providers and models at the same time, and to load balance across targets.
+Use the [AI Proxy Advanced](/plugins/ai-proxy-advanced/ai-gateway/v2/on-prem/reference/) (`ai-proxy-advanced`) plugin to transform and proxy requests to multiple AI providers and models at the same time, and to load balance across targets.
 
 - **On {{site.konnect_short_name}}:** An AI Model generates a Service, one Route per capability it serves (chat completions, embeddings, and so on), and the plugins on each Route (`ai-model-selector` and `ai-proxy-advanced`).
 - **On-prem:** You create one Route per capability you want to expose, each carrying its own `ai-proxy-advanced` plugin.
 
-The AI Model Provider referenced by a target has no plugin of its own. Set its `type` and `auth` in the corresponding `targets` entry of the [`ai-proxy-advanced`](/plugins/ai-proxy-advanced/) plugin.
+The AI Model Provider referenced by a target has no plugin of its own. Set its `type` and `auth` in the corresponding `targets` entry of the [`ai-proxy-advanced`](/plugins/ai-proxy-advanced/ai-gateway/v2/on-prem/reference/) plugin.
 
 ## AI MCP Servers
 
-Use the [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`ai-mcp-proxy`) plugin to convert APIs into MCP tools, proxy MCP servers, expose MCP tools to AI clients, and observe MCP traffic.
+Use the [AI MCP Proxy](/plugins/ai-mcp-proxy/ai-gateway/v2/on-prem/reference/) (`ai-mcp-proxy`) plugin to convert APIs into MCP tools, proxy MCP servers, expose MCP tools to AI clients, and observe MCP traffic.
 
 - **On {{site.konnect_short_name}}:** An AI MCP Server generates one or more Routes, each carrying an `ai-mcp-proxy` plugin. The number of Routes, and whether the plugin converts a REST API into MCP tools or proxies an existing MCP server, depends on the server [mode](/ai-gateway/entities/ai-mcp-server/#server-modes).
 - **On-prem:** You configure the plugin's mode and Routes to match the topology you want.
 
 ## AI Agents
 
-Use the [AI A2A Proxy](/plugins/ai-a2a-proxy/) (`ai-a2a-proxy`) plugin to add observability and gateway control to Agent-to-Agent (A2A) protocol traffic. The plugin supports both JSON-RPC and REST bindings, and always applies A2A protocol handling, agent card URL rewriting, and A2A telemetry. It has no mode to turn that off.
+Use the [AI A2A Proxy](/plugins/ai-a2a-proxy/ai-gateway/v2/on-prem/reference/) (`ai-a2a-proxy`) plugin to add observability and gateway control to Agent-to-Agent (A2A) protocol traffic. The plugin supports both JSON-RPC and REST bindings, and always applies A2A protocol handling, agent card URL rewriting, and A2A telemetry. It has no mode to turn that off.
 
 On {{site.konnect_short_name}}, an AI Agent with `type: a2a` generates:
 - One Service
