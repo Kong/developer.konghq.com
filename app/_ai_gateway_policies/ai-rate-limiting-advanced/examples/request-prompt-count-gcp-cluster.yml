@@ -11,8 +11,8 @@ display_name: Request prompt function with Google Cloud Memorystore cluster auth
 type: ai-rate-limiting-advanced
 requirements:
 - An existing [AI Model](/ai-gateway/entities/ai-model/).
-- A running Redis instance on a [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth).
-.- Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}.
+- A running Redis instance on a [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)..
+- Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}.
 - "Assign the principal to the corresponding role: \n* [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster\n* [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey\n"
 variables:
   cluster_address:

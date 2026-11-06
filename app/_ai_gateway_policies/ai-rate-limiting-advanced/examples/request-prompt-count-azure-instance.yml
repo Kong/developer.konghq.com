@@ -11,10 +11,10 @@ display_name: Request prompt function with Azure Managed Redis instance auth
 type: ai-rate-limiting-advanced
 requirements:
 - An existing [AI Model](/ai-gateway/entities/ai-model/).
-- A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured.
-.- Port `10000`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}.
-- Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance.
-.variables:
+- A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured..
+- Port `10000`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}.
+- Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance..
+variables:
   instance_address:
     value: $INSTANCE_ADDRESS
     description: The Azure Managed Redis instance address.
