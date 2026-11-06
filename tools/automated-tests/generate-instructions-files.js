@@ -17,6 +17,11 @@ import { resolveDevServerTarget } from "./dev-server-target.js";
     const { urlsToTest, haltOnSeriesError } = await resolveUrlsToTest(
       args,
       testsConfig,
+      {
+        imageTag: process.env.KONG_IMAGE_TAG,
+        eventGatewayMinVersion:
+          process.env.KONNECT_EVENT_GATEWAY_MIN_VERSION,
+      },
     );
 
     await generateInstructionFiles(urlsToTest, testsConfig, {
