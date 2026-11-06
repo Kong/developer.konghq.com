@@ -1,0 +1,30 @@
+name: cache-redis-bypass-on-error
+display_name: Cache in Redis and bypass on error
+type: proxy-cache-advanced
+title: 'Keep serving requests when Redis fails'
+description: 'Send requests to the upstream when Redis is unavailable, instead of returning a 502 response.'
+weight: 900
+
+config:
+  response_code:
+    - 200
+  request_method:
+    - GET
+  content_type:
+    - application/json
+  cache_ttl: 300
+  bypass_on_err: true
+  strategy: redis
+  redis:
+    host: ${redis_host}
+    port: 6379
+
+# variables:
+#   redis_host:
+#     value: $REDIS_HOST
+#     description: The hostname of your Redis database.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
