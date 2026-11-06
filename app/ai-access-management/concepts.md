@@ -155,7 +155,7 @@ To stop Token Vault from relying on a provider, remove its trust. To delete a pr
 
 [Token Vault](#token-vault) needs at least one trusted identity provider to verify callers.
 
-To learn more, see [Token Vault's providers](/identity/token-vault/#providers).
+To learn more, see [Token Vault's trusted IdP](/identity/token-vault/#trusted-idp).
 
 ## Token Vault
 
