@@ -10,10 +10,13 @@ rapid:
   app: "2.4.0-rapid.2.0"
 
 releases:
+  - release: "2.4"
+    releaseDate: "2026-11-27"
+    endOfLifeDate: "2027-11-27"
+    latest: true
   - release: "2.3"
     releaseDate: "2026-09-01"
     endOfLifeDate: "2027-09-01"
-    latest: true
   - release: "2.2"
     releaseDate: "2026-06-05"
     endOfLifeDate: "2027-06-05"
