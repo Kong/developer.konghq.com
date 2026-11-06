@@ -7,7 +7,7 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: 'Reference for the Proxy Cache Advanced AI Policy, which stores upstream responses in memory or Redis and serves repeated requests from the cache.'
+description: 'Cache upstream responses in memory or Redis and serve repeated requests from the cache for your AI Models, AI Agents, and AI MCP Servers.'
 categories:
   - traffic-control
 tags:
