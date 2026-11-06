@@ -18,7 +18,7 @@ function parseTarget(value) {
 }
 
 export function resolveDevServerTarget(rawConfig, env = process.env) {
-  const selected = env.BASE_URL || rawConfig.baseUrl;
+  const selected = String(env.BASE_URL || rawConfig.baseUrl).trim();
   const url = parseTarget(selected);
 
   return {
