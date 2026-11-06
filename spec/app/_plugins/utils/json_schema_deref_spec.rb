@@ -101,6 +101,32 @@ RSpec.describe Jekyll::Utils::JsonSchemaDeref do
     end
   end
 
+  describe 'a sibling key that the definition also defines' do
+    let(:schema) do
+      {
+        'properties' => {
+          'owner' => {
+            '$ref' => '#/$defs/Pet',
+            'properties' => { 'email' => { 'type' => 'string' } }
+          }
+        },
+        '$defs' => {
+          'Pet' => {
+            'type' => 'object',
+            'properties' => { 'name' => { 'type' => 'string' } }
+          }
+        }
+      }
+    end
+
+    it 'keeps the definition properties when a sibling also defines properties' do
+      expect(resolved.dig('properties', 'owner', 'properties')).to eq(
+        'name' => { 'type' => 'string' },
+        'email' => { 'type' => 'string' }
+      )
+    end
+  end
+
   describe 'recursive refs' do
     let(:schema) do
       {
