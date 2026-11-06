@@ -1324,14 +1324,14 @@ export CONTROL_PLANE_NAME=payments-dev
 export AI_GATEWAY_NAME=payments-ai-dev
 kongctl plan -f environments.yaml --profile dev --mode sync \
   --require-namespace="$ENV_NS" --output-file dev-plan.json
-kongctl apply --plan dev-plan.json --profile dev
+kongctl sync --plan dev-plan.json --profile dev
 
 export ENV_NS=payments-prod
 export CONTROL_PLANE_NAME=payments-prod
 export AI_GATEWAY_NAME=payments-ai-prod
 kongctl plan -f environments.yaml --profile prod --mode sync \
   --require-namespace="$ENV_NS" --output-file prod-plan.json
-kongctl apply --plan prod-plan.json --profile prod
+kongctl sync --plan prod-plan.json --profile prod
 ```
 
 `--require-namespace` checks the resolved namespace against the expected
@@ -1340,12 +1340,19 @@ incorrect `ENV_NS`. `--require-any-namespace` requires an explicit resource
 namespace or file default. Defaults-only files also select sync namespaces;
 external-only file defaults satisfy guardrails without adding deletion scope.
 
-Use `--mode apply` to create and update without pruning when the supplied
-resources are only part of the environment's desired state. Use `--mode sync`
+Depending on your goals, you can create the plan in `apply` or `sync` mode:
+* Use `--mode apply` to create and update without pruning when the supplied
+resources are only part of the environment's desired state. 
+* Use `--mode sync`
 when the input represents the complete desired set for the selected
-collections and namespaces. Do not share a team namespace across independent
+collections and namespaces. 
+
+A plan created in a particular mode can only be used with that command. `--mode sync` creates a plan for `kongctl sync`; `--mode apply` creates a plan for `kongctl apply`.
+
+Do not share a team namespace across independent
 environment sync runs: omitted sibling resources can become deletion
-candidates. A namespace does not provide API authorization or protect against
+candidates. 
+A namespace does not provide API authorization or protect against
 a parent gateway's cascade deletion.
 
 Both `_defaults.kongctl.namespace` and explicit `kongctl.namespace` accept
