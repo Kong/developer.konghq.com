@@ -1,0 +1,33 @@
+name: datadog-prefix-and-tags
+display_name: Datadog prefix and tags
+type: datadog
+title: 'Add a prefix and tags'
+description: 'Change the metric prefix and add your own tags to the request count sent to a Datadog agent.'
+extended_description: |
+  Change the metric prefix to `aigw` and add the tags `env:production` and `team:ai` to the `request_count` metric.
+weight: 800
+
+requirements:
+  - "A [Datadog agent](https://docs.datadoghq.com/getting_started/agent/#setup) running and reachable from the data plane"
+
+config:
+  host: ${datadog_host}
+  port: 8125
+  prefix: aigw
+  metrics:
+    - name: request_count
+      stat_type: counter
+      sample_rate: 1
+      tags:
+        - env:production
+        - team:ai
+
+# variables:
+#   datadog_host:
+#     value: $DATADOG_HOST
+#     description: The hostname or IP address of your Datadog agent.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
