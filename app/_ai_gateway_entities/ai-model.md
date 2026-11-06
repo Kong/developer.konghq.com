@@ -252,8 +252,8 @@ A developer can sign in to Claude Code with their own Claude subscription. Claud
 {{site.ai_gateway}} keeps the token away from every other upstream:
 
 * It forwards the token only as the single `Authorization` value.
-* It removes the token from all other headers, from the query and body parameters, and from requests to all other targets. This includes other providers and other services that serve the Anthropic API.
-* It never forwards a value that an auth strategy accepted as the sign-in of the developer to {{site.ai_gateway}}.
+* It removes the token from all other headers, and from the query or body parameter that holds the provider key. It does the same on every other target, including other providers and other services that serve the Anthropic API.
+* It doesn't forward a key that a key auth strategy accepted as the sign-in of the developer to {{site.ai_gateway}}.
 
 These requests carry the cost tag `auth-source: claude-ai` and the log field [`ai.proxy.meta.auth_source`](/ai-gateway/ai-audit-log-reference/#core-logs), so cost reports can separate them.
 
