@@ -44,20 +44,27 @@ end
 # TCPServer sets SO_REUSEADDR, which on macOS lets the probe bind a specific
 # address even while a wildcard listener holds the port, so probe with a raw
 # socket that fails loudly with EADDRINUSE instead.
-def port_free?(port)
-  [Addrinfo.tcp("127.0.0.1", port), Addrinfo.tcp("::1", port)].all? do |address|
-    socket = Socket.new(address.afamily, :STREAM)
-    begin
-      socket.bind(address)
-      true
-    rescue Errno::EADDRINUSE
-      false
-    rescue Errno::EADDRNOTAVAIL
-      true
-    ensure
-      socket.close
-    end
+def address_free?(host, port)
+  address = Addrinfo.tcp(host, port)
+  socket = Socket.new(address.afamily, :STREAM)
+  begin
+    socket.bind(address)
+    true
+  rescue Errno::EADDRINUSE
+    false
+  rescue Errno::EADDRNOTAVAIL
+    true
+  ensure
+    socket.close
   end
+rescue SocketError, Errno::EAFNOSUPPORT, Errno::EPROTONOSUPPORT
+  # Without an IPv6 stack (for example ipv6.disable=1) ::1 cannot be resolved
+  # or bound, so treat the address as free instead of failing the whole probe.
+  true
+end
+
+def port_free?(port)
+  ["127.0.0.1", "::1"].all? { |host| address_free?(host, port) }
 end
 
 # Porcelain output is one block per worktree; a worktree whose directory was
