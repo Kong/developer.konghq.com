@@ -126,7 +126,7 @@ body:
 {{ create-team | indent: 3 }}
 
     The team object includes a `konnect_managed` field. `konnect_managed: true` means the team is managed manually in {{site.konnect_short_name}}. `konnect_managed: false` means the team is synced from the IdP.
-    You can change this by sending a `PATCH` request to the [`/portals/{portalId}/teams/{teamId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-team). If the team is currently mapped to an IdP group, remove the mapping first by sending a `DELETE` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}` endpoint](/api/konnect/portal-management/v3/#/operations/delete-portal-idp-team-group-mapping).
+    You can change this by sending a `PATCH` request to the [`/portals/{portalId}/teams/{teamId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-team). If the team is mapped to an IdP group, remove the mapping first by sending a `DELETE` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}` endpoint](/api/konnect/portal-management/v3/#/operations/delete-portal-idp-team-group-mapping).
 
 1. Configure the IdP by sending a `POST` request to the [`/portals/{portalId}/identity-providers` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-identity-provider):
 {% capture create-idp %}
@@ -182,7 +182,7 @@ Find your {{site.dev_portal}} URL in the {{site.dev_portal}} settings in the **P
 
 If you're moving from one IdP to another, you can freeze your existing teams so they aren't affected while you set up and test the new IdP.
 
-1. For each team currently mapped to your old IdP, disable **Sync with external identity provider (IdP)** in the team's settings. This excludes the team from synchronization so its membership stays as-is.
+1. For each team mapped to your old IdP, disable **Sync with external identity provider (IdP)** in the team's settings. This excludes the team from synchronization so its membership stays as-is.
 
 1. Configure and test the new IdP by following [Set up developer teams and group claims in your IdP](#set-up-developer-teams-and-group-claims-in-your-idp) and [Map IdP developer teams in {{site.konnect_short_name}}](#map-idp-developer-teams-in-konnect).
 
