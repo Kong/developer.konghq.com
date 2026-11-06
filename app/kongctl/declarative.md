@@ -1369,10 +1369,8 @@ reviewed values. Keep those variables consistent between planning and
 execution, or use `store: true` for supported fields when the approved value
 must be fixed. A namespace using `store: false` still resolves at load time.
 
-{{site.ai_gateway}} children have resource-specific ownership rules. The twelve
-independently owned families include models, providers, auth strategies,
-policies, custom policies, agents, MCP servers, vaults, consumers, consumer
-groups, CA certificates, and SNIs. Their namespaces are independent of the
+{{site.ai_gateway}} children have resource-specific ownership rules. You can see all independently owned families with [`kongctl list ai-gateway --help`](/kongctl/list/ai-gateway/).
+Their namespaces are independent of the
 parent gateway and inherit file defaults rather than its explicit namespace.
 Consumer credentials inherit consumer ownership. Runtime certificate
 federation remains deferred; config stores, their secrets, and data plane
