@@ -16,8 +16,13 @@ config:
   bypass_on_err: true
   strategy: redis
   redis:
-    host: redis.example.com
+    host: ${redis_host}
     port: 6379
+
+# variables:
+#   redis_host:
+#     value: $REDIS_HOST
+#     description: The hostname of your Redis database.
 
 tools:
   - konnect-api
