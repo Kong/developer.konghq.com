@@ -3,11 +3,11 @@
 module Jekyll
   module Utils
     class JsonSchemaDeref
-      INTERNAL_REF = /\A#\/\$defs\/(?<name>[^\/]+)\z/
+      INTERNAL_REF = /\A#\/(?:\$defs|components\/schemas)\/(?<name>[^\/]+)\z/
 
       def initialize(schema)
         @schema = schema || {}
-        @defs = @schema.fetch('$defs', {})
+        @defs = @schema.fetch('$defs', @schema.dig('components', 'schemas') || {})
       end
 
       def resolve
