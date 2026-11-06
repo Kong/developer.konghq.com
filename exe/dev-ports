@@ -8,7 +8,7 @@ require "socket"
 NETLIFY_BASE_PORT = 8888
 JEKYLL_BASE_PORT = 4000
 VITE_BASE_PORT = 3036
-LIVERELOAD_BASE_PORT = 35729
+LIVERELOAD_BASE_PORT = 35_729
 OFFSET_STEP = 10
 MAX_OFFSET = 190
 
@@ -60,8 +60,23 @@ def port_free?(port)
   end
 end
 
+# Porcelain output is one block per worktree; a worktree whose directory was
+# deleted instead of removed with `git worktree remove` is still listed, but
+# carries a `prunable` line, and its claim is dead.
 def live_worktree_paths
-  git("worktree", "list", "--porcelain").each_line.filter_map { |line| line[/\Aworktree (.+)\z/, 1] }
+  paths = []
+  current = nil
+  git("worktree", "list", "--porcelain").each_line do |raw|
+    line = raw.chomp
+    if line.start_with?("worktree ")
+      paths << current if current
+      current = line.delete_prefix("worktree ")
+    elsif line.start_with?("prunable")
+      current = nil
+    end
+  end
+  paths << current if current
+  paths
 end
 
 def reclaim_stale_claims(claims_dir)
@@ -71,8 +86,13 @@ def reclaim_stale_claims(claims_dir)
     next unless File.file?(marker)
 
     claimed_path = File.read(marker).strip
-    File.unlink(marker) if claimed_path.empty? || !live_paths.include?(claimed_path)
+    next if !claimed_path.empty? && live_paths.include?(claimed_path)
+
+    FileUtils.rm_f(marker)
   end
+rescue Errno::ENOENT
+  # A concurrent allocator removed the marker between the scan and the read.
+  nil
 end
 
 def allocate_offset(claims_dir, worktree_root)
@@ -86,7 +106,7 @@ def allocate_offset(claims_dir, worktree_root)
     end
 
     unless derived_ports(offset).values.all? { |port| port_free?(port) }
-      File.unlink(marker)
+      FileUtils.rm_f(marker)
       next
     end
 
@@ -108,15 +128,15 @@ FileUtils.mkdir_p(claims_dir)
 port_file = File.join(worktree_root, PORT_FILE_NAME)
 env_offset = ENV["PORT_OFFSET"].to_s.strip
 file_offset = File.exist?(port_file) ? File.read(port_file).strip : nil
-file_offset = nil if file_offset&.empty?
+file_offset = nil if file_offset.to_s.empty?
 
 offset =
   if !env_offset.empty?
     parse_offset(env_offset, "PORT_OFFSET")
-  elsif file_offset
-    parse_offset(file_offset, "#{PORT_FILE_NAME} in #{worktree_root}")
   elsif git_dir == git_common_dir
     0
+  elsif file_offset
+    parse_offset(file_offset, "#{PORT_FILE_NAME} in #{worktree_root}")
   else
     allocate_offset(claims_dir, worktree_root)
   end
