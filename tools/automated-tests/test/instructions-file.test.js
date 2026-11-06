@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { load } from "js-yaml";
 
 import {
   testeableUrlsFromFiles,
@@ -75,6 +76,205 @@ test("an operator how-to tagged automated_tests=false is skipped", async () => {
     assert.match(skipped, /\/operator\/how-to\/skipped\//);
     assert.match(skipped, /operator/);
     assert.match(skipped, /Tagged with automated_tests=false/);
+  });
+});
+
+function eventGatewayHowTo(name, requiredVersion, extraFrontmatter = []) {
+  return [
+    `title: ${name}`,
+    "products:",
+    "  - event-gateway",
+    "min_version:",
+    `  event-gateway: '${requiredVersion}'`,
+    ...extraFrontmatter,
+    `permalink: /event-gateway/${name}/`,
+  ].join("\n");
+}
+
+test("an event-gateway guide requiring a newer version than the one under test is skipped with a min-version reason", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "event-gateway-gated.md",
+      eventGatewayHowTo("gated", "1.3"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [file], {
+      imageTag: "1.1",
+    });
+
+    assert.deepEqual(urls, []);
+    const manifest = load(await fs.readFile(".automated-tests", "utf8"));
+    assert.equal(manifest.length, 1);
+    assert.match(manifest[0].message, /1\.3/);
+    assert.match(manifest[0].message, /1\.1/);
+    assert.equal(manifest[0].reason, "min-version");
+    assert.deepEqual(manifest[0].products, ["event-gateway"]);
+    assert.match(manifest[0].name, /\/event-gateway\/gated\//);
+  });
+});
+
+test("the version under test is the minimum of the image tag and the control-plane minimum version", async () => {
+  await inTempDir(async (dir) => {
+    const needs12 = await writeHowTo(
+      dir,
+      "needs-12.md",
+      eventGatewayHowTo("needs-12", "1.2.0"),
+    );
+    const needs11 = await writeHowTo(
+      dir,
+      "needs-11.md",
+      eventGatewayHowTo("needs-11", "1.1"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [needs12, needs11], {
+      imageTag: "1.3",
+      controlPlaneMinVersion: "1.1",
+    });
+
+    assert.deepEqual(urls, ["http://localhost:8888/event-gateway/needs-11/"]);
+  });
+});
+
+test("non-numeric or unset version inputs never gate", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "event-gateway-gated.md",
+      eventGatewayHowTo("gated", "1.3"),
+    );
+    const url = "http://localhost:8888/event-gateway/gated/";
+
+    assert.deepEqual(
+      await testeableUrlsFromFiles(config, [file], {
+        imageTag: "latest",
+        controlPlaneMinVersion: "next",
+      }),
+      [url],
+    );
+    assert.deepEqual(
+      await testeableUrlsFromFiles(config, [file], { imageTag: "" }),
+      [url],
+    );
+    assert.deepEqual(await testeableUrlsFromFiles(config, [file]), [url]);
+  });
+});
+
+test("the min-version comparison tolerates mixed segment counts", async () => {
+  await inTempDir(async (dir) => {
+    const equal = await writeHowTo(
+      dir,
+      "equal.md",
+      eventGatewayHowTo("equal", "1.3.0"),
+    );
+    assert.deepEqual(
+      await testeableUrlsFromFiles(config, [equal], { imageTag: "1.3" }),
+      ["http://localhost:8888/event-gateway/equal/"],
+    );
+
+    const newer = await writeHowTo(
+      dir,
+      "newer.md",
+      eventGatewayHowTo("newer", "1.3"),
+    );
+    assert.deepEqual(
+      await testeableUrlsFromFiles(config, [newer], { imageTag: "1.1.0" }),
+      [],
+    );
+
+    const older = await writeHowTo(
+      dir,
+      "older.md",
+      eventGatewayHowTo("older", "1.3"),
+    );
+    assert.deepEqual(
+      await testeableUrlsFromFiles(config, [older], { imageTag: "1.3.1" }),
+      ["http://localhost:8888/event-gateway/older/"],
+    );
+  });
+});
+
+test("an event-gateway guide with no min_version runs regardless of the version under test", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "event-gateway-unversioned.md",
+      [
+        "title: Unversioned how-to",
+        "products:",
+        "  - event-gateway",
+        "permalink: /event-gateway/unversioned/",
+      ].join("\n"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [file], {
+      imageTag: "1.1",
+    });
+
+    assert.deepEqual(urls, ["http://localhost:8888/event-gateway/unversioned/"]);
+  });
+});
+
+test("a gateway guide with its own min_version is unaffected by the event-gateway gate", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "gateway-versioned.md",
+      [
+        "title: Versioned gateway how-to",
+        "products:",
+        "  - gateway",
+        "min_version:",
+        "  gateway: '99.9'",
+        "permalink: /gateway/versioned/",
+      ].join("\n"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [file], {
+      imageTag: "1.1",
+      controlPlaneMinVersion: "1.1",
+    });
+
+    assert.deepEqual(urls, ["http://localhost:8888/gateway/versioned/"]);
+  });
+});
+
+test("an explicitly targeted guide with a violated minimum aborts generation", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "event-gateway-gated.md",
+      eventGatewayHowTo("gated", "1.3"),
+    );
+
+    await assert.rejects(
+      testeableUrlsFromFiles(config, [file], {
+        explicit: true,
+        imageTag: "1.1",
+      }),
+      (error) => {
+        assert.match(error.message, /event-gateway-gated\.md/);
+        assert.match(error.message, /1\.3/);
+        assert.match(error.message, /1\.1/);
+        return true;
+      },
+    );
+  });
+});
+
+test("unset version inputs force generation of an explicitly targeted guide", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "event-gateway-gated.md",
+      eventGatewayHowTo("gated", "1.3"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [file], {
+      explicit: true,
+    });
+
+    assert.deepEqual(urls, ["http://localhost:8888/event-gateway/gated/"]);
   });
 });
 
