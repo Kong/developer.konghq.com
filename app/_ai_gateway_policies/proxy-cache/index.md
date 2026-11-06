@@ -93,6 +93,7 @@ See [Limitations](#limitations).
 * The query parameters
 * The request headers listed in [`config.vary_headers`](/ai-gateway/policies/proxy-cache/reference/#schema--config-vary-headers)
 * The authenticated AI Consumer, when the request is authenticated
+* The authenticated principal, when [`config.cache_by_principal`](/ai-gateway/policies/proxy-cache/reference/#schema--config-cache-by-principal) is `true`. See [Cache by Principal](/ai-gateway/policies/proxy-cache/examples/cache-by-principal/).
 
 Use these settings to control which requests share a cache entry:
 
@@ -130,31 +131,13 @@ To remove a header from responses, set `X-Cache-Key`, `X-Cache-Status`, or `age`
 
 ## Examples
 
-### Cache successful GET responses
+The following examples cover the common configurations: caching GET responses and keying by principal.
+The policy examples have their own pages:
 
-The following policy caches `200` responses with a JSON or plain text body for GET requests, for 300 seconds:
+* [Cache responses to successful GET requests](/ai-gateway/policies/proxy-cache/examples/cache-get-responses/): Cache `200` responses in memory for 300 seconds.
+* [Cache by Principal](/ai-gateway/policies/proxy-cache/examples/cache-by-principal/): Add the authenticated principal to the cache key.
 
-{% entity_example %}
-type: policy
-data:
-  name: cache-get-responses
-  display_name: Cache GET responses
-  type: proxy-cache
-  global: true
-  config:
-    response_code:
-      - 200
-    request_method:
-      - GET
-    content_type:
-      - text/plain
-      - application/json
-    cache_ttl: 300
-    strategy: memory
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
+The following sections show more configurations.
 
 ### Cache separately by header and query parameter
 

@@ -3,6 +3,8 @@ display_name: Cache by Principal
 type: proxy-cache
 description: 'Cache responses to GET requests using the authenticated principal to compose the cache key.'
 
+extended_description: 'Cache responses to GET requests using the authenticated [principal](/identity/principals/) to compose the cache key.'
+
 title: 'Cache by Principal'
 
 weight: 900
