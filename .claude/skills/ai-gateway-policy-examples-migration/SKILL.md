@@ -1,20 +1,21 @@
 ---
 name: ai-gateway-policy-examples-migration
-description: Use when converting the example files of a Kong Gateway plugin (app/_kong_plugins/<plugin>/examples/*.yaml) into AI Gateway 2.x AI Policy examples (app/_ai_gateway_policies/<policy>/examples/*.yml) on developer.konghq.com. Triggers on "migrate the plugin examples to AI policy examples", "policy examples", "convert <plugin> examples", or a plugin name plus examples plus AI Gateway. Not for the policy overview page (use ai-gateway-plugin-to-policy-migration for that).
-argument-hint: <plugin-name> [more plugin names] [triage-only]
+description: Use when creating AI Gateway 2.x AI Policy examples (app/_ai_gateway_policies/<policy>/examples/*.yml) on developer.konghq.com, either by converting the example files of a Kong Gateway plugin (app/_kong_plugins/<plugin>/examples/*.yaml) or by writing new examples for a policy feature that has no plugin example. Triggers on "migrate the plugin examples to AI policy examples", "policy examples", "convert <plugin> examples", "add examples for the new <feature>", or a policy or plugin name plus examples plus AI Gateway. Not for the policy overview page (use ai-gateway-plugin-to-policy-migration for that).
+argument-hint: <plugin-name> [more plugin names] [triage-only] | new <policy-name> <feature or source>
 allowed-tools: Read, Grep, Glob, AskUserQuestion
 ---
 
-# Plugin examples to AI Policy examples
+# AI Policy examples
 
-Convert plugin example files into AI Policy example files. The work is mostly mechanical and needs no live gateway. The judgment calls (what to rewrite, what to skip) belong to the user, so the skill stops at gates and asks.
+Create AI Policy example files in one of two ways: convert plugin example files (migrate), or write new examples for a policy feature that no plugin example covers (new). The work is mostly mechanical and needs no live gateway. The judgment calls (what to rewrite, what to skip) belong to the user, so the skill stops at gates and asks.
 
-`$ARGUMENTS` holds one or more plugin names. If none are given, ask for them. Do not default to "all plugins".
+`$ARGUMENTS` holds one or more plugin names (migrate), or `new` followed by a policy name and the feature or its source, such as a PRD, ticket or schema diff (new). If none are given, ask for them. Do not default to "all plugins".
 
 Supporting files (read when the step says so):
 - `references/field-mapping.md`: how each plugin example field maps to a policy example field, and what the preview showed
 - `references/triage.md`: how to decide whether a plugin and each of its examples can be converted
 - `references/wording.md`: Gateway-only wording to rewrite, and prose rules for example text
+- `references/new-examples.md`: how to find new features and turn each into a use case (new mode only)
 
 ## Gates
 
@@ -35,8 +36,20 @@ Ask with `AskUserQuestion`, even when the user invoked the skill by name. State 
 
 Modes:
 - **convert** (default): triage, conversion plan, files, validation.
+- **new**: for a policy feature with no plugin example. Follow "New mode" below instead of Steps 1 and 2.
 - **triage-only**: stop after Gate 1.
 - **cancel**.
+
+## New mode
+
+Skip this section in convert mode.
+
+1. Check that the policy is Ready, using the policy checks in `references/triage.md` (scopes entry, not stub, creatable, schema present). Stop if it is not.
+2. Read `references/new-examples.md`. Find the features from the user's source and from the schema fields no existing example uses.
+3. Gate 2 for new mode: present one proposed example per line with its title, the use case in one sentence, the config fields it sets, and the requirements it needs. Show features you propose to skip, and why. Ask for anything the source does not say. Wait for the user.
+4. Then continue at Step 3. In Step 3, write new files instead of copying a plugin example's file name stem, and follow "Names and order" in `references/new-examples.md`.
+
+Every example must be a meaningful use case, not a field demo. Do not write an example whose behavior you cannot state from the source.
 
 ## Step 1: Triage (Gate 1)
 
@@ -80,7 +93,7 @@ Put each finding in the Gate 2 plan as "convert with changes" and show the old a
 
 ## Step 3: Write the files
 
-Create `app/_ai_gateway_policies/<policy>/examples/<example-slug>.yml`. Keep the plugin example's file name stem. Never edit the plugin examples, `index.md`, `app/_schemas/` or any generated file.
+Create `app/_ai_gateway_policies/<policy>/examples/<example-slug>.yml`. For a migrated example, keep the plugin example's file name stem. Never edit the plugin examples, `index.md`, `app/_schemas/` or any generated file.
 
 Rules (details in `references/field-mapping.md`):
 - Add `name` (kebab-case, derived from the example), `display_name` and `type` (the policy slug).
@@ -94,14 +107,15 @@ Rules (details in `references/field-mapping.md`):
 
 1. Run the validator from `tools/aigw-policy-examples-validator`: `node index.js` (run `npm ci` first if it fails on missing modules). Fix findings in the example file. Do not change the validator or the schemas to make an example pass.
 2. Run `rtk vale` on each new file if `vale` accepts YAML. If it does not, say so.
-3. Give the user this preview checklist (the example page is at `/ai-gateway/policies/<policy>/examples/<slug>/`): the intro text, the Prerequisites section, one tab per scope, an "Attach the policy" section on each non-global tab, and the `condition` and `enabled` values in the snippets. Tell the user plainly what is not tested: the validator checks the config against the vendored schema only. It does not send anything to the API, attach the policy, or check that the policy behaves as the example's text says. The same validator runs in CI on pull requests that change policy examples.
+3. Give the user this preview checklist (the example page is at `/ai-gateway/policies/<policy>/examples/<slug>/`): the intro text, the Prerequisites section, one tab per scope, an "Attach the policy" section on each non-global tab, and the `condition` and `enabled` values in the snippets. In new mode, also list the examples whose behavior the user should test (see `references/new-examples.md`). Tell the user plainly what is not tested: the validator checks the config against the vendored schema only. It does not send anything to the API, attach the policy, or check that the policy behaves as the example's text says. The same validator runs in CI on pull requests that change policy examples.
 
 Present the final result: files written, files skipped with reasons, validator output, and any open questions for engineering. Then stop.
 
 ## Checklist
 
 - [ ] Gate 0 answered
-- [ ] Every requested plugin has a triage outcome the user has seen
+- [ ] Every requested plugin has a triage outcome the user has seen (new mode: the policy is Ready)
+- [ ] New mode: each example is a use case with an outcome title, one feature, and a source for every behavior it claims
 - [ ] Every example has a decision the user has seen; skipped examples have a reason
 - [ ] Each file has `name`, `display_name`, `type` and a valid `tools` list, and no `global`
 - [ ] No variables on numeric or boolean fields
