@@ -8,7 +8,7 @@ Behavior marked "rendered" was checked on a preview of the dummy `ai-sanitizer/e
 | `title`, `description`, `weight` | Keep | Rewrite Gateway wording. `weight` orders the examples (higher first). |
 | `extended_description` | Keep | Rendered. Replaces `description` as the intro on the page. |
 | `requirements` | Keep | Rendered as "Prerequisites". Rewrite items that name the AI Proxy plugin or link to `/plugins/...`. |
-| `variables` | Keep, commented out | Write it with every line prefixed `# `. The page does not show it for now, and the user will decide what to do with it. Strings only, see below. |
+| `variables` | Keep | Rendered as the "Environment variables" list and used by the API and Terraform snippets. Strings only, see below. |
 | `config` | Keep | Must validate against the policy schema. A field missing from the policy schema means skip or ask. |
 | `tools` | `konnect-api`, `terraform`, `kongctl` | Drop `deck`, `admin-api`, `kic`. Other values raise an error. |
 | (none) | `name`, `display_name`, `type` | Required. `type` must equal the policy folder slug. `name` is kebab-case, unique per example. |
@@ -31,7 +31,6 @@ What a group needs:
 
 State on the branch this skill was written on: `app/_layouts/policies/example.html` (used by AI Gateway policy pages) lists every example under "Basic use cases" and has no group support. `Policy#examples` in `app/_plugins/generators/ai_gateway_policy/policy.rb` has no `examples_by_group`. So a `group` key on a policy example is read and then ignored.
 
-
 What to do:
 - Before grouping, check that `app/_layouts/policies/example.html` references `examples_by_group`. If it does not, do not add `group` or `examples_groups`. Tell the user the platform does not support it.
 - Never edit `index.md` or the layout from this skill. Both are out of scope.
@@ -39,9 +38,29 @@ What to do:
 
 ## Variables
 
-The `variables:` block is written commented out (`# variables:`, `#   name:` and so on) while `${name}` references stay in `config`. Do not delete it. The rules below still apply to the names and values.
+Keep the `variables:` block active and keep the `${name}` references in `config`. Without it the API and Terraform snippets lose their copy-paste variables.
 
 The Konnect API snippet renders a variable inside the JSON as a quoted string: `"port": "'$SANITIZER_SERVICE_PORT'"`. For a string field that works. For an integer or boolean field the copied request carries a string and the API rejects it. The validator does not catch this, because it replaces `${...}` with a valid placeholder.
+
+Write the block like this:
+
+```yaml
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
+```
+
+- The key is the name used in `config` as `${name}`. Every `${name}` in `config` has a matching key, and every key is used.
+- `value` is the environment variable the snippets export, written as `$UPPER_SNAKE_CASE` and named for what it holds (`$OPENAI_API_KEY`, not `$KEY`).
+- `description` is a short noun phrase that says what the reader supplies, with no trailing period when it is a fragment, for example `Your OpenAI API key` or `The host where your Redis instance runs`. Name the exact credential or service, and match the provider used in `config`.
+- Copy the variables from the plugin example. Change a name or description only when it is wrong for the policy.
+- A secret goes through a variable. Do not paste a real or sample key into `config`.
+
+Field rules:
 
 - String field: keep the variable.
 - Number or boolean field: use a literal value (the PR's own example uses `port: 8080`).
@@ -52,19 +71,3 @@ The Konnect API snippet renders a variable inside the JSON as a quoted string: `
 - The "Attach the policy" section appears on every tab except Global. It tells the reader to add the policy `name` to the entity's `policies` array and shows the updated entity.
 - Attach bodies come from `app/_data/entity_examples/ai-gateway/<scope>/<config>.yml`. A missing config fails the build with the file path in the message.
 - Scope tabs use the labels from `app/_data/entity_examples/config.yml` (`ai_gateway_scopes`).
-
-## AI MCP Server examples: use the Petstore server
-
-Every example that involves an AI MCP Server uses the same Petstore setup as the 2.x MCP how-tos (`app/_how-tos/ai-gateway/map-api-to-mcp-tools.md`, `use-access-controls-for-mcp-tools.md`). Do not invent another server, tool set or upstream API.
-
-| Item | Value |
-|---|---|
-| Server | `name: petstore-mcp`, `display_name: "Petstore API"`, `type: conversion-listener` |
-| Upstream | `config.url: http://host.docker.internal:8080/api/v3` (Swagger Petstore, run in Docker) |
-| Route | `config.route.paths: [/petstore]` |
-| Tools | `get-pets-by-status` (GET `/petstore/pet/findByStatus`, query `status`: `available`, `pending`, `sold`) and `get-pet-by-id` (GET `/petstore/pet/{petId}`, path `petId`: integer) |
-| Prerequisite | The Petstore container from `app/_includes/prereqs/third-party/swagger-petstore.md` |
-
-- **Attach section:** keep the default `attach` (`basic`). `app/_data/entity_examples/ai-gateway/ai-mcp-server/basic.yml` already is the Petstore server. Its tool description reads "Get pet by ID", while the how-tos say "Get a pet by ID". Tell the user about this drift, and do not edit the shared file.
-- **Policy config that names a server, tool or path** (for example a per-tool rule, a tool name list or a URL): replace the plugin example's values with the Petstore ones above. When the example needs more tools than the two Petstore tools, or a tool the Petstore setup does not have, ask the user. Do not make one up.
-- **`requirements`:** add an item that tells the reader to run the Petstore container and create the `petstore-mcp` [AI MCP Server](/ai-gateway/entities/ai-mcp-server/). Link the how-to that creates it only if the user agrees, because policy pages do not link how-tos by default.

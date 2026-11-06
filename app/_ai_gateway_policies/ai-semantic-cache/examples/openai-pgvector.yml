@@ -11,17 +11,17 @@ extended_description: |
 
 weight: 900
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - An OpenAI account
-  - A PostgreSQL server with the [PGVector](https://github.com/pgvector/pgvector) extension installed
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI account.
+  - A PostgreSQL server with the [PGVector](https://github.com/pgvector/pgvector) extension installed.
 
-# variables:
-#   header_value:
-#     value: $OPENAI_API_KEY
-#     description: Your OpenAI API key
-#   pgvector_host:
-#     value: $PGVECTOR_HOST
-#     description: The host where your pgvector-enabled PostgreSQL instance runs
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  pgvector_host:
+    value: $PGVECTOR_HOST
+    description: The host where your pgvector-enabled PostgreSQL instance runs
 
 name: semantic-cache-openai-pgvector
 display_name: Set up with OpenAI and PGVector

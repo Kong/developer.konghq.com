@@ -7,10 +7,10 @@ weight: 900
 requirements:
   - You have an OpenAI subscription.
 
-# variables:
-#   openai_key:
-#     value: $OPENAI_API_KEY
-#     description: An API key to connect to the OpenAI API.
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: An API key to connect to the OpenAI API.
 
 name: add-header-to-response-body
 display_name: Add a header to a response body

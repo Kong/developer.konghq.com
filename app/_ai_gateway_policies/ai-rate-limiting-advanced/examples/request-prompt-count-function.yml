@@ -10,9 +10,9 @@ name: request-prompt-count-function
 display_name: Request prompt function
 type: ai-rate-limiting-advanced
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
 - A [Redis](https://redis.io/docs/latest/) instance.
-- Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}.
+- Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}.
 config:
   strategy: redis
   redis:

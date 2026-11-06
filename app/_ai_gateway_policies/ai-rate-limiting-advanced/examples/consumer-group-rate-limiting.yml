@@ -15,12 +15,12 @@ scopes:
 - ai-model
 - global
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
-- An existing [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
-# variables:
-#   consumer_group_name:
-#     value: $CONSUMER_GROUP_NAME
-#     description: The name of the AI Consumer Group to rate limit.
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
+- An existing [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/).
+variables:
+  consumer_group_name:
+    value: $CONSUMER_GROUP_NAME
+    description: The name of the AI Consumer Group to rate limit.
 config:
   policies:
   - match:

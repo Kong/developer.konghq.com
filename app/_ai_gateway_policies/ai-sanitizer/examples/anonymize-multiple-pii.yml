@@ -5,13 +5,13 @@ title: Anonymize multiple PII categories
 weight: 910
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
 
-# variables:
-#   host:
-#     description: The sanitizer service's host
-#     value: $SANITIZER_SERVICE_HOST
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
 
 name: anonymize-multiple-pii
 display_name: Anonymize multiple PII categories

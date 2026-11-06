@@ -10,22 +10,22 @@ weight: 800
 
 requirements:
   - A GCP project with Model Armor enabled and a configured template.
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - You have created a logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
 
-# variables:
-#   gcp_service_account_json:
-#     description: GCP service account credentials in JSON format.
-#     value: $GCP_SERVICE_ACCOUNT_JSON
-#   project_id:
-#     description: GCP project identifier.
-#     value: $GCP_PROJECT_ID
-#   location_id:
-#     description: GCP location identifier.
-#     value: $GCP_LOCATION_ID
-#   template_id:
-#     description: Guardrail template identifier.
-#     value: $GCP_TEMPLATE_ID
+variables:
+  gcp_service_account_json:
+    description: GCP service account credentials in JSON format.
+    value: $GCP_SERVICE_ACCOUNT_JSON
+  project_id:
+    description: GCP project identifier.
+    value: $GCP_PROJECT_ID
+  location_id:
+    description: GCP location identifier.
+    value: $GCP_LOCATION_ID
+  template_id:
+    description: Guardrail template identifier.
+    value: $GCP_TEMPLATE_ID
 
 name: gcp-model-armor-log-blocked-content
 display_name: Log blocked request and response content

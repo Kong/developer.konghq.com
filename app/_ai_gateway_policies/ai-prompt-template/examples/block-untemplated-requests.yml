@@ -6,7 +6,7 @@ title: 'Block untemplated requests'
 weight: 900
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: block-untemplated-requests
 display_name: Block untemplated requests

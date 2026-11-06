@@ -10,7 +10,7 @@ title: Use IAM role assumption
 weight: 900
 requirements: 
   - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: use-iam-role
 display_name: Use IAM role assumption
@@ -23,22 +23,22 @@ config:
   aws_assume_role_arn: ${aws_assume_role_arn}
   aws_role_session_name: ${aws_role_session_name}
 
-# variables:
-#   guardrails_id:
-#     value: $AWS_GUARDRAILS_ID
-#     description: The ID of the AWS Guardrails configuration.
-#   guardrails_version:
-#     value: $AWS_GUARDRAILS_VERSION
-#     description: The version of the AWS Guardrails configuration (e.g. DRAFT or 1).
-#   aws_region:
-#     value: $AWS_REGION
-#     description: The AWS region to use.
-#   aws_assume_role_arn:
-#     value: $AWS_ASSUME_ROLE_ARN
-#     description: The ARN of the IAM role to assume.
-#   aws_role_session_name:
-#     value: $AWS_ROLE_SESSION_NAME
-#     description: A unique identifier for the AWS role session.
+variables:
+  guardrails_id:
+    value: $AWS_GUARDRAILS_ID
+    description: The ID of the AWS Guardrails configuration.
+  guardrails_version:
+    value: $AWS_GUARDRAILS_VERSION
+    description: The version of the AWS Guardrails configuration (e.g. DRAFT or 1).
+  aws_region:
+    value: $AWS_REGION
+    description: The AWS region to use.
+  aws_assume_role_arn:
+    value: $AWS_ASSUME_ROLE_ARN
+    description: The ARN of the IAM role to assume.
+  aws_role_session_name:
+    value: $AWS_ROLE_SESSION_NAME
+    description: A unique identifier for the AWS role session.
 
 tools:
   - konnect-api

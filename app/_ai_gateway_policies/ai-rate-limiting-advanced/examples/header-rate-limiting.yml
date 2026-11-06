@@ -12,14 +12,14 @@ name: header-rate-limiting
 display_name: Rate limiting for a header
 type: ai-rate-limiting-advanced
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
-# variables:
-#   header_name:
-#     value: $HEADER_NAME
-#     description: The name of the header.
-#   header_value:
-#     value: $HEADER_VALUE
-#     description: The value of the header to rate limit.
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
+variables:
+  header_name:
+    value: $HEADER_NAME
+    description: The name of the header.
+  header_value:
+    value: $HEADER_VALUE
+    description: The value of the header to rate limit.
 config:
   policies:
   - match:

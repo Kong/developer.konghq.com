@@ -38,8 +38,7 @@ Modes:
 - **triage-only**: stop after Gate 1.
 - **cancel**.
 
-
-## Step 2: Triage (Gate 1)
+## Step 1: Triage (Gate 1)
 
 Read `references/triage.md` and give each requested plugin one outcome:
 - **Not an AI Policy:** no entry in `app/_data/policies/ai-gateway/scopes.json`. Skip and say why.
@@ -50,7 +49,7 @@ Read `references/triage.md` and give each requested plugin one outcome:
 
 Present the outcomes as a short list, one line each, with the number of examples that would be converted. Wait for the user. In triage-only mode, stop here.
 
-## Step 3: Classify each example (Gate 2)
+## Step 2: Classify each example (Gate 2)
 
 For each example of each Ready plugin, read the file and `references/field-mapping.md`, then decide:
 - **Convert:** the example maps field by field with no change in meaning.
@@ -70,8 +69,6 @@ Read "Example groups" in `references/field-mapping.md`. Never add `group` or `ex
 - Otherwise, when a policy has enough examples that groups would help, ask with `AskUserQuestion` whether to add groups. Show the proposed `examples_groups` (slug and heading) and which example goes in each group. Offer "no groups" as an option. Wait for the answer, and write groups only if the user approves.
 - Ask once per policy. An approval for one policy does not cover another.
 
-Every AI MCP Server in an example is the Petstore server from the 2.x MCP how-tos (`references/field-mapping.md`). Ask before using any tool or API beyond it.
-
 Do not add a `condition` unless the plugin example already shows one.
 
 Also check that each example is meaningful on AI Gateway 2.x, not only that it validates. Read the `config`, `requirements`, `title` and `description` against the policy's 2.x page and schema, and flag:
@@ -81,7 +78,7 @@ Also check that each example is meaningful on AI Gateway 2.x, not only that it v
 - Variables whose names or descriptions are wrong or misleading (for example a description that names the wrong credential).
 Put each finding in the Gate 2 plan as "convert with changes" and show the old and new text.
 
-## Step 4: Write the files
+## Step 3: Write the files
 
 Create `app/_ai_gateway_policies/<policy>/examples/<example-slug>.yml`. Keep the plugin example's file name stem. Never edit the plugin examples, `index.md`, `app/_schemas/` or any generated file.
 
@@ -90,27 +87,25 @@ Rules (details in `references/field-mapping.md`):
 - `tools` is `konnect-api`, `terraform`, `kongctl`, in that order. Drop `deck`, `admin-api` and `kic`. Any other value breaks the build.
 - Do not set `global`. The page sets it for the selected scope.
 - Use a variable (`${name}`) only for string fields. Use a literal value for numbers and booleans, because the Konnect API snippet renders a variable as a quoted string.
-- Write the `variables:` block commented out, every line prefixed with `# `, and keep the `${name}` references in `config`. Policy example pages currently hide the "Environment variables" list, and the variable handling is under review, so do not leave an active `variables:` block. Never delete the block, because the user will decide later what to do with it.
+- Keep the `variables:` block active and keep the `${name}` references in `config`. Follow "Variables" in `references/field-mapping.md` for the exact shape.
 - Apply the wording rules to `title`, `description`, `extended_description` and `requirements`.
 
-## Step 5: Validate (Gate 3)
+## Step 4: Validate (Gate 3)
 
 1. Run the validator from `tools/aigw-policy-examples-validator`: `node index.js` (run `npm ci` first if it fails on missing modules). Fix findings in the example file. Do not change the validator or the schemas to make an example pass.
 2. Run `rtk vale` on each new file if `vale` accepts YAML. If it does not, say so.
 3. Give the user this preview checklist (the example page is at `/ai-gateway/policies/<policy>/examples/<slug>/`): the intro text, the Prerequisites section, one tab per scope, an "Attach the policy" section on each non-global tab, and the `condition` and `enabled` values in the snippets. Tell the user plainly what is not tested: the validator checks the config against the vendored schema only. It does not send anything to the API, attach the policy, or check that the policy behaves as the example's text says. The same validator runs in CI on pull requests that change policy examples.
 
-4. List the files whose `variables:` block is commented out, with the variable names and descriptions, so the user can decide what to do with them.
-
 Present the final result: files written, files skipped with reasons, validator output, and any open questions for engineering. Then stop.
 
 ## Checklist
 
-- [ ] Gate 0 answered; prerequisites exist on the branch
+- [ ] Gate 0 answered
 - [ ] Every requested plugin has a triage outcome the user has seen
 - [ ] Every example has a decision the user has seen; skipped examples have a reason
 - [ ] Each file has `name`, `display_name`, `type` and a valid `tools` list, and no `global`
 - [ ] No variables on numeric or boolean fields
-- [ ] The `variables:` block is commented out, not removed, and listed for the user
+- [ ] The `variables:` block is active and matches the `${name}` references in `config`
 - [ ] Each example was read for 2.x meaning (prerequisites, provider and model, defaults, variable descriptions)
 - [ ] No `group` or `examples_groups` unless the policy example layout supports groups and the user approved them for that policy (see `references/field-mapping.md`)
 - [ ] Gateway-only wording rewritten; no `/plugins/` links

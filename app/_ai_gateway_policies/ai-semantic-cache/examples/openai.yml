@@ -10,18 +10,18 @@ extended_description: |
 
 weight: 900
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - An OpenAI account
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI account.
   - "A [Redis](https://redis.io/docs/latest/) instance."
-  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
 
-# variables:
-#   header_value:
-#     value: $OPENAI_API_KEY
-#     description: Your OpenAI API key
-#   redis_host:
-#     value: $REDIS_HOST
-#     description: The host where your Redis instance runs
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
 name: semantic-cache-openai
 display_name: Set up with OpenAI and Redis

@@ -10,25 +10,25 @@ weight: 800
 
 requirements:
   - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - You have created a logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
 
-# variables:
-#   guardrails_id:
-#     description: The guardrail identifier to apply.
-#     value: $GUARDRAILS_ID
-#   guardrails_version:
-#     description: The guardrail version to apply.
-#     value: $GUARDRAILS_VERSION
-#   aws_region:
-#     description: The AWS region where the guardrail is deployed.
-#     value: $AWS_REGION
-#   aws_access_key_id:
-#     description: The AWS access key ID used to authenticate the request.
-#     value: $AWS_ACCESS_KEY_ID
-#   aws_secret_access_key:
-#     description: The AWS secret access key used to authenticate the request.
-#     value: $AWS_SECRET_ACCESS_KEY
+variables:
+  guardrails_id:
+    description: The guardrail identifier to apply.
+    value: $GUARDRAILS_ID
+  guardrails_version:
+    description: The guardrail version to apply.
+    value: $GUARDRAILS_VERSION
+  aws_region:
+    description: The AWS region where the guardrail is deployed.
+    value: $AWS_REGION
+  aws_access_key_id:
+    description: The AWS access key ID used to authenticate the request.
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    description: The AWS secret access key used to authenticate the request.
+    value: $AWS_SECRET_ACCESS_KEY
 
 name: aws-guardrails-log-blocked-content
 display_name: Log blocked request and response content

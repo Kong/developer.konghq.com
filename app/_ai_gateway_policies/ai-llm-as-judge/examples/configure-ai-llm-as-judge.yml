@@ -5,8 +5,8 @@ title: 'Configure the AI LLM as Judge policy'
 weight: 900
 
 requirements:
-  - You have a working OpenAI API key
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - You have a working OpenAI API key.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: configure-ai-llm-as-judge
 display_name: Configure the AI LLM as Judge policy
@@ -47,10 +47,10 @@ config:
           embedding_input_type: classification
     route_type: llm/v1/chat
   message_countback: 3
-# variables:
-#   openai_api_key:
-#     description: Your OpenAI API key
-#     value: $OPENAI_API_KEY
+variables:
+  openai_api_key:
+    description: Your OpenAI API key
+    value: $OPENAI_API_KEY
 
 tools:
   - konnect-api

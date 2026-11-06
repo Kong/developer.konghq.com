@@ -5,7 +5,7 @@ title: Anonymize sensitive data in responses
 weight: 900
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: anonymize-response-data
 display_name: Anonymize sensitive data in responses

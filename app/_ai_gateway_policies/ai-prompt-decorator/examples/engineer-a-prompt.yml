@@ -5,7 +5,7 @@ description: 'Prepends a prompt with specific instructions, such as responding i
 weight: 900
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: engineer-a-prompt
 display_name: Engineer a prompt with prepending

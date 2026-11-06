@@ -5,7 +5,7 @@ description: 'Creates a detailed chat history by configuring the policy to prepe
 weight: 900
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 name: create-a-complex-chat-history
 display_name: Create a complex chat history

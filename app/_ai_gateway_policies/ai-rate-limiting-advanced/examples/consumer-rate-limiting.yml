@@ -15,12 +15,12 @@ scopes:
 - ai-model
 - global
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
-- An existing [AI Consumer](/ai-gateway/entities/ai-consumer/)
-# variables:
-#   consumer_id:
-#     value: $CONSUMER_ID
-#     description: The ID of the AI Consumer to rate limit.
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
+- An existing [AI Consumer](/ai-gateway/entities/ai-consumer/).
+variables:
+  consumer_id:
+    value: $CONSUMER_ID
+    description: The ID of the AI Consumer to rate limit.
 config:
   policies:
   - match:

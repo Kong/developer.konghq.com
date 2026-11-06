@@ -4,7 +4,7 @@ description: |
 title: 'Chat route templates'
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 weight: 900
 

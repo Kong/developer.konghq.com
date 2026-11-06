@@ -13,20 +13,20 @@ title: RAG injection with ACLs using OpenAI and Redis
 weight: 910
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
-  - "You have created an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/)"
-  - "You have created [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that match your ACL configuration"
-  - You have an OpenAI account
-  - "A [Redis](https://redis.io/docs/latest/) instance"
-  - "Port `6379`, or your custom Redis port is open and reachable from {{site.ai_gateway}}"
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - "An existing [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/)."
+  - "Existing [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that match your ACL configuration."
+  - You have an OpenAI account.
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
 
-# variables:
-#   openai_api_key:
-#     value: $OPENAI_API_KEY
-#     description: The API key to use to connect to OpenAI
-#   redis_host:
-#     value: $REDIS_HOST
-#     description: The Redis server's host
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI
+  redis_host:
+    value: $REDIS_HOST
+    description: The Redis server's host
 
 name: rag-injector-acls
 display_name: RAG injection with ACLs using OpenAI and Redis

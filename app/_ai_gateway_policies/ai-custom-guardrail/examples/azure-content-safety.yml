@@ -12,15 +12,15 @@ weight: 900
 
 requirements:
   - You have an Azure subscription and access to Azure AI Content Safety.
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
-# variables:
-#   content_safety_url:
-#     value: $CONTENT_SAFETY_URL
-#     description: The full URL of the Azure AI Content Safety instance.
-#   content_safety_key:
-#     value: $CONTENT_SAFETY_KEY
-#     description: The API key to access the Azure AI Content Safety instance.
+variables:
+  content_safety_url:
+    value: $CONTENT_SAFETY_URL
+    description: The full URL of the Azure AI Content Safety instance.
+  content_safety_key:
+    value: $CONTENT_SAFETY_KEY
+    description: The API key to access the Azure AI Content Safety instance.
   
 
 name: custom-guardrail-azure-content-safety

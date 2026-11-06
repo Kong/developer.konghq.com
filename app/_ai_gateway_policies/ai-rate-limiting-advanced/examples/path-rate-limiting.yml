@@ -10,7 +10,7 @@ name: path-rate-limiting
 display_name: Rate limiting for a path
 type: ai-rate-limiting-advanced
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
 config:
   policies:
   - match:

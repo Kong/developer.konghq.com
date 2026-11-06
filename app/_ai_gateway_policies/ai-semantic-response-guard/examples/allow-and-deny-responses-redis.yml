@@ -13,17 +13,17 @@ title: 'Allow and deny responses using Redis as a vector database'
 weight: 900
 
 requirements:
-  - You have created an [AI Model](/ai-gateway/entities/ai-model/)
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
   - "A [Redis](https://redis.io/docs/latest/) instance or another supported vector database."
   - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
 
-# variables:
-#   header_value:
-#     value: $OPENAI_API_KEY
-#     description: Your OpenAI API key
-#   redis_host:
-#     value: $REDIS_HOST
-#     description: The host where your Redis instance runs
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
 
 name: allow-and-deny-responses-redis
 display_name: Allow and deny responses using Redis as a vector database

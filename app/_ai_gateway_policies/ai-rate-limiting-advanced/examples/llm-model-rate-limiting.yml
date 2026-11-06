@@ -12,7 +12,7 @@ name: llm-model-rate-limiting
 display_name: LLM model rate limiting
 type: ai-rate-limiting-advanced
 requirements:
-- You have created an [AI Model](/ai-gateway/entities/ai-model/)
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
 config:
   policies:
   - match:

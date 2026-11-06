@@ -7,13 +7,13 @@ weight: 900
 requirements: 
   - You have a Lakera account and an API key.
 
-# variables:
-#   lakera_api_key:
-#     description: 'The API key for your Lakera account.'
-#     value: $LAKERA_API_KEY
-#   project_id: 
-#     description: "The Lakera project identifier used to evaluate the request."
-#     value: $LAKERA_PROJECT
+variables:
+  lakera_api_key:
+    description: 'The API key for your Lakera account.'
+    value: $LAKERA_API_KEY
+  project_id: 
+    description: "The Lakera project identifier used to evaluate the request."
+    value: $LAKERA_PROJECT
 
 name: configure-lakera-to-reveal-the-failure-reason-to-clients
 display_name: Reveal the failure reason to clients
