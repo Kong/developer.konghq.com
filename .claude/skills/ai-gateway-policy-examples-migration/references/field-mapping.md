@@ -31,7 +31,6 @@ What a group needs:
 
 State on the branch this skill was written on: `app/_layouts/policies/example.html` (used by AI Gateway policy pages) lists every example under "Basic use cases" and has no group support. `Policy#examples` in `app/_plugins/generators/ai_gateway_policy/policy.rb` has no `examples_by_group`. So a `group` key on a policy example is read and then ignored.
 
-None of the migrated plugins had `group` on their examples. Only `ai-proxy-advanced` and `ai-mcp-proxy` do, and they are not AI Policies.
 
 What to do:
 - Before grouping, check that `app/_layouts/policies/example.html` references `examples_by_group`. If it does not, do not add `group` or `examples_groups`. Tell the user the platform does not support it.

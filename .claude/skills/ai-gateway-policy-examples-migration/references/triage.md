@@ -1,6 +1,6 @@
 # Triage
 
-Facts change. Run these checks again for every request, and do not rely on the numbers below.
+Run these checks again for every request, and do not rely on the numbers below.
 
 ## Per plugin
 

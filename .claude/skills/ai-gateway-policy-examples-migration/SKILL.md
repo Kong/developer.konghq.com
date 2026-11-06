@@ -38,15 +38,6 @@ Modes:
 - **triage-only**: stop after Gate 1.
 - **cancel**.
 
-## Step 1: Check prerequisites
-
-The example rendering and validator come from PR 7866 (open when this skill was written). Check that these exist on the current branch:
-- `app/_includes/ai_gateway_policies/example.md`
-- `app/_plugins/drops/policy_config_example/ai_gateway.rb`
-- `tools/aigw-policy-examples-validator/index.js`
-- `app/_data/entity_examples/ai-gateway/ai-model/basic.yml` (the default attach config)
-
-If any is missing, stop and tell the user the branch does not have the policy example support yet. Do not write example files that cannot render or be validated.
 
 ## Step 2: Triage (Gate 1)
 
