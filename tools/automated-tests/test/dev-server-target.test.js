@@ -67,6 +67,15 @@ test("a target with a trailing slash resolves without it", async () => {
   });
 });
 
+test("a target padded with whitespace resolves without it", async () => {
+  await withEnv({ BASE_URL: "  http://localhost:8908  " }, () => {
+    const config = resolveDevServerTarget(rawConfig());
+
+    assert.equal(config.baseUrl, "http://localhost:8908");
+    assert.equal(config.origin, "http://localhost:8908");
+  });
+});
+
 test("a value that parses but is not an http(s) URL fails naming the value", async () => {
   await withEnv({ BASE_URL: "localhost:8898" }, () => {
     assert.throws(() => resolveDevServerTarget(rawConfig()), /localhost:8898/);
@@ -76,6 +85,15 @@ test("a value that parses but is not an http(s) URL fails naming the value", asy
 test("a value that is not a URL fails naming the value", async () => {
   await withEnv({ BASE_URL: "not a url" }, () => {
     assert.throws(() => resolveDevServerTarget(rawConfig()), /not a url/);
+  });
+});
+
+test("a config with no usable target fails as a malformed target", async () => {
+  await withEnv({}, () => {
+    assert.throws(
+      () => resolveDevServerTarget({ productionUrl: "https://developer.konghq.com" }),
+      /is not an absolute URL/,
+    );
   });
 });
 
