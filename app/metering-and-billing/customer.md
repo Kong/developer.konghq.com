@@ -30,7 +30,7 @@ faqs:
 
 Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
 
-Billable events ingested into {{site.metering_and_billing}} always include a subject field that represents metered entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), [Dev Portal applications](/dev-portal/self-service/), or [subjects](#what-is-a-subject) or entities outside of {{site.konnect_short_name}}.
+Billable events ingested into {{site.metering_and_billing}} always include a subject field that represents metered entities within your system, such as {{site.base_gateway}} [Consumers](/gateway/entities/consumer/), {{site.ai_gateway}} [AI Consumers](/ai-gateway/entities/ai-consumer/), [Dev Portal applications](/dev-portal/self-service/), or [generic subjects](#subject-kinds) for entities outside of {{site.konnect_short_name}}.
 
 A customer can have **one or many** usage attributes assigned, allowing you to group usage and billing. For example, if a customer has multiple departments that are producing usage, you could create two usage attributes for each department that are assigned to one customer.
 
@@ -78,7 +78,7 @@ rows:
     recommendation: "[Applications](/dev-portal/self-service/)"
   - use-case: |
       Attribute usage from sources outside of {{site.base_gateway}} and {{site.konnect_short_name}} to customers.
-    recommendation: "[Subjects](#what-is-a-subject)"
+    recommendation: "[Generic subjects](#subject-kinds)"
 {% endtable %}
 
 ### What is a subject?
@@ -93,7 +93,40 @@ A subject can represent any unique event in your system, such as:
 
 The subject model is intentionally generic, enabling flexible application across different metering scenarios.
 
+#### Subject kinds
 
+The **Include usage from** dropdown in the {{site.metering_and_billing}} UI groups subjects by kinds. {{site.metering_and_billing}} recognizes the following kinds of subjects:
+
+{% table %}
+columns:
+  - title: Kind
+    key: kind
+  - title: Represents
+    key: represents
+  - title: Subject key
+    key: subject-key
+  - title: Listed in the UI
+    key: listed
+rows:
+  - kind: Gateway Consumers
+    represents: "A {{site.base_gateway}} [Consumer](/gateway/entities/consumer/)"
+    subject-key: "`consumer:<consumer-id>`"
+    listed: "From {{site.konnect_short_name}}, whether or not it has sent events"
+  - kind: "{{site.ai_gateway}} Consumers"
+    represents: "An {{site.ai_gateway}} [AI Consumer](/ai-gateway/entities/ai-consumer/)"
+    subject-key: "`consumer:<consumer-id>`"
+    listed: "From {{site.konnect_short_name}}, whether or not it has sent events"
+  - kind: Dev Portal Applications
+    represents: "A [Dev Portal application](/dev-portal/self-service/)"
+    subject-key: "`app:<application-id>`"
+    listed: "From {{site.konnect_short_name}}, whether or not it has sent events"
+  - kind: Generic Subjects
+    represents: "Any other `subject` value, such as a user ID or hostname from your own system"
+    subject-key: The value as sent in the event
+    listed: Only when it has recent events
+{% endtable %}
+
+Gateway Consumers and {{site.ai_gateway}} Consumers share the `consumer:` prefix, so the subject key alone doesn't tell them apart.
 
 #### Data ingestion
 
@@ -116,29 +149,22 @@ When shipping data to {{site.konnect_short_name}}, you must include the subject 
 To create a customer in {{site.konnect_short_name}}, do the following:
 
 {% navtabs "customer" %}
-{% navtab "Consumer" %}
+{% navtab "UI" %}
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter your customer's name.
-1. Select **Consumers**.
-1. In the **Include usage from** dropdown, search for your Consumer.
+1. Review the **Key** field.
+
+   {{site.metering_and_billing}} generates the key from the customer's name. The key is always part of the customer's usage attribution: events whose `subject` equals the key are attributed to this customer.
+1. In the **Usage Attribution** section, use the **Include usage from** dropdown to search for and select the usage sources that belong to this customer. The dropdown groups sources by [subject kind](#subject-kinds).
+
+   To attribute a subject that isn't listed yet, type its key and select the **Create** option.
 1. Click **Save**.
 
 {% endnavtab %}
-{% navtab "Application" %}
-
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. In the **Name** field, enter your customer's name.
-1. Select **Applications**.
-1. In the **Include usage from** dropdown, search for the Dev Portal application.
-1. Click **Save**.
-
-{% endnavtab %}
-{% navtab "Subject" %}
+{% navtab "API" %}
 
 Subjects are created when you create the customer. To create a customer associated with a subject, send a `POST` request to the `/openmeter/customers` endpoint:
 
@@ -156,10 +182,10 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens) and `YOUR-SUBJECT-KEY` with the subject key from events that are associated with the customer.
+Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or system access token](/konnect-api/#system-accounts-and-access-tokens) and `YOUR-SUBJECT-KEY` with the subject key from events that are associated with the customer. For the key format of each subject kind, see [Subject kinds](#subject-kinds).
 
 {:.info}
-> {{site.konnect_short_name}} {{site.metering_and_billing}} will also automatically create a subject for you when you ingest an usage event for a new subject.
+> You don't need to register a subject before you send events. You can attribute any `subject` value to a customer. If a subject isn't listed in the UI, type its key and select the **Create** option.
 
 {% endnavtab %}
 {% endnavtabs %}
