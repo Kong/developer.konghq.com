@@ -1,0 +1,25 @@
+description: Configure the AI Prompt Guard policy to allow messages following a specific pattern. 
+extended_description: |
+  Configure the policy to allow messages following a specific pattern. 
+  For requests to pass through in this example, 
+  any of the user role messages in the prompt must have all card fields adhering to this standard:
+  starts with the integer 4, then 3 integers, then 12 asterisks.
+
+  This policy would prevent accidental processing and/or subsequent model training when full card numbers are sent in.
+
+title: 'Allow only'
+
+weight: 900
+
+name: allow-only
+display_name: Allow only
+type: ai-prompt-guard
+
+config: 
+  allow_patterns:
+  - '.*\"card\".*\"4[0-9]{3}\*{12}\"'
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

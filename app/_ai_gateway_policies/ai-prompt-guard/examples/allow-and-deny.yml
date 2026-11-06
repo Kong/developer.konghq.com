@@ -1,0 +1,43 @@
+description: Use the AI Prompt Guard policy to allow general IT questions and block prompts related to hacking, phishing, or inappropriate use.
+extended_description: |
+  This configuration sets up the AI Prompt Guard policy to semantically filter incoming requests based on pattern matching.
+
+  In this example:
+
+  * Requests are **allowed** if they match common IT-related question formats like "what is", "how do I", or "install".
+  * Requests are **denied** if they contain sensitive or inappropriate terms such as "hack", "phish", "malware", or "cve".
+   
+  For a complete tutorial on this example, see [Use AI Prompt Guard Policy to govern your LLM traffic](/ai-gateway/use-ai-prompt-guard-policy/).
+
+title: 'Allow and deny'
+
+weight: 900
+
+name: allow-and-deny
+display_name: Allow and deny
+type: ai-prompt-guard
+
+config:
+  allow_patterns:
+    - "(?i).*what is .*"
+    - "(?i).*how do i .*"
+    - "(?i).*install .*"
+    - "(?i).*configure .*"
+    - "(?i).*reset .*"
+    - "(?i).*troubleshoot .*"
+  deny_patterns:
+    - "(?i).*bypass.*(login|password|auth).*"
+    - "(?i).*hack.*"
+    - "(?i).*phish.*"
+    - "(?i).*malware.*"
+    - "(?i).*cve.*"
+    - "(?i).*exploit.*"
+    - "(?i).*social engineering.*"
+    - "(?i).*pentest.*"
+    - "(?i).*impersonate.*"
+    - "(?i).*dating.*"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
