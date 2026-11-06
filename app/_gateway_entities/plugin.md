@@ -302,6 +302,7 @@ The following plugins support cloning:
 * [OpenID Connect](/plugins/openid-connect/)
 * [Pre-function](/plugins/pre-function/)
 * [Post-function](/plugins/post-function/)
+* [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) {% new_in 3.17 %}
 * [Request Transformer Advanced](/plugins/request-transformer-advanced/)
 * [Request Transformer](/plugins/request-transformer/)
 * [Response Transformer Advanced](/plugins/response-transformer-advanced/)
