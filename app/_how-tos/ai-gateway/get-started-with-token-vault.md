@@ -56,6 +56,8 @@ prereqs:
 related_resources:
   - text: "{{site.identity}} Token Vault"
     url: /identity/token-vault/
+  - text: Authenticate to a GitHub MCP server with Token Vault and Okta
+    url: /ai-gateway/use-token-vault-with-github-mcp-server/
   - text: Principals and directories
     url: /identity/principals/
   - text: "{{site.identity}} authorization servers, claims, scopes, and clients"
