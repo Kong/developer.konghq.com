@@ -52,6 +52,7 @@ sections:
       - path: /mesh/data-plane-proxy/
       - path: /mesh/data-plane-kubernetes/
       - path: /mesh/data-plane-universal/
+      - path: /mesh/universal-mode-responsibilities/
 
   - title: Production Deployments
     items:
