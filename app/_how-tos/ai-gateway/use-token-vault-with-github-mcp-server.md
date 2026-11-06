@@ -2,7 +2,7 @@
 title: Authenticate to a GitHub MCP server with Token Vault and Okta
 permalink: /ai-gateway/use-token-vault-with-github-mcp-server/
 content_type: how_to
-description: ""
+description: Learn how to let an AI agent call the GitHub MCP server on behalf of a user by using Token Vault, Okta, and an AI MCP Server in {{site.ai_gateway}}.
 automated_tests: false
 
 products:
@@ -28,7 +28,7 @@ tags:
 tldr:
   q: How do I let an AI agent call the GitHub MCP server on behalf of a user without the agent handling a GitHub credential?
   a: |
-    Add Okta as your {{site.identity}} directory's trusted IdP, enable the Token Vault, and add a GitHub provider. Then, in {{site.ai_gateway}}, create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) for Okta and an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) for GitHub, and point Claude Code at it. {{site.ai_gateway}} exchanges the user's Okta token for a GitHub token from the vault, so the agent never handles a GitHub credential.
+    Add Okta as a trusted IdP in your {{site.identity}} directory, add a GitHub provider to Token Vault, and create a Token Vault data store in {{site.ai_gateway}}. Then create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) for Okta and an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) for GitHub that uses it. Users sign in to Claude Code with Okta and approve GitHub's consent screen once, and {{site.ai_gateway}} then fetches their GitHub token from the vault on each call, so the agent never handles a GitHub credential.
 
 
 tools:
@@ -63,7 +63,7 @@ prereqs:
            -e TOKEN_VAULT_PRIVATE_KEY
         ```
 
-        This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
+        This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints the following environment variable exports:
 
         ```bash
         export AI_GATEWAY_ID=your-gateway-id
@@ -90,7 +90,7 @@ prereqs:
         1. Export the application's client ID and the authorization server's issuer URI:
 
            ```sh
-           export OKTA_CLIENT_ID='YOUR-OKTA-CLIENT-ID'
+           export OKTA_CLIENT_ID='YOUR_OKTA_CLIENT_ID'
            export OKTA_ISSUER='https://YOUR_OKTA_DOMAIN/oauth2/YOUR_AUTH_SERVER_ID'
            ```
       icon_url: /assets/icons/okta.svg
@@ -106,8 +106,8 @@ prereqs:
         1. Export its client ID and secret:
 
            ```sh
-           export GITHUB_CLIENT_ID='YOUR-CLIENT-ID'
-           export GITHUB_CLIENT_SECRET='YOUR-CLIENT-SECRET'
+           export GITHUB_CLIENT_ID='YOUR_GITHUB_CLIENT_ID'
+           export GITHUB_CLIENT_SECRET='YOUR_GITHUB_CLIENT_SECRET'
            ```
       icon_url: /assets/icons/github.svg
     - title: AI agent
@@ -123,6 +123,12 @@ related_resources:
     url: /ai-gateway/entities/ai-mcp-server/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: Protected resource metadata
+    url: /ai-gateway/entities/ai-mcp-server/#protected-resource-metadata
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
+  - text: "{{site.identity}} directories"
+    url: /identity/directories/
 
 cleanup:
   inline:
@@ -153,7 +159,7 @@ faqs:
 
 ## Trust Okta as the identity provider
 
-Tell your Kong Identity directory to trust tokens that your Okta authorization server issues. For this, send a `POST` request to the directory's [`trusted-idps` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createTrustedIdp) with the issuer URL of your Okta authorization server:
+Tell your {{site.identity}} directory to trust tokens that your Okta authorization server issues. For this, send a `POST` request to the directory's [`trusted-idps` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createTrustedIdp) with the issuer URL of your Okta authorization server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -200,7 +206,7 @@ capture:
 
 ## Create a Token Vault data store
 
-Create a data store to tell AI Gateway how to conect to an outside service. In this case, the service is Token Vault. The gateway needs it to access GitHub's tokens that you store in Token Vault:
+Create a data store that tells {{site.ai_gateway}} how to connect to Token Vault. The gateway needs it to retrieve the GitHub tokens that you store in Token Vault:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -211,7 +217,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   name: token-vault-datastore
-  display_name: Token Vault Datastore
+  display_name: Token Vault data store
   type: token-vault
   config:
     directory: $DIRECTORY_NAME
@@ -223,6 +229,8 @@ body:
 <!--vale on-->
 
 ## Create an AI Auth Strategy for Okta
+
+Create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so the gateway can validate the Okta access tokens that users present when they call the GitHub MCP server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -248,7 +256,18 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+* `issuer` and `client_id` point to your Okta authorization server and the native application that signs users in.
+* `auth_methods` accepts the Okta access token as a bearer token.
+* `cache_tokens_salt` is required for `openid-connect` AI Auth Strategies. Set it to any unique string, which the gateway uses to build the cache key for token endpoint requests.
+
 ## Create the AI MCP Server
+
+Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) in `passthrough-listener` mode, which proxies MCP traffic to the GitHub MCP server without converting its tools. The server uses:
+
+* The Okta AI Auth Strategy to authenticate users.
+* The Token Vault data store and GitHub provider to get each user's GitHub token.
+
+Send the following request to create the AI MCP Server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -286,6 +305,12 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+* `config.url` and `config.route.paths` set the upstream GitHub MCP server and the `/github` path that the gateway exposes it on.
+* `datastores` and `token_vault.provider` tell the gateway which data store and provider to use when it looks up the user's GitHub token in the Token Vault.
+* `access.auth_strategies` references the `okta-oidc` AI Auth Strategy.
+* `access.acl_attribute_type` and `access.access_token_claim_field` identify the caller by the `sub` claim of their Okta access token.
+* `access.metadata` advertises Okta as the authorization server, so that Claude Code knows where to send users to sign in.
+
 ## Connect Claude Code to the AI MCP Server
 
 1. Add the MCP server:
@@ -301,22 +326,22 @@ body:
 
 ## Validate the setup
 
-1. List the MCP server's tools. Before enrollment, the server returns the `authenticate` and `check_authentication_status` tools only.
+1. In your Claude Code session, run `/mcp` and select `github-vault-demo` to list the server's tools. Before enrollment, the server returns only the `authenticate` and `check_authentication_status` tools.
 
-1. Call `authenticate`, then open the returned URL and approve GitHub's consent screen.
+1. Ask Claude Code to call `authenticate`, then open the returned URL and approve GitHub's consent screen.
 
-1. Call `check_authentication_status`.
+1. Ask Claude Code to call `check_authentication_status`.
 
-1. Reload the tool list with `/mcp`. The GitHub MCP server's tools now appear.
+1. Run `/mcp` again to reload the tool list. The GitHub MCP server's tools now appear.
 
 1. [List the credentials](/api/konnect/kong-identity-principals/v2/#/operations/listVaultProviderCredentials) stored for the GitHub provider:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
+   status_code: 200
+   method: GET
+   {% endkonnect_api_request %}
+   <!--vale on-->
 
    The response contains one `user` credential with `status: active` for the Okta user's principal.
