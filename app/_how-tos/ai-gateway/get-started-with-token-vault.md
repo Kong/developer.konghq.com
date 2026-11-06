@@ -40,15 +40,15 @@ prereqs:
         
         1. Set the following values for demo purposes:
         
-        * **Homepage URL:** `https://cloud.konghq.com`
-        * **Redirect URI:** `http://localhost:8000/_vault/callback`
+           * **Homepage URL:** `https://cloud.konghq.com`
+           * **Redirect URI:** `http://localhost:8000/_vault/callback`
         
         1. Export its client ID and secret:
 
-        ```sh
-        export GITHUB_CLIENT_ID='YOUR-CLIENT-ID'
-        export GITHUB_CLIENT_SECRET='YOUR-CLIENT-SECRET'
-        ```
+           ```sh
+           export GITHUB_CLIENT_ID='YOUR-CLIENT-ID'
+           export GITHUB_CLIENT_SECRET='YOUR-CLIENT-SECRET'
+           ```
 
         
       icon_url: /assets/icons/github.svg
