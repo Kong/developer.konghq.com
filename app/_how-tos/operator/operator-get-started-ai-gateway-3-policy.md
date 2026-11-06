@@ -24,14 +24,24 @@ min_version:
 
 works_on:
   - konnect
+  - on-prem
 
 prereqs:
   skip_product: true
+  inline:
+    - title: "{{site.konnect_short_name}}: {{ site.ai_gateway_name }} deployed"
+      topology: konnect
+      include_content: /md/operator/ai-gateway/prereqs/konnect-deployed
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "On-premises: {{ site.ai_gateway_name }} deployed"
+      topology: on-prem
+      include_content: /md/operator/ai-gateway/prereqs/on-prem-deployed
+      icon_url: /assets/icons/kubernetes.svg
 
 tldr:
   q: How do I apply AI policies with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway`.
+    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` or, on-premises (Tech Preview), to your `OnPremAIGateway`.
     Apply the AI Policy to every AI Model on the {{ site.ai_gateway }}.
 
 next_steps:
@@ -63,44 +73,92 @@ By the end of this guide, you will have a single AI Prompt Guard policy that:
 
 The AI Prompt Guard Policy evaluates deny patterns first. If the prompt matches a deny pattern, the request is rejected immediately. If no deny pattern matches, the prompt must then match at least one allow pattern to proceed. This means both rules must be in the same AI Policy to work together correctly.
 
+{% on_prem %}
+content: |
+  {% include operator/ai-gateway-on-prem-tech-preview.md %}
+{% endon_prem %}
+
 
 ## Create the AI Prompt Guard Policy
 
 1. Create an AI Policy that blocks injection attempts and restricts prompts to engineering topics:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayPolicy
-   metadata:
-     name: content-guardrails
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayPolicy
+     metadata:
        name: content-guardrails
-       displayName: Content Guardrails
-       type: ai-prompt-guard
-       enabled: Enabled
-       global: Enabled
-       config:
-         type: inline
-         value:
-           deny_patterns:
-             - "(?i).*ignore (all )?previous instructions.*"
-             - "(?i).*you are now (DAN|jailbroken).*"
-             - "(?i).*disregard (your|all) (previous |prior )?instructions.*"
-             - "(?i).*what (is|was) your (system|initial) prompt.*"
-             - "(?i).*(reveal|show|print|repeat) (your )?(system prompt|instructions).*"
-           allow_patterns:
-             - "(?i).*(what is|how do i|how to|configure|install|troubleshoot|debug|explain|difference between).*"
-             - "(?i).*(kubernetes|docker|helm|terraform|kong|api|service|microservice|container|pod|namespace).*"
-             - "(?i).*(code|function|script|query|yaml|json|bash|python|go|javascript).*"
-   ' | kubectl apply -f -
-   ```
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: content-guardrails
+         displayName: Content Guardrails
+         type: ai-prompt-guard
+         enabled: Enabled
+         global: Enabled
+         config:
+           type: inline
+           value:
+             deny_patterns:
+               - "(?i).*ignore (all )?previous instructions.*"
+               - "(?i).*you are now (DAN|jailbroken).*"
+               - "(?i).*disregard (your|all) (previous |prior )?instructions.*"
+               - "(?i).*what (is|was) your (system|initial) prompt.*"
+               - "(?i).*(reveal|show|print|repeat) (your )?(system prompt|instructions).*"
+             allow_patterns:
+               - "(?i).*(what is|how do i|how to|configure|install|troubleshoot|debug|explain|difference between).*"
+               - "(?i).*(kubernetes|docker|helm|terraform|kong|api|service|microservice|container|pod|namespace).*"
+               - "(?i).*(code|function|script|query|yaml|json|bash|python|go|javascript).*"
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayPolicy
+     metadata:
+       name: content-guardrails
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: content-guardrails
+         displayName: Content Guardrails
+         type: ai-prompt-guard
+         enabled: Enabled
+         global: Enabled
+         config:
+           type: inline
+           value:
+             deny_patterns:
+               - "(?i).*ignore (all )?previous instructions.*"
+               - "(?i).*you are now (DAN|jailbroken).*"
+               - "(?i).*disregard (your|all) (previous |prior )?instructions.*"
+               - "(?i).*what (is|was) your (system|initial) prompt.*"
+               - "(?i).*(reveal|show|print|repeat) (your )?(system prompt|instructions).*"
+             allow_patterns:
+               - "(?i).*(what is|how do i|how to|configure|install|troubleshoot|debug|explain|difference between).*"
+               - "(?i).*(kubernetes|docker|helm|terraform|kong|api|service|microservice|container|pod|namespace).*"
+               - "(?i).*(code|function|script|query|yaml|json|bash|python|go|javascript).*"
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the AI Policy to be reconciled:
 
@@ -157,12 +215,17 @@ List all `AIGatewayPolicy` resources and their reconciliation status:
 kubectl get aigatewaypolicy -n kong
 ```
 
-The output shows each AI Policy, its type, and whether it has been reconciled:
+The output shows each AI Policy and whether it has been reconciled:
 
 ```
-NAME                 PROGRAMMED   AGE
-content-guardrails   True         2m
+NAME                 ID            PROGRAMMED   ORGID        AGE
+content-guardrails   <konnect-id>  True         <org-id>     2m
 ```
+
+{% on_prem %}
+content: |
+  On-premises, the `ID` and `ORGID` columns are empty because the AI Policy is never created in {{ site.konnect_short_name }}.
+{% endon_prem %}
 
 Describe the AI Policy to see its full status, including any reconciliation errors from {{site.operator_product_name}}:
 

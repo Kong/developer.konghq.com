@@ -3,7 +3,7 @@
 <div class="flex flex-col accordion prerequisites" {{ prereqs.default_accordion }}data-multiple="false" data-test-id="prereqs" data-test-products="{{page.products | join: ','}}">
 
   {% for prereq in prereqs.inline_before %}
-  <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0"{% if prereq.topology %} data-deployment-topology="{{ prereq.topology }}"{% endif %}>
     {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
@@ -131,7 +131,7 @@
 
 
   {% for prereq in prereqs.inline_without_position %}
-  <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary accordion-item last:border-b-0"{% if prereq.topology %} data-deployment-topology="{{ prereq.topology }}"{% endif %}>
     {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
