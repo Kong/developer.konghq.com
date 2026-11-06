@@ -38,7 +38,7 @@ To pin the ports for one invocation, set `PORT_OFFSET`; for example, `PORT_OFFSE
 Tooling that targets the dev server accepts a `BASE_URL` environment variable, defaulting to `http://localhost:8888`:
 
 ```sh
-BASE_URL=http://localhost:8908 npm test --prefix tests
+BASE_URL=http://localhost:8908 npm run generate-instruction-files --prefix tools/automated-tests
 ```
 
 ## Generating specific products locally
