@@ -16,3 +16,4 @@ sections:
       - path: /how-to/authenticate-principals-with-basic-authentication/
       - path: /how-to/authenticate-oauth-clients-with-kong-identity/
       - path: /how-to/get-started-with-token-vault/
+      - path: /ai-gateway/use-token-vault-with-github-mcp-server/

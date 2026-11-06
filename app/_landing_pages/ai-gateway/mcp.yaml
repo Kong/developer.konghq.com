@@ -96,6 +96,8 @@ rows:
                   url: /ai-gateway/entities/ai-auth-strategy/
                 - text: Protected resource metadata
                   url: /ai-gateway/entities/ai-mcp-server/#protected-resource-metadata
+                - text: Authenticate to a GitHub MCP server with Token Vault and Okta
+                  url: /ai-gateway/use-token-vault-with-github-mcp-server/
                 - text: Rate Limiting policy
                   url: /ai-gateway/policies/rate-limiting/
 

@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: "Token Vault"
     url: /identity/token-vault/
+  - text: "Authenticate to a GitHub MCP server with Token Vault and Okta"
+    url: /ai-gateway/use-token-vault-with-github-mcp-server/
   - text: "Org chart in {{site.ai_cost_management}}"
     url: /ai-cost-management/org-chart/
   - text: "{{site.konnect_short_name}} teams and roles"
