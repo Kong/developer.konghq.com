@@ -1,8 +1,7 @@
 name: cache-by-principal
 display_name: Cache by Principal
 type: proxy-cache
-description: 'Cache responses to GET requests using the authenticated AI Consumer to compose the cache key.'
-extended_description: 'Cache responses to GET requests using the authenticated [AI Consumer](/ai-gateway/entities/ai-consumer/) to compose the cache key.'
+description: 'Cache responses to GET requests using the authenticated principal to compose the cache key.'
 
 title: 'Cache by Principal'
 
