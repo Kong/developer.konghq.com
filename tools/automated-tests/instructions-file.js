@@ -21,9 +21,57 @@ function deriveSkipProducts(products) {
   return products;
 }
 
-export async function testeableUrlsFromFiles(config, files, { explicit = false } = {}) {
+// A version value counts as numeric only when every dotted segment is an
+// integer (`'1.3'`, `'1.1.0'`). Anything else (`'latest'`, `'next'`, unset)
+// carries no version information and is ignored by the gate.
+export function isNumericVersion(value) {
+  if (typeof value === "number") {
+    value = String(value);
+  }
+  if (typeof value !== "string" || value === "") {
+    return false;
+  }
+  return value.split(".").every((segment) => /^\d+$/.test(segment));
+}
+
+export function compareVersions(a, b) {
+  const aSegments = a.split(".").map(Number);
+  const bSegments = b.split(".").map(Number);
+  const segments = Math.max(aSegments.length, bSegments.length);
+
+  for (let i = 0; i < segments; i++) {
+    const left = aSegments[i] ?? 0;
+    const right = bSegments[i] ?? 0;
+    if (left !== right) {
+      return left - right;
+    }
+  }
+  return 0;
+}
+
+export function effectiveVersionUnderTest(imageTag, eventGatewayMinVersion) {
+  const candidates = [imageTag, eventGatewayMinVersion].filter(isNumericVersion);
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return candidates.reduce((minimum, candidate) =>
+    compareVersions(candidate, minimum) < 0 ? candidate : minimum,
+  );
+}
+
+export async function testeableUrlsFromFiles(
+  config,
+  files,
+  { explicit = false, imageTag, eventGatewayMinVersion } = {},
+) {
   const howTosUrls = [];
   const skipped = [];
+  const versionUnderTest = effectiveVersionUnderTest(
+    imageTag,
+    eventGatewayMinVersion,
+  );
 
   const parsedFiles = files.map((file) => {
     const { data: frontmatter, content } = matter.read(file);
@@ -58,11 +106,31 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
         );
       }
 
+      const requiredEventGatewayVersion =
+        frontmatter.min_version && frontmatter.min_version["event-gateway"]
+          ? String(frontmatter.min_version["event-gateway"])
+          : null;
+      const needsNewerEventGateway =
+        versionUnderTest &&
+        frontmatter.products.includes("event-gateway") &&
+        isNumericVersion(requiredEventGatewayVersion) &&
+        compareVersions(requiredEventGatewayVersion, versionUnderTest) > 0;
+
+      if (needsNewerEventGateway && explicit) {
+        const relativeFilePath = file.replace("../../", "");
+        throw new Error(
+          `${relativeFilePath} requires Event Gateway >= ${requiredEventGatewayVersion}, ` +
+          `but the version under test is ${versionUnderTest}. ` +
+          `Unset KONG_IMAGE_TAG and KONNECT_EVENT_GATEWAY_MIN_VERSION to generate it anyway.`
+        );
+      }
+
       const skipHowTo =
         isNonFirstSeriesPage ||
         content.includes("@todo") ||
         frontmatter.automated_tests === false ||
-        frontmatter.published === false;
+        frontmatter.published === false ||
+        needsNewerEventGateway;
 
       let howToUrl;
       if (frontmatter.permalink) {
@@ -73,14 +141,19 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
 
       if (skipHowTo) {
         let message;
+        let reason = "excluded";
         if (isNonFirstSeriesPage) {
           const firstPageTitle =
             seriesFirstPageTitles[frontmatter.series.id] || "the series' first page";
           message = `Part of series "${frontmatter.series.id}", tested via "${firstPageTitle}"`;
+          reason = "series";
         } else if (frontmatter.automated_tests === false) {
           message = "Tagged with automated_tests=false";
         } else if (frontmatter.published === false) {
           message = "Tagged with published=false";
+        } else if (needsNewerEventGateway) {
+          message = `Requires Event Gateway >= ${requiredEventGatewayVersion}, generating for ${versionUnderTest}`;
+          reason = "min-version";
         } else {
           message = "Tagged with @todo.";
         }
@@ -93,7 +166,7 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
           duration: 0,
           name,
           message,
-          reason: isNonFirstSeriesPage ? "series" : "excluded",
+          reason,
         });
       } else {
         howTosUrls.push(`${config.baseUrl}${howToUrl}`);

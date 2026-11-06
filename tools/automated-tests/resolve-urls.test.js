@@ -120,6 +120,98 @@ test("an explicit non-first series page is a hard error", async () => {
   );
 });
 
+// A guide that declares a minimum newer than the version these tests pin.
+// It is written into the shared temp repo for the duration of one test, so
+// the exact-list assertions elsewhere still see the untouched fixture set.
+function gatedGuidePath() {
+  return path.join(tmpRoot, "app/_how-tos/event-gateway/gated.md");
+}
+
+async function withGatedGuide(fn) {
+  await fs.writeFile(
+    gatedGuidePath(),
+    [
+      "---",
+      "title: Gated",
+      "products:",
+      "  - event-gateway",
+      "min_version:",
+      "  event-gateway: '1.3'",
+      "permalink: /how-to/gated/",
+      "---",
+      "",
+      "Body.",
+      "",
+    ].join("\n"),
+  );
+  try {
+    return await fn();
+  } finally {
+    await fs.rm(gatedGuidePath(), { force: true });
+  }
+}
+
+test("the product run gates an event-gateway guide on the version inputs", async () => {
+  await withGatedGuide(async () => {
+    const { urlsToTest } = await resolveUrlsToTest(
+      { product: "event-gateway" },
+      config,
+      { repoRoot: tmpRoot, imageTag: "1.1" },
+    );
+
+    assert.equal(
+      urlsToTest.some((url) => url.includes("/how-to/gated/")),
+      false,
+    );
+
+    const manifest = load(await readManifest());
+    const row = manifest.find((entry) => entry.reason === "min-version");
+    assert.ok(row, "expected a min-version skip row");
+    assert.match(row.message, /1\.3/);
+    assert.match(row.message, /1\.1/);
+    assert.deepEqual(row.products, ["event-gateway"]);
+  });
+});
+
+test("the full scan threads the version inputs into the filter", async () => {
+  await withGatedGuide(async () => {
+    const { urlsToTest } = await resolveUrlsToTest({}, config, {
+      imageTag: "1.1",
+    });
+
+    assert.equal(
+      urlsToTest.some((url) => url.includes("/how-to/gated/")),
+      false,
+    );
+    const manifest = load(await readManifest());
+    assert.ok(manifest.some((entry) => entry.reason === "min-version"));
+  });
+});
+
+test("explicit file targeting aborts when the version inputs gate the guide", async () => {
+  await withGatedGuide(async () => {
+    await assert.rejects(
+      () =>
+        resolveUrlsToTest(
+          { files: "../../app/_how-tos/event-gateway/gated.md" },
+          config,
+          { imageTag: "1.1" },
+        ),
+      /requires Event Gateway >= 1\.3, but the version under test is 1\.1/,
+    );
+  });
+});
+
+test("explicit URL targeting bypasses the version gate", async () => {
+  const result = await resolveUrlsToTest(
+    { urls: `${config.baseUrl}/how-to/gated/` },
+    config,
+    { imageTag: "1.1" },
+  );
+
+  assert.deepEqual(result.urlsToTest, [`${config.baseUrl}/how-to/gated/`]);
+});
+
 test("the product run applies the same testability rules as the full scan", async () => {
   const { urlsToTest, haltOnSeriesError } = await resolveUrlsToTest(
     { product: "event-gateway" },
