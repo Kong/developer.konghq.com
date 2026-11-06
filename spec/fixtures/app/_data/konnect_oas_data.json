@@ -1,0 +1,20 @@
+[
+  {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "title": "Test API",
+    "latestVersion": {
+      "name": "test-release",
+      "id": "22222222-2222-2222-2222-222222222222"
+    },
+    "description": "Fixture API for the entity_schema tag spec.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "22222222-2222-2222-2222-222222222222",
+        "name": "test-release",
+        "deprecated": false
+      }
+    ]
+  }
+]

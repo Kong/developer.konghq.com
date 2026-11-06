@@ -18,8 +18,13 @@ module Jekyll
       end
 
       def json_schema
-        @json_schema ||= YAML.load(File.read(api_file))
-                             .dig('components', *@schema['path'].split('/').reject(&:empty?))
+        @json_schema ||= begin
+          document = YAML.load_file(api_file)
+          subtree = document.dig('components', *@schema['path'].split('/').reject(&:empty?))
+          Jekyll::Utils::JsonSchemaDeref
+            .new(subtree.merge('$defs' => document.dig('components', 'schemas') || {}))
+            .resolve
+        end
       end
 
       def path
