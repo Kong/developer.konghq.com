@@ -32,7 +32,7 @@ You can establish a private connection between {{site.konnect_short_name}} and y
 
 You can configure this instead of AWS Transit Gateways to secure your connection.
 
-PrivateLink support is currently available in the following AWS regions:
+PrivateLink support is available in the following AWS regions:
 * `us-east-1`
 * `us-east-2`
 * `us-west-2`
@@ -47,6 +47,7 @@ PrivateLink support is currently available in the following AWS regions:
 * `ap-northeast-2`
 * `ap-northeast-3`
 * `mx-central-1`
+* `sa-east-1`
 
 If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
@@ -580,6 +581,39 @@ rows:
 {% endtable %}
 {% endnavtab %}
 
+{% navtab "sa-east-1" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AU
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-042e2f79c256452c0
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-087fce9ea1fc814d1
+    dns: eu.svc.konghq.com
+  - geo: GLOBAL
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-0ef539ffe1f389042
+    dns: global.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-0aca0c5b4a2865f97
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-071fa2372a8231bfd
+    dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-06d9ce06df0359015
+    dns: sg.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-03a03c6884235efa7
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
 {% endnavtabs %}
 <!--vale on-->
-
