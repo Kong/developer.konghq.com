@@ -367,8 +367,7 @@ to align with the new group-to-team mapping.
 ### Exclude teams from IdP synchronization
 
 When IdP mapping is enabled, team memberships are synced from your IdP for every {{site.konnect_short_name}} team by default. 
-You can exclude specific teams from synchronization to manage their membership manually in {{site.konnect_short_name}}, even while mapping is enabled for the rest of your teams.
-This is useful when you are migrating from one IdP to another, or if org admins don't have access to the IdP settings and need to create some teams manually.
+{% include konnect/idp-sync-exclude-teams.md %}
 
 {% navtabs "exclude-teams" %}
 {% navtab "UI" %}
@@ -378,9 +377,7 @@ The team list is available only when OIDC or SAML is configured and enabled for 
 1. Click the **Settings** tab.
 1. Click the **Team mappings** tab.
 1. In the **Identity provider mapping** section, find the team in the list.
-1. Disable **Active** next to the team you don't want IdP sync for.
-
-When the toggle is disabled, the team is excluded from IdP synchronization. 
+1. Disable **Active** next to the team you want to exclude from IdP synchronization. 
 {% endnavtab %}
 {% navtab "API" %}
 Set `konnect_managed` on the team by sending a `PATCH` request to the [`/teams/{teamId}` endpoint](/api/konnect/identity/#/operations/update-team). 
