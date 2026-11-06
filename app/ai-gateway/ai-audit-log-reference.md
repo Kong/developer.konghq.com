@@ -128,7 +128,7 @@ rows:
       The request mode. Can be `oneshot`, `stream`, or `realtime`.
   - property: '`ai.proxy.meta.auth_source` {% new_in 2.4 %}'
     description: |
-      `claude-ai` when {{site.ai_gateway}} forwarded the claude.ai token of the caller to Anthropic, so the Claude subscription of the caller pays for the request.
+      `claude-ai` when {{site.ai_gateway}} selects the claude.ai token of the caller, in place of the provider key, as the credential for Anthropic.
       The gateway logs this field only for these requests. See [Claude subscription of the developer](/ai-gateway/entities/ai-model/#claude-subscription-of-the-developer).
 {% endtable %}
 
