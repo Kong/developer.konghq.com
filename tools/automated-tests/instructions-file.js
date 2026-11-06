@@ -21,6 +21,46 @@ function deriveSkipProducts(products) {
   return products;
 }
 
+// A version value counts as numeric only when every dotted segment is an
+// integer (`'1.3'`, `'1.1.0'`). Anything else (`'latest'`, `'next'`, unset)
+// carries no version information and is ignored by the gate.
+export function isNumericVersion(value) {
+  if (typeof value === "number") {
+    value = String(value);
+  }
+  if (typeof value !== "string" || value === "") {
+    return false;
+  }
+  return value.split(".").every((segment) => /^\d+$/.test(segment));
+}
+
+export function compareVersions(a, b) {
+  const aSegments = a.split(".").map(Number);
+  const bSegments = b.split(".").map(Number);
+  const segments = Math.max(aSegments.length, bSegments.length);
+
+  for (let i = 0; i < segments; i++) {
+    const left = aSegments[i] ?? 0;
+    const right = bSegments[i] ?? 0;
+    if (left !== right) {
+      return left - right;
+    }
+  }
+  return 0;
+}
+
+export function effectiveVersionUnderTest(imageTag, controlPlaneMinVersion) {
+  const candidates = [imageTag, controlPlaneMinVersion].filter(isNumericVersion);
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return candidates.reduce((minimum, candidate) =>
+    compareVersions(candidate, minimum) < 0 ? candidate : minimum,
+  );
+}
+
 export async function testeableUrlsFromFiles(config, files, { explicit = false } = {}) {
   const howTosUrls = [];
   const skipped = [];
