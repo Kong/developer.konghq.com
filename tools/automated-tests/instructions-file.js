@@ -49,8 +49,8 @@ export function compareVersions(a, b) {
   return 0;
 }
 
-export function effectiveVersionUnderTest(imageTag, controlPlaneMinVersion) {
-  const candidates = [imageTag, controlPlaneMinVersion].filter(isNumericVersion);
+export function effectiveVersionUnderTest(imageTag, eventGatewayMinVersion) {
+  const candidates = [imageTag, eventGatewayMinVersion].filter(isNumericVersion);
 
   if (candidates.length === 0) {
     return null;
@@ -64,13 +64,13 @@ export function effectiveVersionUnderTest(imageTag, controlPlaneMinVersion) {
 export async function testeableUrlsFromFiles(
   config,
   files,
-  { explicit = false, imageTag, controlPlaneMinVersion } = {},
+  { explicit = false, imageTag, eventGatewayMinVersion } = {},
 ) {
   const howTosUrls = [];
   const skipped = [];
   const versionUnderTest = effectiveVersionUnderTest(
     imageTag,
-    controlPlaneMinVersion,
+    eventGatewayMinVersion,
   );
 
   const parsedFiles = files.map((file) => {

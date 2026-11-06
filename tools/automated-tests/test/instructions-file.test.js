@@ -129,7 +129,7 @@ test("the version under test is the minimum of the image tag and the control-pla
 
     const urls = await testeableUrlsFromFiles(config, [needs12, needs11], {
       imageTag: "1.3",
-      controlPlaneMinVersion: "1.1",
+      eventGatewayMinVersion: "1.1",
     });
 
     assert.deepEqual(urls, ["http://localhost:8888/event-gateway/needs-11/"]);
@@ -148,7 +148,7 @@ test("non-numeric or unset version inputs never gate", async () => {
     assert.deepEqual(
       await testeableUrlsFromFiles(config, [file], {
         imageTag: "latest",
-        controlPlaneMinVersion: "next",
+        eventGatewayMinVersion: "next",
       }),
       [url],
     );
@@ -232,7 +232,7 @@ test("a gateway guide with its own min_version is unaffected by the event-gatewa
 
     const urls = await testeableUrlsFromFiles(config, [file], {
       imageTag: "1.1",
-      controlPlaneMinVersion: "1.1",
+      eventGatewayMinVersion: "1.1",
     });
 
     assert.deepEqual(urls, ["http://localhost:8888/gateway/versioned/"]);
