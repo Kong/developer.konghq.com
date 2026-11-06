@@ -22,6 +22,18 @@ tags:
   - mcp
   - kubernetes
 
+related_resources:
+  - text: "{{site.context_mesh}}"
+    url: /context-mesh/
+  - text: "{{site.context_mesh}} sources"
+    url: /context-mesh/sources/
+  - text: "{{site.context_mesh}} MCP servers"
+    url: /context-mesh/mcp-servers/
+  - text: "{{site.context_mesh}} skills"
+    url: /context-mesh/skills/
+  - text: "Install {{site.operator_product_name}}"
+    url: /operator/get-started/konnect-crds/install/
+
 tldr:
   q: "How do I deploy the OpenWeather {{site.context_mesh}} MCP server?"
   a: "Install {{site.operator_product_name}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create and deploy the MCP server with the Konnect API."
@@ -119,7 +131,7 @@ helm repo update
 
 ## Install {{site.operator_product_name}}
 
-{{site.base_gateway}} needs {{site.operator_product_name}} to run a {{site.context_mesh}} MCP server:
+{{site.base_gateway}} needs {{site.operator_product_name}} to run a {{site.context_mesh}} MCP server. The following command installs it with the {{site.konnect_short_name}} controller and the `mcp-server` feature gate enabled:
 
 ```shell
 helm upgrade --install kong-operator kong/kong-operator -n kong \
@@ -239,8 +251,7 @@ capture:
 
 ## Add the OpenWeather API as a source
 
-A source holds the OpenAPI specification that {{site.context_mesh}} generates the MCP server from.
-The specification is sent as a single JSON string, so build the request body from the file you downloaded:
+A [source](/context-mesh/sources/) holds the OpenAPI specification that {{site.context_mesh}} generates the MCP server from. Send the specification as a single JSON string, so build the request body from the file you downloaded:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -283,8 +294,7 @@ The `name` must be unique within your organization and can only contain lowercas
 
 ## Create the MCP server
 
-
-Create the MCP server:
+Create the [MCP server](/context-mesh/mcp-servers/):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -323,11 +333,11 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To expose more than one API or MCP server through the same MCP server, repeat this call for each source.
+To expose more than one API or MCP server through the same MCP server, repeat this call for each [source](/context-mesh/sources/). To restrict what an agent can access through a source, see [Blocked capabilities](/context-mesh/mcp-servers/#blocked-capabilities).
 
 ## Deploy the MCP server
 
-Mapping the MCP server to a control plane deploys it. Set `mode` to `basic` to let {{site.konnect_short_name}} manage the underlying Kubernetes workload with its defaults:
+Mapping the MCP server to a control plane deploys it. Set `mode` to `basic` to let {{site.konnect_short_name}} manage the underlying Kubernetes workload with its defaults. For the differences between basic and advanced mode, see [Deployments](/context-mesh/mcp-servers/#deployments):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -404,3 +414,5 @@ Try a prompt in Claude Code:
 ```
 Tell me the weather in Hawaii.
 ```
+
+To give the agent reusable instructions alongside the tools, [add a skill](/context-mesh/skills/#add-a-skill) to the MCP server.
