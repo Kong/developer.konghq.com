@@ -254,11 +254,11 @@ helm upgrade --install --create-namespace -n prometheus --values values.yaml pro
    ```
    {: data-test-step="block" }
 
-1. To trigger autoscaling, start sending traffic in the background. Each request makes the underlying deployment sleep for 100ms, which raises the average response time to that value. Leave it running while you work through the rest of this guide: the 60-second average that the autoscaler reads only stays above its target while requests are flowing, and the metric can take a couple of minutes to be populated. The loop stops on its own after 15 minutes:
+1. To trigger autoscaling, start sending traffic in the background. Each request makes the underlying deployment sleep for 100ms, which raises the average response time to that value. Leave it running while you work through the rest of this guide: the 60-second average that the autoscaler reads only stays above its target while requests are flowing, and the metric can take a few minutes to be populated. The loop sends a request every second for about 30 minutes, which is long enough for the metric to appear and the autoscaler to react:
 
 {% validation custom-command %}
 command: |
-  for _ in {1..900}; do
+  for _ in {1..1800}; do
     curl -k --no-progress-meter --fail-with-body "http://$PROXY_IP/command/shell?cmd=sleep%200.1"
     sleep 1
   done > /dev/null 2>&1 &
@@ -273,13 +273,13 @@ indent: 3
 When all is configured, you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API. Wait until the metric is populated, then query it:
 
 ```bash
-timeout 240 bash -c 'until kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average" | grep -q kong_upstream_latency_ms_60s_average; do sleep 10; done'
+timeout 900 bash -c 'until kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average" | grep -q kong_upstream_latency_ms_60s_average; do sleep 10; done'
 kubectl get --raw '/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average' | jq
 ```
 {: data-test-step="block" }
 
 {:.warning}
-> **Note:** The `prometheus-adapter` may take up to 2 minutes to populate the custom metrics
+> **Note:** The `prometheus-adapter` may take a few minutes to populate the custom metrics. It only discovers `kong_upstream_latency_ms_60s_average` after the data plane has picked up the metrics extension and started reporting latency, so keep the traffic loop running while you wait.
 
 This should result in:
 
