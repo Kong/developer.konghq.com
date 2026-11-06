@@ -112,7 +112,7 @@ or by scoping to a single product, i.e.
 
 This collects the how-to files under `app/_how-tos/<product>` (via `collect-how-to-files.mjs`), skipping any version snapshot folder (e.g. `v1/`), which holds a frozen snapshot of a previous major. The collected files then go through the same testability filtering as the full scan, so a how-to is skipped if it sets `automated_tests: false` or `published: false`, contains `@todo`, or is a non-first page of a series. Each skipped file gets a `Skipping file` log line with the reason, and a row in the skip manifest that the test report reads. A how-to with no `permalink` is tested through its derived URL.
 
-The run scrapes the dev site selected by `BASE_URL` when it is set, otherwise `baseUrl` in `config/tests.yaml` (unchanged default: `http://localhost:8888`). It prints the target it scrapes before visiting the first page, and exits with an error if the selected value is not an absolute `http`/`https` URL. Only `--urls` bypasses the resolved target; its values are used exactly as given. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+The run scrapes the dev site selected by `BASE_URL` when it is set, otherwise `baseUrl` in `config/tests.yaml` (unchanged default: `http://localhost:8888`). It prints the resolved target before visiting the first page, and exits with an error if the selected value is not an absolute `http`/`https` URL. Only `--urls` bypasses the resolved target; its values are used exactly as given. `--urls` and `--product` are mutually exclusive; passing both raises an error.
 
 ### Unit tests for the tooling
 
