@@ -169,4 +169,4 @@ For example, the condition `http.headers.x_trace == "1"` adds the ID only to req
 
 ## Limitations
 
-- When a client calls a tool on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} doesn't add the header to the request that it sends to the upstream service. With `config.echo_downstream` set to `true`, the client still receives the header in the response.
+- When a client calls a tool on an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) of type `conversion-listener`, {{site.ai_gateway}} doesn't add the header to the REST request that it sends to the upstream service. The server sends that request back through {{site.ai_gateway}} as a new request, which doesn't carry the generated ID. With `config.echo_downstream` set to `true`, the client still receives the header in the response. For AI Models and AI Agents, the header is added to the upstream request.
