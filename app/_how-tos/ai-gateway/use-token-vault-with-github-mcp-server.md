@@ -2,7 +2,7 @@
 title: Authenticate to a GitHub MCP server with Token Vault and Okta
 permalink: /ai-gateway/use-token-vault-with-github-mcp-server/
 content_type: how_to
-description: Learn how to let an AI agent call the GitHub MCP server on behalf of a user by using Token Vault, Okta, and an AI MCP Server in {{site.ai_gateway}}.
+description: Let an AI agent call the GitHub MCP server on behalf of a user through Token Vault, Okta, and an AI MCP Server in {{site.ai_gateway}}.
 automated_tests: false
 
 products:
@@ -32,7 +32,7 @@ tldr:
 
 
 tools:
-  - konnect-api
+  - {{site.konnect_product_name}}
 
 prereqs:
   skip_product: true
@@ -123,8 +123,6 @@ related_resources:
     url: /ai-gateway/entities/ai-mcp-server/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
-  - text: Protected resource metadata
-    url: /ai-gateway/entities/ai-mcp-server/#protected-resource-metadata
   - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
     url: /ai-gateway/openid-connect/
   - text: "{{site.identity}} directories"
