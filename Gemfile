@@ -12,7 +12,7 @@ gem 'nodo'
 gem 'nokogiri'
 gem 'nokolexbor'
 gem 'ostruct'
-gem 'rouge', '~> 4.3'
+gem 'rouge', '~> 5.0'
 # XXX: bundler isn't installing mini_portile as a dependency of nokogiri
 # installing it manually fixes the issue
 gem 'mini_portile2', '~> 2.8'
