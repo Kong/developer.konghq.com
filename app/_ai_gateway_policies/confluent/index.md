@@ -83,22 +83,16 @@ Four Confluent Policy settings control which parts of the request the Policy add
 columns:
   - title: Setting
     key: setting
-  - title: Default
-    key: default
   - title: Adds to the message
     key: adds
 rows:
   - setting: "[`config.forward_body`](/ai-gateway/policies/confluent/reference/#schema--config-forward-body)"
-    default: "`true`"
     adds: "`body` and `body_args`"
   - setting: "[`config.forward_headers`](/ai-gateway/policies/confluent/reference/#schema--config-forward-headers)"
-    default: "`false`"
     adds: "`headers`"
   - setting: "[`config.forward_method`](/ai-gateway/policies/confluent/reference/#schema--config-forward-method)"
-    default: "`false`"
     adds: "`method`"
   - setting: "[`config.forward_uri`](/ai-gateway/policies/confluent/reference/#schema--config-forward-uri)"
-    default: "`false`"
     adds: "`uri` and `uri_args`"
 {% endtable %}
 
