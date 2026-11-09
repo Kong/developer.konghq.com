@@ -89,13 +89,7 @@ See [Limitations](#limitations).
 
 ### Cache key
 
-{{site.ai_gateway}} builds the cache key from the following parts of the request:
-
-* The request method and path
-* The query parameters
-* The request headers listed in [`config.vary_headers`](/ai-gateway/policies/proxy-cache/reference/#schema--config-vary-headers)
-* The authenticated AI Consumer, when the request is authenticated
-* The authenticated principal, when [`config.cache_by_principal`](/ai-gateway/policies/proxy-cache/reference/#schema--config-cache-by-principal) is `true`. See [Cache by Principal](/ai-gateway/policies/proxy-cache/examples/cache-by-principal/).
+{% include_cached md/ai-gateway/v2/proxy-cache/cache-key.md slug="proxy-cache" %}
 
 Use these settings to control which requests share a cache entry:
 
@@ -128,22 +122,11 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 Attach the policy to an AI Agent or an AI MCP Server to cache the traffic of one entity.
 Attach it to an AI Consumer or an AI Consumer Group when only some clients need caching.
 
-* With an AI Agent and AI MCP Server scope, the policy caches responses for requests to that entity.
-* With an AI Consumer and AI Consumer Group scope, the policy caches responses only for authenticated requests from that Consumer or from members of that group.
-  Requests from other clients are sent to the upstream.
-* With an AI Model scope, {{site.ai_gateway}} sends every request to the upstream.
-  See [Limitations](#limitations).
+{% include_cached md/ai-gateway/v2/proxy-cache/scope-behavior.md %}
 
 ## Execution order
 
-The Proxy Cache Policy has a priority of 100.
-For details, see [AI Policy priority](/ai-gateway/entities/ai-policy/#ai-policy-priority).
-
-Authentication and policies with a higher priority run before the cache.
-For example, an unauthenticated request receives a `401` response, and the [IP Restriction Policy](/ai-gateway/policies/ip-restriction/) rejects a denied client even when a cached entry exists.
-
-A [Request Termination Policy](/ai-gateway/policies/request-termination/) has a lower priority, so it runs after the cache.
-A request that hits the cache returns the cached response even when it carries the trigger header of the Request Termination Policy.
+{% include_cached md/ai-gateway/v2/proxy-cache/execution-order.md name="Proxy Cache" %}
 
 ## Limitations
 

@@ -101,18 +101,12 @@ If Redis fails, for example when the database is down, the result depends on [`c
 ### Storage TTL
 
 The `config.storage_ttl` setting keeps entries in the Redis database for longer than `config.cache_ttl`.
-When an entry is older than `config.cache_ttl` and `config.cache_control` is `false`, the next request goes to the upstream.
+When an entry is older than `config.cache_ttl` and [`config.cache_control`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-control) is `false`, the next request goes to the upstream.
 {{site.ai_gateway}} replaces the entry with the response and sets the `X-Cache-Status` header to `Refresh`.
 
 ### Cache key
 
-{{site.ai_gateway}} builds the cache key from the following parts of the request:
-
-* The request method and path
-* The query parameters
-* The request headers listed in [`config.vary_headers`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-vary-headers)
-* The authenticated AI Consumer, when the request is authenticated
-* The authenticated principal, when [`config.cache_by_principal`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-by-principal) is `true`. See [Cache by principal](/ai-gateway/policies/proxy-cache-advanced/examples/cache-by-principal/).
+{% include_cached md/ai-gateway/v2/proxy-cache/cache-key.md slug="proxy-cache-advanced" %}
 
 {{site.ai_gateway}} returns the key of each request in the `X-Cache-Key` response header.
 
@@ -132,23 +126,11 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 
 Global scope applies the policy to all traffic, so use it only when every entity needs the same caching.
 
-* When it's scoped to an AI Agent or AI MCP Server, the policy caches responses for requests to that entity.
-  Use this scope to cache the traffic of one entity.
-* When it's scoped to an AI Consumer or AI Consumer Group, the policy caches responses for authenticated requests from that Consumer or from members of that group.
-  Use this scope when only some clients need caching.
-* When the policy is scoped to an AI Model, {{site.ai_gateway}} sends every request to the upstream.
-  See [Limitations](#limitations).
+{% include_cached md/ai-gateway/v2/proxy-cache/scope-behavior.md %}
 
 ## Execution order
 
-The Proxy Cache Advanced Policy has a priority of 100.
-For details, see [AI Policy priority](/ai-gateway/entities/ai-policy/#ai-policy-priority).
-
-Authentication and policies with a higher priority run before the cache.
-For example, an unauthenticated request receives a `401` response, and the [IP Restriction Policy](/ai-gateway/policies/ip-restriction/) rejects a denied client even when a cached entry exists.
-
-A [Request Termination Policy](/ai-gateway/policies/request-termination/) has a lower priority, so it runs after the cache.
-A request that hits the cache returns the cached response even when it carries the trigger header of the Request Termination Policy.
+{% include_cached md/ai-gateway/v2/proxy-cache/execution-order.md name="Proxy Cache Advanced" %}
 
 ## Limitations
 
