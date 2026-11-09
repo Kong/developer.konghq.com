@@ -51,8 +51,8 @@ PrivateLink support is available in the following AWS regions:
 
 If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
-{:.warning}
-> **Limitation:** {{site.ai_gateway}} 2.x data planes that you deploy with {{site.operator_product_name}} cannot use PrivateLink for all of their traffic. The identity call is not routable over PrivateLink and goes over the public internet.
+{:.info}
+> **Note:** PrivateLink is not available for {{site.ai_gateway}} data planes that you deploy with {{site.operator_product_name}}.
 
 ## AWS configuration for PrivateLink
 
