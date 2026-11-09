@@ -1,0 +1,59 @@
+name: transform-messages
+display_name: Transform messages with Lua custom code
+type: confluent-consume
+
+title: 'Transform messages with Lua custom code'
+
+description: 'Transform messages with custom Lua code.'
+
+extended_description: |
+  Transform messages with custom Lua code.
+  In this example, the Confluent Consume Policy normalizes each message to a table and adds a `processed_by_lua` field to it.
+
+weight: 900
+
+scopes:
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+
+requirements:
+  - You have a [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud
+  - You have a [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster
+
+# variables:
+#   host:
+#     value: $BOOTSTRAP_SERVER_HOST
+#     description: The bootstrap server host.
+#   key:
+#     value: $API_KEY
+#     description: The API key to use for authentication.
+#   secret:
+#     value: $API_SECRET
+#     description: The API secret to use for authentication.
+#   topic:
+#     value: $KAFKA_TOPIC
+#     description: The name of the Kafka topic to consume from.
+
+config:
+  bootstrap_servers:
+    - host: ${host}
+      port: 9092
+  topics:
+    - name: ${topic}
+  mode: server-sent-events
+  message_by_lua_functions:
+    - |
+      return function(message)
+        local m = type(message) == "table" and message or { value = message }
+        m.processed_by_lua = true
+        return m
+      end
+  cluster_api_key: ${key}
+  cluster_api_secret: ${secret}
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
