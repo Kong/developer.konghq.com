@@ -34,7 +34,7 @@ It blocks a built-in list of common bots, and you can add your own patterns to d
 ## How does the Bot Detection Policy work?
 
 The Bot Detection Policy compares the `User-Agent` header of each request against the built-in list and your custom patterns.
-When the header matches, {{site.ai_gateway}} rejects the request with a `403 Forbidden` response.
+When the header matches the built-in list or a deny pattern and no allow pattern matches, {{site.ai_gateway}} rejects the request with a 403 Forbidden response.
 
 {{site.ai_gateway}} sends the `403` response before it forwards the request upstream, so a blocked streaming request doesn't open a stream.
 Requests without a `User-Agent` header pass through.
