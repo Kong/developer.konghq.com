@@ -8,7 +8,7 @@ weight: 880
 
 requirements:
   - An existing [AI Model](/ai-gateway/entities/ai-model/).
-  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
+  - An [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service), pulled and running.
 
 variables:
   host:

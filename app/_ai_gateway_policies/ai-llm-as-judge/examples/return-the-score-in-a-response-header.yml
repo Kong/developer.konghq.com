@@ -7,7 +7,7 @@ title: Return the judge score in a response header
 weight: 890
 
 requirements:
-  - You have a working OpenAI API key.
+  - A working OpenAI API key.
   - An existing [AI Model](/ai-gateway/entities/ai-model/).
 
 variables:

@@ -6,7 +6,7 @@ title: Authenticate with an Azure managed identity
 weight: 860
 
 requirements:
-  - You have an Azure subscription and access to Azure AI Content Safety.
+  - An Azure subscription with access to Azure AI Content Safety.
   - An existing [AI Model](/ai-gateway/entities/ai-model/).
   - The data plane runs with an Azure managed identity that has access to Azure AI Content Safety.
 
