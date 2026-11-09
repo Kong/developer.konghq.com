@@ -1,0 +1,42 @@
+description: |
+  Configure the AI Azure Content Safety policy to check content against blocklists that you manage in Azure.
+  With `halt_on_blocklist_hit` enabled, Azure rejects the request when any blocklist term matches.
+
+title: Block content with Azure blocklists
+
+weight: 870
+
+requirements:
+  - You have an Azure subscription and access to Azure AI Content Safety.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing blocklist in Azure AI Content Safety.
+
+variables:
+  content_safety_url:
+    value: $CONTENT_SAFETY_URL
+    description: The full URL of the Azure AI Content Safety instance.
+  content_safety_key:
+    value: $CONTENT_SAFETY_KEY
+    description: The API key to access the Azure AI Content Safety instance.
+  blocklist_name:
+    value: $BLOCKLIST_NAME
+    description: The name of the blocklist in Azure AI Content Safety.
+
+name: block-content-with-blocklists
+display_name: Block content with Azure blocklists
+type: ai-azure-content-safety
+
+config:
+  content_safety_url: ${content_safety_url}
+  content_safety_key: ${content_safety_key}
+  categories:
+    - name: Hate
+      rejection_level: 2
+  blocklist_names:
+    - ${blocklist_name}
+  halt_on_blocklist_hit: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

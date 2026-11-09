@@ -1,0 +1,49 @@
+description: |
+  Configure the AI AWS Guardrails policy to detect violations without blocking requests or responses.
+  The policy still evaluates every request and response against your guardrail, and records what it
+  would have blocked in the logs. Use this to test a guardrail against real traffic before you enforce it.
+
+title: Detect guardrail violations without blocking
+
+weight: 870
+
+requirements:
+  - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
+
+variables:
+  guardrails_id:
+    description: The guardrail identifier to apply.
+    value: $GUARDRAILS_ID
+  guardrails_version:
+    description: The guardrail version to apply.
+    value: $GUARDRAILS_VERSION
+  aws_region:
+    description: The AWS region where the guardrail is deployed.
+    value: $AWS_REGION
+  aws_access_key_id:
+    description: The AWS access key ID used to authenticate the request.
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    description: The AWS secret access key used to authenticate the request.
+    value: $AWS_SECRET_ACCESS_KEY
+
+name: aws-guardrails-detect-violations-without-blocking
+display_name: Detect guardrail violations without blocking
+type: ai-aws-guardrails
+
+config:
+  guardrails_id: ${guardrails_id}
+  guardrails_version: ${guardrails_version}
+  aws_region: ${aws_region}
+  aws_access_key_id: ${aws_access_key_id}
+  aws_secret_access_key: ${aws_secret_access_key}
+  guarding_mode: BOTH
+  continue_on_detection: true
+  log_blocked_content: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

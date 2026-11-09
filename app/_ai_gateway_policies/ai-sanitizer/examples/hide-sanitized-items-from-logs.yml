@@ -1,0 +1,35 @@
+description: |
+  Configure the AI Sanitizer policy to anonymize phone numbers and keep the sanitized items out of your log policies.
+  Use this when the logs themselves must not hold sensitive data.
+
+title: Hide sanitized items from logs
+
+weight: 880
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - You have pulled and run an [AI PII Anonymizer service image](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: hide-sanitized-items-from-logs
+display_name: Hide sanitized items from logs
+type: ai-sanitizer
+
+config:
+  anonymize:
+      - phone
+  port: 8080
+  host: ${host}
+  redact_type: synthetic
+  stop_on_error: true
+  recover_redacted: false
+  skip_logging_sanitized_items: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

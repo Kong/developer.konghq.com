@@ -1,0 +1,44 @@
+description: |
+  Configure the AI Routing Provider policy in `observe_only` mode.
+  The policy asks Switchyard which model it would choose and records the decision, but it doesn't change where requests go.
+  Use this to check Switchyard's decisions on real traffic before you let them route requests.
+
+title: Observe routing decisions without applying them
+
+weight: 900
+
+scopes:
+  - ai-model
+
+requirements:
+  - You have a running [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) decision service that the data plane can reach.
+  - You have registered the AI Routing Provider [custom policy](/ai-gateway/custom-policies/) and run the data plane with `KONG_UNTRUSTED_LUA=on`.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/) for each target, with no policies attached, and an AI Model that clients call.
+
+name: observe-routing-decisions
+display_name: Observe routing decisions without applying them
+type: ai-routing-provider
+
+config:
+  decision_api_url: http://switchyard:4000/v1/decision
+  decision_route: kong-router
+  dispatch: konnect_model
+  default_target: weak
+  mode: observe_only
+  timeout_ms: 2000
+  targets:
+    weak:
+      model: z-ai/glm-5.3
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+    strong:
+      model: google/gemini-3.8-flash
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
