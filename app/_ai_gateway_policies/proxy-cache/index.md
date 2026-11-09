@@ -66,7 +66,7 @@ When a request matches the policy, {{site.ai_gateway}} builds a cache key and lo
 If an entry exists, {{site.ai_gateway}} returns it without calling the upstream.
 If not, {{site.ai_gateway}} sends the request upstream and stores the response when it meets the policy configuration.
 
-The policy stores entries for the number of seconds set in [`config.cache_ttl`](/ai-gateway/policies/proxy-cache/reference/#schema--config-cache-ttl), which is 300 by default.
+The policy stores entries for the number of seconds set in [`config.cache_ttl`](/ai-gateway/policies/proxy-cache/reference/#schema--config-cache-ttl).
 After an entry expires, the next request goes to the upstream and the response replaces the entry.
 
 ### What does the policy cache?
@@ -106,18 +106,6 @@ Use these settings to control which requests share a cache entry:
 
 {{site.ai_gateway}} returns the key of each request in the `X-Cache-Key` response header.
 
-### Cache control
-
-Set [`config.cache_control`](/ai-gateway/policies/proxy-cache/reference/#schema--config-cache-control) to `true` to make the policy follow the `Cache-Control` header defined in [RFC 7234](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2) on requests and responses.
-
-When `config.cache_control` is `true`:
-
-* A request with `Cache-Control: no-cache` or `no-store` skips the cache.
-* An upstream response with `Cache-Control: no-store` or `max-age=0` isn't cached.
-* An upstream response without a `Cache-Control` header isn't cached.
-  Add a `max-age` directive to the upstream response so the policy caches it.
-
-When `config.cache_control` is `false`, which is the default, the policy ignores `Cache-Control` headers.
 
 ### Cache status
 
@@ -129,72 +117,6 @@ When `config.cache_control` is `false`, which is the default, the policy ignores
 
 To remove a header from responses, set `X-Cache-Key`, `X-Cache-Status`, or `age` in [`config.response_headers`](/ai-gateway/policies/proxy-cache/reference/#schema--config-response-headers) to `false`.
 
-## Examples
-
-The following examples cover the common configurations: caching GET responses and keying by principal.
-The policy examples have their own pages:
-
-* [Cache responses to successful GET requests](/ai-gateway/policies/proxy-cache/examples/cache-get-responses/): Cache `200` responses in memory for 300 seconds.
-* [Cache by Principal](/ai-gateway/policies/proxy-cache/examples/cache-by-principal/): Add the authenticated principal to the cache key.
-
-The following sections show more configurations.
-
-### Cache separately by header and query parameter
-
-The following policy gives each value of the `X-Tenant` header and the `page` query parameter its own cache entry.
-Only the `page` query parameter is part of the key:
-
-{% entity_example %}
-type: policy
-data:
-  name: cache-by-tenant-and-page
-  display_name: Cache by tenant and page
-  type: proxy-cache
-  global: true
-  config:
-    response_code:
-      - 200
-    request_method:
-      - GET
-    content_type:
-      - application/json
-    cache_ttl: 120
-    vary_headers:
-      - X-Tenant
-    vary_query_params:
-      - page
-    strategy: memory
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
-
-### Let clients skip the cache
-
-The following policy follows the `Cache-Control` header, so a client can send `Cache-Control: no-cache` to get a fresh response.
-It caches only upstream responses that set a `max-age` directive:
-
-{% entity_example %}
-type: policy
-data:
-  name: cache-with-cache-control
-  display_name: Cache with Cache-Control
-  type: proxy-cache
-  global: true
-  config:
-    response_code:
-      - 200
-    request_method:
-      - GET
-    content_type:
-      - application/json
-    cache_ttl: 300
-    cache_control: true
-    strategy: memory
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
 
 ## Scopes
 
@@ -204,10 +126,10 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 Attach the policy to an AI Agent or an AI MCP Server to cache the traffic of one entity.
 Attach it to an AI Consumer or an AI Consumer Group when only some clients need caching.
 
-* At AI Agent and AI MCP Server scope, the policy caches responses for requests to that entity.
+* With an AI Agent and AI MCP Server scope, the policy caches responses for requests to that entity.
 * At AI Consumer and AI Consumer Group scope, the policy caches responses only for authenticated requests from that Consumer or from members of that group.
   Requests from other clients are sent to the upstream.
-* At AI Model scope, {{site.ai_gateway}} sends every request to the upstream.
+* With an AI Model scope, {{site.ai_gateway}} sends every request to the upstream.
   See [Limitations](#limitations).
 
 ## Execution order
@@ -226,8 +148,8 @@ A request that hits the cache returns the cached response even when it carries t
 * The policy stores entries in memory only.
   The only supported value for [`config.strategy`](/ai-gateway/policies/proxy-cache/reference/#schema--config-strategy) is `memory`.
 * To clear an entry, wait for `config.cache_ttl` to expire.
-  The {{site.ai_gateway}} API has no endpoint to look up, delete, or purge cache entries.
-* At AI Model scope, the policy sets `X-Cache-Status: Bypass` on every response and {{site.ai_gateway}} sends every request to the upstream, so {{site.ai_gateway}} doesn't cache AI Model responses.
+  The {{site.ai_gateway}} API doesn't have an endpoint to look up, delete, or purge cache entries.
+* When it's scoped to an AI Model, the policy sets `X-Cache-Status: Bypass` on every response and {{site.ai_gateway}} sends every request to the upstream, so {{site.ai_gateway}} doesn't cache AI Model responses.
   This applies to chat completion requests, with and without streaming.
 * The cache key is built without the request body.
   At AI Agent and AI MCP Server scope, `POST` requests to the same path with different bodies share one cache entry, so the cached response answers all of them until it expires.
