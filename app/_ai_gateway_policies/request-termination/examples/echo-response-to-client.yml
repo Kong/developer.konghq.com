@@ -9,6 +9,7 @@ description: 'Block requests and echo the request back to the client with debugg
 extended_description: |
   Block requests and echo the request back to the client with debugging information about the {{site.ai_gateway}} instance, such as the internal routing details it matched for the request.
   You can also combine the `config.echo` parameter with a [header name specified in `config.trigger`](/ai-gateway/policies/request-termination/examples/trigger-on-header/) to make the policy trigger only on specific requests and avoid disturbing real traffic.
+  Because the echoed response exposes internal routing details, use a trigger and remove the policy when you finish debugging.
 
 weight: 900
 

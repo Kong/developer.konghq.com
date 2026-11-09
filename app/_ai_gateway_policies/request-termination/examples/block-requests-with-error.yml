@@ -6,6 +6,11 @@ title: 'Block requests with an error message'
 
 description: 'Block requests with a 401 status code and a custom message.'
 
+extended_description: |
+  Block requests with a 401 status code and a custom message.
+  The default status code is `503`.
+  To return a raw response instead of a JSON message, set [`config.body`](/ai-gateway/policies/request-termination/reference/#schema--config-body) and [`config.content_type`](/ai-gateway/policies/request-termination/reference/#schema--config-content-type) instead of `config.message`. The `body` and `message` parameters are mutually exclusive.
+
 weight: 900
 
 config:
