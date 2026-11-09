@@ -98,7 +98,7 @@ Port and adapt:
 
 Do not write examples inline on the page, and do not hand-write `examples/*.yml` files. Invoke the `ai-gateway-policy-examples-migration` skill for the policy (`<plugin-name>` to convert plugin examples, or `new <policy-name> <feature>` for a feature with no plugin example). It owns the example file format, `formats`, and kongctl validation. The page then references the generated examples. The only inline exception is a field set that applies to any example of the policy (for example cloud authentication), where showing the fields once on the page is clearer than repeating them in every example file.
 
-Example files carry both `konnect-api` and `kongctl` formats. The examples skill checks them. If it did not run, or a kongctl manifest was not applied, list that in the summary as not run.
+Example files carry both `konnect-api`, `kongctl`, and `terraform` formats. The examples skill checks them. If it did not run, or a kongctl manifest was not applied, list that in the summary as not run.
 
 Parameter links: `[`config.<param>`](/ai-gateway/policies/<policy>/reference/#schema--config-<param-with-hyphens>)`. Link each parameter on first prose mention. The anchors resolve only after the generated reference page exists, so a local dev build (which skips reference generation in `jekyll-dev.yml`) cannot verify them.
 
