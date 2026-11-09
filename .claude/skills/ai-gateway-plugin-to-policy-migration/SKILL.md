@@ -53,7 +53,7 @@ Check these paths in the repo before relying on them, since the layout can chang
 
 - Policy pages: `app/_ai_gateway_policies/<policy>/index.md`, published at `/ai-gateway/policies/<policy>/`. Do not create `app/ai-gateway/policies/`: the collection owns the URL.
 - The reference (schema) page is generated at `/ai-gateway/policies/<policy>/reference/`. Never hand-write it or a `reference.md`.
-- Optional `examples/` next to `index.md`. Most policies use inline `{% entity_example %}` blocks.
+- Optional `examples/` next to `index.md`.
 - Stubs often exist. Read `app/_ai_gateway_policies/<policy>/index.md` before creating anything. A frontmatter-only stub is normal.
 - Scope support: `app/_data/policies/ai-gateway/scopes.json` (array of `{name, scopes}`). Read it, do not duplicate it by hand.
 - Priority: `app/_data/policies/ai-gateway/priorities.json` is a flat map of policy type to number (`"canary": 20`). There is no `priority.yml`.
@@ -93,27 +93,10 @@ Remove, do not port (these describe Gateway mechanics that do not exist on AI Ga
 
 Port and adapt:
 - The opener: "The X [AI Policy](/ai-gateway/entities/ai-policy/) ..." with `{{site.ai_gateway}}`. Entity names use "AI {Name}".
-- Parameter explanations, grouped by task (custom response, trigger, debug), not by schema order.
+- Parameter explanations, grouped by task (custom response, trigger, debug), not by schema order. Do not repeat parameter explanations that do not add any additional detail that isn't already covered in the schema. This makes it difficult to maintain documentation when the schema changes.
 - A `## Scopes` section listing the scopes from `scopes.json`, linking `/ai-gateway/entities/ai-policy/#ai-policy-scopes`.
-- A `## Execution order` section only if the policy has a notable priority and you verified the order live. Link `/ai-gateway/entities/ai-policy/#ai-policy-priority`.
 
-Examples use `entity_example` with `type: policy` and exactly these formats, in this order. `deck` is excluded because AI Policies are not deck-managed, and `konnect-api` alone leaves kongctl users without an example:
-
-```
-{% entity_example %}
-type: policy
-data:
-  name: example-name
-  display_name: Example display name
-  type: <policy-type>
-  global: true
-  config:
-    ...
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
-```
+Examples should be in a separate examples .yaml file. The only exception is for examples, like cloud authn, where the fields can be applied to any example for that policy so you can show how those fields should be configured.
 
 A `kongctl` format you have not applied is untested content. Apply it (kongctl check in `references/api-shapes.md`, behind Gate 4) or list it in the summary as not run.
 

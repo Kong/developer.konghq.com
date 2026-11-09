@@ -1,6 +1,6 @@
 # Konnect AI Gateway API shapes (test harness)
 
-Base: `https://us.api.konghq.tech/v1/ai-gateways/$KONNECT_CONTROL_PLANE_ID` (`.tech`, not `.com`).
+Base: `https://us.api.konghq.tech/v1/ai-gateways/$KONNECT_CONTROL_PLANE_ID` (`.tech` or `.com`).
 Check the OpenAPI spec if a shape here is rejected. The spec wins.
 
 ## Policy
