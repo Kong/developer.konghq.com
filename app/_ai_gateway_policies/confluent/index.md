@@ -52,7 +52,7 @@ The Policy needs the following settings:
 * [`config.cluster_api_key`](/ai-gateway/policies/confluent/reference/#schema--config-cluster-api-key) and [`config.cluster_api_secret`](/ai-gateway/policies/confluent/reference/#schema--config-cluster-api-secret): The credentials for the cluster.
 
 After the Policy publishes the message, it ends the request.
-{{site.ai_gateway}} returns a `200` response with the following body to the caller and doesn't send the request upstream, so an AI Model with this Policy doesn't reach its LLM provider:
+{{site.ai_gateway}} returns a `200` response with the following body to the caller and ends the request before it reaches the upstream, so an AI Model with this Policy never calls its LLM provider:
 
 ```json
 {"message": "message sent"}
@@ -77,7 +77,7 @@ For an AI Model, the `model` field holds the provider model name that the AI Mod
 
 ## Choose what goes into the message
 
-Four settings control which parts of the request the Policy adds to the message value:
+Four Confluent Policy settings control which parts of the request the Policy adds to the message value:
 
 {% table %}
 columns:
