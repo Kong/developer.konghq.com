@@ -48,7 +48,13 @@ When no rule matches, {{site.ai_gateway}} sends the request to the URL configure
 
 ## Scopes
 
-Apply the Route By Header Policy globally to evaluate the rules for all {{site.ai_gateway}} traffic on the data plane, or attach it to an AI Agent, an AI MCP Server, or an [AI Consumer](/ai-gateway/entities/ai-consumer/) to evaluate the rules for that entity only.
+Apply the Route By Header Policy globally to evaluate the rules for all AI Agent and AI MCP Server requests, or attach it to an AI Agent, an AI MCP Server, or an [AI Consumer](/ai-gateway/entities/ai-consumer/) to evaluate the rules for that entity only.
 A global policy sends every request that includes a matching header, so choose header names and values that only your intended clients send.
 An AI Consumer's rules apply after the client authenticates.
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
+
+## Limitations
+
+- For AI Model traffic, {{site.ai_gateway}} sends requests to the AI Model's own provider, regardless of the request headers.
+- The `upstream_name` is a hostname, not the name of an entity in {{site.ai_gateway}}.
+  {{site.ai_gateway}} resolves the hostname through DNS from the data plane.
