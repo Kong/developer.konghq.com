@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.3.3
+  version: 2.3.5
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@494ab5a1d2a1264c0b67040610866f59c81d82dc
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/494ab5a1d2a1264c0b67040610866f59c81d82dc'
+  x-oas-source: kong/platform-api@39cdb9f4e1690fc61f53794015949f34df4c0ce3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/39cdb9f4e1690fc61f53794015949f34df4c0ce3'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -11944,6 +11944,7 @@ components:
                   $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
               x-min-runtime-version: '2.1'
           required:
+            - route
             - url
           title: AIGatewayMCPServerKongListenerConfig
         tools:
@@ -12058,6 +12059,8 @@ components:
                 discover:
                   $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
               x-min-runtime-version: '2.1'
+          required:
+            - route
           title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
@@ -13291,6 +13294,7 @@ components:
           $ref: '#/components/schemas/AIGatewayProxyConfig'
       additionalProperties: false
       required:
+        - route
         - url
     AIGatewayMCPServerRouteWithMatcher:
       description: |
@@ -13391,6 +13395,7 @@ components:
           minimum: 0
       additionalProperties: false
       required:
+        - route
         - url
         - tools_cache_ttl_seconds
     AIGatewayMCPServerServerConfigBase:
@@ -13859,6 +13864,7 @@ components:
                   $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
               x-min-runtime-version: '2.1'
           required:
+            - route
             - url
           title: AIGatewayMCPServerKongListenerConfig
         tools:
@@ -13983,6 +13989,8 @@ components:
                 discover:
                   $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
               x-min-runtime-version: '2.1'
+          required:
+            - route
           title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
