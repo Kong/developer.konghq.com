@@ -1,0 +1,18 @@
+name: block-requests-with-error
+display_name: Block requests with an error message
+type: request-termination
+
+title: 'Block requests with an error message'
+
+description: 'Block requests with a 401 status code and a custom message.'
+
+weight: 900
+
+config:
+  status_code: 401
+  message: Error - Authentication required
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

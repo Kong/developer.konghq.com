@@ -1,0 +1,23 @@
+name: echo-response-to-client
+display_name: Echo response back to client
+type: request-termination
+
+title: 'Echo response back to client'
+
+description: 'Block requests and echo the request back to the client with debugging information about the {{site.ai_gateway}} instance.'
+
+extended_description: |
+  Block requests and echo the request back to the client with debugging information about the {{site.ai_gateway}} instance, such as the internal routing details it matched for the request.
+  You can also combine the `config.echo` parameter with a [header name specified in `config.trigger`](/ai-gateway/policies/request-termination/examples/trigger-on-header/) to make the policy trigger only on specific requests and avoid disturbing real traffic.
+
+weight: 900
+
+config:
+  status_code: 401
+  message: Error - Authentication required
+  echo: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
