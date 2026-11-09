@@ -19,10 +19,10 @@ config:
     host: ${redis_host}
     port: 6379
 
-# variables:
-#   redis_host:
-#     value: $REDIS_HOST
-#     description: The hostname of your Redis database.
+variables:
+  redis_host:
+    value: $REDIS_HOST
+    description: The hostname of your Redis database.
 
 tools:
   - konnect-api

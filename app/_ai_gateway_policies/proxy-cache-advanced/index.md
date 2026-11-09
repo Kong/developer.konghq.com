@@ -72,7 +72,7 @@ The Proxy Cache Advanced Policy builds a cache key for each request that matches
 If an entry exists, {{site.ai_gateway}} returns it without calling the upstream.
 If not, {{site.ai_gateway}} sends the request upstream and stores the response when it meets the policy configuration.
 
-The policy stores entries for the number of seconds set in [`config.cache_ttl`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-ttl), which is 300 by default.
+The policy stores entries for the number of seconds set in [`config.cache_ttl`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-ttl).
 After an entry expires, the next request goes to the upstream and the response replaces the entry.
 
 ### What does the policy cache?
@@ -114,26 +114,7 @@ When an entry is older than `config.cache_ttl` and `config.cache_control` is `fa
 * The authenticated AI Consumer, when the request is authenticated
 * The authenticated principal, when [`config.cache_by_principal`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-by-principal) is `true`. See [Cache by principal](/ai-gateway/policies/proxy-cache-advanced/examples/cache-by-principal/).
 
-Use these settings to control which requests share a cache entry:
-
-* By default, all query parameters are part of the key.
-  Set [`config.vary_query_params`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-vary-query-params) to use only the listed parameters.
-* By default, the path is case-sensitive.
-  Set [`config.ignore_uri_case`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-ignore-uri-case) to `true` to treat `/Items` and `/items` as the same path.
-* By default, request headers aren't part of the key.
-  List the headers that change the response in `config.vary_headers`.
-
 {{site.ai_gateway}} returns the key of each request in the `X-Cache-Key` response header.
-
-### Cache control
-
-The [`config.cache_control`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-cache-control) setting controls whether the policy follows the `Cache-Control` header defined in [RFC 7234](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2).
-Set it to `true` to turn this on.
-
-When `config.cache_control` is `true`:
-
-* A request with `Cache-Control: no-cache` skips the cache.
-* Without `config.storage_ttl`, an entry expires when the `max-age` directive of the upstream response runs out.
 
 ### Cache status
 
@@ -144,8 +125,6 @@ When `config.cache_control` is `true`:
 * `Refresh`: The entry was older than `config.cache_ttl`. {{site.ai_gateway}} sent the request upstream and replaced the entry.
 * `Bypass`: The policy didn't use the cache, for example because the request method, response status code, or response content type isn't in the policy configuration.
 
-To remove a header from responses, set `X-Cache-Key`, `X-Cache-Status`, or `age` in [`config.response_headers`](/ai-gateway/policies/proxy-cache-advanced/reference/#schema--config-response-headers) to `false`.
-
 ## Scopes
 
 You can apply the Proxy Cache Advanced Policy globally, or attach it to an [AI Model](/ai-gateway/entities/ai-model/), an AI Agent, an AI MCP Server, an AI Consumer, or an AI Consumer Group.
@@ -153,11 +132,11 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 
 Global scope applies the policy to all traffic, so use it only when every entity needs the same caching.
 
-* At AI Agent and AI MCP Server scope, the policy caches responses for requests to that entity.
+* When it's scoped to an AI Agent or AI MCP Server, the policy caches responses for requests to that entity.
   Use this scope to cache the traffic of one entity.
-* At AI Consumer and AI Consumer Group scope, the policy caches responses for authenticated requests from that Consumer or from members of that group.
+* When it's scoped to an AI Consumer or AI Consumer Group, the policy caches responses for authenticated requests from that Consumer or from members of that group.
   Use this scope when only some clients need caching.
-* At AI Model scope, {{site.ai_gateway}} sends every request to the upstream.
+* When the policy is scoped to an AI Model, {{site.ai_gateway}} sends every request to the upstream.
   See [Limitations](#limitations).
 
 ## Execution order
@@ -175,4 +154,4 @@ A request that hits the cache returns the cached response even when it carries t
 
 * {{site.ai_gateway}} doesn't have an endpoint to look up, delete, or purge cache entries.
   To clear an entry, wait for `config.cache_ttl`, or `config.storage_ttl` when you set it, to expire.
-* At AI Model scope, the policy sets `X-Cache-Status: Bypass` on every response and {{site.ai_gateway}} sends every request to the upstream, so AI Model responses are never cached.
+* When the policy is scoped to an AI Model, the policy sets `X-Cache-Status: Bypass` on every response and {{site.ai_gateway}} sends every request to the upstream, so AI Model responses are never cached.

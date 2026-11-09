@@ -23,10 +23,10 @@ config:
     port: 6379
     keepalive_pool_size: 50
 
-# variables:
-#   redis_host:
-#     value: $REDIS_HOST
-#     description: The hostname of your Redis database.
+variables:
+  redis_host:
+    value: $REDIS_HOST
+    description: The hostname of your Redis database.
 
 tools:
   - konnect-api
