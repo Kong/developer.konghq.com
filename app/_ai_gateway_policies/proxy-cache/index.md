@@ -129,7 +129,7 @@ Attach the policy to an AI Agent or an AI MCP Server to cache the traffic of one
 Attach it to an AI Consumer or an AI Consumer Group when only some clients need caching.
 
 * With an AI Agent and AI MCP Server scope, the policy caches responses for requests to that entity.
-* At AI Consumer and AI Consumer Group scope, the policy caches responses only for authenticated requests from that Consumer or from members of that group.
+* With an AI Consumer and AI Consumer Group scope, the policy caches responses only for authenticated requests from that Consumer or from members of that group.
   Requests from other clients are sent to the upstream.
 * With an AI Model scope, {{site.ai_gateway}} sends every request to the upstream.
   See [Limitations](#limitations).
