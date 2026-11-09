@@ -125,6 +125,24 @@ formats:
 
 {% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
+## Policy scope
+
+Don't apply the {{page.name}} Policy to the AI Model that serves its own embedding requests.
+
+The Policy calls an embedding model to compute semantic similarity.
+By default, it sends that request directly to the embedding provider.
+If you set [`config.embeddings.model.options.upstream_url`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-options-upstream-url) to an AI Model on the same {{site.ai_gateway}} instance, the embedding request goes through the data plane like any other request.
+When the Policy is global, it also applies to that request, which triggers another embedding request, and so on.
+The loop doesn't end, and every request returns an HTTP `500` error.
+
+{:.warning}
+> **Important:** When the {{page.name}} Policy is global and `upstream_url` points back to the same {{site.ai_gateway}} instance, every request fails with an HTTP `500` error because of a circular embedding loop.
+
+Use one of the following options to avoid the loop:
+
+* **Attach the Policy to the AI Models it protects.** Create it with `global: false` and reference it in each AI Model's `policies` array. The embedding request then goes to an AI Model that the Policy doesn't cover. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
+* **Send embedding requests directly to the embedding provider.** Set `upstream_url` to the provider's endpoint, or leave it unset. The request bypasses {{site.ai_gateway}} routing, so you must protect the embedding endpoint at the infrastructure level.
+
 ## Vector databases
 
 {% include_cached md/ai-gateway/v2/ai-vector-db.md name=page.name %}

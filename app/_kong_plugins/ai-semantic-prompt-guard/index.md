@@ -97,6 +97,24 @@ The matching behavior is as follows:
 * If any `allow` prompts are set and the request matches one of the `allow` prompts, the request passes through to the LLM.
 * If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list will return a 400 response, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
 
+## Plugin scope
+
+Don't apply {{page.name}} to the route that serves its own embedding requests.
+
+The plugin calls an embedding model to compute semantic similarity.
+By default, it sends that request directly to the embedding provider.
+If you set [`config.embeddings.model.options.upstream_url`](./reference/#schema--config-embeddings-model-options-upstream-url) to a route on the same {{site.base_gateway}} instance, the embedding request goes through the gateway like any other request.
+When the plugin is global, it also applies to that request, which triggers another embedding request, and so on.
+The loop doesn't end, and every request returns an HTTP `500` error.
+
+{:.warning}
+> **Important:** When {{page.name}} is global and `upstream_url` points back to the same {{site.base_gateway}} instance, every request fails with an HTTP `500` error because of a circular embedding loop.
+
+Use one of the following options to avoid the loop:
+
+* **Scope the plugin to the routes or services it protects.** The embedding request then goes to a route that the plugin doesn't cover.
+* **Send embedding requests directly to the embedding provider.** Set `upstream_url` to the provider's endpoint, or leave it unset. The request bypasses {{site.base_gateway}} routing, so you must protect the embedding endpoint at the infrastructure level.
+
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
