@@ -1,0 +1,13 @@
+{% unless page.content_type == 'skill' %}
+{% assign related_skill_list = page.tags | related_skills %}
+{% if related_skill_list.size > 0 %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Agent skills</div>
+  <div class="flex gap-1.5 flex-col">
+  {% for skill in related_skill_list %}
+    <a href="{{ skill.url }}">{{ skill.title }}</a>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endunless %}

@@ -11,6 +11,8 @@ products:
     - gateway
     - metering-and-billing
 
+run_in_kai: "In {{site.konnect_short_name}}, set up {{site.metering_and_billing}} to meter {{site.base_gateway}} API requests. Create a feature and a pricing plan, then create a customer and subscribe them to the plan."
+
 works_on:
     - konnect
 

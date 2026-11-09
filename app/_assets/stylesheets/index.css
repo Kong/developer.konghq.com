@@ -956,6 +956,14 @@
   .info-box {
     @apply  flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full border border-primary;
 
+    .run-in-kai__button {
+      @apply w-full justify-center h-11 focus-visible:!outline focus-visible:!outline-2 focus-visible:!outline-offset-2 focus-visible:!outline-[rgb(var(--color-text-primary))];
+    }
+
+    a.run-in-kai__alt {
+      @apply text-links font-semibold;
+    }
+
     a:not(.badge) {
       @apply text-terciary;
     }
