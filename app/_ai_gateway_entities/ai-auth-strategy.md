@@ -209,7 +209,7 @@ The [`openid-connect` auth strategy](/ai-gateway/openid-connect/) validates a JW
 
 Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456.okta.com`). {{site.ai_gateway}} uses the OIDC discovery endpoint to fetch signing keys automatically.
 
-The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [Schema](#schema) section.
+The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [OpenID Connect AI Auth Strategy schema](/ai-gateway/openid-connect/#schema).
 
 To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). By default, a valid token that doesn't match any AI Consumer falls through to the [default termination behavior](#default-termination-behavior). Set `config.consumer_optional: true` to let that request proceed instead without an AI Consumer identity attached.
 
