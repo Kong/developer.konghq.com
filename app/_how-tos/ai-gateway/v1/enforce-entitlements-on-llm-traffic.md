@@ -161,6 +161,7 @@ rows:
 
 The following diagram shows how those pieces relate:
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
   client(["Client (API key)"])
@@ -203,6 +204,7 @@ flowchart TB
     feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
+<!--vale on-->
 
 ## Create a Consumer
 
@@ -389,7 +391,7 @@ capture:
 <!--vale on-->
 
 {:.info}
-> The `limit` is expressed in the meter's own unit, which is tokens here. A short chat request like the one in the validation step below costs roughly 20 prompt tokens, so 100 tokens is spent after about five requests: long enough to see traffic pass, short enough to see it blocked. `usage_period` is set to `PT1H` because one hour is the shortest usage period the API accepts.
+> The `limit` is expressed in the meter's own unit, which is tokens here. A short chat request like the one in [Validate](#validate) costs roughly 20 prompt tokens, so 100 tokens is spent after about five requests: long enough to see traffic pass, short enough to see it blocked. `usage_period` is set to `PT1H` because one hour is the shortest usage period the API accepts.
 
 Publish the plan so you can subscribe customers to it:
 
@@ -405,7 +407,7 @@ method: POST
 A [customer](/metering-and-billing/customer/) is the entity whose access is enforced. The customer's usage-attribution subject key must match the subject the Entitlement Enforcement plugin sends, which is `consumer:` followed by the Consumer ID you set earlier.
 
 {:.info}
-> This guide creates the customer through the API so that the subject key can be set to the exact `consumer:<consumer-id>` value. In the {{site.metering_and_billing}} UI, the **Include usage from** dropdown only lists subjects that have already sent events, so a freshly created subject key isn't selectable yet.
+> This guide creates the customer through the API so that the subject key is set to the exact `consumer:<consumer-id>` value. To do this in the {{site.metering_and_billing}} UI instead, select the Consumer from the **Gateway Consumers** group of the **Include usage from** dropdown when you create the customer.
 
 Create the customer with the matching subject key:
 
