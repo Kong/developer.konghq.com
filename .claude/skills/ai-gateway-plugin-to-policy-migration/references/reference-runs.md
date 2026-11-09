@@ -17,6 +17,6 @@ Model for a policy that redirects traffic.
 - AI Gateway behavior the plugin page never had: on a Model the redirected request keeps the provider's `Host` header, TLS server name and path; on an Agent the `Host` becomes the canary host; at MCP server scope the whole inbound MCP request is redirected, not the tool's upstream call; global scope affects every entity.
 - Handled as findings, not page content: the MCP server behavior and the group mismatch went to the writer with a draft Slack question for engineering.
 - Not tested, so left off or hedged on the page: the end state of a time-based rollout and whether the ramp is linear, `hash: ip` with different client IPs, the `steps` bucket granularity, whether the gateway translates the request format for a canary upstream, the finalize flow.
-- Mistake to avoid: the first example shipped with `konnect-api` only. Every example needs `konnect-api` and `kongctl`, and the kongctl manifest must be applied and checked.
+- Mistake to avoid: the first example shipped with `konnect-api` only and was written inline. Create examples with the `ai-gateway-policy-examples-migration` skill, which requires `konnect-api` and `kongctl` and checks the kongctl manifest.
 - Incident to avoid: a root `kong reload` broke the container's startup (see `harness-ops.md`).
 - Plugin content dropped: use-case table, KIC warning, Service and Upstream health check wording, ACL plugin dependency.

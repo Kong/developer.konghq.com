@@ -53,7 +53,7 @@ Check these paths in the repo before relying on them, since the layout can chang
 
 - Policy pages: `app/_ai_gateway_policies/<policy>/index.md`, published at `/ai-gateway/policies/<policy>/`. Do not create `app/ai-gateway/policies/`: the collection owns the URL.
 - The reference (schema) page is generated at `/ai-gateway/policies/<policy>/reference/`. Never hand-write it or a `reference.md`.
-- Optional `examples/` next to `index.md`.
+- Optional `examples/` next to `index.md`. Example files are created by the `ai-gateway-policy-examples-migration` skill, not by this one.
 - Stubs often exist. Read `app/_ai_gateway_policies/<policy>/index.md` before creating anything. A frontmatter-only stub is normal.
 - Scope support: `app/_data/policies/ai-gateway/scopes.json` (array of `{name, scopes}`). Read it, do not duplicate it by hand.
 - Priority: `app/_data/policies/ai-gateway/priorities.json` is a flat map of policy type to number (`"canary": 20`). There is no `priority.yml`.
@@ -61,7 +61,7 @@ Check these paths in the repo before relying on them, since the layout can chang
 
 ## Step 1: Gather inputs
 
-1. Read `app/_kong_plugins/<plugin>/index.md` and `examples/*.yaml`.
+1. Read `app/_kong_plugins/<plugin>/index.md`. Leave `examples/*.yaml` to the `ai-gateway-policy-examples-migration` skill (see Step 3).
 2. Get the config schema: `app/_schemas/gateway/plugins/<latest>/<PascalCasePluginName>.json` (for example `3.14/RequestTermination.json`). The plugin dir may have no `schema.json`.
 3. Read the policy's entry in `scopes.json`.
 4. Use `app/_ai_gateway_policies/ip-restriction/index.md` as the pattern for a simple policy page.
@@ -96,9 +96,9 @@ Port and adapt:
 - Parameter explanations, grouped by task (custom response, trigger, debug), not by schema order. Do not repeat parameter explanations that do not add any additional detail that isn't already covered in the schema. This makes it difficult to maintain documentation when the schema changes.
 - A `## Scopes` section listing the scopes from `scopes.json`, linking `/ai-gateway/entities/ai-policy/#ai-policy-scopes`.
 
-Examples should be in a separate examples .yaml file. The only exception is for examples, like cloud authn, where the fields can be applied to any example for that policy so you can show how those fields should be configured.
+Do not write examples inline on the page, and do not hand-write `examples/*.yml` files. Invoke the `ai-gateway-policy-examples-migration` skill for the policy (`<plugin-name>` to convert plugin examples, or `new <policy-name> <feature>` for a feature with no plugin example). It owns the example file format, `formats`, and kongctl validation. The page then references the generated examples. The only inline exception is a field set that applies to any example of the policy (for example cloud authentication), where showing the fields once on the page is clearer than repeating them in every example file.
 
-A `kongctl` format you have not applied is untested content. Apply it (kongctl check in `references/api-shapes.md`, behind Gate 4) or list it in the summary as not run.
+Example files carry both `konnect-api` and `kongctl` formats. The examples skill checks them. If it did not run, or a kongctl manifest was not applied, list that in the summary as not run.
 
 Parameter links: `[`config.<param>`](/ai-gateway/policies/<policy>/reference/#schema--config-<param-with-hyphens>)`. Link each parameter on first prose mention. The anchors resolve only after the generated reference page exists, so a local dev build (which skips reference generation in `jekyll-dev.yml`) cannot verify them.
 
@@ -180,6 +180,6 @@ Use the summary template in `assets/results-table.md`.
 - [ ] Suspected bugs reported to the user with a draft engineering message, not published on the page
 - [ ] Cleanup approved (Gate 4); test resources deleted, mock stopped, keys and test cert removed, CA bundle restored, data plane `STATE_IN_SYNC`
 - [ ] Claims reconciled (Step 4b); unverified claims removed or softened
-- [ ] Every `entity_example` has `formats: [konnect-api, kongctl]`, and the kongctl manifest was applied or listed as not run
+- [ ] Examples created through `ai-gateway-policy-examples-migration` (none inline, except field sets that apply to every example), or listed in the summary as not done
 - [ ] Prose pass done after reconciling, re-run after later edits, `vale` clean
 - [ ] Nothing committed or pushed without an explicit instruction
