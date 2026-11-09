@@ -1,6 +1,6 @@
-// Loaded on every page with the trigger. Adds the hint tooltip to the header
-// logo and, once the arcade has been beaten, a pixel star beside it that
-// links to Kong careers and shows the best time.
+// Loaded on every page with the trigger. Once the arcade has been beaten,
+// adds a pixel star beside the header logo that links to Kong careers and
+// shows the best time.
 
 import { track } from "./analytics";
 
@@ -29,13 +29,6 @@ function readRecord() {
 // The header has separate desktop and mobile logo links.
 export function headerLogos() {
   return [...document.querySelectorAll("#header-nav a[href='/']")];
-}
-
-// The clue on the header logo, with "immersive" in bold.
-function renderHint(tooltip) {
-  const word = document.createElement("strong");
-  word.textContent = "immersive";
-  tooltip.replaceChildren("This game is very ## ", word, " ##...");
 }
 
 // Reuses the site's shared #tooltip element. The site's own [data-tooltip]
@@ -102,7 +95,6 @@ export function recordWin(seconds) {
 }
 
 export function initTrophy() {
-  headerLogos().forEach((logo) => attachTooltip(logo, renderHint));
   const record = readRecord();
   if (record?.best) renderStar(record.best);
 }

@@ -10,11 +10,17 @@ function addBackFace(logo) {
   const back = document.createElement("span");
   back.className = "logo-flip-back";
   back.setAttribute("aria-hidden", "true");
+  const code = document.createElement("span");
+  code.className = "logo-flip-code";
   CODE.forEach((key) => {
     const item = document.createElement("span");
     item.textContent = key;
-    back.append(item);
+    code.append(item);
   });
+  const prompt = document.createElement("span");
+  prompt.className = "logo-flip-prompt";
+  prompt.textContent = "input this";
+  back.append(code, prompt);
   logo.append(back);
 }
 
@@ -33,7 +39,6 @@ export function initLogoFlip() {
       clearTimeout(timer);
       timer = setTimeout(() => {
         logo.classList.add("is-flipped");
-        document.getElementById("tooltip")?.classList.add("hidden");
       }, HOVER_MS);
     });
     logo.addEventListener("mouseleave", reset);
