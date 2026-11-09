@@ -35,6 +35,8 @@ The Proxy Cache [AI Policy](/ai-gateway/entities/ai-policy/) stores upstream res
 
 The policy caches a response when the request method, the response status code, and the response content type all match the policy configuration.
 
+The [Proxy Cache Advanced Policy](/ai-gateway/policies/proxy-cache-advanced/) extends the Proxy Cache Policy with Redis, Redis Cluster, and Redis Sentinel support.
+
 ## Use cases
 
 The following are common reasons to cache responses:

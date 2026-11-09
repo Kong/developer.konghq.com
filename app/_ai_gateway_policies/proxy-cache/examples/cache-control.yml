@@ -1,0 +1,33 @@
+name: cache-with-cache-control
+display_name: Cache with Cache-Control
+type: proxy-cache
+description: 'Follow the `Cache-Control` header so clients can request fresh responses.'
+
+extended_description: 'Follow the `Cache-Control` header, so a client can send `Cache-Control: no-cache` to get a fresh response. The policy caches only upstream responses that set a `max-age` directive.'
+
+title: 'Let clients skip the cache'
+
+weight: 700
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - ai-consumer-group
+  - global
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - application/json
+  cache_ttl: 300
+  cache_control: true
+  strategy: memory
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
