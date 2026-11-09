@@ -15,34 +15,34 @@ scopes:
   - ai-consumer
 
 requirements:
-  - You have a [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud
-  - You have a [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster
-  - You have created an API key and secret in the cluster
-  - You have a [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
-  - You have an identity provider that supports the OAuth 2.0 client credentials grant, such as Keycloak or Okta
+  - A [Kafka cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud) in Confluent Cloud.
+  - A [Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) in the cluster.
+  - An API key and secret for the cluster.
+  - A [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html).
+  - An identity provider that supports the OAuth 2.0 client credentials grant, such as Keycloak or Okta.
 
-# variables:
-#   host:
-#     value: $BOOTSTRAP_SERVER_HOST
-#     description: The bootstrap server host.
-#   key:
-#     value: $API_KEY
-#     description: The API key to use for authentication.
-#   secret:
-#     value: $API_SECRET
-#     description: The API secret to use for authentication.
-#   topic:
-#     value: $KAFKA_TOPIC
-#     description: The name of the Kafka topic to consume from.
-#   registry_url:
-#     value: $REGISTRY_URL
-#     description: The URL of your Confluent Schema Registry instance. For example, `http://schema-registry:8081`.
-#   client_id:
-#     value: $CLIENT_ID
-#     description: The client ID that the policy uses when it calls authenticated endpoints of the identity provider.
-#   client_secret:
-#     value: $CLIENT_SECRET
-#     description: The client secret from the identity provider.
+variables:
+  host:
+    value: $BOOTSTRAP_SERVER_HOST
+    description: The bootstrap server host.
+  key:
+    value: $API_KEY
+    description: The API key to use for authentication.
+  secret:
+    value: $API_SECRET
+    description: The API secret to use for authentication.
+  topic:
+    value: $KAFKA_TOPIC
+    description: The name of the Kafka topic to consume from.
+  registry_url:
+    value: $REGISTRY_URL
+    description: The URL of your Confluent Schema Registry instance. For example, `http://schema-registry:8081`.
+  client_id:
+    value: $CLIENT_ID
+    description: The client ID that the policy uses when it calls authenticated endpoints of the identity provider.
+  client_secret:
+    value: $CLIENT_SECRET
+    description: The client secret from the identity provider.
 
 config:
   bootstrap_servers:

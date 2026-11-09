@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -71,6 +72,7 @@ In `http-get` mode, the Policy returns the records available for every topic in 
   }
 }
 ```
+{:.no-copy-code}
 
 When [`config.message_deserializer`](/ai-gateway/policies/confluent-consume/reference/#schema--config-message-deserializer) is `json`, `value` is a parsed object.
 When it's `noop` (default), `value` is the raw message as a string.
@@ -129,30 +131,3 @@ Attach the Confluent Consume Policy to an AI Model, AI Agent, AI MCP Server, or 
 For an AI Consumer, the Policy takes effect only after the client authenticates.
 
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
-
-## Example
-
-The following example creates a Confluent Consume Policy that reads from one topic over HTTP GET and parses messages as JSON.
-Reference it from the `policies` array on an entity that defines `config.route`, as described in [Consume messages](#consume-messages):
-
-{% entity_example %}
-type: policy
-data:
-  name: confluent-consume
-  display_name: Confluent Consume
-  type: confluent-consume
-  global: false
-  config:
-    bootstrap_servers:
-      - host: pkc-xxxxx.us-east-1.aws.confluent.cloud
-        port: 9092
-    cluster_api_key: CLUSTER_API_KEY
-    cluster_api_secret: CLUSTER_API_SECRET
-    topics:
-      - name: ai-events
-    mode: http-get
-    message_deserializer: json
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
