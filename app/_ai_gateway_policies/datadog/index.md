@@ -33,7 +33,7 @@ related_resources:
 ---
 
 Dashboards that show traffic and latency per entity help you find slow upstreams, error spikes, and unexpected usage before users report them.
-The Datadog [AI Policy](/ai-gateway/entities/ai-policy/) sends request metrics from {{site.ai_gateway}}, such as request count, request and response size, and latency, to a Datadog agent.
+The Datadog Policy is an [AI Policy](/ai-gateway/entities/ai-policy/) that sends request metrics from {{site.ai_gateway}}, such as request count, request and response size, and latency, to a Datadog agent.
 The policy sends the metrics over UDP in the DogStatsD format, so the agent must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/datadog/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/datadog/reference/#schema--config-port).
 
 ## Metrics
@@ -88,8 +88,7 @@ When you set `config.metrics`, the policy sends only the listed metrics and does
 ### Metric types
 
 The `stat_type` field of each metric in `config.metrics` sets the metric type.
-The policy supports the types `counter`, `gauge`, `histogram`, `distribution`, `meter`, `set`, and `timer`.
-The policy sends them with the DogStatsD type codes `c`, `g`, `h`, `d`, `m`, `s`, and `ms`.
+The policy sends each type to the agent as a DogStatsD type code, for example `c` for `counter` and `ms` for `timer`.
 
 Metrics of type `counter` or `gauge` require a `sample_rate`.
 {{site.ai_gateway}} rejects the policy when a `counter` or `gauge` metric doesn't set one.
@@ -103,7 +102,7 @@ The policy adds the following tags to each metric:
   For AI Models, see [Limitations](#limitations).
 * `status`: The HTTP status code of the response.
   To change the tag name, set [`config.status_tag`](/ai-gateway/policies/datadog/reference/#schema--config-status-tag).
-* `app:kong`: Added only when you don't set `config.metrics`.
+* `app:kong`: The policy adds this tag only when you don't set `config.metrics`.
 
 You can add more tags:
 
@@ -119,15 +118,15 @@ The `consumer_identifier` field of a metric sets which value of the [AI Consumer
 * `consumer_id`: The ID of the AI Consumer, with hyphens replaced by underscores.
   For a configuration, see [Log request count](/ai-gateway/policies/datadog/examples/request-count/).
 * `username`: The name of the AI Consumer.
-  A request that authentication rejects reports `anonymous`.
+  For a request that authentication rejects, the tag value is `anonymous`.
 * `custom_id`: AI Consumers don't have a custom ID, so the policy doesn't add a tag.
   Use `consumer_id` or `username` instead.
 
 ## Which requests the policy reports
 
 The Datadog Policy reports every request sent to the entity it's attached to, including requests that end early.
-For example, a request that authentication rejects is reported with the `401` status code.
-A request that another policy ends, such as the [Request Termination Policy](/ai-gateway/policies/request-termination/), is reported with that policy's status code and an `upstream_latency` of `-1`.
+For example, the policy reports a request that authentication rejects with the `401` status code.
+The policy reports a request that another policy ends, such as the [Request Termination Policy](/ai-gateway/policies/request-termination/), with that policy's status code and an `upstream_latency` of `-1`.
 
 For streaming responses, `latency` covers the whole streamed response.
 
@@ -148,21 +147,20 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
   condition: 'http.headers.x_rt == "on"'
   ```
 
-Attach the policy to an AI Agent, AI MCP Server, or AI Model to get metrics for that entity.
 Use AI Consumer scope to count requests per caller, and use global scope when every entity needs the same metrics.
 
 ## Queuing
 
 {% include md/ai-gateway/v2/policies/queues.md name="Datadog" slug="datadog" %}
 
-With the default queue settings, metrics arrive at the Datadog agent within a fraction of a second.
-A larger [`config.queue.max_batch_size`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-batch-size) makes the policy wait for a full batch, so a single request can arrive at the agent up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-coalescing-delay) seconds late.
+A larger [`config.queue.max_batch_size`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-batch-size) makes the policy wait for a full batch before it sends.
+A single request's metrics can then arrive at the agent up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-coalescing-delay) seconds late.
 Keep these values low for near-real-time dashboards.
 
 ## Limitations
 
 At AI Model scope, the Datadog Policy sets the `name` tag of every metric to `ai-gateway`, regardless of which AI Model handled the request.
-The `route_name_tag` tag doesn't identify the AI Model either, because it carries a generated route name.
+The `route_name_tag` tag doesn't identify the AI Model either, because it contains a generated route name.
 As a result, you can't tell AI Models apart in Datadog by grouping on `name`.
 
 To tell AI Models apart, create one Datadog Policy per AI Model, attach each policy to its AI Model, and add a tag that identifies the AI Model to each metric in `config.metrics`, for example `model:gpt-4o`.
