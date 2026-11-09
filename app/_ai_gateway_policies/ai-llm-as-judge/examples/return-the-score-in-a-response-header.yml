@@ -25,7 +25,7 @@ config:
     Your task is to judge whether the response is correct or incorrect. You must
     assign a score between 1 and 100, where: 100 represents a completely correct
     and ideal response, 1 represents a completely incorrect or irrelevant response.
-    Your score must be a single number only — no text, labels, or explanations.
+    Your score must be a single number only: no text, labels, or explanations.
     Use the full range of values (e.g., 13, 47, 86), not just round numbers like
     10, 50, or 100. Be accurate and consistent, as this score will be used by another
     model for learning and evaluation.
