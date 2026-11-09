@@ -27,7 +27,7 @@ function readRecord() {
 }
 
 // The header has separate desktop and mobile logo links.
-function headerLogos() {
+export function headerLogos() {
   return [...document.querySelectorAll("#header-nav a[href='/']")];
 }
 

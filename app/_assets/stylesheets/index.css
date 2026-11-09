@@ -1165,3 +1165,50 @@ dialog.expandable-image-dialog.is-open::backdrop {
     transition: none;
   }
 }
+
+/* Header logo flip: hovering the logo for a few seconds reveals the Konami
+   code on its back face. See app/_assets/javascripts/arcade/logo_flip.js. */
+.logo-flip {
+  position: relative;
+  display: inline-block;
+  perspective: 600px;
+}
+
+.logo-flip > svg {
+  display: block;
+}
+
+.logo-flip > svg,
+.logo-flip-back {
+  backface-visibility: hidden;
+  transition: transform 600ms ease;
+}
+
+.logo-flip-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Funnel Sans", system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgb(var(--color-text-primary));
+  transform: rotateY(180deg);
+}
+
+.logo-flip.is-flipped > svg {
+  transform: rotateY(-180deg);
+}
+
+.logo-flip.is-flipped .logo-flip-back {
+  transform: rotateY(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-flip > svg,
+  .logo-flip-back {
+    transition: none;
+  }
+}
