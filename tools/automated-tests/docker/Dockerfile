@@ -42,8 +42,8 @@ RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
 RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}"
 
-# Install Node.js 22.x (LTS) via NodeSource, then codex CLI
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+# Install Node.js 26.x (LTS) via NodeSource, then codex CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - && \
     apt-get install -y nodejs
 RUN npm install -g @openai/codex
 RUN npm install -g @qwen-code/qwen-code
