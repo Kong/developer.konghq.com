@@ -7,6 +7,7 @@ import {
   buildPersistCommand,
   base64EnvLine,
 } from "./instructions/export-assignment.js";
+import { resolveEnvVars } from "./instructions/env-vars.js";
 import { withTimeout } from "./instructions/command-timeout.js";
 
 const debugCmd = debug("debug:request");
@@ -257,9 +258,21 @@ export async function setEnvVariable(container, name, value) {
   return;
 }
 
+// Marker separating the resolved environment from the raw /env-vars.sh content
+// in one exec's stdout, so the whole read stays a single round trip.
+const ENV_VARS_FILE_MARKER = "__ENV_VARS_FILE__";
+
 export async function getLiveEnv(container) {
   const readEnvVar = await container.exec({
-    Cmd: ["bash", "-c", "source /env-vars.sh && env"],
+    Cmd: [
+      "bash",
+      "-c",
+      // `env` gives the values bash resolved (last assignment wins); the file
+      // itself gives the write order resolveEnvVars needs to decide between a
+      // plain and a _BASE64 entry for the same name. See
+      // instructions/env-vars.js for why the order matters.
+      `source /env-vars.sh && { env; echo ${ENV_VARS_FILE_MARKER}; cat /env-vars.sh 2>/dev/null; }`,
+    ],
     AttachStdout: true,
     AttachStderr: true,
   });
@@ -287,33 +300,14 @@ export async function getLiveEnv(container) {
 
       stream.on("end", () => {
         if (stderr) return reject(new Error(stderr));
-        resolve(stdout.trim());
+        resolve(stdout);
       });
 
       stream.on("error", reject);
     });
   });
 
-  const env = {};
-  const base64Vars = [];
-  for (const envVar of output.split("\n")) {
-    const [name, ...rest] = envVar.split("=");
-    let value = rest.join("=");
+  const [envOutput, fileContent] = output.split(`${ENV_VARS_FILE_MARKER}\n`);
 
-    if (name.endsWith("_BASE64")) {
-      base64Vars.push([name.slice(0, -7), value]); // Remove _BASE64 suffix
-    } else {
-      env[name] = value;
-    }
-  }
-
-  // Apply decoded base64 values last so they always take priority over any
-  // stale plain-named value with the same key. `env`'s line order reflects
-  // bash's internal variable hash table, not insertion order, so a plain
-  // placeholder can appear after its _BASE64 counterpart and must not win.
-  for (const [originalName, value] of base64Vars) {
-    env[originalName] = Buffer.from(value, "base64").toString("utf-8");
-  }
-
-  return env;
+  return resolveEnvVars(envOutput?.trim() ?? "", fileContent);
 }
