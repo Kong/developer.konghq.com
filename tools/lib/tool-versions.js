@@ -165,6 +165,38 @@ export function extractCobraHelp(stdout) {
   return help.join("\n");
 }
 
+export async function buildCobraCommandTree({
+  exec,
+  command,
+  maxDepth,
+  helpFromStdout = (stdout) => stdout.trimEnd(),
+}) {
+  const { stdout: topHelp } = await exec(`${command} --help`);
+
+  const tree = [];
+  for (const name of extractCobraCommands(topHelp)) {
+    tree.push(await buildNode([], name));
+  }
+  return tree;
+
+  async function buildNode(prefix, name) {
+    const { stdout } = await exec(`${[command, ...prefix, name].join(' ')} --help`);
+    const node = { name, help: helpFromStdout(stdout) };
+
+    if (prefix.length < maxDepth) {
+      const children = extractCobraCommands(stdout);
+      if (children.length > 0) {
+        node.subcommands = [];
+        for (const child of children) {
+          node.subcommands.push(await buildNode([...prefix, name], child));
+        }
+      }
+    }
+
+    return node;
+  }
+}
+
 export async function syncReleases({
   repo,
   dataFile,
