@@ -18,6 +18,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92545 by including the hostname in the cache key, preventing cached responses from being served across hostnames.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to unauthenticated callers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.1.1": [
     {
       "message": "Fixed an issue where the `kong.plugins.proxy-cache-advanced.migrations` module was not being loaded when upgrading to `3.8.x.y`.\nThis issue was introduced in `3.8.0.0` and Kong refuses to start if `redis.timeout` and `redis.connect_timeout` are set to different values.\n",

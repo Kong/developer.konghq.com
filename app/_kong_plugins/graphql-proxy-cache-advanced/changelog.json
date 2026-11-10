@@ -1,4 +1,26 @@
 {
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cache entries from being shared across different requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92545 by including the Host header in the cache key, preventing responses from being shared across hosts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92442 by including the authenticated consumer in the cache key, preventing cache entries from being shared across consumers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Added Redis cluster_max_redirections configuration option.",

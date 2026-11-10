@@ -209,6 +209,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of SSE body may have extra trailing in some cases.\n",
