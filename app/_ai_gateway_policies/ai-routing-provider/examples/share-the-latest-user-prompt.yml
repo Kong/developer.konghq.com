@@ -7,9 +7,6 @@ title: Share the latest user prompt with Switchyard
 
 weight: 880
 
-scopes:
-  - ai-model
-
 requirements:
   - A running [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) decision service that the data plane can reach.
   - The AI Routing Provider [custom policy](/ai-gateway/custom-policies/) registered, and the data plane running with `KONG_UNTRUSTED_LUA=on`.
