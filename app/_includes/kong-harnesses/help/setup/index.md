@@ -1,4 +1,4 @@
-```
+```ansi
 Install or create a profile, sign in, and set up the agent CLIs, all in one
 run.
 

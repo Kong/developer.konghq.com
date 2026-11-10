@@ -1,4 +1,4 @@
-```
+```ansi
 Set up the installed agent CLIs to use a profile.
 
 Without --client, activate sets up every agent CLI that the profile lists,

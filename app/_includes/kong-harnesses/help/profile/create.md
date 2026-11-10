@@ -1,4 +1,4 @@
-```
+```ansi
 Create a connection profile and install it. kong-harnesses reads the details
 of your identity provider from its OIDC discovery document.
 

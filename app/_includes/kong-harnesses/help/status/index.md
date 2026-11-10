@@ -1,4 +1,4 @@
-```
+```ansi
 Show the sign-in of a profile and the agent CLIs set up to use it. status
 does not use the network.
 

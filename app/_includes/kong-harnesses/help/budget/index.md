@@ -1,4 +1,4 @@
-```
+```ansi
 Refresh the budget numbers that the status bar shows.
 
 The command asks the gateway for your budgets with your saved access token,

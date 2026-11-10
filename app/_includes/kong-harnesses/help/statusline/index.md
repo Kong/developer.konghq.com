@@ -1,4 +1,4 @@
-```
+```ansi
 Print the status bar line for Claude Code.
 
 Claude Code sends its session data to this command on stdin and shows what

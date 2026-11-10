@@ -1,4 +1,4 @@
-```
+```ansi
 Choose the profile that commands use when you do not give --profile.
 
 With one profile installed, commands use it. With several, they use the

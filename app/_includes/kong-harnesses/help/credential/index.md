@@ -1,4 +1,4 @@
-```
+```ansi
 Print a short-lived access token for a profile.
 
 If you are not signed in yet, credential signs you in first. Some agent CLIs

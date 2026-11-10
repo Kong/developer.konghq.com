@@ -1,4 +1,4 @@
-```
+```ansi
 Refresh the budget numbers of one profile
 
 Usage:

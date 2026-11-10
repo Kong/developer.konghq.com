@@ -1,4 +1,4 @@
-```
+```ansi
 Show the settings of an installed profile. A profile holds no secrets.
 
 Usage:

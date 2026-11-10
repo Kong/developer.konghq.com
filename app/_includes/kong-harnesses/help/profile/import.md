@@ -1,4 +1,4 @@
-```
+```ansi
 Install a connection profile from a file or HTTPS URL. A profile holds no
 secrets. Profile schema versions 1 to 14 are supported.
 

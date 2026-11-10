@@ -1,4 +1,4 @@
-```
+```ansi
 Sign out of a profile.
 
 Without --profile or KONG_HARNESSES_PROFILE, logout uses the only installed

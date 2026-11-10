@@ -1,4 +1,4 @@
-```
+```ansi
 Check that a profile works from start to end, and show a fix for each
 problem found.
 

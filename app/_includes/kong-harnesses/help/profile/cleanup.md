@@ -1,4 +1,4 @@
-```
+```ansi
 Remove the settings that kong-harnesses added to the agent CLIs.
 
 Without --client, cleanup removes them from every supported agent CLI, so no

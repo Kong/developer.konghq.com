@@ -1,4 +1,4 @@
-```
+```ansi
 Print a short-lived access token for a profile.
 
 token never signs in. If you are not signed in, it fails and tells you to

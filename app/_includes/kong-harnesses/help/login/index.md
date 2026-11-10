@@ -1,4 +1,4 @@
-```
+```ansi
 Sign in to a profile, or check its sign-in.
 
 Without --profile or KONG_HARNESSES_PROFILE, login uses the only installed

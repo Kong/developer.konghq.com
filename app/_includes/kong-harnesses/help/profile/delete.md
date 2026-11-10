@@ -1,4 +1,4 @@
-```
+```ansi
 Delete an installed profile from this computer.
 
 This deletes only the saved profile. It does not sign you out and does not

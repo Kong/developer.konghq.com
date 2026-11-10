@@ -1,4 +1,4 @@
-```
+```ansi
 List the installed profiles and mark the default profile.
 
 Usage:

@@ -1,4 +1,4 @@
-```
+```ansi
 Manage connection profiles and the agent CLIs that use them.
 
 Usage:
