@@ -547,19 +547,16 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 
 Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers it from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
 
-<!-- TODO(AI-225 OQ3): confirm where the validation that rejects `auth` on unsupported MCP Server types or runtime versions lives (API layer or Data Plane) and adjust this wording. -->
 Upstream authentication is independent of client-side `access.auth_strategies`.
 For example, clients can authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), while {{site.ai_gateway}} signs requests to the upstream with SigV4.
 
 A single `config.upstream.auth` block applies to all tools of the AI MCP Server.
 Per-tool `upstream.auth` overrides aren't supported.
-<!-- TODO(AI-225 OQ4): per-tool upstream.auth override is out of scope for 2.4. Confirm with the API team that no per-tool override is planned. -->
 
 ### Signing service and region
 
-<!-- TODO(AI-225 OQ2): confirm the runtime infers service and region from the signed request host on all four upstream-making types. -->
-Set `service` and `region` explicitly when the upstream is reached through a custom domain name, such as an Amazon API Gateway custom domain, because the host doesn't identify the AWS service or region.
-For example, set `service` to `lambda` for a Lambda function URL.
+Set `service` explicitly when the upstream is reached through a custom domain name, such as an Amazon API Gateway custom domain, because the host doesn't identify the AWS service. For example, set `service` to `lambda` for a Lambda function URL.
+Set `region` explicitly if the Data Plane environment doesn't provide the region you want to sign for. Otherwise, {{site.ai_gateway}} infers it from the environment.
 
 ### Credential sources
 
@@ -584,10 +581,10 @@ config:
 
 The following `conversion-listener` example calls an IAM-protected Amazon API Gateway custom domain.
 Clients authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and {{site.ai_gateway}} signs the converted upstream requests with SigV4.
-Because a custom domain name doesn't identify the AWS service or region, the example sets `service` and `region` explicitly:
+Because a custom domain name doesn't identify the AWS service, the example sets `service` explicitly, along with `region`:
 
 ```yaml
-mode: conversion-listener
+type: conversion-listener
 access:
   auth_strategies:
     - oidc-strategy
