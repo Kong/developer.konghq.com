@@ -40,22 +40,20 @@ Here are the steps to achieve this configuration:
 
 4. Set Required Environment Variables in Kong
 
-- Set the following environment variables in the Kong environment, replacing the placeholders with actual values:
+   - Set the following environment variables in the Kong environment, replacing the placeholders with actual values:
 
-```
-
-AZURE_CLIENT_ID=
-KONG_VAULT_AZURE_VAULT_URI=
-```
+     ```
+     AZURE_CLIENT_ID=
+     KONG_VAULT_AZURE_VAULT_URI=
+     ```
 
 5. Retrieve Secrets from Azure Key Vault in Kong
 
-- Use the following command to retrieve a secret from Azure Key Vault:
+   - Use the following command to retrieve a secret from Azure Key Vault:
 
-```bash
-
-kong vault get {vault://azure/your-secret-name}
-```
+     ```bash
+     kong vault get {vault://azure/your-secret-name}
+     ```
 
 During this process, you might encounter error messages related to authentication or missing environment variables. These errors often indicate a misconfiguration in the environment variables or access policies. Ensure that the `AZURE_CLIENT_ID` and `KONG_VAULT_AZURE_VAULT_URI` are correctly set and that the managed identity has the appropriate permissions in Azure Key Vault.
 

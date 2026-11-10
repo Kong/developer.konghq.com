@@ -28,10 +28,9 @@ To resolve this issue, you can increase the size of the `prometheus_metrics` sha
 
 1. Check the current size of the shared dictionary by accessing the status endpoint of the Kong node. You may need to use `kubectl port-forward` if running in Kubernetes:
 
-```bash
-
-curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
-```
+   ```bash
+   curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
+   ```
 
 If the output shows that the `allocated_slabs` is equal to the `capacity`, it indicates that the dictionary is full.
 

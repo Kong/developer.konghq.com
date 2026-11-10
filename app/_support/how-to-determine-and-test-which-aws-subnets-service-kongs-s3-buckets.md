@@ -40,36 +40,35 @@ Note: this particular bucket name is used only to illustrate the methodology. It
 
 3. Download the list of IP addresses and filter it based on the values:
 
-```bash
+   ```bash
+   curl https://ip-ranges.amazonaws.com/ip-ranges.json | jq -r '.prefixes[] | select(.service=="S3") | select(.region=="us-east-2") | .ip_prefix' | sort
 
-curl https://ip-ranges.amazonaws.com/ip-ranges.json | jq -r '.prefixes[] | select(.service=="S3") | select(.region=="us-east-2") | .ip_prefix' | sort
-
-1.178.8.0/24
-16.12.60.0/22
-16.12.64.0/22
-18.34.252.0/22
-18.34.72.0/21
-3.141.102.208/28
-3.141.102.224/28
-3.2.67.0/24
-3.5.100.0/22
-3.5.104.0/22
-3.5.108.0/22
-3.5.128.0/22
-3.5.132.0/23
-3.5.88.0/22
-3.5.92.0/23
-52.219.141.0/24
-52.219.142.0/24
-52.219.143.0/24
-52.219.176.0/22
-52.219.212.0/22
-52.219.224.0/22
-52.219.228.0/22
-52.219.232.0/22
-52.219.80.0/20
-52.219.96.0/20
-```
+   1.178.8.0/24
+   16.12.60.0/22
+   16.12.64.0/22
+   18.34.252.0/22
+   18.34.72.0/21
+   3.141.102.208/28
+   3.141.102.224/28
+   3.2.67.0/24
+   3.5.100.0/22
+   3.5.104.0/22
+   3.5.108.0/22
+   3.5.128.0/22
+   3.5.132.0/23
+   3.5.88.0/22
+   3.5.92.0/23
+   52.219.141.0/24
+   52.219.142.0/24
+   52.219.143.0/24
+   52.219.176.0/22
+   52.219.212.0/22
+   52.219.224.0/22
+   52.219.228.0/22
+   52.219.232.0/22
+   52.219.80.0/20
+   52.219.96.0/20
+   ```
 
 This represents a list of all IP subnet ranges that will cover any S3 bucket address in the us-east-2 region.
 
@@ -77,11 +76,10 @@ To prove that the URL is indeed using these subnets, a simple `ping` and lookup 
 
 4. `Ping` the url to determine the current IP:
 
-```bash
-
-ping pulp-cloud-02-eks-01-prod-us-east-2-20220929122921552700000002.s3.amazonaws.com
-PING s3-w.us-east-2.amazonaws.com (52.219.84.188): 56 data bytes
-```
+   ```bash
+   ping pulp-cloud-02-eks-01-prod-us-east-2-20220929122921552700000002.s3.amazonaws.com
+   PING s3-w.us-east-2.amazonaws.com (52.219.84.188): 56 data bytes
+   ```
 
 5. Find the range in the previous list that is the closest to the returned IP.
 

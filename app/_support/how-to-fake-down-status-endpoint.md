@@ -32,91 +32,85 @@ Here are the steps to set it up:
 
 1. Create an upstream for loopbacking the admin API
 
-```bash
-
-http :8001/upstreams name=status_check -f
-```
+   ```bash
+   http :8001/upstreams name=status_check -f
+   ```
 
 2. Set Admin API host as the target for the upstream `status_check`
 
-```bash
-
-http :8001/upstreams/status_check/targets target=<KongAdminAPI hostname>:8001 -f
-```
+   ```bash
+   http :8001/upstreams/status_check/targets target=<KongAdminAPI hostname>:8001 -f
+   ```
 
 3. Create a service with path `/status` and a route for the upstream
 
-```bash
-
-http :8001/services name=status_health host=status_check path=/status -f 
-http :8001/services/status_health/routes name=status_route paths=/status -f
-```
+   ```bash
+   http :8001/services name=status_health host=status_check path=/status -f 
+   http :8001/services/status_health/routes name=status_route paths=/status -f
+   ```
 
 4. Right now we have Kong serving `/status` at the proxy port
 
-```bash
+   ```bash
+   http :8000/status
+   HTTP/1.1 200 OK
 
-http :8000/status
-HTTP/1.1 200 OK
-
-{
-    "database": {
-        "reachable": true
-    },
-    "memory": {
-        "lua_shared_dicts": {
-            "kong": {
-                "allocated_slabs": "0.04 MiB",
-                "capacity": "5.00 MiB"
-            },
-            "kong_healthchecks": {
-                "allocated_slabs": "0.04 MiB",
-                "capacity": "5.00 MiB"
-            },
-            ...
-        },
-        "workers_lua_vms": [
-            {
-                "http_allocated_gc": "182.51 MiB",
-                "pid": 2914
-            },
-            ...
-        ]
-    },
-    "server": {
-        "connections_accepted": 137,
-        "connections_active": 7,
-        "connections_handled": 137,
-        "connections_reading": 0,
-        "connections_waiting": 0,
-        "connections_writing": 7,
-        "total_requests": 137
-    }
-}
-```
+   {
+       "database": {
+           "reachable": true
+       },
+       "memory": {
+           "lua_shared_dicts": {
+               "kong": {
+                   "allocated_slabs": "0.04 MiB",
+                   "capacity": "5.00 MiB"
+               },
+               "kong_healthchecks": {
+                   "allocated_slabs": "0.04 MiB",
+                   "capacity": "5.00 MiB"
+               },
+               ...
+           },
+           "workers_lua_vms": [
+               {
+                   "http_allocated_gc": "182.51 MiB",
+                   "pid": 2914
+               },
+               ...
+           ]
+       },
+       "server": {
+           "connections_accepted": 137,
+           "connections_active": 7,
+           "connections_handled": 137,
+           "connections_reading": 0,
+           "connections_waiting": 0,
+           "connections_writing": 7,
+           "total_requests": 137
+       }
+   }
+   ```
 
 5. Mark the target unhealthy to fake the `/status` endpoint down
 
-```bash
+   ```bash
+   # the template  
+   # :8001/upstreams/<upstream_id>/targets/<targets-id>/[healthy/unhealthy]
 
-# the template  
-# :8001/upstreams/<upstream_id>/targets/<targets-id>/[healthy/unhealthy]
-
-http :8001/upstreams/f3fa8cc2-003a-49fe-8734-c3f433281a46/targets/7355da4e-6684-4d3d-9890-863e2e444510/unhealthy
-HTTP/1.1 204 No Content 
-Access-Control-Allow-Origin: * 
-Connection: keep-alive
-```
+   http :8001/upstreams/f3fa8cc2-003a-49fe-8734-c3f433281a46/targets/7355da4e-6684-4d3d-9890-863e2e444510/unhealthy
+   HTTP/1.1 204 No Content 
+   Access-Control-Allow-Origin: * 
+   Connection: keep-alive
+   ```
 
 6.  Try to curl the `status` endpoint again
 
-```bash
-
-http :8000/status                                                                                                                                                                                                                                        
-HTTP/1.1 503 Service Temporarily Unavailable
-Connection: keep-alive
-Content-Length: 58
-```
+   ```bash
+   http :8000/status                                                                                                                                                                                                                                        
+   HTTP/1.1 503 Service Temporarily Unavailable
+   Connection: keep-alive
+   Content-Length: 58
+   ```
 
 You can see the endpoint returns 503 as it is currently unhealthy as an upstream. To set it healthy, use the endpoint in step 5.
 

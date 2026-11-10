@@ -40,20 +40,10 @@ to avoid obtaining a token from cache that is almost expired.
 
 For example, assuming the access token lifetime is 180s and we want to get a new token 15s before the access token expire. Then we need to set `config.cache_ttl_max=165`. (180-15=165)
 
-The behavior as below
+The behavior as below:
 
-```
+1. We send first request to Kong at 0s. The OpenID Connect plugin will get a new access token from IDP and cache it. This access token is valid for 180s.
 
-1. We send first request to Kong at 0s, 
-OpenID Connect plugin will get a new access token from IDP and cache it. 
-This access token is valid for 180s.
+2. We send request again to Kong at 150s. The OpenID Connect plugin will get the existing access token from cache. Here the access token still valid for 30s (180-150=30).
 
-2. We send request again to Kong at 150s, 
-then OpenID Connect plugin will get the existing access token from cache. 
-Here the access token still valid for 30s(180-150=30).
-
-3. We send request again to Kong at 166s, 
-then OpenID Connect plugin will get a new access token from IDP. 
-Because 166s is larger than 165s which has exceed `config.cache_ttl_max`. 
-This new access token is valid for 180s.
-```
+3. We send request again to Kong at 166s. The OpenID Connect plugin will get a new access token from IDP, because 166s is larger than 165s which has exceeded `config.cache_ttl_max`. This new access token is valid for 180s.

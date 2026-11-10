@@ -36,10 +36,9 @@ Here are the steps to adjust this setting:
 
 2. Add or update the `nginx_http_large_client_header_buffers` setting with a higher value. For example, to set 8 buffers of 24k each, you would add the following line:
 
-```yaml
-
-nginx_http_large_client_header_buffers: "8 24k"
-```
+   ```yaml
+   nginx_http_large_client_header_buffers: "8 24k"
+   ```
 
 3. After making this change, apply the updated configuration to your Kong deployment. The specific steps to do this will depend on how Kong is deployed in your environment (e.g., using Helm to update a Kubernetes deployment).
 

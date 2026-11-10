@@ -30,30 +30,30 @@ For example:
 
 1. If we have 3 Rate Limiting Advanced plugins with a unique string namespace value you will see the following keys in Redis:
 
-```bash
-redis-cli keys *
-1) "1601596980:60:mynamespace3"
-2) "1601596980:60:mynamespace1"
-3) "1601596980:60:mynamespace2"
+   ```bash
+   redis-cli keys *
+   1) "1601596980:60:mynamespace3"
+   2) "1601596980:60:mynamespace1"
+   3) "1601596980:60:mynamespace2"
 
-hgetall 1601597280:60:mynamespace1
-1) "2fc35a0d-1821-460e-a6a5-2514e888c37b"
-2) "1"
-```
+   hgetall 1601597280:60:mynamespace1
+   1) "2fc35a0d-1821-460e-a6a5-2514e888c37b"
+   2) "1"
+   ```
 
 2. If you change the `namespace` parameter of each plugin to the same string `mynamepace` you will see the following data in Redis:
 
-```bash
-redis-cli keys *
-1) "1601597400:60:mynamespace"
+   ```bash
+   redis-cli keys *
+   1) "1601597400:60:mynamespace"
 
-hgetall 1601597400:60:mynamespace
-1) "157ad987-9d50-41d9-9ec9-a242e8e56320"
-2) "1"
-3) "81414cbd-7ee3-4eb5-bde0-2c638ebb381e"
-4) "1"
-5) "2fc35a0d-1821-460e-a6a5-2514e888c37b"
-6) "1"
-```
+   hgetall 1601597400:60:mynamespace
+   1) "157ad987-9d50-41d9-9ec9-a242e8e56320"
+   2) "1"
+   3) "81414cbd-7ee3-4eb5-bde0-2c638ebb381e"
+   4) "1"
+   5) "2fc35a0d-1821-460e-a6a5-2514e888c37b"
+   6) "1"
+   ```
 
 In this case the key is made up of the `window_start:window_size:namespace`, from there the counts are based on the identifier id, in this case consumer id.

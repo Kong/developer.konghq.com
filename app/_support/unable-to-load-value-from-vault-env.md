@@ -55,37 +55,34 @@ This can occur for several reasons:
 
 1. The environment variable name MUST be uppercase. Using a lowercase variable name will result in this error.
 
-```bash
+   ```bash
+   export PASSWORD=uppercase_kong
+   kong vault get env/password
+   uppercase_kong
+   unset PASSWORD
 
-export PASSWORD=uppercase_kong
-kong vault get env/password
-uppercase_kong
-unset PASSWORD
+   export password=kong
+   kong vault get env/password
+   Error: could not get value from external vault (no value found)
 
-export password=kong
-kong vault get env/password
-Error: could not get value from external vault (no value found)
-
-  Run with --v (verbose) or --vv (debug) for more details
-```
+     Run with --v (verbose) or --vv (debug) for more details
+   ```
 
 2. The variable is inaccessible or set under another user account than the one under which Kong is running.
 
-For example
+   For example
 
-Setting this variable on an AWS EC2 instance (under the account `ec2-user`) while Kong is running under the `root` account will produce this error.
+   Setting this variable on an AWS EC2 instance (under the account `ec2-user`) while Kong is running under the `root` account will produce this error.
 
-```bash
+   ```bash
+   [ec2-user@ip-10-0-66-76 ~]$ export PASSWORD=kong
+   ```
 
-[ec2-user@ip-10-0-66-76 ~]$ export PASSWORD=kong
-```
+   If Kong is started with `sudo`, and you have the appropriate permissions to do so, you can preserve your existing environment variable
 
-If Kong is started with `sudo`, and you have the appropriate permissions to do so, you can preserve your existing environment variable
-
-```bash
-
-[ec2-user@ip-10-0-66-76 ~]$ sudo -E kong vault get env/password
-kong
-```
+   ```bash
+   [ec2-user@ip-10-0-66-76 ~]$ sudo -E kong vault get env/password
+   kong
+   ```
 
 3. Kong has not been reloaded since the creation of the environment variable. Once a new variable is introduced a `kong reload` will need to be performed.

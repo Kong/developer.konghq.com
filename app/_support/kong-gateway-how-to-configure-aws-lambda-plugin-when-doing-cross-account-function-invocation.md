@@ -63,28 +63,27 @@ In the other AWS account (the one used by the `aws-lambda` plugin):
 
 2. **{{site.base_gateway}} `aws-lambda` Plugin Configuration:**
 
-Ensure that the role ARN is added into the `aws-lambda` plugin configuration. This is crucial for cross-account Lambda function invocation. The relevant field in the plugin configuration is `aws_assume_role_arn`.
+   Ensure that the role ARN is added into the `aws-lambda` plugin configuration. This is crucial for cross-account Lambda function invocation. The relevant field in the plugin configuration is `aws_assume_role_arn`.
 
-Here is an example snippet of the `aws-lambda` plugin configuration with the `aws_assume_role_arn` field:
+   Here is an example snippet of the `aws-lambda` plugin configuration with the `aws_assume_role_arn` field:
 
-```json
+   ```json
+   {
+   "config": {
+   "function_name": "arn:aws:lambda:us-east-1:123456789012:function:your-function-name",
+   "aws_region": "us-east-1",
+   "aws_key": "your-aws-access-key",
+   "aws_secret": "your-aws-secret-key",
+   "aws_assume_role_arn": "arn:aws:iam::123456789012:role/your-assume-role",
+   "invocation_type": "RequestResponse",
+   "log_type": "Tail",
+   "timeout": 60000,
+   "forward_request_headers": true
+   }
+   }
+   ```
 
-{
-"config": {
-"function_name": "arn:aws:lambda:us-east-1:123456789012:function:your-function-name",
-"aws_region": "us-east-1",
-"aws_key": "your-aws-access-key",
-"aws_secret": "your-aws-secret-key",
-"aws_assume_role_arn": "arn:aws:iam::123456789012:role/your-assume-role",
-"invocation_type": "RequestResponse",
-"log_type": "Tail",
-"timeout": 60000,
-"forward_request_headers": true
-}
-}
-```
-
-Ensure that the `aws_assume_role_arn` field is correctly set with the ARN of the IAM role created for cross-account access.
+   Ensure that the `aws_assume_role_arn` field is correctly set with the ARN of the IAM role created for cross-account access.
 
 3. **Additional Tips:**
 
