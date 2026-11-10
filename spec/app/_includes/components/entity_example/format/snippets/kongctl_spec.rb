@@ -215,6 +215,37 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
     end
   end
 
+  context 'ai-gateway product, policy type with declared variables' do
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/with-variables.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.formatted_examples.detect { |fe| fe.format == 'kongctl' }.presenter
+    end
+
+    subject(:rendered) do
+      render_liquid(
+        '{% include components/entity_example/format/kongctl.md presenter=presenter render_context=true %}',
+        locals: { 'presenter' => presenter }
+      )
+    end
+
+    it 'renders the declared variables as !env tags in the snippet' do
+      expect(rendered).to include('guardrails_id: !env GUARDRAILS_ID')
+      expect(rendered).to include('aws_region: !env AWS_REGION')
+    end
+
+    it 'lists only the AI Gateway placeholder, not the variables already shown in the Environment variables section' do
+      expect(rendered).to include('* `AI_GATEWAY_ID`: The `id` of your AI Gateway.')
+      expect(rendered).not_to include('!env GUARDRAILS_ID`')
+      expect(rendered).not_to include('!env AWS_REGION`')
+    end
+  end
+
   context 'ai-gateway product, policy attachment' do
     before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
 

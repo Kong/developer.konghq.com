@@ -207,6 +207,9 @@ module Jekyll
           end
 
           class AIGatewayPolicy < Base
+            def missing_variables
+              @missing_variables ||= [formats['kongctl']['ai_gateway_variables']['ai_gateway']]
+            end
           end
 
           class AIGatewayPolicyAttachment < Base
