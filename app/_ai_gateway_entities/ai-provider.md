@@ -80,7 +80,6 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="azure.svg" title="Azure OpenAI" cta_url="/ai-gateway/ai-providers/azure/" %}
 {% icon_card icon="bedrock.svg" title="Amazon Bedrock" cta_url="/ai-gateway/ai-providers/bedrock/" %}
 {% icon_card icon="anthropic.svg" title="Anthropic" cta_url="/ai-gateway/ai-providers/anthropic/" %}
-{% icon_card icon="openai.svg" title="OpenAI-compatible and Anthropic-compatible" cta_url="/ai-gateway/ai-providers/openai-anthropic-compatible/" %}
 {% icon_card icon="gemini.svg" title="Gemini" cta_url="/ai-gateway/ai-providers/gemini/" %}
 {% icon_card icon="cohere.svg" title="Cohere" cta_url="/ai-gateway/ai-providers/cohere/" %}
 {% icon_card icon="mistral.svg" title="Mistral" cta_url="/ai-gateway/ai-providers/mistral/" %}
@@ -102,6 +101,14 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="fireworks.svg" title="Fireworks AI" cta_url="/ai-gateway/ai-providers/fireworks/" %}
 {% icon_card icon="togetherai.svg" title="Together AI" cta_url="/ai-gateway/ai-providers/togetherai/" %}
 {% icon_card icon="byteplus.svg" title="BytePlus ModelArk" cta_url="/ai-gateway/ai-providers/byteplus/" %}
+{% endhtml_tag %}
+
+### Custom providers
+
+Use a custom provider when your vendor has no dedicated provider but exposes an OpenAI or Anthropic compatible API.
+
+{% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
+{% icon_card icon="openai.svg" title="OpenAI/Anthropic compatible" cta_url="/ai-gateway/ai-providers/openai-anthropic-compatible/" %}
 {% endhtml_tag %}
 
 ## Outbound authentication

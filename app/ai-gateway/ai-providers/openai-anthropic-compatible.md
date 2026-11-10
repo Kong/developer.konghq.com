@@ -2,7 +2,7 @@
 title: "OpenAI-compatible and Anthropic-compatible providers"
 layout: reference
 content_type: reference
-description: Reference for the openai-compatible and anthropic-compatible provider types, which connect AI Gateway to any vendor that exposes an OpenAI or Anthropic compatible API
+description: The openai-compatible and anthropic-compatible provider types connect {{site.ai_gateway}} to vendors that expose an OpenAI or Anthropic compatible API. Covers provider configuration, request routing, and analytics.
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -50,24 +50,25 @@ Also: the AI Gateway 2.4 release isn't in app/_data/products/ai-gateway.yml yet.
 resolves correctly once the release entry lands.
 -->
 
-{% new_in 2.4 %} Use the `openai-compatible` and `anthropic-compatible` provider types to connect {{site.ai_gateway}} to any vendor that exposes an OpenAI or Anthropic compatible API but doesn't have a dedicated {{site.ai_gateway}} provider.
-You set the vendor's `base_url`, authentication, and a `provider_alias` that identifies the vendor in analytics, logs, and OpenTelemetry data.
+The `openai-compatible` and `anthropic-compatible` provider types connect {{site.ai_gateway}} to a vendor that exposes an OpenAI or Anthropic compatible API but has no dedicated {{site.ai_gateway}} provider.
+Without one, pointing the `openai` provider at the vendor with `upstream_url` attributes the vendor's traffic to OpenAI in analytics and logs.
+You set the vendor's `base_url`, the authentication, and a `provider_alias` that identifies the vendor in telemetry.
+Both types are configured on an [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 
-| Provider type | API format | Standard paths |
-|---------------|------------|----------------|
-| `openai-compatible` | [OpenAI](/ai-gateway/ai-providers/openai/) | `/v1/chat/completions`, `/v1/embeddings` |
-| `anthropic-compatible` | [Anthropic](/ai-gateway/ai-providers/anthropic/) | `/v1/messages` |
+The `openai-compatible` type uses the [OpenAI](/ai-gateway/ai-providers/openai/) API format.
+The `anthropic-compatible` type uses the [Anthropic](/ai-gateway/ai-providers/anthropic/) API format.
 
 If a dedicated provider exists for your vendor, use it instead.
 <!-- TODO(AI-166 OQ4): clarify the relationship to dedicated providers such as `baseten`. -->
 
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="OpenAI-compatible" compare_provider_name="Anthropic-compatible" variant_label="OpenAI-compatible" compare_variant_label="Anthropic-compatible" %}
+
 ## How requests are routed
 
-{{site.ai_gateway}} sends each request to the provider `base_url` plus the standard OpenAI or Anthropic path for the route type.
+Requests to a compatible provider go to the provider `base_url` plus the standard OpenAI or Anthropic path for the route type.
 For example, with a `base_url` of `https://inference.baseten.co`, a chat request goes to `https://inference.baseten.co/v1/chat/completions`.
 <!-- TODO(AI-166 OQ3): confirm how a trailing `/v1` in base_url is handled. Until then, omit the path from base_url. -->
 
-The compatible provider types support the same route types and streaming modes as the `openai` and `anthropic` providers.
 The vendor must implement the endpoints that your AI Model uses.
 
 ## Provider configuration
@@ -89,14 +90,14 @@ rows:
       The vendor's base URL, for example `https://inference.baseten.co`. Must be an HTTP or HTTPS URI of 1 to 2048 characters.
   - field: "`provider_alias`"
     description: |
-      A short name for the vendor, for example `baseten`. Must be 1 to 64 characters, lowercase letters, numbers, and hyphens, and must start and end with a letter or number (`^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`). {{site.ai_gateway}} reports this value as the provider name in analytics, logs, and OpenTelemetry instead of the generic provider type.
+      A short name for the vendor, for example `baseten`. The alias is 1 to 64 characters of lowercase letters, numbers, and hyphens, and starts and ends with a letter or number (`^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`). It replaces the generic provider type in telemetry, as described in [Analytics and observability](#analytics-and-observability).
 {% endtable %}
 <!-- TODO(AI-166 OQ1): confirm whether a provider_alias that matches a built-in provider type is rejected. -->
 <!-- TODO(AI-166 OQ2): confirm whether provider_alias stays required or defaults to the AI Model Provider name. -->
 
 ## Configure an OpenAI-compatible provider
 
-The following example creates an AI Model Provider for a vendor with an OpenAI compatible API:
+The following example creates an AI Model Provider that sends requests to Baseten with the `openai-compatible` type and reports `baseten` as the provider in telemetry:
 
 {% entity_example %}
 type: model-provider
@@ -119,8 +120,8 @@ variables:
     description: "The API key for the vendor. Include any prefix the vendor requires, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-Then create an AI Model with a target that uses the same `type`.
-Set the target `name` to the vendor's model ID:
+The following AI Model routes `/compatible-chat` to a vendor model through that provider.
+Set the target `name` to the vendor's model ID and `config.type` to `openai-compatible`:
 
 {% entity_example %}
 type: model
@@ -143,11 +144,13 @@ data:
 
 ## Configure an Anthropic-compatible provider
 
-The setup is the same, with the `anthropic-compatible` type:
+To connect a vendor with an Anthropic compatible API, create an AI Model Provider with the `anthropic-compatible` type.
+The following example authenticates with an `x-api-key` header:
 
-```yaml
+{% entity_example %}
 type: model-provider
 data:
+  display_name: Example Vendor Compatible
   name: my-anthropic-compatible
   type: anthropic-compatible
   config:
@@ -158,11 +161,17 @@ data:
       headers:
         - name: x-api-key
           value: ${key}
-```
+variables:
+  key:
+    value: $VENDOR_API_KEY
+    secret: true
+    description: "The API key for the vendor."
+{% endentity_example %}
 
 An `anthropic-compatible` target also accepts a `version` option.
 {{site.ai_gateway}} sends it as the `anthropic-version` header.
 The default is `2023-06-01`.
+The following target sets the version explicitly:
 
 ```yaml
 targets:
@@ -177,8 +186,9 @@ targets:
 
 Targets of both types support the standard target options, such as `max_tokens`, `temperature`, `top_k`, `top_p`, costs, and `upstream_url`.
 See the [AI Model entity](/ai-gateway/entities/ai-model/#targets) for the full list.
+Set `input_cost` and `output_cost` so cost reporting reflects the vendor's pricing.
 
 ## Analytics and observability
 
 {{site.ai_gateway}} reports the `provider_alias` value as the provider name in analytics, logs, and OpenTelemetry data.
-This lets you tell vendors apart even though they share a provider type.
+The alias replaces the generic `openai-compatible` or `anthropic-compatible` type, so you can tell vendors apart even though they share a provider type.
