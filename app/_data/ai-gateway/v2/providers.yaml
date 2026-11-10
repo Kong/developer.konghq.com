@@ -2106,10 +2106,11 @@ providers:
         model_example: 'accounts/fireworks/models/qwen3-reranker-8b'
         min_version: '2.4'
       decisions:
-        supported: false
+        supported: true
         streaming: false
-        model_example: ''
-        min_version: ''
+        upstream_path: '`/inference/v1/decisions`, `/inference/v1/systemone`'
+        model_example: 'accounts/fireworks/models/rune'
+        min_version: '2.4'
     limitations:
       general:
         - "Fireworks AI returns upstream errors unchanged, including errors caused by `max_tokens` truncation."

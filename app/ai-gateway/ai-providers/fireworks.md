@@ -75,7 +75,7 @@ variables:
 
 ## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions, completions, the Responses API, embeddings, and rerank through the OpenAI format, and the Messages API through the Anthropic format.
+{{ provider.name }} supports chat completions, completions, the Responses API, embeddings, rerank, and decisions through the OpenAI format, and the Messages API through the Anthropic format.
 
 By default, {{site.ai_gateway}} sends requests to `https://api.fireworks.ai/inference/v1`.
 Set the target `name` to the full {{ provider.name }} model ID, for example `accounts/fireworks/models/llama-v3p1-70b-instruct`.
