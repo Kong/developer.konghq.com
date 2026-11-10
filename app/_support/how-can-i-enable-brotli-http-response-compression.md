@@ -24,7 +24,7 @@ How can I enable Brotli compression for responses from Kong?
 
 1. Verify ngx_brotli Module is Loaded:
 
-   First, ensure that the `ngx_brotli` module is included in your Kong version by running the following command in your Kong container (substitute your own image tag, e.g. `3.14.0.0`):
+   First, ensure that the `ngx_brotli` module is included in your Kong version by running the following command in your Kong container (substitute your own image tag, for example `3.14.0.0`):
 
    ```bash
    docker run -it --rm --user root kong/kong-gateway:3.14.0.0 nginx -V
