@@ -60,6 +60,8 @@ cleanup:
 
 Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in `conversion-only` mode for the [Deck of Cards API](https://deckofcardsapi.com/), which needs no credentials. 
 
+The `conversion-only` server sets `config.route`, and each tool `path` is relative, with no leading `/`. The listener sends each tool call through the route of the `conversion-only` server plus the tool `path`. A tool `path` that starts with `/` is used as-is, and the tool call fails with `no Route matched` unless the path matches a route. For details, see [Tool paths in conversion-only servers](/ai-gateway/entities/ai-mcp-server/#tool-paths-in-conversion-only-servers).
+
 {% entity_examples %}
 ai_gateway_mcp_servers:
   - ref: cards-mcp
@@ -78,7 +80,7 @@ ai_gateway_mcp_servers:
       - name: shuffle-cards
         description: Shuffle a new deck of cards. Returns a deck_id to use with draw-cards.
         method: GET
-        path: /api/deck/new/shuffle/
+        path: new/shuffle/
         parameters:
           - name: deck_count
             in: query
@@ -90,7 +92,7 @@ ai_gateway_mcp_servers:
       - name: draw-cards
         description: Draw cards from an existing deck. Requires a deck_id from shuffle-cards.
         method: GET
-        path: "/api/deck/{deck_id}/draw/"
+        path: "{deck_id}/draw/"
         parameters:
           - name: deck_id
             in: path
@@ -108,7 +110,7 @@ ai_gateway_mcp_servers:
       - name: new-deck
         description: Create a new deck.
         method: GET
-        path: /api/deck/new/
+        path: new/
 {% endentity_examples %}
 
 ## Convert the Petstore API to MCP tools
@@ -135,7 +137,7 @@ ai_gateway_mcp_servers:
       - name: get-pets-by-status
         description: Find pets by status
         method: GET
-        path: /petstore/pet/findByStatus
+        path: pet/findByStatus
         parameters:
           - name: status
             in: query
@@ -150,7 +152,7 @@ ai_gateway_mcp_servers:
       - name: get-pet-by-id
         description: Get a pet by ID
         method: GET
-        path: /petstore/pet/{petId}
+        path: pet/{petId}
         parameters:
           - description: ID of the pet to retrieve
             in: path

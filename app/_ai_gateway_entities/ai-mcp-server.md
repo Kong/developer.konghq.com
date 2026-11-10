@@ -259,7 +259,8 @@ rows:
       Since a `conversion-only` AI MCP Server has no `config.server` block, a `listener` AI MCP Server
       references it directly by its immutable `name` in the listener's
       [`sources`](#schema-aigateway-mcpserver-sources) field. This mode must be used together with one or
-      more AI MCP Servers configured with `listener` mode.
+      more AI MCP Servers configured with `listener` mode. Set [`config.route`](#schema-aigateway-mcpserver-config-route)
+      and use relative tool paths. See [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers) for more information.
     mode: "`conversion-only`"
   - usecase: |
       A single MCP endpoint that aggregates tools from multiple `conversion-only` or
@@ -271,6 +272,8 @@ rows:
       `upstream-server` MCP Servers instead of defining its own. List the immutable `name` of each
       source MCP Server in the listener's [`sources`](#schema-aigateway-mcpserver-sources) field.
       Merges all matching tools into one list and routes each tool call to the correct backend.
+      A `conversion-only` source must set `config.route` and use relative tool paths. See
+      [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
     mode: "`listener`"
   - usecase: |
       Expose an existing upstream MCP server's tools alongside others through a single `listener`
@@ -330,6 +333,15 @@ sequenceDiagram
 > Pings from MCP clients are included in the total request count for an {{site.ai_gateway}}
 > instance, in addition to requests made to the MCP server itself.
 
+### Tool paths in conversion-only servers
+
+A `listener` AI MCP Server runs each tool call of a `conversion-only` source through the Kong router, at the route of the `conversion-only` server plus the tool `path`. When a listener serves a `conversion-only` server:
+
+- Set [`config.route`](#schema-aigateway-mcpserver-config-route) on the `conversion-only` server. Without it, the data plane can't compile the configuration and stops syncing.
+- Write each tool [`path`](#schema-aigateway-mcpserver-tools-path) without a leading `/`, for example `status/{requestId}`. The listener uses a path that starts with `/` as it is, so unless it matches a route, `tools/call` returns `isError: true` with `HTTP call failed with status 404: no Route matched`, even though `tools/list` looks correct.
+
+For an example, see [Aggregate MCP tools](/ai-gateway/aggregate-mcp-tools/).
+
 ### Forward proxy support
 
 {% include md/ai-gateway/v2/forward-proxy.md %}
@@ -340,7 +352,7 @@ You can use a `listener` AI MCP Server to pull tools from multiple `upstream-ser
 
 ### How aggregation works
 
-1. **Sources connect upstreams to listeners**: Set the listener's top-level [`sources`](#schema-aigateway-mcpserver-sources) field to the immutable `name` of each `upstream-server` (or `conversion-only`) AI MCP Server whose tools it should expose (for example, `sources: [weather-service, catalog-service]`). Every AI MCP Server named in `sources` gets pulled into the aggregation.
+1. **Sources connect upstreams to listeners**: Set the listener's top-level [`sources`](#schema-aigateway-mcpserver-sources) field to the immutable `name` of each `upstream-server` (or `conversion-only`) AI MCP Server whose tools it should expose (for example, `sources: [weather-service, catalog-service]`). Every AI MCP Server named in `sources` gets pulled into the aggregation. A `conversion-only` source must set `config.route` and define its tool paths without a leading `/`. For more information, see [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
 
 2. **Tool discovery**: When an MCP client calls `tools/list`, the listener fetches tool lists from every matching upstream. If an upstream requires authentication, configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) with OAuth2 credentials so the listener can fetch its tools.
 
