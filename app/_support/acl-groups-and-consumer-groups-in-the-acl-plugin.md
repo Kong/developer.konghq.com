@@ -126,7 +126,7 @@ consumer_groups:
 - name: red_consumer_group
 
 consumers:
-# This consumer does not belong to any consumer_group, but it has a an ACL group configured:
+# This consumer does not belong to any consumer_group, but it has an ACL group configured:
 - username: first_consumer
   acls: 
     - group: acl_group

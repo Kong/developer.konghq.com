@@ -34,29 +34,29 @@ If the Portal CLI does not look good for you, this article will guide you to del
 
 3. Find the target workspace ID and confirm how many files it has.
 
-You will see there are 103 files in the workspace 'test'.
+   You will see there are 103 files in the workspace 'test'.
 
-```sql
-kong=# select id from workspaces where name = 'test';
-                  id
---------------------------------------
- 01aa5640-589a-4687-9cec-3e0e1afc4aae
+   ```sql
+   kong=# select id from workspaces where name = 'test';
+                     id
+   --------------------------------------
+    01aa5640-589a-4687-9cec-3e0e1afc4aae
 
-kong=# select count(*) from files where ws_id = '01aa5640-589a-4687-9cec-3e0e1afc4aae';
- count
--------
-   103
-```
+   kong=# select count(*) from files where ws_id = '01aa5640-589a-4687-9cec-3e0e1afc4aae';
+    count
+   -------
+      103
+   ```
 
 4. Delete files of the target workspace and then check
 
-```sql
-kong=# delete from files where ws_id='01aa5640-589a-4687-9cec-3e0e1afc4aae';
-DELETE 103
-kong=# select ws_id, path from files where ws_id='01aa5640-589a-4687-9cec-3e0e1afc4aae';
- ws_id | path
--------+------
-(0 rows)
-```
+   ```sql
+   kong=# delete from files where ws_id='01aa5640-589a-4687-9cec-3e0e1afc4aae';
+   DELETE 103
+   kong=# select ws_id, path from files where ws_id='01aa5640-589a-4687-9cec-3e0e1afc4aae';
+    ws_id | path
+   -------+------
+   (0 rows)
+   ```
 
 5. You can delete the workspace now.

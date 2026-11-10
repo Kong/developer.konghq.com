@@ -128,7 +128,7 @@ body:
 If you're using the {{site.konnect_short_name}} UI, you can run the commands provided and click **Connect**. If you're using the {{site.konnect_short_name}} Cloud Gateways API, follow these steps:
 
 1. Run this command on your project to create a private DNS zone:
-```sh
+   ```sh
    gcloud dns \
      --project=$GCP_PROJECT_ID \
      managed-zones create $DNS_NAME \
