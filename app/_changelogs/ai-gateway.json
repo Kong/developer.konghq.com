@@ -2816,5 +2816,174 @@
         "scope": "Core"
       }
     ]
+  },
+  "2.2.1": {
+    "kong-aigw": [
+      {
+        "message": "Bumped libexpat to 2.9.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL to 3.5.9.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped PCRE2 to 10.49.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped snappy to 1.3.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-111497 in the bundled Brotli compression library by bumping brotli from 1.1.0 to 1.2.1, preventing an out-of-bounds write that could allow remote code execution when Kong compresses or decompresses data with Brotli.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**proxy-cache**: Added `cache_by_principal` configuration option to switch\ncache key segmentation by Principal when using Kong Identity Directory. When\nenabled, the authenticated Principal's id is used to compose the cache key.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Added `cache_by_principal` configuration option to\nswitch cache key segmentation by Principal when using Kong Identity Directory.\nWhen enabled, the authenticated Principal's id is used to compose the cache\nkey.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Security: Fixed CVE-2026-92558 by digesting every cache key field and component to a fixed-length value before joining them, preventing two different requests from resolving to the same cache key, and one caller's cached response from being served to another, when header values contain the separator characters.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Security: Fixed CVE-2026-92545 by always including the request Host in the cache key, preventing a response generated for one Host from being served to another Host on routes that match more than one Host or have no Host constraint.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Security: Partially fixed CVE-2026-92442 by including the authenticated consumer's id in the cache key, preventing one caller's GraphQL response from being served to another caller on routes reachable by more than one caller. Responses marked `Cache-Control: private` or `no-store` can still be cached; this is not addressed in this release.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where the cache key did not correctly segment by consumer group.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Security: Fixed CVE-2026-92558 by digesting every cache key field and component to a fixed-length value before joining them, preventing two different requests from resolving to the same cache key, and one caller's cached response from being served to another, when request values contain the separator characters.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Security: Fixed CVE-2026-92545 by always including the request Host in the cache key, preventing a response generated for one Host from being served to another Host on routes that match more than one Host or have no Host constraint.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to unauthenticated callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Fixed an issue where the cache key did not correctly\nsegment by consumer group.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Security: Fixed CVE-2026-92545 by including the hostname in the cache key, preventing cached responses from being served across hostnames.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Security: Fixed CVE-2026-92439 by evaluating the audience XPath relative to the Conditions node, so the plugin now rejects assertions whose audience does not match the configured `issuer`, preventing a validly signed assertion issued for a different Service Provider from being accepted when the IdP shares its signing key across Service Providers.\n\n   **Note:** The stricter validation can break existing logins if the `Audience` value is not an exact match for `issuer`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-105986 in the Admin API by applying RBAC self-protection checks consistently, preventing those protections from being bypassed.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-92441 in the gateway by normalizing and percent-escaping the `X-Forwarded-Path` header (removing dot segments) and percent-escaping `X-Forwarded-Prefix`, including bytes such as CR and LF, preventing header injection and request smuggling against upstream services when these headers are sent upstream.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Security: Fixed CVE-2026-92544 in the LLM usage counters by escaping every value before running the SQL statement, preventing SQL injection when a client-supplied model name is written to the license_llm_data table.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Improved the performance of proxied requests by skipping the regular\nexpression engine when URI path escaping finds nothing to escape.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
   }
 }
