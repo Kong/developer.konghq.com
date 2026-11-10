@@ -47,7 +47,7 @@ TODO(AI-246 OQ2): the `meta` discriminator name may change. Update `type: meta` 
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Meta" %}
 
-## Configure a {{ provider.name }} provider {% new_in 2.4 %}
+## Configure a {{ provider.name }} provider
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 You can then route [AI Models](/ai-gateway/entities/ai-model/) to {{ provider.name }}.
@@ -74,11 +74,15 @@ variables:
     description: "The API key used to connect to Meta. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-## Configure a {{ provider.name }} model {% new_in 2.4 %}
+## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions and the Responses API through the OpenAI format, and the Messages API through the Anthropic format. Streaming, tool calling, and structured output are supported. Models also accept image, video, and PDF input.
+{{ provider.name }} supports chat completions and the Responses API through the OpenAI format, and the Messages API through the Anthropic format.
+{{ provider.name }} also supports streaming, tool calling, and structured output.
+Models also accept image, video, and PDF input.
 
-By default, {{site.ai_gateway}} sends requests to the {{ provider.name }} hosted Model API at `https://api.meta.ai/v1`. Set the target `name` to the upstream model ID, for example `muse-spark-1.3`. {{site.ai_gateway}} passes the name to {{ provider.name }} unchanged.
+By default, {{site.ai_gateway}} sends requests to the {{ provider.name }} hosted Model API at `https://api.meta.ai/v1`.
+Set the target `name` to the upstream model ID, for example `muse-spark-1.3`.
+{{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model
@@ -102,8 +106,10 @@ data:
 To use a different base URL, set `upstream_url` on the target.
 
 {:.warning}
-> Model IDs with a `-contributor` suffix let {{ provider.name }} train on your prompts. Don't use them for sensitive data.
+> When you use a model ID with a `-contributor` suffix, {{ provider.name }} can train on your prompts.
+> Don't use these model IDs for sensitive data.
 
 ## Self-hosted Llama models
 
-This provider targets the {{ provider.name }} hosted Model API. To route to a self-hosted open-weight Llama model, use the [Llama2 provider](/ai-gateway/ai-providers/llama/) with `upstream_url` instead.
+The {{ provider.name }} provider targets the {{ provider.name }} hosted Model API.
+To route to a self-hosted open-weight Llama model, use the [Llama2 provider](/ai-gateway/ai-providers/llama/) with `upstream_url` instead.

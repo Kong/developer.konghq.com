@@ -46,7 +46,7 @@ TODO(AI-164 OQ1): the runtime capability matrix isn't confirmed. Verify Rerank s
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Fireworks AI" %}
 
-## Configure a {{ provider.name }} provider {% new_in 2.4 %}
+## Configure a {{ provider.name }} provider
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 You can then route [AI Models](/ai-gateway/entities/ai-model/) to {{ provider.name }}.
@@ -73,11 +73,13 @@ variables:
     description: "The API key used to connect to Fireworks AI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-## Configure a {{ provider.name }} model {% new_in 2.4 %}
+## Configure a {{ provider.name }} model
 
 {{ provider.name }} supports chat completions, completions, the Responses API, embeddings, and rerank through the OpenAI format, and the Messages API through the Anthropic format.
 
-By default, {{site.ai_gateway}} sends requests to `https://api.fireworks.ai/inference/v1`. Set the target `name` to the full {{ provider.name }} model ID, for example `accounts/fireworks/models/llama-v3p1-70b-instruct`. {{site.ai_gateway}} passes the name to {{ provider.name }} unchanged.
+By default, {{site.ai_gateway}} sends requests to `https://api.fireworks.ai/inference/v1`.
+Set the target `name` to the full {{ provider.name }} model ID, for example `accounts/fireworks/models/llama-v3p1-70b-instruct`.
+{{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model
@@ -100,7 +102,7 @@ data:
 
 ## US-only region
 
-To keep requests in the US, set the target `upstream_url` to the {{ provider.name }} US endpoint:
+To keep {{ provider.name }} requests in the US, set the target `upstream_url` to the {{ provider.name }} US endpoint:
 
 ```yaml
 targets:
@@ -113,4 +115,5 @@ targets:
 
 ## Errors
 
-{{site.ai_gateway}} passes upstream errors from {{ provider.name }} through to the client unchanged. This includes errors from `max_tokens` truncation.
+{{site.ai_gateway}} returns upstream errors from {{ provider.name }} to the client unchanged.
+{{site.ai_gateway}} also returns errors caused by `max_tokens` truncation unchanged.

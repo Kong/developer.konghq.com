@@ -44,7 +44,7 @@ related_resources:
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Together AI" %}
 
-## Configure a {{ provider.name }} provider {% new_in 2.4 %}
+## Configure a {{ provider.name }} provider
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 You can then route [AI Models](/ai-gateway/entities/ai-model/) to {{ provider.name }}.
@@ -71,11 +71,14 @@ variables:
     description: "The API key used to connect to Together AI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-## Configure a {{ provider.name }} model {% new_in 2.4 %}
+## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions, completions, and embeddings through the OpenAI format. Streaming uses server-sent events (SSE).
+{{ provider.name }} supports chat completions and completions through the OpenAI format.
+Streaming uses server-sent events (SSE).
 
-By default, {{site.ai_gateway}} sends requests to `https://api.together.xyz/v1`. Set the target `name` to the {{ provider.name }} model ID, for example `meta-llama/Llama-3.3-70B-Instruct-Turbo`. {{site.ai_gateway}} passes the name to {{ provider.name }} unchanged.
+By default, {{site.ai_gateway}} sends requests to `https://api.together.xyz/v1`.
+Set the target `name` to the {{ provider.name }} model ID, for example `meta-llama/Llama-3.3-70B-Instruct-Turbo`.
+{{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model

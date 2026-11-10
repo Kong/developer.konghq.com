@@ -48,7 +48,7 @@ TODO(AI-119): no BytePlus logo SVG exists in the repo. Add app/assets/icons/byte
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="BytePlus ModelArk" %}
 
-## Configure a {{ provider.name }} provider {% new_in 2.4 %}
+## Configure a {{ provider.name }} provider
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 You can then route [AI Models](/ai-gateway/entities/ai-model/) to {{ provider.name }}.
@@ -75,11 +75,13 @@ variables:
     description: "The API key used to connect to BytePlus ModelArk. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-## Configure a {{ provider.name }} model {% new_in 2.4 %}
+## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions, the Responses API, Messages, and embeddings through the OpenAI format, with streaming. It also supports image and video generation.
+{{ provider.name }} supports chat completions, the Responses API, Messages, and embeddings through the OpenAI format, with streaming.
+{{ provider.name }} also supports image and video generation.
 
-Set the target `name` to a {{ provider.name }} model ID, for example `seed-1-6-250615`, or to an inference endpoint ID, for example `ep-20250101000000-abcde`. {{site.ai_gateway}} passes the name to {{ provider.name }} unchanged.
+Set the target `name` to a {{ provider.name }} model ID, for example `seed-1-6-250615`, or to an inference endpoint ID, for example `ep-20250101000000-abcde`.
+{{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model
@@ -103,6 +105,9 @@ data:
 
 ## Region
 
-By default, {{site.ai_gateway}} sends requests to `https://ark.REGION.bytepluses.com/api/v3`. Set the optional target `region` field to choose the region. The default is `ap-southeast`.
+By default, {{site.ai_gateway}} sends requests to `https://ark.REGION.bytepluses.com/api/v3`.
+Set the optional target `region` field to choose the region.
+The default is `ap-southeast`.
 
-To use a custom base URL, set `upstream_url` on the target. When `upstream_url` is set, {{site.ai_gateway}} ignores `region`.
+To use a custom base URL, set `upstream_url` on the target.
+When `upstream_url` is set, {{site.ai_gateway}} ignores `region`.
