@@ -32,39 +32,40 @@ To resolve this issue, you can increase the size of the `prometheus_metrics` sha
    curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
    ```
 
-If the output shows that the `allocated_slabs` is equal to the `capacity`, it indicates that the dictionary is full.
+   If the output shows that the `allocated_slabs` is equal to the `capacity`, it indicates that the dictionary is full.
 
-```
-{
-  "allocated_slabs": "5.00 MiB",
-  "capacity": "5.00 MiB"
-}
-```
+   ```json
+   {
+   "allocated_slabs": "5.00 MiB",
+   "capacity": "5.00 MiB"
+   }
+   ```
 
-To increase the dictionary size, add the following configuration parameter in the `env` section of your dataplanes' `values.yaml`:
+2. To increase the dictionary size, add the following configuration parameter in the `env` section of your dataplanes' `values.yaml`:
 
-```yaml
+   ```yaml
+   nginx_http_lua_shared_dict: "prometheus_metrics 100m"
+   ```
 
-nginx_http_lua_shared_dict: "prometheus_metrics 100m"
-```
+   Alternatively, set it as an environment variable:
 
-Alternatively, set it as an environment variable:
+   ```yaml
+  KONG_NGINX_HTTP_LUA_SHARED_DICT: "prometheus_metrics 100m"
+  ```
 
-```yaml
+3. After applying the configuration change, verify that the size of the shared dictionary has increased by checking the status endpoint again:
 
-KONG_NGINX_HTTP_LUA_SHARED_DICT: "prometheus_metrics 100m"
-```
-
-After applying the configuration change, verify that the size of the shared dictionary has increased by checking the status endpoint again:
-
-```bash
-
-curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
-{
-   "capacity": "100.00 MiB",
-   "allocated_slabs": "26.48 MiB"
-}
-```
+   ```bash
+   curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
+   ```
+  
+   Response:
+   ```json
+   {
+      "capacity": "100.00 MiB",
+      "allocated_slabs": "26.48 MiB"
+   }
+   ```
 
 The `capacity` should now reflect the new size, such as `100.00 MiB`.
 
