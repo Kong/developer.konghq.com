@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.7": [
+    {
+      "message": "Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.15": [
     {
       "message": "Fixed an issue that failed to delete vector database indexes and cached embedding records when a plugin instance was deleted.",
