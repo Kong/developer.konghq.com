@@ -20,10 +20,10 @@ config:
       consumer_identifier: consumer_id
       sample_rate: 1
 
-# variables:
-#   datadog_host:
-#     value: $DATADOG_HOST
-#     description: The hostname or IP address of your Datadog agent.
+variables:
+  datadog_host:
+    value: $DATADOG_HOST
+    description: The hostname or IP address of your Datadog agent.
 
 tools:
   - konnect-api

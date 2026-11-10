@@ -22,10 +22,10 @@ config:
         - env:production
         - team:ai
 
-# variables:
-#   datadog_host:
-#     value: $DATADOG_HOST
-#     description: The hostname or IP address of your Datadog agent.
+variables:
+  datadog_host:
+    value: $DATADOG_HOST
+    description: The hostname or IP address of your Datadog agent.
 
 tools:
   - konnect-api

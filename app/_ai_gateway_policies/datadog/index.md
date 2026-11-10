@@ -154,7 +154,7 @@ Use AI Consumer scope to count requests per caller, and use global scope when ev
 {% include md/ai-gateway/v2/policies/queues.md name="Datadog" slug="datadog" %}
 
 A larger [`config.queue.max_batch_size`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-batch-size) makes the policy wait for a full batch before it sends.
-A single request's metrics can then arrive at the agent up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-coalescing-delay) seconds late.
+A single request's metrics are sent to the agent up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/datadog/reference/#schema--config-queue-max-coalescing-delay) seconds late.
 Keep these values low for near-real-time dashboards.
 
 ## Limitations
