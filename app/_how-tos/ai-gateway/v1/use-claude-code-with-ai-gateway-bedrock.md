@@ -255,7 +255,7 @@ This output confirms that {{ site.claude_code }} routed the request through {{si
 When using {{ site.claude_code }} with AWS Bedrock models, you may encounter connection errors.
 See the following sections for common error workarounds.
 
-### API Error 400: `context_management`: Extra inputs are not permitted
+### API Error 400: context_management: Extra inputs are not permitted
 
 Some beta features aren't compatible with AWS Bedrock.
 This error displays because {{ site.claude }} beta features are enabled.

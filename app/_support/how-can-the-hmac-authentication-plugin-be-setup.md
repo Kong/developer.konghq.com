@@ -36,13 +36,13 @@ How can the plugin be configured to authenticate the client?
 
 The hmac-auth plugin requires a specific Authentication header format that includes details of the Consumer authentication username, the HMAC algorithm, the headers to use for the HMAC calculation and the actual HMAC signature itself.
 
-Assuming that a GET request is being made to the `/hmac-echo` endpoint, the current date-time is " Mon, 07 Sep 2026 07:58:05 GMT " and the plugin has the below configuration;
+Assuming that a GET request is being made to the `/hmac-echo` endpoint, the current date-time is " Mon, 07 Sep 2026 07:58:05 GMT " and the plugin has the following configuration:
 
 ```
 config.enforce_headers": [ "date", "request-line" ]
 ```
 
-Then the required HMAC can be found by running the below command;
+The required HMAC can be found by running the following command:
 
 ```bash
 printf "date: Mon, 07 Sep 2026 07:58:05 GMT\nGET /hmac-echo HTTP/1.1"  | openssl dgst -sha256 -hmac "secret123" -binary | openssl enc -base64 -A
@@ -54,7 +54,7 @@ which outputs the below hmac value;
 DCiYhzZME5ox2kGkDm9gsRt7oekcxsscGVW6rOhecyo=
 ```
 
-## Worked Example for the `hmac-auth` plugin
+## Worked Example for the hmac-auth plugin
 
 1. Create a Consumer
 
@@ -178,7 +178,7 @@ DCiYhzZME5ox2kGkDm9gsRt7oekcxsscGVW6rOhecyo=
    }
    ```
 
-Note the `username` supplied in the `Authorization` header must match the `hmac-auth` **credential's** `username` field (`hmac-username`, from step 2), not the Consumer's own `username` (`hmac-consumer`, from step 1) — supplying the Consumer's username instead returns `401 {"message":"HMAC signature cannot be verified"}`.
+Note the `username` supplied in the `Authorization` header must match the `hmac-auth` **credential's** `username` field (`hmac-username`, from step 2), not the Consumer's own `username` (`hmac-consumer`, from step 1). Supplying the Consumer's username instead returns `401 {"message":"HMAC signature cannot be verified"}`.
 
 The plugin configuration has a skew value of 60 seconds. If you make a call using the token after 60 seconds, then you will see an "401 - Unauthorized" error.
 

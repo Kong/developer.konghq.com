@@ -32,7 +32,7 @@ Using bucket URL: pulp-cloud-02-eks-01-prod-us-east-2-20220929122921552700000002
 
 This bucket holds Kong binaries which are available for download.
 
-Note: this particular bucket name is used only to illustrate the methodology. It no longer resolves to the `us-east-2` region implied by its name — it currently resolves via `us-east-1`. Rather than relying on this specific example, use a bucket/endpoint you've freshly verified for your region, or a region-specific S3 endpoint (for example `s3.<region>.amazonaws.com`), and confirm the resolved region with `dig`/`ping` before filtering `ip-ranges.json`. The `ip-ranges.json` + `jq` methodology below remains valid regardless of which bucket you check.
+Note: this particular bucket name is used only to illustrate the methodology. It no longer resolves to the `us-east-2` region implied by its name. It resolves via `us-east-1`. Rather than relying on this specific example, use a bucket/endpoint you've freshly verified for your region, or a region-specific S3 endpoint (for example `s3.<region>.amazonaws.com`), and confirm the resolved region with `dig`/`ping` before filtering `ip-ranges.json`. The `ip-ranges.json` + `jq` methodology below remains valid regardless of which bucket you check.
 
 1. Determine the AWS service we are targeting, in this case, it is S3 .
 
@@ -70,9 +70,9 @@ Note: this particular bucket name is used only to illustrate the methodology. It
    52.219.96.0/20
    ```
 
-This represents a list of all IP subnet ranges that will cover any S3 bucket address in the us-east-2 region.
+   This represents a list of all IP subnet ranges that will cover any S3 bucket address in the us-east-2 region.
 
-To prove that the URL is indeed using these subnets, a simple `ping` and lookup can be performed.
+   To prove that the URL is indeed using these subnets, a simple `ping` and lookup can be performed.
 
 4. `Ping` the url to determine the current IP:
 
@@ -83,6 +83,6 @@ To prove that the URL is indeed using these subnets, a simple `ping` and lookup 
 
 5. Find the range in the previous list that is the closest to the returned IP.
 
-The closest related subnet is: 52.219.80.0/20
+   The closest related subnet is: 52.219.80.0/20
 
 6. Use a subnet calculator so show the IP addresses that are covered by the range. Results

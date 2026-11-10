@@ -55,7 +55,7 @@ Things to check:
    printenv | sort
    ```
 
-   Execute the below command to know if from Kong container, we are able to reference these variables through vault parameters:
+   Execute the following command to verify that the Kong container can reference these variables through vault parameters:
 
    ```bash
    kong vault get <Vault name/prefix>/environment_variable 
@@ -64,7 +64,7 @@ Things to check:
 
    Note that the prefix (`MY_`) is not added here to the env variable name. If we add them (`my_clientid`) and check, we will get the error found here:
 
-5. You could then reference as shown below in any of the supported referenceable fields in the plugin.
+5. You could then reference as shown in the following example in any of the supported referenceable fields in the plugin.
 
    Here I am referencing these in the OIDC plugin `clientid` and `clientsecret` fields.
 

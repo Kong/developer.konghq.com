@@ -16,7 +16,7 @@ tldr:
 
 ## Overview
 
-We currently have an  LB doing health checks for the `/status` endpoint at every nth second interval. If we want to do an upgrade to the Kong node, we will take down the Admin API but we don’t want the LB to route the request when the node is down during the interval gap. Is there any way we can turn off the `/status` endpoint?
+We have an LB doing health checks for the `/status` endpoint at every nth second interval. If we want to do an upgrade to the Kong node, we will take down the Admin API but we don’t want the LB to route the request when the node is down during the interval gap. Is there any way we can turn off the `/status` endpoint?
 
 ## Steps
 
@@ -26,7 +26,7 @@ To turn it off, you need to restart kong but in case a restart is not possible, 
 
 This technique applies to standalone/traditional Kong nodes only. On a hybrid-mode Admin API, `PUT /upstreams/{id}/targets/{id}/unhealthy` returns `404`, so this approach does not work against a hybrid Control Plane's Admin API.
 
-On a standalone node, note that the health checker is "lazy": the first health-check-related request against a freshly created upstream/target can return `400` until a request has actually been proxied through it at least once. Send one warm-up request through the upstream before marking targets healthy/unhealthy; after that, the endpoint behaves as described below.
+On a standalone node, note that the health checker is "lazy": the first health-check-related request against a freshly created upstream/target can return `400` until a request has actually been proxied through it at least once. Send one warm-up request through the upstream before marking targets healthy/unhealthy; after that, the endpoint behaves as described in the following steps.
 
 Here are the steps to set it up:
 
@@ -112,7 +112,7 @@ Here are the steps to set it up:
    Content-Length: 58
    ```
 
-You can see the endpoint returns 503 as it is currently unhealthy as an upstream. To set it healthy, use the endpoint in step 5.
+You can see the endpoint returns 503 because it is marked as unhealthy as an upstream. To set it healthy, use the endpoint in step 5.
 
 ```bash
 

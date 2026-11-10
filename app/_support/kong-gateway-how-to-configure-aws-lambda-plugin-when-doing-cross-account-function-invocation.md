@@ -47,19 +47,19 @@ To resolve this issue, follow these steps:
 
 1. **Cross-Account Lambda Function Invocation Setup:**
 
-In the AWS account owning the Lambda function:
+   In the AWS account owning the Lambda function:
 
-- Create an IAM Role that grants the necessary permissions for invoking Lambda functions. This role will be assumed by IAM users from another AWS account.
+   - Create an IAM Role that grants the necessary permissions for invoking Lambda functions. This role will be assumed by IAM users from another AWS account.
 
-- Define a trust relationship with the other AWS account, allowing IAM users from that account to assume the role.
+   - Define a trust relationship with the other AWS account, allowing IAM users from that account to assume the role.
 
-- Attach policies to the IAM role that grant permissions to invoke Lambda functions.
+   - Attach policies to the IAM role that grant permissions to invoke Lambda functions.
 
-In the other AWS account (the one used by the `aws-lambda` plugin):
+   In the other AWS account (the one used by the `aws-lambda` plugin):
 
-- Create an IAM user who will be invoking Lambda functions in the above AWS account.
+   - Create an IAM user who will be invoking Lambda functions in the above AWS account.
 
-- Attach a policy to the IAM user that allows assuming the IAM role created in the above account.
+   - Attach a policy to the IAM user that allows assuming the IAM role created in the above account.
 
 2. **{{site.base_gateway}} `aws-lambda` Plugin Configuration:**
 
@@ -87,6 +87,6 @@ In the other AWS account (the one used by the `aws-lambda` plugin):
 
 3. **Additional Tips:**
 
-- For logging purposes, if you encounter issues with logs not appearing when using the `aws-lambda` plugin, consider adjusting the `log_type` configuration based on your requirements for security monitoring and troubleshooting.
+   - For logging purposes, if you encounter issues with logs not appearing when using the `aws-lambda` plugin, consider adjusting the `log_type` configuration based on your requirements for security monitoring and troubleshooting.
 
 By following these steps, you should be able to configure the `aws-lambda` plugin in {{site.base_gateway}} for successful cross-account Lambda function invocation.

@@ -28,15 +28,15 @@ Here are the steps to achieve this configuration:
 
 1. Create a Managed Identity in Azure
 
-- Navigate to the Azure portal and create a new managed identity. Note the `AZURE_CLIENT_ID` of the created identity.
+   - Navigate to the Azure portal and create a new managed identity. Note the `AZURE_CLIENT_ID` of the created identity.
 
 2. Assign the Managed Identity to Your Azure Resource
 
-- Assign the managed identity to the Azure VM or AKS instance where Kong is deployed.
+   - Assign the managed identity to the Azure VM or AKS instance where Kong is deployed.
 
 3. Configure Access Policies in Azure Key Vault
 
-- Go to your Azure Key Vault instance and add an access policy. Grant the managed identity `Secrets -> Get` permission.
+   - Go to your Azure Key Vault instance and add an access policy. Grant the managed identity `Secrets -> Get` permission.
 
 4. Set Required Environment Variables in Kong
 
