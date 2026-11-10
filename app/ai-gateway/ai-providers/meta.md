@@ -108,8 +108,3 @@ To use a different base URL, set `upstream_url` on the target.
 {:.warning}
 > When you use a model ID with a `-contributor` suffix, {{ provider.name }} can train on your prompts.
 > Don't use these model IDs for sensitive data.
-
-## Self-hosted Llama models
-
-The {{ provider.name }} provider targets the {{ provider.name }} hosted Model API.
-To route to a self-hosted open-weight Llama model, use the [Llama2 provider](/ai-gateway/ai-providers/llama/) with `upstream_url` instead.

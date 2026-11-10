@@ -77,10 +77,10 @@ variables:
 
 ## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions, the Responses API, Messages, and embeddings through the OpenAI format, with streaming.
+{{ provider.name }} supports chat completions and embeddings through the OpenAI format, with streaming.
 {{ provider.name }} also supports image and video generation.
 
-Set the target `name` to a {{ provider.name }} model ID, for example `seed-1-6-250615`, or to an inference endpoint ID, for example `ep-20250101000000-abcde`.
+Set the target `name` to a {{ provider.name }} model ID, for example `seed-1-6-250615`.
 {{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}

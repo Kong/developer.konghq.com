@@ -1945,7 +1945,7 @@ providers:
         model_example: 'muse-spark-1.3'
         min_version: '2.4'
         note:
-          content: "Also supports the OpenAI Responses API and the Anthropic Messages API. When you use a model ID with a `-contributor` suffix, Meta can train on your prompts. For self-hosted open-weight Llama models, use the [Llama2 provider](/ai-gateway/ai-providers/llama/) with `upstream_url` instead."
+          content: "Also supports the OpenAI Responses API and the Anthropic Messages API."
       completions:
         supported: false
         streaming: false

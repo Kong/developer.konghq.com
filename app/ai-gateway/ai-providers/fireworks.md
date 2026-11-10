@@ -112,8 +112,3 @@ targets:
       type: fireworks
       upstream_url: https://us.api.fireworks.ai/inference/v1
 ```
-
-## Errors
-
-{{site.ai_gateway}} returns upstream errors from {{ provider.name }} to the client unchanged.
-{{site.ai_gateway}} also returns errors caused by `max_tokens` truncation unchanged.
