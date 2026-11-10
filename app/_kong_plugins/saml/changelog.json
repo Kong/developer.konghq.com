@@ -30,6 +30,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.7": [
+    {
+      "message": "Security: Fixed CVE-2026-92439 by enforcing the assertion's audience restriction, preventing acceptance of assertions meant for a different audience.\n\n   **Note:** The stricter validation can break existing logins if the `Audience`\nvalue is not an exact match for `issuer`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.12": [
     {
       "message": "Security: Fixed CVE-2026-14917 in the SAML plugin by always validating the `samlp:Response` signature when `idp_certificate` is configured correctly (and logging a warning if misconfigured), preventing a crafted unsigned SAML response from silently bypassing authentication under configurations that set `validate_assertion_signature` to false.",
