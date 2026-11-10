@@ -29,6 +29,19 @@ rows:
       - blocks:
         - type: card
           config:
+            title: kong-harnesses
+            description: |
+              kong-harnesses is Kong's OIDC credential helper that obtains short-lived access tokens for
+              coding agents such as Claude Code, Codex, OpenCode, and omp. It manages connection profiles,
+              signs in to an identity provider, and sets up the agent CLIs.
+            icon: /assets/icons/code.svg
+            cta:
+              text:
+              url: /kong-harnesses/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: decK
             description: |
               decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of

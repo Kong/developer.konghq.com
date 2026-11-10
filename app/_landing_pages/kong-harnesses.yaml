@@ -1,49 +1,34 @@
 metadata:
-  title: "{{site.kong_harnesses}}"
+  title: kong-harnesses
   content_type: landing_page
-  description: "This page is an introduction to {{site.kong_harnesses}}, Kong's command-line tool for TODO."
+  description: This page is an introduction to kong-harnesses, Kong's OIDC credential helper that obtains short-lived access tokens for coding agents.
   tools:
     - kong-harnesses
-  tags:
-    - cli
   breadcrumbs:
     - /tools/
-
 rows:
   - header:
       type: h1
-      text: "{{site.kong_harnesses}}"
+      text: "kong-harnesses"
       sub_text: |
-        TODO: One sentence that says what {{site.kong_harnesses}} is for.
+        Kong's OIDC credential helper for coding agents
 
   - header:
+      type: h2
+      text: What is kong-harnesses?
     columns:
-      - header:
-          type: h2
-          text: "What is {{site.kong_harnesses}}?"
-        blocks:
+      - blocks:
         - type: text
           config: |
-            TODO: Describe {{site.kong_harnesses}}.
-
-            {{site.kong_harnesses}} works with [{{site.ai_gateway}}](/ai-gateway/) and [AI Management](/ai-management/).
-
-      - header:
-          type: h2
-          text: "When should I use {{site.kong_harnesses}}?"
-        blocks:
-        - type: text
-          config: |
-            You should use {{site.kong_harnesses}} if one or more of the following is true:
-            - TODO: First reason
-            - TODO: Second reason
+            kong-harnesses obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
+            It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
 
   - columns:
     - blocks:
       - type: card
         config:
           title: Get started
-          description: Learn how to use {{site.kong_harnesses}} for the first time.
+          description: Learn how to use kong-harnesses for the first time.
           cta:
             text: Get started
             url: /kong-harnesses/get-started/
@@ -52,7 +37,7 @@ rows:
       - type: card
         config:
           title: Reference
-          description: "TODO: What the reader finds in this reference."
+          description: Look up kong-harnesses commands and options.
           cta:
             text: Read the reference
             url: /kong-harnesses/example-reference/
