@@ -6,7 +6,7 @@ import path from 'path';
 import { writeHelpTree, escapeLiquid } from '../../lib/tool-versions.js';
 
 function tempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'agent-auth-cli-help-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'kong-harnesses-help-'));
 }
 
 test('removes the existing includes directory before writing', () => {

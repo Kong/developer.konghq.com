@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { syncReleases } from '../../lib/tool-versions.js';
 
-const dataFile = 'app/_data/tools/agent-auth-cli.yml';
+const dataFile = 'app/_data/tools/kong-harnesses.yml';
 
 function fakeFetch(releases, { ok = true, status = 200, statusText = 'OK' } = {}) {
   const calls = [];
@@ -28,12 +28,12 @@ test('groups releases by major.minor series, keeping the highest patch and marki
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.deepEqual(
     writes.map((w) => w.content),
     [
-      'name: agent-auth-cli\n\nreleases:\n' +
+      'name: kong-harnesses\n\nreleases:\n' +
         '  - release: "0.4"\n' +
         '    version: "0.4.1"\n' +
         '    latest: true\n' +
@@ -50,10 +50,10 @@ test('fetches releases from the GitHub API for the configured repo', async () =>
   const { fetchImpl, calls } = fakeFetch([]);
   const { writeFile } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/agent-auth-cli/releases');
+  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kong-harnesses/releases');
 });
 
 test('sends an Authorization Bearer header built from GH_TOKEN when it is set', async () => {
@@ -61,9 +61,9 @@ test('sends an Authorization Bearer header built from GH_TOKEN when it is set', 
   const { writeFile } = fakeWriter();
 
   await syncReleases({
-    repo: 'Kong/agent-auth-cli',
+    repo: 'Kong/kong-harnesses',
     dataFile,
-    name: 'agent-auth-cli',
+    name: 'kong-harnesses',
     fetch: fetchImpl,
     writeFile,
     env: { GH_TOKEN: 'ghp_test-token' },
@@ -76,7 +76,7 @@ test('sends no Authorization header when GH_TOKEN is not set', async () => {
   const { fetchImpl, calls } = fakeFetch([]);
   const { writeFile } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile, env: {} });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} });
 
   assert.equal(calls[0].options.headers.Authorization, undefined);
 });
@@ -86,7 +86,7 @@ test('throws an error naming the token requirement when the request fails', asyn
   const { writeFile, writes } = fakeWriter();
 
   await assert.rejects(
-    syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile, env: {} }),
+    syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} }),
     /GH_TOKEN/,
   );
   assert.equal(writes.length, 0);
@@ -100,11 +100,11 @@ test('accepts releases tagged without a leading v', async () => {
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(
     writes[0].content,
-    'name: agent-auth-cli\n\nreleases:\n' +
+    'name: kong-harnesses\n\nreleases:\n' +
       '  - release: "0.5"\n' +
       '    version: "0.5.10"\n' +
       '    latest: true\n' +
@@ -118,9 +118,9 @@ test('derives the released date from published_at', async () => {
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
-  assert.equal(writes[0].content, 'name: agent-auth-cli\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
+  assert.equal(writes[0].content, 'name: kong-harnesses\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
 });
 
 test('consumes whatever the API returned without paginating', async () => {
@@ -133,7 +133,7 @@ test('consumes whatever the API returned without paginating', async () => {
   const { fetchImpl, calls } = fakeFetch(releases);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'Kong/agent-auth-cli', dataFile, name: 'agent-auth-cli', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(calls.length, 1);
   assert.ok(!calls[0].url.includes('?'), 'the sync must not request further pages');

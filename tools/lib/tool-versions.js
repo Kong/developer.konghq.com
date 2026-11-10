@@ -167,7 +167,7 @@ export async function syncReleases({
   if (!response.ok) {
     throw new Error(
       `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ` +
-        `${repo} is a private repository: set GH_TOKEN to a GitHub token with read access to it.`,
+        `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
     );
   }
 

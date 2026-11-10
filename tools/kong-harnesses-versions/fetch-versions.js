@@ -7,13 +7,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 (async () => {
   try {
     const series = await syncReleases({
-      repo: 'Kong/agent-auth-cli',
-      name: 'agent-auth-cli',
-      dataFile: path.resolve(__dirname, '../../app/_data/tools/agent-auth-cli.yml'),
+      repo: 'Kong/kong-harnesses',
+      name: 'kong-harnesses',
+      dataFile: path.resolve(__dirname, '../../app/_data/tools/kong-harnesses.yml'),
     });
 
     if (series.length > 0) {
-      console.log(`Updated agent-auth-cli versions (${series.length} releases)`);
+      console.log(`Updated kong-harnesses versions (${series.length} releases)`);
       console.log(`Latest version: ${series[0].version}`);
     }
   } catch (error) {

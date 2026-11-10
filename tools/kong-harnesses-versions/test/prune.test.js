@@ -5,10 +5,10 @@ import os from 'os';
 import path from 'path';
 import { pruneStalePages } from '../../lib/tool-versions.js';
 
-const includePattern = /{%\s*include_cached\s+agent-auth-cli\/help\/([^\s%]+)\s*%}/g;
+const includePattern = /{%\s*include_cached\s+kong-harnesses\/help\/([^\s%]+)\s*%}/g;
 
 function setupDirs() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agent-auth-cli-prune-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kong-harnesses-prune-'));
   const docsDir = path.join(root, 'docs');
   const includesDir = path.join(root, 'includes');
   fs.mkdirSync(docsDir, { recursive: true });
@@ -21,7 +21,7 @@ test('deletes a page whose include no longer exists', () => {
   const { docsDir, includesDir } = setupDirs();
   fs.writeFileSync(
     path.join(docsDir, 'doctor.md'),
-    'Doctor page\n\n{% include_cached agent-auth-cli/help/doctor/index.md %}\n',
+    'Doctor page\n\n{% include_cached kong-harnesses/help/doctor/index.md %}\n',
     'utf8',
   );
 
@@ -35,7 +35,7 @@ test('keeps a page whose includes all exist', () => {
   const { docsDir, includesDir } = setupDirs();
   fs.writeFileSync(
     path.join(docsDir, 'token.md'),
-    'Token page\n\n{% include_cached agent-auth-cli/help/token/index.md %}\n',
+    'Token page\n\n{% include_cached kong-harnesses/help/token/index.md %}\n',
     'utf8',
   );
 
@@ -60,7 +60,7 @@ test('removes a directory left empty by pruning', () => {
   fs.mkdirSync(path.join(docsDir, 'profile'), { recursive: true });
   fs.writeFileSync(
     path.join(docsDir, 'profile', 'create.md'),
-    'Profile page\n\n{% include_cached agent-auth-cli/help/profile/create.md %}\n',
+    'Profile page\n\n{% include_cached kong-harnesses/help/profile/create.md %}\n',
     'utf8',
   );
 
