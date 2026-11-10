@@ -260,7 +260,7 @@ rows:
       references it directly by its immutable `name` in the listener's
       [`sources`](#schema-aigateway-mcpserver-sources) field. This mode must be used together with one or
       more AI MCP Servers configured with `listener` mode. Set [`config.route`](#schema-aigateway-mcpserver-config-route)
-      and use relative tool paths; see [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
+      and use relative tool paths. See [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers) for more information.
     mode: "`conversion-only`"
   - usecase: |
       A single MCP endpoint that aggregates tools from multiple `conversion-only` or
@@ -272,7 +272,7 @@ rows:
       `upstream-server` MCP Servers instead of defining its own. List the immutable `name` of each
       source MCP Server in the listener's [`sources`](#schema-aigateway-mcpserver-sources) field.
       Merges all matching tools into one list and routes each tool call to the correct backend.
-      A `conversion-only` source must set `config.route` and use relative tool paths; see
+      A `conversion-only` source must set `config.route` and use relative tool paths. See
       [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
     mode: "`listener`"
   - usecase: |
@@ -352,7 +352,7 @@ You can use a `listener` AI MCP Server to pull tools from multiple `upstream-ser
 
 ### How aggregation works
 
-1. **Sources connect upstreams to listeners**: Set the listener's top-level [`sources`](#schema-aigateway-mcpserver-sources) field to the immutable `name` of each `upstream-server` (or `conversion-only`) AI MCP Server whose tools it should expose (for example, `sources: [weather-service, catalog-service]`). Every AI MCP Server named in `sources` gets pulled into the aggregation. A `conversion-only` source must set `config.route` and define its tool paths without a leading `/`; see [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
+1. **Sources connect upstreams to listeners**: Set the listener's top-level [`sources`](#schema-aigateway-mcpserver-sources) field to the immutable `name` of each `upstream-server` (or `conversion-only`) AI MCP Server whose tools it should expose (for example, `sources: [weather-service, catalog-service]`). Every AI MCP Server named in `sources` gets pulled into the aggregation. A `conversion-only` source must set `config.route` and define its tool paths without a leading `/`. For more information, see [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
 
 2. **Tool discovery**: When an MCP client calls `tools/list`, the listener fetches tool lists from every matching upstream. If an upstream requires authentication, configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) with OAuth2 credentials so the listener can fetch its tools.
 

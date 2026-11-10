@@ -60,7 +60,7 @@ cleanup:
 
 Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity in `conversion-only` mode for the [Deck of Cards API](https://deckofcardsapi.com/), which needs no credentials. 
 
-The `conversion-only` server sets `config.route`, and each tool `path` is relative, with no leading `/`. The listener sends each tool call through the route of the `conversion-only` server plus the tool `path`. A tool `path` that starts with `/` is used as it is, and the tool call fails with `no Route matched` unless the path matches a route. For details, see [Tool paths in conversion-only servers](/ai-gateway/entities/ai-mcp-server/#tool-paths-in-conversion-only-servers).
+The `conversion-only` server sets `config.route`, and each tool `path` is relative, with no leading `/`. The listener sends each tool call through the route of the `conversion-only` server plus the tool `path`. A tool `path` that starts with `/` is used as-is, and the tool call fails with `no Route matched` unless the path matches a route. For details, see [Tool paths in conversion-only servers](/ai-gateway/entities/ai-mcp-server/#tool-paths-in-conversion-only-servers).
 
 {% entity_examples %}
 ai_gateway_mcp_servers:
