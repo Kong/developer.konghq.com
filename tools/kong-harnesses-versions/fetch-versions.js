@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const series = await syncReleases({
       repo: 'Kong/kong-harnesses',
       name: 'kong-harnesses',
+      internalRepo: true,
       dataFile: path.resolve(__dirname, '../../app/_data/tools/kong-harnesses.yml'),
     });
 

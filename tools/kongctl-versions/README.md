@@ -30,7 +30,7 @@ Both scripts are thin entry points over the shared library in `tools/lib/tool-ve
 npm test
 ```
 
-The tests in `test/` cover the shared command-tree builder (depth-2 recursion, usage scoping, skipping hidden and deprecated commands) with a mocked `exec`, without the binary or the network.
+The tests in `test/` cover the shared command-tree builder (depth-2 recursion, usage scoping, skipping hidden and deprecated commands) and the release sync (series grouping, the 10-series limit, and the failure message) with a mocked `exec` and `fetch`, without the binary or the network.
 
 ## Equivalence proof for sync-logic changes
 
@@ -44,6 +44,7 @@ When changing the sync logic (the entry points or `tools/lib/tool-versions.js`),
    cp -R ../../app/_includes/kongctl/help /tmp/kongctl-sync-snapshot/help
    cp ../../app/_data/tools/kongctl.yml /tmp/kongctl-sync-snapshot/kongctl.yml
    git restore ../../app/_includes/kongctl/help ../../app/_data/tools/kongctl.yml ../../app/kongctl
+   git clean -fd ../../app/_includes/kongctl
    ```
 
    Run both fetches back-to-back so the GitHub API can't move between them.
@@ -58,6 +59,6 @@ When changing the sync logic (the entry points or `tools/lib/tool-versions.js`),
 
    The help includes must be byte-identical. The yml may differ only in extra older series rows (`syncReleases` keeps up to 10 series); the `latest` entry must be unchanged.
 
-3. `git restore` the generated files so the commit contains only the code change.
+3. `git restore` and `git clean` the generated files (the local binary can add include files that `git restore` alone leaves behind) so the commit contains only the code change, then confirm with `git status --short`.
 
-The node:test suite locks the structure (three-level nesting, usage-scoped help, ansi fences) so the equivalence is regression-checked in CI, not just proven once.
+The node:test suite locks the structure (three-level nesting, usage-scoped help, ansi fences) so the equivalence is regression-checked every time the suite runs, not just proven once. (`make test` runs only the RSpec suite, so run `npm test` in this directory explicitly.)

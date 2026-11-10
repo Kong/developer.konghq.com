@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildCobraCommandTree, extractCobraHelp } from '../../lib/tool-versions.js';
+import { buildCommandTree } from '../extract-help.js';
 
 const topHelp = `Longer help to show usage of this application.
 
@@ -162,4 +163,20 @@ test('skips help, completion, version, and deprecated commands at every level', 
   assert.equal(calls.some((command) => command.includes('completion')), false);
   assert.equal(calls.some((command) => / help /.test(command) || command.endsWith(' help --help')), false);
   assert.equal(calls.some((command) => command.includes('version')), false);
+});
+
+test('the entry point wires the builder to usage-scoped help and depth-2 recursion', async () => {
+  const { exec } = fakeExec(outputs());
+
+  const tree = await buildCommandTree({ exec });
+
+  // helpFromStdout is extractCobraHelp: the usage-scoped section only.
+  assert.deepEqual(tree.map((node) => node.name), ['get']);
+  assert.equal(tree[0].help.startsWith('Usage:'), true);
+  assert.equal(tree[0].help.includes('Display one or many Kong resources.'), false);
+
+  // maxDepth is 2: sub-subcommands are populated, and recursion stops there.
+  const aiGateway = tree[0].subcommands.find((node) => node.name === 'ai-gateway');
+  assert.deepEqual(aiGateway.subcommands.map((node) => node.name), ['agents']);
+  assert.equal(aiGateway.subcommands[0].subcommands, undefined);
 });

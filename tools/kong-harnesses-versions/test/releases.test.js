@@ -86,8 +86,17 @@ test('throws an error naming the token requirement when the request fails', asyn
   const { writeFile, writes } = fakeWriter();
 
   await assert.rejects(
-    syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} }),
-    /GH_TOKEN/,
+    syncReleases({
+      repo: 'Kong/kong-harnesses',
+      dataFile,
+      name: 'kong-harnesses',
+      internalRepo: true,
+      fetch: fetchImpl,
+      writeFile,
+      env: {},
+    }),
+    (error) =>
+      /GH_TOKEN/.test(error.message) && /internal repository/.test(error.message),
   );
   assert.equal(writes.length, 0);
 });
