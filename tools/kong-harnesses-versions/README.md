@@ -2,9 +2,9 @@
 
 Manually syncs the kong-harnesses documentation on developer.konghq.com with the installed binary and its GitHub releases.
 
-## Runbook
+## How to run the sync
 
-Run the sync in this order:
+Run the steps in this order:
 
 1. Upgrade the CLI first so the extracted help matches the latest release:
 
