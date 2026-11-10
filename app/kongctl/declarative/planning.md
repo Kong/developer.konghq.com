@@ -129,6 +129,9 @@ deleted data or secret material that {{site.konnect_short_name}} does not return
 | Establish ownership of existing resources | `kongctl adopt --help` |
 | Export current state | `kongctl dump declarative --help` |
 
+See [Adopt existing resources](/kongctl/declarative/adoption/) for ownership
+previews and exporting selected resources into declarative inputs.
+
 Use `kongctl <command> --help` for flags and supported resource types.
 `kongctl plan` writes executable JSON; redacted diff output is for review. For
 updates, text diff shows changed fields. JSON and YAML diff expose those changes

@@ -135,6 +135,11 @@ remote files.
 
 Set namespaces, defaults, protection, and ownership guardrails.
 
+### [Adopt existing resources](/kongctl/declarative/adoption/)
+
+Preview adoption, select existing children, and save declarations for your
+configuration workflow.
+
 ### [Planning, reviewing, and executing changes](/kongctl/declarative/planning/)
 
 Choose commands, review saved plans, and understand execution and recovery.

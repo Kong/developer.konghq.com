@@ -28,6 +28,10 @@ resources store this metadata in {{site.konnect_short_name}} labels. Participati
 under a gateway. Other children follow their parent's lifecycle. Confirm support
 for each resource with `kongctl explain`.
 
+To assign ownership to existing resources and save their configuration, see
+[Adopt existing resources](/kongctl/declarative/adoption/). Parent adoption
+doesn't adopt independently owned children.
+
 ## Protected resources
 
 The `protected` field prevents accidental deletion of critical resources:
