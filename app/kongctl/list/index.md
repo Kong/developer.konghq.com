@@ -56,6 +56,9 @@ rows:
       [kongctl list gateway](/kongctl/list/gateway/)
     description: "List gateways."
   - command: |
+      [kongctl list identity](/kongctl/list/identity/)
+    description: "List Kong Identity resources."
+  - command: |
       [kongctl list konnect](/kongctl/list/konnect/)
     description: "List {{site.konnect_short_name}} resources."
   - command: |
