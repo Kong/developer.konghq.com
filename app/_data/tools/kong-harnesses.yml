@@ -1,2 +1,34 @@
 name: kong-harnesses
-icon: /assets/icons/code.svg
+
+releases:
+  - release: "0.11"
+    version: "0.11.0"
+    latest: true
+    released: 2026-11-09
+  - release: "0.10"
+    version: "0.10.0"
+    released: 2026-11-09
+  - release: "0.9"
+    version: "0.9.0"
+    released: 2026-11-06
+  - release: "0.8"
+    version: "0.8.1"
+    released: 2026-11-04
+  - release: "0.7"
+    version: "0.7.0"
+    released: 2026-10-28
+  - release: "0.6"
+    version: "0.6.0"
+    released: 2026-10-26
+  - release: "0.5"
+    version: "0.5.2"
+    released: 2026-10-06
+  - release: "0.4"
+    version: "0.4.0"
+    released: 2026-09-17
+  - release: "0.3"
+    version: "0.3.0"
+    released: 2026-09-17
+  - release: "0.2"
+    version: "0.2.0"
+    released: 2026-09-11

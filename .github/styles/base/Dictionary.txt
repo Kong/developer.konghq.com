@@ -800,6 +800,8 @@ straiker
 start_cmd
 statsd
 status_code
+statusLine
+statusline
 stderr
 stdin
 stdout

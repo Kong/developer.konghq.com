@@ -1,0 +1,14 @@
+{
+  "name": "kong-harnesses-versions",
+  "version": "1.0.0",
+  "description": "Automation to sync kong-harnesses versions and help text",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "extract-help": "node extract-help.js",
+    "fetch-versions": "node fetch-versions.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

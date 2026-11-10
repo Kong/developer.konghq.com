@@ -1,0 +1,282 @@
+import fs from 'fs';
+import path from 'path';
+
+export function escapeLiquid(text) {
+  return text.replace(/\$\{\{[^}]*\}\}/g, '{% raw %}$&{% endraw %}');
+}
+
+export function writeHelpTree({ tree, includesDir, fence }) {
+  const closingFence = fence.match(/^`+/)?.[0] ?? fence;
+
+  fs.rmSync(includesDir, { recursive: true, force: true });
+  fs.mkdirSync(includesDir, { recursive: true });
+
+  for (const command of tree) {
+    // Top-level commands always get a directory with an index.md, as before.
+    const commandDir = path.join(includesDir, command.name);
+    fs.mkdirSync(commandDir, { recursive: true });
+    writeHelpFile(path.join(commandDir, 'index.md'), command.help, fence, closingFence);
+    console.log(`Wrote help for '${command.name}' to ${command.name}/index.md`);
+
+    writeSubcommands({ nodes: command.subcommands ?? [], dir: commandDir, prefix: [command.name], fence, closingFence });
+  }
+}
+
+function writeSubcommands({ nodes, dir, prefix, fence, closingFence }) {
+  for (const node of nodes) {
+    const label = `${prefix.join(' ')} ${node.name}`;
+    const hasChildren = (node.subcommands ?? []).length > 0;
+
+    if (!hasChildren) {
+      // Leaf: a flat named file next to its parent's index.md.
+      writeHelpFile(path.join(dir, `${node.name}.md`), node.help, fence, closingFence);
+      console.log(`Wrote help for '${label}' to ${[...prefix, `${node.name}.md`].join('/')}`);
+      continue;
+    }
+
+    // Node with children: its own directory with an index.md, then recurse.
+    const nodeDir = path.join(dir, node.name);
+    fs.mkdirSync(nodeDir, { recursive: true });
+    writeHelpFile(path.join(nodeDir, 'index.md'), node.help, fence, closingFence);
+    console.log(`Wrote help for '${label}' to ${[...prefix, node.name, 'index.md'].join('/')}`);
+
+    writeSubcommands({ nodes: node.subcommands, dir: nodeDir, prefix: [...prefix, node.name], fence, closingFence });
+  }
+}
+
+function writeHelpFile(filePath, help, fence, closingFence) {
+  fs.writeFileSync(filePath, `${fence}\n${escapeLiquid(help)}\n${closingFence}`, 'utf8');
+}
+
+export function pruneStalePages({ docsDir, includesDir, includePattern }) {
+  if (!fs.existsSync(docsDir)) {
+    return 0;
+  }
+
+  const docs = listFilesRecursive(docsDir).filter((filePath) => filePath.endsWith('.md'));
+  let removedPages = 0;
+
+  for (const docPath of docs) {
+    const content = fs.readFileSync(docPath, 'utf8');
+    const includeMatches = [...content.matchAll(includePattern)];
+
+    if (includeMatches.length === 0) {
+      continue;
+    }
+
+    const hasMissingInclude = includeMatches.some(
+      (match) => !fs.existsSync(path.resolve(includesDir, match[1])),
+    );
+
+    if (hasMissingInclude) {
+      fs.unlinkSync(docPath);
+      removedPages += 1;
+      console.log(`Removed stale page: ${docPath}`);
+    }
+  }
+
+  pruneEmptyDirectories(docsDir);
+  return removedPages;
+}
+
+function listFilesRecursive(rootDir) {
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursive(entryPath));
+    } else if (entry.isFile()) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
+function pruneEmptyDirectories(rootDir, currentDir = rootDir) {
+  const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    pruneEmptyDirectories(rootDir, path.join(currentDir, entry.name));
+  }
+
+  if (currentDir === rootDir) {
+    return;
+  }
+
+  if (fs.readdirSync(currentDir).length === 0) {
+    fs.rmdirSync(currentDir);
+  }
+}
+
+export function extractCobraCommands(stdout) {
+  const availableCommands = [];
+  const lines = stdout.split('\n');
+  let inCommandsSection = false;
+
+  for (const line of lines) {
+    if (line.startsWith('Available Commands:')) {
+      inCommandsSection = true;
+      continue;
+    }
+
+    if (inCommandsSection) {
+      if (line.trim() === '' || line.startsWith('Flags:')) {
+        break;
+      }
+
+      if (!line.includes('[deprecated]')) {
+        const command = line.trim().split(/\s+/)[0];
+        if (['help', 'completion', 'version'].includes(command)) {
+          continue;
+        }
+        availableCommands.push(command);
+      }
+    }
+  }
+
+  return availableCommands;
+}
+
+export function extractCobraHelp(stdout) {
+  const help = [];
+  const lines = stdout.split('\n');
+
+  let isInFlags = false;
+  for (const line of lines) {
+    if (line.startsWith('Global Flags:')) {
+      break;
+    }
+
+    if (line.startsWith("Usage:")) {
+      isInFlags = true;
+    }
+
+    if (isInFlags) {
+      help.push(line);
+    }
+  }
+
+  return help.join("\n");
+}
+
+export async function buildCobraCommandTree({
+  exec,
+  command,
+  maxDepth,
+  helpFromStdout = (stdout) => stdout.trimEnd(),
+}) {
+  const { stdout: topHelp } = await exec(`${command} --help`);
+
+  const tree = [];
+  for (const name of extractCobraCommands(topHelp)) {
+    tree.push(await buildNode([], name));
+  }
+  return tree;
+
+  async function buildNode(prefix, name) {
+    const { stdout } = await exec(`${[command, ...prefix, name].join(' ')} --help`);
+    const node = { name, help: helpFromStdout(stdout) };
+
+    if (prefix.length < maxDepth) {
+      const children = extractCobraCommands(stdout);
+      if (children.length > 0) {
+        node.subcommands = [];
+        for (const child of children) {
+          node.subcommands.push(await buildNode([...prefix, name], child));
+        }
+      }
+    }
+
+    return node;
+  }
+}
+
+export async function syncReleases({
+  repo,
+  dataFile,
+  name,
+  internalRepo = false,
+  fetch = globalThis.fetch,
+  writeFile = (filePath, content) => fs.writeFileSync(filePath, content, 'utf8'),
+  env = process.env,
+}) {
+  const headers = { Accept: 'application/vnd.github+json' };
+  if (env.GH_TOKEN) {
+    headers.Authorization = `Bearer ${env.GH_TOKEN}`;
+  }
+
+  const response = await fetch(`https://api.github.com/repos/${repo}/releases`, { headers });
+
+  if (!response.ok) {
+    const tokenHint = internalRepo
+      ? `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`
+      : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
+    throw new Error(
+      `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
+    );
+  }
+
+  const releases = await response.json();
+
+  const validReleases = releases
+    .filter((release) => !release.draft && !release.prerelease)
+    .map((release) => ({
+      version: release.tag_name.replace(/^v/, ''),
+      released: release.published_at.split('T')[0],
+    }));
+
+  if (validReleases.length === 0) {
+    console.warn('No valid releases found');
+    return [];
+  }
+
+  const releasesBySeries = {};
+  for (const release of validReleases) {
+    const [major, minor] = release.version.split('.');
+    const series = `${major}.${minor}`;
+    if (!releasesBySeries[series] || compareVersions(release.version, releasesBySeries[series].version) > 0) {
+      releasesBySeries[series] = release;
+    }
+  }
+
+  const seriesList = Object.entries(releasesBySeries)
+    .map(([series, release]) => ({ release: series, ...release }))
+    .sort((a, b) => compareVersions(b.version, a.version))
+    .slice(0, 10);
+
+  seriesList[0].latest = true;
+
+  let yamlContent = `name: ${name}\n\nreleases:\n`;
+  for (const release of seriesList) {
+    yamlContent += `  - release: "${release.release}"\n`;
+    yamlContent += `    version: "${release.version}"\n`;
+    if (release.latest) {
+      yamlContent += `    latest: true\n`;
+    }
+    yamlContent += `    released: ${release.released}\n`;
+  }
+
+  writeFile(dataFile, yamlContent);
+  return seriesList;
+}
+
+function compareVersions(a, b) {
+  const aParts = a.split('.').map(Number);
+  const bParts = b.split('.').map(Number);
+
+  for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+    const aNum = aParts[i] || 0;
+    const bNum = bParts[i] || 0;
+
+    if (aNum > bNum) return 1;
+    if (aNum < bNum) return -1;
+  }
+
+  return 0;
+}
