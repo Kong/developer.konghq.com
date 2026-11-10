@@ -19,7 +19,11 @@ function toArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
-export async function resolveUrlsToTest(args, config, { repoRoot } = {}) {
+export async function resolveUrlsToTest(
+  args,
+  config,
+  { repoRoot, imageTag, eventGatewayMinVersion } = {},
+) {
   if (args.urls && args.product) {
     throw new Error("Pass either --urls or --product, not both.");
   }
@@ -31,10 +35,12 @@ export async function resolveUrlsToTest(args, config, { repoRoot } = {}) {
     };
   }
 
+  const versionInputs = { imageTag, eventGatewayMinVersion };
+
   if (args.product) {
     const { files } = collectHowToFiles(args.product, { repoRoot });
     return {
-      urlsToTest: await testeableUrlsFromFiles(config, files),
+      urlsToTest: await testeableUrlsFromFiles(config, files, versionInputs),
       // Scanning a whole product routinely hits non-first series pages;
       // log and skip them instead of aborting the rest of the batch.
       haltOnSeriesError: false,
@@ -48,6 +54,7 @@ export async function resolveUrlsToTest(args, config, { repoRoot } = {}) {
   return {
     urlsToTest: await testeableUrlsFromFiles(config, howToFiles, {
       explicit: !!args.files,
+      ...versionInputs,
     }),
     haltOnSeriesError: true,
   };

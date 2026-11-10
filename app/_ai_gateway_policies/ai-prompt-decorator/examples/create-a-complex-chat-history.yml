@@ -1,0 +1,30 @@
+title: 'Create a complex chat history'
+
+description: 'Creates a detailed chat history by configuring the policy to prepend and append multiple messages, allowing any user to continue the conversation.'
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+
+name: create-a-complex-chat-history
+display_name: Create a complex chat history
+type: ai-prompt-decorator
+
+config:
+  prompts:
+    prepend:
+    - role: system
+      content: You are data scientist, specialising in survey analytics.
+    - role: user
+      content: Classify this test result set as positive, negative, or neutral.
+    - role: assistant
+      content: These tests are NEUTRAL.
+    append:
+    - role: user
+      content: Do not mention any real participant names in your justification.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

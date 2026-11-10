@@ -5,6 +5,7 @@ metadata:
   products:
     - ai-gateway
   works_on:
+    - on-prem
     - konnect
   min_version:
     ai-gateway: '2.0'
@@ -73,16 +74,8 @@ rows:
             - title: Konnect UI
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
-                then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
-            - title: On-Prem
-              content: |
-                See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/).
-
-                If you're migrating from an existing on-prem deployment, follow the [migration guide](/ai-gateway/on-prem-migration/).
-  - header:
-      type: h3
-      text: Use case quickstart
-    columns:
+                select the AI view, then navigate to **Gateways** and click **New AI gateway**.
+  - columns:
       - blocks:
         - type: card
           config:
@@ -550,6 +543,15 @@ rows:
               cta:
                 text: View FIPS 140-3 compliance
                 url: /ai-gateway/fips-support/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Data plane version compatibility
+              description: Learn how the minimum supported data plane version controls which data planes and features work with your {{site.ai_gateway}} control plane.
+              cta:
+                text: View data plane version compatibility
+                url: /ai-gateway/data-plane-version-compatibility/
                 align: end
 
   - header:

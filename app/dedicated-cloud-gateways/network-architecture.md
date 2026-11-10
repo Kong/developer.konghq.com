@@ -66,9 +66,9 @@ The following diagram shows what the Kong-managed architecture looks like if you
 flowchart LR
     subgraph kong_account["Kong-managed AWS infra"]
         subgraph kong_vpc["Kong-managed VPC"]
-          dp1["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
-          dp2["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
-          dp3["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
+          dp1["fa:fa-gateway Data plane node"]
+          dp2["fa:fa-gateway Data plane node"]
+          dp3["fa:fa-gateway Data plane node"]
         end
     end
 

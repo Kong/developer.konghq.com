@@ -7,7 +7,8 @@
 import "~/stylesheets/index.css";
 
 import { datadogRum } from "@datadog/browser-rum";
-import mermaid from "mermaid";
+import { mountAsync } from "pele/lazy";
+import icons from "@/javascripts/diagram-icons";
 import Dropdowns from "@/javascripts/components/dropdown";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
@@ -56,30 +57,38 @@ document.addEventListener("DOMContentLoaded", function () {
 //   });
 // }
 
-mermaid.initialize({
-  startOnLoad: true,
-  theme: "base",
-  themeVariables: {
-    primaryColor: "#fff",
-    primaryBorderColor: "rgb(var(--color-icon-primary))",
-    primaryTextColor: "#495c64",
-    secondaryColor: "#fff",
-    secondaryTextColor: "#5096f2",
-    tertiaryBorderColor: "#AAB4BB",
-    edgeLabelBackground: "#fff",
-    fontFamily: '"Inter", system-ui, sans-serif',
-    fontSize: "15px",
-    lineColor: "#99b0c0",
-    activationBorderColor: "#c2d4e0",
-    sequenceNumberColor: "#fff",
-  },
-});
+function resolveDiagramIcon(token) {
+  const name = token.replace(/^fa[bklrs]?:fa-/, "");
+  return icons[name] ?? null;
+}
+
+async function mountDiagrams() {
+  const diagrams = [...document.querySelectorAll("pre.mermaid")];
+
+  await Promise.all(
+    diagrams.map(async (el) => {
+      const source = el.textContent.trim();
+
+      try {
+        await mountAsync(el, source, {
+          zoom: true,
+          icons: resolveDiagramIcon,
+        });
+      } catch (error) {
+        console.error("Failed to render diagram:", error);
+        if (!el.firstChild) el.textContent = source;
+      }
+    }),
+  );
+}
+
+mountDiagrams();
 
 window.addEventListener("load", () => {
   const hash = window.location.hash;
   if (hash && !document.getElementById("api-spec")) {
     const escapedHash = CSS.escape(hash.slice(1));
-    // Give time for collapsibles to expand/mermaid to render
+    // Give time for collapsibles to expand/diagrams to render
     setTimeout(() => {
       const el = document.querySelector(`#${escapedHash}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });

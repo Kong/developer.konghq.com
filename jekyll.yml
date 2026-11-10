@@ -145,6 +145,11 @@ ai_gateway_policies:
       - premium_partner
       - support_url
 
+aigw_onprem_plugin_reference:
+  - ai-proxy-advanced
+  - ai-mcp-proxy
+  - ai-a2a-proxy
+
 insomnia_run: https://insomnia.rest/run/
 
 # product name vars
@@ -173,6 +178,8 @@ observability: Observability
 dev_portal: Dev Portal
 identity: Kong Identity
 insomnia: Insomnia
+ai_cost_management: AI Cost Management
+
 # Company names
 openai: OpenAI
 anthropic: Anthropic

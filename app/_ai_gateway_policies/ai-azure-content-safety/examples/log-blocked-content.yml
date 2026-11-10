@@ -1,0 +1,41 @@
+description: |
+  Configure the AI Azure Content Safety policy to log the raw content of blocked requests and responses.
+  When a request or response is blocked, the original prompt or response body is captured in the
+  log entry under `ai.proxy.azure-content-safety.input_faulty_prompt` and
+  `ai.proxy.azure-content-safety.output_faulty_response`.
+
+title: Log blocked request and response content
+
+weight: 800
+
+requirements:
+  - An Azure subscription and access to Azure AI Content Safety.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
+
+variables:
+  content_safety_url:
+    value: $CONTENT_SAFETY_URL
+    description: The full URL of the Azure AI Content Safety instance.
+  content_safety_key:
+    value: $CONTENT_SAFETY_KEY
+    description: The API key to access the Azure AI Content Safety instance.
+
+name: azure-content-safety-log-blocked-content
+display_name: Log blocked request and response content
+type: ai-azure-content-safety
+
+config:
+  content_safety_url: ${content_safety_url}
+  content_safety_key: ${content_safety_key}
+  categories:
+    - name: Hate
+      rejection_level: 2
+    - name: Violence
+      rejection_level: 2
+  log_blocked_content: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

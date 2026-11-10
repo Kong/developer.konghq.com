@@ -8,6 +8,9 @@ method: POST
 body:
   display_name: "example-principal"
   description: "Example principal"
+extract_body:
+  - name: 'id'
+    variable: PRINCIPAL_ID
 capture:
   - variable: PRINCIPAL_ID
     jq: ".id"

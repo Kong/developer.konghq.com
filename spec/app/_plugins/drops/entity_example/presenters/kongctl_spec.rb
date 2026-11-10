@@ -136,3 +136,40 @@ RSpec.describe Jekyll::Drops::EntityExample::Presenters::Kongctl::EventGatewayPo
     end
   end
 end
+
+RSpec.describe Jekyll::Drops::EntityExample::Presenters::Kongctl::AIGatewayPolicy do
+  let(:example_drop) { double('example_drop') }
+  let(:formats) do
+    {
+      'kongctl' => {
+        'ai_gateway_variables' => {
+          'ai_gateway' => { 'placeholder' => 'AI_GATEWAY_ID', 'description' => 'The `id` of your AI Gateway.' }
+        }
+      }
+    }
+  end
+
+  subject(:presenter) { described_class.new(example_drop:) }
+
+  before { allow(presenter).to receive(:formats).and_return(formats) }
+
+  describe '#missing_variables' do
+    before do
+      allow(example_drop).to receive(:product).and_return('ai-gateway')
+      allow(example_drop).to receive(:variables).and_return(
+        'guardrails_id' => { 'value' => '$GUARDRAILS_ID', 'description' => 'The guardrail identifier.' },
+        'aws_region' => { 'value' => '$AWS_REGION', 'description' => 'The AWS region.' }
+      )
+    end
+
+    it 'lists only the AI Gateway placeholder' do
+      expect(presenter.missing_variables.map { |variable| variable['placeholder'] }).to eq(['AI_GATEWAY_ID'])
+    end
+
+    it 'does not repeat the declared variables shown in the Environment variables section' do
+      placeholders = presenter.missing_variables.map { |variable| variable['placeholder'] }
+
+      expect(placeholders).not_to include('!env GUARDRAILS_ID', '!env AWS_REGION')
+    end
+  end
+end

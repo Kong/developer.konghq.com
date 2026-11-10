@@ -19,11 +19,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "client_cert_fingerprint_header_name": {
-          "type": "string",
-          "description": "Define the HTTP header name used for the SHA1 fingerprint of the client certificate.",
-          "default": "X-Client-Cert-Fingerprint"
-        },
         "inject_client_cert_details": {
           "type": "boolean",
           "description": "Enables TLS client certificate metadata values to be injected into HTTP headers.",
@@ -48,6 +43,11 @@
           "type": "string",
           "description": "Define the HTTP header name used for the subject DN of the client certificate.",
           "default": "X-Client-Cert-Subject-DN"
+        },
+        "client_cert_fingerprint_header_name": {
+          "type": "string",
+          "description": "Define the HTTP header name used for the SHA1 fingerprint of the client certificate.",
+          "default": "X-Client-Cert-Fingerprint"
         }
       }
     },

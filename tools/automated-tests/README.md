@@ -22,7 +22,7 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 
 The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
 
-The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`).
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`).
 
 Each product can define:
 
@@ -68,9 +68,9 @@ konnect:
 
 The script will iterate over the list of `how-tos`, check if it needs to generate instruction files for that file, by testing the following conditions:
 
-* The frontmatter doesn't include `automated_tests: false`.
+* The front matter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
+* One of `gateway`, `ai-gateway`, `event-gateway`, or `operator` is set as `products` in the front matter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
@@ -81,6 +81,10 @@ Next, it spins up a headless browser and visits the corresponding URL for each `
 * **Steps**: pulls the value of all the elements with the `data-test-step` attribute. These represent both the steps the test needs to execute and `validations` that act as the assertions.
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
   * `data-test-step=json`: When the value is a json object, it represents the configuration of a `validation` step, which the test will treat as an assertion.
+
+For products configured with `extractInstructionsAs: block` in `config/tests.yaml` (`kic`), every `data-test-step` element, including rendered validation blocks, is copied as a plain bash command instead of a JSON assertion. A block fence can also carry `data-test-retry-count`: the extracted command becomes a structured step that the runner repeats with exponential backoff (5s initial delay doubling per attempt, capped at 30s), so readers see a single command while the test waits out asynchronous provisioning.
+
+How-to series are extracted as one instruction file: the extractor starts at the series' first page and follows the `data-test-series-next` links, appending every continuation page's steps in series order. Continuation pages therefore carry their own step markers but no instruction file of their own.
 
 After extracting the information, it generates an instruction file at `<url-path>/<deployment-model>/<product>.yaml` (e.g. `how-to/my-guide/on-prem/gateway.yaml`, `how-to/my-guide/konnect/gateway.yaml`) and stores them in `instructionsDir`.
 
@@ -94,7 +98,9 @@ From the root of the repo run:
 
 By default, it will iterate over all the how-tos, but it also supports generating instruction files for a subset of how-tos by passing their urls, i.e.
 
-`npm run generate-instruction-files -- --urls='http://localhost:8888/how-to/x/' --urls='http://localhost:8888/how-to/y/'`
+`npm run generate-instruction-files -- --urls="${BASE_URL:-http://localhost:8888}/how-to/x/" --urls="${BASE_URL:-http://localhost:8888}/how-to/y/"`
+
+`BASE_URL` is only needed when the dev server is not at `http://localhost:8888` (a worktree claims its own port offset automatically; the resolved entry URL is in `tmp/dev-url`). Only `--urls` values are used as given: `--files` and `--product` prefix the resolved dev-server target.
 
 or by passing the corresponding files, i.e.
 
@@ -104,9 +110,11 @@ or by scoping to a single product, i.e.
 
 `npm run generate-instruction-files -- --product=ai-gateway`
 
-This collects the how-to files under `app/_how-tos/<product>` (via `collect-how-to-files.mjs`), skipping any version snapshot folder (e.g. `v1/`), which holds a frozen snapshot of a previous major. The collected files then go through the same testability filtering as the full scan, so a how-to is skipped if it sets `automated_tests: false` or `published: false`, contains `@todo`, or is a non-first page of a series. Each skipped file gets a `Skipping file` log line with the reason, and a row in the skip manifest that the test report reads. A how-to with no `permalink` is tested through its derived URL.
+This collects the how-to files under `app/_how-tos/<product>` (via `collect-how-to-files.mjs`), skipping any version snapshot folder (e.g. `v1/`), which holds a frozen snapshot of a previous major. The collected files then go through the same testability filtering as the full scan, so a how-to is skipped if it sets `automated_tests: false` or `published: false`, contains `@todo`, or is a non-first page of a series. Event-gateway how-tos can also be skipped for their minimum version: when the run's Event Gateway version under test — the minimum of the numeric values among `KONG_IMAGE_TAG` and `KONNECT_EVENT_GATEWAY_MIN_VERSION` — is older than a guide's `min_version` for `event-gateway`, the guide is skipped with a `min-version` reason (e.g. `Requires Event Gateway >= 1.3, generating for 1.1`). Unset or non-numeric inputs (`latest`, `next`) never gate, so scheduled runs with empty inputs generate everything. Each skipped file gets a `Skipping file` log line with the reason, and a row in the skip manifest that the test report reads. A how-to with no `permalink` is tested through its derived URL.
 
-The base URL always comes from `baseUrl` in `config/tests.yaml`. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+Generation never prunes `instructionsDir`: a guide the min-version gate skips (say, in a local `KONG_IMAGE_TAG=1.1` generation) keeps the instruction file a previous `latest` generation wrote, and Stage 2 keeps running it. CI is unaffected (`input/` is gitignored and regenerated on every run); locally, delete `input/instructions/` first when re-targeting an older version.
+
+The run scrapes the dev site selected by `BASE_URL` when it is set, otherwise `baseUrl` in `config/tests.yaml` (unchanged default: `http://localhost:8888`). It prints the resolved target before visiting the first page, and exits with an error if the selected value is not an absolute `http`/`https` URL. Only `--urls` bypasses the resolved target; its values are used exactly as given. `--urls` and `--product` are mutually exclusive; passing both raises an error.
 
 ### Unit tests for the tooling
 
@@ -122,12 +130,13 @@ they never read `app/_how-tos`. Add a fixture page there to cover a new case.
 
 ### Running the tests
 
-1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file basename, e.g. `gateway.yaml`, `operator.yaml`).
+1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file's base name, e.g. `gateway.yaml`, `operator.yaml`).
 1. Runs a docker image with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
 1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding `<deployment-model>.<product>` key. It also sets the `ENV` variables defined there in the container. For products that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `GATEWAY_VERSION`.
  E.g. for on-prem gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `on-prem.gateway.versions` for the entry `version: '3.9'`.
 1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
 1. Tests can be scoped to a specific deployment model by setting the `DEPLOYMENT_MODEL` env variable, e.g. `DEPLOYMENT_MODEL=on-prem`.
+1. If the `PRODUCTS` and `DEPLOYMENT_MODEL` filters match no instruction file, the run prints the active filter values and exits with code 1 instead of reporting zero tests and passing.
 1. Runs the `setup` commands defined in `runtimes.yaml` once, and after each test it resets it by running the commands under `reset`.
 1. For each instruction file (test), it runs its `prereqs` block.
 1. Then, it runs the steps sequentially. Steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
@@ -156,6 +165,23 @@ By default, it will run all the instruction files, but it also supports running 
 
 `DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
 
+Operator how-tos are testable on-prem and on Konnect: the generator extracts operator pages into `on-prem/operator.yaml` and `konnect/operator.yaml` instruction files. The `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply.
+
+Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Operator is extracted in `default` mode, so each element's own `data-test-step` decides how it runs: a `block` fence is copied as a bash command, and a `{% validation %}` block is extracted as a JSON assertion (a `request-check` assertion carries its `status_code`). Document an expected non-2xx response (for example a 404 isolation check) as a `custom-command` rather than a `request-check`: the `request-check` snippet renders a copyable curl with `--fail-with-body`, which exits non-zero as soon as the response is not 2xx.
+
+#### Run konnect operator tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='operator' npm run run-tests`
+
+The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to and creates a fresh k3d cluster. It does not pre-install the operator: each konnect page installs it from its own documented Helm steps (extracted via the `prereqs/products/operator.md` include, which sets `ENABLE_CONTROLLER_KONNECT=true` and waits for the controller deployment to become available). The test steps then apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
+
+Requirements and behavior:
+
+* `TESTS_KONNECT_TOKEN` must be exported: it is the Konnect token the operator authenticates with.
+* `KONG_LICENSE_DATA` is not required for konnect operator runs: konnect pages never apply a `KongLicense`.
+* Reset and cleanup delete **every control plane in the token's org** through the Konnect API, so the token must belong to a dedicated docs test org, never a shared one.
+* The transit gateway how-to creates real AWS resources (an EC2 transit gateway and a RAM resource share). It needs `TESTS_AWS_REGION`, `TESTS_AWS_ACCESS_KEY_ID`, and `TESTS_AWS_SECRET_ACCESS_KEY` exported, and it deletes the resources it creates in its cleanup.
+
 #### Run unreleased gateway version
 
 `GATEWAY_VERSION='3.12' PRODUCTS=gateway DEPLOYMENT_MODEL=on-prem KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
@@ -177,4 +203,6 @@ By default, it will run all the instruction files, but it also supports running 
 | `PRODUCTS` | Specifies which products to test (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`). | true | null |
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |
 | `KONNECT_DOMAIN` | Selects the Konnect target for the run (e.g. `konghq.tech` to run against the internal environment). Also builds the site if you pass it to `exe/build`, so the rendered commands and the test run agree. | false | `konghq.com` |
-| `KONNECT_EVENT_GATEWAY_MIN_VERSION` | Sets the minimum Konnect Event Gateway version that the `get.konghq.com/ai` quickstart script deploys. Passed through to the test container only when set. | false | null |
+| `KONNECT_EVENT_GATEWAY_MIN_VERSION` | Sets the minimum Konnect Event Gateway version that the `get.konghq.com/event-gateway` quickstart script deploys. Passed through to the test container only when set. At generation time, its numeric value (with `KONG_IMAGE_TAG`'s) is the version under test that gates event-gateway how-tos whose `min_version` is newer; unset or non-numeric values never gate. | false | null |
+| `KONG_IMAGE_TAG` | Sets the data plane image tag (e.g. `kong-event-gateway:<tag>`, or a `kong-gateway-dev` nightly for unreleased gateway runs) via the matching `runtimes.yaml` entry. At generation time, its numeric value (with `KONNECT_EVENT_GATEWAY_MIN_VERSION`'s) is the version under test that gates event-gateway how-tos whose `min_version` is newer; unset or non-numeric values never gate. | false | null |
+| `KONNECT_AI_GATEWAY_MIN_VERSION` | Sets the minimum Konnect AI Gateway version that the `get.konghq.com/ai` quickstart script deploys. Passed through to the test container only when set. It plays no role in generation-time gating. | false | null |

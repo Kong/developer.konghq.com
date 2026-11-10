@@ -26,10 +26,28 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongpluginbinding/global-prometheus \
+          kongplugin/prometheus-global \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% include /operator/prometheus.md %}
@@ -53,69 +71,91 @@ config:
   latency_metrics: true
   status_code_metrics: true' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Apply the plugin globally
 
-{% navtabs "Deployment" %}
-{% navtab "Konnect" %}
+{% konnect %}
+content: |
+  Create a `KongPluginBinding` resource and set `spec.scope` to `GlobalInControlPlane`:
 
-Create a `KongPluginBinding` resource and set `spec.scope` to `GlobalInControlPlane`:
-```sh
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongPluginBinding
-metadata:
-  name: global-prometheus
-  namespace: kong
-spec:
-  pluginRef:
-    name: prometheus-global
-  scope: GlobalInControlPlane
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: gateway-control-plane' | kubectl apply -f -
-```
-{% endnavtab %}
+  ```sh
+  echo '
+  apiVersion: configuration.konghq.com/v1alpha1
+  kind: KongPluginBinding
+  metadata:
+    name: global-prometheus
+    namespace: kong
+  spec:
+    pluginRef:
+      name: prometheus-global
+    scope: GlobalInControlPlane
+    controlPlaneRef:
+      type: konnectNamespacedRef
+      konnectNamespacedRef:
+        name: kong' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
 
-{% navtab "Self-managed" %}
+{% on_prem %}
+content: |
+  Enable the plugin by annotating the `Gateway` resource with `konghq.com/plugins: prometheus-global`:
 
-Enable the plugin by annotating the `Gateway` resource with `konghq.com/plugins: prometheus-global`:
-
-```sh
-echo '
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong
-  namespace: kong
-  annotations:
-    konghq.com/plugins: prometheus-global
-spec:
-  gatewayClassName: gateway-class
-  listeners:
-  - name: proxy
-    port: 80
-    protocol: HTTP' | kubectl apply -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
+  ```sh
+  echo '
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+    annotations:
+      konghq.com/plugins: prometheus-global
+  spec:
+    gatewayClassName: gateway-class
+    listeners:
+    - name: proxy
+      port: 80
+      protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Validate
 
 You can verify that metrics are being collected by port-forwarding to the data plane Pod:
 
+1. Wait for the `Gateway` to be programmed:
+
+   ```sh
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=300s
+   ```
+   {: data-test-step="block" }
+
 1. Get the data plane Pod name:
+
    ```bash
    POD_NAME=$(kubectl get pods -n kong -o jsonpath='{.items[0].metadata.name}')
    ```
+   {: data-test-step="block" }
 
-1. Port forward the metrics port:
+1. Port forward the metrics port. Run the port-forward in the background so that the next command can use it:
+
    ```sh
-   kubectl port-forward $POD_NAME 8100:8100 -n kong
+   kubectl port-forward $POD_NAME 8100:8100 -n kong >/dev/null 2>&1 &
    ```
+   {: data-test-step="block" }
 
 1. Access the metrics:
-   ```bash
-   curl http://localhost:8100/metrics | grep kong_
-   ```
+
+   <!-- vale off -->
+{% validation custom-command %}
+command: |
+  curl -s http://localhost:8100/metrics | grep -m1 kong_
+expected:
+  return_code: 0
+  message: 'kong_'
+render_output: false
+indent: 3
+{% endvalidation %}
+<!-- vale on -->

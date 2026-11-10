@@ -19,11 +19,9 @@ tools:
   - operator
 
 works_on:
-  - konnect
   - on-prem
 
 prereqs:
-  enterprise: true
   kubernetes:
     gateway_api: true
   entities:
@@ -38,6 +36,29 @@ tldr:
     Deploy a `DataPlaneMetricsExtension` to expose latency metrics from a Service,
     then configure the {{site.operator_product_name}} to associate those metrics with the Data Plane.
     This enables external tools like Prometheus and KEDA to trigger scaling decisions.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Uninstall the metrics stack this guide installs, delete the resources it created, then remove the operator. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        helm uninstall prometheus-adapter -n prometheus
+        helm uninstall prometheus -n prometheus
+        kubectl delete --ignore-not-found namespace prometheus
+        kubectl delete -n kong --ignore-not-found \
+          horizontalpodautoscaler/command \
+          servicemonitor/gateway-operator \
+          httproute/command \
+          gateway/kong \
+          gatewayconfiguration/kong
+        kubectl delete --ignore-not-found gatewayclass/kong
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% assign gatewayApiVersion = "v1" %}
@@ -67,6 +88,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         latency: true
     ' | kubectl apply -f -
     ```
+    {: data-test-step="block" }
 
 1. Create a GatewayConfiguration that uses it:
 
@@ -84,6 +106,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         name: kong
     ' | kubectl apply -f -
     ```
+    {: data-test-step="block" }
 
 1. Patch the GatewayClass to use the config:
 
@@ -101,6 +124,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         }
     ]'
     ```
+    {: data-test-step="block" }
 
 ## Install Prometheus
 
@@ -116,12 +140,14 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
    helm repo update
    ```
+   {: data-test-step="block" }
 
 1. Install Prometheus via [`kube-prometheus-stack` helm chart](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack):
 
    ```bash
    helm upgrade --install --create-namespace -n prometheus prometheus prometheus-community/kube-prometheus-stack
    ```
+   {: data-test-step="block" }
 
 ## Create a ServiceMonitor to scrape {{ site.operator_product_name }}
 
@@ -138,7 +164,7 @@ metadata:
   namespace: kong-system
 spec:
   endpoints:
-  - port: https
+  - port: http
     scheme: http
     path: /metrics
     bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -146,6 +172,7 @@ spec:
     matchLabels:
       control-plane: controller-manager ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 After applying the above manifest you can check one of the metrics exposed by {{ site.operator_product_name }}
 to verify that the scrape config has been applied.
@@ -159,7 +186,7 @@ kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090 -n 
 This can be verified by going to your Prometheus UI and querying:
 
 ```
-up{service=~"kgo-gateway-operator-metrics-service"}
+up{service=~"kong-operator-kong-operator-metrics"}
 ```
 
 {:.info}
@@ -201,33 +228,58 @@ rules:
       sum by (exported_service) (rate(kong_upstream_latency_ms_count{<<.LabelMatchers>>}[60s:10s]))
 ' > values.yaml
 ```
+{: data-test-step="block" }
 
 Install `prometheus-adapter` using Helm:
 
 ```bash
 helm upgrade --install --create-namespace -n prometheus --values values.yaml prometheus-adapter prometheus-community/prometheus-adapter
 ```
+{: data-test-step="block" }
 
 ## Send traffic
 
-To trigger autoscaling, run the following command in a new terminal window. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value.
+1. Wait for the `Gateway` and the `command` `HTTPRoute` to be programmed:
 
-```bash
-while curl -k "http://$(kubectl get -n kong gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers)/command/shell?cmd=sleep%200.1" ; do sleep 1; done
-```
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/command -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
 
-Keep this running while we move on to next steps.
+1. Get the `Gateway`'s external IP address:
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
+
+1. To trigger autoscaling, start sending traffic in the background. Each request makes the underlying deployment sleep for 100ms, which raises the average response time to that value. Leave it running while you work through the rest of this guide: the 60-second average that the autoscaler reads only stays above its target while requests are flowing, and the metric can take a few minutes to be populated. The loop sends a request every second for about 30 minutes, which is long enough for the metric to appear and the autoscaler to react:
+
+{% validation custom-command %}
+command: |
+  for _ in {1..1800}; do
+    curl -k --no-progress-meter --fail-with-body "http://$PROXY_IP/command/shell?cmd=sleep%200.1"
+    sleep 1
+  done > /dev/null 2>&1 &
+expected:
+  return_code: 0
+render_output: false
+indent: 3
+{% endvalidation %}
 
 ## Verify metrics are exposed in Kubernetes
 
-When all is configured, you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API:
+When all is configured, you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API. Wait until the metric is populated, then query it:
 
 ```bash
+timeout 900 bash -c 'until kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average" | grep -q kong_upstream_latency_ms_60s_average; do sleep 10; done'
 kubectl get --raw '/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average' | jq
 ```
+{: data-test-step="block" }
 
 {:.warning}
-> **Note:** The `prometheus-adapter` may take up to 2 minutes to populate the custom metrics
+> **Note:** The `prometheus-adapter` may take a few minutes to populate the custom metrics. It only discovers `kong_upstream_latency_ms_60s_average` after the data plane has picked up the metrics extension and started reporting latency, so keep the traffic loop running while you wait.
 
 This should result in:
 
@@ -296,6 +348,7 @@ spec:
         value: 4
         periodSeconds: 2
       selectPolicy: Max
+
   metrics:
   - type: Object
     object:
@@ -309,14 +362,19 @@ spec:
         type: Value
         value: "40" ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Observe Kubernetes `SuccessfulRescale` events
 
 You can watch `SuccessfulRescale` events using the following `kubectl` command:
 
-```bash
-kubectl get events -n kong --field-selector involvedObject.name=command --field-selector involvedObject.kind=HorizontalPodAutoscaler -w
-```
+{% validation custom-command %}
+command: |
+  timeout 60 kubectl get events -n kong --field-selector involvedObject.name=command,involvedObject.kind=HorizontalPodAutoscaler -w | grep -m1 SuccessfulRescale
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 If everything went well we should see the `SuccessfulRescale` events:
 
@@ -328,7 +386,7 @@ If everything went well we should see the `SuccessfulRescale` events:
 ```
 {:.no-copy-code}
 
-Then when latency drops (when you stop sending traffic with the `curl` command) you should observe the `SuccessfulRescale` events scaling your workloads down:
+Then when latency drops (when the traffic loop finishes, or when you stop it) you should observe the `SuccessfulRescale` events scaling your workloads down:
 
 ```bash
 4s          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 1; reason: All metrics below target

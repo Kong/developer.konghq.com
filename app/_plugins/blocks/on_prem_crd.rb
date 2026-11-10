@@ -26,16 +26,21 @@ module Jekyll
       config = YAML.load(contents)
       config = add_defaults(config)
 
-      should_create_namespace = config.delete('create_namespace')
+      drop = Drops::OnPremCrd.new(yaml: config, format: @page['output_format'])
 
-      # Process YAML for the code block
-      config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
-
-      context.stack do
-        context['config'] = config
-        context['should_create_namespace'] = should_create_namespace
+      output = context.stack do
+        context['config'] = drop
         ComponentTemplates.fetch('on_prem_crd', 'html', base: 'app/_includes').render(context)
       end
+
+      if config['indent']
+        # If the config has an indent key, we need to indent the output
+        # by that many spaces.
+        indent = ' ' * config['indent'].to_i
+        output = output.lines.map { |line| "#{indent}#{line}" }.join
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% on_prem_crd %} block contains a malformed yaml:

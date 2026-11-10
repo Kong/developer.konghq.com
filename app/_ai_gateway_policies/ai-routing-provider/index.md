@@ -8,6 +8,7 @@ min_version:
   ai-gateway: '2.2'
 third_party: true
 works_on:
+  - on-prem
   - konnect
 
 products:

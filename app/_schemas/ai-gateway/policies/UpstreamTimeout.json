@@ -22,12 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "read_timeout": {
-          "type": "integer",
-          "maximum": 2147483646,
-          "minimum": 0,
-          "description": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2."
-        },
         "send_timeout": {
           "type": "integer",
           "maximum": 2147483646,
@@ -39,6 +33,12 @@
           "maximum": 2147483646,
           "minimum": 0,
           "description": "The timeout in milliseconds for establishing a connection to the upstream server. Must be an integer between 1 and 2^31-2."
+        },
+        "read_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2."
         }
       }
     },

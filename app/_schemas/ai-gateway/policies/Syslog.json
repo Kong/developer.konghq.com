@@ -29,40 +29,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        },
-        "facility": {
-          "type": "string",
-          "enum": [
-            "auth",
-            "authpriv",
-            "cron",
-            "daemon",
-            "ftp",
-            "kern",
-            "local0",
-            "local1",
-            "local2",
-            "local3",
-            "local4",
-            "local5",
-            "local6",
-            "local7",
-            "lpr",
-            "mail",
-            "news",
-            "syslog",
-            "user",
-            "uucp"
-          ],
-          "description": "The facility is used by the operating system to decide how to handle each log message.",
-          "default": "user"
-        },
         "log_level": {
           "type": "string",
           "enum": [
@@ -118,6 +84,74 @@
             "warning"
           ],
           "default": "info"
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        },
+        "facility": {
+          "type": "string",
+          "enum": [
+            "auth",
+            "authpriv",
+            "cron",
+            "daemon",
+            "ftp",
+            "kern",
+            "local0",
+            "local1",
+            "local2",
+            "local3",
+            "local4",
+            "local5",
+            "local6",
+            "local7",
+            "lpr",
+            "mail",
+            "news",
+            "syslog",
+            "user",
+            "uucp"
+          ],
+          "description": "The facility is used by the operating system to decide how to handle each log message.",
+          "default": "user"
+        },
+        "log_sanitization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
+              "default": []
+            },
+            "body_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "PCRE patterns to redact from the AI request and response payloads.",
+              "default": []
+            },
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
+            }
+          }
         }
       }
     },

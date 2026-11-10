@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './base'
+require_relative 'base'
 
 module Jekyll
   module Drops
@@ -194,6 +194,59 @@ module Jekyll
                 data: @example_drop.data,
                 variables: variables
               )
+            end
+          end
+
+          class AIGatewayPolicy < Base
+            def provider_source
+              'konnect'
+            end
+
+            def terraform_resource_name
+              'konnect_ai_gateway_policy'
+            end
+
+            def render
+              output(data.except('config'), 1, true, "\n") + jsonencode_config
+            end
+
+            def jsonencode_config
+              s = line('config = jsonencode({', 1)
+              s += output(data['config'], 2, false, "\n")
+              s + line('})', 1)
+            end
+          end
+
+          class AIGatewayPolicyAttachment < Base
+            POLICY_RESOURCE_REFERENCE = 'konnect_ai_gateway_policy.my_policy.name'
+
+            def provider_source
+              'konnect'
+            end
+
+            def terraform_resource_name
+              "konnect_ai_gateway_#{entity_type}"
+            end
+
+            def render
+              output(data.except('policies', 'config'), 1, true, "\n") + jsonencode_config + policies_config
+            end
+
+            private
+
+            def jsonencode_config
+              return '' unless data['config']
+
+              s = line('config = jsonencode({', 1)
+              s += output(data['config'], 2, false, "\n")
+              s + line('})', 1)
+            end
+
+            def policies_config
+              values = data['policies'].map do |policy|
+                policy == @example_drop.policy_name ? POLICY_RESOURCE_REFERENCE : quote(policy)
+              end
+              line("policies = [#{values.join(', ')}]", 1)
             end
           end
         end

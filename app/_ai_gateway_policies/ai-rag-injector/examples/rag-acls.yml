@@ -1,0 +1,78 @@
+description: Configure the AI RAG Injector policy with access control lists to restrict knowledge base collections based on consumer groups.
+
+extended_description: |
+  Configure the AI RAG Injector policy with access control lists (ACLs) to restrict which consumer groups can access specific knowledge base collections. This configuration uses Redis as the vector database and OpenAI text-embedding-3-large for embeddings.
+
+  The example demonstrates a three-tier access model:
+  - Public documents accessible to all authenticated users
+  - Finance reports restricted to finance and executive groups
+  - Executive confidential content accessible only to executives
+
+title: RAG injection with ACLs using OpenAI and Redis
+
+weight: 910
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - "An existing [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/)."
+  - "Existing [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that match your ACL configuration."
+  - You have an OpenAI account.
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI
+  redis_host:
+    value: $REDIS_HOST
+    description: The Redis server's host
+
+name: rag-injector-acls
+display_name: RAG injection with ACLs using OpenAI and Redis
+type: ai-rag-injector
+
+config:
+  inject_template: |
+    Use the following context to answer the question. If the context doesnt contain relevant information, say so.
+    Context:
+    <CONTEXT>
+    Question: <PROMPT>
+  inject_as_role: system
+  consumer_identifier: consumer_group
+  global_acl_config:
+    allow:
+      - public
+    deny: []
+  collection_acl_config:
+    public-docs:
+      allow: []
+      deny: []
+    finance-reports:
+      allow:
+        - finance
+        - executive
+      deny:
+        - contractor
+    executive-confidential:
+      allow:
+        - executive
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_api_key}
+    model:
+      provider: openai
+      name: text-embedding-3-large
+  vectordb:
+    strategy: redis
+    redis:
+      host: ${redis_host}
+      port: 6379
+    distance_metric: cosine
+    dimensions: 3072
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

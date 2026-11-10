@@ -1797,5 +1797,1024 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "2.3.0": {
+    "kong-aigw": [
+      {
+        "message": "**ai-nvidia-nemo-guardrail**: The default `config.auth.prefix` is now empty instead of `Bearer `, so configurations that relied on the default send the raw API key; set `config.auth.prefix` explicitly when a scheme is required. The response guard also evaluates the full conversation instead of only the assistant answer, which can block responses that were previously allowed.",
+        "type": "Breaking Change",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Changed the `cache_control` default to `true`. The plugin now caches only responses with upstream freshness information. To cache by `cache_ttl`, set it to `false`.",
+        "type": "Breaking Change",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added Ubuntu 26.04 (Resolute Raccoon) and RHEL 10 FIPS images.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped brotli to 1.2.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped libexpat to 2.9.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-cel from 0.4.0 to 0.5.0.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped multipart from 0.5.11 to 0.5.12.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL to 3.5.9.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped PCRE2 to 10.49.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped snappy to 1.3.1.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Kong AI Gateway Docker images are now built on Ubuntu 26.04 and RHEL 10,\nreplacing Ubuntu 24.04 and RHEL 9.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Removed the libpcre3 package dependency from Kong AI Gateway .deb packages; Kong bundles PCRE2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Removed the pcre package dependency from Kong AI Gateway .rpm packages; Kong bundles PCRE2 and RHEL 10 no longer ships classic PCRE.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Updated Bazel to 8.7.0 and migrated the build to Bazel Modules (Bzlmod).",
+        "type": "dependency",
+        "scope": "Default"
+      },
+      {
+        "message": "**access-policy-engine**: Added a new plugin that enforces the Cedar policy set carried by the\nauthenticated principal, compiled from the [access-policy-engine](https://github.com/Kong/access-policy-engine)\nRust library (built as `libape` with LuaJIT FFI bindings). Requests without a Kong Identity\nprincipal pass through; enforced requests fail closed. Model calls are enforced as\n`CallModel`; MCP traffic is enforced only with `enforce_mcp` (off by default), tool calls\nas `CallTool` and every other MCP request as `connect` on the server; other routes pass.\nThe control plane's `RequestContext` envelope is the context record. WebSocket upgrades\nare enforced at the handshake. Key-auth and openid-connect now carry the principal's group\nmemberships and effective policy set on `authenticated_principal`. The Konnect analytics\npayload gains an `ape` entry with the decision (`allow`, `deny`, `error`) and the list of\ndetermining policies.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**access-policy-engine**: Aligned the Cedar request document with the `groups` contract\nchange (pin 7a6dd65): memberships ride the identity's top-level `groups`; `type` is an\nentity attribute.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added support for driving certain plugin configuration fields with a CEL\nexpression, evaluated per request and falling back to the field's static\nvalue if unset or if evaluation fails.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added the `ai_pricing_cache_size` property to set the size of the shared memory zone that stores the AI pricing catalogs polled from `dynamic_pricing_uri`.",
+        "type": "feature",
+        "scope": "Configuration"
+      },
+      {
+        "message": "Added the `principal` field to the log serialization output. The field reports the `id` and `display_name` of the authenticated principal for the request.",
+        "type": "feature",
+        "scope": "PDK"
+      },
+      {
+        "message": "**AI Gateway**: AI analytics and logs now report `input_tokens`/`output_tokens`\nand their `_details` breakdowns for every GenAI category, including text\ngeneration and embeddings. The legacy `prompt_tokens`/`completion_tokens` pair\nis unchanged and is still reported for text generation and embeddings, so\nexisting consumers and dashboards keep working, but it is deprecated in favour\nof the canonical names.\n\nThe analytics payload also carries token data the gateway already measured but\npreviously dropped: prompt-cache writes (`cache_write_tokens` and its per-TTL\nbreakdown `cache_write_tokens_by_ttl`), video token counts, image tokens in the\noutput and cached breakdowns, and the provider-reported `service_tier`.\n\nAI logs and analytics now also split the request cost into\n`input_token_cost` and `output_token_cost` next to `cost`. The input side\ncovers fresh, cache-read and cache-write tokens, both sides carry the\ncontext-window and service-tier multipliers, and the two add up to `cost`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Added `log_blocked_content` field to log blocked payloads in ai-prompt-guard, ai-semantic-prompt-guard, and ai-semantic-response-guard.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added `allow_when` and `deny_when` CEL expressions to `default_acl` entries and per-tool `acl`, so tool access can be decided from Kong Identity principal attributes, consumer groups, headers and other request context.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added configurable credential placement for Token Vault providers. The new\n`auth.token_vault.credential` record configures where the gateway reads the caller's inbound\ncredential and where it writes the vault-issued outbound credential. Each placement accepts a\nheader, a query parameter, or a body field. The gateway rejects the request when the request\nshape cannot carry the placement, such as with LLM auth integrations and MCP tool-call bodies.\nMCP discovery carries headers only, so a query or body placement is skipped there with a\nwarning and discovery runs unauthenticated; the tools/list gate likewise ignores a body\nplacement with a warning, and that provider's tools stay hidden. The schema no longer accepts\nthe `server.token_vault` field. Set `auth.token_vault` instead.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added gateway-hosted OAuth enrollment for Token Vault providers: credentials are envelope-encrypted with a gateway-held key pair and only the encrypted blob is stored.\n\nCredential storage is configured through the new required `auth.token_vault.storage` record (set `storage.current_version` and `storage.keys` for the key versions; rotate by adding a version and flipping `current_version`); the L2 exchange cache settings moved to `auth.token_vault.cache.redis`, and the interim `mode` field was removed.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added per-method and per-tool rate limiting via the new `rate_limiting` config field.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Migrated plugin to use shared /_vault/callback[/initiate] endpoints.\n`token-vault-callback-handler` is now a prerequisite for this plugin.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Added `ai.compressor.request_bytes_before` and\n`ai.compressor.request_bytes_after` to the log for native request bodies. They show savings on\n`system` and `tools` that Headroom's token counts don't include.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Added prompt compression metrics to Konnect Analytics and the response headers with the result.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Added `x-opencode-session-id` to the default `session_id_headers` list. opencode v2 sends `X-Session-Id` with the parent session id for subagents. With the new default, a subagent and its parent no longer share one Headroom session.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added an `http_5xx` option to `failover_criteria` that matches any 5xx upstream status, including statuses nginx does not natively retry such as 501 or 522. Matched 5xx responses count toward the target circuit breaker failure threshold.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added cost tag capture from `ai-cost-*` request headers and\nuser-configured header names and prefixes in Konnect. Tags appear in analytics\ncustom fields with the `ai_cost.` prefix.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added dynamic pricing: a node-level pricing catalog in `kong.conf` that ai-proxy-advanced consults for per-request cost. `dynamic_pricing` (on by default) enables it for the node; `dynamic_pricing_uri` polls every 60 seconds (`http(s)://` or air-gapped `file://`); when unset, Konnect gateways fetch their org catalog with the cluster certificate and others use the public baseline. Pricing resolves per target: any `model.options` pricing field (rates, cost lists, factors) makes `model.options` price that target on its own; every other target is priced by the catalog, and an unpriced model bills 0 with a rate-limited warn. ai-semantic-cache prices cache savings from the same per-target source; ai-rate-limiting-advanced's cost pre-charge does too, so a catalog-priced target reserves in-flight quota at its catalog rate. While enabled, the pricing partial is bypassed; with `dynamic_pricing = off` it resolves from the partial first, then `model.options`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added `http_400`, `http_401`, `http_402`, `http_405`, `http_408`, `http_409`, `http_413`, `http_415`, `http_422`, `http_522`, and `http_529` to the supported `failover_criteria` values. Configured HTTP 429 and 5xx responses count toward the target circuit breaker failure threshold; other 4xx responses trigger failover without counting as failures.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added native passthrough for the Gemini and Vertex Interactions API.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for Baseten provider for chat completions, with Model APIs as the default upstream and dedicated deployments via `upstream_url`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for the Bedrock Runtime native OpenAI and Anthropic APIs at `/openai/v1/chat/completions`, `/openai/v1/responses`, and `/anthropic/v1/messages`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for Bedrock Mantle models, for four endpoints and llm_formats:  `/v1/chat/completions` (openai), `/v1/responses` (openai), `/v1/files` (openai),  and `/v1/messages` (anthropic).",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added `vpc_endpoint` Bedrock option to send requests to a custom VPC endpoint (`host` or `host:port`; the port defaults to 443).",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Anthropic's \"preserved thinking\" binds thinking blocks to the conversation\nprefix that produced them, so replaying a thinking block after the preceding context changed fails\nupstream with HTTP 400. Kong now enables the `drop_block` binding mode (with its required\n`thinking-binding-controls-2026-08-01` beta flag) by default on every outgoing request that carries\nthinking, for the preserved-thinking generation and newer — Fable and Mythos in any release, and\nSonnet, Haiku, and Opus from 5.5 — across Anthropic, Google Cloud Vertex AI, Azure Foundry, and\nAmazon Bedrock.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Dynamic pricing now bills server-side tool calls (web search, web fetch, file search and remote MCP) at the per-call prices in the catalog's provider-level `tools` list. The tool cost is added to `usage.cost` outside every token pricing multiplier, and is broken down per tool in the new `usage.tool_cost` and `usage.tool_usage` log fields.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Added the `principal` policy match type, which matches or partitions\non the Kong Identity principal's `id`, `display_name` or a `metadata.<name>` scalar.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Added the expressible `custom_key` field. It replaces the subject\npart of every matched policy's counter key for the request and keeps model and provider\npartitions. Set `expressions.custom_key` to compute it per request with CEL.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**analytics**: Added the groups of the authenticated Kong Identity principal (`id` and `type`) to the analytics payload as `principal.groups`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Bundled the KFC Rust shared library for use by Lua FFI integrations.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**dynamic pricing**: Added catalog entry overrides: an entry with `override: true` and an `effective_to` RFC 3339 timestamp (`YYYY-MM-DDTHH:MM:SS[.fff]Z`, Kong AIP 142; fractional seconds truncated) bills its `pricing` until the gateway's clock reaches `effective_to`, then falls back to the entry's `baseline_price` (same rate shape as `pricing`). A malformed combination (unparseable `effective_to`, missing or invalid `baseline_price`, or either field without `override: true`) degrades to a plain override entry with a warn instead of dropping it, so the request never bills 0. `effective_from` stays catalog-side: the catalog publishes one entry per (provider, model) with last-write-wins, so the data plane never picks between entries by time.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Added `response_code`, `content_type`, and `cache_control` configuration options to control which upstream responses the plugin caches.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**http-log**, **file-log**, **tcp-log**, **udp-log**, **syslog**, **loggly**, **solace-log**, **kafka-log**: Added an opt-in `log_sanitization` configuration\nblock. When enabled, sensitive data are redacted in log entry.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**jwe**: Added support for the RSA-OAEP-256 key management algorithm in JWE.",
+        "type": "feature",
+        "scope": "PDK"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Increased max body size from 128KB to 1MB for debugger payload capture feature.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Added actor token support to token exchange. Configure `token_exchange.request.actor_token` to include an actor token, read from a request header or a static token value, in the token exchange request.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `credential_claims` to support mapping virtual credentials from multiple claim paths, while retaining and supporting the existing `credential_claim` as a shorthand configuration.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `principals.jit.all_claims` and `principals.jit.claims` to share token claims with the Kong Identity principal lookup. `all_claims` sends every verified token claim. `claims` sends only the named claims. Kong Identity maps the claims through the trusted IdP's JIT mapping. This mapping provisions or updates the principal just in time. Kong Identity owns that setting. By default the lookup carries only the principal claim (e.g. `sub`).",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `protected_resource_metadata` configuration to support RFC 9728 OAuth 2.0 Protected Resource Metadata, enabling automatic authorization server discovery by serving a well-known metadata document and enriching `WWW-Authenticate` challenge headers with `resource_metadata` and `scope` attributes.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added support for Microsoft Entra ID's On-Behalf-Of flow through a new `token_exchange.grant_type = jwt_bearer` (RFC 7523) mode, plus `map_identities_from` and `token_exchange.provider`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added the `token_exchange.subject_token_issuers[].deny_on_mismatch` config option. When set to `true`, Kong denies a bearer token whose issuer matches but whose `conditions` do not match, instead of passing it through unexchanged. Kong also logs this when it happens.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added `verify_signature` and `jwks_uri` fields to `token_exchange.subject_token_issuers` for verifying incoming subject token signatures before exchange.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Added a `metrics.enable_credential_attribute` config option.\nWhen enabled, the `kong.auth.credential.id` attribute is added to the `http.server.request.count`,\n`http.server.request.size`, `http.server.response.size`, `gen_ai.client.token.usage` and `kong.gen_ai.llm.cost` metrics\nwhen an authenticated credential is available. The new `opentelemetry_metrics_credential_attr_limit` configuration property\nsets the maximum number of distinct attribute values for each worker.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Added a `metrics.enable_principal_attribute` config option. When enabled, the principal attributes are added to the metrics when an authenticated principal is available.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Plugin conditions (and CEL-based ACL rules) can now reference `principal.groups` and `principal.type`. The first is the list of groups for the authenticated principal. The second is the principal kind, `group` or `principal`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**proxy-cache**: Added `cache_by_principal` configuration option to switch cache key segmentation by Principal when using Kong Identity Directory. When enabled, the authenticated Principal's id is used to compose the cache key.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Added `cache_by_principal` configuration option to switch cache key segmentation by Principal when using Kong Identity Directory. When enabled, the authenticated Principal's id is used to compose the cache key.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Added expressions.limit to drive individual\nlimit entries via CEL, falling back to the static value on error.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Added support for rate limiting by Kong Identity\nDirectory Principal, via `identifier: principal`, and for overriding the\nrate-limiting key entirely via the new, expressible `custom_key` field.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Added the `counter_key` field to let you choose which consumer attribute is now used as the rate-limiting counter identifier. Supported values are `consumer.id`, `consumer.username`, and `consumer.custom_id`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: added the `missing_identifier_behavior` config option. It controls what the plugin does when `identifier` cannot resolve a value for a request. Set it to `ip` (default) to fall back to the client IP address, `reject` to respond with `403 Forbidden`, `skip` to let the  request through uncounted, or `fixed_key` to count the request under one shared, fixed key.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**token-vault-callback-handler**: Added a new plugin to handle all Token Vault OAuth callbacks at the global well-known routes /_vault/callback[/initiate].",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**token-vault-credential-manager**: Added a new plugin that provides a self-serve connectors\nUI backed by Kong Identity's Token Vault, allowing you to list, connect, and revoke\nthird-party provider credentials.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**token-vault-exchange**: Added a new plugin that exchanges your bearer token for an upstream\ncredential via the Kong Token Vault, configurable on arbitrary routes.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**token-vault-exchange**: Migrated enrollment-required 401s to surface the gateway-hosted\n/_vault/callback/initiate URL; `token-vault-callback-handler` is now a prerequisite for this plugin.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Fixed an issue where a JSON-RPC endpoint whose path ended with `/extendedAgentCard` had its advertised endpoint URL truncated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Fixed an issue where empty arrays in agent cards were re-encoded as empty objects, which failed strict A2A SDK schema validation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed an issue where streaming responses could end before pending asynchronous guardrail checks completed, losing their moderation results from request logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed an issue where masking dropped the request payload\non routes with a non-OpenAI `llm_format`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-gcp-model-armor**: Fixed an issue where the OUTPUT guardrail failed to detect prompt injection in Gemini responses by extracting the answer text before sending it to Model Armor.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Guardrails**: Fixed an issue where the prompt text the guardrail plugins match against ended on a blank line, so a deny or allow pattern anchored to its end (`\\z`, `\\Z` or `$`) never matched. The `\\n\\n` separator now goes only between the included messages, and a message whose multi-modal parts carry no text no longer puts one in front of the message that follows it. A pattern written against that blank line instead, one ending in `\\n\\n`, `\\n+$` or `\\s+$`, stops matching once this ships: a deny pattern of that shape forwards content it used to block, and an allow pattern of that shape rejects content it used to pass. Re-anchor it on the content (`\\z` or `$`), or keep its trailing whitespace optional (`\\s*$`). Plugins that read this text build a slightly different string than before: `ai-semantic-cache` entries stored before the upgrade can miss once, and the `ai-rate-limiting-advanced` pre-charge is one token lower per request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Fixed the `continue_on_detection` description on ai-prompt-guard, ai-semantic-prompt-guard and ai-semantic-response-guard to match their behavior.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed a bug where input_cost or output_cost set to 0, would cause all LLM costs to output as 0.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where failed upstream `tools/list` requests caused immediate retries and listener errors under load.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where token_vault upstream auth answered 500 instead of 502 when the token vault couldn't supply a credential.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where arrays of RPC messages were not blocked, potentially leading to ACL check bypass.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where modern MCP protocol version metadata was forwarded to legacy upstream servers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where a client could pass Kong-internal headers such as `X-Kong-MCP-Ctx` to the internal tool-call request and redirect it in `listener` mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where path traversal could be done with embedded dot segments in tool path parameters.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where `notifications/tools/list_changed` was not delivered on the call that completes Token Vault enrollment, so clients that accept SSE responses can now refetch their tool list without holding a subscription stream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where upstream-server mode skipped MCP servers on routes with only regex paths. Internal calls are now pinned to that route, not re-matched by path.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where Kong kept replaying an upstream MCP session the server had already dropped, serving an empty or stale tool list instead of starting a new session.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where token_vault incorrectly returned a 500 error for missing or rejected bearer tokens. Now returns 401 with `WWW-Authenticate` header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Improved the Token Vault enrollment prompts served to LLM callers:\nthe virtual `token_vault_authenticate`/`token_vault_check_authentication_status` tools now\nstate upfront they are the only tools available until authorization completes, and the\nenrollment URL is delivered with strict verbatim-copy instructions so agents relay it to\nthe user's browser unmodified.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: `tools[].description` is now optional in `passthrough-listener` and `upstream-server` modes; it remains required in `conversion-listener` and `conversion-only` modes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-model-selector**: Fixed an issue where a model resolved by ai-model-selector plugin from a custom location specified was never written into the upstream request body when the provider is identical with the adapter, causing the provider to reject the request for a missing `model` field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Fixed a 500 error when a Headroom call reused a pooled connection\nthat Headroom had already closed. Kong now sends the call once more on a new connection.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Fixed an issue where compression stayed off on a\nroute where the client format and the provider format match through a driver\nshortcut (an Anthropic body to Anthropic models on Bedrock). The compressor\nread the route type from its own configuration, which has no such field. It\nalso no longer replaces the body the provider driver builds, so driver\ndefaults (for example `max_tokens`) survive on the wire. A body whose\nconversation the round trip left unchanged is forwarded exactly as the client\nsent it, and a round trip that changed a tool result alone is written back.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Fixed an issue where a compressor backend that answered with an empty text list failed every request on the route with an HTTP 500. An empty answer means nothing was compressed, so the plugin now forwards the request to the upstream uncompressed, with no `X-Kong-Prompt-Compression-*` headers and no compression metrics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: On routes to Anthropic, Kong now forwards the `anthropic-beta` tokens\nthat Headroom returns, after the client's own. Headroom Enterprise's tool search needs this\nheader for the tools it defers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: The Headroom provider now skips native Bedrock Converse requests and\nlogs a warning. Headroom can't read Converse content blocks, so these requests came back\nuncompressed with an extra `model` field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-template**: Fixed an issue where a templated request on an `ai-proxy` or `ai-proxy-advanced` route failed instead of being rendered. And the guardrail plugins run after `ai-prompt-template` and `ai-prompt-decorator`, so a guard inspects the prompt the provider receives.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini reasoning content was not emitted as thinking blocks in Anthropic-format responses. Requests can now opt out with `thinking.display`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where request bodies were re-encoded\nwith a non-deterministic JSON key order; content-neutral transforms now\nforward the client's original request bytes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where upstream SSE `event:` lines were dropped from streaming responses for the `llm/v1/responses` route type.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where driver response headers (e.g. Set-Cookie) were not removed from streaming responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where targets kept using expired credentials after a vault rotated the secrets referenced in their `auth` until the configuration was reloaded.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a forced `tool_choice` was rejected by Claude\nSonnet 5.5. The plugin now sends `auto` to a model that refuses a forced tool call.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where an Anthropic-native request to Vertex carried\n`temperature`, `top_p`, `top_k` or `seed` for a model that rejects them. The plugin now drops\nthem on that route, as it already did for OpenAI-format requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where an Anthropic target rejected OpenAI-format history that replayed the `reasoning` field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where anthropic-format tool call conversion dropped parallel tool calls, emitted non-object tool_use input, and dropped text alongside tool results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where replaying history to a Cohere target was not restored.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the `gen_ai.system_instructions` OpenTelemetry span attribute contained the system prompt even when `logging.log_payloads` was disabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Databricks rejected chat history that replayed the `reasoning` field returned by Kong.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where DeepSeek in thinking mode rejected tool-call history without reasoning content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where empty, null, or malformed tool call arguments produced a missing or invalid tool input in Anthropic and Bedrock requests instead of `{}`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini 3 models rejected OpenAI-format requests with tool-call history because the converted function calls had no thought signature.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a Mistral target rejected OpenAI-format history that replayed the `reasoning` field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Bedrock streaming through\n`invoke-with-response-stream` reported no cache read/write token counts on\n`bedrock`-format responses and no per-TTL cache-write breakdown, which billed\ncached tokens at the full input rate.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Databricks reasoning was dropped when the upstream returned it as `reasoning_content` instead of content parts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the Anthropic adapter dropped image content blocks and leaked non-text tool_result blocks when converting requests to the OpenAI format.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where empty tool_use input was converted to `[]` in Anthropic adapter.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsigned thinking blocks from open-weight Anthropic-compatible models were stripped from replayed request history, causing models to re-reason every turn.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where using Anthropic models over Bedrock would produce\nredundant error-level spam in the Kong logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where reasoning requests to Amazon Nova models with a high reasoning effort failed with a 400 error because Bedrock rejected the combination of `reasoningConfig.maxReasoningEffort = \"high\"` with `inferenceConfig.maxTokens`, `temperature`, or `topP`. Those sampling parameters are now dropped from the request for such reasoning requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a request body the gateway rebuilt, or that\na filter rewrote on a route without a driver transform, was re-encoded in a member order\nthat changed between workers and restarts, causing upstream prompt cache misses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a gateway-derived reasoning_effort outside the levels an OpenAI-family target model accepts was forwarded as it was, which made the provider answer 400. A derived value above the model's ceiling is now lowered, and one below its floor is raised.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `temperature`, `top_p`, `top_k` and `seed` were sent to Claude models that reject them, so your requests to those models no longer fail.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed `response_format` JSON schema requests failing on Claude 4.5 and\nlater models. For an OpenAI-format request the plugin strips the JSON Schema keywords the\nAnthropic API rejects, and answers 400 for a schema it cannot express.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**, **ai-a2a-proxy**, **ai-mcp-proxy**: Fixed an issue where requests sent through `proxy_config` failed with a 503 when the data plane could not resolve the upstream host itself; Kong now leaves upstream name resolution to the forward proxy.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed an issue where downloading a non-JSONL file through the `llm/v1/files` content endpoint with `logging.log_statistics` enabled truncated the response body, because the batch usage parser aborted the body filter partway through the download.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed an issue where an Anthropic-format request sent to an Anthropic-format target (Anthropic, or Bedrock with a Claude model) lost the client's `cache_control` TTL when a plugin modified the request body. Kong replaced the TTL with a model default of `1h`, which bills cache writes at the one-hour rate. Kong now keeps each client `cache_control` that the rewritten body still carries. A breakpoint that survives without the client's value gets Anthropic's five-minute default, and a breakpoint the plugin removed is not recreated. On the rebuilt body, a `ttl` the provider rejects now reaches the provider unchanged and comes back as the provider's error, instead of being replaced by a Kong default.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed the OpenAI-shaped SSE chunks that Kong synthesizes from a\nGemini stream breaking the OpenAI streaming contract, so stock OpenAI SDKs could not read them. The\nchunks carried no `object` discriminator, reported `created` as `0` because Gemini omits `createTime`\non stream chunks, repeated `role` in every delta instead of the first one only, and merged\n`finish_reason` into the last content-bearing chunk instead of sending the closing chunk with an empty\ndelta that OpenAI clients expect. Passthrough streams were never affected.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy** and **ai-proxy-advanced**: Fixed an issue where reading back a stored object (for example `GET /v1/responses/{id}`) counted its token usage and server-side tool calls again, billing the response a second time in `usage.cost` and in cost-based rate limiting. A non-`POST` request to a RESTful object API (responses, assistants, files, batches) is no longer metered, except the poll that returns the result of a background Responses job, whose `POST` carries no usage; the batch output file download and realtime sessions are still metered.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where a Bedrock target without an `auth` block accepted a\nclient `Authorization: Bearer bedrock-api-key-` header, so any caller could replace the\ngateway credentials with its own key. The override now requires the target to set\n`auth.allow_override` to true.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where a Bedrock target refused a client\n`Authorization: Bearer bedrock-api-key-` header with HTTP 500 instead of a 4xx, which\nreported a caller-caused rejection as a server fault. The refusal is now HTTP 403.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where a client `x-api-key` header was forwarded to AWS on a\nBedrock target.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where 'OpenInference' OpenTelemetry keys format would output token counts\nas float/double type, resulting in 0 token counts, depending on the backend collector.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where it was not possible to retrieve Anthropic batch inference results when presented in JSONL content type.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where the Bedrock `Authorization: Bearer bedrock-api-key-` override header\nwas matched case-sensitively, regarding the `allow_override` auth configuration.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where calendar window policies\nnamed the window segment of rate-limit response headers `nil` instead of the\nconfigured period (`week`, `month`). Header handling remained incomplete when an\nai-proxy-advanced balancer denies one target and then serves a later target:\nrate-limit headers stored for the denied target can still remain on the\nsuccessful response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**, **ai-semantic-response-guard**: Fixed an issue where response text extraction did not recognize Cohere v1 chat responses, which carry the answer as a top-level \"text\" field. The whole response body was treated as the text to sanitize or guard. A dedicated extractor now reads the answer text from Cohere v1 chat responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where `credentials` was dropped from the `anonymize` list when `all` was also selected, which silently turned off credential sanitization.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where, with `ai-sanitizer` and `recover_redacted` enabled on the same route, a response with one caller's restored PII could be cached and served to other callers. Such responses are no longer cached.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where the plugin cached a request with an `Authorization` header when `cache_control` was enabled. The plugin read a wrong nginx variable, so it never found the header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where a streaming cache hit for the `llm/v1/responses` route type replayed SSE frames without `event:` lines.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-response-guard**: Fixed an issue where the OUTPUT guard failed to block responses from non-OpenAI providers (e.g. Bedrock) because it embedded the raw provider response envelope instead of the answer text. The guard now extracts the answer text with the shared driver extractors, for all supported providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Allow AI Gateway control planes and data planes with matching major and minor versions to run different patch releases.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where a config backup exported by a data plane could not be re-imported if it contained non-workspaceable entities such as `ca_certificates` or `oic_issuers`. The export incorrectly included a `ws_id` field for those entities, which the declarative config schema rejects as an unknown field.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where a failed balancer creation leaked the per-upstream create lock, so every later creation for the same upstream stalled for 30 seconds.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where a healthcheck counter value of 255 crashed health checker creation. Healthcheck counters (`successes`, `tcp_failures`, `timeouts`, `http_failures`) are now limited to 254.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where a Postgres connection whose setup statements timed out was returned to the pool, causing subsequent queries on that connection to fail with an internal server error.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where AI proxy plugins rejected a price of 0 in `model.options.input_cost` and in the `input_per_token` and `output_per_token` fields of `config.pricing.models`. The same price was accepted in other pricing fields. A price of 0 is now valid in these fields, and a target with both costs set to 0 is billed as 0 with no missing-price warning.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where data planes retried unrecoverable TLS certificate setup failures instead of loading their backup configuration.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where dynamic upstream TLS settings set via the PDK were lost during buffered proxying.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where failed `kong.balancer` tracing spans did not include the failure reason.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where hybrid data planes stopped configuration retries after a\ncertificate verification failure during control plane rotation. Retries now use\ncycling backoff; Konnect data planes keep stopping retries.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where incremental DP (sync v2) would not export config to fallback storage when the control plane uses periodic polling instead of notify_new_version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where `kong.service.request.set_body()` doesn't process boundary with `=` character.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where plugin server processes were left running after the\nworker managing them was killed, allowing unused processes to accumulate and\nincrease memory usage.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where RBAC self-protection checks were not applied consistently in the Admin API.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "Fixed an issue where the control plane could fail to update a data plane's status if that data plane reconnected or disconnected while the update was in progress.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the Distroless images did not ship the IANA timezone database (`tzdata`), causing **ai-rate-limiting-advanced** calendar windows to reject every `timezone` (including `UTC`) as not a valid IANA timezone and Data Planes to fail CP-to-DP config sync.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the `kong.request.get_body()` function incorrectly parsed Content-Disposition name parameter if it is not double quoted.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where the `/status/ready` API responded with HTTP `500` or `200` instead of `503` when some workers failed in initialization.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Token Vault refresh did not write refreshed admin-enrolled shared OAuth\ncredentials back to Kong Identity for **ai-mcp-proxy** and **token-vault-exchange**.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an SQL injection in the LLM usage counters. A model name that came from a client request was written into the `license_llm_data` table without escaping. The counters now escape every value before they run the statement.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed the request body being written before the filters that can change it, which broke Bedrock and SageMaker requests signed with AWS Signature Version 4.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed the `X-Forwarded-Path` header to hold a normalized and percent-escaped\npath. The gateway now removes dot segments and escapes unsafe bytes, such\nas CR and LF, before it sends the header to the upstream service.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "`GET /admins/:admin?generate_register_url=true` now requires permission to\ncreate admins and full ownership of the target's roles before returning a\nregistration token and URL. Previously any caller with read access on\n`/admins*` could read the registration JWT of an invited admin and use it\nto set the account password on the unauthenticated `/admins/register`\nendpoint.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Fixed an issue where responses to authenticated requests could be incorrectly cached and served to other callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Fixed an issue where the plugin's cache key could collide, causing cache entries to be shared across different requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Fixed an issue where the plugin's cache key did not include the request's Host header, causing responses to be shared across different hosts on the same route.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Fixed an issue where the plugin's cache key did not include the authenticated consumer, so cache entries could be shared across different consumers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-proxy-cache-advanced**: Fixed an issue where the plugin cached responses that should not have been cached.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where `pass_all_downstream_headers` forwarded stale `Content-Length`, `Content-Encoding`, and `Transfer-Encoding` headers, breaking schema introspection.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**jwe-decrypt**: Fixed an issue where an invalid `alg` or `enc` value in the JWE header caused a 500 error. It now returns a 403 error, and a missing `alg` value now returns a 400 error instead.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oauth2-introspection**: Fixed an issue where the credential ID could expose sensitive information.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where plugin with no_proxy configured still sent a malformed absolute-form request to the IdP.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where claim headers added to upstream requests remained unavailable to later plugins after an earlier read returned no value.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where `token_exchange.cache` defaulted to disabled instead of its documented enabled default when omitted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a session was not saved on a request that performed a token exchange. A session-restored request now reuses the exchanged identity instead of re-exchanging.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where `token_exchange` scope and audience conditions matched only the claims `scope` and `aud`. Support for `scopes_claim`/`audience_claim` is now added to `token_exchange`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where an invalid JSON response from the JWKS discovery endpoint caused an unhandled error instead of a proper error message.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed `proof_of_possession_mtls: optional` to verify only tokens with the certificate hash claim. Cert-bound tokens now require a valid cert, others are not mTLS-verified.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed the token exchange cache to stop outliving its subject token, mixing entries across `grant_type`/`provider`/client, and serving stale results after a plugin update under incremental config sync. Use `cache_tokens_salt` to scope the cache further.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where multi-valued HTTP headers in access logs were exported as numbered attributes instead of an array, which caused Elasticsearch mapping conflicts and dropped records.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `kong.shared_dict.size` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the plugin removed existing metric\nseries when the `otel_metrics` shared dictionary was full. The plugin now\ndrops the new series and keeps the existing ones.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where unchanged metrics kept stale timestamps, which caused Prometheus remote write requests to reject metrics batches.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "`PATCH /admins/:admin` no longer accepts the `status` field, and identity\nfields (`username`, `custom_id`, `email`, `rbac_token_enabled`) of a\nmore-privileged admin can no longer be changed by a delegated caller.\n`DELETE /admins/:admin` and `PATCH /admins/:admin/workspaces/:workspace`\nare subject to the same check. Previously a delegated writer on `/admins*`\ncould re-open an existing admin's registration flow and take over the\naccount.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where responses to authenticated requests could be incorrectly cached and served to a caller without valid credentials.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where the plugin could generate the same cache key for different requests, causing Kong to serve a cached response meant for a different request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where the plugin's cache key did not include the request's hostname, causing Kong to serve a cached response meant for a different hostname.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache-advanced**: Fixed an issue where the cache key did not correctly segment by consumer group.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Fixed an issue where responses to authenticated requests could be incorrectly cached and served to other callers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Fixed an issue where the plugin generated the same cache key for different requests. Kong then served a cached response meant for a different request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Fixed an issue where the plugin's cache key did not include the request's hostname, causing Kong to serve a cached response meant for a different hostname.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**proxy-cache**: Fixed an issue where the cache key did not correctly segment by consumer group.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**RBAC**: Fixed an issue where a temporary database outage during an RBAC\nuser's group lookup cached a wrong value, breaking every later Admin API\nrequest from that user.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Registering an invited admin via `POST /admins/register` now correctly sets\nthe admin status to `APPROVED`. Previously the status update used reversed\nDAO arguments and silently left the admin in `INVITED` state.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where the plugin's cache key did not vary by all of the callout request's headers, causing Kong to serve the wrong cached response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where the plugin could generate the same cache key for different requests, causing Kong to serve a cached response meant for a different request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**saml**: Fixed an issue where the plugin did not enforce the SAML\nassertion's audience restriction. The plugin now rejects assertions\nwhose audience does not match the configured `issuer`.\n**Note:** the stricter validation can break existing logins if `Audience`\nvalue is not an exact match for `issuer`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "The `/admins/:admin/roles` and `/rbac/users/:user/roles` endpoints now\nverify that the caller holds every role they assign to or remove from\nanother principal (callers with full access may delegate any role). A\ndelegated writer on `/admins*` can no longer grant roles such as\n`super-admin` to another admin, which previously allowed a low-privileged\nidentity admin to escalate to full Admin API control.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**token-vault-credential-manager**: Reduced Kong Identity / Token Vault load from the\nconnectors page: the vault provider list is now cached per node for 30s (failed fetches\nnegatively cached for 2s) instead of being re-fetched on every poll, and the page now\nbacks off when per-provider probes fail instead of polling at full rate.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**token-vault-credential-manager**: The connectors endpoint now probes vault providers\nconcurrently instead of sequentially, so its latency is the slowest single probe rather\nthan the sum (previously K providers x 5s timeout against a hung vault), and the page's\nbase poll interval is now 30s with an immediate poll when the tab regains focus (e.g.\nreturning from the enrollment flow).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**vault-auth**: Fixed an issue where credentials remained usable after being rotated, revoked, or reassigned to another consumer on Vault KV v2 mounts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved the performance of proxied requests by skipping the regular\nexpression engine when URI path escaping finds nothing to escape.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
   }
 }

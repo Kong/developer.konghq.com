@@ -17,6 +17,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayCustomPolicy
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api

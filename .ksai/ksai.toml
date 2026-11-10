@@ -31,13 +31,43 @@ paths = [
 source_files = ["review-rules/core.md"]
 
 [[review.packs]]
+name = "Prose"
+paths = [
+  "app/**/*.md",
+  "app/_landing_pages/**/*.yaml",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/prose.md"]
+
+[[review.packs]]
+name = "Schema restating"
+paths = [
+  "app/_kong_plugins/**/*.md",
+  "app/_gateway_entities/**/*.md",
+  "app/_ai_gateway_policies/**/*.md",
+  "app/_ai_gateway_entities/**/*.md",
+  "app/_event_gateway_policies/**/*.md",
+  "app/_mesh_policies/**/*.md",
+  "app/event-gateway/configuration.md",
+  "app/gateway/kong-manager/configuration.md",
+  "app/gateway/cp-dp-communication.md",
+]
+source_files = ["review-rules/schema-restate.md"]
+
+[[review.packs]]
 name = "Information overload"
 paths = [
   "app/**/*.md",
   "!app/_how-tos/**",
   "!app/_kong_plugins/**",
   "!app/_event_gateway_policies/**",
-  "!app/_ai_policies/**",
+  "!app/_ai_gateway_policies/**",
   "!app/_mesh_policies/**",
   "!app/_references/**",
   "!app/_changelogs/**",
@@ -96,3 +126,18 @@ source_files = ["review-rules/related-resources.md"]
 name = "Landing pages"
 paths = ["app/_landing_pages/**/*.yaml"]
 source_files = ["review-rules/landing-pages.md"]
+
+[[review.packs]]
+name = "UI inventory lists"
+paths = [
+  "app/**/*.md",
+  "app/_landing_pages/**/*.yaml",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/ui-inventory.md"]

@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayModel
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -67,8 +68,8 @@ faqs:
 
   - q: Can a client override the model name from the request body?
     a: |
-      By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the upstream AI Provider model name. See [Request routing rules](#request-routing-rules) for details and examples.
+      By default, no. Clients must send the `name` of the AI Model in the `model` field, not the upstream model name. A request with any other value fails.
+      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the AI Model name. See [Request routing rules](#request-routing-rules) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -111,7 +112,7 @@ At request time, the AI Model mediates traffic between clients and upstream AI P
 1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
 1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Model Provider](/ai-gateway/entities/ai-model-provider/), unless the target is a self-hosted model.
 1. Authenticates to the upstream LLM service using credentials stored on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity.
-1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
+1. Decorates the upstream request with per-target configuration (for example, temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
 1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
 
@@ -184,6 +185,20 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Expose all capabilities
+
+To expose every capability that the AI Model's [`type`](#schema-aigateway-model-type) and providers support, set `capabilities` to `["*"]`. You don't have to list each capability, and new capabilities that a later release adds are included automatically.
+
+* A `model` type AI Model exposes all `model` capabilities.
+* An `api` type AI Model exposes only `batches` and `files`. The `skills` capability is never selected by `*` and must be listed explicitly.
+* Capabilities that the provider doesn't support, or that the data plane version doesn't support, are omitted.
+* If you list other values next to `*`, they are ignored.
+
+An empty or absent `capabilities` list still exposes no capabilities. You must set `*` explicitly.
+
+{:.warning}
+> A wildcard AI Model can create many routes. For example, an AI Model with `capabilities: ["*"]` and `formats: [{type: "*"}]` on an OpenAI provider creates approximately 25 routes. These routes use every path under the AI Model's base path, and they can conflict with an AI MCP Server or AI Agent that uses the same path.
+
 ## Request and response formats
 
 By default, AI Models expose all endpoints using OpenAI-compatible format. {{site.ai_gateway}} provides a single, standardized interface across all providers, so you can swap providers (OpenAI, Anthropic, self-hosted, etc.) without changing client code or integration logic.
@@ -231,7 +246,39 @@ rows:
 
 When a native format is set, only the corresponding provider is supported with its specific APIs.
 
-### Passthrough {% new_in 2.2 %}
+### Expose all formats
+
+To accept every API format, set `formats` to `[{type: "*"}]`. Combined with [`capabilities: ["*"]`](#expose-all-capabilities), the AI Model listens on every {{site.ai_gateway}} endpoint:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: "*"
+```
+
+The `*` format has the following behavior:
+
+* It selects every format in the preceding table except `passthrough`, which can't be combined with other formats. Formats that the data plane version doesn't support are omitted. For example, `typesafe` is selected only if you're running {{site.ai_gateway}} 2.2 or later.
+* If you list other formats next to `*`, they are ignored.
+* An absent or empty `formats` list still defaults to `openai`.
+* Your provider must support the formats that `*` selects. A provider might not support every format.
+
+### Use multiple formats
+
+An AI Model can list more than one format. It then exposes the capabilities of each format, so clients can call the same AI Model with different API shapes. For example, the following AI Model serves all capabilities for both the `openai` and `cohere` formats:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: openai
+  - type: cohere
+```
+
+If you set explicit capabilities, a capability that no listed format supports is rejected. A capability that only some of the listed formats serve is exposed for those formats only.
+
+When two formats serve the same path, for example `realtime` on `/realtime` for `openai` and `gemini`, the AI Model keeps the endpoint of the `openai` format. If you list formats and capabilities explicitly, you get a routing conflict warning for the endpoint that is omitted.
+
+### Passthrough
 
 If your upstream exposes a format {{site.ai_gateway}} doesn't recognize, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, without `Content-Type` enforcement or schema validation.
 
@@ -339,7 +386,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Request routing rules
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
+By default, applications or services making requests to the AI Model endpoint must specify the `name` of the AI Model in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
 
 `config.route.model` accepts one of the following match strategies:
 
@@ -347,7 +394,7 @@ By default, applications or services making requests to the AI Model endpoint mu
 * [`header_param`](#schema-aigateway-model-config-route-model): matches a value in the request headers, indexed by header name.
 * [`path_param`](#schema-aigateway-model-config-route-model): matches a value present in the request path, indexed by path parameter name.
 
-Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (currently limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't set, {{site.ai_gateway}} creates a default model selector using the AI Model's name and format.
 
@@ -361,6 +408,10 @@ To control how consumers authenticate before their access is evaluated, configur
 > All AI Models in a {{site.ai_gateway}} exposed on the same base path that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy.
 >
 > For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
+
+### CEL-based ACLs
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI Model" anchor="#schema-aigateway-model-access" %}
 
 ## Attach AI Policies
 

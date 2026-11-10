@@ -28,7 +28,7 @@ module Jekyll
               @variables = variables
             end
 
-            def run(data) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+            def run(data)
               keys_pattern = variables.keys.map { |key| Regexp.escape(key.to_s) }.join('|')
               regex = /\$\{(#{keys_pattern})\}/
 
@@ -112,6 +112,7 @@ module Jekyll
           class KongctlData
             SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
             SECRET_SENTINEL_PATTERN = /__kongctl_secret_env_([A-Z][A-Z0-9_]*)__/
+            REF_SENTINEL_PATTERN = /__kongctl_ref_([\w-]+)__/
             AI_GATEWAY_LOOKUP_SENTINEL = '__kongctl_lookup_ai_gateway__'
             ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
 
@@ -121,9 +122,14 @@ module Jekyll
 
             def self.apply_tags(yaml)
               yaml
+                .gsub(REF_SENTINEL_PATTERN, '!ref \1#name')
                 .gsub(SECRET_SENTINEL_PATTERN, '!secret {source: !env \1}')
                 .gsub(SENTINEL_PATTERN, '!env \1')
                 .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup {id: !env AI_GATEWAY_ID}')
+            end
+
+            def self.ref_sentinel(policy_name)
+              "__kongctl_ref_#{policy_name}__"
             end
 
             def initialize(variables: {})

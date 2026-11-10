@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@75f67e9c148d0225a8321c01ceabf1a53b08467c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/75f67e9c148d0225a8321c01ceabf1a53b08467c'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -739,6 +739,21 @@ paths:
         - {}
       tags:
         - Portal
+  /api/v3/customization/navigations:
+    get:
+      operationId: list-portal-navigations
+      summary: List Navigations
+      description: 'Returns every sidebar navigation configuration for the portal. The portal resolves which navigation applies to a given route itself, by longest `show_on_path_prefixes` entry match. Links a visitor may not see are omitted. Returns 404 when no navigation is published.'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPortalNavigationsResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+        - {}
+      tags:
+        - Portal Customization
   /api/v3/developer:
     post:
       operationId: register
@@ -4921,6 +4936,8 @@ components:
         canonical_domain:
           description: The canonical domain of the developer portal
           type: string
+        ai:
+          $ref: '#/components/schemas/AISettings'
       additionalProperties: false
       required:
         - portal_id
@@ -5158,6 +5175,140 @@ components:
         - created_at
         - updated_at
       title: PortalSnippet
+    ListPortalNavigations:
+      description: Every sidebar navigation configuration for the portal. Not paginated.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalNavigationInfo'
+      additionalProperties: false
+      required:
+        - data
+      title: ListPortalNavigations
+    PortalNavigationInfo:
+      description: A single sidebar navigation configuration for the portal.
+      type: object
+      properties:
+        show_on_path_prefixes:
+          description: Route prefixes this navigation claims.
+          type: array
+          items:
+            type: string
+          example:
+            - /guides
+          minItems: 1
+          uniqueItems: true
+        name:
+          description: Names the navigation. Visitors never see it.
+          type: string
+          example: Main
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLinkGroup'
+      additionalProperties: false
+      required:
+        - show_on_path_prefixes
+        - name
+        - groups
+      title: PortalNavigationInfo
+    NavigationLinkGroup:
+      description: 'A group of navigation links, rendered in order, with an optional header.'
+      type: object
+      properties:
+        header:
+          description: Heading text displayed above the group's links. Omit it for an unlabeled group.
+          type: string
+          example: Getting started
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLink'
+      additionalProperties: false
+      required:
+        - links
+      title: NavigationLinkGroup
+    NavigationLink:
+      description: 'A single navigation link, already filtered for the requesting visitor, optionally with nested children.'
+      type: object
+      properties:
+        text:
+          description: The link label.
+          type: string
+          example: Overview
+        href:
+          description: 'The link target: a portal path (`/guides`), an anchor (`/getting-started#section`), a query (`?tab=1`), or a full `https://` URL.'
+          type: string
+          example: /getting-started
+        external:
+          description: 'When true, the link opens in a new tab.'
+          type: boolean
+          default: false
+        expanded:
+          description: 'When true, the link''s children start expanded.'
+          type: boolean
+          default: false
+        children:
+          description: 'Nested links, up to three levels total, including this link.'
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLink'
+          example: []
+      additionalProperties: false
+      required:
+        - text
+        - href
+      title: NavigationLink
+    AISettingsFeatures:
+      description: 'AI features configuration. When top-level `enabled` is false, every feature toggle here is automatically reset to false.'
+      type: object
+      properties:
+        ai_search:
+          description: AI Search config
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              description: Whether AI Search is enabled or not
+              type: boolean
+              default: false
+          required:
+            - enabled
+        mcp_server:
+          description: AI Features config
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              description: Whether the MCP Server is enabled or not
+              type: boolean
+              default: false
+            write_operations_enabled:
+              description: Whether write operations are enabled or not for the Portal MCP Server enabled
+              type: boolean
+              default: false
+          required:
+            - enabled
+            - write_operations_enabled
+      additionalProperties: false
+      required:
+        - mcp_server
+        - ai_search
+    AISettings:
+      type: object
+      properties:
+        enabled:
+          description: Is AI enabled?
+          type: boolean
+          default: false
+        features:
+          $ref: '#/components/schemas/AISettingsFeatures'
+      additionalProperties: false
+      required:
+        - enabled
+        - features
     SnippetName:
       description: The unique name of a snippet in a portal.
       type: string
@@ -6882,6 +7033,14 @@ components:
                 rbac_enabled: true
                 name: my portal
                 canonical_domain: portal.example.com
+                ai:
+                  enabled: true
+                  features:
+                    mcp_server:
+                      enabled: true
+                      write_operations_enabled: false
+                    ai_search:
+                      enabled: false
     PortalImageAssetResponse:
       description: An image asset
       content:
@@ -6899,6 +7058,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomizationV3'
+    ListPortalNavigationsResponse:
+      description: Every sidebar navigation configuration for the portal. Not paginated.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListPortalNavigations'
     PortalIntegrationsResponse:
       description: Response for portal integration configurations
       content:
@@ -6973,6 +7138,8 @@ tags:
     description: The API for retrieving details about a single Konnect Portal.
   - name: Content
     description: The API for retrieving content for a Konnect Portal.
+  - name: Portal Customization
+    description: The API for retrieving customization options for a Dev Portal.
   - name: Registrations
     description: |
       The API for Konnect Portal application registrations. If the portal is public

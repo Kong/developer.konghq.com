@@ -6,10 +6,19 @@ import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
 import { executeCommand, executeDocCommand } from "../docker-helper.js";
+import { executeDocCommandWithRetry } from "./retry.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
 const log = debug("tests:runner");
+
+// Cleanup is best-effort, so a command that hangs (not just fails) must be
+// abandoned too: `kubectl delete` of a namespace wedged in Terminating by a
+// stuck finalizer never returns and would block the whole run forever.
+// Five minutes is far above any healthy cleanup command. Overridable for
+// debugging a slow environment.
+const CLEANUP_COMMAND_TIMEOUT_MS =
+  Number(process.env.CLEANUP_COMMAND_TIMEOUT_MS) || 5 * 60 * 1000;
 
 export class ExitOnFailure extends Error {
   constructor(message) {
@@ -101,15 +110,36 @@ async function runCleanup(cleanup, container, runtimeConfig) {
   if (cleanup) {
     const config = await processCleanup(cleanup);
     if (config.commands) {
+      // A command that fails (e.g. deleting a resource an earlier failed step
+      // never created) must not skip the remaining ones, or later resources
+      // leak, but it does mean state was left behind: run them all, then fail
+      // the run so a leaked resource is not reported as a pass.
+      const errors = [];
       for (const command of config.commands) {
-        if (typeof command === "string") {
-          await executeCommand(container, command);
-        } else {
-          await validate(container, command, runtimeConfig);
+        try {
+          if (typeof command === "string") {
+            await executeCommand(
+              container,
+              command,
+              command,
+              CLEANUP_COMMAND_TIMEOUT_MS
+            );
+          } else {
+            await validate(container, command, runtimeConfig);
+          }
+        } catch (err) {
+          errors.push(err.message);
         }
       }
+      if (errors.length > 0) {
+        log(`   cleanup ❌. ${errors.length} command(s) failed:`);
+        for (const error of errors) {
+          log(`     ${error}`);
+        }
+        throw new Error(`Cleanup failed: ${errors.join("; ")}`);
+      }
+      log(`   cleanup ✅ .`);
     }
-    log(`   cleanup ✅ .`);
   }
 }
 
@@ -123,6 +153,15 @@ async function runSteps(steps, runtimeConfig, container) {
         for (const command of config.commands) {
           if (typeof command === "string") {
             await executeDocCommand(container, command);
+            log(`   step ✅ .`);
+          } else if (command.command !== undefined) {
+            // A command object is a bash step marked data-test-retry-count on
+            // its page fence: the runner repeats it with exponential backoff.
+            await executeDocCommandWithRetry(
+              container,
+              command.command,
+              command.retry_count,
+            );
             log(`   step ✅ .`);
           } else {
             // XXX: Sleep needed here because we need to wait for the iterator

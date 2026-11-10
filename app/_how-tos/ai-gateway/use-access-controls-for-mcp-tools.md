@@ -110,7 +110,7 @@ ai_gateway_consumer_groups:
 
 ## Create AI Consumers
 
-1. Configure individual [AI Consumers](/ai-gateway/entities/ai-consumer/) and add them to their groups. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
+1. Configure individual [AI Consumers](/ai-gateway/entities/ai-consumer/) and add them to their groups. Each one inherits the ACL rules of its group, and Eason, who doesn't belong to a group, is only reachable through the tool-level ACLs you'll set in the following section:
 
 {% capture consumers %}
 {% entity_examples %}
@@ -376,7 +376,6 @@ ai_gateway_mcp_servers:
       default_tool_acls:
         allow:
           - admin
-        deny: []
     config:
       url: http://host.docker.internal:8080/api/v3
       route:

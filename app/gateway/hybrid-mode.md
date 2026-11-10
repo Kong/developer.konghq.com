@@ -141,10 +141,10 @@ The following diagram shows what {{site.base_gateway}} looks like in self-manage
 flowchart TD
 
 A[(Database)]
-B(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Control Plane <br> #40;{{site.base_gateway}} instance#41;)
-C(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 3<br> #40;{{site.base_gateway}} instance#41;)
-D(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 1<br> #40;{{site.base_gateway}} instance#41;)
-E(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 2<br> #40;{{site.base_gateway}} instance#41;)
+B(fa:fa-KogoBlue Control Plane <br> #40;{{site.base_gateway}} instance#41;)
+C(fa:fa-KogoBlue Data Plane 3<br> #40;{{site.base_gateway}} instance#41;)
+D(fa:fa-KogoBlue Data Plane 1<br> #40;{{site.base_gateway}} instance#41;)
+E(fa:fa-KogoBlue Data Plane 2<br> #40;{{site.base_gateway}} instance#41;)
 
 subgraph id1 [Self-managed CP node]
 A---B

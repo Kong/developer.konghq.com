@@ -19,6 +19,7 @@ sections:
         description: Run a fully-hosted {{site.ai_gateway}} control plane and data planes on Dedicated Cloud Gateways.
         url: /dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways
       - path: /ai-gateway/architecture/
+      - path: /ai-access-management/
       - title: "{{site.ai_gateway}} capabilities"
         description: Learn about the core capabilities of {{site.ai_gateway}}.
         url: /ai-gateway/#ai-gateway-capabilities
@@ -61,6 +62,7 @@ sections:
       - path: /ai-gateway/conditions/
       - path: /ai-gateway/changelog/
       - path: /ai-gateway/version-support-policy/
+      - path: /ai-gateway/data-plane-version-compatibility/
 
   - title: "{{site.ai_gateway}} entities"
     items:
@@ -76,6 +78,11 @@ sections:
       - path: /ai-gateway/entities/ai-vault/
       - path: /ai-gateway/entities/ai-auth-strategy/
       - path: /ai-gateway/entities/ai-data-plane-certificate/
+  - title: AI Management
+    items:
+      - path: /ai-management/
+      - path: /ai-management/roles-and-permissions/
+      - path: /ai-management/observability/
   - title: "{{site.ai_gateway}} providers"
     items:
       - path: /ai-gateway/ai-providers/**/*
@@ -131,6 +138,7 @@ sections:
   - title: Reference
     items:
       - path: /ai-gateway/ai-gateway-v2-concepts/
+      - path: /ai-access-management/concepts/
       - path: /ai-gateway/configuration/
       - path: /ai-gateway/configure-on-prem/
       - path: /ai-gateway/v2-migration-guide/

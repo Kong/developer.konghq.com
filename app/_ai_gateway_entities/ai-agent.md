@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayAgent
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -78,7 +79,7 @@ faqs:
     a: |
       Reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or id in the AI Agent's
       [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same field used on AI Models. An AI Agent
-      currently accepts up to one AI Auth Strategy reference. The AI Agent has its own top-level authentication
+      accepts up to one AI Auth Strategy reference. The AI Agent has its own top-level authentication
       mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: How do I attach AI Policies to an AI Agent?
@@ -92,6 +93,12 @@ faqs:
       signs each proxied request using static IAM credentials, environment auto-detection, or an assumed role. This
       is separate from [`access.auth_strategies`](#schema-aigateway-agent-access), which authenticates inbound
       clients rather than outbound requests to the upstream agent. See [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream agent that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Set [`config.certificates`](#schema-aigateway-agent-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) for a private CA.
+      Both fields apply to `a2a` and `http` AI Agents.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI Agent?
@@ -340,7 +347,11 @@ To restrict which AI Consumers or teams can reach a specific agent, use ACLs. Th
 
 For per-request authentication and identity validation, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in the [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism: you configure the authentication through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
-An AI Agent currently accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
+An AI Agent accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
+
+### CEL-based ACLs
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI Agent" anchor="#schema-aigateway-agent-access" %}
 
 ## Upstream authentication
 
@@ -372,6 +383,23 @@ config:
 ```
 
 `config.upstream` is available regardless of the AI Agent's [`type`](#schema-aigateway-agent-type); it applies to `a2a` and `http` Agents alike.
+
+## Upstream TLS
+
+{% include md/ai-gateway/v2/upstream-tls.md name='AI Agent' schema_prefix='schema-aigateway-agent-config' %}
+
+These fields apply to both `a2a` and `http` AI Agents.
+
+In the following example, the AI Agent presents the `agent-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
+
+```yaml
+config:
+  url: https://booking-agent.internal.kongair.com
+  certificates:
+    - agent-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
+```
 
 ## Attach AI Policies
 

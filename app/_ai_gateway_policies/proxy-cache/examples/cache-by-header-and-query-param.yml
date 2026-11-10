@@ -1,0 +1,36 @@
+name: cache-by-header-and-query-param
+display_name: Cache by header and query parameter
+type: proxy-cache
+description: 'Cache responses separately for each value of the `X-Tenant` header and the `page` query parameter.'
+
+extended_description: 'Cache responses separately for each value of the `X-Tenant` header and the `page` query parameter. Only the `page` query parameter is part of the cache key.'
+
+title: 'Cache separately by header and query parameter'
+
+weight: 800
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - ai-consumer-group
+  - global
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - application/json
+  cache_ttl: 120
+  vary_headers:
+  - X-Tenant
+  vary_query_params:
+  - page
+  strategy: memory
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

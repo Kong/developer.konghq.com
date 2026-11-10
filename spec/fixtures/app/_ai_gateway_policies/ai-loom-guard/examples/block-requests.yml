@@ -1,0 +1,10 @@
+title: Block loom requests
+description: Block requests that match a loom pattern.
+weight: 900
+name: loom-guard
+display_name: Loom Guard
+type: ai-loom-guard
+config:
+  action: block
+tools:
+  - konnect-api

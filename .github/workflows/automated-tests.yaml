@@ -50,6 +50,7 @@ jobs:
           DEPLOYMENT_MODEL: on-prem
           PRODUCTS: gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
+          TESTS_SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
 
