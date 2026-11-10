@@ -11,6 +11,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.12": [
+    {
+      "message": "Fixed CVE-2026-92545 by including the hostname in the cache key, preventing cached responses from being served across hostnames.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.20": [
     {
       "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
