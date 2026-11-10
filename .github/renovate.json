@@ -13,6 +13,20 @@
         "review:tech"
     ],
     "cloneSubmodules": true,
+    "customManagers": [
+        {
+            "customType": "regex",
+            "fileMatch": [
+                "(^|/)Makefile$",
+                "\\.github/reusable-steps/install-deps/action\\.yaml$"
+            ],
+            "matchStrings": [
+                "npm install -g corepack@(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+            ],
+            "depNameTemplate": "corepack",
+            "datasourceTemplate": "npm"
+        }
+    ],
     "packageRules": [
         {
             "groupName": "Non-major dependencies",

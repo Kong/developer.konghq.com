@@ -28,7 +28,10 @@ runs:
     # Configure Node to build assets
     - name: Enable Corepack
       shell: bash
-      run: corepack enable
+      run: |
+        # Corepack is no longer bundled with Node.js 25 and later, so install it first
+        npm install -g corepack@0.36.0
+        corepack enable
 
     - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
       with:
