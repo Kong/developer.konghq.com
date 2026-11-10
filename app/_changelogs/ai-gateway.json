@@ -2985,5 +2985,39 @@
         "scope": "Core"
       }
     ]
+  },
+  "2.3.1": {
+    "kong-aigw": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42533.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-48142.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-56434.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-60005.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-9256.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-42055.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
   }
 }
