@@ -56,6 +56,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.12": [
+    {
+      "message": "Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now supports dynamic request URLs in the form of Lua expressions `$(some_lua_expression)`.",

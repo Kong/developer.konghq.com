@@ -1422,7 +1422,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.13"
-    ee-version: "3.13.0.11"
+    ee-version: "3.13.0.12"
     eol: 2026-12-18
     distributions:
       - amazonlinux2:
@@ -2281,6 +2281,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.13.0.12': 2026/11/10
   '3.14.0.16': 2026/10/14
   '3.16.0.1': 2026/10/12
   '3.13.0.11': 2026/09/28
