@@ -4,8 +4,11 @@
 // `export ID="$(kongctl get ...)"`) run in a throwaway `bash -c` exec, so the
 // variable evaporates before the next step reads it. buildPersistCommand wraps
 // the original command verbatim and, on success, appends the resulting value to
-// /env-vars.sh base64-encoded. docker-helper.js getLiveEnv decodes every
-// `NAME_BASE64` entry last, so persisted values win over stale plain entries.
+// /env-vars.sh base64-encoded. docker-helper.js getLiveEnv decodes such a
+// `NAME_BASE64` entry when it is the last writer of NAME in the file, so a
+// persisted value wins over the plain placeholder it replaces, while a plain
+// entry written later (by a later step, or a later instruction file) wins - the
+// same resolution `source` performs. See instructions/env-vars.js.
 // The line format lives in base64EnvLine; docker-helper.js setEnvVariable uses
 // the same formatter, so the file convention has a single owner.
 
