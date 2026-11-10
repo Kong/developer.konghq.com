@@ -56,7 +56,7 @@ Clients receive a standard JSON error response for streaming and non-streaming r
 
 
 {:.warning}
-> The `xpath_abbreviated` type matches strings such as `//*` and `<script>` tags, so it can match ordinary content.
+> The `xpath_abbreviated` type matches strings such as `//*` and `</script>`, so it can match ordinary content.
 > Run the policy with `enforcement_mode` set to `log_only` and review the log before you block traffic.
 
 ## Scopes
