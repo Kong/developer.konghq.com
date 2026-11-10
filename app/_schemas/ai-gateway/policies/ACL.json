@@ -24,20 +24,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Arbitrary group names that are allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
-        },
-        "deny": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Arbitrary group names that are not allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
-        },
         "hide_groups_header": {
           "type": "boolean",
           "description": "If enabled (`true`), prevents the `X-Consumer-Groups` and `X-Authenticated-Groups` headers from being sent in the request to the upstream service. These headers are not set when `allow_when` or `deny_when` is used.",
@@ -70,6 +56,20 @@
             "minLength": 1
           },
           "description": "Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Arbitrary group names that are allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
+        },
+        "deny": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Arbitrary group names that are not allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
         }
       }
     },

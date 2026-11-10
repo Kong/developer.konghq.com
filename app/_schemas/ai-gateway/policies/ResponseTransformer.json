@@ -1,8 +1,65 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
+        "remove": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "rename": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
         "replace": {
           "type": "object",
           "properties": {
@@ -38,6 +95,13 @@
         "add": {
           "type": "object",
           "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "json": {
               "type": "array",
               "items": {
@@ -56,13 +120,6 @@
                 ]
               },
               "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
               "default": []
             }
           }
@@ -70,6 +127,13 @@
         "append": {
           "type": "object",
           "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "json": {
               "type": "array",
               "items": {
@@ -89,74 +153,20 @@
               },
               "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
               "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "remove": {
-          "type": "object",
-          "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "rename": {
-          "type": "object",
-          "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
             }
           }
         }
       }
     },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
+    "consumer_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
       },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
       "type": "object",
@@ -187,16 +197,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
-    },
-    "consumer_group": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     }
   }
 }

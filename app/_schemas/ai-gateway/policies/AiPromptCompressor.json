@@ -1,27 +1,17 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "compressor_type": {
+          "type": "string",
+          "enum": [
+            "rate",
+            "target_token"
+          ],
+          "description": "What compression type to use to compress with",
+          "default": "rate"
+        },
         "provider": {
           "type": "string",
           "enum": [
@@ -34,12 +24,6 @@
         "headroom": {
           "type": "object",
           "properties": {
-            "proxy_token": {
-              "type": "string",
-              "description": "HEADROOM_PROXY_TOKEN, sent both as `X-Headroom-Proxy-Token` and as `Authorization: Bearer`. Required unless `compressor_url` is a loopback address (localhost, 127.0.0.0/8, ::1). A wrong token surfaces as 401.",
-              "x-encrypted": true,
-              "x-referenceable": true
-            },
             "ssl_verify": {
               "type": "boolean",
               "description": "Verify TLS certificate of the Headroom endpoint (for https endpoints).",
@@ -56,49 +40,39 @@
                 "thread-id",
                 "x-claude-code-agent-id",
                 "x-claude-code-session-id",
+                "x-opencode-session-id",
                 "x-session-id"
               ]
+            },
+            "proxy_token": {
+              "type": "string",
+              "description": "HEADROOM_PROXY_TOKEN, sent both as `X-Headroom-Proxy-Token` and as `Authorization: Bearer`. Required unless `compressor_url` is a loopback address (localhost, 127.0.0.0/8, ::1). A wrong token surfaces as 401.",
+              "x-referenceable": true,
+              "x-encrypted": true
             }
           },
-          "description": "Headroom-specific settings, read only when `provider` is `headroom`. Point the policy-wide `compressor_url` at the Headroom `/v1/compress` endpoint, and keep the policy-wide `timeout` above the Headroom-side turn lock plus compression timeout. Headroom keeps its sessions in memory on one process, so point Kong at a single instance and not at a load-balanced set.",
+          "description": "Headroom-specific settings, read only when `provider` is `headroom`. Point the policy-wide `compressor_url` at the Headroom `/v1/compress` endpoint, and keep the policy-wide `timeout` above the Headroom-side turn lock plus compression timeout. By default, Headroom keeps its sessions in memory on one process, so point Kong at a single instance. To load-balance, set `HEADROOM_COMPRESS_SESSION_STORE` on every instance (Headroom 0.42+).",
           "default": {}
         },
-        "timeout": {
+        "keepalive_timeout": {
           "type": "number",
-          "description": "Connection timeout with the compressor",
-          "default": 10000
+          "description": "The keepalive timeout for the established http connnection",
+          "default": 60000
         },
         "stop_on_error": {
           "type": "boolean",
           "description": "Stop processing if an error occurs",
           "default": true
         },
-        "message_type": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "assistant",
-              "system",
-              "user"
-            ]
-          },
-          "default": [
-            "user"
-          ]
-        },
-        "compressor_type": {
-          "type": "string",
-          "enum": [
-            "rate",
-            "target_token"
-          ],
-          "description": "What compression type to use to compress with",
-          "default": "rate"
-        },
         "proxy_config": {
           "type": "object",
           "properties": {
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
             "proxy_scheme": {
               "type": "string",
               "enum": [
@@ -135,12 +109,6 @@
             "https_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
-            },
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
             }
           }
         },
@@ -172,17 +140,50 @@
           "description": "The url of the compressor",
           "default": "http://localhost:8080"
         },
-        "keepalive_timeout": {
+        "timeout": {
           "type": "number",
-          "description": "The keepalive timeout for the established http connnection",
-          "default": 60000
+          "description": "Connection timeout with the compressor",
+          "default": 10000
         },
         "log_text_data": {
           "type": "boolean",
           "description": "Log the text data",
           "default": false
+        },
+        "message_type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "assistant",
+              "system",
+              "user"
+            ]
+          },
+          "default": [
+            "user"
+          ]
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "consumer": {
       "type": "object",

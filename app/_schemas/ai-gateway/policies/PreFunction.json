@@ -29,6 +29,13 @@
     "config": {
       "type": "object",
       "properties": {
+        "access": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
         "header_filter": {
           "type": "array",
           "items": {
@@ -36,7 +43,35 @@
           },
           "default": []
         },
+        "ws_handshake": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_client_frame": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
         "body_filter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_upstream_frame": {
           "type": "array",
           "items": {
             "type": "string"
@@ -58,41 +93,6 @@
           "default": []
         },
         "rewrite": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "log": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "ws_handshake": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "ws_client_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "ws_upstream_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "access": {
           "type": "array",
           "items": {
             "type": "string"

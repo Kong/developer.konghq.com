@@ -1,54 +1,25 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "status_tag": {
-          "type": "string",
-          "description": "String to be attached as the tag of the HTTP status.",
-          "default": "status"
-        },
-        "route_name_tag": {
-          "type": "string",
-          "description": "String to be attached as tag of the route name or ID."
-        },
-        "retry_count": {
-          "type": "integer",
-          "description": "Number of times to retry when sending data to the upstream server."
-        },
-        "queue_size": {
-          "type": "integer",
-          "description": "Maximum number of log entries to be sent on each message to the upstream server."
-        },
         "queue": {
           "type": "object",
           "properties": {
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
+            },
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            },
             "max_entries": {
               "type": "integer",
               "maximum": 1000000,
@@ -87,28 +58,57 @@
               ],
               "description": "The number of of queue delivery timers. -1 indicates unlimited.",
               "default": 1
-            },
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
-            },
-            "max_coalescing_delay": {
-              "type": "number",
-              "maximum": 3600,
-              "minimum": 0,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "default": 1
             }
           }
+        },
+        "prefix": {
+          "type": "string",
+          "description": "String to be attached as a prefix to a metric's name.",
+          "default": "kong"
+        },
+        "service_name_tag": {
+          "type": "string",
+          "description": "String to be attached as the name of the service.",
+          "default": "name"
+        },
+        "status_tag": {
+          "type": "string",
+          "description": "String to be attached as the tag of the HTTP status.",
+          "default": "status"
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": "Number of times to retry when sending data to the upstream server."
+        },
+        "flush_timeout": {
+          "type": "number",
+          "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
         },
         "metrics": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
+              "stat_type": {
+                "type": "string",
+                "enum": [
+                  "counter",
+                  "distribution",
+                  "gauge",
+                  "histogram",
+                  "meter",
+                  "set",
+                  "timer"
+                ],
+                "description": "Determines what sort of event the metric represents"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of tags"
+              },
               "sample_rate": {
                 "type": "number",
                 "maximum": 1,
@@ -135,26 +135,6 @@
                   "upstream_latency"
                 ],
                 "description": "Datadog metric’s name"
-              },
-              "stat_type": {
-                "type": "string",
-                "enum": [
-                  "counter",
-                  "distribution",
-                  "gauge",
-                  "histogram",
-                  "meter",
-                  "set",
-                  "timer"
-                ],
-                "description": "Determines what sort of event the metric represents"
-              },
-              "tags": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "List of tags"
               }
             },
             "required": [
@@ -164,6 +144,12 @@
           },
           "description": "List of metrics to be logged."
         },
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "localhost",
+          "x-referenceable": true
+        },
         "port": {
           "type": "integer",
           "maximum": 65535,
@@ -171,32 +157,46 @@
           "description": "An integer representing a port number between 0 and 65535, inclusive.",
           "default": 8125
         },
-        "prefix": {
-          "type": "string",
-          "description": "String to be attached as a prefix to a metric's name.",
-          "default": "kong"
-        },
-        "service_name_tag": {
-          "type": "string",
-          "description": "String to be attached as the name of the service.",
-          "default": "name"
-        },
         "consumer_tag": {
           "type": "string",
           "description": "String to be attached as tag of the consumer.",
           "default": "consumer"
         },
-        "flush_timeout": {
-          "type": "number",
-          "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
-        },
-        "host": {
+        "route_name_tag": {
           "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "localhost",
-          "x-referenceable": true
+          "description": "String to be attached as tag of the route name or ID."
+        },
+        "queue_size": {
+          "type": "integer",
+          "description": "Maximum number of log entries to be sent on each message to the upstream server."
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "consumer": {
       "type": "object",

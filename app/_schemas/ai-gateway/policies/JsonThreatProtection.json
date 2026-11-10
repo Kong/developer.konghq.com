@@ -1,32 +1,27 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "max_array_element_count": {
+        "max_container_depth": {
           "type": "integer",
           "maximum": 2147483648,
           "minimum": -1,
-          "description": "Max number of elements in an array. -1 means unlimited.",
+          "description": "Max nested depth of objects and arrays. -1 means unlimited.",
+          "default": -1
+        },
+        "max_object_entry_count": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max number of entries in an object. -1 means unlimited.",
+          "default": -1
+        },
+        "max_string_value_length": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max string value length. -1 means unlimited.",
           "default": -1
         },
         "allow_duplicate_object_entry_name": {
@@ -48,6 +43,27 @@
           "description": "Enforcement mode of the security policy.",
           "default": "block"
         },
+        "error_status_code": {
+          "type": "integer",
+          "maximum": 499,
+          "minimum": 400,
+          "description": "The response status code when validation fails.",
+          "default": 400
+        },
+        "max_object_entry_name_length": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max string length of object name. -1 means unlimited.",
+          "default": -1
+        },
+        "max_array_element_count": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max number of elements in an array. -1 means unlimited.",
+          "default": -1
+        },
         "error_message": {
           "type": "string",
           "description": "The response message when validation fails",
@@ -59,43 +75,27 @@
           "minimum": -1,
           "description": "Max size of the request body. -1 means unlimited.",
           "default": 8192
-        },
-        "max_object_entry_name_length": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max string length of object name. -1 means unlimited.",
-          "default": -1
-        },
-        "max_string_value_length": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max string value length. -1 means unlimited.",
-          "default": -1
-        },
-        "error_status_code": {
-          "type": "integer",
-          "maximum": 499,
-          "minimum": 400,
-          "description": "The response status code when validation fails.",
-          "default": 400
-        },
-        "max_container_depth": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max nested depth of objects and arrays. -1 means unlimited.",
-          "default": -1
-        },
-        "max_object_entry_count": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max number of entries in an object. -1 means unlimited.",
-          "default": -1
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",
