@@ -255,7 +255,9 @@ This output confirms that {{ site.claude_code }} routed the request through {{si
 When using {{ site.claude_code }} with AWS Bedrock models, you may encounter connection errors.
 See the following sections for common error workarounds.
 
+<!--vale off-->
 ### API Error 400: context_management: Extra inputs are not permitted
+<!--vale on-->
 
 Some beta features aren't compatible with AWS Bedrock.
 This error displays because {{ site.claude }} beta features are enabled.
@@ -311,7 +313,9 @@ variables:
 {% endcapture %}
 {{ fix_claude_beta | indent: 3 }}
 
-### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
+<!--vale off-->
+### API Error 400: max_tokens must be greater than thinking.budget_tokens
+<!--vale on-->
 
 If your `max_tokens` limit is too small, you may encounter this error.
 You can resolve this by setting `max_tokens` to a value greater than `budget_tokens`. The maximum value is `200000`.
