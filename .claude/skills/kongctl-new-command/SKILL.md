@@ -30,18 +30,21 @@ If any paths correspond to removed commands (the include file no longer exists),
 
 ## Prerequisites
 
-Check that `kongctl` is installed and up to date. Run:
+Check that `kongctl` is installed and its version matches the latest version recorded in `app/_data/tools/kongctl.yml`. Run:
 
 ```sh
 which kongctl && kongctl version
-# If missing: brew install kongctl (or: brew upgrade kongctl)
 ```
 
-Ask the user to upgrade to the latest version before proceeding:
+Then read `app/_data/tools/kongctl.yml` and find the entry with `latest: true`. Compare its `version` value to the installed version.
 
-> "Before I start, please upgrade kongctl to the latest version. You can use `brew upgrade kongctl` or `curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version <version-name>`. Let me know when that's done."
+- If `kongctl` is missing, ask the user to install it: `brew install kongctl`.
+- If the installed version matches the latest version in `kongctl.yml`, continue.
+- If they differ, stop and tell the user:
 
-Only continue once the user confirms their version is up to date.
+> "Your installed kongctl is `<installed version>`, but `app/_data/tools/kongctl.yml` records `<latest version>` as latest. Please upgrade before I continue: `brew upgrade kongctl` or `curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version <latest version>`. Let me know when that's done."
+
+Only continue once the versions align.
 
 Only run kongctl commands with the `--help` flag.
 
