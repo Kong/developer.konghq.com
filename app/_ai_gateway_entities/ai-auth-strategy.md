@@ -306,4 +306,7 @@ data:
 
 ## Schema
 
+{:.success}
+> **Looking for the OIDC auth strategy schema?** See the [OpenID Connect AI Auth Strategy reference](/ai-gateway/openid-connect/#schema).
+
 {% entity_schema %}

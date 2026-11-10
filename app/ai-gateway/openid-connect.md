@@ -1265,6 +1265,14 @@ data:
     cache_tokens_salt: multi-client-auth-cache-salt
 {% endentity_example %}
 
+## Limitations
+
+The OpenID Connect AI Auth Strategy passes its `config` object to {{site.base_gateway}}'s [OpenID Connect plugin](/plugins/openid-connect/), but not every plugin capability is supported. The following plugin capabilities aren't supported in the AI Auth Strategy:
+
+* [Protected resource metadata](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata) (`config.protected_resource_metadata`)
+* [Subject token signature verification](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) for [token exchange](#token-exchange) (`config.token_exchange.subject_token_issuers[].verify_signature`)
+* [Actor tokens](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) for token exchange (`config.token_exchange.request.actor_token`)
+
 ## Schema
 
 {% entity_schema %}
