@@ -111,7 +111,7 @@ At request time, the AI Model mediates traffic between clients and upstream AI P
 1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
 1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Model Provider](/ai-gateway/entities/ai-model-provider/), unless the target is a self-hosted model.
 1. Authenticates to the upstream LLM service using credentials stored on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity.
-1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
+1. Decorates the upstream request with per-target configuration (for example, temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
 1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
 
@@ -245,6 +245,18 @@ For each target, you provide the upstream model name (for example, `gpt-4o`) and
 
 There's no separate target entity or endpoint. Targets are managed only as nested data inside an AI Model, through the same AI Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the AI Model itself.
 
+### Claude subscription of the developer
+
+A developer can sign in to Claude Code with their own Claude subscription. Claude Code then sends a claude.ai token as `Authorization: Bearer sk-ant-oat...`. On an Anthropic target at `https://api.anthropic.com`, {{site.ai_gateway}} sends this token to Anthropic in place of the AI Model Provider key when [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) is `true`. A target with no provider key also forwards the token. The subscription of the developer then pays for the request.
+
+{{site.ai_gateway}} keeps the token away from every other upstream:
+
+* It forwards the token only as the single `Authorization` value.
+* It removes the token from all other headers, and from the query or body parameter that holds the provider key. It does the same on every other target, including other providers and other services that serve the Anthropic API.
+* It doesn't forward upstream a key that a key auth strategy accepted as the sign-in of the developer to {{site.ai_gateway}}.
+
+These requests carry the cost tag `auth-source: claude-ai` and the log field [`ai.proxy.meta.auth_source`](/ai-gateway/ai-audit-log-reference/#core-logs), so cost reports can separate them.
+
 ## Load balancing
 
 An AI Model routes to a single target by default. You can add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure [`config.balancer`](#schema-aigateway-model-config-balancer) to distribute requests according to a load balancing algorithm.
@@ -347,7 +359,7 @@ By default, applications or services making requests to the AI Model endpoint mu
 * [`header_param`](#schema-aigateway-model-config-route-model): matches a value in the request headers, indexed by header name.
 * [`path_param`](#schema-aigateway-model-config-route-model): matches a value present in the request path, indexed by path parameter name.
 
-Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (currently limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't set, {{site.ai_gateway}} creates a default model selector using the AI Model's name and format.
 
