@@ -7,16 +7,29 @@ groups:
 
   - title: CLI References
     sections:
-      - items:
-          - path: /kong-harnesses/budget/
-          - path: /kong-harnesses/budget/*/**
-          - path: /kong-harnesses/credential/
-          - path: /kong-harnesses/doctor/
+      - title: Get Started
+        items:
+          - path: /kong-harnesses/setup/
+      - title: Sign In and Out
+        items:
           - path: /kong-harnesses/login/
           - path: /kong-harnesses/logout/
+      - title: Manage Profiles
+        items:
           - path: /kong-harnesses/profile/
           - path: /kong-harnesses/profile/*/**
-          - path: /kong-harnesses/setup/
+      - title: Get Access Tokens
+        items:
+          - path: /kong-harnesses/credential/
+          - path: /kong-harnesses/token/
+      - title: View Status
+        items:
           - path: /kong-harnesses/status/
           - path: /kong-harnesses/statusline/
-          - path: /kong-harnesses/token/
+      - title: Refresh Budget Numbers
+        items:
+          - path: /kong-harnesses/budget/
+          - path: /kong-harnesses/budget/*/**
+      - title: Diagnose Problems
+        items:
+          - path: /kong-harnesses/doctor/
