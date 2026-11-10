@@ -157,7 +157,7 @@ missing or ambiguous declarations, and dependency cycles fail with resource
 context. Write-only secrets cannot be selected.
 
 An arbitrary destination does not imply a lookup resource type. Supply the
-canonical singular `resource_type` in a lookup mapping, as above. For scoped
+canonical singular `resource_type` in a lookup mapping, as in the earlier lookup example. For scoped
 lookups, also supply `parent_ref` naming a declaration with an existing {{site.konnect_short_name}}
 ID. For example:
 

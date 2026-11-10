@@ -56,11 +56,10 @@ mode, respectively. `diff --plan` can inspect a plan generated in any mode.
 
 Plan artifacts enable more advanced workflows:
 
-- **Audit Trail**: Retain reviewed plans as controlled build artifacts
-- **Review Process**: Share plans and review with team members before execution
-- **Deferred Execution**: Generate plans in CI, apply them after approval
-- **Recovery Analysis**: Inspect earlier changes when preparing a fresh plan
-- **Compliance**: Document exactly what changes were planned
+- Keep reviewed plans as controlled build artifacts, which document exactly what was planned
+- Share plans with team members for review before execution
+- Generate plans in CI and apply them after approval
+- Inspect earlier changes when preparing a fresh plan
 
 ## Plan artifact workflows
 

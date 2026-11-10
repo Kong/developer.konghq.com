@@ -82,16 +82,32 @@ kongctl get portals
 Use `kongctl explain portal` to inspect accepted fields and
 `kongctl scaffold portal` to generate starter YAML for your installed version.
 For field definitions and supported resource types, see the
-[Declarative Resource Reference](/kongctl/supported-resources/).
+[declarative resource reference](/kongctl/supported-resources/).
 
 ## Choose a workflow
 
-| Goal | Command | Deletion behavior |
-| --- | --- | --- |
-| Create and update | `apply` | Does not prune omitted resources |
-| Reconcile desired state | `sync` | Prunes explicitly scoped collections |
-| Remove selected resources | `delete` | Deletes selected resources |
-| Review changes | `diff --mode <mode>` | Previews the selected mode |
+{% table %}
+columns:
+  - title: Goal
+    key: goal
+  - title: Command
+    key: command
+  - title: Deletion behavior
+    key: deletion
+rows:
+  - goal: Create and update
+    command: "`apply`"
+    deletion: Does not prune omitted resources
+  - goal: Reconcile desired state
+    command: "`sync`"
+    deletion: Prunes explicitly scoped collections
+  - goal: Remove selected resources
+    command: "`delete`"
+    deletion: Deletes selected resources
+  - goal: Review changes
+    command: "`diff --mode <mode>`"
+    deletion: Previews the selected mode
+{% endtable %}
 
 Execution commands generate a plan internally. For a separate review step:
 
@@ -106,7 +122,8 @@ Saved apply, sync, and delete plans require the matching execution command.
 ## Find detailed behavior
 
 Read the topic matching your task. Each page includes examples and the technical
-rules needed to interpret them. For schema details, use
+rules needed to interpret them. This guide was previously one page, so if an older
+link brought you here, find the section in one of the following topics. For schema details, use
 `kongctl explain <resource>.<field>` before guessing field names or tags.
 
 ### [Configuration files and resource identity](/kongctl/declarative/configuration/)

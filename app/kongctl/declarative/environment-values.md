@@ -146,15 +146,28 @@ policy configuration, and conflicting union branches, require an explicit
 cannot be inferred also require `type`; inference does not duplicate policy
 schemas or select an arbitrary union branch.
 
-| Type | Conversion |
-| --- | --- |
-| `string` | Preserve raw environment text, including whitespace and quotes |
-| `boolean` | Parse a YAML boolean (`true` or `false`, also title/upper case) |
-| `integer` | Parse a whole number; fractional values are errors |
-| `number` | Parse a finite decimal number, including exponent notation |
-| `null` | Parse a YAML null value |
-| `array` | Parse a YAML/JSON sequence with typed nested values |
-| `object` | Parse a YAML/JSON mapping with string keys and typed values |
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Conversion
+    key: conversion
+rows:
+  - type: "`string`"
+    conversion: Preserve raw environment text, including whitespace and quotes
+  - type: "`boolean`"
+    conversion: "Parse a YAML boolean (`true` or `false`, also title/upper case)"
+  - type: "`integer`"
+    conversion: Parse a whole number; fractional values are errors
+  - type: "`number`"
+    conversion: Parse a finite decimal number, including exponent notation
+  - type: "`null`"
+    conversion: Parse a YAML null value
+  - type: "`array`"
+    conversion: Parse a YAML/JSON sequence with typed nested values
+  - type: "`object`"
+    conversion: Parse a YAML/JSON mapping with string keys and typed values
+{% endtable %}
 
 Quote the enum name in `type: "null"`; an unquoted YAML null is not a string
 option. An explicit type must match a known destination; `integer` is also

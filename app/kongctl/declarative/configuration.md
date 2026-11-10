@@ -36,7 +36,7 @@ Resources can have multiple identifiers:
 
 Top-level resource keys and field names in declarative YAML are stable
 configuration contract names. Use the names documented in the
-[Declarative Resource Reference](/kongctl/supported-resources/), and use
+[declarative resource reference](/kongctl/supported-resources/), and use
 `ref` values when one resource needs to refer to another.
 
 ```yaml
@@ -75,7 +75,7 @@ Parents are defined at the root of a configuration while children can be
 expressed both nested under their parent and at the root with a parent reference
 field.
 
-**Hierarchical Configuration**:
+### Hierarchical configuration
 
 ```yaml
 apis:
@@ -91,7 +91,7 @@ apis:
         visibility: public
 ```
 
-**Flattened Configuration**:
+### Flattened configuration
 
 ```yaml
 apis:
