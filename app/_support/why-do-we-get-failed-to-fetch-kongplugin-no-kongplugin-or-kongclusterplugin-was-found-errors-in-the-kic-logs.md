@@ -20,7 +20,10 @@ My Ingress rule or `KongConsumer` references a `konghq.com/plugins` annotation w
 
 How can I find the affected resource and stop these errors?
 
-Note: current versions of {{site.kic_product_name}} no longer log the string `failed to fetch KongPlugin: no KongPlugin or KongClusterPlugin was found` anywhere in the controller logs. Instead, this failure surfaces only as a Kubernetes Warning Event on the affected resource. Check `kubectl get events` or `kubectl describe` on the relevant Ingress/`KongConsumer` for a Warning Event describing the missing `KongPlugin`/`KongClusterPlugin`, rather than grepping the controller logs.
+{:.info}
+> **Note:** Current versions of {{site.kic_product_name}} no longer log the string `failed to fetch KongPlugin: no KongPlugin or KongClusterPlugin was found` anywhere in the controller logs. 
+> Instead, this failure surfaces only as a Kubernetes Warning Event on the affected resource. 
+> Check `kubectl get events` or `kubectl describe` on the relevant Ingress/`KongConsumer` for a Warning Event describing the missing `KongPlugin`/`KongClusterPlugin`, rather than grepping the controller logs.
 
 ## Solution
 
@@ -39,7 +42,7 @@ If you do not know which resource could be at fault because this is something th
 
    ```bash
    # find all Kong Ingress rules in all workspaces:
-    kubectl get ing --all-namespaces
+   kubectl get ing --all-namespaces
     
    # run the following for each Ingress rule found:
    kubectl describe -n <relevantnamespace> ing <ingressname> | grep "konghq.com/plugins"
@@ -52,7 +55,7 @@ If you do not know which resource could be at fault because this is something th
    kubectl get KongConsumer --all-namespaces
     
    # Find which plugins are configured for each consumer:
-   kubectl describe -n <relevantnamespace> KongConsumer <kongconsumerreturnedin1> | grep "konghq.com/plugins"
+   kubectl describe -n <relevantnamespace> KongConsumer <kongconsumer> | grep "konghq.com/plugins"
    ```
 
-4. If you find a Kong Consumer or Ingress rule that has a non existent plugin configured, edit or delete the relevant Ingress rule as appropriate, and the log entries should stop.
+4. If you find a Kong Consumer or Ingress rule that references a missing plugin, edit or delete the relevant resource, and the log entries should stop.
