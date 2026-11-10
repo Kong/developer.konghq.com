@@ -12,24 +12,40 @@ export function writeHelpTree({ tree, includesDir, fence }) {
   fs.mkdirSync(includesDir, { recursive: true });
 
   for (const command of tree) {
+    // Top-level commands always get a directory with an index.md, as before.
     const commandDir = path.join(includesDir, command.name);
     fs.mkdirSync(commandDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(commandDir, 'index.md'),
-      `${fence}\n${escapeLiquid(command.help)}\n${closingFence}`,
-      'utf8',
-    );
+    writeHelpFile(path.join(commandDir, 'index.md'), command.help, fence, closingFence);
     console.log(`Wrote help for '${command.name}' to ${command.name}/index.md`);
 
-    for (const subcommand of command.subcommands ?? []) {
-      fs.writeFileSync(
-        path.join(commandDir, `${subcommand.name}.md`),
-        `${fence}\n${escapeLiquid(subcommand.help)}\n${closingFence}`,
-        'utf8',
-      );
-      console.log(`Wrote help for '${command.name} ${subcommand.name}' to ${command.name}/${subcommand.name}.md`);
-    }
+    writeSubcommands({ nodes: command.subcommands ?? [], dir: commandDir, prefix: [command.name], fence, closingFence });
   }
+}
+
+function writeSubcommands({ nodes, dir, prefix, fence, closingFence }) {
+  for (const node of nodes) {
+    const label = `${prefix.join(' ')} ${node.name}`;
+    const hasChildren = (node.subcommands ?? []).length > 0;
+
+    if (!hasChildren) {
+      // Leaf: a flat named file next to its parent's index.md.
+      writeHelpFile(path.join(dir, `${node.name}.md`), node.help, fence, closingFence);
+      console.log(`Wrote help for '${label}' to ${[...prefix, `${node.name}.md`].join('/')}`);
+      continue;
+    }
+
+    // Node with children: its own directory with an index.md, then recurse.
+    const nodeDir = path.join(dir, node.name);
+    fs.mkdirSync(nodeDir, { recursive: true });
+    writeHelpFile(path.join(nodeDir, 'index.md'), node.help, fence, closingFence);
+    console.log(`Wrote help for '${label}' to ${[...prefix, node.name, 'index.md'].join('/')}`);
+
+    writeSubcommands({ nodes: node.subcommands, dir: nodeDir, prefix: [...prefix, node.name], fence, closingFence });
+  }
+}
+
+function writeHelpFile(filePath, help, fence, closingFence) {
+  fs.writeFileSync(filePath, `${fence}\n${escapeLiquid(help)}\n${closingFence}`, 'utf8');
 }
 
 export function pruneStalePages({ docsDir, includesDir, includePattern }) {

@@ -49,6 +49,44 @@ test('writes command nodes to index.md and subcommand leaves to named files', ()
   assert.equal(fs.existsSync(path.join(includesDir, 'profile', 'delete.md')), true);
 });
 
+test('writes nested subcommand directories and flat leaf subcommand files', () => {
+  const includesDir = path.join(tempDir(), 'includes');
+
+  writeHelpTree({
+    tree: [
+      {
+        name: 'get',
+        help: 'Display Kong resources.',
+        subcommands: [
+          {
+            name: 'ai-gateway',
+            help: 'AI Gateway commands.',
+            subcommands: [
+              { name: 'agents', help: 'Agent help.' },
+              { name: 'routes', help: 'Route help.' },
+            ],
+          },
+          { name: 'api', help: 'API help.' },
+        ],
+      },
+    ],
+    includesDir,
+    fence: '```',
+  });
+
+  // A subcommand with children gets its own directory: index.md plus one file per child.
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'ai-gateway', 'index.md')), true);
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'ai-gateway', 'agents.md')), true);
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'ai-gateway', 'routes.md')), true);
+
+  // A leaf subcommand still gets a flat named file.
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'api.md')), true);
+
+  // The nesting rule leaves no misplaced files behind.
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'ai-gateway.md')), false);
+  assert.equal(fs.existsSync(path.join(includesDir, 'get', 'ai-gateway', 'agents', 'index.md')), false);
+});
+
 test('wraps help content in the given fence', () => {
   const includesDir = path.join(tempDir(), 'includes');
 
