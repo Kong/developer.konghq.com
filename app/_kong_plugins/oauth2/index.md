@@ -36,6 +36,8 @@ related_resources:
     url: /how-to/configure-oidc-with-kong-oauth2/
   - text: "{{site.base_gateway}} authentication"
     url: /gateway/authentication/
+  - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+    url: /identity/migrate-oauth-to-identity/
 
 notes: |
   This plugin can't be used in Konnect, hybrid, or DB-less modes. It needs to

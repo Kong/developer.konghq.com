@@ -8,6 +8,8 @@ description: Create an OAuth 2.0 Client Credentials flow for a Gateway Service.
 related_resources:
   - text: Authentication
     url: /authentication/
+  - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+    url: /identity/migrate-oauth-to-identity/
 
 products:
     - gateway
