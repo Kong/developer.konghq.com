@@ -107,6 +107,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-92439 by enforcing the assertion's audience restriction, preventing acceptance of assertions meant for a different audience.\n\n   **Note:** The stricter validation can break existing logins if the `Audience`\nvalue is not an exact match for `issuer`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Standardized Redis configuration across plugins. The Redis configuration now follows a common schema shared with other plugins.",

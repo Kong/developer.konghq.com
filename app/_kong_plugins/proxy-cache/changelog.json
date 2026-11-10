@@ -11,6 +11,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92545 by including the hostname in the cache key, preventing cached responses from being served across hostnames.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92443 by not caching authenticated responses, preventing them from being served to other callers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where the Age header was not being updated correctly when serving cached responses.\n",
