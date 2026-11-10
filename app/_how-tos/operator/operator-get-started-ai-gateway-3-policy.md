@@ -28,20 +28,11 @@ works_on:
 
 prereqs:
   skip_product: true
-  inline:
-    - title: "{{site.konnect_short_name}}: {{ site.ai_gateway_name }} deployed"
-      topology: konnect
-      include_content: /md/operator/ai-gateway/prereqs/konnect-deployed
-      icon_url: /assets/icons/kubernetes.svg
-    - title: "On-premises: {{ site.ai_gateway_name }} deployed"
-      topology: on-prem
-      include_content: /md/operator/ai-gateway/prereqs/on-prem-deployed
-      icon_url: /assets/icons/kubernetes.svg
 
 tldr:
   q: How do I apply AI policies with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` or, on-premises (Tech Preview), to your `OnPremAIGateway`.
+    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` or, for on-prem (Tech Preview), to your `OnPremAIGateway`.
     Apply the AI Policy to every AI Model on the {{ site.ai_gateway }}.
 
 next_steps:
@@ -248,7 +239,7 @@ content-guardrails   <konnect-id>  True         <org-id>     2m
 
 {% on_prem %}
 content: |
-  On-premises, the `ID` and `ORGID` columns are empty because the AI Policy is never created in {{ site.konnect_short_name }}.
+  For on-prem, the `ID` and `ORGID` columns are empty because the AI Policy is never created in {{ site.konnect_short_name }}.
 {% endon_prem %}
 
 Describe the AI Policy to see its full status, including any reconciliation errors from {{site.operator_product_name}}:

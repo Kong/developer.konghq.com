@@ -21,7 +21,7 @@ rawLicenseString: '$(cat ./license.json)'
 {%- assign keg_install = include.keg_install | default: include["keg-install"] -%}
 {%- assign extra_set = include.set | default: prereqs.operator.set -%}
 {%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
-{%- comment -%} Controllers enabled only in the on-prem install command, e.g. ONPREMAIGATEWAY. {%- endcomment -%}
+{%- comment -%} Controllers enabled only in the on-prem install command, for example ONPREMAIGATEWAY. {%- endcomment -%}
 {%- assign on_prem_controllers = include.on_prem_controllers | default: page.prereqs.operator.on_prem_controllers -%}
 {%- assign chart_version = include.chart_version -%}
 {%- if prereqs.operator.rapid -%}

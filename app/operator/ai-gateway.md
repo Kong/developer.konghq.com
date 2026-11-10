@@ -3,6 +3,7 @@ title: "{{ site.ai_gateway_name }} with {{ site.operator_product_name }}"
 description: "Understand the Kubernetes resources that make up an {{ site.ai_gateway_name }} deployment managed by {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
+permalink: /operator/ai-gateway/
 
 breadcrumbs:
   - /operator/
@@ -29,6 +30,12 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Policies
     url: /ai-gateway/entities/ai-policy/
+  - text: "Install {{ site.ai_gateway_name }} 2.x on-prem using Docker Compose"
+    url: /ai-gateway/install/docker/
+  - text: "Configure {{ site.ai_gateway_name }} on-prem"
+    url: /ai-gateway/configure-on-prem/
+  - text: "Migrate to {{ site.ai_gateway_name }} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: AI Data Plane Certificates
     url: /ai-gateway/entities/ai-data-plane-certificate/
   - text: AI Consumers
@@ -46,7 +53,7 @@ related_resources:
 
 {{site.operator_product_name}} manages three distinct layers:
 
-- **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent. As a [Tech Preview](#on-premises-control-plane), `OnPremAIGateway` can take this role instead, with {{site.operator_product_name}} acting as the control plane and no {{ site.konnect_short_name }} connection.
+- **Control plane**: You can either use `KonnectAIGateway` (which provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}) or [`OnPremAIGateway` in tech preview](#on-prem-control-plane) (which provisions a {{site.ai_gateway}} 2.x on-prem). All other resources reference it as their parent.
 - **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayAuthStrategy`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
 - **Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, {{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane.
 
@@ -66,9 +73,9 @@ rows:
   - resource: "`KonnectAIGateway`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Creates the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}
-  - resource: "`OnPremAIGateway`"
+  - resource: "`OnPremAIGateway` (Tech Preview)"
     api_group: "`aigateway.konghq.com/v1alpha1`"
-    purpose: "Tech Preview: runs the {{ site.ai_gateway }} control plane inside {{ site.operator_product_name }} and pushes configuration to its data planes, without {{ site.konnect_short_name }}"
+    purpose: "Runs the {{ site.ai_gateway }} 2.x control plane inside {{ site.operator_product_name }} and pushes configuration to its data planes, without {{ site.konnect_short_name }}"
   - resource: "`AIGatewayModelProvider`"
     api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Configures an upstream LLM provider (OpenAI, Anthropic, Azure, Gemini, etc.)
@@ -123,9 +130,9 @@ All configuration resources anchor to the `KonnectAIGateway` as their root via `
 12. `AIGatewayDataPlaneCertificate.spec.aiGatewayRef` → `KonnectAIGateway`
 13. `AIGatewayDataPlane.spec.controlPlaneRef` → `KonnectAIGateway`
 
-With an on-premises control plane, every `spec.aiGatewayRef` above points at an `OnPremAIGateway` instead, and `AIGatewayDataPlane.spec.controlPlaneRef` uses `type: onpremNamespacedRef`. See [On-premises control plane](#on-premises-control-plane).
+With an on-premises control plane, every `spec.aiGatewayRef` above points at an `OnPremAIGateway` instead, and `AIGatewayDataPlane.spec.controlPlaneRef` uses `type: onpremNamespacedRef`. See [On-premises control plane](#on-prem-control-plane).
 
-## On-premises control plane
+## On-prem control plane
 
 {% include operator/ai-gateway-on-prem-tech-preview.md %}
 
@@ -135,7 +142,7 @@ An `OnPremAIGateway` replaces the {{ site.konnect_short_name }}-hosted control p
 1. Translates them into {{ site.ai_gateway }} configuration.
 1. Pushes that configuration to the Admin API of every `AIGatewayDataPlane` attached to the `OnPremAIGateway`.
 
-Nothing is sent to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-premises control plane, set the deployment toggle to **on-prem** on [Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/install/).
+Nothing is sent to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-premises control plane, see [Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/install/).
 
 ### Enable the on-premises controller
 
@@ -233,7 +240,7 @@ spec:
       namespace: kong
 ```
 
-Resources in `ai-team-a` then set `spec.aiGatewayRef.namespacedRef.namespace: kong`. Without the grant, the `OnPremAIGateway` reports `WatchNamespaceGrantValid=False` and `Ready=False`, and its control plane instance doesn't run.
+Resources are in `ai-team-a`, then set `spec.aiGatewayRef.namespacedRef.namespace: kong`. Without the grant, the `OnPremAIGateway` reports `WatchNamespaceGrantValid=False` and `Ready=False`, and its control plane instance doesn't run.
 
 ### Status conditions
 
@@ -269,7 +276,7 @@ Configuration resources report a `Programmed` condition, as they do with {{site.
 The following behavior was observed with {{site.operator_product_name}} 2.4.0-rapid.3.0 and may change:
 
 - **A single invalid resource marks the whole gateway as not ready.** For example, an `AIGatewayModelProvider` that references a missing Secret sets `ConfigurationTranslated=False` and `Ready=False` on the `OnPremAIGateway`. The invalid resource is left out, and the rest of the configuration is still pushed to the data planes, so traffic for other AI Models keeps working.
-- **Configuration is pushed, not pulled, so new data plane Pods depend on {{site.operator_product_name}}.** Running data plane Pods keep serving their last pushed configuration if {{site.operator_product_name}} becomes unavailable. A data plane Pod that starts while {{site.operator_product_name}} is unavailable has no configuration, stays not ready, and receives no traffic until {{site.operator_product_name}} recovers and pushes configuration to it. Run more than one data plane replica, and avoid restarting data planes and {{site.operator_product_name}} at the same time.
+- **Configuration is pushed, not pulled, so new data plane Pods depend on {{site.operator_product_name}}.** Running data plane Pods keep serving their last pushed configuration if {{site.operator_product_name}} becomes unavailable. A data plane Pod that starts while {{site.operator_product_name}} is unavailable has no configuration, isn't ready, and doesn't receive traffic until {{site.operator_product_name}} recovers and pushes configuration to it. To work around this issue, run more than one data plane replica, and avoid restarting data planes and {{site.operator_product_name}} at the same time.
 
 ## Supported providers
 
@@ -337,12 +344,12 @@ Each resource type is covered end-to-end in the getting started series:
 
 ## Route to a model using a selector
 
-{{site.operator_product_name}} always places a model selector in front of an AI Model's targets, even when a single `AIGatewayModel` is the only one on its route. By default, the selector matches the request body's `model` field against the AI Model's own name (`spec.apiSpec.model.name`). **A request whose `model` value doesn't match never reaches any target** — it falls through instead of being proxied. This is why every request in the [deploy](/operator/get-started/ai-gateway/deploy/) and [policy](/operator/get-started/ai-gateway/policy/) guides includes `"model": "gpt-4o-mini"`: that value is what the selector uses to activate this AI Model, not just metadata for the upstream provider.
+{{site.operator_product_name}} always places a model selector in front of an AI Model's targets, even when a single `AIGatewayModel` is the only one on its route. By default, the selector matches the request body's `model` field against the AI Model's own name (`spec.apiSpec.model.name`). **A request whose `model` value doesn't match never reaches any target**; it falls through instead of being proxied. This is why every request in the [deploy](/operator/get-started/ai-gateway/deploy/) and [policy](/operator/get-started/ai-gateway/policy/) guides includes `"model": "gpt-4o-mini"`: that value is what the selector uses to activate this AI Model, not just metadata for the upstream provider.
 
 To accept a client-side alias instead of the AI Model's own name, set `config.route.model`:
 
 - `values`: the alias to match, as a single-item list. When omitted, the AI Model's own name is used.
-- `bodyParam`, `headerParam`, or `pathParam`: which part of the request to match the alias against — a JSON body property, a header, or a named regex capture group in `paths`, respectively. Set at most one of these; when none are set, the request body's `model` property is matched by default.
+- `bodyParam`, `headerParam`, or `pathParam`: which part of the request to match the alias against (a JSON body property, a header, or a named regex capture group in `paths`, respectively). Set at most one of these; when none are set, the request body's `model` property is matched by default.
 
 The following configuration accepts a client-side alias in the request body's `model` field:
 
@@ -374,7 +381,7 @@ config:
 A client that sends the header `x-model-route: my-gpt-4o` is routed to this AI Model.
 
 {:.warning}
-> **`config.route.model` is a different mechanism from `config.route.headers` and `config.route.paths`.** The latter are Kong's native route-matching criteria — they decide whether a request reaches this AI Model's route at all. `config.route.model` runs after the route matches, to select which AI Model's targets handle the request when multiple AI Models share a route. Setting `config.route.headers` to gate a route by header presence does not make that header usable as a model alias source, and combining the two produces a proxy error instead of the expected routing behavior.
+> **`config.route.model` is a different mechanism from `config.route.headers` and `config.route.paths`.** The latter are Kong's native route-matching criteria. They decide whether a request reaches this AI Model's route at all. `config.route.model` runs after the route matches, to select which AI Model's targets handle the request when multiple AI Models share a route. Setting `config.route.headers` to gate a route by header presence does not make that header usable as a model alias source, and combining the two produces a proxy error instead of the expected routing behavior.
 
 ## Load balancing across targets
 
@@ -405,7 +412,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-See [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/) for a full description of each algorithm's behavior and tradeoffs — the algorithms and their semantics are the same; only the configuration surface differs.
+See [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/) for a full description of each algorithm's behavior and tradeoffs. The algorithms and their semantics are the same; only the configuration surface differs.
 
 ## Exposing tools with AIGatewayMCPServer
 
@@ -647,8 +654,8 @@ kubectl get aigatewaymodelprovider/openai-provider -n kong \
   -o jsonpath='{.status.conditions[?(@.type=="Programmed")].message}'
 ```
 
-- `no Admin API endpoints discovered; configuration not pushed`: no `AIGatewayDataPlane` attached to the `OnPremAIGateway` is running yet. Deploy one, or check its `Ready` condition.
-- `failed to fetch Secret ... not found (note: the operator only reads Secrets carrying its Secret label selector, konghq.com/secret=true by default)`: the Secret is missing or lacks the `konghq.com/secret=true` label.
+- `no Admin API endpoints discovered; configuration not pushed`: An `AIGatewayDataPlane` that is attached to the `OnPremAIGateway` isn't running yet. Deploy one, or check its `Ready` condition.
+- `failed to fetch Secret ... not found (note: the operator only reads Secrets carrying its Secret label selector, konghq.com/secret=true by default)`: The Secret is missing or lacks the `konghq.com/secret=true` label.
 
 ### On-premises request returns a 500 DNS or balancer error
 

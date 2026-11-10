@@ -33,10 +33,6 @@ prereqs:
     konnect:
       auth: true
   inline:
-    - title: "On-premises: {{site.operator_product_name}} with the on-premises controllers"
-      topology: on-prem
-      include_content: /md/operator/ai-gateway/prereqs/on-prem-operator
-      icon_url: /assets/icons/kubernetes.svg
     - title: OpenAI API Key
       include_content: /md/ai-gateway/v2/prereqs/openai
       icon_url: /assets/icons/openai.svg
@@ -45,7 +41,7 @@ tldr:
   q: How do I deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}?
   a: |
     With {{site.konnect_short_name}}, create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. {{site.operator_product_name}} provisions the mTLS certificate automatically.
-    On-premises (Tech Preview), create an `OnPremAIGateway` and an `AIGatewayDataPlane` that references it, then add the same provider and model resources with `spec.aiGatewayRef.kind: OnPremAIGateway`. {{site.operator_product_name}} pushes the configuration to the data plane directly.
+    For on-prem (Tech Preview), create an `OnPremAIGateway` and an `AIGatewayDataPlane` that references it, then add the same provider and model resources with `spec.aiGatewayRef.kind: OnPremAIGateway`. {{site.operator_product_name}} pushes the configuration to the data plane directly.
 
 next_steps:
   - text: Apply AI policies

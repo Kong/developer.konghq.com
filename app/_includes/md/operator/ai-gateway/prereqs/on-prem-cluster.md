@@ -1,6 +1,6 @@
 {% include operator/ai-gateway-on-prem-tech-preview.md %}
 
-To run {{ site.ai_gateway_name }} with an on-premises control plane, you need:
+To run {{ site.ai_gateway_name }} with an on-prem control plane, you need:
 
 * A Kubernetes cluster, with `kubectl` configured to use it.
 * [Helm](https://helm.sh/docs/intro/install/), to install {{site.operator_product_name}}.

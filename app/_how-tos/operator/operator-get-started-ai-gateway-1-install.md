@@ -54,6 +54,12 @@ related_resources:
     url: /ai-gateway/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
+  - text: "Install {{ site.ai_gateway_name }} 2.x on-prem using Docker Compose"
+    url: /ai-gateway/install/docker/
+  - text: "Configure {{ site.ai_gateway_name }} on-prem"
+    url: /ai-gateway/configure-on-prem/
+  - text: "Migrate to {{ site.ai_gateway_name }} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
 
 tags:
   - install

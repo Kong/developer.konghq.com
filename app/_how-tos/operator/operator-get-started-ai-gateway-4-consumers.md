@@ -28,15 +28,6 @@ works_on:
 
 prereqs:
   skip_product: true
-  inline:
-    - title: "{{site.konnect_short_name}}: AI Policy applied"
-      topology: konnect
-      include_content: /md/operator/ai-gateway/prereqs/konnect-policy
-      icon_url: /assets/icons/kubernetes.svg
-    - title: "On-premises: AI Policy applied"
-      topology: on-prem
-      include_content: /md/operator/ai-gateway/prereqs/on-prem-policy
-      icon_url: /assets/icons/kubernetes.svg
 
 cleanup:
   inline:
@@ -107,7 +98,7 @@ content: |
   An on-premises control plane doesn't send data to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} analytics aren't available for AI Consumers.
 {% endon_prem %}
 
-## Create an `AIGatewayAuthStrategy`
+## Create an AI Auth Strategy
 
 The `AIGatewayAuthStrategy` resource configures the authentication scheme {{ site.ai_gateway_name }} uses to verify downstream clients. This example uses API key authentication.
 
@@ -364,7 +355,7 @@ You should get a `401 Unauthorized`.
 
 `AIGatewayConsumerGroup` is a named set of AI Consumers that you can target as a unit. Use AI Consumer Groups to:
 
-- Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
+- Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group. Each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
 - Restrict or allow group access to individual AI Models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
 - With {{ site.konnect_short_name }}, attribute usage across multiple AI Consumers to a single AI Consumer Group in {{ site.konnect_short_name }} analytics
 
@@ -474,7 +465,7 @@ team-platform   <konnect-id>   True         <org-id>     2m
 
 {% on_prem %}
 content: |
-  On-premises, the `ID` and `ORGID` columns are empty because the AI Consumer is never created in {{ site.konnect_short_name }}.
+  For on-prem, the `ID` and `ORGID` columns are empty because the AI Consumer is never created in {{ site.konnect_short_name }}.
 {% endon_prem %}
 
 Describe an AI Consumer to see the full status and any reconciliation errors:
