@@ -209,6 +209,26 @@ rows:
             icon: /assets/icons/byteplus.svg
             cta:
               url: /ai-gateway/ai-providers/byteplus/
+  - header:
+      type: h2
+      text: Custom providers
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Use a custom provider when your vendor has no dedicated provider but exposes an OpenAI or Anthropic compatible API.
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: icon_card
+          config:
+            title: OpenAI/Anthropic compatible
+            icon: /assets/icons/openai.svg
+            cta:
+              url: /ai-gateway/ai-providers/openai-anthropic-compatible/
   - columns:
       - blocks:
           - type: structured_text

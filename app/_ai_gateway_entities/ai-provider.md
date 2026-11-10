@@ -103,6 +103,14 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="byteplus.svg" title="BytePlus ModelArk" cta_url="/ai-gateway/ai-providers/byteplus/" %}
 {% endhtml_tag %}
 
+### Custom providers
+
+Use a custom provider when your vendor has no dedicated provider but exposes an OpenAI or Anthropic compatible API.
+
+{% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
+{% icon_card icon="openai.svg" title="OpenAI/Anthropic compatible" cta_url="/ai-gateway/ai-providers/openai-anthropic-compatible/" %}
+{% endhtml_tag %}
+
 ## Outbound authentication
 
 The [`config.auth`](#schema-aigateway-model-provider-config-auth) object declares how {{site.ai_gateway}} authenticates to the upstream AI provider. The shape of `auth` depends on the AI Model Provider's [`type`](#schema-aigateway-model-provider-type):
