@@ -1,7 +1,0 @@
-extends: existence
-message: "'%s' is a bold line used as a heading. Use a real heading, or write a plain sentence."
-level: warning
-nonword: true
-scope: raw
-tokens:
-  - '(?m)^\*\*[^*\n]+\*\*:?[ \t]*$'
