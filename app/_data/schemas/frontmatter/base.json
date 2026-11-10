@@ -65,7 +65,6 @@
           "inso-cli",
           "kic",
           "kongctl",
-          "kong-harnesses",
           "operator",
           "terraform",
           "admin-api",
