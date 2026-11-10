@@ -20,5 +20,6 @@ rows:
     description: A list of the sanitized PII items. Each item includes `original_text`, `redact_text`, `entity_type`, and `count`.
 {% endtable %}
 
-The `sanitized_items` entries include the original text, so the log contains the sensitive data.
-Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-skip-logging-sanitized-items) to `true` to omit `sanitized_items` and keep that data out of your logs.
+By default, {{site.ai_gateway}} masks `original_text` in `sanitized_items`: it keeps only the first and last character and replaces the rest with `*`.
+Set [`redact_logged_original_text`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-redact-logged-original-text) to `false` to log the original text. In that case, the log contains the sensitive data.
+Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-skip-logging-sanitized-items) to `true` to omit `sanitized_items` entirely.
