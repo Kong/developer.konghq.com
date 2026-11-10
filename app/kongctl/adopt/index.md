@@ -17,21 +17,37 @@ breadcrumbs:
 related_resources:
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
+  - text: Adopt existing resources
+    url: /kongctl/declarative/adoption/
   - text: Get started with kongctl
     url: /kongctl/get-started/
 ---
 
-The kongctl declarative configuration engine only considers resources that have a `kongctl.namespace` label matching the namespace values given to it during planning and execution.
-You may want to bring an existing {{site.konnect_short_name}} resource under declarative management if it was created outside of kongctl.
-The `adopt` command lets you add a namespace label to existing {{site.konnect_short_name}} resources without modifying any other fields.
-Once you adopt a resource, add it to your configuration set to manage it declaratively going forward.
+Use `kongctl adopt` to bring existing {{site.konnect_short_name}} resources
+under declarative management by assigning namespace ownership metadata.
+Adoption preserves resource IDs and configuration. Resources must also be
+included in your declarative inputs to manage them going forward.
+
+Add `--declarative-output PATH` to adopt and save the selected resources as
+YAML in one command. The destination must be a new file in an existing
+directory. Include that file in your configuration inputs, or merge its
+contents into your existing files.
+
+Use `--dry-run` to preview ownership changes without changing remote
+resources. Combined with `--declarative-output`, it saves proposed
+configuration; use a different output path for the actual adoption.
+
+Parent adoption doesn't adopt independently owned children. See
+[Adopt existing resources](/kongctl/declarative/adoption/) for child selection,
+parent references, and complete workflows.
 
 ## Examples
 
-Adopt a {{site.dev_portal}} by name:
+Adopt a {{site.dev_portal}} by name and save its declaration:
 
 ```shell
-kongctl adopt portal my-portal --namespace team-alpha
+kongctl adopt portal my-portal --namespace team-alpha \
+  --declarative-output portal.yaml
 ```
 
 Adopt a control plane by ID:
@@ -48,8 +64,9 @@ kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
   --namespace analytics
 ```
 
-If the resource already has a `KONGCTL-namespace` label, the command fails
-without making changes.
+If the resource already has namespace ownership metadata, the command fails
+without making changes unless you pass `--overwrite-namespace`. This also
+applies when the existing namespace matches the requested namespace.
 
 ## Subcommands
 

@@ -21,6 +21,10 @@ related_resources:
 
 Export declarative configuration from {{site.konnect_short_name}}.
 
+To adopt existing resources and save their configuration in one command, use
+[`kongctl adopt --declarative-output`](/kongctl/declarative/adoption/).
+`dump declarative` exports current state without assigning ownership.
+
 Use `--include-child-resources` to include children of the selected parent
 resource types. Use `--skip-defaults` to omit literal API defaults while
 preserving explicit `null` and non-default values.
