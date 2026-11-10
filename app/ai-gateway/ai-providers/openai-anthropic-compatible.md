@@ -66,14 +66,14 @@ If a dedicated provider exists for your vendor, use it instead.
 ## How requests are routed
 
 Requests to a compatible provider go to the provider `base_url` plus the standard OpenAI or Anthropic path for the route type.
-For example, with a `base_url` of `https://inference.baseten.co`, a chat request goes to `https://inference.baseten.co/v1/chat/completions`.
+For example, with a `base_url` of `https://api.example-vendor.com`, a chat request goes to `https://api.example-vendor.com/v1/chat/completions`.
 <!-- TODO(AI-166 OQ3): confirm how a trailing `/v1` in base_url is handled. Until then, omit the path from base_url. -->
 
-The vendor must implement the endpoints that your AI Model uses.
+The vendor must implement the endpoints that your [AI Model](/ai-gateway/entities/ai-model/) uses.
 
 ## Provider configuration
 
-Set the following fields in the `config` of the AI Model Provider. All fields are required.
+Set the following fields in the `config` of the [AI Model Provider](/ai-gateway/entities/ai-model-provider/). All fields are required.
 
 {% table %}
 columns:
@@ -87,27 +87,27 @@ rows:
       Authentication for the vendor. Set `type` to `basic` and provide either one header (`name` and `value`) or one query parameter (`name`, `value`, and `location`). Values can reference a secret in a vault.
   - field: "`base_url`"
     description: |
-      The vendor's base URL, for example `https://inference.baseten.co`. Must be an HTTP or HTTPS URI of 1 to 2048 characters.
+      The vendor's base URL, for example `https://api.example-vendor.com`. Must be an HTTP or HTTPS URI of 1 to 2048 characters.
   - field: "`provider_alias`"
     description: |
-      A short name for the vendor, for example `baseten`. The alias is 1 to 64 characters of lowercase letters, numbers, and hyphens, and starts and ends with a letter or number (`^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`). It replaces the generic provider type in telemetry, as described in [Analytics and observability](#analytics-and-observability).
+      A short name for the vendor, for example `example-vendor`. The alias is 1 to 64 characters of lowercase letters, numbers, and hyphens, and starts and ends with a letter or number (`^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`). It replaces the generic provider type in telemetry, as described in [Analytics and observability](#analytics-and-observability).
 {% endtable %}
 <!-- TODO(AI-166 OQ1): confirm whether a provider_alias that matches a built-in provider type is rejected. -->
 <!-- TODO(AI-166 OQ2): confirm whether provider_alias stays required or defaults to the AI Model Provider name. -->
 
 ## Configure an OpenAI-compatible provider
 
-The following example creates an AI Model Provider that sends requests to Baseten with the `openai-compatible` type and reports `baseten` as the provider in telemetry:
+The following example creates an AI Model Provider that sends requests to an example vendor with the `openai-compatible` type and reports `example-vendor` as the provider in telemetry:
 
 {% entity_example %}
 type: model-provider
 data:
-  display_name: Baseten Compatible
+  display_name: Example Vendor OpenAI Compatible
   name: my-openai-compatible
   type: openai-compatible
   config:
-    base_url: https://inference.baseten.co
-    provider_alias: baseten
+    base_url: https://api.example-vendor.com
+    provider_alias: example-vendor
     auth:
       type: basic
       headers:
@@ -126,8 +126,8 @@ Set the target `name` to the vendor's model ID and `config.type` to `openai-comp
 {% entity_example %}
 type: model
 data:
-  display_name: DeepSeek V4 Pro
-  name: deepseek-v4-pro
+  display_name: Example Vendor Chat Model
+  name: example-vendor-chat
   type: model
   capabilities:
     - generate
@@ -136,7 +136,7 @@ data:
       paths:
         - /compatible-chat
   targets:
-    - name: deepseek-ai/DeepSeek-V4-Pro-0813
+    - name: VENDOR_MODEL_ID
       provider: my-openai-compatible
       config:
         type: openai-compatible

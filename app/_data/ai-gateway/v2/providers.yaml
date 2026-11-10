@@ -2425,7 +2425,7 @@ providers:
         supported: true
         streaming: true
         upstream_path: '`/v1/chat/completions`'
-        model_example: 'deepseek-ai/DeepSeek-V4-Pro-0813'
+        model_example: 'Use the model ID from your vendor'
         min_version: '2.4'
       completions:
         supported: false
@@ -2436,7 +2436,7 @@ providers:
         supported: true
         streaming: false
         upstream_path: '`/v1/embeddings`'
-        model_example: 'Qwen/Qwen3-Embedding-8B'
+        model_example: 'Use the model ID from your vendor'
         min_version: '2.4'
       files:
         supported: false
