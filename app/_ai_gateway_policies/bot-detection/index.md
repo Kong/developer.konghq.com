@@ -57,20 +57,7 @@ If your applications, SDKs, or agent frameworks use one of these libraries, the 
 * `reqwest`
 * `aws-sdk-*` and `Boto3`
 
-The following example applies the built-in list to all traffic:
-
-{% entity_example %}
-type: policy
-data:
-  name: block-common-bots
-  display_name: Block common bots
-  type: bot-detection
-  global: true
-  config: {}
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
+For a configuration that uses the built-in list, see [Block common bots](/ai-gateway/policies/bot-detection/examples/block-common-bots/).
 
 ## Deny or allow custom User-Agents
 
@@ -83,21 +70,4 @@ When a `User-Agent` matches both an `allow` pattern and a `deny` pattern, {{site
 Patterns are case-sensitive.
 To match a pattern regardless of case, start it with `(?i)`.
 
-The following example allows a client built on the Go HTTP library and blocks any `User-Agent` that contains `scraper`, in any case:
-
-{% entity_example %}
-type: policy
-data:
-  name: bot-detection-custom
-  display_name: Bot Detection with custom patterns
-  type: bot-detection
-  global: true
-  config:
-    allow:
-      - Go-http-client
-    deny:
-      - (?i)scraper
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
+For a configuration that allows a Go HTTP client and blocks scrapers, see [Allow and deny custom User-Agents](/ai-gateway/policies/bot-detection/examples/allow-and-deny-custom-user-agents/).
