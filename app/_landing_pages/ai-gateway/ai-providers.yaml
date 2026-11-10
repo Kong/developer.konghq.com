@@ -202,6 +202,13 @@ rows:
             icon: /assets/icons/togetherai.svg
             cta:
               url: /ai-gateway/ai-providers/togetherai/
+      - blocks:
+        - type: icon_card
+          config:
+            title: BytePlus ModelArk
+            icon: /assets/icons/byteplus.svg
+            cta:
+              url: /ai-gateway/ai-providers/byteplus/
   - columns:
       - blocks:
           - type: structured_text
