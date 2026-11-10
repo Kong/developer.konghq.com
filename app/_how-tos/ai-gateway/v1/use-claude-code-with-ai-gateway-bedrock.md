@@ -263,9 +263,9 @@ This error displays because {{ site.claude }} beta features are enabled.
 To resolve this issue, do the following:
 
 1. Disable betas and experiments:
-```sh
-export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
-```
+   ```sh
+   export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+   ```
 2. Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin to remove beta information and the `model` field:
 {% capture fix_claude_beta %}
 {% entity_examples %}
