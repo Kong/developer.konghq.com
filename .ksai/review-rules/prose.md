@@ -24,6 +24,9 @@ Post at most one finding per rule per PR. List every repeat in the same comment.
 - **"Not X, Y" constructions.** A sentence that says what a thing is not before saying what it is ("This isn't a cache, it's a buffer", "not just X, but Y"). Rewrite as the positive statement. Not a violation: a correction of a mistake readers commonly make, where the negative half is the warning.
 - **Markdown pipe tables.** A `| a | b |` table or a `|---|---|` separator row outside a code fence. This repo renders tables through the `{% table %}` Liquid block, so rewrite the table as one and keep every cell.
 - **Inline FAQ heading.** A `## FAQ` or `## FAQs` heading in the page body. FAQs go in the `faqs:` frontmatter list. Raise as a question if the writer did not ask for an FAQ.
+- **Heading case.** A heading in title case ("Loading Values From Environment Variables", "Choose a Workflow"). `app/contributing/style-guide.md` requires sentence case: capitalize the first word and proper nouns only. Suggest the exact sentence-case heading. Not a violation: product, feature and entity names, acronyms (TLS, YAML), plugin names, a version prefix ("3.12.x breaking changes"), the Kong terms "Admin API" and "Kong Manager", and headings inside code or partner-authored text. Renaming a heading changes its anchor only when the words change, so check links that point at it.
+- **Dense bullets and paragraphs.** A bullet that runs four or more lines, or a paragraph that carries several separate rules or conditions. Suggest splitting it into shorter bullets or sentences, one rule each, and write the split out. Not a violation: a code block, a table cell, a reference description that must stay in one sentence for accuracy.
+- **Bullets that repeat each other.** Two bullets in one list say the same thing in different words (for example "Audit trail" and "Compliance" both meaning "keep a record"). Suggest merging them and write the merged bullet.
 
 ## Flag only when the sentence stands without its heading, intro or lead-in
 
@@ -35,6 +38,6 @@ Post at most one finding per rule per PR. List every repeat in the same comment.
 
 ## Do not flag
 
-- Anything Vale already reports: dashes, positional words, "e.g.", temporal words, repeated words, banned terms.
+- Anything Vale already reports: dashes, positional words (including "as above"), `Kongctl` casing, bold lines used as headings, stray `<a id>` anchor tags, "e.g.", temporal words, repeated words, banned terms.
 - Quoted error text, partner-authored third-party plugin prose, and text inside code, YAML values, or `{% %}` tags.
 - Pre-existing issues on unchanged lines.
