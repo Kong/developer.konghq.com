@@ -24,7 +24,7 @@ For a complete create, rotation, saved-plan, composition, and aggregate-write
 walkthrough, see the
 [Secrets example][secrets-example].
 
-Some Konnect APIs accept secret values on create or update but do not return
+Some {{site.konnect_short_name}} APIs accept secret values on create or update but do not return
 them from `get` or `list` responses. Common examples include:
 
 - Portal identity provider `config.client_secret`
@@ -38,8 +38,8 @@ them from `get` or `list` responses. Common examples include:
 - {{site.ai_gateway}} Vault authentication credentials
 - {{site.ai_gateway}} runtime certificate `key` and `key_alt`
 - Portal custom domain `ssl.custom_private_key`
-- Event Gateway backend cluster `authentication.password`
-- Event Gateway schema registry authentication `password`
+- {{site.event_gateway_short}} backend cluster `authentication.password`
+- {{site.event_gateway_short}} schema registry authentication `password`
 - {{site.ai_gateway}} Consumer Credential `api_key`
 
 Secret material in write-only fields must use `!secret`. Literal values and
@@ -66,9 +66,9 @@ the path within the plan directory and rejects absolute paths, parent traversal,
 and symlinks that escape that boundary. When a plan is written to standard
 output, the current working directory is the boundary.
 
-Recognized Konnect vault references can be written literally because they
+Recognized {{site.konnect_short_name}} vault references can be written literally because they
 identify secret material without containing it. They remain visible in plans,
-and Konnect resolves them when applying the configuration:
+and {{site.konnect_short_name}} resolves them when applying the configuration:
 
 ```yaml
 value: "{vault://support-secrets/openai-auth-header}"
@@ -121,7 +121,7 @@ saved plan metadata for later review. If the flag finds no writable secrets, the
 command succeeds with a warning. An exact `--write-secret` selector remains
 strict and fails if its requested field cannot be written.
 
-The current Konnect API permits at most one {{site.ai_gateway}} Model Provider
+The current {{site.konnect_short_name}} API permits at most one {{site.ai_gateway}} Model Provider
 authentication header. The selector still uses `config.auth.headers[].value`
 because it follows the array-shaped OpenAPI field without coupling configuration
 to index `0`.
@@ -138,7 +138,7 @@ creates a secret-only update. Human output reports `write requested` without
 showing a value.
 
 {{site.ai_gateway}} Consumer Credential `api_key` is create-only. Omit it to let
-Konnect generate a key, or supply it with `!secret` on a new credential.
+{{site.konnect_short_name}} generate a key, or supply it with `!secret` on a new credential.
 Selecting it on an existing credential fails. Rotate it by declaring a new
 credential and deliberately retiring the old one; kongctl never silently
 recreates it.

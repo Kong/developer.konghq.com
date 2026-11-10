@@ -23,12 +23,12 @@ namespaces define ownership and reconciliation boundaries.
 
 The `kongctl` section provides metadata for resource management. Namespace and
 protection metadata are supported on namespace-bearing resources. Most parent
-resources store this metadata in Konnect labels. Participating
+resources store this metadata in {{site.konnect_short_name}} labels. Participating
 {{site.ai_gateway}} children own their metadata independently, even when nested
 under a gateway. Other children follow their parent's lifecycle. Confirm support
 for each resource with `kongctl explain`.
 
-## Protected Resources
+## Protected resources
 
 The `protected` field prevents accidental deletion of critical resources:
 
@@ -40,7 +40,7 @@ portals:
       protected: true  # Cannot be deleted until protection is removed
 ```
 
-## Namespace Management
+## Namespace management
 
 The `namespace` field enables resource isolation:
 
@@ -57,7 +57,7 @@ A namespace must contain 1–63 lowercase alphanumeric characters or hyphens and
 must start and end with an alphanumeric character. Consecutive hyphens are
 permitted and are preserved exactly.
 
-## File-Level Defaults
+## File-level defaults
 
 Use `_defaults` to set metadata defaults for namespace-bearing resources in one
 file. Explicit resource metadata overrides these defaults:
@@ -81,7 +81,7 @@ portals:
     # Overrides both defaults
 ```
 
-## Namespace and Protected Field Behavior
+## Namespace and protected field behavior
 
 `kongctl` provides some default behavior depending on how metadata fields are
 specified or omitted. The following tables summarize the behavior.
@@ -120,7 +120,7 @@ explicit metadata. Consumer credentials inherit consumer ownership. See the
 [{{site.ai_gateway}} federation guide][site-ai-gateway-federation-guide] for the support
 matrix, existing-resource ownership setup, and cascade-deletion limits.
 
-## Namespace Enforcement Flags
+## Namespace enforcement flags
 
 The `kongctl plan` command provides built-in namespace guardrails:
 

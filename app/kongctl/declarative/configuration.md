@@ -20,17 +20,17 @@ related_resources:
 Read this page when organizing manifests, choosing resource identifiers, or
 loading local and remote sources.
 
-## Resource Identity
+## Resource identity
 
 Resources can have multiple identifiers:
 
 - **ref**: `kongctl` declarative engine identifier. It must be unique across
   all resources in a given set of input configuration files and is used to
   create references between resources in that configuration.
-- **id**: *Most* Konnect resources have an `id` field which is a Konnect
+- **id**: *Most* {{site.konnect_short_name}} resources have an `id` field which is a {{site.konnect_short_name}}
   assigned UUID. This field is not stored in declarative configuration files but
   will be used internally by the declarative engine.
-- **name**: *Many* Konnect resources have a `name` field which *may or may not*
+- **name**: *Many* {{site.konnect_short_name}} resources have a `name` field which *may or may not*
   be subject to a unique constraint within an organization for that resource
   type.
 
@@ -50,7 +50,7 @@ portals:
     default_application_auth_strategy_id: !ref oauth-strategy#id
 ```
 
-## Basic Structure
+## Basic structure
 
 ```yaml
 # Optional defaults section
@@ -69,7 +69,7 @@ portals: # List of Parent portal resources
       protected: true
 ```
 
-## Hierarchical vs Flattened configuration
+## Hierarchical vs flattened configuration
 
 Parents are defined at the root of a configuration while children can be
 expressed both nested under their parent and at the root with a parent reference
@@ -114,7 +114,7 @@ api_publications:
 
 Fields such as `portal` on `portal_pages` and `api` on `api_versions` select the
 parent declaration for a root-level child. They are kongctl configuration
-fields. Kongctl resolves the parent's Konnect ID for API requests, including
+fields. kongctl resolves the parent's {{site.konnect_short_name}} ID for API requests, including
 route parameters. When a child is nested, its parent is inferred and the
 selector can be omitted.
 
@@ -122,7 +122,7 @@ Fields such as `portal_id` on API publications are API relationship fields. The
 flattened example uses `api: users-api` to select the owning API and
 `portal_id: !ref main-portal` to reference the publication's target portal. A
 plain ref such as `portal: portal-test` identifies a declaration's `ref`; it is
-not a literal Konnect UUID.
+not a literal {{site.konnect_short_name}} UUID.
 
 `portal: !ref portal-test` and `portal: !ref portal-test#id` are also valid
 parent selectors. `!ref` defaults to `#id`, but affected releases require the
@@ -186,17 +186,17 @@ before fetching them. Existing files are left intact by default. Use
 existing saved files.
 
 When `--remote-file-auth=auto` is enabled, which is the default, `kongctl` sends
-the current profile's Konnect bearer token only to HTTPS remote sources on
-Konnect hosts, such as `*.cloud.konghq.com` or the configured Konnect API host.
+the current profile's {{site.konnect_short_name}} bearer token only to HTTPS remote sources on
+{{site.konnect_short_name}} hosts, such as `*.cloud.konghq.com` or the configured {{site.konnect_short_name}} API host.
 Authentication is never sent to arbitrary hosts. Use `--remote-file-auth=none`
-to fetch a remote file without adding Konnect authentication headers.
+to fetch a remote file without adding {{site.konnect_short_name}} authentication headers.
 
 Review remote configuration before running mutating commands in production.
 Prefer HTTPS URLs and pin examples to immutable versions when using them in CI.
 
-## Field Validation
+## Field validation
 
-Kongctl uses strict YAML validation to catch configuration errors early:
+kongctl uses strict YAML validation to catch configuration errors early:
 
 ```yaml
 # This will cause an error

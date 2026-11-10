@@ -21,9 +21,9 @@ Read the relevant section when updating API specifications, portal webhooks, or
 {{site.ai_gateway}} resources whose lifecycle has additional constraints. Field
 schemas remain in the [resource reference](/kongctl/supported-resources/).
 
-## Authorizing API Operation Removal
+## Authorizing API operation removal
 
-When access control enforcement (ACE) is enabled, Konnect rejects updates that
+When access control enforcement (ACE) is enabled, {{site.konnect_short_name}} rejects updates that
 remove operations from the current API specification unless explicitly
 authorized. Set the synthetic `force_delete` field directly on the parent API to
 authorize these updates:
@@ -51,7 +51,7 @@ authorization is no longer intended.
 
 The planner records `force_delete: true` on authorized update changes in saved
 JSON plans. Executing such a plan preserves that policy without consulting the
-original manifest. It maps to Konnect's `force=true` update query parameter, is
+original manifest. It maps to {{site.konnect_short_name}}'s `force=true` update query parameter, is
 never sent in the request body or labels, and is not inferred or exported by
 `dump`.
 
@@ -59,14 +59,14 @@ When switching the current version, kongctl creates or updates the target child
 version before updating the API. In `sync` mode, deletion of the old current
 version waits for the switch to succeed. Keep the old version in `versions` to
 retain it; omitting it requests deletion when that collection is in sync scope.
-Other Konnect deletion restrictions still apply.
+Other {{site.konnect_short_name}} deletion restrictions still apply.
 
 Existing child specifications can also be updated in place. The same
 authorization is needed if such an update removes current operations under ACE.
 Changing the operations of the current version affects access control even if
 historical version records are retained.
 
-## Portal Audit Log Webhooks
+## Portal audit log webhooks
 
 Portal audit-log webhooks can reference organization audit-log destinations that
 are managed outside kongctl. Declare those destinations under
@@ -123,7 +123,7 @@ servers nor the source-only `conversion-only` and `upstream-server` variants
 qualify. All matching creations must succeed before a matching deletion
 proceeds, including when several servers share a route.
 
-Konnect accepts distinct server names with the same route, including different
+{{site.konnect_short_name}} accepts distinct server names with the same route, including different
 authentication and policies. During overlap, either configuration may serve
 requests; do not rely on the old route winning. Clients must be compatible with
 both configurations during this interval. See Kong's
@@ -146,9 +146,9 @@ retain ordinary dependency ordering without a replacement guarantee.
 [gateway-route-priority]:
 https://developer.konghq.com/gateway/entities/route/
 
-## {{site.ai_gateway}} Config Stores and Vaults
+## {{site.ai_gateway}} config stores and vaults
 
-{{site.ai_gateway}} Config Stores can back Konnect Vaults declared under the
+{{site.ai_gateway}} Config Stores can back {{site.konnect_short_name}} Vaults declared under the
 same gateway. Use `!ref <config-store-ref>#id` for the Vault's
 `config.config_store_id` so kongctl orders creation and supplies the remote
 Config Store ID:
@@ -185,11 +185,11 @@ provider Vault reference.
 [config-store-vault-example]:
 https://github.com/Kong/kongctl/blob/main/docs/examples/declarative/ai-gateway/config-store-vault.yaml
 
-## {{site.ai_gateway}} Runtime TLS
+## {{site.ai_gateway}} runtime TLS
 
 {{site.ai_gateway}} runtime certificates, CA certificates, and SNIs are gateway
 child resources. They are distinct from data plane certificates, which
-authenticate data planes to Konnect. Runtime certificate private keys are
+authenticate data planes to {{site.konnect_short_name}}. Runtime certificate private keys are
 write-only and must use `!secret`:
 
 ```yaml
@@ -279,7 +279,7 @@ Encryption keys and datastore credentials use deferred `!secret` sources.
 Existing write-only values require `--write-secret` or `--write-secrets` for an
 intentional rewrite. Keep previous key versions while rotating keys so existing
 credentials can still be decrypted. Dump preserves key version metadata; it
-cannot recover encryption key material. Konnect-managed datastores are excluded
+cannot recover encryption key material. {{site.konnect_short_name}}-managed datastores are excluded
 from dump and sync pruning. Datastore deletion checks usage and requires
 dependent resources to detach or be deleted first.
 

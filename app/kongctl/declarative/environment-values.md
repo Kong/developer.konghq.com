@@ -21,7 +21,7 @@ Read this page when choosing deferred versus stored `!env`, extracting
 structured values, or fixing values in a reviewed plan. Use [write-only
 secrets](/kongctl/declarative/secrets/) for sensitive write-only fields.
 
-## Loading Values From Environment Variables
+## Loading values from environment variables
 
 Use `!env` to load a value from an environment variable into a string field:
 
@@ -64,7 +64,7 @@ the requested field path.
 A runnable example is available in
 [docs/examples/declarative/env/][docs-examples-declarative-env].
 
-### !env Behavior
+### !env behavior
 
 - Deferred `!env` supports string-typed fields only.
 - Unset environment variables are treated as errors.
@@ -90,7 +90,7 @@ A runnable example is available in
   in separate command invocations, so environment values may differ between them
   and the executed value may differ from what was observed while planning.
 - Human-readable plan and diff output redact deferred `!env` values and the
-  corresponding current values returned by Konnect. Saved plans also redact
+  corresponding current values returned by {{site.konnect_short_name}}. Saved plans also redact
   those current values while retaining the desired deferred references.
 
 Diffs, execution reports, and operation/HTTP logs also redact nested fields with
@@ -98,7 +98,7 @@ sensitive names, including password, secret, credential, token, API-key, and
 private-key patterns. This applies to literal and stored values as well as
 deferred values. Diff redaction applies to text, JSON, YAML, and
 `--full-content` output. It does not classify these fields as write-only or
-change when their values are sent to Konnect.
+change when their values are sent to {{site.konnect_short_name}}.
 
 Executable `kongctl plan` output can retain literal and stored values needed by
 `apply --plan`. Use deferred `!env` to avoid storing those values in a plan.

@@ -17,12 +17,12 @@ related_resources:
     url: /kongctl/supported-resources/
 ---
 
-Read this page when linking declarations, selecting existing Konnect objects, or
+Read this page when linking declarations, selecting existing {{site.konnect_short_name}} objects, or
 composing scoped lookups.
 
 ## External resources
 
-External resources are Konnect objects managed elsewhere but selected by the
+External resources are {{site.konnect_short_name}} objects managed elsewhere but selected by the
 `kongctl` declarative engine for use by managed resources. Use `_external` when
 the object needs a reusable declarative `ref` or managed children. Use the
 `!lookup` tag to resolve an existing object directly in a relationship field.
@@ -68,7 +68,7 @@ Because kongctl does not own those resources:
   Namespace-bearing managed resources and explicit defaults determine namespace
   scope; child collections have resource-specific ownership rules.
 - Child resources (portal pages, API versions, publications, implementations,
-  documents, etc.) are still planned by resolving the external parent's Konnect
+  documents, etc.) are still planned by resolving the external parent's {{site.konnect_short_name}}
   ID. You do not need to (and cannot) assign a namespace to the external
   definition itself.
 - An external parent is not changed or deleted, but its child collections
@@ -105,14 +105,14 @@ selectors, all of which must match. `id:<uuid>` and `{id: <uuid>}` bind a known
 ID directly and cannot be combined with other selectors. Selector lookups must
 match exactly one resource.
 
-Some relationship fields, such as `portal_id`, are fields from the Konnect API
+Some relationship fields, such as `portal_id`, are fields from the {{site.konnect_short_name}} API
 schema. Others, such as `ai_gateway`, are parent selectors added by kongctl for
 root-level child declarations. Their names remain different for compatibility,
 but both accept literal IDs, `!ref`, `!external`, and `!lookup` where supported.
 When a child is nested under its parent, the kongctl parent selector is omitted
 and inferred from the nesting.
 
-Lookups run during planning with the active Konnect profile. Equivalent lookups,
+Lookups run during planning with the active {{site.konnect_short_name}} profile. Equivalent lookups,
 including `_external` declarations, are cached for that plan. Saved plans
 contain resolved IDs rather than tag placeholders.
 
@@ -145,7 +145,7 @@ ai_gateways:
               name: shared-gateway
 ```
 
-`!ref target` and `!ref target#id` both select the Konnect ID. Existing IDs
+`!ref target` and `!ref target#id` both select the {{site.konnect_short_name}} ID. Existing IDs
 resolve during planning. New resources are created before operations that need
 their IDs, including a policy referencing its own parent. Other selectors
 address scalar fields present in the declaration, using JSON field names and
@@ -158,7 +158,7 @@ context. Write-only secrets cannot be selected.
 
 An arbitrary destination does not imply a lookup resource type. Supply the
 canonical singular `resource_type` in a lookup mapping, as above. For scoped
-lookups, also supply `parent_ref` naming a declaration with an existing Konnect
+lookups, also supply `parent_ref` naming a declaration with an existing {{site.konnect_short_name}}
 ID. For example:
 
 ```yaml
@@ -204,7 +204,7 @@ format 1.0 plans. Direct apply and saved-plan apply use the same resolution
 path. Planning again compares resolved values to avoid repeated
 reference-induced updates.
 
-## Nested YAML Tags
+## Nested YAML tags
 
 Nested tags are supported only for combinations whose resolution order and
 security behavior are defined explicitly. `!env` may be used as a direct mapping

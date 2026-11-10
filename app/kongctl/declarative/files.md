@@ -20,7 +20,7 @@ related_resources:
 Read this page when loading text or structured values with `!file`, or resolving
 file paths and base directory errors.
 
-## Loading File Content to YAML Fields
+## Loading file content to YAML fields
 
 Load the entire content of a file as a string:
 
@@ -54,7 +54,7 @@ apis:
 
 Supported file types: Any text file (`.txt`, `.md`, `.yaml`, `.json`, etc.)
 
-### Security Features
+### Security features
 
 **Path Traversal Prevention**: Absolute paths are blocked. Relative paths may
 include `..`, but the resolved path must stay within the base directory
@@ -85,7 +85,7 @@ config: !file ./config/settings.yaml
 
 **File Size Limits**: Files are limited to 10MB.
 
-### Performance Features
+### Performance features
 
 **File Caching**: Files are cached during a single execution to improve
 performance:
@@ -99,7 +99,7 @@ apis:
     description: !file ./common.yaml#api.desc       # Uses cached version
 ```
 
-### Value Extraction
+### Value extraction
 
 You can extract specific values from structured data loaded from the `file` tag
 with this hash (`#`) notation:

@@ -20,13 +20,13 @@ related_resources:
 Read this page when selecting a command, reviewing saved plans, or separating
 planning from execution.
 
-## Plan Artifacts
+## Plan artifacts
 
 A plan records the operations needed to move resources from their current state
 to the declared desired state. Every declarative execution uses a plan. Saving
 the plan as JSON is optional; it enables a separate review and execution step.
 
-### How Planning Works
+### How planning works
 
 The declarative configuration commands (`apply`, `sync`, `delete`, `diff`) use
 the planning engine internally:
@@ -52,7 +52,7 @@ Saved plans have strict execution ownership. `apply --plan`, `sync --plan`, and
 `delete --plan` accept only plans generated in `apply`, `sync`, and `delete`
 mode, respectively. `diff --plan` can inspect a plan generated in any mode.
 
-### Why Use Plan Artifacts?
+### Why use plan artifacts?
 
 Plan artifacts enable more advanced workflows:
 
@@ -62,9 +62,9 @@ Plan artifacts enable more advanced workflows:
 - **Recovery Analysis**: Inspect earlier changes when preparing a fresh plan
 - **Compliance**: Document exactly what changes were planned
 
-## Plan Artifact Workflows
+## Plan artifact workflows
 
-### Basic Plan Review Workflow
+### Basic plan review workflow
 
 Developer creates plan:
 
@@ -90,7 +90,7 @@ After approval, apply the plan:
 kongctl apply --plan proposed-changes.json
 ```
 
-### Production Deployment with Approval
+### Production deployment with approval
 
 ```shell
 # CI/CD Pipeline Stage 1: Plan Generation
@@ -113,9 +113,9 @@ not a snapshot of the complete desired state, and replaying an old plan is not a
 rollback procedure.
 
 Restore the desired manifest revision from version control, generate a fresh
-plan against current Konnect state, and review it before execution. Review
+plan against current {{site.konnect_short_name}} state, and review it before execution. Review
 deletions and write-only values separately: restoring a manifest cannot recover
-deleted data or secret material that Konnect does not return.
+deleted data or secret material that {{site.konnect_short_name}} does not return.
 
 ## Choose a command
 

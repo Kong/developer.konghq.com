@@ -21,7 +21,7 @@ Use this workflow to reuse a manifest across independently synchronized
 environments. Install kongctl and authenticate each profile before starting.
 Review [sync scope](/kongctl/declarative/sync/) before choosing sync mode.
 
-## Environment Management
+## Environment management
 
 Use distinct namespaces for environments that are synchronized independently,
 optionally scoped by both team and environment, such as `payments-dev` and
