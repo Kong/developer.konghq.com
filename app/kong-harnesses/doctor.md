@@ -1,19 +1,19 @@
 ---
-title: agent-auth-cli doctor
+title: kong-harnesses doctor
 description: Check one profile end to end and report each fix beside each finding.
 
 content_type: reference
 layout: reference
 
 tools:
-  - agent-auth-cli
+  - kong-harnesses
 
 breadcrumbs:
-  - /agent-auth-cli/
+  - /kong-harnesses/
 ---
 
 The `doctor` command checks one profile end to end: the profile, the sign-in, the client, and both endpoints. It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
 ## Command usage
 
-{% include_cached agent-auth-cli/help/doctor/index.md %}
+{% include_cached kong-harnesses/help/doctor/index.md %}

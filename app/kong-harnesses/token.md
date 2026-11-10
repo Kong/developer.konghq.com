@@ -1,19 +1,19 @@
 ---
-title: agent-auth-cli token
+title: kong-harnesses token
 description: Print one short-lived access token for an explicit connection profile.
 
 content_type: reference
 layout: reference
 
 tools:
-  - agent-auth-cli
+  - kong-harnesses
 
 breadcrumbs:
-  - /agent-auth-cli/
+  - /kong-harnesses/
 ---
 
 The `token` command prints one short-lived OIDC access token for an explicit connection profile.
 
 ## Command usage
 
-{% include_cached agent-auth-cli/help/token/index.md %}
+{% include_cached kong-harnesses/help/token/index.md %}

@@ -1,20 +1,20 @@
 ---
-title: agent-auth-cli profile cleanup
-description: Remove settings still owned by agent-auth-cli.
+title: kong-harnesses profile cleanup
+description: Remove settings still owned by kong-harnesses.
 
 content_type: reference
 layout: reference
 
 tools:
-  - agent-auth-cli
+  - kong-harnesses
 
 breadcrumbs:
-  - /agent-auth-cli/
-  - /agent-auth-cli/profile/
+  - /kong-harnesses/
+  - /kong-harnesses/profile/
 ---
 
-The `profile cleanup` command removes the settings values that agent-auth-cli still owns in a supported client. Without a `--client` selector it reverses everything the tool owns in every supported client.
+The `profile cleanup` command removes the settings values that kong-harnesses still owns in a supported client. Without a `--client` selector it reverses everything the tool owns in every supported client.
 
 ## Command usage
 
-{% include_cached agent-auth-cli/help/profile/cleanup.md %}
+{% include_cached kong-harnesses/help/profile/cleanup.md %}

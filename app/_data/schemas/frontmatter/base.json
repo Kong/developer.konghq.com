@@ -71,7 +71,7 @@
           "admin-api",
           "konnect-api",
           "kong-cli",
-          "agent-auth-cli"
+          "kong-harnesses"
         ]
       }
     },

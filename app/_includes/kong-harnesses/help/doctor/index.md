@@ -1,31 +1,60 @@
 ```
-Check one profile end to end and report each fix beside its finding.
+Check that a profile works from start to end, and show a fix for each
+problem found.
 
-Unlike status, this reaches the network: it establishes and closes one
-connection to the issuer and to the gateway. It opens no browser and writes
-no settings. Under --client opencode it also asks the npm registry, with your
-own npm token, whether OpenCode can install the gateway plugin, and looks for
-the plugin in OpenCode's cache.
+Without --profile or KONG_HARNESSES_PROFILE, doctor checks the only installed
+profile, or the default profile if there are several. Without --client, it
+checks every agent CLI that the profile lists, with one report for each.
 
-For Claude Code it also reads the gateway's model list with the profile's
-sign-in, as activation does, and checks that /model offers only what the
-gateway serves, that the configured model is one of those, and that no
-setting still sends Claude Code to Anthropic.
+Unlike status, doctor uses the network. It connects to the identity provider
+and to the gateway for each agent CLI. It does not open a browser and does
+not change any settings. It also checks that:
 
---json writes the report as one JSON document with a schema_version.
+  - the gateway has a route for each agent CLI that is set up, and accepts
+    your sign-in there (doctor sends an empty request to find out)
+  - for OpenCode, npm can install the gateway plugin (doctor asks the npm
+    registry with your own npm token), and the plugin is in OpenCode's cache
+  - for Claude Code, /model offers only the models that the gateway serves,
+    the selected model is one of them, and no setting still sends Claude
+    Code to Anthropic
 
---report writes the JSON report for a support ticket. It adds the
-agent-auth-cli and Claude Code versions, the platform, and the Claude Code
-settings and shell variables. Each value that can hold a credential is
-replaced with <redacted>, so the report can be attached as it is.
+-o json prints the report as one JSON document with a schema_version and one
+entry for each agent CLI. -o yaml prints the same document as YAML.
 
---inference sends one small request through the active Claude Code route.
-It uses the selected model, profile sign-in, CA bundle, and process proxy.
-It checks a complete response stream from the Anthropic API.
-This request can incur model charges. The prompt is "Reply with OK." and
-the output limit is 16 tokens. The check sends no files or conversation data.
-It opens no browser and makes no automatic retry or provider fallback.
+--report prints a JSON report to attach to a support ticket. It adds the
+kong-harnesses version and the platform. For Claude Code it adds the
+settings, the shell variables and the Claude Code version. For Codex,
+OpenCode and omp it adds only the path of the config file and whether that
+file exists. Each value that can hold a secret is replaced with <redacted>,
+so you can attach the report as it is.
+
+--inference sends one small model request through Claude Code's route, so
+the profile must set up Claude Code. It uses the selected model, your
+sign-in, the CA bundle and the proxy, and checks for a complete answer from
+the Anthropic API. This request can cost money. The prompt is "Reply with
+OK." and the answer is at most 16 tokens. It sends no files and no chat
+history. It does not open a browser, retry, or switch to another provider.
 
 Usage:
-  agent-auth-cli doctor --name <name> [--json | --report] [--inference]
+  kong-harnesses doctor [flags]
+
+Examples:
+  # Check the default profile and every agent CLI it lists
+  kong-harnesses doctor
+  # Also send one small model request through Claude Code's route (this can cost money)
+  kong-harnesses doctor --profile work --inference
+  # Print a report to attach to a support ticket
+  kong-harnesses doctor --profile work --report
+
+Flags:
+  -h, --help              help for doctor
+      --inference         send one small model request through Claude Code's route; this can cost money
+  -o, --output format     output format: text (the default), json, or yaml
+  -p, --profile profile   the installed profile to use; KONG_HARNESSES_PROFILE sets it too
+      --report            print a JSON report to attach to a support ticket
+
+Global Flags:
+      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --log-file path     write the debug log to this path instead of stderr
+      --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

@@ -1,19 +1,19 @@
 ---
-title: agent-auth-cli logout
+title: kong-harnesses logout
 description: Sign out of one profile and remove its saved sign-in.
 
 content_type: reference
 layout: reference
 
 tools:
-  - agent-auth-cli
+  - kong-harnesses
 
 breadcrumbs:
-  - /agent-auth-cli/
+  - /kong-harnesses/
 ---
 
 The `logout` command signs out of one connection profile at its revocation endpoint and removes the saved sign-in from this computer.
 
 ## Command usage
 
-{% include_cached agent-auth-cli/help/logout/index.md %}
+{% include_cached kong-harnesses/help/logout/index.md %}

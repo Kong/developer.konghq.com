@@ -1,26 +1,26 @@
 metadata:
-  title: agent-auth-cli
+  title: kong-harnesses
   content_type: landing_page
-  description: This page is an introduction to agent-auth-cli, Kong's OIDC credential helper that obtains short-lived access tokens for coding agents.
+  description: This page is an introduction to kong-harnesses, Kong's OIDC credential helper that obtains short-lived access tokens for coding agents.
   tools:
-    - agent-auth-cli
+    - kong-harnesses
   breadcrumbs:
     - /tools/
 rows:
   - header:
       type: h1
-      text: "agent-auth-cli"
+      text: "kong-harnesses"
       sub_text: |
         Kong's OIDC credential helper for coding agents
 
   - header:
       type: h2
-      text: What is agent-auth-cli?
+      text: What is kong-harnesses?
     columns:
       - blocks:
         - type: text
           config: |
-            agent-auth-cli obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
+            kong-harnesses obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
             It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
 
   - header:
@@ -33,24 +33,32 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "**[agent-auth-cli credential](/agent-auth-cli/credential/)**: Return one access token, creating the first login when absent"
-                    - "**[agent-auth-cli doctor](/agent-auth-cli/doctor/)**: Check one profile end to end and report each fix beside each finding"
-                    - "**[agent-auth-cli login](/agent-auth-cli/login/)**: Sign in to, repair, or diagnose one profile"
-                    - "**[agent-auth-cli logout](/agent-auth-cli/logout/)**: Sign out of one profile and remove its saved sign-in"
-                    - "**[agent-auth-cli profile](/agent-auth-cli/profile/)**: Manage public connection profiles and Claude integration"
-                    - "**[agent-auth-cli setup](/agent-auth-cli/setup/)**: Import one profile, sign in, and configure the client, in one run"
-                    - "**[agent-auth-cli status](/agent-auth-cli/status/)**: Inspect one profile's local login and client activation state"
-                    - "**[agent-auth-cli statusline](/agent-auth-cli/statusline/)**: Render one status-bar line from a client's session document"
-                    - "**[agent-auth-cli token](/agent-auth-cli/token/)**: Print one access token for an explicit connection profile"
+                    - "**[kong-harnesses budget](/kong-harnesses/budget/)**: Refresh the budget numbers that the status bar shows"
+                    - "**[kong-harnesses credential](/kong-harnesses/credential/)**: Print an access token, signing in first if needed"
+                    - "**[kong-harnesses doctor](/kong-harnesses/doctor/)**: Find problems with a profile and show how to fix them"
+                    - "**[kong-harnesses login](/kong-harnesses/login/)**: Sign in to a profile, or check its sign-in"
+                    - "**[kong-harnesses logout](/kong-harnesses/logout/)**: Sign out of a profile and delete its saved sign-in"
+                    - "**[kong-harnesses profile](/kong-harnesses/profile/)**: Manage connection profiles and the agent CLIs that use them"
+                    - "**[kong-harnesses setup](/kong-harnesses/setup/)**: Install or create a profile, sign in, and set up the agent CLIs"
+                    - "**[kong-harnesses status](/kong-harnesses/status/)**: Show the sign-in and agent CLI setup, without using the network"
+                    - "**[kong-harnesses statusline](/kong-harnesses/statusline/)**: Print the status bar line for Claude Code"
+                    - "**[kong-harnesses token](/kong-harnesses/token/)**: Print an access token, without signing in"
+                - type: text
+                  text: |
+                    **Budget subcommands:**
+                - type: unordered_list
+                  items:
+                    - "**[budget refresh](/kong-harnesses/budget/refresh/)**: Refresh the budget numbers of one profile"
                 - type: text
                   text: |
                     **Profile subcommands:**
                 - type: unordered_list
                   items:
-                    - "**[profile create](/agent-auth-cli/profile/create/)**: Build and install a profile using OIDC discovery"
-                    - "**[profile import](/agent-auth-cli/profile/import/)**: Install a complete profile from a file or HTTPS URL"
-                    - "**[profile list](/agent-auth-cli/profile/list/)**: List installed profiles"
-                    - "**[profile show](/agent-auth-cli/profile/show/)**: Show one installed profile's public configuration"
-                    - "**[profile activate](/agent-auth-cli/profile/activate/)**: Configure one or every detected agent CLI to use one profile"
-                    - "**[profile cleanup](/agent-auth-cli/profile/cleanup/)**: Remove settings still owned by agent-auth-cli"
-                    - "**[profile delete](/agent-auth-cli/profile/delete/)**: Remove one installed profile from this computer"
+                    - "**[profile create](/kong-harnesses/profile/create/)**: Create a profile from your identity provider's details"
+                    - "**[profile import](/kong-harnesses/profile/import/)**: Install a profile from a file or HTTPS URL"
+                    - "**[profile list](/kong-harnesses/profile/list/)**: List installed profiles"
+                    - "**[profile get](/kong-harnesses/profile/get/)**: Show the settings of an installed profile"
+                    - "**[profile default](/kong-harnesses/profile/default/)**: Choose the profile that commands use when you do not give --profile"
+                    - "**[profile activate](/kong-harnesses/profile/activate/)**: Set up the installed agent CLIs to use a profile"
+                    - "**[profile cleanup](/kong-harnesses/profile/cleanup/)**: Remove the settings that kong-harnesses added"
+                    - "**[profile delete](/kong-harnesses/profile/delete/)**: Delete an installed profile from this computer"

@@ -1,14 +1,25 @@
 ```
-Remove settings values still owned by agent-auth-cli.
+Remove the settings that kong-harnesses added to the agent CLIs.
+
+Without --client, cleanup removes them from every supported agent CLI, so no
+agent CLI is left half set up. With --client, it cleans up only that agent
+CLI: claude-code, codex, opencode, or omp.
 
 Usage:
-  agent-auth-cli profile cleanup [--print-only]
-  agent-auth-cli --client <name> profile cleanup [--print-only]
+  kong-harnesses profile cleanup [flags]
 
-Without --client, cleanup reverses everything this tool owns in every
-supported client at its default configuration location, so a machine reported
-as cleaned up is not left half configured. The optional process-level --client
-selector scopes it to one target: claude-code, codex, opencode, or omp. An
-activation installed with --claude-config-location is bound to that file and
-is reversed by repeating the same --claude-config-location.
+Examples:
+  # Show what cleanup would remove
+  kong-harnesses profile cleanup --dry-run
+  # Remove the settings that kong-harnesses added
+  kong-harnesses profile cleanup
+
+Flags:
+      --dry-run   show the changes without making them
+  -h, --help      help for cleanup
+
+Global Flags:
+      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --log-file path     write the debug log to this path instead of stderr
+      --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

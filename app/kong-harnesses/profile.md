@@ -1,19 +1,19 @@
 ---
-title: agent-auth-cli profile
-description: Manage public connection profiles and the global Claude integration.
+title: kong-harnesses profile
+description: Manage connection profiles and the agent CLIs that use them.
 
 content_type: reference
 layout: reference
 
 tools:
-  - agent-auth-cli
+  - kong-harnesses
 
 breadcrumbs:
-  - /agent-auth-cli/
+  - /kong-harnesses/
 ---
 
-The `profile` command manages public connection profiles: building them with OIDC discovery, importing them, listing and showing them, activating a client to use one, cleaning up activation settings, and deleting them. See the [profile subcommands](/agent-auth-cli/profile/create/) for each command.
+The `profile` command manages public connection profiles: building them with OIDC discovery, importing them, listing and showing them, activating a client to use one, cleaning up activation settings, and deleting them. See the [profile subcommands](/kong-harnesses/profile/create/) for each command.
 
 ## Command usage
 
-{% include_cached agent-auth-cli/help/profile/index.md %}
+{% include_cached kong-harnesses/help/profile/index.md %}

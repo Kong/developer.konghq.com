@@ -1,32 +1,54 @@
 ```
-Import one profile, sign in, and configure the client, in one run.
+Install or create a profile, sign in, and set up the agent CLIs, all in one
+run.
+
+setup runs these three commands in this order, and asks the same questions
+they ask:
+
+  kong-harnesses profile import <source>   (or profile create, without <source>)
+  kong-harnesses login --profile <name> [--no-browser]
+  kong-harnesses profile activate <name> [--auto-approve] [--skip-route-check]
+
+<source> is a profile file or an HTTPS URL. With <source>, setup shows the
+gateway and identity provider of the profile, and asks you to type the
+profile name before it installs it. Without <source>, setup asks the
+questions of profile create, which needs a terminal.
+
+Without --client, setup sets up every installed agent CLI that the profile
+lists, as profile activate does. --auto-approve answers yes to the import and
+to the agent CLI list, and prints the import summary to stderr. With a
+<source>, only the sign-in is then left. OpenCode has its own sign-in, so
+setup skips the sign-in when OpenCode is the only agent CLI. With
+--no-browser, open the printed URL in a browser on this computer.
+
+You can run setup again safely. It does not import a profile file that is
+already installed with the same content, keeps a sign-in that still works,
+and leaves an agent CLI that is already set up. If a step fails, setup stops
+and names the step. Run the same command again to continue from there. If the
+gateway or this computer refuses an agent CLI, setup names it with the fix.
+
+After setup, use login to fix a sign-in, profile activate to switch profiles,
+and profile cleanup to undo the setup.
 
 Usage:
-  agent-auth-cli setup <source> [--no-browser] [--auto [--yes]]
-  agent-auth-cli --client <name> setup <source> [--no-browser]
+  kong-harnesses setup [source] [flags]
 
-setup runs what these three commands do, in this order, and prompts as they
-do:
+Examples:
+  # Set up with a profile URL from your admin
+  kong-harnesses setup <profile-url>
+  # Set up without one, and answer questions to create a profile
+  kong-harnesses setup
+  # Set up from a file, and answer yes to every question
+  kong-harnesses setup work.json --auto-approve
 
-  agent-auth-cli profile import <source>
-  agent-auth-cli login --name <name> [--no-browser]
-  agent-auth-cli profile activate --name <name> [--auto [--yes]]
+Flags:
+      --auto-approve       install the profile and set up the listed agent CLIs without asking
+  -h, --help               help for setup
+      --no-browser         print the sign-in URL instead of opening a browser; open the URL on this computer
+      --skip-route-check   do not send test requests to the gateway's routes
 
-<name> is the profile name the source carries. Import shows the gateway and
-identity provider the profile names and asks for the exact profile name
-before it installs anything.
-
-<source> is a local profile file or an HTTPS URL. --yes confirms only the
-automatic client selection. OpenCode uses its own sign-in, so setup skips
-CLI sign-in when --client opencode is selected or --auto detects only OpenCode.
-With --no-browser, open the printed URL on this computer to complete sign-in.
-
-setup is safe to run again. A local source already installed with the same
-content is not imported again, a usable sign-in is left alone, and a client
-already configured is left unchanged. It stops at the first step that fails
-and says which one; running the same setup command again resumes there.
-
-The three commands remain for what comes after: login when a sign-in needs
-attention, profile activate to switch profiles, and profile cleanup to undo
-activation.
+Global Flags:
+      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --log-file path     write the debug log to this path instead of stderr
+      --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

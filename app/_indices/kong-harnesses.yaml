@@ -1,20 +1,22 @@
-title: agent-auth-cli Documentation
+title: kong-harnesses Documentation
 groups:
-  - title: About agent-auth-cli
+  - title: About kong-harnesses
     sections:
       - items:
-          - path: /agent-auth-cli/
+          - path: /kong-harnesses/
 
   - title: CLI References
     sections:
       - items:
-          - path: /agent-auth-cli/credential/
-          - path: /agent-auth-cli/doctor/
-          - path: /agent-auth-cli/login/
-          - path: /agent-auth-cli/logout/
-          - path: /agent-auth-cli/profile/
-          - path: /agent-auth-cli/profile/*/**
-          - path: /agent-auth-cli/setup/
-          - path: /agent-auth-cli/status/
-          - path: /agent-auth-cli/statusline/
-          - path: /agent-auth-cli/token/
+          - path: /kong-harnesses/budget/
+          - path: /kong-harnesses/budget/*/**
+          - path: /kong-harnesses/credential/
+          - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/login/
+          - path: /kong-harnesses/logout/
+          - path: /kong-harnesses/profile/
+          - path: /kong-harnesses/profile/*/**
+          - path: /kong-harnesses/setup/
+          - path: /kong-harnesses/status/
+          - path: /kong-harnesses/statusline/
+          - path: /kong-harnesses/token/
