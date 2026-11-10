@@ -234,7 +234,7 @@ rows:
                         - skills
 
                 - text: |
-                    Generate a [plan](/kongctl/declarative/#plan-artifacts) from input configuration without invoking changes
+                    Generate a [plan](/kongctl/declarative/planning/#plan-artifacts) from input configuration without invoking changes
                   action:
                     type: command
                     config:
