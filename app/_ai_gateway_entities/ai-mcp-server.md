@@ -531,8 +531,7 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 * **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
 This applies to the AI MCP Server modes that make requests to an upstream service.
-{% new_in 2.4 %} In 2.4 and later, `aws` upstream authentication is supported on `passthrough-listener`, `upstream-server`, `conversion-listener`, and `conversion-only`.
-In earlier versions, only `passthrough-listener` supports it.
+The `aws` upstream authentication type is supported on `passthrough-listener`, `upstream-server`, `conversion-listener`, and `conversion-only`.
 A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
 `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
 
@@ -548,8 +547,6 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 
 Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers it from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
 
-{% new_in 2.4 %}
-
 <!-- TODO(AI-225 OQ3): confirm where the validation that rejects `auth` on unsupported MCP Server types or runtime versions lives (API layer or Data Plane) and adjust this wording. -->
 Upstream authentication is independent of client-side `access.auth_strategies`.
 For example, clients can authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), while {{site.ai_gateway}} signs requests to the upstream with SigV4.
@@ -558,13 +555,13 @@ A single `config.upstream.auth` block applies to all tools of the AI MCP Server.
 Per-tool `upstream.auth` overrides aren't supported.
 <!-- TODO(AI-225 OQ4): per-tool upstream.auth override is out of scope for 2.4. Confirm with the API team that no per-tool override is planned. -->
 
-### Signing service and region {% new_in 2.4 %}
+### Signing service and region
 
 <!-- TODO(AI-225 OQ2): confirm the runtime infers service and region from the signed request host on all four upstream-making types. -->
 Set `service` and `region` explicitly when the upstream is reached through a custom domain name, such as an Amazon API Gateway custom domain, because the host doesn't identify the AWS service or region.
 For example, set `service` to `lambda` for a Lambda function URL.
 
-### Credential sources {% new_in 2.4 %}
+### Credential sources
 
 {{site.ai_gateway}} uses static credentials (`access_key_id`, `secret_access_key`, and optionally `session_token`) if you set them.
 Otherwise, it uses the Data Plane's default AWS credential provider chain.
@@ -584,8 +581,6 @@ config:
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
 ```
-
-{% new_in 2.4 %}
 
 The following `conversion-listener` example calls an IAM-protected Amazon API Gateway custom domain.
 Clients authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and {{site.ai_gateway}} signs the converted upstream requests with SigV4.
