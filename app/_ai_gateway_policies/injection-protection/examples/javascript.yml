@@ -1,0 +1,32 @@
+title: 'JavaScript injection'
+
+description: 'Detects arbitrarily injected JavaScript that is part of a cross-site scripting attack and executes in the browser.'
+extended_description: |
+  Detects arbitrarily injected JavaScript that is part of a cross-site scripting attack and executes in the browser.
+  Uses the following regular expression for matching: `<\s*script\b[^>]*>[^<]+<\s*/\s*script\s*>`
+
+weight: 900
+
+name: javascript
+display_name: 'JavaScript injection'
+type: injection-protection
+
+config:
+  injection_types:
+    - js
+  locations:
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
