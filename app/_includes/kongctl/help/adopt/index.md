@@ -27,6 +27,7 @@ Available Commands:
   control-plane Adopt an existing Konnect control plane into namespace management
   dcr-provider  Adopt an existing Konnect DCR provider into namespace management
   event-gateway Adopt an existing Konnect Event Gateway Control Plane into namespace management
+  identity      Manage Kong Identity resources
   konnect       Manage Konnect resources
   organization  Adopt organization resources into namespace management
   portal        Adopt an existing Konnect portal into namespace management
@@ -49,7 +50,7 @@ Flags:
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --namespace string        Namespace label to apply to the resource (required)
+      --namespace string        Namespace ownership metadata to apply to the resource (required)
       --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
@@ -61,7 +62,7 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --overwrite-namespace     Overwrite an existing namespace label on the resource
+      --overwrite-namespace     Overwrite existing namespace ownership metadata on the resource
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
