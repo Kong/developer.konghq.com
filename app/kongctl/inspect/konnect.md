@@ -25,6 +25,12 @@ The `konnect` command allows you to manage {{site.konnect_short_name}} resources
 
 {% include_cached /kongctl/help/inspect/konnect/index.md %}
 
+### kongctl inspect konnect identity
+
+Manage Kong Identity resources.
+
+{% include_cached /kongctl/help/inspect/konnect/identity.md %}
+
 ### kongctl inspect konnect mesh
 
 Inspect what a {{site.mesh_product_name}} control plane computed, rather than what was

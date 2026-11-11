@@ -90,6 +90,7 @@ Flags:
                                             --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
                                             --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
                                           - Config path: [ konnect.declarative.require-namespace ]
+      --secret-output-dir string          Directory for private initial credentials when creating OAuth clients or Identity API keys
       --text-id-format string             Configure UUID rendering in static text-table ID columns.
                                           - Config path: [ text.id-format ]
                                           - Allowed    : [ compact|full ]
