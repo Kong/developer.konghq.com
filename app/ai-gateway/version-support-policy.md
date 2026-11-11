@@ -168,43 +168,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
-{% navtab "2.1" %}
-{{site.ai_gateway_name}} 2.1 was released on 2026-09-24.
-
-{{site.ai_gateway_name}} 2.1 supports the following deployment targets until 2026-10-24, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: OS
-    key: os
-  - title: Version
-    key: version
-  - title: ARM support
-    key: arm
-  - title: FIPS 140-3
-    key: fips
-  - title: EOL
-    key: eol
-rows:
-  - os: Ubuntu
-    version: "24.04"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-  - os: RHEL
-    version: "9.x"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-  - os: Distroless
-    version: "N/A"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-{% endtable %}
-<!--vale on-->
-{% endnavtab %}
 {% endnavtabs %}
 
 {:.info .no-icon}
@@ -229,6 +192,10 @@ columns:
   - title: End of sunset support
     key: sunset
 rows:
+  - version: "2.1"
+    release_date: "2026-09-24"
+    eol: "2026-10-24"
+    sunset: "2026-11-24"
   - version: "2.0"
     release_date: "2026-08-31"
     eol: "2026-09-30"
