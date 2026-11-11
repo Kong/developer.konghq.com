@@ -6,7 +6,7 @@ Complete the following steps to configure Okta for MCP OAuth2 authentication. Th
 
 1. Go to **Security > API > Authorization Servers**.
 2. Click `default`.
-3. Go to the **Scopes** tab.
+3. Click the **Scopes** tab.
 4. Click **Add Scope**.
 5. Name: `mcp:access`
 6. Display phrase: `Access MCP tools`
@@ -15,7 +15,7 @@ Complete the following steps to configure Okta for MCP OAuth2 authentication. Th
 
 ### Add an access policy
 
-1. In the same `default` authorization server, go to the **Access Policies** tab.
+1. In the same `default` authorization server, click the **Access Policies** tab.
 2. Click **Add Policy**.
 3. Name: `MCP Access`
 4. Assign to: **All clients**
@@ -54,7 +54,7 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 1. Assignments: **Skip group assignment for now**
 1. Click **Save**.
 1. Copy the **Client ID** and **Client Secret**. These go into the {{site.ai_gateway}} `ai-mcp-oauth2` plugin config.
-1. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
+1. Click the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
 1. Export the credentials:
 
     ```sh
@@ -72,7 +72,7 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 1. Sign-in redirect URIs: `http://localhost:6274/oauth/callback/debug`
 1. Assignments: **Skip group assignment for now**
 1. Click **Save**.
-1. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
+1. Click the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
 1. Copy the **Client ID**. This is the Client ID you enter in MCP Inspector. No secret is needed for this public client.
 
 {:.info}
