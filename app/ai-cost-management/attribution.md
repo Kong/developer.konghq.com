@@ -330,10 +330,10 @@ Identity attribution comes from the [AI Auth Strategy](/ai-gateway/entities/ai-a
 
 The strategy type determines which subject you get:
 
-* A `key-auth` or `basic-auth` strategy attributes the request to its [AI Consumer](/ai-gateway/entities/ai-consumer/).
+* A `key-auth` strategy attributes the request to its [AI Consumer](/ai-gateway/entities/ai-consumer/).
 * An `openid-connect` strategy with `principals.enabled` attributes the request to a {{site.identity}} principal.
   Pair it with a [trusted IdP](/identity/token-vault/#trusted-idp) and [automatic user provisioning](#automatic-user-provisioning) to create a principal on first login.
-* An `openid-connect-credential-claim` strategy attributes the request to the token's raw `sub` claim, with no principal or consumer involved.
+* An `openid-connect` strategy without `principals.enabled` attributes the request to the token's raw claim named in `credential_claim`, which defaults to `sub`, with no principal or consumer involved.
 
 Principal-based attribution also depends on the [org chart](/ai-cost-management/org-chart/).
 Upload your org structure before the first request, so a newly provisioned principal already has a team and cost center to join.
