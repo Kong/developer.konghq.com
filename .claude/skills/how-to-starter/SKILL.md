@@ -33,10 +33,8 @@ template, tag syntax, and placeholder conventions.
    `min_version`.
 3. Check 2-3 sibling files in the target `app/_how-tos/<product>/` directory to match that
    product's real permalink and frontmatter conventions before writing anything.
-4. Check `app/_includes/prereqs/` (and its subfolders, e.g. `products/`, `auth/oidc/`) for an
-   existing file covering any prereq the how-to needs, before writing a single one by hand.
-   Reference a match with `include_content: prereqs/<path>` instead of duplicating its setup
-   steps inline.
+4. Check `app/_includes/` for a file covering any prereq the how-to needs (`prereqs/` for shared ones, `md/ai-gateway/v2/prereqs/` for AI Gateway). Reference a match with
+`include_content: <path>` instead of writing its setup steps inline.
 5. Write the file. Fill every frontmatter field you know; drop an inline
    `<!-- TODO: ... -->` for anything unknown — never guess a value.
 6. Draft body H2s as one terse placeholder sentence each (for example, "Configure the

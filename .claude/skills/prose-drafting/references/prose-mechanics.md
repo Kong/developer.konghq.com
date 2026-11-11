@@ -81,8 +81,8 @@ here, check there before assuming it's undocumented.
     clause with ", and ...": the subject switch reads as an afterthought.
     Rewrite as two active sentences, one per subject. For example, "the
     groups... are created if they don't already exist, and the principal
-    joins them" becomes "{{site.identity}} creates any group from the claim
-    that doesn't already exist. The principal then joins one of those groups."
+    joins them" becomes "When the claim names a group that doesn't already exist, {{site.identity}}
+creates it. The principal then joins one of those groups.
 - **Negation and conditional clauses**: don't put a trailing "no" after a
   clause that reads as positive. The reader parses the first half as
   positive and only learns at "no" that the thing is absent, which reads
