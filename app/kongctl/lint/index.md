@@ -100,13 +100,13 @@ When `kongctl lint` finds violations at or above the `--fail-severity` level, th
 You can use this to stop a CI/CD pipeline before a problematic configuration is applied. 
 To lint multiple files, pass a directory to `-f` and use `-R` to process it recursively.
 
-## Lint expanded declarative configuration
+## Lint expanded declarative configuration {% new_in 1.28 %}
 
 By default, `kongctl lint` checks each input as written, including template
-definitions. Starting in kongctl v1.28, use `--expand` to lint values from local
-`!file` includes, principal `!csv` inputs, and `_templates` and `_extends`
-inheritance. This lets rules check included and inherited values after resource
-overrides have been applied.
+definitions. Use `--expand` to lint values from local `!file` includes,
+principal `!csv` inputs, and `_templates` and `_extends` inheritance. This lets
+rules check included and inherited values after resource overrides have been
+applied.
 
 For example, save a shared API template in `templates.yaml`:
 
