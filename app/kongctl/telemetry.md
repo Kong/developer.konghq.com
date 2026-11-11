@@ -146,30 +146,16 @@ precedence over this setting.
 
 ### Setting precedence
 
-kongctl checks these rules from highest to lowest precedence. Rule 1 has the
-highest priority. The first applicable rule decides whether telemetry is
-enabled; kongctl ignores the remaining rules:
+kongctl checks these settings in order:
 
-1. If `--no-telemetry` is passed, telemetry is disabled.
-2. Otherwise, if `DO_NOT_TRACK=1` is set, telemetry is disabled.
-3. Otherwise, if `KONGCTL_NO_TELEMETRY=true` is set, telemetry is disabled.
-4. Otherwise, if a device preference is saved in `.telemetry-enabled`, its
-   `true` or `false` value determines whether telemetry is enabled.
-5. Otherwise, the active profile's `telemetry.enabled` value applies. If the
-   profile has no setting, telemetry is enabled by default.
+1. If `--no-telemetry`, `DO_NOT_TRACK=1`, or `KONGCTL_NO_TELEMETRY=true` is set,
+   telemetry is **off**, regardless of other settings.
+2. Otherwise, use the choice you saved at the initial login prompt.
+3. If you haven't saved a choice, use the profile's `telemetry.enabled` setting,
+   which defaults to `true`.
 
-`KONGCTL_NO_TELEMETRY` is a disable-only switch:
-
-* `true` disables telemetry, even if your saved preference or profile enables it.
-* `false` does not enable telemetry. It has the same effect as leaving this
-  environment variable unset: kongctl continues to rule 4, then rule 5 if no
-  device preference exists.
-
-For example, if you answered **No** at the login prompt, kongctl saved `false`
-in `.telemetry-enabled`. Setting `KONGCTL_NO_TELEMETRY=false` leaves that saved
-preference in effect, so telemetry stays disabled. To enable telemetry again,
-change the saved preference to `true` and ensure none of the disable options
-in rules 1 through 3 are active.
+`KONGCTL_NO_TELEMETRY=false` does not turn telemetry on. Your saved login choice
+or profile setting still applies.
 
 ### Change or reset the device preference
 
