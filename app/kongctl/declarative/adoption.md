@@ -34,18 +34,44 @@ existing protection. See [ownership and namespaces](/kongctl/declarative/ownersh
 for the boundaries that these metadata fields establish.
 
 Adopting a parent changes ownership of that parent only. Run separate commands
-for independently owned children. There is no recursive command that adopts
+for independently owned children. There isn't a recursive command that adopts
 all child resource types together.
 
 ## Select child resources
 
 Choose one selection method per child command:
 
-| Selection | Example | Behavior |
-| --- | --- | --- |
-| Exact identifier | `models legacy-chat` | Select one child by ID or exact name. |
-| All children in a family | `models --all` | Select every model under the selected gateway. |
-| Filtered selection | `models --name-pattern 'legacy-*'` | Select children whose full names match the quoted glob. |
+{% table %}
+columns:
+  - title: |
+      Selection
+    key: selection
+  - title: |
+      Example
+    key: example
+  - title: |
+      Behavior
+    key: behavior
+rows:
+  - selection: |
+      Exact identifier
+    example: |
+      `models legacy-chat`
+    behavior: |
+      Select one child by ID or exact name.
+  - selection: |
+      All children in a family
+    example: |
+      `models --all`
+    behavior: |
+      Select every model under the selected gateway.
+  - selection: |
+      Filtered selection
+    example: |
+      `models --name-pattern 'legacy-*'`
+    behavior: |
+      Select children whose full names match the quoted glob.
+{% endtable %}
 
 Don't combine an identifier, `--all`, or `--name-pattern`. Patterns support
 `*`, `?`, and character classes such as `[ab]`. Quote patterns so your shell
@@ -58,20 +84,64 @@ usernames, rather than display names.
 Select the remote gateway explicitly with `--gateway-id` or `--gateway-name`.
 Each family supports exact selection, `--all`, and `--name-pattern`:
 
-| Child subcommand | Resource |
-| --- | --- |
-| `models` | Models |
-| `model-providers` | Model providers |
-| `auth-strategies` | Authentication strategies |
-| `policies` | Policy instances |
-| `custom-policies` | Custom policy definitions |
-| `agents` | Agents |
-| `mcp-servers` | MCP servers |
-| `vaults` | Vaults |
-| `consumers` | Consumers |
-| `consumer-groups` | Consumer groups |
-| `ca-certificates` | CA certificates |
-| `snis` | SNIs |
+{% table %}
+columns:
+  - title: |
+      Child subcommand
+    key: command
+  - title: |
+      Resource
+    key: resource
+rows:
+  - command: |
+      `models`
+    resource: |
+      Models
+  - command: |
+      `model-providers`
+    resource: |
+      Model providers
+  - command: |
+      `auth-strategies`
+    resource: |
+      Authentication strategies
+  - command: |
+      `policies`
+    resource: |
+      Policy instances
+  - command: |
+      `custom-policies`
+    resource: |
+      Custom policy definitions
+  - command: |
+      `agents`
+    resource: |
+      Agents
+  - command: |
+      `mcp-servers`
+    resource: |
+      MCP servers
+  - command: |
+      `vaults`
+    resource: |
+      Vaults
+  - command: |
+      `consumers`
+    resource: |
+      Consumers
+  - command: |
+      `consumer-groups`
+    resource: |
+      Consumer groups
+  - command: |
+      `ca-certificates`
+    resource: |
+      CA certificates
+  - command: |
+      `snis`
+    resource: |
+      SNIs
+{% endtable %}
 
 For example, preview adoption of a filtered model selection:
 
@@ -91,13 +161,49 @@ both directory flags. Use `--directory-id` to override that default, or
 `--directory-name` to select another directory. OAuth clients require an
 explicit auth server selector.
 
-| Command under `kongctl adopt identity` | Selection | Parent selector |
-| --- | --- | --- |
-| `groups` | ID, exact name, `--all`, or `--name-pattern` | Directory |
-| `principals` | Individual UUID and required `--ref` | Directory |
-| `principal identities` | Individual UUID and required `--ref` | Directory and `--principal-id` |
-| `principal basic-auths` | UUID, `--username`, `--all`, or username pattern | Directory and `--principal-id` |
-| `auth-server clients` | Client ID, `--client-name`, `--all`, or name pattern | `--auth-server-id` or `--auth-server-name` |
+{% table %}
+columns:
+  - title: |
+      Command under `kongctl adopt identity`
+    key: command
+  - title: |
+      Selection
+    key: selection
+  - title: |
+      Parent selector
+    key: parent
+rows:
+  - command: |
+      `groups`
+    selection: |
+      ID, exact name, `--all`, or `--name-pattern`
+    parent: |
+      Directory
+  - command: |
+      `principal`
+    selection: |
+      Individual UUID and required `--ref`
+    parent: |
+      Directory
+  - command: |
+      `principal identities`
+    selection: |
+      Individual UUID and required `--ref`
+    parent: |
+      Directory and `--principal-id`
+  - command: |
+      `principal basic-auths`
+    selection: |
+      UUID, `--username`, `--all`, or username pattern
+    parent: |
+      Directory and `--principal-id`
+  - command: |
+      `auth-server clients`
+    selection: |
+      Client ID, `--client-name`, `--all`, or name pattern
+    parent: |
+      `--auth-server-id` or `--auth-server-name`
+{% endtable %}
 
 Principal and principal identity adoption persist the supplied `--ref` as
 the declarative lookup identity. They don't support bulk selection. Adoption
@@ -155,10 +261,35 @@ configuration inputs.
 For child exports, `--parent-ref` controls how the generated configuration
 links to the parent:
 
-| Export option | Generated configuration | Files needed for planning |
-| --- | --- | --- |
-| Omit `--parent-ref` | The selected children and an external parent declaration using the parent's exact remote ID. | The exported file. Other referenced resources must already exist or have declarations. |
-| Set `--parent-ref REF` | Root-level children with `!ref REF#id` parent links and no parent declaration. | The exported file and a declaration with that ref for the same remote parent. |
+{% table %}
+columns:
+  - title: |
+      Export option
+    key: option
+  - title: |
+      Generated configuration
+    key: configuration
+  - title: |
+      Files needed for planning
+    key: files
+rows:
+  - option: |
+      Omit `--parent-ref`
+    configuration: |
+      The selected children and an external parent declaration using the
+      parent's exact remote ID.
+    files: |
+      The exported file. Other referenced resources must already exist or have
+      declarations.
+  - option: |
+      Set `--parent-ref REF`
+    configuration: |
+      Root-level children with `!ref REF#id` parent links and no parent
+      declaration.
+    files: |
+      The exported file and a declaration with that ref for the same remote
+      parent.
+{% endtable %}
 
 `--parent-ref` names a local declarative ref. It doesn't select the remote
 parent or read existing input files. The gateway, directory, principal, or
