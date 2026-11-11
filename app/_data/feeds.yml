@@ -1,0 +1,5 @@
+security-advisories:
+  title: Kong Security Advisories
+  description: Security advisories for Kong products.
+  link: /support/security/
+  source: security_advisories
