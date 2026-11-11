@@ -148,7 +148,6 @@ kongctl import identity org-chart \
 ```
 
 Each run writes a JSON report to `--report-output-dir`, listing the users and teams it created, updated, or deactivated.
-If the org structure changes between the preview and the import, the command rejects the file and applies nothing.
 
 {% endnavtab %}
 {% endnavtabs %}

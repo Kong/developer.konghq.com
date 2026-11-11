@@ -148,9 +148,6 @@ They come from any of the following sources:
 * The request consumer's gateway consumer groups (as `consumer_group/UUID`)
 * JWT `group` or `groups` claims on an `openid-connect` auth strategy (as `oidc/GROUP`)
 
-{{site.identity}} group memberships don't have to exist beforehand.
-When automatic user provisioning is enabled, {{site.identity}} creates any group from the caller's token claim that doesn't already exist. The principal then joins those groups.
-
 A single event holds at most 64 groups.
 
 ### Teams
