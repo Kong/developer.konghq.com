@@ -4,7 +4,7 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 1. Go to **Security > API > Authorization Servers**.
 1. Click `default`.
-1. Go to the **Scopes** tab.
+1. Click the **Scopes** tab.
 1. Click **Add Scope**.
 1. Name: `api:access`
 1. Display phrase: `Access protected APIs`
@@ -13,7 +13,7 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 #### Add an access policy
 
-1. In the same `default` authorization server, go to the **Access Policies** tab.
+1. In the same `default` authorization server, click the **Access Policies** tab.
 1. Click **Add Policy**.
 1. Name: `API Access`
 1. Assign to: **All clients**
