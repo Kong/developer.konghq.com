@@ -138,6 +138,38 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 1. Presents it to Token Vault to request a credential for a specific provider.
 1. After it gets one back, it injects the credential into the actual outbound request to the third-party service (for example, as a header, for providers that support it).
 
+## Gateway response codes
+
+When a Token Vault brokering plugin (`token-vault-exchange` or `ai-mcp-proxy`) asks Token Vault for
+a credential, the {{site.ai_gateway_name}} maps the vault's reply to one of the following
+responses. Codes the caller can't fix signal a gateway-side configuration fault (`500`) or a vault
+outage (`502`) so they can be monitored and alerted on, instead of a `401` that suggests the
+caller's own token is the problem.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Response
+    key: response
+  - title: When the gateway returns it
+    key: when
+rows:
+  - response: "`401`"
+    when: |
+      * The caller presents no usable inbound credential.
+      * Token Vault rejects the caller's grant: the token is expired, revoked, or not issued by a trusted IdP, or a `static_secret` exchange presents the wrong secret (`invalid_grant`). The response includes the vault's error detail.
+  - response: "`401` with `enrollment_required`"
+    when: |
+      * No credential is enrolled for the caller yet. The response includes a gateway-rehosted `enrollment_url` the caller opens to complete enrollment.
+  - response: "`500`"
+    when: |
+      * Any other vault reply: for example a `403`/`404` from a misconfigured directory or provider, or a `400` error the caller can't fix. This is a gateway-side configuration fault, not a vault outage.
+  - response: "`502`"
+    when: |
+      * Token Vault is unavailable: a vault `5xx` or a connection failure.
+{% endtable %}
+<!--vale on-->
+
 ## Directory
 
 The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes identities and access in Token Vault. To use Token Vault, you activate it in your directory with the `vault_enabled` flag.
