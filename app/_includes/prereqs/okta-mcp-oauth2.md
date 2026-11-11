@@ -44,9 +44,10 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 
 ### Create the web application (used by {{site.ai_gateway}} for introspection)
 
-1. Go to **Applications > Applications > Create App Integration**.
+1. Go to **Applications and Resources > Applications > Create App Integration**.
 1. Sign-in method: **OIDC - OpenID Connect**
 1. Application type: **Web Application**
+1. Client definition: select "Use Okta-generated client ID".
 1. App integration name: `Kong MCP Gateway`
 1. Grant types: check **Client Credentials** and **Authorization Code**.
 1. Set **Sign-in redirect URIs** to any valid URL (for example, `http://localhost/unused`). Kong does not use the redirect flow for this app, but Okta requires the field.
@@ -63,7 +64,7 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 
 ### Create the native application (used by MCP Inspector)
 
-1. Go to **Applications > Applications > Create App Integration**.
+1. Go to **Applications and Resources > Applications > Create App Integration**.
 1. Sign-in method: **OIDC - OpenID Connect**
 1. Application type: **Native Application**
 1. App integration name: `MCP Inspector`

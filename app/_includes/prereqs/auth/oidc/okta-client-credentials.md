@@ -29,9 +29,10 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 #### Create a web application
 
-1. Go to **Applications > Applications > Create App Integration**.
+1. Go to **Applications and Resources > Applications > Create App Integration**.
 1. Sign-in method: **OIDC - OpenID Connect**
 1. Application type: **Web Application**
+1. Client definition: select "Use Okta-generated client ID".
 1. App integration name: `Kong Gateway`
 1. Grant types: check **Client Credentials**.
 1. Assignments: **Skip group assignment for now**
