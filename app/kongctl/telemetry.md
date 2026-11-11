@@ -1,8 +1,9 @@
 ---
 title: kongctl telemetry and privacy
 description: >-
-  Learn what usage data kongctl collects, how to disable telemetry, and how to
-  inspect events locally without sending them to Kong.
+  kongctl collects usage data by default. This reference lists the event fields,
+  telemetry opt-out options, and how to inspect events locally without sending
+  them to Kong.
 content_type: reference
 layout: reference
 
@@ -55,8 +56,8 @@ rows:
 {% endtable %}
 
 The transport also includes a fixed `signal=kongctl` label to identify the tool.
-The event contains no user, device, installation, or {{site.konnect_short_name}}
-organization identifier.
+The event doesn't contain a user, device, installation, or
+{{site.konnect_short_name}} organization identifier.
 
 ## What is not collected
 
@@ -69,13 +70,13 @@ The telemetry payload does not include:
 * Configuration file contents or file paths
 * Hostnames, usernames, email addresses, or IP addresses
 
-The absence of IP addresses from the payload does not mean that network
-infrastructure cannot observe the source IP address of a telemetry datagram.
+Network infrastructure can still observe the source IP address of a telemetry
+datagram, even though the payload doesn't contain it.
 
 ## When telemetry is sent
 
-When enabled, kongctl attempts to send one event when an eligible command
-finishes. Help, version, and shell completion commands are excluded, as is
+When telemetry is enabled, kongctl attempts to send one event when an eligible
+command finishes. Help, version, and shell completion commands are excluded, as is
 running `kongctl` without a subcommand. Commands that fail before a subcommand
 is resolved do not produce an event.
 
@@ -166,8 +167,8 @@ to enable it.
 
 To reset the preference, delete only `.telemetry-enabled` from that directory.
 The active profile's setting then applies. Resetting the preference does not
-disable telemetry; without another opt-out, it defaults to enabled. The next
-interactive login asks again if telemetry is enabled.
+disable telemetry; without another opt-out, it defaults to enabled. If telemetry
+is enabled, the next interactive login asks again.
 
 ## Inspect events without sending them
 
