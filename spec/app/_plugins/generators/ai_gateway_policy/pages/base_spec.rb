@@ -19,7 +19,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
       icon: 'my-policy.png',
       unreleased?: false,
       min_release: nil,
-      api_spec_exists?: false
+      api_spec_exists?: false,
+      explicit_major: nil
     )
   end
 

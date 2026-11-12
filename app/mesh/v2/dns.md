@@ -183,7 +183,7 @@ To override DNS configuration from data planes, use `--dns-coredns-config-templa
 
 To override the configuration, prepare a DNS configuration file. The file is a [CoreDNS configuration](https://coredns.io/manual/toc/) that {{site.mesh_product_name}} processes as a Go template.
 
-Base your edits on [the existing default configuration](https://github.com/kumahq/kuma/blob/master/app/kuma-dp/pkg/dataplane/dnsserver/Corefile). For example, use the following configuration to make the DNS server return `NOERROR` instead of an error for IPv6 queries when your cluster has IPv6 disabled:
+Base your edits on [the existing default configuration](https://github.com/kumahq/kuma/blob/release-2.14/app/kuma-dp/pkg/dataplane/dnsserver/Corefile). For example, use the following configuration to make the DNS server return `NOERROR` instead of an error for IPv6 queries when your cluster has IPv6 disabled:
 
 {% raw %}
 

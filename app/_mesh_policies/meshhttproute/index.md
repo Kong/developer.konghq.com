@@ -25,7 +25,7 @@ them:
 * What's rewritten on the way
 
 Matching and precedence follow the
-[Gateway API `HTTPRoute` specification](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.HTTPRouteRule).
+[Gateway API `HTTPRoute` specification](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#httprouterule).
 
 Other policies can also target a route: `MeshRetry`, `MeshTimeout`, `MeshAccessLog`, and
 `MeshLoadBalancingStrategy` accept `to[].targetRef.kind: MeshHTTPRoute`, which applies them

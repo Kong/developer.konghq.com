@@ -36,7 +36,8 @@ RSpec.describe Jekyll::EventGatewayPolicyPages::Pages::Example do
       publish?: true,
       icon: nil,
       unreleased?: false,
-      min_release: nil
+      min_release: nil,
+      explicit_major: nil
     )
   end
 
