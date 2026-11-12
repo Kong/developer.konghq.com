@@ -46,7 +46,6 @@ The Policy sets the severity of each log entry based on the response status code
 * [`config.server_errors_severity`](/ai-gateway/policies/syslog/reference/#schema--config-server-errors-severity) applies to `5xx` responses.
 
 [`config.log_level`](/ai-gateway/policies/syslog/reference/#schema--config-log-level) sets the least severe level that the Policy logs.
-The Policy doesn't log entries with a less severe level.
 For example, with `log_level` set to `warning`, the Policy doesn't log an entry assigned `info`, and it logs entries assigned `warning` or `err`.
 
 [`config.facility`](/ai-gateway/policies/syslog/reference/#schema--config-facility) tags every entry with a syslog facility, so the daemon can route entries to different destinations.
@@ -71,13 +70,7 @@ See [Logging and observability](/ai-gateway/entities/ai-model/#logging-and-obser
 ## Redact sensitive data
 
 Use [`config.log_sanitization`](/ai-gateway/policies/syslog/reference/#schema--config-log-sanitization) to redact sensitive values from log entries.
-Redaction is off by default.
-When you set `enabled` to `true`, the Policy replaces values with `********`.
-The following settings extend what the Policy redacts by default:
-
-* [`redact_headers`](/ai-gateway/policies/syslog/reference/#schema--config-log-sanitization-redact-headers): Header names to redact, in addition to the built-in defaults.
-* [`body_json_paths`](/ai-gateway/policies/syslog/reference/#schema--config-log-sanitization-body-json-paths): JSONPath expressions that select fields to redact. Paths apply to each payload separately, so `$.messages[*].content` redacts the request messages and leaves the response untouched.
-* [`body_patterns`](/ai-gateway/policies/syslog/reference/#schema--config-log-sanitization-body-patterns): PCRE patterns to redact from the request and response bodies.
+JSONPath expressions in `body_json_paths` apply to each payload separately, so `$.messages[*].content` redacts request messages and leaves the response untouched.
 
 Body redaction has an effect only when payload logging is enabled on the AI Model.
 
@@ -86,7 +79,6 @@ For a configuration that redacts a header and matching values, see [Redact sensi
 ## Custom fields by Lua
 
 The [`config.custom_fields_by_lua`](/ai-gateway/policies/syslog/reference/#schema--config-custom-fields-by-lua) setting lets you add, change, or remove log fields with Lua code.
-For a configuration that removes one field and adds another, see [Add and remove log fields](/ai-gateway/policies/syslog/examples/add-and-remove-log-fields/).
 
 Dots in a field key create nested fields.
 
@@ -122,7 +114,7 @@ For a configuration that removes the request body from the log, see [Remove LLM 
 
 {% include /md/ai-gateway/v2/policies/sandbox.md %}
 
-The default value is `strict`.
+The [`untrusted_lua`](/ai-gateway/configuration/#untrusted-lua) setting defaults to `strict`.
 The Lua code runs in the log phase, so only [PDK](/gateway/pdk/reference/) methods that work in that phase are available.
 
 ## Scopes

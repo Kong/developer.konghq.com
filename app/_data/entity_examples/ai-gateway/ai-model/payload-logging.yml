@@ -1,0 +1,23 @@
+display_name: my-gpt-4o
+name: my-gpt-4o
+type: model
+capabilities:
+  - generate
+formats:
+  - type: openai
+policies: []
+targets:
+  - name: gpt-4o
+    provider: my-openai-account
+    config:
+      type: openai
+config:
+  route:
+    paths:
+      - /v1
+    model:
+      body_param: model
+      values:
+        - my-gpt-4o
+  logging:
+    payloads: true

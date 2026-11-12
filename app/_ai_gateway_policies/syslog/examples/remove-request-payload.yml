@@ -21,6 +21,9 @@ config:
   custom_fields_by_lua:
     "ai.proxy.payload.request": "return nil"
 
+attach:
+  ai-model: payload-logging
+
 tools:
   - konnect-api
   - terraform
