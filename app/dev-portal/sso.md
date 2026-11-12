@@ -73,8 +73,15 @@ To ensure the preview experience in the {{site.konnect_short_name}} Dev Portal E
 ## OIDC back-channel logout
 
 If you use OIDC for SSO, you can configure back-channel logout so the Dev Portal ends a developer's session when their IdP session ends.
+When back-channel logout isn't enabled, a developer who logs out from the IdP (or an admin who terminates their IdP session, for example after offboarding) stays logged in to {{site.dev_portal}} until their {{site.dev_portal}} tokens expire.
 
 By default, when a developer signs out of your IdP, they stay signed in to the Dev Portal until their Dev Portal session expires.
+
+Before enabling back-channel logout, keep the following in mind:
+* Back-channel logout only applies to sessions that start after you enable it.
+* If your IdP doesn't send a session ID, all of a developer's Dev Portal sessions are ended.
+* Some IdPs send a logout request only when a developer signs themselves out, or only end one session when an admin ends all of a developer's sessions. Verify how your IdP behaves.
+* If the request from your IdP is invalid, the Dev Portal ignores it and doesn't sign anyone out.
 
 ### Requirements
 
@@ -93,16 +100,10 @@ By default, when a developer signs out of your IdP, they stay signed in to the D
 1. In the {{site.konnect_short_name}} sidebar, click [**{{site.dev_portal}}**](https://cloud.konghq.com/portals/).
 1. Click your {{site.dev_portal}}.
 1. In the {{site.dev_portal}} sidebar, click **Settings**.
-1. Click the **Identity** tab.
+1. Click the **Security** tab.
 1. Next to your OIDC identity provider, click **Configure**.
 1. Enable **Back-channel logout**.
 
-### What to expect
-
-* Back-channel logout only applies to sessions that start after you enable it. Sessions that started earlier aren't ended by your IdP's logout requests, and stay signed in until they expire.
-* If your IdP doesn't send a session ID, all of that developer's Dev Portal sessions are ended.
-* Some IdPs send a logout request only when a developer signs out themselves, or end only one session when an admin ends all of a developer's sessions. Check how your IdP behaves, and test the situations that matter to you.
-* If the request from your IdP is invalid, the Dev Portal ignores it and doesn't sign anyone out.
 
 ## Dev Portal SSO configuration example
 
