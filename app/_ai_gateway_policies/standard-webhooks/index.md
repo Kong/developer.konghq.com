@@ -67,7 +67,6 @@ See [Limitations](#limitations) for how the policy uses the secret as a signing 
 ## Set the timestamp tolerance
 
 The [`config.tolerance_second`](/ai-gateway/policies/standard-webhooks/reference/#schema--config-tolerance-second) parameter sets how old a webhook timestamp can be, in seconds.
-The default is `300`.
 {{site.ai_gateway}} rejects a webhook with a timestamp older than this value.
 For example, with `tolerance_second: 60`, a webhook signed 30 seconds ago passes and a webhook signed 90 seconds ago doesn't.
 
@@ -79,7 +78,8 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 
 Consider the following when you choose a scope:
 * A policy scoped to an AI Consumer Group applies only after the client authenticates, because authentication runs first.
-* A global policy validates every request on the data plane, so every sender needs to sign its requests.
+* A global policy validates every {{site.ai_gateway}} request on the data plane, so every sender needs to sign its requests.
+  Non-AI traffic on the same data plane isn't affected.
   Use a [`condition`](/ai-gateway/entities/ai-policy/#conditional-ai-policy-execution) to run the policy only for the requests that carry webhooks.
 
 ## Limitations
