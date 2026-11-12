@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl adopt event-gateway
+    url: /kongctl/adopt/event-gateway/
 ---
 
 Use the `get` verb with the `event-gateway` command to query {{site.konnect_short_name}} {{site.event_gateway_short}}s.

@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -37,7 +38,7 @@ The AI Lakera Guard Policy inspects model traffic at three points in the LLM req
 * **Response phase (buffered)**: Inspection occurs **before** any byte is transmitted back toward the client. The AI Lakera Guard Policy buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before {{site.ai_gateway}} sends any part of the response back to the client.
 * **Response phase (per-frame)**: The AI Lakera Guard Policy runs during streaming responses like Server-Sent Events. {{site.ai_gateway}} processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the AI Lakera Guard Policy inspects that segment with Lakera Guard before forwarding the frame to the client.
 
-The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not currently support.
+The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not support.
 
 ## Inspected content
 
@@ -75,6 +76,75 @@ rows:
     content: "Input string or array of input strings."
     limitation: "Embedding outputs cannot be inspected."
 {% endtable %}
+
+## Rejection modes
+
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name checks_responses=true %}
+
+In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-response-failure-message) for responses.
+The following response is the body for a request blocked in `none` mode:
+
+```json
+{
+  "message": "Request was filtered by Lakera Guard",
+  "error": true
+}
+```
+
+In `verbose` mode, `detail` contains the detector results that Lakera Guard returned for the content, and `reason` is the type of the detector that matched.
+For example, a prompt injection attempt returns the following response:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-lakera-guard",
+    "reason": "prompt_attack",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": [
+      {
+        "project_id": "project-lakera-default",
+        "policy_id": "policy-lakera-default",
+        "detector_id": "prompt_attack",
+        "detector_type": "prompt_attack",
+        "detected": true,
+        "result": "l1_confident",
+        "message_id": 0
+      }
+    ]
+  }
+}
+```
+
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-rejection-mode) to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Lakera Guard - Verbose Rejection
+  name: ai-lakera-guard
+  type: ai-lakera-guard
+  config:
+    api_key: ${lakera_api_key}
+    rejection_mode: verbose
+variables:
+  lakera_api_key:
+    value: $LAKERA_API_KEY
+    description: Your Lakera Guard API key.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+{:.info}
+> The Policy inspects streamed responses one buffered segment at a time.
+> Content that Lakera Guard only recognizes across several segments, such as a sentence split between two frames, might not be blocked while streaming.
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 ## Logging
 

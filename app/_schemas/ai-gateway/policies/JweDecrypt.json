@@ -32,6 +32,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "lookup_header_name": {
+          "type": "string",
+          "description": "The name of the header to look for the JWE token.",
+          "default": "Authorization"
+        },
         "forward_header_name": {
           "type": "string",
           "description": "The name of the header that is used to set the decrypted value.",
@@ -48,11 +53,6 @@
           "type": "boolean",
           "description": "Defines how the policy behaves in cases where no token was found in the request. When using `strict` mode, the request requires a token to be present and subsequently raise an error if none could be found.",
           "default": true
-        },
-        "lookup_header_name": {
-          "type": "string",
-          "description": "The name of the header to look for the JWE token.",
-          "default": "Authorization"
         }
       },
       "required": [

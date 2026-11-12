@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayModelProvider
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -87,6 +88,7 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="metaai.svg" title="Llama" cta_url="/ai-gateway/ai-providers/llama/" %}
 {% icon_card icon="xai.svg" title="xAI" cta_url="/ai-gateway/ai-providers/xai/" %}
 {% icon_card icon="dashscope.svg" title="Alibaba Cloud DashScope" cta_url="/ai-gateway/ai-providers/dashscope/" %}
+{% icon_card icon="baseten.svg" title="Baseten" cta_url="/ai-gateway/ai-providers/baseten/" %}
 {% icon_card icon="cerebras.svg" title="Cerebras" cta_url="/ai-gateway/ai-providers/cerebras/" %}
 {% icon_card icon="deepseek.svg" title="DeepSeek" cta_url="/ai-gateway/ai-providers/deepseek/" %}
 {% icon_card icon="ollama.svg" title="Ollama" cta_url="/ai-gateway/ai-providers/ollama/" %}
@@ -94,6 +96,7 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="vercel.svg" title="Vercel" cta_url="/ai-gateway/ai-providers/vercel/" %}
 {% icon_card icon="vllm.svg" title="vLLM" cta_url="/ai-gateway/ai-providers/vllm/" %}
 {% icon_card icon="sagemaker.svg" title="AWS SageMaker" cta_url="/ai-gateway/ai-providers/sagemaker/" %}
+{% icon_card icon="typesafe.svg" title="TypeSafe AI" cta_url="/ai-gateway/ai-providers/typesafe/" %}
 {% endhtml_tag %}
 
 ## Outbound authentication

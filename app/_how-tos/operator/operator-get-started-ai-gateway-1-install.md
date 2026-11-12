@@ -19,7 +19,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.3'
+  operator: '2.4'
   ai-gateway: '2.0'
 
 works_on:
@@ -71,10 +71,13 @@ Create the namespace used throughout this series:
 ```bash
 kubectl create namespace kong
 ```
+{: data-test-step="block" }
 
 ## Install {{site.operator_product_name}}
 
-{% include prereqs/products/operator.md raw=true v_maj=2 %}
+{% include operator/rapid-release.md %}
+
+{% include prereqs/products/operator.md raw=true v_maj=2 chart_version=site.data.products.operator.rapid.chart %}
 
 ## Verify {{ site.ai_gateway }} CRDs
 
@@ -83,5 +86,6 @@ Confirm the {{ site.ai_gateway }} CRDs are registered in the cluster:
 ```bash
 kubectl get crd | grep -E "aigateway|aigatewaydataplane"
 ```
+{: data-test-step="block" }
 
 You should see entries for `konnectaigateways`, `aigatewaymodelproviders`, `aigatewaymodels`, `aigatewaypolicies`, `aigatewayauthstrategies`, `aigatewayconsumers`, `aigatewayconsumercredentials`, `aigatewayconsumergroups`, `aigatewayagents`, `aigatewaydataplanecertificates`, and `aigatewaydataplanes`.

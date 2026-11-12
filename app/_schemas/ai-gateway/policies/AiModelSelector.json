@@ -18,16 +18,6 @@
           "items": {
             "type": "object",
             "properties": {
-              "source": {
-                "type": "string",
-                "enum": [
-                  "body",
-                  "header",
-                  "path"
-                ],
-                "description": "Where the policy reads the request model from.",
-                "default": "body"
-              },
               "header_name": {
                 "type": "string",
                 "description": "Header to read when source is 'header'."
@@ -47,6 +37,16 @@
               "pcre_capture_name": {
                 "type": "string",
                 "description": "Named capture group in `pcre_pattern` to use as the model name. Required when `pcre_pattern` is set."
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "body",
+                  "header",
+                  "path"
+                ],
+                "description": "Where the policy reads the request model from.",
+                "default": "body"
               }
             }
           },
@@ -78,26 +78,6 @@
         "https"
       ]
     },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
     "consumer": {
       "type": "object",
       "properties": {
@@ -117,6 +97,26 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

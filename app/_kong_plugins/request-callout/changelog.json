@@ -11,9 +11,33 @@
       "scope": "Plugin"
     }
   ],
+  "3.16.0.2": [
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.6": [
     {
       "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.15.0.7": [
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -37,6 +61,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.17": [
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting for HTTPS callouts cannot be disabled.",
@@ -45,6 +81,25 @@
     },
     {
       "message": "Fix duplicated content-type headers in the callout request when body.custom is enabled and content-type header is also set in headers.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.11": [
+    {
+      "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.12": [
+    {
+      "message": "Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -253,6 +308,25 @@
     },
     {
       "message": "Fixed an issue where the client request body is forwarded to upstream when `upstream.body.forward` is false.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.20": [
+    {
+      "message": "Security: Fixed CVE-2026-123041 by including all callout request headers in the cache key, preventing cached callout responses from being served to requests with different headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
       "type": "bugfix",
       "scope": "Plugin"
     }

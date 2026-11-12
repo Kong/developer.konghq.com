@@ -5,6 +5,7 @@ metadata:
   products:
     - ai-gateway
   works_on:
+    - on-prem
     - konnect
   min_version:
     ai-gateway: '2.0'
@@ -42,6 +43,7 @@ rows:
             config:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
+              expandable: true
 
   - header:
       type: h2
@@ -64,10 +66,15 @@ rows:
                 The script creates an {{site.ai_gateway}} control plane in {{site.konnect_short_name}} and deploys a local data plane using Docker.
 
                 All licensing is handled automatically by {{site.konnect_short_name}}.
+            - title: Fully-hosted
+              content: |
+                With [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), Kong hosts the control plane and data planes for you, including scaling, upgrades, and high availability, so you don't have to run your own {{site.ai_gateway}} data planes.
+
+                See [{{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways](/dedicated-cloud-gateways/reference/#ai-gateway-2-0-on-dedicated-cloud-gateways) to create a fully-hosted {{site.ai_gateway}}.
             - title: Konnect UI
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
-                then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
+                select the AI view, then navigate to **Gateways** and click **New AI gateway**.
   - columns:
       - blocks:
         - type: card
@@ -112,7 +119,7 @@ rows:
                     Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure these entities once, then govern them from a unified control plane with built-in auth, policy enforcement, and observability:
 
                     * [Routing and load balancing](/ai-gateway/load-balancing/) across AI providers
-                    * [Streaming and authentication](/ai-gateway/streaming/)
+                    * [Streaming](/ai-gateway/streaming/)
                     * Control user access and ACLs
                     * See [usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
       - header:
@@ -505,7 +512,7 @@ rows:
   - header:
       type: h2
       text: Key references
-    column_count: 2
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -527,6 +534,24 @@ rows:
               cta:
                 text: See changelog
                 url: /ai-gateway/changelog/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: FIPS 140-3 compliance
+              description: Learn how {{site.ai_gateway}} supports FIPS 140-3 compliance.
+              cta:
+                text: View FIPS 140-3 compliance
+                url: /ai-gateway/fips-support/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Data plane version compatibility
+              description: Learn how the minimum supported data plane version controls which data planes and features work with your {{site.ai_gateway}} control plane.
+              cta:
+                text: View data plane version compatibility
+                url: /ai-gateway/data-plane-version-compatibility/
                 align: end
 
   - header:
@@ -563,7 +588,7 @@ rows:
               a: |
                 {{site.ai_gateway}} 2.x replaces {{site.base_gateway}}'s plugin-centric model (V1) with an entity model (V2).
                 Instead of configuring the AI Proxy/AI Proxy Advanced plugin directly, you now create AI Model Provider and AI Model entities to manage upstream connectivity and routing.
-                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of V1 concepts to V2 entities, and [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
+                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of V1 concepts to V2 entities, and [Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
             - q: I was using AI Proxy or AI Proxy Advanced. Where did those plugins go?
               a: |
                 In {{site.ai_gateway}} 2.x, the proxy is configured through the [AI Model entity](/ai-gateway/entities/ai-model/) rather than the AI Proxy plugin.

@@ -3,6 +3,7 @@
 require 'yaml'
 require_relative '../monkey_patch'
 require_relative '../component_templates'
+require_relative '../drops/concerns/test_section'
 
 DEFAULTS = {
   'gwapi_version' => 'v1',
@@ -15,13 +16,15 @@ DEFAULTS = {
 }.freeze
 
 module Jekyll
-  class HttpRoute < Liquid::Block # rubocop:disable Style/Documentation, Metrics/ClassLength
+  class HttpRoute < Liquid::Block
+    include Jekyll::Drops::Concerns::TestSection
+
     def initialize(tag_name, markup, tokens)
       super
       @name = markup.strip
     end
 
-    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength, Metrics/CyclomaticComplexity
+    def render(context)
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
@@ -35,13 +38,16 @@ module Jekyll
         config[k] = v[1] if config[k].nil? || config[k].empty?
       end
 
+      @yaml = config
+      validate_section!
+
       unless config['disable_gateway']
         gateway_api = <<~YAML
           ```bash
           echo "
           #{format_yaml(to_gatewayapi(config).to_yaml)}" | kubectl apply -f -
           ```
-          {: data-test-step="block" }
+          {: #{test_attribute}="block" }
         YAML
       end
 
@@ -74,7 +80,7 @@ module Jekyll
       yaml.lines.map { |line| line.gsub(/^---\s*\n/, '') }.compact.join
     end
 
-    def to_gatewayapi(config) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def to_gatewayapi(config)
       output = {
         'apiVersion' => "gateway.networking.k8s.io/#{config['gwapi_version']}",
         'kind' => 'HTTPRoute',
@@ -121,7 +127,7 @@ module Jekyll
       output
     end
 
-    def to_ingress(config) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def to_ingress(config)
       {
         'apiVersion' => 'networking.k8s.io/v1',
         'kind' => 'Ingress',

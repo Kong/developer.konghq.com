@@ -28,44 +28,44 @@ To resolve this issue, you can increase the size of the `prometheus_metrics` sha
 
 1. Check the current size of the shared dictionary by accessing the status endpoint of the Kong node. You may need to use `kubectl port-forward` if running in Kubernetes:
 
-```bash
+   ```bash
+   curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
+   ```
 
-curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
-```
+   If the output shows that the `allocated_slabs` is equal to the `capacity`, it indicates that the dictionary is full.
 
-If the output shows that the `allocated_slabs` is equal to the `capacity`, it indicates that the dictionary is full.
+   ```json
+   {
+   "allocated_slabs": "5.00 MiB",
+   "capacity": "5.00 MiB"
+   }
+   ```
 
-```
-{
-  "allocated_slabs": "5.00 MiB",
-  "capacity": "5.00 MiB"
-}
-```
+2. To increase the dictionary size, add the following configuration parameter in the `env` section of your dataplanes' `values.yaml`:
 
-To increase the dictionary size, add the following configuration parameter in the `env` section of your dataplanes' `values.yaml`:
+   ```yaml
+   nginx_http_lua_shared_dict: "prometheus_metrics 100m"
+   ```
 
-```yaml
+   Alternatively, set it as an environment variable:
 
-nginx_http_lua_shared_dict: "prometheus_metrics 100m"
-```
+   ```yaml
+  KONG_NGINX_HTTP_LUA_SHARED_DICT: "prometheus_metrics 100m"
+  ```
 
-Alternatively, set it as an environment variable:
+3. After applying the configuration change, verify that the size of the shared dictionary has increased by checking the status endpoint again:
 
-```yaml
-
-KONG_NGINX_HTTP_LUA_SHARED_DICT: "prometheus_metrics 100m"
-```
-
-After applying the configuration change, verify that the size of the shared dictionary has increased by checking the status endpoint again:
-
-```bash
-
-curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
-{
-   "capacity": "100.00 MiB",
-   "allocated_slabs": "26.48 MiB"
-}
-```
+   ```bash
+   curl -s http://localhost:8100/status | jq .memory.lua_shared_dicts.prometheus_metrics
+   ```
+  
+   Response:
+   ```json
+   {
+      "capacity": "100.00 MiB",
+      "allocated_slabs": "26.48 MiB"
+   }
+   ```
 
 The `capacity` should now reflect the new size, such as `100.00 MiB`.
 

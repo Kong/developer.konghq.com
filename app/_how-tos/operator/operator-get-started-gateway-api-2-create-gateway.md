@@ -77,6 +77,7 @@ content: |
             - name: proxy
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 
   ### Existing {{site.konnect_short_name}} control plane
 
@@ -120,6 +121,7 @@ content: |
   ```bash
   kubectl create namespace kong
   ```
+  {: data-test-step="block" }
 
   ```bash
   echo '
@@ -135,8 +137,9 @@ content: |
           spec:
             containers:
             - name: proxy
-              image: kong/kong-gateway:3.9' | kubectl apply -f -
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 
@@ -158,6 +161,7 @@ spec:
     namespace: kong
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a `Gateway` Resource
 
@@ -178,13 +182,14 @@ spec:
     port: 80
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 {% konnect %}
 content: |
   {{site.operator_product_name}} will automatically create the `DataPlane` and `KonnectGatewayControlPlane` resources.
 
   {:.info}
-  > By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to use a predictable name based on the Gateway's namespace and name. Names can't be changed after creation.
+  > By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to give it the Gateway's name instead, and, in {{site.operator_product_name}} 2.3.2 and later, to name the control plane in {{site.konnect_short_name}} `<namespace>_<gateway-name>`. {{site.operator_product_name}} sets these names when it creates the resources and doesn't change them afterwards.
 {% endkonnect %}
 
 {% on_prem %}

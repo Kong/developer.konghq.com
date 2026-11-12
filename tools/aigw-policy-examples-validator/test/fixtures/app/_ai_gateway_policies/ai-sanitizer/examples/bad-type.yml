@@ -1,0 +1,6 @@
+title: Wrong type
+name: pii-sanitizer
+display_name: PII Sanitizer
+type: ai-semantic-cache
+config:
+  rejection_mode: return_error

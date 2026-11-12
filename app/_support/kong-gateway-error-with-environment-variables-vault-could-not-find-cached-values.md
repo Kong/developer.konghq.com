@@ -39,13 +39,11 @@ Things to check:
 
 1. The environment variable in the docker file should have these added: The variables that would be referenced with the vault and if you are using an environment variable prefix, then `KONG_VAULT_ENV_PREFIX` should be added. In my example below, my `KONG_VAULT_ENV_PREFIX=MY_` and hence all the variables that I want this vault to reference will also have this prefix:
 
-```bash
--e "MY_CLIENTID=<Clientid>" \
-
--e "KONG_VAULT_ENV_PREFIX=MY_" \
-
--e "MY_CLIENTSECRET=<clientsecret>" \
-```
+   ```bash
+   -e "MY_CLIENTID=<Clientid>" \
+   -e "KONG_VAULT_ENV_PREFIX=MY_" \
+   -e "MY_CLIENTSECRET=<clientsecret>" \
+   ```
 
 2. Note that these environment variables should be specified in upper case. If specified in lower case, then they are not valid. More on this can be found here.
 
@@ -53,27 +51,27 @@ Things to check:
 
 4. Check from inside Kong container if the reference is right. For this exec into the Kong container and execute the following command to view env variables and make sure the variables you created are showing up:
 
-```bash
-printenv | sort
-```
+   ```bash
+   printenv | sort
+   ```
 
-Execute the below command to know if from Kong container, we are able to reference these variables through vault parameters:
+   Execute the following command to verify that the Kong container can reference these variables through vault parameters:
 
-```bash
-kong vault get <Vault name/prefix>/environment_variable 
-Eg: kong vault get my-env-vault/clientsecret
-```
+   ```bash
+   kong vault get <Vault name/prefix>/environment_variable 
+   Eg: kong vault get my-env-vault/clientsecret
+   ```
 
-Note that the prefix (`MY_`) is not added here to the env variable name. If we add them (`my_clientid`) and check, we will get the error found here:
+   Note that the prefix (`MY_`) is not added here to the env variable name. If we add them (`my_clientid`) and check, we will get the error found here:
 
-5. You could then reference as shown below in any of the supported referenceable fields in the plugin.
+5. You could then reference as shown in the following example in any of the supported referenceable fields in the plugin.
 
-Here I am referencing these in the OIDC plugin `clientid` and `clientsecret` fields.
+   Here I am referencing these in the OIDC plugin `clientid` and `clientsecret` fields.
 
-Syntax:
+   Syntax:
 
-```
-{vault://<vault name/prefix/<env variable name>}
-```
+   ```
+   {vault://<vault name/prefix/<env variable name>}
+   ```
 
 I am getting redirected to the IDP since the client ID and secret is valid:

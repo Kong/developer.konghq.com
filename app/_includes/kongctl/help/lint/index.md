@@ -28,9 +28,10 @@ Examples:
 Flags:
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                - List       : [ kongctl list themes ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -D, --display-only-failures   Only output results with severity equal to or greater than --fail-severity
   -F, --fail-severity string    Results of this severity or above will trigger a failure exit code. Allowed: [ error | warn | info | hint ] (default "error")
@@ -54,7 +55,7 @@ Flags:
                                 - Allowed    : [ json|yaml|text ] (default "text")
   -p, --profile string          Specify the profile to use for this command. (default "default")
   -R, --recursive               Process the directory used in -f, --filename recursively
-  -r, --ruleset string          Path to a Spectral-compatible linting ruleset file (YAML or JSON)
+  -r, --ruleset string          Local YAML or JSON ruleset for vacuum (partial Spectral compatibility; no custom functions). Input tags/templates are not expanded; extends paths use the working directory (URLs allowed in extends).
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]

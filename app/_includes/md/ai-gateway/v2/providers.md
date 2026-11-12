@@ -5,7 +5,7 @@
   {%- assign compare_provider = include.providers.providers | where: "name", include.compare_provider_name | first -%}
 {%- endif -%}
 {% if provider %}
-{%- assign default_generate_paths = "/chat/completions|/completions|/responses" | split: "|" -%}
+{%- assign default_generate_paths = "/chat/completions|/completions" | split: "|" -%}
 {%- assign generate_paths = provider.capabilities.generate.paths -%}
 {%- if generate_paths == nil or generate_paths == empty -%}
   {%- assign generate_paths = default_generate_paths -%}
@@ -38,8 +38,10 @@ You can proxy requests to {{ provider.name }} AI models through {{site.ai_gatewa
 {%- capture audio_translation_label -%}{% if page.output_format == 'markdown' %}Audio translation{% else %}[Audio translation](#audio){% endif %}{%- endcapture -%}
 {%- capture video_label -%}{% if page.output_format == 'markdown' %}Video{% else %}[Video](#video){% endif %}{%- endcapture -%}
 {%- capture rerank_label -%}{% if page.output_format == 'markdown' %}Rerank{% else %}[Rerank](#rerank){% endif %}{%- endcapture -%}
+{%- capture decisions_label -%}{% if page.output_format == 'markdown' %}Decisions{% else %}[Decisions](#decisions){% endif %}{%- endcapture -%}
 {%- capture batches_label -%}{% if page.output_format == 'markdown' %}Batches{% else %}[Batches](#batches){% endif %}{%- endcapture -%}
 {%- capture files_label -%}{% if page.output_format == 'markdown' %}Files{% else %}[Files](#files){% endif %}{%- endcapture -%}
+{%- capture skills_label -%}{% if page.output_format == 'markdown' %}Skills{% else %}[Skills](#skills){% endif %}{%- endcapture -%}
 
 ## Upstream paths
 
@@ -61,7 +63,7 @@ columns:
   - title: Upstream path or API
     key: upstream_path
 rows:
-{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files" | split: "," -%}
+{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files,decisions,skills" | split: "," -%}
 {% for cap in all_capability_keys %}
 {% assign cap_supported = false %}
 {% if provider.capabilities[cap].supported %}{% assign cap_supported = true %}{% endif %}
@@ -69,7 +71,7 @@ rows:
 {% if compare_provider.capabilities[cap].supported %}{% assign cap_supported_compare = true %}{% endif %}
 {% if cap_supported or cap_supported_compare %}
 {% case cap %}
-{% when 'generate' %}{% assign cap_label = generate_label %}{% assign cap_path_template = generate_paths_display %}{% assign cap_description = "Text generation for chat completions and responses" %}
+{% when 'generate' %}{% assign cap_label = generate_label %}{% assign cap_path_template = generate_paths_display %}{% assign cap_description = "Text generation for chat completions" %}
 {% when 'agentic' %}{% assign cap_label = agentic_label %}{% assign cap_path_template = "`/assistants` or `/responses`" %}{% assign cap_description = "Agent and assistant-based interactions" %}
 {% when 'realtime' %}{% assign cap_label = realtime_label %}{% assign cap_path_template = "`/realtime`" %}{% assign cap_description = "Bidirectional streaming for real-time applications" %}
 {% when 'embeddings' %}{% assign cap_label = embeddings_label %}{% assign cap_path_template = "`/embeddings`" %}{% assign cap_description = "Vector embeddings from text input" %}
@@ -81,6 +83,8 @@ rows:
 {% when 'rerank' %}{% assign cap_label = rerank_label %}{% assign cap_path_template = "`/rerank`" %}{% assign cap_description = "Semantic reranking of documents" %}
 {% when 'batches' %}{% assign cap_label = batches_label %}{% assign cap_path_template = "`/batches`" %}{% assign cap_description = "Batch processing of requests" %}
 {% when 'files' %}{% assign cap_label = files_label %}{% assign cap_path_template = "`/files`" %}{% assign cap_description = "File management and storage" %}
+{% when 'skills' %}{% assign cap_label = skills_label %}{% assign cap_path_template = "`/skills`" %}{% assign cap_description = "Manage reusable skill bundles hosted with the provider" %}
+{% when 'decisions' %}{% assign cap_label = decisions_label %}{% assign cap_path_template = "`/v1/systemone`" %}{% assign cap_description = "Typed decision requests with per-option probabilities and a confidence score" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
@@ -137,7 +141,9 @@ rows:
 {%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign batches_note_num = 0 %}{% if provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign batches_note_num = note_counter %}{% endif -%}
 {%- assign files_note_num = 0 %}{% if provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign files_note_num = note_counter %}{% endif -%}
+{%- assign skills_note_num = 0 %}{% if provider.capabilities.skills.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign skills_note_num = note_counter %}{% endif -%}
 {%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
+{%- assign decisions_note_num = 0 %}{% if provider.capabilities.decisions.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign decisions_note_num = note_counter %}{% endif -%}
 {%- assign compare_generate_note_num = 0 %}{% if compare_provider.capabilities.generate.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_generate_note_num = note_counter %}{% endif -%}
 {%- assign compare_embeddings_note_num = 0 %}{% if compare_provider.capabilities.embeddings.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_embeddings_note_num = note_counter %}{% endif -%}
 {%- assign compare_agentic_note_num = 0 %}{% if compare_provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_agentic_note_num = note_counter %}{% endif -%}
@@ -149,7 +155,9 @@ rows:
 {%- assign compare_realtime_note_num = 0 %}{% if compare_provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_realtime_note_num = note_counter %}{% endif -%}
 {%- assign compare_batches_note_num = 0 %}{% if compare_provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_batches_note_num = note_counter %}{% endif -%}
 {%- assign compare_files_note_num = 0 %}{% if compare_provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_files_note_num = note_counter %}{% endif -%}
+{%- assign compare_skills_note_num = 0 %}{% if compare_provider.capabilities.skills.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_skills_note_num = note_counter %}{% endif -%}
 {%- assign compare_rerank_note_num = 0 %}{% if compare_provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_rerank_note_num = note_counter %}{% endif -%}
+{%- assign compare_decisions_note_num = 0 %}{% if compare_provider.capabilities.decisions.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_decisions_note_num = note_counter %}{% endif -%}
 {%- assign has_text = false -%}
 {%- assign has_embeddings = false -%}
 {%- assign has_agentic = false -%}
@@ -159,7 +167,9 @@ rows:
 {%- assign has_realtime = false -%}
 {%- assign has_batches = false -%}
 {%- assign has_files = false -%}
+{%- assign has_skills = false -%}
 {%- assign has_rerank = false -%}
+{%- assign has_decisions = false -%}
 {%- if provider.capabilities.generate.supported or compare_provider.capabilities.generate.supported %}{% assign has_text = true %}{% endif -%}
 {%- if provider.capabilities.embeddings.supported or compare_provider.capabilities.embeddings.supported %}{% assign has_embeddings = true %}{% endif -%}
 {%- if provider.capabilities.agentic.supported or compare_provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
@@ -169,7 +179,9 @@ rows:
 {%- if provider.capabilities.realtime.supported or compare_provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.batches.supported or compare_provider.capabilities.batches.supported %}{% assign has_batches = true %}{% endif -%}
 {%- if provider.capabilities.files.supported or compare_provider.capabilities.files.supported %}{% assign has_files = true %}{% endif -%}
+{%- if provider.capabilities.skills.supported or compare_provider.capabilities.skills.supported %}{% assign has_skills = true %}{% endif -%}
 {%- if provider.capabilities.rerank.supported or compare_provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
+{%- if provider.capabilities.decisions.supported or compare_provider.capabilities.decisions.supported %}{% assign has_decisions = true %}{% endif -%}
 
 ## Supported capabilities
 
@@ -401,9 +413,9 @@ rows:
 {% if compare_provider.capabilities[cap].supported %}{% assign cap_supported_compare = true %}{% endif %}
 {% if cap_supported or cap_supported_compare %}
 {% case cap %}
-{% when 'audio_speech' %}{% assign cap_short = "speech" %}{% assign cap_path_template = "`/audio/speech`" %}
-{% when 'audio_transcription' %}{% assign cap_short = "transcription" %}{% assign cap_path_template = "`/audio/transcriptions`" %}
-{% when 'audio_translation' %}{% assign cap_short = "translation" %}{% assign cap_path_template = "`/audio/translations`" %}
+{% when 'audio_speech' %}{% assign cap_short = "audio/speech" %}{% assign cap_path_template = "`/audio/speech`" %}
+{% when 'audio_transcription' %}{% assign cap_short = "audio/transcription" %}{% assign cap_path_template = "`/audio/transcriptions`" %}
+{% when 'audio_translation' %}{% assign cap_short = "audio/translation" %}{% assign cap_path_template = "`/audio/translations`" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
@@ -668,9 +680,9 @@ rows:
 {% endtable %}
 {% if provider.capabilities.batches.note.content %}<sup>{{ batches_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.batches.note.content }}{% endif %}
 {% if compare_provider.capabilities.batches.note.content %}<sup>{{ compare_batches_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.batches.note.content }}{% endif %}
+
 {:.warning}
-> Batches are configured on a separate AI Model with `type: "api"`, distinct from regular models that handle synchronous capabilities like generate and embeddings.
-> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
+> Batch jobs run on an AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type). Regular models handle synchronous capabilities like generate and embeddings, so a model that serves batches can't serve those capabilities.
 {%- endif -%}
 
 {% if has_files %}
@@ -726,8 +738,64 @@ rows:
 {% if compare_provider.capabilities.files.note.content %}<sup>{{ compare_files_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.files.note.content }}{% endif %}
 
 {:.warning}
-> Batches are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
-> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
+> Files are managed through an AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), the same type that serves batches. Create one dedicated AI Model for batches and files, and keep generate and embeddings on a separate regular model, because each model is either a regular model or an API model, not both.
+{%- endif -%}
+
+{% if has_skills %}
+
+### Skills
+
+Support for {{ provider.name }} skills management capabilities:
+
+{% table %}
+vertical_align: middle
+columns:
+  - title: Capability
+    key: capability
+{% if compare_provider %}
+  - title: Variant
+    key: variant
+{% endif %}
+  - title: Model example
+    key: model_example
+  - title: Path template
+    key: path_template
+  - title: Min version
+    key: min_version
+rows:
+{% if compare_provider %}
+{% if provider.capabilities.skills.supported and compare_provider.capabilities.skills.supported %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} & {{ include.compare_variant_label }}"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% elsif provider.capabilities.skills.supported %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} only"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% else %}
+  - capability: "skills{% if compare_skills_note_num != 0 %}<sup>{{ compare_skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.compare_variant_label }} only"
+    model_example: "{{ compare_provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ compare_provider.capabilities.skills.min_version }}"
+{% endif %}
+{% elsif provider.capabilities.skills %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% endif %}
+{% endtable %}
+{% if provider.capabilities.skills.note.content %}<sup>{{ skills_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.skills.note.content }}{% endif %}
+{% if compare_provider.capabilities.skills.note.content %}<sup>{{ compare_skills_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.skills.note.content }}{% endif %}
+
+{:.warning}
+> Skills are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches, files, and skills, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_rerank %}
@@ -782,6 +850,58 @@ rows:
 {% if provider.capabilities.rerank.note.content %}<sup>{{ rerank_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.rerank.note.content }}{% endif %}
 {% if compare_provider.capabilities.rerank.note.content %}<sup>{{ compare_rerank_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.rerank.note.content }}{% endif %}
 {%- endif -%}
+{% if has_decisions %}
+
+### Decisions
+
+Support for {{ provider.name }} decision capabilities:
+
+{% table %}
+vertical_align: middle
+columns:
+  - title: Capability
+    key: capability
+{% if compare_provider %}
+  - title: Variant
+    key: variant
+{% endif %}
+  - title: Model example
+    key: model_example
+  - title: Path template
+    key: path_template
+  - title: Min version
+    key: min_version
+rows:
+{% if compare_provider %}
+{% if provider.capabilities.decisions.supported and compare_provider.capabilities.decisions.supported %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} & {{ include.compare_variant_label }}"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/v1/systemone`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% elsif provider.capabilities.decisions.supported %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} only"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/v1/systemone`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% else %}
+  - capability: "decisions{% if compare_decisions_note_num != 0 %}<sup>{{ compare_decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.compare_variant_label }} only"
+    model_example: "{{ compare_provider.capabilities.decisions.model_example }}"
+    path_template: "`/v1/systemone`"
+    min_version: "{{ compare_provider.capabilities.decisions.min_version }}"
+{% endif %}
+{% elsif provider.capabilities.decisions %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/v1/systemone`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% endif %}
+{% endtable %}
+{% if provider.capabilities.decisions.note.content %}<sup>{{ decisions_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.decisions.note.content }}{% endif %}
+{% if compare_provider.capabilities.decisions.note.content %}<sup>{{ compare_decisions_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.decisions.note.content }}{% endif %}
+{%- endif %}
 
 ## {{ provider.name }} base URL
 
@@ -795,9 +915,9 @@ rows:
 {% if compare_provider %}
 By default, {{site.ai_gateway}} routes {{ provider.name }} requests to {{ include.variant_label }} at `{{ provider.url_patterns.first }}`.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 
-{{ compare_provider.variant_trigger }} This switches routing to {{ include.compare_variant_label }} at `{{ compare_provider.url_patterns.first }}`.
+To route requests to {{ include.compare_variant_label }}, {{ compare_provider.variant_trigger }}. {{site.ai_gateway}} then sends them to `{{ compare_provider.url_patterns.first }}`.
 
-{{site.ai_gateway}} uses the correct URL automatically based on this configuration. You only need to set `upstream_url` in your [AI Model](/ai-gateway/entities/ai-model/) configuration if you're using a self-hosted or {{ provider.name }}-compatible endpoint instead.
+You don't need to set the URL yourself. You only need to set `upstream_url` in your [AI Model](/ai-gateway/entities/ai-model/) configuration if you're using a self-hosted or {{ provider.name }}-compatible endpoint instead.
 {% else %}
 {% if provider.url_is_variable %}
 The base URL is <code>{{ provider.url_patterns.first }}</code>.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
@@ -808,6 +928,39 @@ The base URL is `{{ provider.url_patterns.first }}`.{% if has_capability_path %}
 {% endif %}
 
 {{site.ai_gateway}} uses this URL automatically. You only need to configure a URL if you're using a self-hosted or {{ provider.name }}-compatible endpoint, in which case set the `upstream_url` option in your [AI Model](/ai-gateway/entities/ai-model/) configuration.
+{% endif %}
+
+{% assign general_limitations = provider.limitations.general %}
+{% assign compare_general_limitations = compare_provider.limitations.general %}
+{% if general_limitations.size > 0 or compare_general_limitations.size > 0 %}
+
+## {{ provider.name }} limitations
+
+{{ provider.name }} has the following limitations in {{site.ai_gateway}}:
+
+{% if compare_provider %}
+**{{ include.variant_label }}:**
+
+{% for limitation in general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% if general_limitations.size == 0 or general_limitations == nil %}
+- None.
+{% endif %}
+
+**{{ include.compare_variant_label }}:**
+
+{% for limitation in compare_general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% if compare_general_limitations.size == 0 or compare_general_limitations == nil %}
+- None.
+{% endif %}
+{% else %}
+{% for limitation in general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% endif %}
 {% endif %}
 
 {% else %}

@@ -150,6 +150,6 @@ method: GET
 To block API requests at {{site.base_gateway}} or {{site.ai_gateway}} when a customer's entitlement is exhausted, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/).
 The plugin checks a customer's feature access and usage limit against {{site.metering_and_billing}} and blocks the request when the customer is over their limit.
 
-See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) to enforce an entitlement on {{site.base_gateway}} traffic, or [Enforce entitlements on LLM traffic](/how-to/enforce-entitlements-on-llm-traffic/) to cap LLM token usage on {{site.ai_gateway}}.
+See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) to enforce an entitlement on {{site.base_gateway}} traffic, or [Enforce entitlements on LLM traffic](/ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/) to cap LLM token usage on {{site.ai_gateway}}.
 
 You can also use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) alongside the plugin to alert customers or your team as they approach a threshold, independently of whether traffic is blocked.

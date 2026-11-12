@@ -106,12 +106,12 @@ headers:
 status_code: 200
 {% endvalidation %}
 
-This request is routed to `httpbun.com`:
+This request is routed to `httpbun.com`, which responds with a 301 redirect to HTTPS:
 {% validation request-check %}
 url: /anything
 headers:
   - 'location:us-west'
-status_code: 200
+status_code: 301
 {% endvalidation %}
 
 

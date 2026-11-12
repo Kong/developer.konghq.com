@@ -15,6 +15,10 @@ module Jekyll
         example['show_in_api']
       end
 
+      def consumer_credential?
+        example.fetch('consumer_credential', true) != false
+      end
+
       def tags
         @tags ||= example.fetch('tags', [])
       end

@@ -5,7 +5,7 @@ require_relative '../../drops/plugins/aigw_policy_schema'
 
 module Jekyll
   module AIGatewayPolicyPages
-    class Policy # rubocop:disable Style/Documentation
+    class Policy
       include Policies::Base
       include Policies::GeneratorBase
 
@@ -14,7 +14,14 @@ module Jekyll
       end
 
       def examples
-        @examples ||= []
+        @examples ||= if overview_content.empty?
+                        []
+                      else
+                        drops = example_files.map do |file|
+                          Drops::PolicyConfigExample::AIGateway.new(file:, plugin: self)
+                        end
+                        drops.sort_by { |example| -example.weight }
+                      end
       end
 
       def api_spec_exists?
@@ -35,6 +42,17 @@ module Jekyll
         @overview_content ||= Jekyll::Utils::MarkdownParser.new(index_file).content.strip
       end
 
+      def scopes
+        @scopes ||= site.data.dig('policies', 'ai-gateway', 'scopes')
+                        &.find { |entry| entry['name'] == @slug }
+                        &.fetch('scopes', [])
+                        &.map { |s| normalize_scope(s) } || []
+      end
+
+      def priority
+        @priority ||= site.data.dig('policies', 'ai-gateway', 'priorities', slug)
+      end
+
       private
 
       # Some AI Gateway policies (Konnect-only) have no backing classic Gateway
@@ -52,13 +70,6 @@ module Jekyll
 
       def policies_metadata
         @policies_metadata ||= site.config.dig('ai_gateway_policies', 'metadata')
-      end
-
-      def scopes
-        @scopes ||= site.data.dig('policies', 'ai-gateway', 'scopes')
-                        &.find { |entry| entry['name'] == @slug }
-                        &.fetch('scopes', [])
-                        &.map { |s| normalize_scope(s) } || []
       end
 
       def normalize_scope(scope)

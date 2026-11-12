@@ -18,6 +18,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: kongctl adopt portal
+    url: /kongctl/adopt/portal/
+  - text: kongctl get portal
+    url: /kongctl/get/portal/
 ---
 
 Use the `list` verb with the `portal` command to query {{site.konnect_short_name}} portals.

@@ -53,9 +53,9 @@ prereqs:
     - title: Redis stack
       include_content: prereqs/redis
       icon_url: /assets/icons/redis.svg
-    - title: Kong Prompt Compressor service via Cloudsmith
-      include_content: prereqs/cloudsmith
-      icon_url: /assets/icons/cloudsmith.svg
+    - title: Kong Prompt Compressor service
+      include_content: prereqs/ai-prompt-compressor
+      icon_url: /assets/icons/third-party/docker.svg
     - title: Langchain splitters
       include_content: prereqs/langchain
       icon_url: /assets/icons/python.svg
@@ -147,7 +147,7 @@ variables:
 >
 > If you're using a model other than `text-embedding-3-large`, be sure to update the `vectordb.dimensions` value to match the model’s embedding size.
 
-Once the plugin is created, **copy its `id`** from the Deck response. Then, export it so the ingestion script can reference it later:
+After the plugin is created, **copy its `id`** from the Deck response. Then, export it so the ingestion script can reference it later:
 
 ```bash
 export PLUGIN_ID=<YOUR_PLUGIN_ID>

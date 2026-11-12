@@ -68,6 +68,12 @@ Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} {{s
 
 {% include_cached /kongctl/help/adopt/konnect/event-gateway.md %}
 
+### kongctl adopt konnect identity
+
+Adopt Kong Identity resources using namespace labels or ownership metadata.
+
+{% include_cached /kongctl/help/adopt/konnect/identity.md %}
+
 ### kongctl adopt konnect organization
 
 Adopt {{site.konnect_short_name}} organization settings.

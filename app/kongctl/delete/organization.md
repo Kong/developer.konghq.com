@@ -17,6 +17,14 @@ breadcrumbs:
 related_resources:
   - text: kongctl delete commands
     url: /kongctl/delete/
+  - text: kongctl adopt organization
+    url: /kongctl/adopt/organization/
+  - text: kongctl create organization
+    url: /kongctl/create/organization/
+  - text: kongctl get organization
+    url: /kongctl/get/organization/
+  - text: kongctl list organization
+    url: /kongctl/list/organization/
 ---
 
 Manage {{site.konnect_short_name}} system account resources.

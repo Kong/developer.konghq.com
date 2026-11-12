@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { globSync } from "tinyglobby";
 import minimist from "minimist";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { compareVersions } from "./compare-versions.js";
 
 function generateChangelogsByVersion(folderPath, version, product) {
@@ -19,13 +19,13 @@ function generateChangelogsByVersion(folderPath, version, product) {
   });
 
   let changelog = {};
-  const setup = yaml.load(fs.readFileSync("./config/setup.yaml", "utf-8"));
+  const setup = load(fs.readFileSync("./config/setup.yaml", "utf-8"));
   folders.forEach((folder) => {
     const key = path.basename(folder);
     changelog[key] = [];
     const entries = globSync(`${folder}/*`);
     entries.forEach((entry) => {
-      const change = yaml.load(fs.readFileSync(entry, "utf-8"));
+      const change = load(fs.readFileSync(entry, "utf-8"));
       if (!change.hasOwnProperty("scope")) {
         change.scope = setup.defaults.scope;
       }

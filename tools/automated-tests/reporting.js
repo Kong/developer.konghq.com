@@ -1,7 +1,7 @@
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
-const expectedFailures = yaml.load(
+const expectedFailures = load(
   await fs.readFile("./config/expected_failures.yaml", "utf-8")
 );
 
@@ -128,9 +128,8 @@ export async function logResults(
   if (includeGlobalSkips) {
     let skippedInstructions;
     try {
-      skippedInstructions = yaml.load(
-        await fs.readFile("./.automated-tests", "utf-8")
-      );
+      const content = await fs.readFile("./.automated-tests", "utf-8");
+      skippedInstructions = content.trim() ? load(content) : [];
     } catch (error) {
       if (error.code !== "ENOENT") throw error;
     }

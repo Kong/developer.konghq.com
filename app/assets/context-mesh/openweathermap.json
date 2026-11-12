@@ -1,0 +1,262 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenWeatherMap Current Weather API",
+    "description": "Retrieve current weather conditions for a location, specified by latitude and longitude.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.openweathermap.org",
+      "description": "OpenWeatherMap production API"
+    }
+  ],
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/data/2.5/weather": {
+      "get": {
+        "summary": "Get current weather",
+        "description": "Returns current weather conditions for the given coordinates, including temperature, wind, cloud cover, and humidity.",
+        "operationId": "getCurrentWeather",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "description": "Latitude of the location, between -90 and 90.",
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "required": true,
+            "description": "Longitude of the location, between -180 and 180.",
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "description": "Units of measurement. `standard` returns Kelvin, `metric` returns Celsius, and `imperial` returns Fahrenheit.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "standard",
+                "metric",
+                "imperial"
+              ],
+              "default": "standard"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "description": "Language code for the weather description, for example `en` or `es`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current weather conditions for the requested location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentWeatherResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing or invalid."
+          },
+          "404": {
+            "description": "No location matches the requested coordinates."
+          },
+          "429": {
+            "description": "The account has exceeded its request quota."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "appid",
+        "description": "OpenWeatherMap API key."
+      }
+    },
+    "schemas": {
+      "CurrentWeatherResponse": {
+        "type": "object",
+        "description": "Current weather conditions returned by the `/data/2.5/weather` endpoint.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Location name, for example `Honolulu`."
+          },
+          "dt": {
+            "type": "integer",
+            "description": "Time of the observation, as a Unix timestamp in UTC."
+          },
+          "timezone": {
+            "type": "integer",
+            "description": "Offset of the location from UTC, in seconds."
+          },
+          "visibility": {
+            "type": "integer",
+            "description": "Visibility in metres, capped at 10000."
+          },
+          "coord": {
+            "type": "object",
+            "description": "Coordinates of the location.",
+            "properties": {
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              }
+            }
+          },
+          "weather": {
+            "type": "array",
+            "description": "Weather conditions observed at the location.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "Weather condition code."
+                },
+                "main": {
+                  "type": "string",
+                  "description": "Condition group, for example `Rain`."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Condition description."
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "Weather icon identifier."
+                }
+              }
+            }
+          },
+          "main": {
+            "type": "object",
+            "description": "Temperature, pressure, and humidity readings.",
+            "properties": {
+              "temp": {
+                "type": "number",
+                "description": "Current temperature."
+              },
+              "feels_like": {
+                "type": "number",
+                "description": "Temperature accounting for human perception."
+              },
+              "temp_min": {
+                "type": "number",
+                "description": "Lowest temperature observed at the location."
+              },
+              "temp_max": {
+                "type": "number",
+                "description": "Highest temperature observed at the location."
+              },
+              "pressure": {
+                "type": "integer",
+                "description": "Atmospheric pressure at sea level, in hPa. Same value as `sea_level`."
+              },
+              "humidity": {
+                "type": "integer",
+                "description": "Humidity percentage."
+              },
+              "sea_level": {
+                "type": "integer",
+                "description": "Atmospheric pressure at sea level, in hPa."
+              },
+              "grnd_level": {
+                "type": "integer",
+                "description": "Atmospheric pressure at ground level, in hPa."
+              }
+            }
+          },
+          "wind": {
+            "type": "object",
+            "description": "Wind readings.",
+            "properties": {
+              "speed": {
+                "type": "number",
+                "description": "Wind speed."
+              },
+              "deg": {
+                "type": "integer",
+                "description": "Wind direction in degrees."
+              },
+              "gust": {
+                "type": "number",
+                "description": "Wind gust speed."
+              }
+            }
+          },
+          "clouds": {
+            "type": "object",
+            "description": "Cloud cover.",
+            "properties": {
+              "all": {
+                "type": "integer",
+                "description": "Cloud cover percentage."
+              }
+            }
+          },
+          "rain": {
+            "type": "object",
+            "description": "Rain volume, present only when it is raining.",
+            "properties": {
+              "1h": {
+                "type": "number",
+                "description": "Rain volume for the last hour, in mm."
+              }
+            }
+          },
+          "sys": {
+            "type": "object",
+            "description": "Country and daylight information.",
+            "properties": {
+              "country": {
+                "type": "string",
+                "description": "Two-letter country code."
+              },
+              "sunrise": {
+                "type": "integer",
+                "description": "Sunrise time, as a Unix timestamp in UTC."
+              },
+              "sunset": {
+                "type": "integer",
+                "description": "Sunset time, as a Unix timestamp in UTC."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

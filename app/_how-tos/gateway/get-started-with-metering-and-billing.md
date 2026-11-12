@@ -59,7 +59,7 @@ related_resources:
   - text: Billing and invoicing
     url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
-    url: /how-to/meter-llm-traffic/
+    url: /ai-gateway/meter-llm-traffic/
   - text: Get started with {{site.metering_and_billing}} generic meters
     url: /how-to/get-started-with-metering-and-billing-generic-meters/
 min_version:
@@ -92,6 +92,7 @@ In this guide, you'll:
 
 The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
 
+<!--vale off-->
 {% mermaid %}
 flowchart TB
   subgraph gateway["<b>Kong Gateway</b>"]
@@ -120,6 +121,7 @@ flowchart TB
     subscription --> plan
 
 {% endmermaid %}
+<!--vale on-->
 
 
 ## Create a Consumer
@@ -260,7 +262,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
 1. In the **Key** field, enter `kong-air`.
-1. In the **Include usage from** dropdown, select "kong-air".
+1. In the **Include usage from** dropdown, select "kong-air" from the **Gateway Consumers** group.
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.

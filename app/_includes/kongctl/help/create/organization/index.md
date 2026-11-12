@@ -6,12 +6,6 @@ Usage:
 Aliases:
   organization, org, orgs
 
-Examples:
-  # Get current organization information
-  kongctl get organization
-  # Get current organization information using explicit product
-  kongctl get konnect organization
-
 Available Commands:
   system-account Manage Konnect system account resources
 
@@ -22,9 +16,10 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                - List       : [ kongctl list themes ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for organization
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)

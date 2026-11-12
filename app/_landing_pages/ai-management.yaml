@@ -1,0 +1,205 @@
+metadata:
+  title: "AI Management"
+  content_type: landing_page
+  description: "AI Management is the {{site.konnect_short_name}} area where admins set up {{site.ai_gateway}} resources and other users request access to them."
+  products:
+    - ai-gateway
+  works_on:
+    - konnect
+  tags:
+    - ai
+
+rows:
+  - header:
+      type: h1
+      text: "AI Management"
+      sub_text: "Govern the AI resources that your organization uses"
+
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              AI Management is the {{site.konnect_short_name}} area for managing AI in your organization.
+              Org Admins set up AI Models, AI Model Providers, AI MCP Servers, and AI Agents.
+              Everyone else requests access to them.
+
+              These resources are [{{site.ai_gateway}} entities](/ai-gateway/entities/).
+              The people and agents that call them are [{{site.identity}} principals](/identity/principals/).
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/ai-management/ai-management-home.png
+              alt_text: "The AI Management home page in {{site.konnect_short_name}}, with AI Models, AI MCP Servers, AI Agents, AI Gateways, Access Management, Cost Management, and Observability in the navigation, and cards to add a model, MCP server, or agent"
+              expandable: true
+
+  - header:
+      type: h2
+      text: "Resources"
+    column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Models
+              description: The AI Model entity gives clients a single endpoint for one or more upstream LLMs through {{site.ai_gateway}}.
+              icon: /assets/icons/brain.svg
+              cta:
+                text: AI Model entity
+                url: /ai-gateway/entities/ai-model/
+      - blocks:
+          - type: card
+            config:
+              title: Providers
+              description: The AI Model Provider entity lets you securely store and manage credentials for connecting to upstream LLM services.
+              icon: /assets/icons/cloud.svg
+              cta:
+                text: AI Model Provider entity
+                url: /ai-gateway/entities/ai-model-provider/
+      - blocks:
+          - type: card
+            config:
+              title: MCP servers
+              description: "The AI MCP Server entity connects MCP-compatible clients to your backend systems."
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: AI MCP Server entity
+                url: /ai-gateway/entities/ai-mcp-server/
+      - blocks:
+          - type: card
+            config:
+              title: Agents
+              description: The AI Agent entity proxies A2A and HTTP agents through {{site.ai_gateway}}.
+              icon: /assets/icons/a2a-quickstart.svg
+              cta:
+                text: AI Agent entity
+                url: /ai-gateway/entities/ai-agent/
+
+  - header:
+      type: h2
+      text: "Access Management"
+      description: "Access Management controls who can use your organization's resources, such as AI Models or AI MCP Servers, in {{site.ai_gateway}}. For more information, see [{{site.ai_gateway}} access management](/ai-access-management/)."
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Users
+              description: "A user is a person who signs in to AI Management. An admin, an org chart import, or just-in-time provisioning at first sign-in adds each user."
+              icon: /assets/icons/team.svg
+              cta:
+                text: Users in access management
+                url: /ai-access-management/concepts/#users
+      - blocks:
+          - type: card
+            config:
+              title: Groups
+              description: A group is a list of users and agents that share the same rules.
+              icon: /assets/icons/team.svg
+              cta:
+                text: Groups in access management
+                url: /ai-access-management/concepts/#groups
+      - blocks:
+          - type: card
+            config:
+              title: Identity providers
+              description: An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in.
+              icon: /assets/icons/identity.svg
+              cta:
+                text: Identity providers in access management
+                url: /ai-access-management/concepts/#identity-providers
+      - blocks:
+          - type: card
+            config:
+              title: Token Vault
+              description: Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller.
+              icon: /assets/icons/keyring.svg
+              cta:
+                text: "{{site.identity}} Token Vault"
+                url: /identity/token-vault/
+      - blocks:
+          - type: card
+            config:
+              title: Virtual keys
+              description: A virtual key is an API key that lets a caller use {{site.ai_gateway}}.
+              icon: /assets/icons/key.svg
+              cta:
+                text: Virtual keys in access management
+                url: /ai-access-management/concepts/#virtual-keys
+      - blocks:
+          - type: card
+            config:
+              title: Roles and permissions
+              description: "AI Management roles control who can create and manage AI Models, AI MCP Servers, AI Agents, and virtual keys, and who can view cost data."
+              icon: /assets/icons/team.svg
+              cta:
+                text: AI Management roles and permissions
+                url: /ai-management/roles-and-permissions/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.identity}}"
+              description: "{{site.identity}} centralizes authentication in {{site.konnect_short_name}}."
+              icon: /assets/icons/identity.svg
+              cta:
+                text: "{{site.identity}} overview"
+                url: /identity/
+      - blocks:
+          - type: card
+            config:
+              title: Principals
+              description: A principal represents an external client, workload, or human authenticating to {{site.ai_gateway}}.
+              icon: /assets/icons/key.svg
+              cta:
+                text: Principals and directories
+                url: /identity/principals/
+      - blocks:
+          - type: card
+            config:
+              title: AI Auth Strategies
+              description: An AI Auth Strategy lets you declare an inbound authentication mechanism at the gateway level and attach it to specific AI Models, AI Agents, or AI MCP Servers.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: AI Auth Strategy entity
+                url: /ai-gateway/entities/ai-auth-strategy/
+
+  - header:
+      type: h2
+      text: "Observability and Cost Management"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.observability}}"
+              description: "Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents."
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: Observability in AI Management
+                url: /ai-management/observability/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_cost_management}}"
+              description: "Track your organization's AI model spend, budgets, and alerts across users, groups, models, and teams."
+              icon: /assets/icons/money.svg
+              cta:
+                text: "{{site.ai_cost_management}} overview"
+                url: /ai-cost-management/
+      - blocks:
+          - type: card
+            config:
+              title: Budgets
+              description: A budget in AI Cost Management tracks AI spend against a limit and sends alerts as spend approaches it.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Budgets in AI Cost Management
+                url: /ai-cost-management/budgets/
+      - blocks:
+          - type: card
+            config:
+              title: Model cost management
+              description: "{{site.ai_gateway}} calculates the cost of every request to an LLM provider, matching what the provider bills."
+              icon: /assets/icons/money.svg
+              cta:
+                text: "Model cost management in {{site.ai_gateway}}"
+                url: /ai-gateway/model-cost-management/

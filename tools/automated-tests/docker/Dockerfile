@@ -1,12 +1,12 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap git telnet openssl default-jre-headless
 
 # set python env
 RUN python3 -m venv /opt/myenv
 ENV PATH="/opt/myenv/bin:$PATH"
 
 RUN ARCH=$(dpkg --print-architecture) && \
-    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.66.1/deck_v1.66.1_${ARCH}.deb && \
+    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.70.0/deck_v1.70.0_${ARCH}.deb && \
     dpkg -i deck_v1.deb
 RUN apt-get update
 RUN apt-get install ca-certificates curl
@@ -42,8 +42,8 @@ RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
 RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}"
 
-# Install Node.js 22.x (LTS) via NodeSource, then codex CLI
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+# Install Node.js 26.x (LTS) via NodeSource, then codex CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - && \
     apt-get install -y nodejs
 RUN npm install -g @openai/codex
 RUN npm install -g @qwen-code/qwen-code
@@ -98,3 +98,55 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "$CHECKSUM  yq" | sha256sum -c - && \
     install -o root -g root -m 0755 yq /usr/local/bin/yq && \
     rm yq
+
+# Install cosign v2.6.5 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="c3b4f5410e608af03a5eb0aaac84a4313d8da131248e08ff1759ac70c79d1644" ;; \
+      arm64) CHECKSUM="426193b4c5da4d4d643e822f48fe0cc8a476ca1782a272704831f5a0cef716d7" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o cosign "https://github.com/sigstore/cosign/releases/download/v2.6.5/cosign-linux-${ARCH}" && \
+    echo "$CHECKSUM  cosign" | sha256sum -c - && \
+    install -o root -g root -m 0755 cosign /usr/local/bin/cosign && \
+    rm cosign
+
+# Install regctl v0.11.7 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="3737fbbdd791e04e7a831640b681f3397a376498e80e2ad9b1b2d27296f239bc" ;; \
+      arm64) CHECKSUM="9f349bab5c407ac04f3dabf99c7c7a6b0f9e9723c23f2775380e804d02c6dbb9" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o regctl "https://github.com/regclient/regclient/releases/download/v0.11.7/regctl-linux-${ARCH}" && \
+    echo "$CHECKSUM  regctl" | sha256sum -c - && \
+    install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
+    rm regctl
+
+# Install kustomize v5.8.2 (pinned + checksum verified, for the operator upgrade how-to's CRD step)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="06af0a202c2b831207d0173f9c9cdb1b30abceca0747cb3fbb72792d26055c95" ;; \
+      arm64) CHECKSUM="0991957191951cb7dddd142403b5bb98a1fcd6378ba0079dddc1e2c309080a7f" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.2/kustomize_v5.8.2_linux_${ARCH}.tar.gz" && \
+    echo "$CHECKSUM  kustomize.tar.gz" | sha256sum -c - && \
+    tar -xzf kustomize.tar.gz kustomize && \
+    install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize && \
+    rm -rf kustomize kustomize.tar.gz
+
+# Install grpcurl v1.9.4 (pinned + checksum verified, for the GRPCRoute how-to).
+# The release publishes the amd64 binary as `x86_64`, so the asset name is mapped
+# separately from dpkg's architecture name.
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) ASSET="x86_64"; CHECKSUM="97e13d58d2733a0e62cd2571d1d5f0c02823f0d25282f08bddedf1ad9c5d1736" ;; \
+      arm64) ASSET="arm64"; CHECKSUM="ad66227d90631da5428b4a5ccf28d63846f0f15649d8b2367df044a59edbb617" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o grpcurl.tar.gz "https://github.com/fullstorydev/grpcurl/releases/download/v1.9.4/grpcurl_1.9.4_linux_${ASSET}.tar.gz" && \
+    echo "$CHECKSUM  grpcurl.tar.gz" | sha256sum -c - && \
+    tar -xzf grpcurl.tar.gz grpcurl && \
+    install -o root -g root -m 0755 grpcurl /usr/local/bin/grpcurl && \
+    rm -rf grpcurl grpcurl.tar.gz

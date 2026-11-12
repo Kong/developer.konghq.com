@@ -7,11 +7,14 @@ Aliases:
   konnect, k, K
 
 Examples:
-  # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
+  # Create a Konnect personal access token
+  kongctl create konnect pat --name ci --expires-in 30d -o token
+  # Create a Konnect system account access token
+  kongctl create konnect spat --system-account-name ci-bot --name ci --expires-in 30d -o env
 
 Available Commands:
-  organization Get current organization information
+  mesh         Create Kong Mesh access tokens
+  organization Manage Konnect organization resources
   pat          Create a Konnect personal access token
   spat         Create a Konnect system account access token
 
@@ -22,9 +25,10 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                - List       : [ kongctl list themes ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for konnect
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)

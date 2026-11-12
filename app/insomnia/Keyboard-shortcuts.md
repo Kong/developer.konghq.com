@@ -40,8 +40,8 @@ rows:
   - shortcut: |
       Windows: `Ctrl + Shift + ,` <br>
       Mac: `⇧ ⌘ ,`
-    action: "Show document/collection settings"
-    description: Open settings for the current document or collection.
+    action: "Show API Collection settings"
+    description: Open settings for the current API Collection.
   - shortcut: |
       Windows: `Ctrl + Alt + Shift + ,` <br>
       Mac: `⌥ ⇧ ⌘ ,`

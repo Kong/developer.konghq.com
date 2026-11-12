@@ -45,9 +45,30 @@ min_version:
 ---
 
 Add authentication to a Gateway Service or Route with an access token and a secret token. 
-Credential tokens are stored securely via [Vault](https://developer.hashicorp.com/vault). 
+Credential tokens are stored securely via [Vault](https://developer.hashicorp.com/vault).
 
 The credential lifecycle can be managed through the [Admin API](/api/gateway/admin-ee/), or independently via Vault.
+
+## How it works
+
+The plugin stores Consumer credentials in HashiCorp Vault and reads them from there to authenticate requests. To connect to a Vault server, it uses a Vault object:
+
+* **Vault object:** A resource managed through the [`/vault-auth` endpoint](/plugins/vault-auth/api/).
+  It holds the connection and authentication details for a HashiCorp Vault server. 
+  Different plugin instances can reference different Vault objects, so they can authenticate against different Vault servers.
+
+    {:.warning}
+    > **Important:** The Vault object is not the same as a Vault entity. The Vault object is introduced by the Vault Authentication plugin and used only by that plugin. 
+    The Vault entity is a standalone entity in {{site.base_gateway}} for managing secrets.
+
+* **[Consumer](/gateway/entities/consumer/):** Represents the client. 
+  Each Consumer has an `access_token` and `secret_token` pair, generated with the `POST /vault-auth/{vault}/credentials/{consumer}` endpoint and stored in HashiCorp Vault.
+
+The plugin links to a Vault object through `config.vault.id`.
+
+When a client sends a request with its `access_token` and `secret_token`, the plugin uses the Vault object to look up the credentials in HashiCorp Vault. If they match, {{site.base_gateway}} identifies the Consumer and proxies the request.
+
+For a full walkthrough, see [Enable authentication with Vault in {{site.base_gateway}}](/how-to/enable-vault-authentication/).
 
 ## Token time-to-live (TTL)
 

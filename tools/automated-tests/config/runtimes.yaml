@@ -84,8 +84,6 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
-      KONNECT_DOMAIN: konghq.tech
-      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
     setup:
       commands:
         - export KONGCTL_DEFAULT_KONNECT_PAT=$KONNECT_TOKEN
@@ -111,6 +109,9 @@ on-prem:
       commands:
         - helm repo add kong https://charts.konghq.com
         - helm repo update
+        # The documented on-prem KongLicense prereq reads ./license.json from
+        # the container's working directory (.workspace, see runtimes.js).
+        - 'printf "%s" "$KONG_LICENSE_DATA" > ./license.json'
     cleanup:
       commands:
         - k3d cluster delete operator-test
@@ -119,6 +120,15 @@ on-prem:
         - k3d cluster delete operator-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-test --wait
         - kubectl config use-context k3d-operator-test
+        # Register the Helm repo only, never pre-install the operator:
+        # pre-installing creates kong-system, which breaks pages whose steps
+        # create that namespace themselves (the multi-tenancy series). Every
+        # tested page installs its own operator, either through the standard
+        # operator prereq include or in its own steps. The repo registration
+        # stays because some pages (e.g. enable-debug-logging) run
+        # `helm install` without adding the repo first.
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
 
   kic:
     setup:
@@ -148,6 +158,18 @@ konnect:
       commands:
         - deck gateway reset -f
 
+  identity:
+    reset:
+      commands:
+        - &delete-auth-servers |
+          curl -s -X GET "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v1/auth-servers" -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.data[].id' | while read -r AUTH_SERVER_ID; do
+            curl -s -X DELETE "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v1/auth-servers/$AUTH_SERVER_ID?force=true" -H "Authorization: Bearer $KONNECT_TOKEN"
+          done
+        - &delete-directories |
+          curl -s -X GET "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/directories" -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.data[].id' | while read -r DIRECTORY_ID; do
+            curl -s -X DELETE "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/directories/$DIRECTORY_ID?force=true" -H "Authorization: Bearer $KONNECT_TOKEN"
+          done
+
   ai-gateway:
     env:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
@@ -163,29 +185,90 @@ konnect:
     cleanup:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN -d -n automated-tests-ai-gateway-quickstart
+        - *delete-auth-servers
+        - *delete-directories
 
     reset:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m -n automated-tests-ai-gateway-quickstart | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
         - sleep 5
         - find . -mindepth 1 -delete
+        - *delete-auth-servers
+        - *delete-directories
+
   event-gateway:
+    env:
+      KONG_IMAGE_NAME: kong-event-gateway
+      KONG_IMAGE_TAG: latest
     setup:
       commands: []
+
+    quickstart:
+      command: curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG
 
     cleanup:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
-        - docker compose -f /files/event-gateway/docker-compose.yaml down
-        - |
-          AUTH_SERVER_ID=$(curl -s -X GET "https://us.api.konghq.com/v1/auth-servers?filter%5Bname%5D%5Beq%5D=Appointments%20Dev" -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.data[0].id') &&
-            curl -s -X DELETE "https://us.api.konghq.com/v1/auth-servers/$AUTH_SERVER_ID?force=true" -H "Authorization: Bearer $KONNECT_TOKEN"
+        - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
+        - *delete-auth-servers
+        - *delete-directories
 
+    # Teardown only. Every event-gateway how-to starts its own Kafka cluster and runs the
+    # quickstart itself, so the harness must not leave a cluster or a gateway of its own
+    # running underneath the file about to start: how-tos that bring up a different compose
+    # file (SASL, mTLS) reuse the `kafka_cluster` project name, so a leftover container from
+    # the shared stack (schema-registry) would attach to their brokers and create topics.
     reset:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
-        - docker compose -f /files/event-gateway/docker-compose.yaml down
-        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
-        - sleep 5
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
-        - sleep 5
+        - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
+        # Wipe files a previous test file generated (kafkactl configs, certs, credential
+        # scripts) so a stale one can't influence the file about to run.
+        - find . -mindepth 1 -delete
+        - *delete-auth-servers
+        - *delete-directories
+
+      # Fallback for files that don't provision themselves, i.e. whose steps and prereqs
+      # contain no `quickstart` validation. Skipped for every other file.
+      provision:
+        commands:
+          - docker compose -f /files/event-gateway/docker-compose.yaml up -d
+          - sleep 5
+          - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
+          - sleep 5
+
+  operator:
+    setup:
+      commands:
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+    cleanup:
+      commands:
+        # Deleting the cluster alone would orphan the Konnect-side control
+        # planes (the operator's finalizers die with the cluster), so every
+        # control plane in the token's org is deleted through the API first.
+        - &delete-control-planes |
+          PAGE=1
+          while :; do
+            # -g is required: the page[number]/page[size] query params would
+            # otherwise be parsed as curl URL globbing and fail with exit 3
+            # (URL malformed), silently deleting nothing.
+            RESPONSE=$(curl -s -g --max-time 60 -X GET "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes?page[number]=$PAGE&page[size]=100" -H "Authorization: Bearer $KONNECT_TOKEN")
+            # Break on any response that yields no control plane ids: an empty
+            # page (end of pagination) or any failure (empty body, non-JSON
+            # error page, auth error). Never key the loop on meta pagination
+            # fields: a parse failure would empty them and loop forever.
+            IDS=$(printf '%s' "$RESPONSE" | jq -r '.data[]?.id' 2>/dev/null)
+            [ -z "$IDS" ] && break
+            for CONTROL_PLANE_ID in $IDS; do
+              curl -s -g --max-time 60 -X DELETE "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes/$CONTROL_PLANE_ID" -H "Authorization: Bearer $KONNECT_TOKEN"
+            done
+            PAGE=$((PAGE+1))
+          done
+        - k3d cluster delete operator-konnect-test
+    reset:
+      commands:
+        - *delete-control-planes
+        - k3d cluster delete operator-konnect-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-konnect-test --wait
+        - kubectl config use-context k3d-operator-konnect-test

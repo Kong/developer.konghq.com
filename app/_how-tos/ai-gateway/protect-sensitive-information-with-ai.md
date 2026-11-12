@@ -29,7 +29,16 @@ prereqs:
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
     - title: AI PII Anonymizer service access
       include_content: prereqs/ai-sanitizer
-      icon_url: /assets/icons/cloudsmith.svg
+      icon_url: /assets/icons/third-party/docker.svg
+
+cleanup:
+  inline:
+    - title: Cleanup PII service
+      content: |
+        ```sh
+        docker rm -f ai-pii-service
+        ```
+        {: data-test-cleanup="block" }
 
 min_version:
   ai-gateway: '2.0'
@@ -47,7 +56,12 @@ related_resources:
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
-docker run --rm -d -p 8080:8080 kong/ai-pii-service:v0.2.2-en
+docker run --rm -d \
+  --name ai-pii-service \
+  --network kong-ai-quickstart-net \
+  --network-alias host.docker.internal \
+  -p 8080:8080 \
+  kong/ai-pii-service:v0.3.1-en
 ```
 {: data-test-step="block" }
 

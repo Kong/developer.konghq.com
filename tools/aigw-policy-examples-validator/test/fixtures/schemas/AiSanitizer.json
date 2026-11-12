@@ -1,0 +1,17 @@
+{
+  "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "rejection_mode": {
+          "type": "string",
+          "default": "return_error"
+        },
+        "port": {
+          "type": "integer",
+          "default": 8080
+        }
+      }
+    }
+  }
+}

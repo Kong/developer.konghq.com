@@ -25,6 +25,7 @@ config:
     - password
   tls_client_auth_cert_id: ${cert-id}
   tls_client_auth_ssl_verify: true
+  cache_tokens_salt: ${salt-token}
 
 variables:
   issuer:
@@ -38,6 +39,11 @@ variables:
   cert-id:
     value: $CERTIFICATE_ID
     description: The UUID of a Certificate object in {{site.base_gateway}}, which contains a client cert and key pair.
+  salt-token:
+    value: $TOKEN_SALT
+    description: |
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync. This parameter is optional for other formats.
+      For example, generate one with `openssl rand -base64 16`.
 
 tools:
   - deck

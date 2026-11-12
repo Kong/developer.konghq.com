@@ -25,7 +25,7 @@ tldr:
 
 prereqs:
     inline:
-        - title: Create and configure a collection
+        - title: Create and configure an API Collection
           include_content: prereqs/create-collection
           icon_url: /assets/icons/menu.svg
 ---
@@ -34,7 +34,7 @@ prereqs:
 
 In this example, we'll configure an after-response script that checks the value of a JSON field in a response:
 
-1. In Insomnia, navigate to the "Flight Service 0.1.0" document.
+1. In Insomnia, navigate to the "Flight Service 0.1.0" API Collection.
 1. Click the **Collection** tab in the sidebar.
 1. In the sidebar of your collection, select the **Get KongAir planned flights** request.
 1. Open **Scripts** > **After-response**.

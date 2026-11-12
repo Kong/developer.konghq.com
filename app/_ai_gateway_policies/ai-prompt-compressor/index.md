@@ -2,17 +2,20 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
 content_type: plugin
-description: 'Compress prompts with LLMLingua 2 before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
+description: 'Compress prompts before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
 categories:
   - ai
 tags:
   - ai
   - performance
-
+search_aliases:
+  - headroom
+  - LLMLingua
 related_resources:
   - text: AI RAG Injector Policy
     url: /ai-gateway/policies/ai-rag-injector/
@@ -24,11 +27,12 @@ related_resources:
     url: /ai-gateway/forward-proxy/
 ---
 
-The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
+The AI Prompt Compressor Policy compresses messages before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression providers.
 
-* **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
-* **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-* **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+The following compression providers are available:
+
+- `kong`: Use the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) to compress prose in user messages.
+- `headroom`: Use [Headroom](https://github.com/headroomlabs-ai/headroom) to compress agent traffic such as tool results, large JSON payloads, search output, and logs returned by tools.
 
 ## Why use prompt compression
 
@@ -44,33 +48,54 @@ columns:
   - title: Description
     key: description
 rows:
-  - option: Token limit management
-    description: |
-      Compress verbose inputs like chat history or documents to stay within the LLM's context window. Prevents truncation of important content.
   - option: Cost reduction
     description: |
       Reducing token count in prompts decreases API costs when calling large language models, especially for high-volume use cases.
+  - option: Token limit management
+    description: |
+      Compress verbose inputs like chat history or documents to stay within the LLM's context window. Prevents truncation of important content.
   - option: Latency reduction
     description: |
       Smaller prompts result in faster request/response cycles, improving performance for real-time applications like voice assistants.
-  - option: Data privacy
-    description: |
-      Compress or abstract sensitive or personally identifiable information to maintain privacy and comply with data protection standards.
   - option: Dynamic prompt optimization
     description: |
       Automatically strip verbose or low-value content before sending to the LLM, keeping the focus on what's most relevant.
 {% endtable %}
 <!-- vale on -->
 
-## AI Prompt Compression Service
+### Deterministic compression  
 
-Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
+Prompt compression is a powerful lever to reduce costs by shrinking the number of input tokens sent to the LLM provider. However, standard compression techniques can alter the text slightly on each run. Because LLM providers offer native prompt caching that relies on exact prefix matches, any variation in the compressed payload triggers a cache miss, forcing you to pay full price for those tokens. Deterministic compression solves this by ensuring that identical inputs always produce identical compressed outputs. This avoids cache misses and guarantees a cache hit on the provider's side, allowing the {{site.ai_gateway}} to stack the cost-saving benefits of both input token reduction and provider-level caching.
 
-{% include prereqs/cloudsmith.md %}
+## LLMLingua compressor service
+
+Kong provides a Docker image for a compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The compressor service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
+
+### Access the Docker image
+
+Kong distributes the compressor service publicly on Docker Hub, under the `kong/ai-compress-service` repository. No authentication is required to pull it.
+
+To pull an image:
+
+```bash
+docker pull kong/ai-compress-service:TAG
+```
+
+Replace `TAG` with the image tag you want to run, for example:
+
+```bash
+docker pull kong/ai-compress-service:v0.0.6
+```
+
+To run the image as a standalone container:
+
+```bash
+docker run --rm -p 8080:8080 kong/ai-compress-service:v0.0.6
+```
 
 ### Image configuration options
 
-You can configure the Kong AI Prompt Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
+You can configure the compressor service image using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
 
 <!-- vale off -->
 {% table %}
@@ -98,9 +123,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### Compression endpoints
+### Compressor Service endpoints
 
-The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
+The compressor service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
 
 * **POST `/llm/v1/compressPrompt`**: Compresses a prompt using either a compression ratio or a target token count. Supports selective compression via `<LLMLINGUA>` tags.
 
@@ -108,34 +133,7 @@ The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You c
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 
-## Prompt compression options
-
-The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Configuration Option
-    key: option
-  - title: Description
-    key: description
-rows:
-  - option: Compression by ratio
-    description: |
-      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
-  - option: Compression by token count
-    description: |
-      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
-  - option: Conditional rules
-    description: |
-      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
-  - option: Selective compression with tags
-    description: |
-      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
-{% endtable %}
-<!-- vale on -->
-
-## How it works
+### LLMLINGUA prompt flow
 
 1. The user sends the final prompt to the AI Prompt Compressor Policy.
 1. The AI Prompt Compressor Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
@@ -181,6 +179,402 @@ sequenceDiagram
 <!-- vale on -->
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
+
+### Prompt compression options
+
+The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Configuration Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: Compression by ratio
+    description: |
+      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
+  - option: Compression by token count
+    description: |
+      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
+  - option: Conditional rules
+    description: |
+      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
+  - option: Selective compression with tags
+    description: |
+      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
+{% endtable %}
+<!-- vale on -->
+
+## Headroom compressor service
+
+Before you use Headroom with the AI Prompt Compressor Policy, you need a Headroom instance accessible to your {{site.ai_gateway}}.
+
+You can do this with one of the following:
+
+* [Local Headroom installation](https://docs.headroomlabs.ai/docs/installation)
+* [Headroom Enterprise](https://www.headroomlabs.ai/)
+
+### Configure Headroom connection
+
+To configure an AI Prompt Compressor Policy with Headroom as the compressor service, do the following:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Prompt Compressor with Headroom
+  name: my-ai-prompt-compressor
+  type: ai-prompt-compressor
+  config:
+    provider: headroom
+    compressor_url: http://headroom-service:8787/v1/compress
+    timeout: 45000
+    keepalive_timeout: 60000
+    log_text_data: false
+    stop_on_error: true
+    headroom:
+      proxy_token: ${headroom_proxy_token}
+      ssl_verify: true
+      session_id_headers:
+        - x-claude-code-session-id
+        - x-claude-code-agent-id
+        - thread-id
+        - session-id
+        - x-session-id
+variables:
+  headroom_proxy_token:
+    value: $HEADROOM_PROXY_TOKEN
+    description: Your Headroom provider authentication token.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+Set `timeout` higher than the sum of two Headroom waits.
+The first is the per-session turn lock, which makes concurrent turns of one conversation wait for each other (10 seconds).
+The second is the compression work itself, which `HEADROOM_COMPRESSION_TIMEOUT_SECONDS` limits (30 seconds by default).
+The default `timeout` of `10000` milliseconds is lower than that sum, so requests can time out before Headroom finishes.
+
+For more details, see the [configuration reference](/ai-gateway/policies/ai-prompt-compressor/reference/#configuration).
+
+### Compressor Service endpoint
+
+The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts OpenAI and Anthropic's message formats. Requests in unsupported formats are forwarded unchanged. You can use this interface to compress prompts or integrate the service with the AI Prompt Compressor Policy.
+
+Headroom uses loopback-trust by default. It answers unauthenticated calls on `127.0.0.1`, and returns `404` to non-loopback callers unless it's started with `HEADROOM_COMPRESS_ALLOW_REMOTE=1`. You can run Headroom as a co-located sidecar reachable from the {{site.ai_gateway}} data plane without authentication. Alternatively, you can point the Policy at a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and `Authorization: Bearer` headers, set with the `headroom.proxy_token` configuration field.
+Configuration validation requires `headroom.proxy_token` unless `compressor_url` points to a loopback address (`localhost`, `127.0.0.0/8`, or `::1`).
+
+### Headroom prompt flow
+
+The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns.
+
+The Policy derives the session identifier as follows:
+
+- If any header listed in `config.headroom.session_id_headers` is present on the request, the identifier is built from all of the present headers together.
+  Configuring several headers narrows the session instead of replacing it.
+- If none of those headers is present, the identifier is built from the model, the leading system message, and the first user message.
+
+The model name is always part of the identifier.
+Every identifier is also scoped to the Policy instance and to the [AI Consumer](/ai-gateway/entities/ai-consumer/), or to the `credential` when the route authenticates without resolving a consumer.
+
+We recommend headers whose values stay the same across turns, because a header that changes on every request stops the upstream cache from hitting.
+A header that identifies the caller instead of the conversation, such as an installation or machine ID, places all of that caller's conversations in one session.
+
+Two requests share one session state on the Headroom side when they have the same Policy instance, the same AI Consumer or credential, and the same model.
+They must also have the same values for the configured headers or, when no header is present, the same system message and first user message.
+If sessions collide, then only one will hit the upstream cache.
+
+{% comment %}
+Headroom compresses in one of two modes, set with `config.headroom.mode`. 
+The default, `lossy`, drops what Headroom deems redundant, without a way to recover it. 
+`ccr` ensures the original content is retrievable.
+If the model needs to retrieve it, {{site.ai_gateway}} resolves that retrieval against the provider on the model's behalf. 
+Use `lossy` unless something downstream of the model depends on exact tool output or conversation history that was compressed away, since `ccr` adds a round trip and has narrower provider support.
+{% endcomment %}
+
+1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
+2. The AI Prompt Compressor takes the request body, which contains the whole conversation in a `messages` or `input` array.
+3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the request body, the model name, and a session identifier for the conversation.
+   The model that {{site.ai_gateway}} selects for the route takes precedence over the model in the request body.
+4. If Headroom recognizes the session identifier, it replays the turns it already compressed unchanged and compresses only the new messages. Otherwise, it compresses the whole conversation.
+5. Headroom returns `200` with metadata and the rewritten request body, which includes `system` and `tools`.
+
+If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-handling).
+
+The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    actor User as User/Agent
+    participant KongAICompressor as AI Prompt Compressor Policy
+    participant Headroom
+    participant LLM as LLM Provider
+
+    User->>KongAICompressor: Sends request
+    activate KongAICompressor
+    KongAICompressor->>Headroom: POST /v1/compress with request body and session ID
+
+    alt Session recognized
+        Headroom->>Headroom: Replay cached turns, compress only new messages
+    else New session
+        Headroom->>Headroom: Compress whole conversation
+    end
+
+    alt Compression succeeds
+        Headroom-->>KongAICompressor: Return 200 with rewritten request body and metadata
+        KongAICompressor->>LLM: Send compressed request to upstream provider
+        LLM-->>KongAICompressor: Return response
+        KongAICompressor-->>User: Return response
+    else Compression fails
+        Headroom-->>KongAICompressor: Return failure response
+        KongAICompressor--xUser: Return HTTP 500, request not forwarded
+    end
+    deactivate KongAICompressor
+{% endmermaid %}
+<!-- vale on -->
+
+{% comment %}
+
+Set `config.headroom.mode` to `ccr` when something downstream of the model needs to retrieve the content Headroom compressed away.
+In this mode, Headroom marks the content it compressed and adds a `headroom_retrieve` tool to the request instead of dropping that content. 
+If the model calls that tool, the AI Prompt Compressor Policy resolves the retrieval against the provider itself and returns only the final answer. 
+The client never sees the `headroom_retrieve` tool call.
+`ccr` requires Headroom v0.38.0 or later.
+
+`ccr` costs more than `lossy` compression in exchange for that reversibility.
+Each retrieval the model asks for is an extra round trip to the provider. That round trip is metered the same as any other provider call, in token analytics, cost, and rate limiting.
+
+
+The following diagram illustrates how the AI Prompt Compressor Policy resolves a retrieval in `ccr` mode:
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    actor User as User/Agent
+    participant KongAICompressor as AI Prompt Compressor Policy
+    participant Headroom
+    participant LLM as LLM Provider
+
+    User->>KongAICompressor: Sends request
+    activate KongAICompressor
+    KongAICompressor->>Headroom: POST /v1/compress with messages and session ID
+    Headroom-->>KongAICompressor: Return compressed messages, headroom_retrieve tool, and metadata
+    KongAICompressor->>LLM: Send compressed messages and headroom_retrieve tool
+    LLM-->>KongAICompressor: Calls headroom_retrieve for a compressed turn
+
+    KongAICompressor->>LLM: Re-sends request with the original turn restored
+    LLM-->>KongAICompressor: Return final answer
+    KongAICompressor-->>User: Return final answer only
+    deactivate KongAICompressor
+{% endmermaid %}
+<!-- vale on -->
+
+Headroom's `HEADROOM_GATEWAY_TURN_TTL_SECONDS` setting (120 seconds by default) must be longer than the slowest provider response the route serves. If a retrieval takes longer than that, Headroom drops the turn, and the model's request for the original content fails with an error instead of returning it.
+{% endcomment %}
+
+### Failure handling
+
+By default, if the call to Headroom fails, times out, or returns an error, the Policy returns an HTTP `500` to the client rather than forwarding the request uncompressed.
+
+The Policy retries a `503` response that indicates a compression timeout, for up to three attempts in total, with a wait of 0.2 seconds and then 0.5 seconds between attempts.
+Headroom can return this response when a concurrent turn of the same conversation holds the per-session turn lock.
+After the last attempt, the Policy returns an HTTP `500`.
+Every other non-`200` response (for example a `400` from a bad configuration, or a `401` from a missing or incorrect bearer token) fails immediately.
+
+A call to Headroom that reuses a pooled connection Headroom has already closed is sent again on a new connection instead of failing the request.
+
+### Limitations
+
+- Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**. Older images silently ignore the session id and run stateless.
+- By default, Headroom keeps sessions in memory in one Headroom process, and Kong must send all turns of a session to that process.
+  Point each data plane node at its own sidecar, or point all data plane nodes at one shared instance.
+  Do not put a load balancer in front of Headroom instances that keep sessions in memory.
+- To run several Headroom instances behind a load balancer, set `HEADROOM_COMPRESS_SESSION_STORE` to a [Redis](https://redis.io/) URL (`redis://...`) on every instance.
+  The instances then share the session state.
+  Shared sessions require Headroom v0.42.0 or later, installed with the `redis` extra.
+  The default Headroom image doesn't include the `redis` extra, so build an image that installs `headroom-ai[proxy,redis]`.
+  The lock that keeps the turns of one session in order works only inside one instance.
+  If a client sends turns of one session in parallel, route each session to one instance.
+  For more information, see the [Headroom repository](https://github.com/headroomlabs-ai/headroom).
+- No MCP tool-response compression: only the LLM request path is supported.
+- Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
+- A native Bedrock Converse request is skipped, with a warning. Headroom can't read Converse's content blocks.
+- The Policy forwards a request uncompressed, regardless of `stop_on_error`, in the following cases:
+  - The request body isn't JSON.
+  - No model name is found in the request or in the model that {{site.ai_gateway}} selects for the route.
+- Compressing a Responses API request (`input`) requires a Headroom image with `input` support.
+
+{% comment %}
+- `ccr` mode doesn't support the OpenAI Responses API. A request in that format on a `ccr` route is compressed as `lossy` instead.
+- For a streaming client in `ccr` mode, the AI Prompt Compressor Policy returns HTTP `200` and sends ping events once the request is 5 seconds old, before the provider has answered. If the provider then returns an error, the client receives it as an SSE `error` event rather than an HTTP error status, which changes how the client should retry.
+- `ccr` only works where the AI Prompt Compressor Policy can read the provider's answer in the format Headroom compressed: Anthropic Messages requests to Claude (direct, or through Bedrock, Vertex, Azure, or Databricks), and OpenAI chat requests to OpenAI or Azure OpenAI. A request on a `ccr` route that doesn't match one of these is compressed `lossy` instead, with no extra configuration needed.
+{% endcomment %}
+
+## Prompt compression metrics
+
+When the AI Prompt Compressor Policy compresses a request, {{site.ai_gateway}} reports the compression result to [{{site.konnect_short_name}} Analytics](/observability/explorer/). Requests that don't pass through the Policy don't change any compression metric. You can use these metrics to measure how many tokens compression saves and how long it takes.
+
+Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by {{site.ai_gateway}}, control plane, data plane node, route, and AI Consumer. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.
+
+Compression metrics contain token and message counts only. They never include the original or compressed text.
+
+### Analytics metrics
+
+The following metrics are available in Explorer:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - metric: "`save_token_count`"
+    type: Count
+    description: Number of tokens saved, summed over the compressed messages. This metric is reported per compression provider and has no model dimension.
+  - metric: "`original_token_count`"
+    type: Count
+    description: Number of tokens before compression.
+  - metric: "`compress_token_count`"
+    type: Count
+    description: Number of tokens after compression.
+  - metric: "`compressed_message_count`"
+    type: Count
+    description: Number of messages sent to the compressor per request, including messages it leaves unchanged.
+  - metric: "`duration`"
+    type: Latency
+    description: Average time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
+
+### Analytics dimensions
+
+You can also group and filter the compression metrics by these compression-specific dimensions:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Dimension
+    key: dimension
+  - title: Values
+    key: values
+  - title: Description
+    key: description
+rows:
+  - dimension: "`provider`"
+    values: "`kong`, `headroom`"
+    description: The compression provider that handled the request.
+  - dimension: "`compress_type`"
+    values: "`rate`, `target_token`"
+    description: The compression method used. Available for the `kong` provider only. For `headroom`, the value is empty.
+{% endtable %}
+<!-- vale on -->
+
+The two providers report compression at different granularity. The `kong` provider reports one result for each compressed message. [Headroom](#headroom-compressor-service) reports one result for the whole request. The metrics sum the results for each request, so they mean the same thing for both providers.
+
+### Log fields
+
+The summary is also added to the `ai.compressor` entry of the log serializer, beside `compress_items`. Logging Policies such as HTTP Log and File Log include these fields:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`provider`"
+    description: The compression provider, `kong` or `headroom`.
+  - field: "`original_token_count`"
+    description: Number of tokens before compression.
+  - field: "`compress_token_count`"
+    description: Number of tokens after compression.
+  - field: "`save_token_count`"
+    description: Number of tokens saved.
+  - field: "`compressed_message_count`"
+    description: Number of compressed messages.
+  - field: "`duration`"
+    description: Time the compressor took, in milliseconds.
+  - field: "`compress_type`"
+    description: The compression method. Not set for `headroom`.
+{% endtable %}
+<!-- vale on -->
+
+#### Headroom session fields
+
+For the `headroom` provider, the single `compress_items` entry has an `information` string in this format:
+
+`<transforms>;frozen_message_count=<N>;cached_prefix_replayed=<true|false>`
+
+Headroom adds the two session parts only when it runs the request in a session.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Part
+    key: part
+  - title: Description
+    key: description
+rows:
+  - part: "`<transforms>`"
+    description: A comma-separated list of the transforms that Headroom applied to the request.
+  - part: "`frozen_message_count`"
+    description: |
+      The number of leading messages that Headroom did not compress again on this turn.
+      Headroom counts the leading messages that it can replay from the compression cache of the session.
+      Plain messages always count. A tool result counts only after Headroom caches it. The last message never counts.
+      Headroom calculates this value from its own state.
+      The value can be more than zero on the first turn.
+  - part: "`cached_prefix_replayed`"
+    description: |
+      `true` when Headroom compressed some earlier messages to different bytes than on the previous turn, and then replaced them with the bytes from the previous turn.
+      The replacement keeps the start of the prompt the same.
+      `false` when Headroom replaced nothing. This is the usual value.
+      The value is also `false` when the Headroom process has no previous turn for the session:
+      * The first turn of a session.
+      * After the session state expires.
+      * When Headroom keeps sessions in memory, on an instance that hasn't served the session before.
+
+      In these cases, the start of the prompt can change.
+{% endtable %}
+<!-- vale on -->
+
+{:.warning}
+> Do not use `cached_prefix_replayed` to measure prompt cache hits.
+> The field reports whether Headroom replayed earlier bytes. It does not report on the prompt cache of the LLM provider.
+> A value of `false` does not mean that the start of the prompt is the same as on the previous turn.
+> To measure cache hits, use the cached-token counts that the LLM provider reports. These are `cached_tokens` in `ai.proxy.usage.prompt_tokens_details` in the [audit log](/ai-gateway/ai-audit-log-reference/#core-logs), and the `gen_ai.usage.cache_read.input_tokens` attribute in [OpenTelemetry traces](/ai-gateway/llm-open-telemetry/#span-attribute-reference).
+
+### Response headers
+
+When the compressor handles a request, the Policy adds the following headers to plain and streamed responses, so the caller can read what compression saved:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Value
+    key: value
+rows:
+  - header: "`X-Kong-Prompt-Compression-Saved-Tokens`"
+    value: Number of tokens saved.
+  - header: "`X-Kong-Prompt-Compression-Messages`"
+    value: Number of compressed messages.
+  - header: "`X-Kong-Prompt-Compression-Duration`"
+    value: Time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
+
+The headers are also added when the compressor doesn't change a message because its token count falls outside every compression range. In that case, the message still counts toward the message count and the original token count, and it saves no tokens.
+
+If the compressor returns an empty result, or the request body has a shape the provider can't compress, the Policy forwards the request to the upstream unchanged, regardless of `stop_on_error`. In that case, the response has no compression headers, and the request adds nothing to the compression metrics.
 
 ## Forward proxy support
 

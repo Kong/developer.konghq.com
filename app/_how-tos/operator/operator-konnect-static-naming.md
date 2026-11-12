@@ -33,19 +33,35 @@ prereqs:
   operator:
     konnect:
       auth: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the `KonnectGatewayControlPlane` that {{ site.operator_product_name }}
+        created for it, which removes the control plane from {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found gateway/hybrid kongconsumer/consumer1
+        kubectl delete -n kong --ignore-not-found konnectgatewaycontrolplane --all
+        kubectl delete -n kong --ignore-not-found gatewayconfiguration/hybrid
+        kubectl delete --ignore-not-found gatewayclass/hybrid
+        kubectl delete namespace --ignore-not-found kong
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, {{ site.operator_product_name }} generates unique, dynamic names for `KonnectGatewayControlPlane` resources created from a `Gateway`. 
 
-The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use a static, predictable name for the generated control plane based on the Gateway's namespace and name (for example, `default-hybrid`). This enables you to configure references before the control plane is created.
+The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use static, predictable names for the resources it generates from a `Gateway`. The `KonnectGatewayControlPlane` resource is named after the `Gateway`. In {{site.operator_product_name}} 2.3.2 and later, the control plane this resource creates in {{site.konnect_short_name}} is named `<namespace>_<gateway-name>` (for example, `kong_hybrid`); in earlier versions, it's named after the `Gateway` alone (for example, `hybrid`). This enables you to configure references before the control plane is created.
 
 {:.warning}
-> Once a `KonnectGatewayControlPlane` name is created, it can't be modified. Plan your naming carefully before enabling this annotation.
+> {{site.operator_product_name}} names the `KonnectGatewayControlPlane` resource and the control plane it creates in {{site.konnect_short_name}} at creation time, and it doesn't rename them afterwards. Adding or removing the annotation on an existing `Gateway` doesn't rename the resources already created for it, and control planes created before upgrading to {{site.operator_product_name}} 2.3.2 keep the name they already have. To rename an existing control plane in {{site.konnect_short_name}}, edit `spec.createControlPlaneRequest.name` on the `KonnectGatewayControlPlane`.
 
-When static naming is enabled, {{site.operator_product_name}} derives the name for the `KonnectGatewayControlPlane` using the following logic:
+When static naming is enabled, {{site.operator_product_name}} names the `KonnectGatewayControlPlane` resource after the `Gateway`. The control plane it creates in {{site.konnect_short_name}} is named `<namespace>_<gateway-name>` in {{site.operator_product_name}} 2.3.2 and later, and after the `Gateway` alone in earlier versions.
 
-* If the Gateway is in the same namespace as {{site.operator_product_name}}, the name will be the same as the Gateway name.
-* If the Gateway is in a different namespace, the name will be the Gateway name prefixed with the namespace.
+The namespace is part of the {{site.konnect_short_name}} name because control plane names must be unique across your whole {{site.konnect_short_name}} organization, while Gateway names only have to be unique within a namespace. The two parts are joined with an underscore, which can't appear in a namespace or a Gateway name, so the namespace and the Gateway name stay unambiguously separated. As a result, the Kubernetes and {{site.konnect_short_name}} names of the same control plane differ, for example `hybrid` and `kong_hybrid`.
 
 ## Create the GatewayConfiguration and GatewayClass resources
 
@@ -82,6 +98,7 @@ spec:
     name: hybrid
     namespace: kong ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Configure the Gateway with static naming
 
@@ -103,8 +120,29 @@ spec:
     protocol: HTTP
     port: 80' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
+
+Check that the operator created the `KonnectGatewayControlPlane` and that it's Programmed:
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectGatewayControlPlane
+name: hybrid
+{% endvalidation %}
+<!-- vale on -->
+
+The resource asks {{site.konnect_short_name}} for a control plane named `<namespace>_<gateway-name>`. Confirm the name it requests:
+
+<!-- vale off -->
+{% validation kubernetes-resource-property %}
+kind: KonnectGatewayControlPlane
+name: hybrid
+path: '.spec.createControlPlaneRequest.name'
+expected: kong_hybrid
+{% endvalidation %}
+<!-- vale on -->
 
 To validate, fetch a list of control planes in {{site.konnect_short_name}}:
 
@@ -116,9 +154,9 @@ method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You should see a control plane named `kong-hybrid`.
+You should see a control plane named `kong_hybrid` (`hybrid` on {{site.operator_product_name}} 2.3.1 and earlier).
 
-You can now reference the control plane in other resources using the Gateway name. For example, here's how to reference it in a `KongConsumer` resource:
+You can now reference the control plane in other resources using the name of the `KonnectGatewayControlPlane` resource, which matches the Gateway name. No resource looks up the control plane by its {{site.konnect_short_name}} name. For example, here's how to reference it in a `KongConsumer` resource:
 
 ```sh
 echo '
@@ -134,3 +172,16 @@ spec:
     konnectNamespacedRef:
       name: hybrid' | kubectl apply -f -
 ```
+{: data-test-step="block" }
+
+Confirm that the `KongConsumer` resolved the reference to the generated resource:
+
+<!-- vale off -->
+{% validation kubernetes-resource-property %}
+kind: KongConsumer
+name: consumer1
+path: |
+  .status.conditions[] | select(.type == "ControlPlaneRefValid") | .status
+expected: "True"
+{% endvalidation %}
+<!-- vale on -->

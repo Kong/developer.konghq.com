@@ -22,19 +22,10 @@
     "config": {
       "type": "object",
       "properties": {
-        "request_if_media_type": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "application/json"
-          ]
-        },
-        "response_jq_program": {
+        "request_jq_program": {
           "type": "string"
         },
-        "response_jq_program_options": {
+        "request_jq_program_options": {
           "type": "object",
           "properties": {
             "compact_output": {
@@ -54,6 +45,44 @@
               "default": false
             },
             "sort_keys": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "default": {}
+        },
+        "request_if_media_type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "application/json"
+          ]
+        },
+        "response_jq_program": {
+          "type": "string"
+        },
+        "response_jq_program_options": {
+          "type": "object",
+          "properties": {
+            "ascii_output": {
+              "type": "boolean",
+              "default": false
+            },
+            "sort_keys": {
+              "type": "boolean",
+              "default": false
+            },
+            "compact_output": {
+              "type": "boolean",
+              "default": true
+            },
+            "raw_output": {
+              "type": "boolean",
+              "default": false
+            },
+            "join_output": {
               "type": "boolean",
               "default": false
             }
@@ -79,35 +108,6 @@
           "default": [
             200
           ]
-        },
-        "request_jq_program": {
-          "type": "string"
-        },
-        "request_jq_program_options": {
-          "type": "object",
-          "properties": {
-            "join_output": {
-              "type": "boolean",
-              "default": false
-            },
-            "ascii_output": {
-              "type": "boolean",
-              "default": false
-            },
-            "sort_keys": {
-              "type": "boolean",
-              "default": false
-            },
-            "compact_output": {
-              "type": "boolean",
-              "default": true
-            },
-            "raw_output": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          "default": {}
         }
       }
     },

@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayModel
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -31,6 +32,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
@@ -38,12 +41,11 @@ related_resources:
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
 faqs:
-  - q: What's the difference between an AI Model entity and the `model` field in an AI Policy configuration?
+  - q: What's the difference between an AI Model entity and an AI Policy entity?
     a: |
       An AI Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API and UI.
-      It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model.
-      You declare both separately and attach AI Policies to AI Models.
-
+      It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model or other entity.
+      You declare each separately and reference AI Policies in AI Model configurations.
 
   - q: What happens when I update an AI Model?
     a: |
@@ -52,9 +54,7 @@ faqs:
 
   - q: Can I apply the same configuration to multiple AI Models?
     a: |
-      Yes, by attaching one AI Policy with that configuration to each AI Model.
-      AI Policies are not shared between entities, each instance is independent.
-      See [AI Policy entity](/ai-gateway/entities/ai-policy/).
+      Yes, by referencing the same AI Policy in each AI Model configuration. See [AI Policy entity](/ai-gateway/entities/ai-policy/) for details.
 
   - q: How do I limit which AI Consumers can reach an AI Model?
     a: |
@@ -68,8 +68,8 @@ faqs:
 
   - q: Can a client override the model name from the request body?
     a: |
-      By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the upstream AI Provider model name. See [Request routing rules](#request-routing-rules) for details and examples.
+      By default, no. Clients must send the `name` of the AI Model in the `model` field, not the upstream model name. A request with any other value fails.
+      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the AI Model name. See [Request routing rules](#request-routing-rules) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -112,7 +112,7 @@ At request time, the AI Model mediates traffic between clients and upstream AI P
 1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
 1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Model Provider](/ai-gateway/entities/ai-model-provider/), unless the target is a self-hosted model.
 1. Authenticates to the upstream LLM service using credentials stored on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity.
-1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
+1. Decorates the upstream request with per-target configuration (for example, temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
 1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
 
@@ -128,8 +128,8 @@ An AI Model is a managed entity. {{site.ai_gateway}} owns its runtime configurat
 
 When you expose an AI Model, you choose which AI capabilities it provides through the [`capabilities`](#schema-aigateway-model-capabilities) field. The [`type`](#schema-aigateway-model-type) you select determines which capabilities are available:
 
-* **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`.
-* **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`.
+* **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`, `decisions`.
+* **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`, `skills`.
 
 Not every LLM service supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Model Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
@@ -144,10 +144,10 @@ columns:
     key: description
 rows:
   - capability: "`generate`"
-    path: "`/chat/completions`, `/completions`, `/responses`"
+    path: "`/chat/completions`, `/completions`"
     description: Text generation and conversational responses from generative models.
   - capability: "`agentic`"
-    path: "`/assistants`"
+    path: "`/assistants`, `/responses`"
     description: Persistent tool-using agents with state management and metadata.
   - capability: "`embeddings`"
     path: "`/embeddings`"
@@ -179,8 +179,25 @@ rows:
   - capability: "`files`"
     path: "`/files`"
     description: File uploads for long documents and structured input.
+  - capability: "`skills`"
+    path: "`/skills`"
+    description: Create, manage, and download reusable skill bundles hosted with the provider.
 {% endtable %}
 <!-- vale on -->
+
+### Expose all capabilities
+
+To expose every capability that the AI Model's [`type`](#schema-aigateway-model-type) and providers support, set `capabilities` to `["*"]`. You don't have to list each capability, and new capabilities that a later release adds are included automatically.
+
+* A `model` type AI Model exposes all `model` capabilities.
+* An `api` type AI Model exposes only `batches` and `files`. The `skills` capability is never selected by `*` and must be listed explicitly.
+* Capabilities that the provider doesn't support, or that the data plane version doesn't support, are omitted.
+* If you list other values next to `*`, they are ignored.
+
+An empty or absent `capabilities` list still exposes no capabilities. You must set `*` explicitly.
+
+{:.warning}
+> A wildcard AI Model can create many routes. For example, an AI Model with `capabilities: ["*"]` and `formats: [{type: "*"}]` on an OpenAI provider creates approximately 25 routes. These routes use every path under the AI Model's base path, and they can conflict with an AI MCP Server or AI Agent that uses the same path.
 
 ## Request and response formats
 
@@ -205,7 +222,7 @@ rows:
     capabilities: Translates between OpenAI request and response shapes and the upstream provider format.
   - format: "`anthropic`"
     provider: "[Anthropic](/ai-gateway/ai-providers/anthropic/#supported-native-llm-formats-for-anthropic)"
-    capabilities: Messages, batch processing.
+    capabilities: Messages, batch processing, skills management.
   - format: "`bedrock`"
     provider: "[Amazon Bedrock](/ai-gateway/ai-providers/bedrock/#supported-native-llm-formats-for-amazon-bedrock)"
     capabilities: Converse, RAG (RetrieveAndGenerate), reranking, async invocation.
@@ -218,10 +235,54 @@ rows:
   - format: "`huggingface`"
     provider: "[Hugging Face](/ai-gateway/ai-providers/huggingface/#supported-native-llm-formats-for-hugging-face)"
     capabilities: Text generation, streaming.
+  - format: "`typesafe`"
+    provider: "[TypeSafe AI](/ai-gateway/ai-providers/typesafe/#supported-native-llm-formats-for-typesafe-ai)"
+    capabilities: "Decisions (native format required)."
+  - format: "`passthrough`"
+    provider: Any upstream
+    capabilities: Forwards request and response bodies byte-for-byte, without parsing or transformation.
 {% endtable %}
 <!-- vale on -->
 
 When a native format is set, only the corresponding provider is supported with its specific APIs.
+
+### Expose all formats
+
+To accept every API format, set `formats` to `[{type: "*"}]`. Combined with [`capabilities: ["*"]`](#expose-all-capabilities), the AI Model listens on every {{site.ai_gateway}} endpoint:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: "*"
+```
+
+The `*` format has the following behavior:
+
+* It selects every format in the preceding table except `passthrough`, which can't be combined with other formats. Formats that the data plane version doesn't support are omitted. For example, `typesafe` is selected only if you're running {{site.ai_gateway}} 2.2 or later.
+* If you list other formats next to `*`, they are ignored.
+* An absent or empty `formats` list still defaults to `openai`.
+* Your provider must support the formats that `*` selects. A provider might not support every format.
+
+### Use multiple formats
+
+An AI Model can list more than one format. It then exposes the capabilities of each format, so clients can call the same AI Model with different API shapes. For example, the following AI Model serves all capabilities for both the `openai` and `cohere` formats:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: openai
+  - type: cohere
+```
+
+If you set explicit capabilities, a capability that no listed format supports is rejected. A capability that only some of the listed formats serve is exposed for those formats only.
+
+When two formats serve the same path, for example `realtime` on `/realtime` for `openai` and `gemini`, the AI Model keeps the endpoint of the `openai` format. If you list formats and capabilities explicitly, you get a routing conflict warning for the endpoint that is omitted.
+
+### Passthrough
+
+If your upstream exposes a format {{site.ai_gateway}} doesn't recognize, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, without `Content-Type` enforcement or schema validation.
+
+Passthrough keeps upstream provider authentication, AI Consumer identity, request-count rate limiting, and logging. For more information, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
 
 ## Targets
 
@@ -325,7 +386,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Request routing rules
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
+By default, applications or services making requests to the AI Model endpoint must specify the `name` of the AI Model in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
 
 `config.route.model` accepts one of the following match strategies:
 
@@ -333,7 +394,7 @@ By default, applications or services making requests to the AI Model endpoint mu
 * [`header_param`](#schema-aigateway-model-config-route-model): matches a value in the request headers, indexed by header name.
 * [`path_param`](#schema-aigateway-model-config-route-model): matches a value present in the request path, indexed by path parameter name.
 
-Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (currently limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't set, {{site.ai_gateway}} creates a default model selector using the AI Model's name and format.
 
@@ -341,7 +402,16 @@ When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't se
 
 To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
 
-To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy simultaneously.
+To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
+
+{:.info}
+> All AI Models in a {{site.ai_gateway}} exposed on the same base path that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy.
+>
+> For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
+
+### CEL-based ACLs
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI Model" anchor="#schema-aigateway-model-access" %}
 
 ## Attach AI Policies
 
@@ -351,7 +421,12 @@ Reference AI Policies through the [`policies`](#schema-aigateway-model-policies)
 
 ### AI Policy execution order
 
-Authentication runs first, through the AI Model's assigned [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), not through an attached AI Policy. Attached AI Policies then execute in a defined order based on policy type. If execution order matters for your use case, refer to the [plugin priority documentation](/gateway/entities/plugin/#plugin-priority).
+Authentication happens through the AI Model's assigned [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/).
+AI Policies attached to an AI Model run only after authentication succeeds, regardless of their [priority](/ai-gateway/entities/ai-policy/#ai-policy-priority). 
+If the request fails authentication, they don't run.
+This differs from a global AI Policy, which can run before authentication.
+If an AI Policy must run before authentication, apply it globally.
+For more information, see [Scopes and authentication](/ai-gateway/entities/ai-policy/#scopes-and-authentication).
 
 ## Upstream proxy configuration
 
@@ -412,6 +487,62 @@ data:
 {:.info}
 > Because [`config.route.model`](#schema-aigateway-model-config-route-model) is set here with `body_param: model`, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
+### Set up an AI Model with API capabilities
+
+You can also configure an AI Model entity with `api` type capabilities: `skills`, `batches`, and `files`. API capabilities are set on a dedicated AI Model, separate from any `model`-type AI Model handling synchronous capabilities like `generate`.
+
+The following example set's up an AI Model to provide the `skills` capability. The Skills API only supports native format passthrough for each provider. This means an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with a skill in another's native format, is not supported.
+
+{:.info}
+> `targets[].name` is still required by the schema, but Skills requests don't select a model, so any placeholder value works.
+
+For OpenAI formats run:
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-openai-skills
+  name: my-openai-skills
+  type: api
+  capabilities:
+    - skills
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: openai-skills
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /openai
+{% endentity_example %}
+
+For Anthropic formats run:
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-anthropic-skills
+  name: my-anthropic-skills
+  type: api
+  capabilities:
+    - skills
+  formats:
+    - type: anthropic
+  policies: []
+  targets:
+    - name: anthropic-skills
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /anthropic
+{% endentity_example %}
 
 ## Schema
 

@@ -26,8 +26,8 @@ tldr:
 faqs:
   - q: Can I migrate my pre-request scripts from another API client, like Postman, to Insomnia?
     a: Yes, you can copy and paste your pre-request scripts directly from Postman into an Insomnia pre-request script.
-  - q: Can I run pre-request scripts without a collection?
-    a: No, you can only run pre-request scripts from a collection or a collection that was generated from a document.
+  - q: Can I run pre-request scripts without an API Collection?
+    a: No, pre-request scripts run on the requests inside an API Collection. Every API Collection supports them, including one that holds an OpenAPI spec.
   - q: Can I use variables in request paths?
     a: |
       Yes. Insomnia supports variables in request paths through **template tags** and **environment variables**.  
@@ -40,7 +40,7 @@ faqs:
 
 prereqs:
     inline:
-        - title: Create and configure a collection
+        - title: Create and configure an API Collection
           include_content: prereqs/create-collection
           icon_url: /assets/icons/menu.svg
 ---
@@ -49,7 +49,7 @@ prereqs:
 
 In this example, we'll configure a pre-request script that sets a variable in the request:
 
-1. In Insomnia, navigate to the "Flight Service 0.1.0" document.
+1. In Insomnia, navigate to the "Flight Service 0.1.0" API Collection.
 1. Click the **Collection** tab in the sidebar.
 1. In the sidebar of your collection, select the **Get a specific flight by flight number** request.
 1. Click the **Scripts** tab on the request.

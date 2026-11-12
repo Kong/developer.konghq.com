@@ -1,5 +1,21 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpcs",
+          "https",
+          "tls"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpcs",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
@@ -34,22 +50,6 @@
           "default": "X-Client-Cert-Fingerprint"
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpcs",
-          "https",
-          "tls"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpcs",
-        "https"
-      ]
     },
     "route": {
       "type": "object",

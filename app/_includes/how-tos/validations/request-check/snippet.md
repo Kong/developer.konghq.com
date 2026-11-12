@@ -57,4 +57,5 @@ You should see the following header{% if header_count > 1 %}s{% endif %}:
 ```text{% for header in include.config.expected_headers %}
 {{ header }}{% endfor %}
 ```
+{:.no-copy-code}
 {% endif %}

@@ -1,0 +1,21 @@
+name: block-common-bots
+display_name: Block common bots
+type: bot-detection
+description: 'Block requests whose `User-Agent` header matches the built-in list of common bots and HTTP client libraries.'
+
+title: 'Block common bots'
+
+weight: 900
+
+scopes:
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - global
+
+config: {}
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

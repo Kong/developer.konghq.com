@@ -7,19 +7,27 @@
 {%- endif -%}
 
 {% unless page.example.requirements == empty %}
-## Prerequisites
+### Prerequisites
 
 {% for requirement in page.example.requirements %}
 * {{ requirement | liquify }}
 {%- endfor -%}
 {%- endunless -%}
 {% unless page.example.variables == empty %}
-## Environment variables
+### Environment variables
 
 {% for variable in page.example.variables %}
 * `{{ variable.value }}` {%- if variable.description -%}: {{variable.description | liquify }}{% endif%}
 {% endfor %}
 {% endunless %}
+
+{% if page.credential_example %}
+{% if page.output_format == 'markdown' %}
+{% include components/plugin_credential_example.md credential_example=page.credential_example %}
+{% else %}
+{% include components/plugin_credential_example.html credential_example=page.credential_example %}
+{% endif %}
+{% endif %}
 
 {%- if page.output_format == 'markdown' -%}
 {% include components/plugin_config_example.md plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label %}

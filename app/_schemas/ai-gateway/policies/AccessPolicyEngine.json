@@ -1,0 +1,64 @@
+{
+  "properties": {
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Custom type for representing a foreign key with a null value allowed.",
+      "x-foreign": true
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "The raw response body to send when a request is denied by the policy set.",
+          "default": "{\"message\":\"Forbidden\"}"
+        },
+        "enforce_mcp": {
+          "type": "boolean",
+          "description": "Whether MCP traffic is enforced. When enabled, tool calls authorize as `CallTool` and every other MCP request as `connect` on the server. When disabled, MCP traffic passes unenforced. Model calls are always enforced.",
+          "default": false
+        },
+        "status_code": {
+          "type": "integer",
+          "maximum": 599,
+          "minimum": 100,
+          "description": "The response code to send when a request is denied by the policy set. Must be an integer between 100 and 599.",
+          "default": 403
+        },
+        "content_type": {
+          "type": "string",
+          "description": "Content type of the raw response configured with `config.body`.",
+          "default": "application/json"
+        }
+      }
+    }
+  }
+}

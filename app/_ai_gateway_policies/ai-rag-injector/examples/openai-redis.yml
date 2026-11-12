@@ -1,0 +1,54 @@
+description: Configure the AI RAG Injector policy to inject content to use Redis as vector database and the OpenAI text-embedding-3-large model for embedding.
+
+extended_description: |
+  Configure the AI RAG Injector policy to inject content to use Redis as vector database and the OpenAI text-embedding-3-large model for embedding.
+
+  {:.info}
+  > This example uses `text-embedding-3-large`, which supports up to `3072` dimensions. If you use `text-embedding-ada-002` instead, you must set `dimensions` to exactly `1536`.
+
+title: RAG injection with OpenAI and Redis
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - You have an OpenAI account.
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+  redis:
+    value: $REDIS_HOST
+    description: The Redis server's host
+
+name: rag-injector-openai-redis
+display_name: RAG injection with OpenAI and Redis
+type: ai-rag-injector
+
+config:
+  inject_template: |
+    Only use the following information surrounded by <RAG></RAG> and your existing knowledge to provide the best possible answer to the user.
+    <RAG><CONTEXT></RAG>
+    User's question: <PROMPT>
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      provider: openai
+      name: text-embedding-3-large
+  vectordb:
+    strategy: redis
+    redis:
+      host: ${redis}
+      port: 6379
+    distance_metric: cosine
+    dimensions: 3072
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

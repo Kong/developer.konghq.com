@@ -28,6 +28,8 @@ categories:
   - security
 
 related_resources:
+  - text: Request Rule Validator policy
+    url: /event-gateway/policies/request-rule-validator/
   - text: Virtual clusters
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
@@ -107,10 +109,34 @@ ACL policies on the [virtual cluster](/event-gateway/entities/virtual-cluster/) 
 Each client's principal is evaluated against ACL rules before the {{site.event_gateway_short}} forwards any request to the backend.
 Consumer Group management commands (for example, create or delete) are also intercepted and evaluated against ACL rules using the `group` resource type.
 
+### Constraining the content of an allowed action
+
+The ACL policy decides whether a principal can perform an action at all, based on the resource, operation, and permission type.
+It doesn't inspect the content of the request beyond the resource name.
+
+If you need to constrain the content of an allowed action, for example capping the number of partitions a client can request or enforcing a topic naming pattern, use the [Request Rule Validator policy](/event-gateway/policies/request-rule-validator/) instead.
+
+You can combine both policies on the same virtual cluster: ACLs decide who can act, and Request Rule Validator decides what the action contains.
+We recommend placing ACLs before Request Rule Validator, so an unauthorized client learns nothing about your content rules before it's rejected on authorization grounds.
+
 ## Security considerations
 
-When `resource_names` uses an expression that interpolates an identity into a glob pattern (for example `[context.auth.principal.name + "-*"]` or `[context.auth.token.claims.topic_prefix + "*"]`), the interpolated value is matched as a glob and is **not** escaped. If the value can contain glob metacharacters (`*`, `?`, `[`, `]`), they act as wildcards and can widen the set of matched resources beyond what you intend.
+When `resource_names` uses an expression that interpolates an identity into a glob pattern (for example {% raw %}`{{[context.auth.principal.name + "-*"]}}`{% endraw %} or {% raw %}`{{[context.auth.token.claims.topic_prefix + "*"]}}`{% endraw %}), the interpolated value is matched as a glob and is **not** escaped. If the value can contain glob metacharacters (`*`, `?`, `[`, `]`), they act as wildcards and can widen the set of matched resources beyond what you intend.
 
-For example, with `resource_names: '[context.auth.principal.name + "-*"]'`, a principal named `ali*` produces the pattern `ali*-*`, which matches topics such as `alibob-secrets` and `ali-data`, not just that principal's own topics.
+For example, with {% raw %}`resource_names: '{{[context.auth.principal.name + "-*"]}}'`{% endraw %}, a principal named `ali*` produces the pattern `ali*-*`, which matches topics such as `alibob-secrets` and `ali-data`, not just that principal's own topics.
 
 Only interpolate identity values into `resource_names` patterns when those values are guaranteed not to contain glob metacharacters.
+
+## Observability
+
+The ACL policy logs each decision type at a different level:
+* Allowed requests are logged at the `trace` level.
+* Denied requests are logged at the `debug` level.
+
+By default, {{site.event_gateway_short}} logs at the `info` level, which excludes these logs.
+Kafka usually has high traffic, and logging every decision could overwhelm the logging system.
+To show ACL decisions without raising the level for the whole gateway, set the `debug` level for the ACL module only:
+
+```sh
+KEG__OBSERVABILITY__LOG_FLAGS=info,keg::kafka::proxy::transform::policies::acl=debug
+```

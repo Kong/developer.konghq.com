@@ -11,6 +11,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.16.0.1": [
+    {
+      "message": "Fixed an issue where Kong Gateway did not send an SNI to the OPA server. It now sends `opa_host` as the SNI when that is a hostname; with `ssl_verify = true`, the certificate must include `opa_host`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
@@ -21,6 +28,13 @@
   "3.14.0.2": [
     {
       "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.16": [
+    {
+      "message": "Fixed an issue where Kong Gateway did not send an SNI to the OPA server. It now sends `opa_host` as the SNI when that is a hostname; with `ssl_verify = true`, the certificate must include `opa_host`.",
       "type": "bugfix",
       "scope": "Plugin"
     }

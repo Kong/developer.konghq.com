@@ -15,9 +15,10 @@ Flags:
                                      - Default   : [ https://us.api.konghq.com ]
       --color-theme string           Configures the CLI UI/theme (prompt, tables, TUI elements).
                                      - Config path: [ color-theme ]
-                                     - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                     - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                     - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                     - List       : [ kongctl list themes ] (default "auto")
       --config-file string           Path to the configuration file to load.
+                                     - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                      - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --expires-at string            Token expiration timestamp in RFC3339 format, for example 2026-06-24T12:00:00Z or 2026-06-24T12:00:00+02:00. Fractional seconds are accepted. Must be between 1 day and 365 days (12 months) from now.
       --expires-in string            Token lifetime. Use a duration between 1 day and 365 days (12 months). Supported units are ns, us, ms, s, m, h, and d (days). Examples: 24h, 36h, 1d, 30d.

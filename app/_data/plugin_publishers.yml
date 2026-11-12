@@ -28,8 +28,8 @@ inigo:
 moesif:
   name: Moesif
 
-noname-security:
-  name: Noname Security
+akamai:
+  name: Akamai
 
 salt:
   name: Salt Security

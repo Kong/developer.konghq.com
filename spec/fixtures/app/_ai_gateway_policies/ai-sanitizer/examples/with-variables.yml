@@ -1,0 +1,20 @@
+title: Block requests or responses that violate guardrails policies
+description: Configure the AI AWS Guardrails policy to block requests or responses that violate guardrails policies predefined on AWS.
+weight: 100
+name: guardrails-policy
+display_name: Guardrails policy
+type: ai-aws-guardrails
+variables:
+  guardrails_id:
+    description: The guardrail identifier used in the request to apply the guardrail
+    value: $GUARDRAILS_ID
+  aws_region:
+    description: The AWS region where the guardrail is deployed
+    value: $AWS_REGION
+config:
+  guardrails_id: ${guardrails_id}
+  aws_region: ${aws_region}
+  guarding_mode: BOTH
+tools:
+  - konnect-api
+  - kongctl

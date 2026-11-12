@@ -32,6 +32,8 @@ related_resources:
     url: /how-to/package-apis-with-dev-portal/
   - text: API packages reference
     url: /catalog/api-packaging/
+  - text: "{{site.dev_portal}} MCP servers"
+    url: /dev-portal/mcp-servers/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from {{site.dev_portal}}, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
@@ -499,14 +501,60 @@ resource "konnect_api_publication" "my_apipublication" {
 
 Once published, the API appears in the selected {{site.dev_portal}}. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
 
+### Generate an MCP server from your published APIs
+
+After an API is published to {{site.dev_portal}}, you can also expose it to AI agents through an MCP server generated directly from that {{site.dev_portal}}. This gives developers a way to connect their own agent or IDE to browse the same API documentation and specifications available in {{site.dev_portal}}, and, depending on configuration, register applications and use API credentials on their behalf.
+
+Agent access respects the same [user authentication](/dev-portal/security-settings/) and [RBAC](/dev-portal/developer-rbac/) settings that apply to the developer connecting the agent, so an agent never sees more than its developer already can.
+
+For details on enabling this and how {{site.dev_portal}} settings affect what an agent can do, see [{{site.dev_portal}} MCP servers](/dev-portal/mcp-servers/).
+
 ### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 
 When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the live request with their configuration.
 
-The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
+The **Try it!** feature is enabled by default for published APIs. You can disable it for the entire {{site.dev_portal}} by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). If the {{site.dev_portal}}-wide setting is disabled, **Try it!** is unavailable for every API published to that {{site.dev_portal}}, even if an individual API publication is configured to allow it.
 
+If **Try it!** is enabled for the {{site.dev_portal}}, you can also disable it for a specific API publication, or restrict which developers can use it, without changing the {{site.dev_portal}}-wide setting.
 
-You may need to enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
+To configure **Try it!** on a per-API basis, do the following:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Published APIs** tab.
+1. Find the API, click its action menu, and click **Edit publication**.
+1. Click **Advanced settings** to expand it.
+1. Select or deselect the **Enable the ability to send test requests in Portal** checkbox to turn **Try it!** on or off for this API.
+1. From the **Who can send test request** dropdown menu, select who can send test requests for this API:
+    * **All**: Anybody can send test requests.
+    * **Authenticated**: Only authenticated {{site.dev_portal}} developers can see and send test requests.
+    * **Registered**: Only developers with at least one application registered with this API can send test requests.
+1. Click **Save**.
+
+When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters. 
+
+For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
+
+```yaml
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-kong-client-credentials-config:
+        extraTokenRequestParameters:
+          - name: audience
+            label: Audience
+            description: The audience of the authorization server to scope tokens to
+            omitIfEmpty: true
+            required: true
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://example.com/oauth/token'
+```
+
+#### CORS configuration for Try it!
+
+You may need to enable the CORS plugin for **Try it!** to work. Use the following table to determine the appropriate CORS configuration based on the Routes associated with your APIs:
 
 {% feature_table %} 
 item_title: Use case
@@ -536,26 +584,77 @@ features:
     cors: "[Enable Try it in {{site.dev_portal}} for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
-When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters.
+#### Sign in with OAuth2 in Try it!
 
-For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
+You can allow developers to use **Try it!** with their IdP credentials by declaring an OAuth2 security scheme with an `authorizationCode` flow in a published API spec.
+In addition to declaring `authorizationCode` in the spec, you must also do the following:
+* The flow's `authorizationUrl` and `tokenUrl` must be absolute `https` URLs.
+* **Try it!** must be enabled for {{site.dev_portal}} and the API.
+
+For example, you would configure the `authorizationCode` flow in your published API spec like this:
 
 ```yaml
 components:
   securitySchemes:
-    oauth2:
+    MyIdP:
       type: oauth2
-      x-kong-client-credentials-config:
-        extraTokenRequestParameters:
-          - name: audience
-            label: Audience
-            description: The audience of the authorization server to scope tokens to
-            omitIfEmpty: true
-            required: true
       flows:
-        clientCredentials:
-          tokenUrl: 'https://example.com/oauth/token'
+        authorizationCode:
+          authorizationUrl: https://idp.example.com/oauth2/authorize
+          tokenUrl: https://idp.example.com/oauth2/token
+          scopes:
+            read: Read access
 ```
+
+This will display a sign-in panel (with client ID, scopes, and an **Authorize** button) for that scheme instead of a plain access token field. 
+Developers click **Authorize**, sign in to the identity provider (IdP) in a popup, and Try It uses the resulting access token for requests.
+Developers can get the client ID in a few different ways:
+* **APIs that use {{site.base_gateway}}:** Developers can get a client ID from app registration with [DCR](/dev-portal/dynamic-client-registration/).
+* **APIs that use an external gateway:** Since other gateways can have a different flow, you must give developers the client ID (for example, a public client ID that you can add to your API specs).
+
+This sign-in uses the [authorization code flow with PKCE](https://www.rfc-editor.org/rfc/rfc9700#section-2.1.1) (S256), so client secrets aren't involved. 
+It's independent of [developer self-service and app registration](/dev-portal/self-service/) and of [{{site.dev_portal}} SSO](/dev-portal/sso/): it authenticates a single Try It request against the IdP named in the spec's security scheme, not the developer's {{site.dev_portal}} account.
+
+To support this for your API, set up your IdP like the following:
+
+1. **Create a public client.** Register a single-page application (SPA), or any public client type, that uses the authorization code grant, PKCE with the `S256` method, and no client secret. The exchange happens in the developer's browser, which cannot hold a secret.
+1. **Register the redirect URI.** Register your {{site.dev_portal}} redirect URI, including `https` and without a trailing slash, once for the default {{site.dev_portal}} domain and once for each custom domain the {{site.dev_portal}} is served on:
+
+   ```
+   https://<your-portal-domain>/_oauth/spec-renderer/try-it-callback.client.vue
+   ```
+1. **Allow CORS on the token endpoint.** After sign-in, the developer's browser calls your token endpoint directly to exchange the code for a token. The token endpoint must answer the CORS preflight (`OPTIONS`) request, so allow your {{site.dev_portal}}'s origin (`Access-Control-Allow-Origin: https://<your-portal-domain>`) for each {{site.dev_portal}} domain, and allow the `POST` method and the `Content-Type` header.
+1. **Allow the scopes your spec declares.** Allow the client to request the scopes listed in the security scheme.
+
+{:.info}
+> **Configuration for common identity providers:**
+> * **Okta**: Create a [Single-Page Application](https://developer.okta.com/docs/guides/sign-into-spa-redirect/) type OIDC application, add the redirect URI under Sign-in redirect URIs, and add each {{site.dev_portal}} origin as a Trusted Origin with CORS enabled.
+> * **Auth0**: Create a [Single Page Application](https://auth0.com/docs/get-started/auth0-overview/create-applications/single-page-web-apps#register-single-page-web-applications), add the redirect URI to [Allowed Callback URLs](https://auth0.com/docs/customize/custom-domains/multiple-custom-domains/migration-guide#callback-urls), and add each {{site.dev_portal}} origin to Allowed Web Origins.
+> * **Microsoft Entra ID**: Register the redirect URI under the [Single-page application platform](https://learn.microsoft.com/entra/identity-platform/scenario-spa-app-configuration?tabs=react). The token endpoint only allows browser requests for SPA redirect URIs.
+
+The access token is kept in memory only and it's lost when the page reloads. 
+When the token expires, developers must click **Authorize** again to refresh the token.
+
+##### Troubleshooting
+
+Use the following table to help you troubleshoot errors when configuring the `authorizationCode` flow in a published API spec:
+
+{% table %}
+columns:
+  - title: Symptom
+    key: symptom
+  - title: Likely cause
+    key: cause
+rows:
+  - symptom: "\"Your browser blocked the sign-in window\""
+    cause: The browser blocked the popup. Allow popups for the {{site.dev_portal}} domain.
+  - symptom: The IdP shows an error in the popup about the redirect URI
+    cause: The redirect URI isn't registered for this {{site.dev_portal}} domain, or it doesn't match exactly.
+  - symptom: "\"Unable to reach the token endpoint\""
+    cause: The token endpoint doesn't allow CORS from the {{site.dev_portal}} origin. Check the browser's network tab for the exact failure.
+  - symptom: "The popup shows \"This window lost its connection to the page that opened it\""
+    cause: The popup lost its link to the {{site.dev_portal}} page, so it can't pass the result back. Close it and click **Authorize** again. If it keeps happening, contact support.
+{% endtable %}
 
 #### Spec renderer feature support
 

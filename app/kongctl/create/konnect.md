@@ -25,6 +25,12 @@ kongctl provides for creating {{site.konnect_short_name}} access tokens.
 
 {% include_cached /kongctl/help/create/konnect/index.md %}
 
+### kongctl create konnect mesh
+
+The `mesh` command works with resources on a {{site.mesh_product_name}} control plane.
+
+{% include_cached /kongctl/help/create/konnect/mesh.md %}
+
 ### kongctl create konnect organization
 
 Manage {{site.konnect_short_name}} system account resources.

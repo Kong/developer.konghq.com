@@ -26,8 +26,8 @@ rows:
                   text: |
                     Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
                     KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts.
-                    KAi is always disabled by default for Enterprise accounts.
-                    Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+                    KAi is disabled by default for Enterprise accounts created before October 2026, and enabled by default for accounts created since.
+                    Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
 
                     KAi can help you do the following:
                     * **Find information on {{site.konnect_short_name}}:** Ask questions about {{site.konnect_short_name}} features, settings, and configurations.
@@ -37,7 +37,7 @@ rows:
           - type: button
             config:
               text: "Try KAi in {{site.konnect_short_name}} &rarr;"
-              url: https://cloud.konghq.com/global/organization/labs/kai
+              url: https://cloud.konghq.com/global/organization/settings/ai-settings
       - blocks:
           - type: image
             config:
@@ -231,11 +231,13 @@ rows:
               a: |
                 That depends on your account type.
 
-                * **Plus and trial accounts:** KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
+                * **Plus and trial accounts:** KAi is _enabled_ by default for {{site.konnect_short_name}} Plus and trial accounts. 
                 Only organization owners can enable or disable KAi for an organization. 
                 
-                * **Enterprise accounts:** KAi is always disabled by default for Enterprise accounts. 
-                Enterprise accounts can enable it by [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+                * **Enterprise accounts:** KAi is _disabled_ by default for Enterprise accounts created prior to October 2026. 
+                Enterprise accounts can enable it by [enabling it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
+
+                For all Enterprise accounts created since October 2026, KAi is _enabled_ by default. 
             - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
               a: |
                 No. KAi can make changes to your {{site.konnect_short_name}} configuration but will always ask for your confirmation before applying any changes.
@@ -248,15 +250,20 @@ rows:
             - q: Is there an additional cost to using KAi?
               a: |
                 Access to KAi is included in your existing Plus and Trial plans. 
-                Enterprise users should contact their Kong account manager or [enable it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+                Enterprise users should contact their Kong account manager or [enable it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
             - q: Does KAi train on any of my data?
               a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
             - q: Which models does KAi use?
               a: |
-                We currently use Anthropic Claude (US/EMEA/AU) and Z.ai GLM-5 (IN), both provided by AWS Bedrock.
+                We currently use Anthropic Claude, Z.ai GLM, and Alibaba Qwen models, all provided by AWS Bedrock.
                 Review the terms for models on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
             - q: What regions is KAi available in?
               a: KAi is currently available in US, EU, AU, and IN. Other regions will be added over time.
+            - q: Does my data leave the region I am in?
+              a: |
+                No. KAi uses in-region inference for all workloads. 
+                KAi may use different models (from Anthropic Claude, Z.ai GLM, and Alibaba Qwen) for different workloads in different regions.
+                This is to ensure in-region inference rules are maintained. For this reason, experience and answer quality may vary depending on region.
             - q: Where can I find my limits and quotas?
               a: |
                 Individual chat context information can be found in the bottom right of the chat window, below the submit button.

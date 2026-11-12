@@ -22,16 +22,16 @@
     "config": {
       "type": "object",
       "properties": {
-        "tolerance_second": {
-          "type": "integer",
-          "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
-          "default": 300
-        },
         "secret_v1": {
           "type": "string",
           "description": "Webhook secret",
           "x-referenceable": true,
           "x-encrypted": true
+        },
+        "tolerance_second": {
+          "type": "integer",
+          "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
+          "default": 300
         }
       },
       "required": [

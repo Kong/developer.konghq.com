@@ -1,7 +1,11 @@
 import { chromium } from "playwright";
 import fs from "fs/promises";
 import path from "path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
+import { visitedOrigins } from "../dev-server-target.js";
+
+import { prependProxyIpExport } from "./proxy-ip.js";
+import { parseRetryCount } from "./retry.js";
 
 class NonFirstSeriesPageError extends Error {}
 
@@ -82,10 +86,16 @@ async function extractPrereqs(page, platform) {
   for (const i in prerequisites) {
     const prereq = prerequisites[i];
     if (await prereq.isVisible()) {
-      const trigger = await prereq.locator(".accordion-trigger");
-      if (i >= 1) {
+      const trigger = prereq.locator(".accordion-trigger");
+      // Only click items that are actually closed. The children of the
+      // prereqs container include hidden test-marker divs, so the first
+      // *accordion* item can sit at any container index: clicking its
+      // trigger by index alone would toggle the default-open item closed.
+      const expanded = await prereq.getAttribute("aria-expanded");
+      if (i >= 1 && expanded !== "true") {
         await trigger.click();
       }
+      await revealAccordionPanels(prereq);
 
       const extractedBlocks = await extractPrereqsBlocks(prereq);
       blocks.push(...extractedBlocks);
@@ -93,6 +103,25 @@ async function extractPrereqs(page, platform) {
   }
 
   return { blocks };
+}
+
+// The accordion binds its click handler on DOMContentLoaded, but pages are
+// loaded with waitUntil: "domcontentloaded" and clicked immediately, so the
+// handler may not be bound yet when the trigger click lands. A click on an
+// unbound trigger leaves the panel hidden, and every [data-test-prereq] block
+// inside is then silently skipped — the generated instruction file loses the
+// how-to's prerequisite commands (e.g. the Kafka compose stack), which only
+// surfaces later as a test failing on a missing docker network. Reveal the
+// item's panels directly instead of trusting the click.
+async function revealAccordionPanels(item) {
+  await item
+    .locator(".accordion-panel")
+    .evaluateAll((panels) =>
+      panels.forEach((panel) => {
+        panel.classList.remove("hidden");
+        panel.hidden = false;
+      }),
+    );
 }
 
 async function extractCleanupBlocks(elem) {
@@ -141,6 +170,7 @@ async function extractCleanup(page) {
       if (i >= 1) {
         await trigger.click();
       }
+      await revealAccordionPanels(item);
 
       const extractedBlocks = await extractCleanupBlocks(item);
       instructions.push(...extractedBlocks);
@@ -172,11 +202,17 @@ async function extractSetup(page) {
   return instructions;
 }
 
-async function extractSteps(page, config) {
+async function extractSteps(page, config, product) {
   const instructions = [];
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
+    // Blocks inside the FAQ section are examples for readers, not test steps:
+    // their variables are absent from the test environment.
+    if (await elem.evaluate((el) => el.closest("#faqs") !== null)) {
+      continue;
+    }
+
     await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       let step;
@@ -193,12 +229,22 @@ async function extractSteps(page, config) {
 
         let copiedText = await copyFromClipboard(page);
 
-        // Make curl requests work for KIC
-        if (copiedText.includes("curl") && copiedText.includes("$PROXY_IP")) {
-          copiedText = "export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')\n" + copiedText;
-        }
+        copiedText = prependProxyIpExport(copiedText, product);
 
-        instructions.push(copiedText);
+        const retryCount = await elem.getAttribute("data-test-retry-count");
+        const retry = parseRetryCount(retryCount);
+        if (retry !== null) {
+          // The runner (retry.js) repeats the command with exponential
+          // backoff, so readers see only the plain fence on the page.
+          instructions.push({ command: copiedText, retry_count: retry });
+        } else if (retryCount !== null) {
+          console.error(
+            `Warning: invalid data-test-retry-count "${retryCount}" on a step; extracting it without retries.`,
+          );
+          instructions.push(copiedText);
+        } else {
+          instructions.push(copiedText);
+        }
       } else {
         // validation-type step
         const parsedInstruction = JSON.parse(step);
@@ -283,7 +329,7 @@ async function writeInstructionsToFile(url, config, platform, product, instructi
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
 
-  await fs.writeFile(instructionsFile, yaml.dump(instructions), "utf-8");
+  await fs.writeFile(instructionsFile, dump(instructions), "utf-8");
 
   return instructionsFile;
 }
@@ -341,7 +387,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const setup = await extractSetup(page);
       const product = deriveProduct(setup, products);
       const prereqs = await extractPrereqs(page, platform);
-      const steps = await extractSteps(page, productConfig);
+      const steps = await extractSteps(page, productConfig, product);
       const cleanup = await extractCleanup(page);
 
       while ((await page.locator("[data-test-series-next]").count()) > 0) {
@@ -357,7 +403,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         // series' setup/product/version come from the first page only.
         const continuationPrereqs = await extractPrereqs(page, platform);
         steps.push(...continuationPrereqs.blocks);
-        steps.push(...(await extractSteps(page, productConfig)));
+        steps.push(...(await extractSteps(page, productConfig, product)));
         cleanup.push(...(await extractCleanup(page)));
       }
 
@@ -406,6 +452,10 @@ export async function generateInstructionFiles(
   config,
   { haltOnSeriesError = true } = {},
 ) {
+  // Computed before the browser launches, so a malformed --urls value
+  // fails before any browser work.
+  const origins = visitedOrigins(urlsToTest);
+
   const browser = await chromium.launch({
     args: [
       "--no-sandbox",
@@ -417,10 +467,13 @@ export async function generateInstructionFiles(
   });
 
   try {
-    const context = await browser.newContext({
-      permissions: ["clipboard-read", "clipboard-write"],
-      origin: new URL(config.baseUrl).origin,
-    });
+    const context = await browser.newContext();
+    for (const origin of origins) {
+      await context.grantPermissions(
+        ["clipboard-read", "clipboard-write"],
+        { origin },
+      );
+    }
 
     for (const uri of urlsToTest) {
       try {

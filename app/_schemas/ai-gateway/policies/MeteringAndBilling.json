@@ -1,63 +1,23 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "attributes": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "source": {
-                "type": "string",
-                "enum": [
-                  "header",
-                  "query"
-                ],
-                "description": "Where to find this attribute in the request."
-              },
-              "look_up_value_in": {
-                "type": "string",
-                "description": "The header name or query parameter that contains the value, e.g 'x-department-id'"
-              },
-              "event_property_name": {
-                "type": "string",
-                "description": "The property name in the usage event data payload."
-              }
-            },
-            "required": [
-              "event_property_name",
-              "look_up_value_in",
-              "source"
-            ]
-          },
-          "description": "Capture custom properties to the usage event data payload for pricing dimensions or reporting. Attributes add dimensions like provider, department or project that your billing model needs for tiered or per-dimension pricing."
+        "api_token": {
+          "type": "string",
+          "description": "Bearer token for authenticating with the ingest endpoint.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
+          "default": 10000
+        },
+        "keepalive": {
+          "type": "number",
+          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
+          "default": 60000
         },
         "subject": {
           "type": "object",
@@ -80,6 +40,11 @@
           },
           "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
         },
+        "meter_api_requests": {
+          "type": "boolean",
+          "description": "Emit a usage event for each API Gateway request.",
+          "default": true
+        },
         "meter_ai_token_usage": {
           "type": "boolean",
           "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
@@ -94,11 +59,6 @@
           "type": "boolean",
           "description": "Verify the TLS certificate presented by the ingest endpoint.",
           "default": true
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
-          "default": 60000
         },
         "queue": {
           "type": "object",
@@ -158,26 +118,66 @@
             }
           }
         },
-        "meter_api_requests": {
-          "type": "boolean",
-          "description": "Emit a usage event for each API Gateway request.",
-          "default": true
-        },
-        "api_token": {
-          "type": "string",
-          "description": "Bearer token for authenticating with the ingest endpoint.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
-          "default": 10000
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "header",
+                  "query"
+                ],
+                "description": "Where to find this attribute in the request."
+              },
+              "look_up_value_in": {
+                "type": "string",
+                "description": "The header name or query parameter that contains the value, e.g 'x-department-id'"
+              },
+              "event_property_name": {
+                "type": "string",
+                "description": "The property name in the usage event data payload."
+              }
+            },
+            "required": [
+              "event_property_name",
+              "look_up_value_in",
+              "source"
+            ]
+          },
+          "description": "Capture custom properties to the usage event data payload for pricing dimensions or reporting. Attributes add dimensions like provider, department or project that your billing model needs for tiered or per-dimension pricing."
         }
       },
       "required": [
         "api_token",
         "ingest_endpoint"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

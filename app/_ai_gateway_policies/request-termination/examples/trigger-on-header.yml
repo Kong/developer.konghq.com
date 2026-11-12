@@ -1,0 +1,28 @@
+name: trigger-on-header
+display_name: Trigger policy on header
+type: request-termination
+
+title: 'Trigger policy on header'
+
+description: 'Block requests if a specific header exists in the request.'
+
+extended_description: |
+  Block requests if a specific header exists in the request.
+  You can also combine `config.trigger` with the [`config.echo` debugging parameter](/ai-gateway/policies/request-termination/examples/echo-response-to-client/) to avoid disturbing real traffic while debugging.
+
+weight: 900
+
+config:
+  status_code: 401
+  message: Error - Authentication required
+  trigger: ${trigger}
+
+variables:
+  trigger:
+    value: $X_MY_HEADER
+    description: The name of the header that triggers the block.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

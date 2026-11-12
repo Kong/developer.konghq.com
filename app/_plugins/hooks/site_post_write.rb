@@ -9,7 +9,8 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
     major_versions.each do |version|
       version_metadata[version['release']] = {
         eol: version['eol'],
-        label: version['label']
+        label: version['label'],
+        lts: version['lts'] == true
       }
     end
 
@@ -41,6 +42,7 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
         endOfLifeDate: eol_date,
         endOfsunset_date: sunset_date,
         label: metadata[:label],
+        isLTS: metadata[:lts],
         changelogUrl: changelog_url
       }
     end

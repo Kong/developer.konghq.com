@@ -19,6 +19,7 @@ This how-to also requires {{ routeCount }} pre-configured route{% if routeCount 
 name: {{ route.name }}
 matches: [{{ route | json_prettify }}]
 skip_host: true
+section: prereqs
 {% endhttproute %}
 {%- endfor -%}
 {%- endif -%}

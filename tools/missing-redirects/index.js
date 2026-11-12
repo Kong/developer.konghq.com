@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import minimist from "minimist";
 
 const argv = minimist(process.argv.slice(2));
@@ -30,7 +30,7 @@ const collectionPermalinks = (function () {
   const configFile = "../../jekyll.yml";
   let permalinks = {};
   if (fs.existsSync(configFile)) {
-    const config = yaml.load(fs.readFileSync(configFile, "utf8"));
+    const config = load(fs.readFileSync(configFile, "utf8"));
     if (config.defaults) {
       for (const def of config.defaults) {
         if (def.scope?.path?.startsWith("_") && def.values?.permalink) {

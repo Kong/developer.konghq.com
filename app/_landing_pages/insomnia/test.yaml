@@ -30,15 +30,16 @@ rows:
                     - Test complex workflows by chaining the responses from requests together
                     - Execute unlimited test runs simultaneously 
                     - Import your tests from Postman
-                    - Use the full range of [Chai `assert` assertions](https://www.chaijs.com/api/assert/) in both post-request and unit test scripts  
+                    - Use the full range of [Chai `assert` assertions](https://www.chaijs.com/api/assert/) in both post-request and legacy unit test scripts  
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    {:.info}
-                      > Unit tests are planned for deprecation in a future release.
-                      > [Migrate to scripts](/insomnia/scripts/)
+                    {:.warning}
+                    > {% new_in 13.3 %} Legacy unit tests are hidden by default and are planned for deprecation in a future release. An API Collection that already contains legacy unit tests still shows its **Tests** tab automatically. To show the **Tests** tab on every API Collection, go to **Preferences** > **General** > **Application** and enable **Show legacy unit tests**.
+                    >
+                    > For new and existing work alike, the recommended way to test in Insomnia is [pre-request and after-response scripts](/insomnia/scripts/).
       - blocks:
           - type: image
             config:

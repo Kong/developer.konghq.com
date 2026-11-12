@@ -1,0 +1,6 @@
+display_name: Duplicate GPT-4o
+name: duplicate-gpt-4o
+type: model
+policies:
+  - pii-sanitizer
+  - platform-rate-limit

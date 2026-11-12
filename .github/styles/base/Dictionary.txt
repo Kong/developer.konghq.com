@@ -11,6 +11,7 @@ ai_rate_limiting_policy
 agentic
 Agno
 Agno's
+akamai
 AIGateway
 Alertmanager
 Alibaba
@@ -34,6 +35,7 @@ apiVersion
 appendPolicies
 AppRole
 appsentinels
+Arize
 arg
 args
 ARN
@@ -77,6 +79,8 @@ backporting
 backports
 backreference
 backreferences
+baseten
+Bingbot
 wget
 meshtrust
 sectionName
@@ -110,6 +114,7 @@ camelCase
 CDNs
 ce
 cef
+cel
 cerebras
 certificate_admin
 charset
@@ -191,6 +196,7 @@ db_import
 db-ip
 dbless
 dcr
+debounce
 DECK_
 deck_files
 declaratively
@@ -209,6 +215,9 @@ dereferenced
 dereferencing
 deserialization
 deserialize
+deserializer
+deserializing
+deserializes
 deserialized
 destructuring
 dev
@@ -304,6 +313,7 @@ globbing
 gluu
 gojira
 Golang
+Googlebot
 googleSearch
 goroutine
 goroutines
@@ -409,6 +419,7 @@ JMeter
 journald
 jq
 jQuery
+js
 json
 JSONObject
 JSONObjects
@@ -457,6 +468,7 @@ KongPlugin
 konnect
 KPI
 KPIs
+KRaft
 kscheme
 ksearch
 kubeconfig
@@ -501,6 +513,7 @@ M_Link
 M_Resource
 maglev
 major_version
+malforming
 managedfields
 matchers
 max_args
@@ -534,6 +547,7 @@ minio
 misconfiguration
 misconfigurations
 misconfigured
+misrouted
 mockbin
 modelarmor
 moesif
@@ -574,7 +588,10 @@ nodeport
 nullable
 Nullsoft
 nunjucks
-Noname
+noname
+nonamesecurity
+nonce
+nonces
 nopp
 nopped
 nopping
@@ -659,6 +676,7 @@ proxy_listen
 proxy_ssl
 proxying
 public_key
+pushable
 Qdrant
 qubit
 querystring
@@ -679,6 +697,7 @@ reconverge
 redis
 Redpanda
 reentrant
+reference_with_schema
 referenceable
 ReferenceGrant
 regctl
@@ -696,6 +715,8 @@ reportingComponent
 reportingInstance
 requery
 requeue
+requeued
+requeues
 requeuing
 request_counts
 requestable
@@ -705,6 +726,7 @@ reranked
 reranking
 resourceVersion
 response_format
+RESTful
 resty
 resync
 Resync
@@ -742,6 +764,7 @@ Scriptable
 SDKs
 search_by_username
 secret_id
+semver
 sequenceDiagram
 serializer
 serverless
@@ -752,6 +775,7 @@ service_name
 shm
 show_in_api
 Sigstore
+sign_in
 skyflow
 slas
 Slowloris
@@ -811,6 +835,8 @@ supports_konnect
 svg
 svgs
 swaggerhub
+switchyard
+syntaxes
 syscall
 syslog
 systemd
@@ -854,8 +880,11 @@ tooltip
 tproxy
 traceable
 Traefik
+transcode
+transcodes
 transcoded
 transcoder
+transcoding
 transpile
 transpiled
 trendai
@@ -898,6 +927,7 @@ unicode
 unix
 unlinking
 unmanaged
+unmarshal
 unmarshalled
 unnamespaced
 unnormalized
@@ -1057,3 +1087,33 @@ server_version_num
 unredact
 userinfo
 xyz
+consumer_groups
+workspaceable
+bodyless
+ngx_brotli
+decompressor
+lua_ssl_trusted_certificate
+customEnv
+pre
+mkdir
+volumeMounts
+inlining
+overridable
+maxdbs
+init_worker_by_lua
+sasl
+jwt_secret
+Strigo
+emerg
+subrequest
+walkthroughs
+unsynchronized
+musl
+buildx
+containerd
+rootfs
+semver
+unmarshall
+malforming
+Dify
+tokenizer

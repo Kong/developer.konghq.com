@@ -46,6 +46,41 @@ tldr:
 
 prereqs:
   skip_product: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the routes, services, gateways, and gateway configurations from both tenant namespaces, then the cluster-scoped resources:
+
+        ```bash
+        kubectl delete -n kong-gw-public --ignore-not-found \
+          httproute/echo \
+          service/echo \
+          gateway/gw-public \
+          gatewayconfiguration/gw-public
+
+        kubectl delete -n kong-gw-private --ignore-not-found \
+          httproute/private-only \
+          service/echo \
+          gateway/gw-private \
+          gatewayconfiguration/gw-private
+
+        kubectl delete --ignore-not-found \
+          gatewayclass/gw-public \
+          gatewayclass/gw-private \
+          konglicense/kong-license
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong-gw-private kong-gw-public kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Deploy test services
@@ -56,6 +91,7 @@ prereqs:
    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-public
    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-private
    ```
+   {: data-test-step="block" }
 
 1. Wait for both deployments to be ready:
 
@@ -63,6 +99,7 @@ prereqs:
    kubectl rollout status deployment/echo -n kong-gw-public --timeout=60s
    kubectl rollout status deployment/echo -n kong-gw-private --timeout=60s
    ```
+   {: data-test-step="block" }
 
 ## Create an HTTPRoute for the public gateway
 
@@ -90,6 +127,7 @@ spec:
       port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create two HTTPRoutes for the private gateway
 
@@ -136,8 +174,18 @@ spec:
       port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
+
+Wait for the routes to be programmed. Route conditions are nested in `status.parents`, so the wait uses a jsonpath instead of a condition:
+
+```bash
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo -n kong-gw-public --timeout=300s
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo -n kong-gw-private --timeout=300s
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/private-only -n kong-gw-private --timeout=300s
+```
+{: data-test-step="block" }
 
 1. Get the external IP address for each gateway:
 
@@ -145,17 +193,22 @@ spec:
    export PUBLIC_GW_IP=$(kubectl get gateway gw-public -n kong-gw-public \
      -o jsonpath='{.status.addresses[0].value}')
    echo $PUBLIC_GW_IP
+   ```
+   {: data-test-step="block" }
+
+   ```bash
    export PRIVATE_GW_IP=$(kubectl get gateway gw-private -n kong-gw-private \
      -o jsonpath='{.status.addresses[0].value}')
    echo $PRIVATE_GW_IP
    ```
+   {: data-test-step="block" }
 
 {% capture check_1 %}
 {% validation request-check %}
 url: /echo
 status_code: 200
-on_prem_url: $PUBLIC_GW_IP
-konnect_url: $PUBLIC_GW_IP
+on_prem_url: http://$PUBLIC_GW_IP
+konnect_url: http://$PUBLIC_GW_IP
 {% endvalidation %}
 {% endcapture %}
 
@@ -163,8 +216,8 @@ konnect_url: $PUBLIC_GW_IP
 {% validation request-check %}
 url: /echo
 status_code: 200
-on_prem_url: $PRIVATE_GW_IP:8080
-konnect_url: $PRIVATE_GW_IP:8080
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
 {% endvalidation %}
 {% endcapture %}
 
@@ -172,17 +225,19 @@ konnect_url: $PRIVATE_GW_IP:8080
 {% validation request-check %}
 url: /private
 status_code: 200
-on_prem_url: $PRIVATE_GW_IP:8080
-konnect_url: $PRIVATE_GW_IP:8080
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
 {% endvalidation %}
 {% endcapture %}
 
 {% capture check_4 %}
-{% validation request-check %}
-url: /private
-status_code: 200
-on_prem_url: $PUBLIC_GW_IP
-konnect_url: $PUBLIC_GW_IP
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w '%{http_code}' "$PUBLIC_GW_IP/private"
+expected:
+  message: "404"
+  return_code: 0
+render_output: false
 {% endvalidation %}
 {% endcapture %}
 
@@ -196,4 +251,4 @@ konnect_url: $PUBLIC_GW_IP
    {{check_3 | indent}}
    {{check_4 | indent}}
 
-The public gateway returns 404 because its in-memory {{ site.kic_product_name_short }} only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public {{ site.kic_product_name_short }} never processes it and never programs it into the public data plane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public` — and vice versa. This is namespace isolation working as intended.
+The public gateway returns 404 because its in-memory {{ site.kic_product_name_short }} only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public {{ site.kic_product_name_short }} never processes it and never programs it into the public data plane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public`, and vice versa. This is namespace isolation working as intended.

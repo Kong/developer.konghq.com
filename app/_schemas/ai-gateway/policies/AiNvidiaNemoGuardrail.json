@@ -22,22 +22,14 @@
     "config": {
       "type": "object",
       "properties": {
-        "text_source": {
-          "type": "string",
-          "enum": [
-            "concatenate_all_content",
-            "concatenate_user_content"
-          ],
-          "description": "Select where to pick the 'text' for the guardrail service request.",
-          "default": "concatenate_all_content"
-        },
-        "response_failure_message": {
-          "type": "string",
-          "description": "The message to return when a failure occurs on the response phase."
-        },
         "auth": {
           "type": "object",
           "properties": {
+            "prefix": {
+              "type": "string",
+              "description": "Prefix prepended to auth.api_key when building the header value. NeMo consumes the default X-Model-Authorization header value verbatim, so no prefix is applied by default.",
+              "default": ""
+            },
             "api_key": {
               "type": "string",
               "description": "API key sent to NeMo for LLM authentication.",
@@ -48,62 +40,43 @@
               "type": "string",
               "description": "Header name used to forward the API key.",
               "default": "X-Model-Authorization"
-            },
-            "prefix": {
-              "type": "string",
-              "description": "Prefix prepended to auth.api_key when building the header value.",
-              "default": "Bearer "
             }
           },
           "required": [
             "api_key"
           ]
         },
-        "guardrails": {
-          "type": "object",
-          "properties": {
-            "config": {
-              "type": "object",
-              "additionalProperties": true,
-              "description": "Inline guardrail configuration, forwarded to NeMo as-is under guardrails.config (see https://docs.nvidia.com/nemo/guardrails/configure-guardrails/configuration-reference).",
-              "nullable": true,
-              "x-speakeasy-type-override": "any"
-            },
-            "config_id": {
-              "type": "string",
-              "description": "Name of a single stored guardrail configuration."
-            },
-            "config_ids": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Stored configurations to combine, in order."
-            }
-          }
-        },
         "stop_on_error": {
           "type": "boolean",
           "description": "Stop processing if an error occurs.",
           "default": true
         },
-        "response_buffer_size": {
-          "type": "number",
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
-          "default": 100
+        "allow_masking": {
+          "type": "boolean",
+          "description": "Allow masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
+          "default": false
+        },
+        "text_source": {
+          "type": "string",
+          "enum": [
+            "concatenate_all_content",
+            "concatenate_user_content"
+          ],
+          "description": "Select where to pick the 'text' for the guardrail service request.",
+          "default": "concatenate_all_content"
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "Whether to verify the SSL certificate of the guardrail service endpoint.",
+          "default": true
         },
         "model": {
           "type": "string",
           "description": "Model name sent in the request body."
         },
-        "request_failure_message": {
+        "response_failure_message": {
           "type": "string",
-          "description": "The message to return when a failure occurs on the request phase."
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Connection timeout with the guardrail service.",
-          "default": 10000
+          "description": "The message to return when a failure occurs on the response phase."
         },
         "proxy_config": {
           "type": "object",
@@ -153,15 +126,36 @@
             }
           }
         },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "Whether to verify the SSL certificate of the guardrail service endpoint.",
-          "default": true
+        "nemo_endpoint": {
+          "type": "string",
+          "description": "Full URL of the NeMo Guardrails checks endpoint, e.g. http://nemo-guardrails:7331/v1/guardrail/checks."
         },
-        "log_blocked_content": {
-          "type": "boolean",
-          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
-          "default": false
+        "request_failure_message": {
+          "type": "string",
+          "description": "The message to return when a failure occurs on the request phase."
+        },
+        "guardrails": {
+          "type": "object",
+          "properties": {
+            "config_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Stored configurations to combine, in order."
+            },
+            "config": {
+              "type": "object",
+              "additionalProperties": true,
+              "description": "Inline guardrail configuration, forwarded to NeMo as-is under guardrails.config (see https://docs.nvidia.com/nemo/guardrails/configure-guardrails/configuration-reference).",
+              "nullable": true,
+              "x-speakeasy-type-override": "any"
+            },
+            "config_id": {
+              "type": "string",
+              "description": "Name of a single stored guardrail configuration."
+            }
+          }
         },
         "guarding_mode": {
           "type": "string",
@@ -173,14 +167,20 @@
           "description": "The guardrail mode to use for the request.",
           "default": "INPUT"
         },
-        "allow_masking": {
+        "log_blocked_content": {
           "type": "boolean",
-          "description": "Allow masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
           "default": false
         },
-        "nemo_endpoint": {
-          "type": "string",
-          "description": "Full URL of the NeMo Guardrails checks endpoint, e.g. http://nemo-guardrails:7331/v1/guardrail/checks."
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the guardrail service.",
+          "default": 10000
+        },
+        "response_buffer_size": {
+          "type": "number",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
+          "default": 100
         }
       },
       "required": [

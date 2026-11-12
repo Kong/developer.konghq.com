@@ -9,13 +9,6 @@ kuma:
         # more details on preparing certificates: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/
         secretName: kong-mesh-apiserver-tls
 
-    apiServer:
-      corsAllowedDomains:
-        # change these values you want to access the control plane API server or Mesh GUI from a custom domain
-        - https://localhost:5682
-        # if you want to access the API server using the HTTP port, add the following line
-        # - http://localhost:5681
-
     defaults:
       # change these values if you want to open the admin access rights of control plane API server to more groups
       adminRoleGroups:
@@ -24,6 +17,9 @@ kuma:
         - kubeadm:cluster-admins
 
     envVars:
+      # restrict which origins may call the control plane API server or Mesh GUI
+      # comma-separated; add http://localhost:5681 if HTTP access is enabled
+      KUMA_API_SERVER_CORS_ALLOWED_DOMAINS: https://localhost:5682
       # if you want to access the API server using the HTTP port, change the following switch to "true"
       KUMA_API_SERVER_HTTP_ENABLED: "false"
 
