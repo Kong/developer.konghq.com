@@ -25,6 +25,7 @@ groups:
           - path: /kongctl/docker/
           - path: /kongctl/config/
           - path: /kongctl/authentication/
+          - path: /kongctl/telemetry/
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
