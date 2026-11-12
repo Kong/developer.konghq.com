@@ -1,7 +1,7 @@
 ---
 title: Reconnect {{site.konnect_short_name}} data planes after a Kubernetes cluster loss
 short_title: Reconnect {{site.konnect_short_name}} data planes
-description: "Save the Helm release and client certificate of a Kong Gateway data plane connected to Konnect, then reconnect a replacement data plane to the same control plane after the cluster is lost."
+description: "Save the Helm release and client certificate of a {{site.base_gateway}} data plane connected to Konnect, then reconnect a replacement data plane to the same control plane after the cluster is lost."
 content_type: how_to
 
 permalink: /how-to/reconnect-konnect-data-planes-after-cluster-loss/

@@ -1,6 +1,6 @@
 ---
 title: "Prepare for disaster recovery on Kubernetes"
-description: "Define recovery objectives, protect configuration and secrets, and prepare capacity and traffic failover for Kong Gateway on Kubernetes."
+description: "Define recovery objectives, protect configuration and secrets, and prepare capacity and traffic failover for {{site.base_gateway}} on Kubernetes."
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -23,7 +23,7 @@ related_resources:
     url: /gateway/disaster-recovery/kubernetes/
   - text: Test disaster recovery
     url: /gateway/disaster-recovery/kubernetes/test/
-  - text: Back up and restore Kong Gateway
+  - text: Back up and restore {{site.base_gateway}}
     url: /gateway/upgrade/backup-and-restore/
 ---
 

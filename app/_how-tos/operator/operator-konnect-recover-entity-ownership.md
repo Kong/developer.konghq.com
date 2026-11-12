@@ -1,7 +1,7 @@
 ---
 title: Recover {{site.operator_product_name}} ownership of {{site.konnect_short_name}} entities after a cluster loss
 short_title: Recover entity ownership after a cluster loss
-description: "Reconnect a new Kong Operator installation to Konnect Gateway Services and Routes that the operator managed in a lost Kubernetes cluster, without creating duplicates."
+description: "Reconnect a new {{site.operator_product_name}} installation to Konnect Gateway Services and Routes that the operator managed in a lost Kubernetes cluster, without creating duplicates."
 content_type: how_to
 
 permalink: /operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/

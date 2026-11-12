@@ -1,7 +1,7 @@
 ---
 title: Recover a self-managed hybrid {{site.base_gateway}} deployment after a Kubernetes cluster loss
 short_title: Recover a hybrid deployment
-description: "Back up the PostgreSQL database and Helm releases of a self-managed Kong Gateway hybrid deployment, then restore the control plane and data plane in a replacement Kubernetes cluster."
+description: "Back up the PostgreSQL database and Helm releases of a self-managed {{site.base_gateway}} hybrid deployment, then restore the control plane and data plane in a replacement Kubernetes cluster."
 content_type: how_to
 
 permalink: /how-to/recover-hybrid-deployment-after-cluster-loss/

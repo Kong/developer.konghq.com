@@ -1,6 +1,6 @@
 ---
 title: "Disaster recovery for Gateways managed by {{site.operator_product_name}}"
-description: "Learn what to save to recover self-hosted Gateways managed by Kong Operator after a Kubernetes cluster loss, the order to restore them in, and how to adapt the recovery to your deployment."
+description: "Learn what to save to recover self-hosted Gateways managed by {{site.operator_product_name}} after a Kubernetes cluster loss, the order to restore them in, and how to adapt the recovery to your deployment."
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -24,7 +24,7 @@ related_resources:
     url: /gateway/disaster-recovery/kubernetes/prepare/
   - text: Test disaster recovery
     url: /gateway/disaster-recovery/kubernetes/test/
-  - text: Kong Operator architecture
+  - text: "{{site.operator_product_name}} architecture"
     url: /operator/reference/architecture/
   - text: Version compatibility
     url: /operator/reference/version-compatibility/

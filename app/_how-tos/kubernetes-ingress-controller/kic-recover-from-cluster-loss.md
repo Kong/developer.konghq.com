@@ -1,7 +1,7 @@
 ---
 title: Recover a {{site.kic_product_name_short}} deployment after a cluster loss
 short_title: Recover from a cluster loss
-description: "Save the Helm release, routing resources, and TLS certificate of a DB-less Kong Ingress Controller deployment, then restore them in a replacement Kubernetes cluster."
+description: "Save the Helm release, routing resources, and TLS certificate of a DB-less {{site.kic_product_name}} deployment, then restore them in a replacement Kubernetes cluster."
 content_type: how_to
 
 permalink: /kubernetes-ingress-controller/recover-from-cluster-loss/

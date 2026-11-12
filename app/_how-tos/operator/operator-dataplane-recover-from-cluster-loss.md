@@ -1,7 +1,7 @@
 ---
 title: Recover a Gateway managed by {{site.operator_product_name}} after a cluster loss
 short_title: Recover from a cluster loss
-description: "Save the Kong Operator Helm release and the Gateway API resources that you wrote, then restore them in a replacement Kubernetes cluster so that the operator recreates the Gateway."
+description: "Save the {{site.operator_product_name}} Helm release and the Gateway API resources that you wrote, then restore them in a replacement Kubernetes cluster so that the operator recreates the Gateway."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/recover-from-cluster-loss/

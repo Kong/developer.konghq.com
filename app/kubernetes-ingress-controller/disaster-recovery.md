@@ -1,6 +1,6 @@
 ---
 title: "Disaster recovery for DB-less deployments managed by {{site.kic_product_name_short}}"
-description: "Learn what to save to recover a DB-less Kong Gateway managed by Kong Ingress Controller after a Kubernetes cluster loss, the order to restore it in, and how to adapt the recovery to your deployment."
+description: "Learn what to save to recover a DB-less {{site.base_gateway}} managed by {{site.kic_product_name}} after a Kubernetes cluster loss, the order to restore it in, and how to adapt the recovery to your deployment."
 content_type: reference
 layout: reference
 breadcrumbs:

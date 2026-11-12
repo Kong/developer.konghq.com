@@ -1,6 +1,6 @@
 ---
 title: "Recover {{site.konnect_short_name}}-managed data planes on Kubernetes"
-description: "Learn what to save to reconnect Kubernetes data planes to a surviving Konnect control plane after a cluster loss, and how to recover Kong Operator ownership of Konnect entities."
+description: "Learn what to save to reconnect Kubernetes data planes to a surviving Konnect control plane after a cluster loss, and how to recover {{site.operator_product_name}} ownership of Konnect entities."
 content_type: reference
 layout: reference
 breadcrumbs:

@@ -1,6 +1,6 @@
 ---
 title: "Recover a self-managed hybrid deployment on Kubernetes"
-description: "Learn what to save to recover a self-managed Kong Gateway hybrid deployment on Kubernetes, how to restore its PostgreSQL database and Keyring, and how to fail back."
+description: "Learn what to save to recover a self-managed {{site.base_gateway}} hybrid deployment on Kubernetes, how to restore its PostgreSQL database and Keyring, and how to fail back."
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -20,7 +20,7 @@ related_resources:
     url: /gateway/disaster-recovery/kubernetes/prepare/
   - text: Test disaster recovery
     url: /gateway/disaster-recovery/kubernetes/test/
-  - text: Back up and restore Kong Gateway
+  - text: Back up and restore {{site.base_gateway}}
     url: /gateway/upgrade/backup-and-restore/
   - text: Keyring recovery
     url: /gateway/keyring/#disaster-recovery
