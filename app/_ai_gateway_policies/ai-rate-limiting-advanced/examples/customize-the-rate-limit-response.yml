@@ -1,5 +1,8 @@
 description: |
   Configure the AI Rate Limiting Advanced policy to return your own message when a client exceeds the limit.
+  
+extended_description: |
+  Configure the AI Rate Limiting Advanced policy to return your own message when a client exceeds the limit.
   The policy also hides the limit and remaining-count headers from responses, so clients can't read your limits.
   Rate-limited responses still include `Retry-After` and reset headers.
 

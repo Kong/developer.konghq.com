@@ -1,4 +1,7 @@
 description: |
+  Configure the AI Routing Provider policy in observation mode.
+
+extended_description: |
   Configure the AI Routing Provider policy in `observe_only` mode.
   The policy asks Switchyard which model it would choose and records the decision, but it doesn't change where requests go.
   Use this to check Switchyard's decisions on real traffic before you let them route requests.

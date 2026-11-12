@@ -1,4 +1,7 @@
 description: |
+  Configure the AI Routing Provider policy for a Switchyard route that calls a model to decide.
+
+extended_description: |
   Configure the AI Routing Provider policy for a Switchyard route that calls a model to decide, such as `llm_classifier`.
   The decision includes a model call, so the default `timeout_ms` of `300` would send most requests to `default_target`.
   Set `timeout_ms` to cover the judge call, and keep it at or below `60000`.

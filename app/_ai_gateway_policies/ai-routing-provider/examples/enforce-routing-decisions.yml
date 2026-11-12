@@ -1,4 +1,7 @@
 description: |
+  Configure the AI Routing Provider policy in enforce mode.
+  
+extended_description: |
   Configure the AI Routing Provider policy in `enforce` mode.
   The policy sends each request to the AI Model for the target that Switchyard selects.
   If Switchyard is slow, unreachable or returns a target you haven't listed, the policy falls back to `default_target`.
