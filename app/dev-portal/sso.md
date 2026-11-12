@@ -82,6 +82,8 @@ Before enabling back-channel logout, keep the following in mind:
 * If your IdP doesn't send a session ID, all of a developer's Dev Portal sessions are ended.
 * Some IdPs send a logout request only when a developer signs themselves out, or only end one session when an admin ends all of a developer's sessions. Verify how your IdP behaves.
 * If the request from your IdP is invalid, the Dev Portal ignores it and doesn't sign anyone out.
+* Encrypted logout tokens aren't supported. Your IdP must send signed, unencrypted logout tokens.
+* The Dev Portal rejects logout tokens that are more than 10 minutes old.
 
 ### Requirements
 
