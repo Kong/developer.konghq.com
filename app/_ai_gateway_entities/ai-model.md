@@ -328,6 +328,12 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Session affinity
+
+Set [`config.balancer.session_affinity`](#schema-aigateway-model-config-balancer-session-affinity) to keep each conversation on the target that served its earlier turns. This preserves provider prompt-cache savings while the configured [algorithm](#algorithms) still places new conversations and handles failover. Session affinity works with every algorithm except `consistent-hashing`, and doesn't require clients to send a session header.
+
+For a multi-node data plane, store affinity state in a Redis Datastore so it holds regardless of which node receives a request. For use cases, storage guidance, and limitations, see [Session affinity](/ai-gateway/load-balancing/#session-affinity).
+
 ### Retry and fallback
 
 To add redundancy and failover, the load balancer supports configurable retries, timeouts, and failover to different targets when one is unavailable. Fallback works across targets with any supported format, so you can mix providers freely (for example, OpenAI and Mistral). For configuration details, see [Retry and fallback configuration](/ai-gateway/load-balancing/#retry-and-fallback).

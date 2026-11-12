@@ -119,6 +119,133 @@ rows:
 
 For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
 
+### Session affinity
+
+Session affinity keeps a multi-turn conversation on the target that served its earlier turns.
+The configured algorithm places the first turn of a conversation, and session affinity sends later turns to that same target as long as it can take them.
+Session affinity requires {{site.ai_gateway}} 2.4 or later.
+
+Configure session affinity in [`config.balancer.session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) on the AI Model.
+It works with every algorithm except `consistent-hashing`.
+
+#### Why use session affinity
+
+LLM providers cache the prompt prefix on the target that served it.
+In a long conversation, such as one with a coding agent, each turn includes the full history again.
+When a turn goes to a different target than the earlier turns, the provider reprocesses the whole history at full cost and latency instead of reusing its cached prefix.
+
+Before session affinity, the only way to keep a conversation on one target was `consistent-hashing`.
+That forced a choice between prompt-cache savings and your preferred strategy (round-robin, latency, cost, or priority).
+It also depended on clients sending a stable header on every request, which most clients don't do.
+
+Use session affinity when you want to balance new conversations by cost, latency, or priority, but keep each running conversation on one target.
+
+Session affinity is a performance optimization, not a correctness feature.
+If a turn goes to a different target, the conversation still works and you only lose the provider's cached prefix.
+
+#### How a conversation is bound to a target
+
+Clients don't need to send a session header or key.
+{{site.ai_gateway}} identifies a conversation from what the client already sends:
+
+1. If the request includes the provider's identifier for the previous response, {{site.ai_gateway}} uses it.
+   This applies to `previous_response_id` in OpenAI Responses requests and the previous message ID in Anthropic Messages requests.
+1. Otherwise, {{site.ai_gateway}} uses a fingerprint of the conversation history up to the latest assistant message.
+   This applies to Chat Completions and compatible providers, which don't return a stable response ID.
+
+The binding works as follows:
+
+1. The configured algorithm selects a target for the first turn.
+1. After a successful response, {{site.ai_gateway}} records which target served the conversation.
+1. For each follow-up turn, {{site.ai_gateway}} sends the request to the recorded target if that target can take it.
+
+Only a successful response updates the recorded target.
+A failed final attempt doesn't change which target a conversation is bound to.
+
+#### Failover and re-binding
+
+If the recorded target can't take a follow-up request, the configured algorithm selects a new target.
+A target can't take a request when it's unhealthy, over its rate limit, or no longer part of the AI Model.
+After a successful response, {{site.ai_gateway}} binds the conversation to the new target.
+Later turns go to the new target, and the client doesn't see an error.
+
+Retries and failover follow the [retry and fallback](#retry-and-fallback) settings.
+When a retry or failover ends on a different target, that target becomes the conversation's new target after a successful response.
+
+#### Relationship to consistent hashing
+
+`consistent-hashing` is an algorithm that routes by a hash of a header value you control, such as a user ID.
+Session affinity is a layer on top of an algorithm that routes by conversation, so it doesn't need a header.
+You can't combine the two.
+
+We recommend session affinity when your goal is prompt-cache reuse within a conversation, because it works with any algorithm and without client changes.
+Keep `consistent-hashing` when you need requests routed by an identity you choose, such as a user ID.
+
+#### Storage and requirements
+
+{{site.ai_gateway}} stores which target served each conversation.
+Set `storage.type` based on how your data plane is deployed:
+
+{% table %}
+columns:
+  - title: Storage
+    key: storage
+  - title: Choose it when
+    key: when
+  - title: Trade-offs
+    key: tradeoffs
+rows:
+  - storage: "`local`"
+    when: |
+      You run a single data plane node, or you are evaluating the feature.
+    tradeoffs: |
+      The state is held in the memory of each node and isn't shared.
+      If a follow-up turn is sent to a different node, that node doesn't have a record of the conversation, and the configured algorithm selects a target.
+      Restarting a node clears its state.
+  - storage: "`redis`"
+    when: |
+      You run more than one data plane node.
+    tradeoffs: |
+      The state is shared through a Datastore of type `redis-ee`, so affinity holds across all nodes.
+      You need to provision and monitor Redis.
+{% endtable %}
+
+We recommend `redis` for any multi-node data plane because `local` storage only preserves affinity when consecutive turns reach the same node.
+
+Use `ttl` to control how long {{site.ai_gateway}} remembers a conversation's target.
+Memory use grows with the number of active conversations and the TTL.
+{{site.ai_gateway}} stores a small record per turn, not the conversation history.
+
+#### Limitations
+
+* **Context compaction can break the link.** Clients such as coding agents sometimes compact or summarize the history.
+  When a request includes a provider response ID, affinity continues to work after compaction.
+  When {{site.ai_gateway}} relies on the history fingerprint alone, the compacted history no longer matches, and the configured algorithm selects the target.
+* **Fallback to the configured algorithm.** If the state store is unavailable, or a conversation's entry expired or was evicted, the configured algorithm selects the target without returning an error.
+  The cost is a provider prompt-cache miss.
+* **Identical conversations.** {{site.ai_gateway}} identifies conversations by their content, so two clients that send identical message histories can be sent to the same target.
+* **Single Datastore scope.** Affinity isn't shared across gateways.
+  State is shared only among the data plane nodes that use the same Datastore.
+
+<!-- TODO (observability): AI-186 lists affinity outcome (hit, miss, rebound), identity source, and provider cached-token counts per session in Konnect observability. Add the metric and span attribute names once engineering confirms them. -->
+
+#### Configure session affinity
+
+The following AI Model `config.balancer` fragment enables session affinity on the `lowest-latency` algorithm and shares state through Redis:
+
+```yaml
+config:
+  balancer:
+    algorithm: lowest-latency
+    session_affinity:
+      enabled: true
+      ttl: 21600
+      storage:
+        type: redis
+        datastore:
+          name: shared-redis
+```
+
 ### Request routing rules
 
 Routing rules allow clients to send an alias instead of the actual model name in the request. This decouples the external model identifier from the internal provider model, enabling flexible routing without changing client code.
@@ -222,6 +349,10 @@ rows:
     action: "Use [`hash_on_header`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-hash-on-header)"
     description: |
       Ensure that the same user consistently routes to the same target model, enabling sticky sessions and reliable fallback behavior.
+  - scenario: "Keep a conversation on one target without giving up your balancing algorithm"
+    action: "Enable [`session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity)"
+    description: |
+      Route follow-up turns to the target that served earlier turns to benefit from provider prompt caching, regardless of the algorithm that places new conversations. See [Session affinity](#session-affinity).
   - scenario: "Models have different costs"
     action: "Set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`"
     description: |
