@@ -109,11 +109,11 @@ The following describes the default configuration settings of the `MeshTCPRoute`
 To route TCP traffic for a MeshGateway, you need to target the
 MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
-### Interactions with `MeshHTTPRoute`
+### Interactions with MeshHTTPRoute
 
 [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute) takes priority over `MeshTCPRoute` when both are defined for the same service, and the matching `MeshTCPRoute` is ignored.
 
-### Interactions with `TrafficRoute`
+### Interactions with TrafficRoute
 
 `MeshTCPRoute` takes priority over [`TrafficRoute`](/mesh/v2/policies/meshhttproute/) when a proxy is targeted by both policies.
 

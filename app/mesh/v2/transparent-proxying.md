@@ -59,7 +59,7 @@ If you choose to not use transparent proxying, or if you're running on a platfor
 
 Without manipulating `iptables` to redirect traffic, you will need to explicitly tell `kuma-dp` where to listen to capture it. This can require changes to your application code.
 
-The example below specifies that `kuma-dp` will listen on the address `10.119.249.39:15000`. 
+The following example specifies that `kuma-dp` will listen on the address `10.119.249.39:15000`. 
 This in turn creates an Envoy listener for the port. 
 When consuming a service over this address, it will cause traffic to redirect to `127.0.0.1:5000` where our app is running:
 

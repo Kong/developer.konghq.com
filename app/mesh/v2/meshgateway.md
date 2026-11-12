@@ -159,7 +159,7 @@ conf:
 {% endnavtab %}
 {% endnavtabs %}
 
-In the above example, the gateway proxy listens for HTTP protocol connections on TCP port 8080 but restricts the `Host` header to `foo.example.com`.
+In this example, the gateway proxy listens for HTTP protocol connections on TCP port 8080 but restricts the `Host` header to `foo.example.com`.
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -215,7 +215,7 @@ conf:
 {% endnavtab %}
 {% endnavtabs %}
 
-The example above shows a `MeshGateway` resource with two HTTP listeners on the same port.
+This example shows a `MeshGateway` resource with two HTTP listeners on the same port.
 In this case, the gateway proxy will be configured to listen on port 8080, and accept HTTP requests for both hostnames.
 
 Because each listener entry has its own {{site.mesh_product_name}} tags, policies can still be targeted to a specific listener.
@@ -399,7 +399,7 @@ conf:
 #### Cross-mesh hostname
 
 If the listener includes a `hostname` value, the cross-mesh listener will be reachable from all meshes at this `hostname` and `port`.
-In the example above, the URL is `http://default.mesh:8080`.
+In this example, the URL is `http://default.mesh:8080`.
 
 Otherwise, it will be reachable at the host: `internal.<gateway-name>.<mesh-of-gateway-name>.mesh`.
 

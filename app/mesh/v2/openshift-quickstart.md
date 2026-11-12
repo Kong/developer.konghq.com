@@ -77,7 +77,7 @@ In this section, you will install a ROSA cluster called `kong-mesh-2` in the `us
     ```
     Creating an admin user gives you quick access to the cluster for this quickstart. We recommend using a formal identity provider that you grant admin privileges to in a production environment.
 
-1. Validate you can log in to the cluster using the credentials provided by the ROSA CLI `stout`. Once you successfully login, you can proceed to the next section.
+1. Validate you can log in to the cluster using the credentials provided by the ROSA CLI `stout`. After you log in, you can install {{site.mesh_product_name}}.
 
 ## Install {{site.mesh_product_name}} in standalone mode
 

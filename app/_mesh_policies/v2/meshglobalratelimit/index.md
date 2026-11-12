@@ -359,7 +359,7 @@ When the local rate limit is reached, the data plane proxy stops sending request
 
 This could lower network traffic between the data plane proxy and the ratelimit service. Also, it can protect your ratelimit service from a DDoS "attack" by your services. 
 Moreover, this could be used to more evenly distribute traffic to the ratelimit service and mitigate the problem of depleting whole limit at the beginning of the counter window.
-This is described in the previous section.
+For more information, see [Rate limiting algorithm](#rate-limiting-algorithm).
 
 {% navtabs "meshglobalratelimit-example" %}
 {% navtab "Kubernetes" %}

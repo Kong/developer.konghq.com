@@ -36,7 +36,7 @@ Once you've specified a CA backend, {{site.mesh_product_name}} automatically gen
 The certificates that {{site.mesh_product_name}} generates have a SAN set to `spiffe://<mesh name>/<service name>`. When {{site.mesh_product_name}} enforces policies that require an identity, like [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission), it will extract the SAN from the client certificate and use it to match the service identity.
 
 {:.warning}
-> By default mTLS **is not** enabled. You need to activate it explicitly as described below. When you enable mTLS, all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) you configure a policy to explicitly allow traffic across proxies.
+> By default mTLS **is not** enabled. You need to activate it explicitly, as described in the following sections. When you enable mTLS, all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) you configure a policy to explicitly allow traffic across proxies.
 > 
 > Always make sure to include  [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) in your configuration before enabling mTLS in a mesh to avoid unexpected traffic interruptions caused by a lack of authorization between proxies.
 

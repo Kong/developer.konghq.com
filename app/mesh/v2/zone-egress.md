@@ -32,7 +32,7 @@ When a zone egress is present:
 * All requests that are sent from local data plane proxies to external Services available within the zone will be directed through the local zone egress instance.
 
 {:.info}
-> The `ZoneEgress` proxy currently is an optional component.
+> The `ZoneEgress` proxy is an optional component.
 > In the future it will become required for using external services.
 
 The `ZoneEgress` entity includes the following parameters:

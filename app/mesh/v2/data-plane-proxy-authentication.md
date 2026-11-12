@@ -138,7 +138,7 @@ kumactl generate dataplane-token \
 
 When a token includes a workload value, the data plane proxy must have a matching `kuma.io/workload` label. This label can be set either:
 
-* In the token itself (as shown above)
+* In the token itself, with the `workload` value when you generate the token
 * Directly on the data plane proxy resource
 
 If a data plane proxy connects with a workload token, it must have the `kuma.io/workload` label with a value matching the token. Connection attempts without the matching label are rejected.

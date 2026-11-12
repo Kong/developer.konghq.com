@@ -4,6 +4,7 @@ _workspace
 Aadhaar
 acl
 acls
+activeMTLSBackend
 addons
 admin_listen
 admin's
@@ -189,6 +190,7 @@ datagram
 datagrams
 dataplane
 dataplanes
+dataplaneTags
 datastore
 datastores
 db_export

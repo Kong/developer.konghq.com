@@ -166,7 +166,7 @@ rows:
 
 ## Changes that affect every policy
 
-### Removed legacy `targetRef` kinds
+### Removed legacy targetRef kinds
 
 `spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshService`,
 `MeshServiceSubset` and `MeshGateway` are rejected with
@@ -250,7 +250,7 @@ to:
 
 See [Policy targeting](/mesh/policy-targeting/) for how each kind is matched.
 
-### `rules` instead of `from`
+### rules instead of from
 
 Inbound configuration moves from `spec.from`, which matched clients by a `targetRef`, to
 `spec.rules`, which match them by the identity they present. On Universal, the API and
@@ -409,7 +409,7 @@ and still apply. Nothing rejects the `Dataplane`, so the change is silent.
 Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
 protocol only through the tag.
 
-### Removed inbound `tags`
+### Removed inbound tags
 
 `networking.inbound[].tags` no longer exists. The field is reserved in the schema and unknown
 fields are allowed when a `Dataplane` is read, so a `Dataplane` still carrying it applies without
@@ -417,7 +417,7 @@ error and the tags are dropped. Any policy that matched on those tags stops matc
 
 Move the tags to the `Dataplane`'s top-level `labels`.
 
-### Outbounds defined by a `backendRef`
+### Outbounds defined by a backendRef
 
 `networking.outbound[].tags` is removed. An outbound is now defined by a `backendRef` naming a
 `MeshService`, `MeshExternalService` or `MeshMultiZoneService`:
@@ -444,7 +444,7 @@ A `Dataplane` already stored with outbound `tags` keeps being served. The tags a
 no outbound listener is generated, so the workload loses connectivity to that destination with
 nothing reported.
 
-### Label-based `reachableBackends` refs
+### Label-based reachableBackends refs
 
 Each ref in `networking.transparentProxying.reachableBackends.refs[]` now selects by `kind` and
 `labels`. `name` and `namespace` are no longer fields of a ref. A stored ref that still uses `name` resolves to nothing, and the proxy gets no outbounds for it.
@@ -466,14 +466,14 @@ reachableBackends:
         kuma.io/display-name: postgres
 ```
 
-### Removed `networking.advertisedAddress`
+### Removed networking.advertisedAddress
 
 `networking.advertisedAddress` is dropped when the `Dataplane` is read, and other proxies reach
 the workload on `networking.address`. A proxy behind NAT that relied on the advertised address loses its inbound traffic.
 
 Make sure `networking.address` is reachable from every other proxy that calls the workload.
 
-### Removed `MeshService` `dataplaneTags` selector
+### Removed MeshService dataplaneTags selector
 
 On a `MeshService` you manage manually, `spec.selector.dataplaneTags` is removed. A `MeshService` that still carries only `dataplaneTags` is read back with an empty selector.
 It matches no proxies and reports `Unavailable`.
@@ -483,7 +483,7 @@ supported selectors.
 
 ## Changes that affect MeshHTTPRoute and MeshTCPRoute
 
-### Removed MeshServiceSubset `backendRef` kind
+### Removed MeshServiceSubset backendRef kind
 
 `backendRefs[]` accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`, and
 `tags` is gone from the `backendRef` schema entirely. On `MeshHTTPRoute` this covers the
@@ -547,7 +547,7 @@ publish the future SPIFFE IDs with a non-issuing `MeshIdentity`, rewrite this po
 `MeshTLS` for those IDs, deploy mesh-scoped egress if you use `MeshExternalService`, then canary
 and expand the issuing identity and verify every proxy before upgrading.
 
-### Rewrite `from` as `rules`, and `action` as a list
+### Rewrite from as rules, and action as a list
 
 `spec.from` is removed, along with `action` and the client `targetRef` it matched on.
 
@@ -660,7 +660,7 @@ Envoy export to the collector directly and are now removed:
 `runtime.kubernetes.injector.otelPipeEnabled` (`KUMA_RUNTIME_KUBERNETES_INJECTOR_OTEL_PIPE_ENABLED`)
 on the control plane, and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` on the sidecar.
 
-### Move `Mesh.spec.logging` into a policy
+### Move Mesh.spec.logging into a policy
 
 `Mesh.spec.logging`, with its `LoggingBackend` definitions, is removed. A `Mesh` still setting
 it applies successfully and the control plane ignores the field, so mesh-wide access logging stops without an
@@ -674,7 +674,7 @@ Shared changes that apply here:
 - [Labels-only selection](#label-based-references)
 - [The `from` to `rules` move](#rules-instead-of-from)
 
-### Bring `healthyPanicThreshold` over from MeshHealthCheck
+### Bring healthyPanicThreshold over from MeshHealthCheck
 
 The field is removed from `MeshHealthCheck.to[].default` and now lives at
 `MeshCircuitBreaker.to[].default.outlierDetection.healthyPanicThreshold`. Both policies
@@ -720,7 +720,7 @@ Where a cluster is covered by both, `MeshProxyPatch` runs last and now wins the 
 and the policy keeps the rest. Remove patches written before this change that you no longer rely
 on, along with any workaround added because the patch appeared to do nothing.
 
-### No MeshHTTPRoute targets in `to[]`
+### No MeshHTTPRoute targets in to[]
 
 Circuit breaking applies to a whole destination rather than to individual routes, so
 `MeshCircuitBreaker` doesn't accept `kind: MeshHTTPRoute` in
@@ -739,7 +739,7 @@ Shared changes that apply here:
 The `404` for an unmatched request is the change to plan for, and it is covered under
 [Response to unmatched MeshHTTPRoute requests](#response-to-unmatched-meshhttproute-requests).
 
-### Check that every `backendRef` resolves
+### Check that every backendRef resolves
 
 A rule that declares `backendRefs` and resolves none of them used to fall back to the
 destination named in its `to` entry. It now answers `500`. A `backendRef` naming a port the
@@ -770,7 +770,7 @@ Shared changes that apply here:
 - [Naming a destination rather than the mesh](#route-destinations)
 - [The legacy policy removal](#removed-legacy-policy-types)
 
-### Required `backendRefs`
+### Required backendRefs
 
 A rule must declare `backendRefs`. An empty or missing list is rejected with
 `backendRefs: must be defined`. This differs from `MeshHTTPRoute`, where omitting the list
@@ -778,7 +778,7 @@ sends matched requests to the destination in the `to` entry.
 
 `to` needs at least one entry, and a `to` entry accepts at most one rule.
 
-### Unresolved `backendRef` entries
+### Unresolved backendRef entries
 
 A TCP proxy has no status code to answer with, so an unresolved reference is dropped from the
 split rather than answered with an error, and the rule loses that share of its connections.
@@ -888,7 +888,7 @@ a cross-zone failover order is about. Split a policy that configured both: keep 
 `loadBalancer` on the entry targeting the `MeshService`, and move `crossZone` to an entry
 targeting the `MeshMultiZoneService`.
 
-### Move `Mesh.spec.routing.localityAwareLoadBalancing` into a policy
+### Move Mesh.spec.routing.localityAwareLoadBalancing into a policy
 
 That field is removed from the `Mesh` schema. A `Mesh` still setting it applies successfully and
 the control plane ignores the field. Locality awareness is on by default in this policy, so a `Mesh` that had
@@ -923,7 +923,7 @@ A new `Mesh` no longer comes with the default `mesh-retry-all-<mesh>` policy, so
 retry requests until you apply a `MeshRetry`. Existing meshes keep the default policies they
 already have.
 
-### Don't rely on `retriableResponseHeaders`
+### Don't rely on retriableResponseHeaders
 
 `retriableResponseHeaders` is accepted and passed to Envoy, but Envoy only uses these matchers
 with its `retriable-headers` retry condition, which `retryOn` can't set. A policy that relied on
@@ -939,7 +939,7 @@ Shared changes that apply here:
 - [The `from` to `rules` move](#rules-instead-of-from)
 - [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
 
-### Move every limit into `rules`
+### Move every limit into rules
 
 `to` and `rules` are now mutually exclusive, and a policy's top-level `targetRef` decides which
 one it may use:
@@ -1000,7 +1000,7 @@ The export path change under
 [OpenTelemetry export through kuma-dp](#opentelemetry-export-through-kuma-dp)
 applies here too.
 
-### Prepare scrapers for `ActiveMTLSBackend`
+### Prepare scrapers for ActiveMTLSBackend
 
 `prometheus.tls.mode: ActiveMTLSBackend` now secures the metrics endpoint with the workload
 identity of the data plane proxy. A remote scraper must present a client certificate with a
@@ -1092,7 +1092,7 @@ write time. The control plane resolves and compiles a module supplied through a 
 when generating agent configuration instead. Check source-loading and combined-module
 compilation errors after applying; resource acceptance alone doesn't prove the policy is active.
 
-### Replace a MeshService or named `targetRef`
+### Replace a MeshService or named targetRef
 
 `spec.targetRef.kind` accepts `Mesh` and `Dataplane` only. `MeshService` is rejected with
 `in body should be one of [Mesh Dataplane]`, in the CRD enum as well as in the control plane, so
@@ -1328,7 +1328,7 @@ Meshes on `mtls.backends[].mode: STRICT`, meshes with mTLS disabled, and meshes 
 have a `MeshTLS` policy are unaffected. A mesh using `MeshIdentity` already resolved to `Strict`
 without a policy.
 
-### Rewrite `from` as `rules`
+### Rewrite from as rules
 
 `spec.from` is removed, and `spec.rules` is the only place for inbound TLS configuration.
 
@@ -1399,7 +1399,7 @@ and the export path change under
 [OpenTelemetry export through kuma-dp](#opentelemetry-export-through-kuma-dp)
 applies here too.
 
-### Move `Mesh.spec.tracing` into a policy
+### Move Mesh.spec.tracing into a policy
 
 `Mesh.spec.tracing` is removed. A `Mesh` still setting it applies successfully and the control plane
 ignores the field, so mesh-wide tracing stops without an error. Express the same backends as a
@@ -1424,7 +1424,7 @@ Shared changes that apply here:
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
 
-### Move `healthyPanicThreshold` to MeshCircuitBreaker
+### Move healthyPanicThreshold to MeshCircuitBreaker
 
 `to[].default.healthyPanicThreshold` is removed. See
 [Bring healthyPanicThreshold over from MeshHealthCheck](#bring-healthypanicthreshold-over-from-meshhealthcheck)
@@ -1439,7 +1439,7 @@ Shared changes that apply here:
 - [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
 - [The legacy policy removal](#removed-legacy-policy-types)
 
-### Move every fault into `rules`
+### Move every fault into rules
 
 `spec.to` is accepted only when `spec.targetRef.kind` is `Mesh`, and then `to[].targetRef`
 accepts `kind: Mesh` and nothing else. With `kind: Dataplane`, defining `to` at all is rejected

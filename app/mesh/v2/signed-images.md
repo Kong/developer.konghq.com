@@ -48,7 +48,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 * The GitHub owner is case-sensitive (`Kong/kong-mesh` vs `kong/kong-mesh`)
 
-### Image signature verification with `kong/kuma-cp`
+### Image signature verification with kong/kuma-cp
 
 The {{site.mesh_product_name}} image signature can be verified using `cosign`:
 

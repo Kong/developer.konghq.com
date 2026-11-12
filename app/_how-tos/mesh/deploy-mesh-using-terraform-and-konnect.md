@@ -429,7 +429,7 @@ The zone uses a system account access token with the `Connector` role on this co
    ```
 
    `kubernetes_manifest` reads the `MeshTrafficPermission` CRD from the cluster when Terraform
-   plans, so it can only be applied once the zone control plane from the previous section has
+   plans, so it can only be applied once the zone control plane from [Deploy the zone control plane](#deploy-the-zone-control-plane) has
    installed the CRDs.
 
 1. Apply the configuration:

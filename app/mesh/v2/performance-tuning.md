@@ -49,7 +49,7 @@ The problem described in [Reachable services](#reachable-services) can also be m
 
 Enabling this flag causes {{site.mesh_product_name}} to compute a dependency graph between services and generate XDS configuration that allows communication only between services permitted to reach each other (those whose [effective](/mesh/v2/policies-introduction/) action is not `deny`).
 
-In the example below, service `b` can only be called by service `a`. There is no reason to compute or distribute configuration for service `b` to any other service, since they are not permitted to communicate with it.
+In the following example, service `b` can only be called by service `a`. There is no reason to compute or distribute configuration for service `b` to any other service, since they are not permitted to communicate with it.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -88,7 +88,7 @@ root@second-test-server:/# curl -v first-test-server:80
 curl: (52) Empty reply from server
 ```
 
-The sections below highlight the most important aspects of this feature. For more information, see the [MADR](https://github.com/kumahq/kuma/blob/master/docs/madr/decisions/031-automatic-rechable-services.md#automatic-reachable-services).
+The following sections highlight the most important aspects of this feature. For more information, see the [MADR](https://github.com/kumahq/kuma/blob/master/docs/madr/decisions/031-automatic-rechable-services.md#automatic-reachable-services).
 
 ### Supported targetRef kinds
 

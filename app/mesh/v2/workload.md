@@ -288,7 +288,7 @@ kubectl get pods -n <namespace> -o jsonpath='{range .items[*]}{.metadata.name}{"
 
 To resolve a multi-mesh namespace conflict:
 
-1. Identify affected Pods: Use the command above to list all Pods and their mesh assignments in the namespace.
+1. Identify affected Pods: Use the command in [Detecting multi-mesh namespace issues](#detecting-multi-mesh-namespace-issues) to list all Pods and their mesh assignments in the namespace.
 1. Reorganize workloads: Move Pods that belong to different meshes into separate namespaces.
 1. (Optional) Enable proactive prevention: Set `runtime.kubernetes.disallowMultipleMeshesPerNamespace=true` in the control plane configuration to prevent the issue from recurring.
 

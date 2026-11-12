@@ -63,7 +63,7 @@ A policy's role determines:
 * How it's synchronized for each policy in multi-zone deployments.
 * How it's prioritized when multiple policies overlap.
 
-The table below introduces the policy roles and how to recognize them.
+The following table introduces the policy roles and how to recognize them.
 
 <!-- vale off -->
 {% table %}
@@ -262,7 +262,7 @@ rows:
 
 When multiple policies target the same proxy, {{ site.mesh_product_name }} merges them using a priority-based strategy.
 
-Policy priority is determined by a total ordering of attributes. The table below defines the sorting order, applied sequentially with ties broken by the next attribute in the list.
+Policy priority is determined by a total ordering of attributes. The following table defines the sorting order, applied sequentially with ties broken by the next attribute in the list.
 
 <!-- vale off -->
 {% table %}

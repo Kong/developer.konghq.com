@@ -177,7 +177,7 @@ networking:
 
 ### Delegated gateway Dataplane
 
-Register an existing API gateway (such as {{site.base_gateway}}) as a delegated gateway that fronts the mesh:
+Register an existing API gateway (for example, {{site.base_gateway}}) as a delegated gateway that fronts the mesh:
 
 ```yaml
 type: Dataplane

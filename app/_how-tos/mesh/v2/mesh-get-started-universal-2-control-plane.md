@@ -46,7 +46,7 @@ You can now access the {{site.mesh_product_name}} user interface at <http://127.
 
 ## Configure kumactl
 
-To manage the deployment with [kumactl](/mesh/v2/cli/), connect it to the control plane you started in the previous section.
+To manage the deployment with [kumactl](/mesh/v2/cli/), connect it to the control plane you started in [Start the control plane](#start-the-control-plane).
 
 1. Run the following command to get the admin token from the control plane:
 

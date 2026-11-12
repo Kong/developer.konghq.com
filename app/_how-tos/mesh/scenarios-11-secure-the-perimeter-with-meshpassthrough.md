@@ -22,7 +22,7 @@ tldr:
     On a control plane that sets `restrictOutbound` to `false`, apply a `MeshPassthrough` policy to:
     1. Block unknown destinations with `passthroughMode: None`.
     2. Allow specific destinations with `passthroughMode: Matched` and `appendMatch` entries (for example, `httpbin.konghq.com` on port 80).
-    3. Keep one auditable record of the external destinations your workloads can reach.
+    3. Keep one record of the external destinations your workloads can reach, so you can audit them.
 faqs:
   - q: What happens to traffic to unknown destinations when no `MeshPassthrough` policy selects a proxy?
     a: |

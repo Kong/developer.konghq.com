@@ -79,7 +79,7 @@ The following describes the default configuration settings of the `MeshPassthrou
 `MeshPassthrough` policy allows you to create a match for a wildcard subdomain.
 
 {:.warning}
-> Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
+> Partial subdomain matching is not supported. For example, a match for `*w.example.com` will be rejected.
 
 {% policy_yaml %}
 ```yaml

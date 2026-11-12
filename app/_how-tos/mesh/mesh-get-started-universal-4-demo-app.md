@@ -24,7 +24,7 @@ tldr:
 faqs:
   - q: How does the demo app find `kv` by its hostname?
     a: |
-      Three pieces make that workallow the demo app to reach `kv` by a hostname:
+      Three pieces allow the demo app to reach `kv` by a hostname:
 
       - The control plane generated a `MeshService` named `kv`, and allocated
         a VIP and the `kv.svc.mesh.local` hostname.

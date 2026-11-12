@@ -68,7 +68,7 @@ To learn more about what this guide does, read the following reference pages:
 * [MeshMetric](/mesh/policies/meshmetric/): how proxies expose and export metrics
 * [MeshAccessLog](/mesh/policies/meshaccesslog/): how proxies write access logs
 
-## Update `MeshMetric`
+## Update MeshMetric
 
 The collector from [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/) already exports the proxy metrics to Prometheus, but without `pod` and `namespace` labels.
 The {{site.mesh_product_name}} Grafana dashboards filter on these labels, and only a Prometheus scrape of each proxy adds them.
@@ -125,7 +125,7 @@ Add a Prometheus backend to `MeshMetric`, which makes each Kong Air sidecar expo
      wget -qO- http://$POD_IP:5670/metrics | head -10
    ```
 
-## Update `MeshAccessLog`
+## Update MeshAccessLog
 
 `MeshAccessLog` makes each Kong Air sidecar write a structured record for each request it sends.
 

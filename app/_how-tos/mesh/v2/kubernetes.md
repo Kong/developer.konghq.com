@@ -119,7 +119,7 @@ spec:
 
 Traffic is now encrypted and secure. 
 
-## Allow traffic from `demo-app` to `redis`
+## Allow traffic from demo-app to redis
 
 {{site.mesh_product_name}} doesn't define default traffic permissions, so no traffic flows with mTLS enabled until you define a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) policy.
 

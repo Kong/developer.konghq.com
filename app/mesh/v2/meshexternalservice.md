@@ -33,7 +33,7 @@ The `MeshExternalService` resource allows services running inside the mesh to co
 You can declare external resources instead of relying on a [`MeshPassthrough`](/mesh/v2/policies/meshpassthrough/) policy or passthrough mode in the mesh configuration. 
 
 {:.warning}
-> Currently you can't configure granular [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) policies for `MeshExternalService` resources.
+> You can't configure granular [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) policies for `MeshExternalService` resources.
 > You can only enable or disable the whole traffic to `MeshExternalService` from a mesh.
 > For more information, see [Controlling MeshExternalService access from Mesh](#controlling-meshexternalservice-access-from-mesh).
 
@@ -134,7 +134,7 @@ networking:
 
 ### Controlling MeshExternalService access from Mesh 
 
-Currently, you can't configure a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) policy for a `MeshExternalService` resource. However, you can configure access to all external services on the mesh level. For example, you can disable 
+You can't configure a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) policy for a `MeshExternalService` resource. However, you can configure access to all external services on the mesh level. For example, you can disable 
 outgoing traffic to all `MeshExternalService` resources:
 
 {% navtabs "Environments" %}

@@ -130,12 +130,12 @@ forge.
 
 ## Accepted values by field
 
-### `spec.targetRef`
+### spec.targetRef
 
 * `Mesh`: applies a policy across the mesh
 * `Dataplane`: with `labels`, narrows the policy to a set of proxies. `targetRef.sectionName` narrows further, to one named listener or inbound of the selected proxy. Without `labels`, it selects the same proxies as `Mesh`, but with a higher [priority](#policy-precedence).
 
-### `spec.to[].targetRef`
+### spec.to[].targetRef
 
 `spec.to[].targetRef` is a narrower selector than the top level, and the accepted kinds vary by policy:
 
@@ -156,7 +156,7 @@ rows:
 
 `MeshRateLimit` and `MeshFaultInjection` are even narrower: they accept `kind: Mesh` only, and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`, `to` must be empty.
 
-### `spec.rules[]`
+### spec.rules[]
 
 `spec.rules[]` defines where a policy supports inbound configuration. Each rule may carry `matches`, and a match
 selects on one of two fields:

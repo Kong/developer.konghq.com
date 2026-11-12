@@ -23,7 +23,7 @@ A `MeshProxyPatch` policy can modify:
 > This policy uses a new policy matching algorithm.
 > Do **not** combine with the deprecated Proxy Template policy.
 
-## `targetRef` support matrix
+## targetRef support matrix
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}

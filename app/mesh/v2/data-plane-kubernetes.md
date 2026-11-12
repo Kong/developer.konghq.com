@@ -138,7 +138,7 @@ spec:
       targetPort: 8080
 ```
 
-The configuration above generates the following inbounds in your {{site.mesh_product_name}} data plane:
+This configuration generates the following inbounds in your {{site.mesh_product_name}} data plane:
 
 ```yaml
 ...
@@ -380,7 +380,7 @@ spec:
       }'
 ```
 
-The configuration above makes the following changes:
+This configuration makes the following changes:
 
 {% table %}
 columns:

@@ -357,7 +357,7 @@ rules:
 ### Observability operator role
 
 We may also have an infrastructure team which is responsible for the logging/metrics/tracing systems in the organization.
-Currently, those features are configured on `Mesh`, `MeshAccessLog`, and `MeshTrace` objects.
+Those features are configured on `Mesh`, `MeshAccessLog`, and `MeshTrace` objects.
 
 {% navtabs "codeblock" %}
 {% navtab "Kubernetes" %}
@@ -1089,7 +1089,7 @@ In a multi-zone setup, `AccessRole` and `AccessRoleBinding` are not synchronized
 ## Wildcard tag value matching {% new_in 1.9.1 %}
 
 {:.info}
-> **Note**: This feature currently only works with "Source and Destination" selectors. This limitation restricts using newer policy types like `MeshTrafficPermission`, `MeshAccessLog`, or `MeshHTTPRoute`.
+> **Note**: This feature only works with "Source and Destination" selectors. This limitation restricts using newer policy types like `MeshTrafficPermission`, `MeshAccessLog`, or `MeshHTTPRoute`.
 
 
 You can perform partial tag value matching using `*` wildcards.

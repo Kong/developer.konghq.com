@@ -41,7 +41,7 @@ You actually don't need to have a KIC instance in both zones. For a partial or w
 * The most local instantiation of the services (this is called locality-aware routing)
 * Or, in the event of a failure, the service hosted in another zone
 
-We've decided to use two KIC instances to deal with a scenario where an entire zone goes down — for example, a cloud region failure.
+We've decided to use two KIC instances to deal with a scenario where an entire zone goes down (for example, a cloud region failure).
 
 <!--vale off -->
 {% mermaid %}

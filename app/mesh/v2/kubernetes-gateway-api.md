@@ -107,7 +107,7 @@ spec:
 
 {% capture backendref-limitation %}
 {:.warning}
-> This limitation exists because {{site.mesh_product_name}} currently only allows referencing as `backendRefs` [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/).
+> This limitation exists because {{site.mesh_product_name}} only allows referencing as `backendRefs` [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/).
 > 
 > This is a temporary limitation. [We're actively working on extending `backendRef` to support {{site.mesh_product_name}}'s `MeshServices`](https://github.com/kumahq/kuma/issues/9894). Once this feature is complete, you'll be able to reference services across different clusters within your mesh.
 {% endcapture %}
@@ -270,7 +270,7 @@ If the route's namespace differs from its `parentRef`'s namespace, the `HTTPRout
 > Remember to tag your `Service` ports with `appProtocol: http` to use them in an `HTTPRoute`.
 
 {:.warning}
-> Because of [how {{site.mesh_product_name}} currently maps resources](#how-it-works), the combination of the `HTTPRoute` name and namespace and the parent `Service` name and namespace must be no more than 249 characters.
+> Because of [how {{site.mesh_product_name}} maps resources](#how-it-works), the combination of the `HTTPRoute` name and namespace and the parent `Service` name and namespace must be no more than 249 characters.
 
 ## How it works
 

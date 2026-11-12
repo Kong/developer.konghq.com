@@ -176,7 +176,7 @@ spec:
 
 This route would send all traffic to `dev.example.com` to the `v2` backend, but other traffic to `v1`.
 
-## `MeshTCPRoute`
+## MeshTCPRoute
 
 If your traffic isn't HTTP, you can use [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) to balance traffic between services:
 

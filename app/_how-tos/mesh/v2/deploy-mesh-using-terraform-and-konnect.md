@@ -116,7 +116,7 @@ This guide uses Terraform to provision a {{site.konnect_short_name}}-managed glo
 
 This guide uses the `konnect` and `konnect-beta` Terraform providers. The `konnect` provider is the [general availability](/stages-of-software-availability/#general-availability) version, and `konnect-beta` is the [beta](/stages-of-software-availability/#beta) version with the latest features. Features move from the beta provider to the GA provider once they are stable and fully tested.
 
-Mesh resources are currently available only in the beta provider.
+Mesh resources are available only in the beta provider.
 
 1. Create a `providers.tf` file:
 

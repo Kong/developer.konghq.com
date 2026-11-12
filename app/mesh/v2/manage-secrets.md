@@ -180,7 +180,7 @@ Secrets are synced from the global control plane to the zones CPs, but not the o
 
 Here is an example of how to use a {{site.mesh_product_name}} `Secret` with a `provided` [Mutual TLS](/mesh/v2/policies/mutual-tls/#using-a-provided-ca) backend.
 
-The examples below assume that the `Secret` object has already been created:
+The following examples assume that the `Secret` object has already been created:
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}

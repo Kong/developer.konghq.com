@@ -317,7 +317,7 @@ Please upload the certificate and the key to the machine, and then define the fo
 {% endnavtab %}
 {% endnavtabs %}
 
-##### `activeMTLSBackend`
+##### activeMTLSBackend
 
 We no longer support `activeMTLSBackend`, if you need to encrypt and authorize the metrics use [Secure metrics with TLS](#secure-metrics-with-tls) with a combination of [one of the authorization methods](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
 

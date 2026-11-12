@@ -278,4 +278,4 @@ CNI component logs are available via `kubectl logs`.
 To enable debug-level logging, set the `CNI_LOG_LEVEL` environment variable to `debug` on the `{{site.mesh_product_name_path}}-cni` DaemonSet. Note that editing the DaemonSet restarts the CNI Pods, during which mesh-enabled application Pods can't start or stop. Avoid this in production unless approved.
 
 {:.warning}
-> The eBPF CNI currently doesn't support exposing its logs.
+> The eBPF CNI doesn't support exposing its logs.

@@ -73,7 +73,7 @@ faqs:
               requestTimeout: 1s
       ```
 
-      The example above applies a request timeout of 1 second to incoming requests. The rules API applies configuration to all incoming traffic and doesn't support filtering by a subset of traffic, so it doesn't yet support `MeshTrafficPermission` or `MeshFaultInjection`.
+      This example applies a request timeout of 1 second to incoming requests. The rules API applies configuration to all incoming traffic and doesn't support filtering by a subset of traffic, so it doesn't yet support `MeshTrafficPermission` or `MeshFaultInjection`.
 
 prereqs:
   inline:

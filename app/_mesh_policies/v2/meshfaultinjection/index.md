@@ -15,7 +15,7 @@ major_version:
 > This policy uses a new policy matching algorithm.
 > Do **not** combine with the now deprecated FaultInjection policy.
 
-## `targetRef` support matrix
+## targetRef support matrix
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}

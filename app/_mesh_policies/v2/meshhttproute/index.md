@@ -97,11 +97,11 @@ spec:
 To route HTTP traffic for a MeshGateway, you need to target the
 MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
-### Interactions with `MeshTCPRoute`
+### Interactions with MeshTCPRoute
 
 `MeshHTTPRoute` takes priority over [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) when a proxy is targeted by both and the matching `MeshTCPRoute` is ignored.
 
-### Interactions with `TrafficRoute`
+### Interactions with TrafficRoute
 
 `MeshHTTPRoute` takes priority over [`TrafficRoute`](/mesh/v2/policies/meshhttproute/) when a proxy is targeted by both policies.
 

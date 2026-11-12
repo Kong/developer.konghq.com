@@ -109,7 +109,7 @@ See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshserv
 
 ## How the developer makes services resilient
 
-### Retries with `MeshRetry`
+### Retries with MeshRetry
 
 A new mesh doesn't retry failed requests.
 The developer wants every caller of `check-in-api` to retry requests that fail with a `5xx` status.
@@ -119,7 +119,7 @@ See [Target workloads and services](/mesh/target-workloads-and-services/).
 Calls to AeroPay also get retries: a `MeshRetry` makes the `passenger-portal` sidecar retry failed calls to `aeropay-api` up to three times.
 See [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
 
-### Test failures with `MeshFaultInjection`
+### Test failures with MeshFaultInjection
 
 The developer checks how callers handle a failing `check-in-api`.
 A `MeshFaultInjection` makes the `check-in-api` sidecar return errors, add latency, or slow its responses to `flight-control`, without changing the application.

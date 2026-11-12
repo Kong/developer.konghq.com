@@ -137,7 +137,7 @@ At this point you can visualize your traces in Grafana by choosing the Jaeger da
 
 ### Visualize logs
 
-To visualize your containers' logs and your access logs with Grafana, you can then add a [`MeshAccessLog` policy](/mesh/v2/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
+To visualize your containers' logs and your access logs with Grafana, you can then add a [`MeshAccessLog` policy](/mesh/v2/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown in the following example:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}

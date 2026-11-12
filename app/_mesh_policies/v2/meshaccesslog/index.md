@@ -21,7 +21,7 @@ major_version:
 > This guide assumes you have already configured your observability tools to work with {{site.mesh_product_name}}.
 > If you haven't, see the [observability docs](/mesh/v2/observability/).
 
-## `targetRef` support matrix
+## targetRef support matrix
 
 {% navtabs "support-matrix" %}
 {% navtab "Sidecar" %}

@@ -45,7 +45,7 @@ Expected output:
 {"counter":1,"zone":""}
 ```
 
-## Apply a `MeshTimeout` policy
+## Apply a MeshTimeout policy
 
 Limit request duration from `demo-app` to `kv` to 1 second:
 
@@ -188,7 +188,7 @@ spec:
 EOF
 ```
 
-## Log traffic with `MeshAccessLog`
+## Log traffic with MeshAccessLog
 
 Create an access log policy targeting the route:
 
@@ -228,7 +228,7 @@ Check logs:
 kubectl logs -n kuma-demo -l app=demo-app -c kuma-sidecar
 ```
 
-## Apply a `MeshRetry` policy
+## Apply a MeshRetry policy
 
 Remove the default retry policy:
 

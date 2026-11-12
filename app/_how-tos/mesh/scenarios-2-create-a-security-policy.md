@@ -60,7 +60,7 @@ kubectl exec -n kong-air-production deploy/flight-control -- \
 
 The `check-in-api` application responds with its pod hostname.
 
-## Issue workload identity with `MeshIdentity`
+## Issue workload identity with MeshIdentity
 
 The [`MeshIdentity`](/mesh/policies/meshidentity/) resource gives each workload an identity and a certificate.
 Kong Air runs in one zone for now, so this guide uses the `Bundled` provider with `autogenerate`.
@@ -128,7 +128,7 @@ Now that every proxy has a workload identity, the Kong Air proxies change behavi
 No `MeshTrafficPermission` exists yet, so `check-in-api` now rejects `flight-control` with `403 Forbidden`.
 For more information, see [Identity requirements](/mesh/policies/meshtrafficpermission/#identity-requirements).
 
-## Make strict mTLS explicit with `MeshTLS`
+## Make strict mTLS explicit with MeshTLS
 
 The [`MeshTLS`](/mesh/policies/meshtls/) policy sets the TLS mode, versions, and ciphers for mesh connections.
 Kong Air's proxies already run in `Strict` mode because they have a workload identity.

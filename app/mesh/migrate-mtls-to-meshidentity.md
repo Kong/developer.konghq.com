@@ -131,7 +131,7 @@ Record these values before changing anything:
 - Whether its `mode` is `STRICT` or `PERMISSIVE`
 - The leaf certificate expiration under `dpCert.rotation.expiration`
 - For a `provided` backend, the certificate and private-key Secret names
-- Every `MeshTrafficPermission` that currently allows traffic into the mesh
+- Every `MeshTrafficPermission` that allows traffic into the mesh
 
 Only the enabled backend issues certificates. Don't translate inactive backends unless they
 represent a CA that the new mesh must continue to trust.
