@@ -101,7 +101,7 @@ compatible_versions:
 
 ### Gateway API
 
-The following table presents the compatibility of {{site.kic_product_name}}'s [Gateway API](https://github.com/kubernetes-sigs/gateway-api) with specific Kubernetes minor versions. As {{site.kic_product_name}} implements Gateway API features using the upstream project, which defines [its own compatibility declarations](https://gateway-api.sigs.k8s.io/concepts/versioning/#supported-versions), the expected compatibility of Gateway API features might be limited to those.
+The following table presents the compatibility of {{site.kic_product_name}}'s [Gateway API](https://github.com/kubernetes-sigs/gateway-api) with specific Kubernetes minor versions. As {{site.kic_product_name}} implements Gateway API features using the upstream project, which defines [its own compatibility declarations](https://gateway-api.sigs.k8s.io/docs/concepts/versioning/#supported-versions), the expected compatibility of Gateway API features might be limited to those.
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
