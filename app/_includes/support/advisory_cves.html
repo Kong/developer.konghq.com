@@ -14,7 +14,12 @@ columns:
 {%- endif %}
 rows:
 {%- for cve in include.advisory.cves %}
-{%- capture severity %}{{ cve.severity | capitalize }}{% if cve.cvss_score %}{% if cve.severity %} {% endif %}(CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endif %}{% endcapture %}
+{%- assign severity = cve.severity | capitalize %}
+{%- if cve.cvss_score %}
+{%- capture cvss %}(CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endcapture %}
+{%- if severity != "" %}{% assign severity = severity | append: " " %}{% endif %}
+{%- assign severity = severity | append: cvss %}
+{%- endif %}
   - cve: {{ cve.id | jsonify }}
     description: {{ cve.summary | jsonify }}
     severity: {{ severity | jsonify }}

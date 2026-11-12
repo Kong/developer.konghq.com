@@ -8,6 +8,7 @@ works_on:
   - on-prem
   - konnect
 advisory:
+  published: "2025-03-25"
   cves:
     - id: CVE-2025-24513
       status: not_affected
