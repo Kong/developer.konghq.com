@@ -26,22 +26,28 @@ related_resources:
     url: /kubernetes-ingress-controller/kic-high-availability/
 ---
 
-Recover a DB-less {{site.base_gateway}} and standalone {{site.kic_product_name}} in a replacement Kubernetes cluster. This walkthrough restores a Helm release and its Kubernetes routing resources, then tests the replacement before moving traffic.
+You can recover a [DB-less](/gateway/db-less-mode/) {{site.base_gateway}} and a standalone {{site.kic_product_name}} in a replacement Kubernetes cluster.
+This walkthrough restores a Helm release and its Kubernetes routing resources, then tests the replacement before you move traffic.
 
-The failure is loss of the original cluster. No running gateway or last known good configuration is available. The recovery source is the files and secrets you saved before the failure.
+The failure is the loss of the original cluster.
+No running gateway or last known good configuration is available.
+The recovery source is the files and secrets that you saved before the failure.
 
 ## Starting deployment
 
-This example uses:
+The {{site.kic_product_name_short}} recovery example uses the following deployment:
 
-* The [KIC Helm installation](/kubernetes-ingress-controller/install/) with release `kong`, chart `kong/ingress`, and namespace `kong`.
-* An Ingress named `echo`, using ingress class `kong`, which routes `echo.example.com/echo` to the `echo` Service on port `1027`.
+* The [{{site.kic_product_name_short}} Helm installation](/kubernetes-ingress-controller/install/) with release `kong`, chart `kong/ingress`, and namespace `kong`.
+* An Ingress named `echo`, with the ingress class `kong`, which routes `echo.example.com/echo` to the `echo` Service on port `1027`.
 * A TLS Secret named `echo-tls` for `echo.example.com`.
 * A replacement cluster with a working LoadBalancer implementation and access to the required container registry.
 
-Use two distinct kubeconfig contexts. Set `PRIMARY_CONTEXT` to the original cluster and `RECOVERY_CONTEXT` to the empty replacement. Every cluster command in this guide names its context.
+Use two distinct kubeconfig contexts.
+Set `PRIMARY_CONTEXT` to the original cluster and `RECOVERY_CONTEXT` to the empty replacement cluster.
+Every cluster command in this guide names its context.
 
-If you use Gateway API instead of Ingress, preserve the GatewayClass, Gateway, HTTPRoutes, and any ReferenceGrants in place of the Ingress manifest. For an embedded Operator controller, use the [Operator walkthrough](/operator/dataplanes/disaster-recovery/).
+If you use Gateway API instead of Ingress, save the GatewayClass, Gateway, HTTPRoutes, and any ReferenceGrants instead of the Ingress manifest.
+For an embedded controller in {{site.operator_product_name}}, use the [{{site.operator_product_name}} walkthrough](/operator/dataplanes/disaster-recovery/).
 
 ## Save the recovery files before the failure
 
@@ -51,7 +57,7 @@ Create a protected working directory outside the cluster:
 mkdir -p recovery/kic
 ```
 
-Save the release's effective values:
+Save the effective values of the release:
 
 ```bash
 helm get values kong -n kong --kube-context "$PRIMARY_CONTEXT" \
@@ -64,26 +70,44 @@ Read the installed chart version:
 helm list -n kong --kube-context "$PRIMARY_CONTEXT"
 ```
 
-Set `KIC_CHART_VERSION` to the version shown after `ingress-` in the `CHART` column. Download that exact chart from the configured Kong Helm repository:
+Set `KIC_CHART_VERSION` to the version that follows `ingress-` in the `CHART` column.
+Download that exact chart from the configured Kong Helm repository:
 
 ```bash
 helm pull kong/ingress --version "$KIC_CHART_VERSION" \
   --destination recovery/kic
 ```
 
-The recommended source for the remaining files is a Git repository deployed through CD or GitOps; see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code). Record the revision you will restore. If your routing resources aren't in a repository, [export them from the running cluster](#export-routing-resources-without-a-repository).
+We recommend that you keep the remaining files in a Git repository that you deploy through CD or GitOps, because recovery is then a normal deployment of a known revision.
+For more information, see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
+Record the revision that you will restore.
+If your routing resources aren't in a repository, [export them from the running cluster](#export-routing-resources-without-a-repository).
 
-Complete this recovery set using your deployment repository and secret store:
+Complete the recovery set from your deployment repository and secret store:
 
-| File | Contents |
-| --- | --- |
-| `values.yaml` and `ingress-<version>.tgz` | The saved Helm values and chart |
-| `application.yaml` | The desired Deployment and Service manifests for the echo application |
-| `routing.yaml` | The Ingress and any referenced Kong resources, including authentication policies |
-| `tls.crt` and `tls.key` | The certificate and private key for the `echo-tls` Secret |
-| `ca.crt` | The CA certificate used by the test client to trust the listener |
+{% table %}
+columns:
+  - title: File
+    key: file
+  - title: Contents
+    key: contents
+rows:
+  - file: "`values.yaml` and `ingress-<version>.tgz`"
+    contents: The saved Helm values and chart
+  - file: "`application.yaml`"
+    contents: The desired Deployment and Service manifests for the echo application
+  - file: "`routing.yaml`"
+    contents: The Ingress and any Kong resources that it references, including authentication policies
+  - file: "`tls.crt` and `tls.key`"
+    contents: "The certificate and private key for the `echo-tls` Secret"
+  - file: "`ca.crt`"
+    contents: The CA certificate that the test client uses to trust the listener
+{% endtable %}
 
-For a drill, start with the [echo application manifest](/manifests/kic/echo-service.yaml) and save it as `application.yaml`. Pin its image to the digest used in the original cluster. Save this Ingress as `routing.yaml` and apply it in the original cluster before taking the baseline:
+For a drill, start with the [echo application manifest](/manifests/kic/echo-service.yaml) and save it as `application.yaml`.
+Pin its image to the digest that the original cluster uses.
+
+Save the following Ingress as `routing.yaml`, and apply it in the original cluster before you take the baseline:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -110,24 +134,31 @@ spec:
                   number: 1027
 ```
 
-Supply a certificate valid for `echo.example.com`; a private test CA is sufficient for a drill. Create `echo-tls` in the original cluster using the same Secret creation command used during recovery, with `PRIMARY_CONTEXT` in place of `RECOVERY_CONTEXT`.
+Supply a certificate that's valid for `echo.example.com`.
+For a drill, a private test CA is enough.
+Create `echo-tls` in the original cluster with the same Secret creation command that you use during recovery, but with `PRIMARY_CONTEXT` instead of `RECOVERY_CONTEXT`.
 
-Keep the complete set in protected storage outside the failed cluster. Helm values and private keys can contain secrets. Include additional Secrets, custom plugin artifacts, and cluster-scoped resources such as KongLicense if your installation uses them.
+Keep the complete set in protected storage outside the failed cluster, because Helm values and private keys can contain secrets.
+If your installation uses them, also include other Secrets, custom plugin artifacts, and cluster-scoped resources such as KongLicense.
 
 ### Export routing resources without a repository
 
-Use this fallback only if the routing resources aren't in source control. It captures the cluster's current state, including changes that were applied by hand.
+Use this fallback only if the routing resources aren't in source control.
+The export captures the current state of the cluster, including changes that someone applied manually.
 
-Export the Ingress and Kong resources from the original namespace. Add every other kind your deployment uses, such as `kongconsumers` or `kongupstreampolicies`:
+Export the Ingress and Kong resources from the original namespace.
+Add every other kind that your deployment uses, such as `kongconsumers` or `kongupstreampolicies`:
 
 ```bash
 kubectl --context "$PRIMARY_CONTEXT" -n kong get ingress,kongplugins \
   -o yaml > recovery/kic/routing.yaml
 ```
 
-Export cluster-scoped resources such as KongClusterPlugin with a separate command without `-n`. Don't add `secrets` to the export, because it writes credentials and private keys into a plain file. Restore those from your secret store.
+Export cluster-scoped resources such as KongClusterPlugin with a separate command, without `-n`.
+Don't add `secrets` to the export, because it writes credentials and private keys into a plain file.
+Restore Secrets from your secret store instead.
 
-Remove the fields that Kubernetes generates for the original objects. With [`yq`](https://github.com/mikefarah/yq) installed, run:
+Use [`yq`](https://github.com/mikefarah/yq) to remove the fields that Kubernetes generated for the original objects:
 
 ```bash
 yq -i '.items[] |= (del(.status) | del(.metadata.uid, .metadata.resourceVersion,
@@ -141,11 +172,12 @@ Review the file, then commit it to a repository so that the next recovery starts
 
 ### Record the baseline
 
-Before the drill, perform the request in [Test the recovered route](#test-the-recovered-route) against the original load balancer. Record the HTTP status and echo response.
+Before the drill, send the request from [Test the recovered route](#test-the-recovered-route) to the original load balancer.
+Record the HTTP status and the echo response.
 
 ## Restore the release and its resources
 
-Confirm that the replacement context is the intended cluster:
+Make sure that the replacement context points to the intended cluster:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" cluster-info
@@ -164,7 +196,9 @@ kubectl --context "$RECOVERY_CONTEXT" -n kong create secret tls echo-tls \
   --cert=recovery/kic/tls.crt --key=recovery/kic/tls.key
 ```
 
-Restore other Secrets referenced by your values or routing configuration before their dependent resources. For Gateway API installations, install the saved Gateway API CRDs first; they are separate from the routing objects.
+Restore any other Secrets that your values or routing configuration reference before you restore the resources that depend on them.
+For Gateway API installations, install the saved Gateway API CRDs first.
+The CRDs are separate from the routing objects.
 
 Install the saved chart with the saved values:
 
@@ -174,14 +208,18 @@ helm install kong "recovery/kic/ingress-${KIC_CHART_VERSION}.tgz" \
   -f recovery/kic/values.yaml
 ```
 
-This is a new installation in the replacement cluster. Keep the release name and namespace so that chart-generated Service names and controller settings remain consistent. Wait for the controller before applying its routing resources:
+The `helm install` command creates a new installation in the replacement cluster.
+Keep the release name and namespace so that the Service names and controller settings that the chart generates stay the same.
+
+Wait for the controller before you apply its routing resources:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong rollout status \
   deployment/kong-controller --timeout=300s
 ```
 
-Do not wait for the DB-less gateway to become ready before restoring its configuration. It may need that configuration to pass its readiness check.
+Don't wait for the DB-less gateway to become ready before you restore its configuration.
+The gateway can need that configuration to pass its readiness check.
 
 Restore the application:
 
@@ -212,7 +250,10 @@ Read the new proxy address:
 kubectl --context "$RECOVERY_CONTEXT" -n kong get service kong-gateway-proxy
 ```
 
-Set `RECOVERY_ADDRESS` to its external IP or hostname. It can differ from the original address. Test directly against it while retaining the application's hostname for HTTP and TLS:
+Set `RECOVERY_ADDRESS` to its external IP or hostname.
+The address can be different from the original address.
+
+Send a request directly to the new address, and keep the hostname of the application for HTTP and TLS:
 
 ```bash
 curl --fail-with-body --cacert recovery/kic/ca.crt \
@@ -220,18 +261,38 @@ curl --fail-with-body --cacert recovery/kic/ca.crt \
   https://echo.example.com/echo
 ```
 
-Expect HTTP `200` and the echo application's response identifying a pod in the replacement cluster. A Gateway `404` means the route is missing or does not match. A `503` requires checking the backend Service and its endpoints. A certificate error requires checking the restored Secret, hostname, and CA.
+Expect HTTP `200` and an echo response that identifies a pod in the replacement cluster.
+If the request fails, check the response:
 
-If the application has authentication, repeat its recorded authorized and unauthorized requests. A successful public echo request does not test authentication recovery.
+* `404` from the gateway: The route is missing or doesn't match.
+* `503`: Check the backend Service and its endpoints.
+* Certificate error: Check the restored Secret, the hostname, and the CA.
 
-To test continuing configuration updates, add a second path, `/echo-recovered`, to the saved Ingress, apply `routing.yaml` again, and repeat the request with that path. Expect the same successful response. Remove the temporary path from the file and reapply it after testing.
+If the application uses authentication, repeat the authorized and unauthorized requests that you recorded.
+A successful public echo request doesn't test authentication recovery.
+
+To check that configuration updates still work, do the following:
+
+1. Add a second path, `/echo-recovered`, to the saved Ingress, and apply `routing.yaml` again.
+1. Repeat the request with that path, and expect the same successful response.
+1. Remove the temporary path from the file, and apply the file again.
 
 ## Move traffic and finish recovery
 
-Update the DNS record or external load balancer that serves `echo.example.com` to use the replacement address. For a DNS-managed endpoint, replace the old A/AAAA address or CNAME target with the new load balancer address.
+Update the DNS record or external load balancer that serves `echo.example.com` to use the replacement address.
+For a DNS-managed endpoint, replace the old A or AAAA address, or the CNAME target, with the new load balancer address.
 
-Repeat the request without `--connect-to` to test the normal client entry point. Record traffic recovery only when this request succeeds through the updated endpoint.
+Repeat the request without `--connect-to` to test the normal client entry point.
+Record traffic recovery only when this request succeeds through the updated endpoint.
 
-For failback, restore the accepted files to the original environment, validate its address with `--connect-to`, and then change the client endpoint back. Preserve any configuration changes made during recovery in the deployment repository before resuming GitOps.
+For failback, restore the accepted files to the original environment, and validate its address with `--connect-to`.
+Then change the client endpoint back.
+Before you resume GitOps, save any configuration changes that you made during recovery in the deployment repository.
 
-The restored routing state is the revision saved in `routing.yaml`; later changes are absent. Record that revision, the restored certificate identity, and the time at which both traffic and configuration updates worked in the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results).
+The restored routing state is the revision that you saved in `routing.yaml`.
+Changes made after that revision are missing.
+In the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results), record the following:
+
+* The revision
+* The identity of the restored certificate
+* The time when both traffic and configuration updates worked

@@ -30,22 +30,27 @@ related_resources:
     url: /operator/reference/version-compatibility/
 ---
 
-Recover a self-hosted Gateway in a replacement Kubernetes cluster by reinstalling {{site.operator_product_name}} and reapplying its desired resources. The operator creates new data plane workloads and Services from those resources.
+You can recover a self-hosted Gateway in a replacement Kubernetes cluster when you reinstall {{site.operator_product_name}} and reapply its desired resources.
+{{site.operator_product_name}} creates new data plane workloads and Services from those resources.
 
-This walkthrough assumes the original cluster is unavailable. It does not copy generated Deployments or depend on a gateway retaining its old configuration. For data planes connected to Konnect, use the [Konnect walkthrough](/gateway/disaster-recovery/kubernetes/konnect/).
+This walkthrough assumes that the original cluster is unavailable.
+It doesn't copy generated Deployments, and it doesn't depend on a gateway that keeps its old configuration.
+For data planes connected to {{site.konnect_short_name}}, use the [{{site.konnect_short_name}} walkthrough](/gateway/disaster-recovery/kubernetes/konnect/).
 
 ## Starting deployment
 
-Use the self-hosted deployment from [Provision a Gateway](/operator/get-started/gateway-api/deploy-gateway/) and [Configure a route and service](/operator/get-started/gateway-api/create-route/):
+The {{site.operator_product_name}} recovery example uses the self-hosted deployment from [Provision a Gateway](/operator/get-started/gateway-api/deploy-gateway/) and [Configure a route and service](/operator/get-started/gateway-api/create-route/):
 
-* Operator Helm release `kong-operator` in namespace `kong-system`, using chart `kong/kong-operator`.
-* GatewayConfiguration `kong-configuration`, Gateway `kong`, and HTTPRoute `echo` in namespace `kong`.
-* GatewayClass `kong`, with controller name `konghq.com/gateway-operator`.
-* An HTTP listener on port `80` routing `/echo` to the echo Service.
+* The {{site.operator_product_name}} Helm release `kong-operator` in the `kong-system` namespace, with the `kong/kong-operator` chart.
+* The GatewayConfiguration `kong-configuration`, the Gateway `kong`, and the HTTPRoute `echo` in the `kong` namespace.
+* The GatewayClass `kong`, with the controller name `konghq.com/gateway-operator`.
+* An HTTP listener on port `80` that routes `/echo` to the echo Service.
 
-Use an Operator version with the embedded controller described in the [architecture reference](/operator/reference/architecture/). Keep the same Operator, Gateway, chart, and CRD versions during recovery.
+Use an {{site.operator_product_name}} version with the embedded controller that the [architecture reference](/operator/reference/architecture/) describes.
+Keep the same {{site.operator_product_name}}, {{site.base_gateway}}, chart, and CRD versions during recovery.
 
-Set `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT` to distinct original and replacement kubeconfig contexts. The replacement cluster must support LoadBalancer Services and reach the required registries.
+Set `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT` to two distinct kubeconfig contexts for the original and replacement clusters.
+The replacement cluster must support LoadBalancer Services and have access to the required registries.
 
 ## Save the recovery files
 
@@ -55,7 +60,7 @@ Create a protected directory outside the cluster:
 mkdir -p recovery/operator
 ```
 
-Save the effective Operator Helm values:
+Save the effective {{site.operator_product_name}} Helm values:
 
 ```bash
 helm get values kong-operator -n kong-system --kube-context "$PRIMARY_CONTEXT" \
@@ -68,35 +73,57 @@ Read the installed chart version:
 helm list -n kong-system --kube-context "$PRIMARY_CONTEXT"
 ```
 
-Set `OPERATOR_CHART_VERSION` to the version after `kong-operator-` in the `CHART` column, then save that chart:
+Set `OPERATOR_CHART_VERSION` to the version that follows `kong-operator-` in the `CHART` column, then save that chart:
 
 ```bash
 helm pull kong/kong-operator --version "$OPERATOR_CHART_VERSION" \
   --destination recovery/operator
 ```
 
-The recommended source for these manifests is a Git repository deployed through CD or GitOps; see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code). Record the revision you will restore. If they aren't in a repository, [export them from the running cluster](#export-gateway-resources-without-a-repository).
+We recommend that you keep these manifests in a Git repository that you deploy through CD or GitOps, because recovery is then a normal deployment of a known revision.
+For more information, see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
+Record the revision that you will restore.
+If the manifests aren't in a repository, [export them from the running cluster](#export-gateway-resources-without-a-repository).
 
 Copy these desired manifests from the deployment repository into the recovery directory:
 
-| File | Resources |
-| --- | --- |
-| `gateway-api-crds.yaml` | The Gateway API CRD bundle used by the original installation |
-| `gateway-configuration.yaml` | GatewayConfiguration `kong-configuration`, including the pinned Gateway image |
-| `gateway-class.yaml` | GatewayClass `kong` and its parameters reference |
-| `gateway.yaml` | Gateway `kong` and its listeners |
-| `application.yaml` | The echo Deployment and Service |
-| `routes.yaml` | HTTPRoute `echo` and any referenced Kong resources |
+{% table %}
+columns:
+  - title: File
+    key: file
+  - title: Resources
+    key: resources
+rows:
+  - file: "`gateway-api-crds.yaml`"
+    resources: The Gateway API CRD bundle that the original installation uses
+  - file: "`gateway-configuration.yaml`"
+    resources: "GatewayConfiguration `kong-configuration`, including the pinned {{site.base_gateway}} image"
+  - file: "`gateway-class.yaml`"
+    resources: GatewayClass `kong` and its parameters reference
+  - file: "`gateway.yaml`"
+    resources: Gateway `kong` and its listeners
+  - file: "`application.yaml`"
+    resources: The echo Deployment and Service
+  - file: "`routes.yaml`"
+    resources: HTTPRoute `echo` and any Kong resources that it references
+{% endtable %}
 
-Use authored manifests without old UIDs, owner references, or `.status`. The generated DataPlane, Deployment, and Service are outputs of reconciliation; the operator will recreate them.
+Use the manifests that you wrote, without old UIDs, owner references, or `.status`.
+The generated `DataPlane`, Deployment, and Service are outputs of reconciliation, and {{site.operator_product_name}} recreates them.
 
-The example uses the chart-managed CA and recreates all workloads that use it. If your Helm values reference an external CA, an issuer, registry credentials, or a license Secret, add those dependencies and their restoration commands to the recovery set. Restore them before installing the chart. An old workload that survives elsewhere will not automatically trust a new CA.
+The example uses the chart-managed CA, and recreates all workloads that use it.
+Your Helm values can reference an external CA, an issuer, registry credentials, or a license Secret.
+If they do, add those dependencies and their restore commands to the recovery set, and restore them before you install the chart.
+An old workload that survives elsewhere doesn't automatically trust a new CA.
 
 ### Export Gateway resources without a repository
 
-Use this fallback only if the manifests aren't in source control. It captures the cluster's current state, including changes that were applied by hand. Save the Gateway API CRD bundle and application manifests from their release or source, and export only the resources you authored, not the generated DataPlane, Deployment, or Service.
+Use this fallback only if the manifests aren't in source control.
+The export captures the current state of the cluster, including changes that someone applied manually.
+Save the Gateway API CRD bundle and the application manifests from their release or source.
+Export only the resources that you wrote, not the generated `DataPlane`, Deployment, or Service.
 
-Export the namespaced resources into the files the restore uses:
+Export the namespaced resources into the files that the restore uses:
 
 ```bash
 kubectl --context "$PRIMARY_CONTEXT" -n kong get gatewayconfiguration \
@@ -107,14 +134,16 @@ kubectl --context "$PRIMARY_CONTEXT" -n kong get httproute \
   -o yaml > recovery/operator/routes.yaml
 ```
 
-Add any Kong resources that the routes reference to `routes.yaml`. Export the cluster-scoped GatewayClass separately:
+Add any Kong resources that the routes reference to `routes.yaml`.
+
+Export the cluster-scoped GatewayClass separately:
 
 ```bash
 kubectl --context "$PRIMARY_CONTEXT" get gatewayclass kong \
   -o yaml > recovery/operator/gateway-class.yaml
 ```
 
-Remove the fields that Kubernetes and the operator generate for the original objects, including the operator's cleanup finalizers on the Gateway. With [`yq`](https://github.com/mikefarah/yq) installed, run:
+Use [`yq`](https://github.com/mikefarah/yq) to remove the fields that Kubernetes and {{site.operator_product_name}} generated for the original objects, including the cleanup finalizers on the Gateway:
 
 ```bash
 STRIP='del(.status) | del(.metadata.uid, .metadata.resourceVersion,
@@ -131,24 +160,24 @@ Review the files, then commit them to a repository so that the next recovery sta
 
 ### Record the baseline
 
-Record the original response from `/echo` and the Gateway's address before the drill.
+Before the drill, record the original response from `/echo` and the address of the Gateway.
 
 ## Reinstall the operator
 
-Confirm the destination:
+Make sure that the replacement context points to the intended cluster:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" cluster-info
 ```
 
-Restore the saved Gateway API CRDs before creating any Gateway resources:
+Restore the saved Gateway API CRDs before you create any Gateway resources:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" apply \
   -f recovery/operator/gateway-api-crds.yaml
 ```
 
-Install the saved Operator chart:
+Install the saved {{site.operator_product_name}} chart:
 
 ```bash
 helm install kong-operator "recovery/operator/kong-operator-${OPERATOR_CHART_VERSION}.tgz" \
@@ -156,7 +185,8 @@ helm install kong-operator "recovery/operator/kong-operator-${OPERATOR_CHART_VER
   -f recovery/operator/values.yaml --wait --timeout 5m
 ```
 
-The new installation must provide the Operator CRDs used by the saved resources. If your original installation disabled chart-managed CRD installation or used cert-manager, restore those separately using the same versions before proceeding.
+The new installation must provide the {{site.operator_product_name}} CRDs that the saved resources use.
+If your original installation turned off chart-managed CRD installation or used cert-manager, restore those separately with the same versions before you continue.
 
 Create the Gateway namespace:
 
@@ -166,14 +196,14 @@ kubectl --context "$RECOVERY_CONTEXT" create namespace kong
 
 ## Restore the Gateway and routes
 
-Apply the configuration first:
+Apply the GatewayConfiguration first:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" apply \
   -f recovery/operator/gateway-configuration.yaml
 ```
 
-Restore the class that references it:
+Restore the GatewayClass that references the GatewayConfiguration:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" apply \
@@ -187,27 +217,29 @@ kubectl --context "$RECOVERY_CONTEXT" apply \
   -f recovery/operator/gateway.yaml
 ```
 
-Restore the backend and route:
+Restore the backend and the route:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong apply \
   -f recovery/operator/application.yaml -f recovery/operator/routes.yaml
 ```
 
-Wait for the operator to program the Gateway:
+Wait for {{site.operator_product_name}} to program the Gateway:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong wait \
   --for=condition=Programmed gateway/kong --timeout=300s
 ```
 
-Expect `condition met`. If this times out, inspect the Gateway's conditions and events before moving traffic:
+Expect `condition met`.
+If the command times out, inspect the conditions and events of the Gateway before you move traffic:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong describe gateway kong
 ```
 
-Resolve missing parameters, certificate failures, or image pull failures. Applying old generated Deployments does not fix a failed Gateway reconciliation.
+Fix any missing parameters, certificate failures, or image pull failures.
+Applying old generated Deployments doesn't fix a failed Gateway reconciliation.
 
 ## Verify the new workloads serve the saved route
 
@@ -217,31 +249,51 @@ Read the recovered address:
 kubectl --context "$RECOVERY_CONTEXT" -n kong get gateway kong
 ```
 
-Set `RECOVERY_ADDRESS` to the Gateway's address and test it:
+Set `RECOVERY_ADDRESS` to the address of the Gateway, and send a request to it:
 
 ```bash
 curl --fail-with-body "http://${RECOVERY_ADDRESS}/echo"
 ```
 
-Expect HTTP `200` and an echo response identifying a pod in the recovery cluster. A programmed Gateway with a `404` response still needs its route fixed. A `503` requires checking backend readiness and Service endpoints.
+Expect HTTP `200` and an echo response that identifies a pod in the recovery cluster.
+If the request fails, check the response:
 
-In `routes.yaml`, add a second HTTPRoute path match for `/echo-recovered` to the same rule, then apply the file again:
+* `404`: The Gateway is programmed, but the route needs a fix.
+* `503`: Check the backend readiness and the Service endpoints.
 
-```bash
-kubectl --context "$RECOVERY_CONTEXT" -n kong apply \
-  -f recovery/operator/routes.yaml
-```
+To check that the embedded controller processes new configuration after recovery, do the following:
 
-Request `http://${RECOVERY_ADDRESS}/echo-recovered` and expect the echo response. This checks that the embedded controller processes new configuration after recovery. Remove the temporary match and reapply the file.
+1. In `routes.yaml`, add a second HTTPRoute path match for `/echo-recovered` to the same rule.
+1. Apply the file again:
 
-This HTTP example tests workload and routing recovery. For a deployment with TLS or authentication, restore its referenced Secrets and repeat its HTTPS, authorized, and unauthorized baseline requests before accepting traffic.
+   ```bash
+   kubectl --context "$RECOVERY_CONTEXT" -n kong apply \
+     -f recovery/operator/routes.yaml
+   ```
+
+1. Send a request to `http://${RECOVERY_ADDRESS}/echo-recovered`, and expect the echo response.
+1. Remove the temporary match, and apply the file again.
+
+This HTTP example tests workload and routing recovery.
+If your deployment uses TLS or authentication, restore the Secrets that it references.
+Then repeat its HTTPS, authorized, and unauthorized baseline requests before you accept traffic.
 
 ## Move traffic and fail back
 
-Update the external DNS or load balancer entry for the application to point to the recovered Gateway address. Request `/echo` through that normal hostname and compare it with the direct-address result.
+Update the external DNS or load balancer entry of the application to point to the recovered Gateway address.
+Send a request to `/echo` through that normal hostname, and compare the result with the direct-address result.
 
-The operator owns its newly generated Services. If the original deployment used a separately managed Service, restore that Service's desired configuration and verify that its selector matches the new data plane pods. Recreating a Gateway does not transfer ownership of that external Service or load balancer.
+{{site.operator_product_name}} owns the Services that it generates.
+If the original deployment used a separately managed Service, restore the desired configuration of that Service.
+Make sure that its selector matches the new data plane pods.
+Recreating a Gateway doesn't transfer ownership of that external Service or load balancer.
 
-To fail back, repeat the restore against the rebuilt original environment, validate its new address, and update the client entry point again. Keep the accepted Gateway and route files in the deployment repository so that GitOps preserves the recovered state.
+To fail back, repeat the restore against the rebuilt original environment, validate its new address, and update the client entry point again.
+Keep the accepted Gateway and route files in the deployment repository, so that GitOps keeps the recovered state.
 
-Record the source revision, new Gateway address, traffic recovery time, and successful route update in the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results).
+In the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results), record the following:
+
+* The source revision
+* The new Gateway address
+* The traffic recovery time
+* The result of the route update

@@ -26,30 +26,59 @@ related_resources:
     url: /gateway/keyring/#disaster-recovery
 ---
 
-Restore a self-managed hybrid control plane from a PostgreSQL backup, then reconnect replacement Kubernetes data planes. This walkthrough uses a full logical database backup and the same Gateway version as the original deployment.
+You can recover a self-managed [hybrid mode](/gateway/hybrid-mode/) deployment on Kubernetes when you lose the {{site.base_gateway}} cluster and its database.
+Restore the control plane from a PostgreSQL backup, then reconnect replacement Kubernetes data planes.
+This walkthrough uses a full logical database backup and the same {{site.base_gateway}} version as the original deployment.
 
-The failure is loss of the Gateway cluster and its database. The result is a new control plane serving the configuration present in the backup. Changes made after the backup are not recovered by this procedure.
+The result is a new control plane that serves the configuration from the backup.
+This procedure doesn't recover changes that you made after the backup.
 
 ## Starting deployment and recovery inputs
 
-Use the release layout from [Install Kong Gateway on Kubernetes](/gateway/install/kubernetes/on-prem/): Helm releases `kong-cp` and `kong-dp`, chart `kong/kong`, namespace `kong`, and PostgreSQL database and role `kong`.
+The hybrid recovery example uses the release layout from [Install {{site.base_gateway}} on Kubernetes](/gateway/install/kubernetes/on-prem/):
 
-The example restores into a separate PostgreSQL instance with an empty database named `kong`, owned by the `kong` role. Provision that instance and role before restoring. It must use a Gateway-supported PostgreSQL version and be reachable from both the recovery workstation and control plane.
+* Helm releases: `kong-cp` and `kong-dp`
+* Chart: `kong/kong`
+* Namespace: `kong`
+* PostgreSQL database and role: `kong`
+
+The example restores into a separate PostgreSQL instance with an empty database named `kong`, owned by the `kong` role.
+Provision that instance and role before you restore.
+The instance must use a PostgreSQL version that {{site.base_gateway}} supports.
+Both the recovery workstation and the control plane must be able to reach it.
 
 Set these variables:
 
-| Variable | Value |
-| --- | --- |
-| `PRIMARY_CONTEXT` | Original Kubernetes context |
-| `RECOVERY_CONTEXT` | Replacement Kubernetes context |
-| `PRIMARY_PG_HOST` | Original PostgreSQL host, used only when taking the backup |
-| `RECOVERY_PG_HOST` | Replacement PostgreSQL host |
-| `GATEWAY_CHART_VERSION` | Original `kong/kong` chart version |
-| `KONG_ADMIN_TOKEN` | Existing Admin API token, if RBAC is enabled |
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Value
+    key: value
+rows:
+  - variable: "`PRIMARY_CONTEXT`"
+    value: Original Kubernetes context
+  - variable: "`RECOVERY_CONTEXT`"
+    value: Replacement Kubernetes context
+  - variable: "`PRIMARY_PG_HOST`"
+    value: Original PostgreSQL host, used only to take the backup
+  - variable: "`RECOVERY_PG_HOST`"
+    value: Replacement PostgreSQL host
+  - variable: "`GATEWAY_CHART_VERSION`"
+    value: "Original `kong/kong` chart version"
+  - variable: "`KONG_ADMIN_TOKEN`"
+    value: Existing Admin API token, if RBAC is enabled
+{% endtable %}
 
-Use PostgreSQL clients compatible with the source server. Supply database credentials through a protected PostgreSQL password file and retain the TLS settings required by your database. The commands assume the standard PostgreSQL port; supply `--port` if yours differs.
+Use PostgreSQL clients that are compatible with the source server.
+Supply database credentials through a protected PostgreSQL password file, and keep the TLS settings that your database requires.
+The commands use the standard PostgreSQL port.
+If your port is different, add `--port` to the commands.
 
-Before the failure, create a Service and Route named `dr-check` in the default Workspace that serve a known upstream through `/dr-check`. Record a successful response and an authentication rejection if the Route is protected. New Routes accept only HTTPS unless you set `protocols`, so the requests in this guide use `https://`.
+Before the failure, create a Gateway Service and a Route named `dr-check` in the default Workspace.
+They must serve a known upstream through `/dr-check`.
+Record a successful response, and an authentication rejection if the Route is protected.
+New Routes accept only HTTPS unless you set `protocols`, so the requests in this guide use `https://`.
 
 ## Save the database and deployment files
 
@@ -59,14 +88,16 @@ Create the protected backup directory:
 mkdir -p recovery/hybrid
 ```
 
-Take a complete database backup in PostgreSQL custom format:
+Take a complete database backup in the PostgreSQL custom format:
 
 ```bash
 pg_dump --host="$PRIMARY_PG_HOST" --username=kong --dbname=kong \
   --format=custom --file=recovery/hybrid/kong.dump
 ```
 
-Record its creation time and the last configuration change included in it. This is a database backup, not a backup of PostgreSQL roles, cloud resources, or certificate files.
+Record the time of the backup and the last configuration change that it includes.
+The `pg_dump` command backs up the database only.
+It doesn't back up PostgreSQL roles, cloud resources, or certificate files.
 
 Save the control plane values:
 
@@ -89,24 +120,40 @@ helm pull kong/kong --version "$GATEWAY_CHART_VERSION" \
   --destination recovery/hybrid
 ```
 
-Also preserve the `kong-cluster-cert` certificate and private key as `tls.crt` and `tls.key`, the license as `license.json`, and any database Secret, custom plugins, registry credentials, or externally referenced secrets. If Keyring is enabled, include its recovery private key as `keyring-recovery.pem` and the Secret that mounts the public key named by `keyring_recovery_public_key`. Confirm that recovery was configured before this backup.
+Also save the following files:
 
-Keep all of these files in protected storage outside the original environment. Record the exact Gateway image; recovery must not silently select a newer image.
+* The `kong-cluster-cert` certificate and private key, as `tls.crt` and `tls.key`
+* The license, as `license.json`
+* Any database Secret, custom plugins, registry credentials, or externally referenced secrets
+
+If [Keyring](/gateway/keyring/) is enabled, also save its recovery private key as `keyring-recovery.pem`, and the Secret that mounts the public key named by `keyring_recovery_public_key`.
+Make sure that you configured Keyring recovery before you took this backup.
+
+Keep all of these files in protected storage outside the original environment.
+Record the exact {{site.base_gateway}} image, so that recovery doesn't select a newer image.
 
 ## Restore the database before starting Kong
 
-Isolate the former database writer and pause configuration pipelines. During a drill, keep the recovery database isolated from production management tools. Do not let two independent control planes accept changes intended for one authoritative environment.
+Isolate the former database writer and pause configuration pipelines.
+During a drill, keep production management tools away from the recovery database.
+Don't let two independent control planes accept changes that are meant for one authoritative environment.
 
-Restore into the empty recovery database:
+Restore the backup into the empty recovery database:
 
 ```bash
 pg_restore --host="$RECOVERY_PG_HOST" --username=kong --dbname=kong \
   --exit-on-error recovery/hybrid/kong.dump
 ```
 
-Expect the command to exit successfully without restore errors. This restores the schema and data together. Do not bootstrap Kong into the empty database before this restore. If it fails partway through, recreate an empty recovery database before retrying; do not accept a partial restore. See the [PostgreSQL restore reference](https://www.postgresql.org/docs/current/app-pgrestore.html).
+Expect the command to exit successfully without restore errors.
+The `pg_restore` command restores the schema and the data together.
+Don't bootstrap Kong into the empty database before this restore.
+If the restore fails partway through, recreate an empty recovery database before you try again.
+Don't accept a partial restore.
+For more information, see the [PostgreSQL restore reference](https://www.postgresql.org/docs/current/app-pgrestore.html).
 
-Create an override file that points the control plane at the recovery database and disables migration jobs for this same-version restore:
+Create an override file that points the control plane at the recovery database.
+The file also turns off migration jobs, because this restore uses the same version:
 
 ```yaml
 env:
@@ -117,11 +164,17 @@ migrations:
   postUpgrade: false
 ```
 
-Replace `<RECOVERY_PG_HOST>` with the recovery database endpoint and save the file as `recovery/hybrid/restore-values.yaml`. Leave `values-cp.yaml` unchanged; values in this override take precedence. If the database name, role, password or Secret reference, or TLS settings also differ, override them here too. Keep the saved Gateway image unchanged. Verify that the saved chart supports these settings. The [Kong chart migration template](https://github.com/Kong/charts/blob/main/charts/kong/templates/migrations.yaml) uses `migrations.init` to control the install-time bootstrap job.
+Replace `<RECOVERY_PG_HOST>` with the endpoint of the recovery database, and save the file as `recovery/hybrid/restore-values.yaml`.
+Don't change `values-cp.yaml`, because the values in this override take precedence.
+If the database name, role, password or Secret reference, or TLS settings are also different, override them in this file too.
+Don't change the saved {{site.base_gateway}} image.
+
+Make sure that the saved chart supports these settings.
+The [Kong chart migration template](https://github.com/Kong/charts/blob/main/charts/kong/templates/migrations.yaml) uses `migrations.init` to control the bootstrap job that runs at install time.
 
 ## Restore credentials and the control plane
 
-Confirm that `RECOVERY_CONTEXT` points to the replacement cluster, then create its namespace:
+Make sure that `RECOVERY_CONTEXT` points to the replacement cluster, then create its namespace:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" create namespace kong
@@ -134,14 +187,17 @@ kubectl --context "$RECOVERY_CONTEXT" -n kong create secret tls kong-cluster-cer
   --cert=recovery/hybrid/tls.crt --key=recovery/hybrid/tls.key
 ```
 
-Restore the license Secret used by the installation example:
+Restore the license Secret that the installation example uses:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong create secret generic kong-enterprise-license \
   --from-file=license=recovery/hybrid/license.json
 ```
 
-Restore any other Secrets referenced by the saved values before installing, including the Keyring recovery public key Secret. A missing Secret volume keeps the pod from starting. Deploy the control plane:
+Before you install, restore any other Secrets that the saved values reference, including the Secret for the Keyring recovery public key.
+If a Secret volume is missing, the pod doesn't start.
+
+Deploy the control plane with the saved values and the override file:
 
 ```bash
 helm install kong-cp "recovery/hybrid/kong-${GATEWAY_CHART_VERSION}.tgz" \
@@ -150,9 +206,10 @@ helm install kong-cp "recovery/hybrid/kong-${GATEWAY_CHART_VERSION}.tgz" \
   --wait --timeout 5m
 ```
 
-If startup fails, inspect the control plane logs for database authentication, TLS, schema, or keyring errors. Do not run migrations to work around a mismatch between the saved database and Gateway image.
+If startup fails, inspect the control plane logs for database authentication, TLS, schema, or Keyring errors.
+Don't run migrations to work around a mismatch between the saved database and the {{site.base_gateway}} image.
 
-Forward the private Admin API in a separate terminal:
+In a separate terminal, forward the private Admin API port:
 
 ```bash
 kubectl --context "$RECOVERY_CONTEXT" -n kong port-forward \
@@ -166,11 +223,15 @@ curl --fail-with-body -H "Kong-Admin-Token: $KONG_ADMIN_TOKEN" \
   http://localhost:8001/routes/dr-check
 ```
 
-Expect the saved Route, including its ID and `/dr-check` path. For a different Workspace, use that Workspace's Admin API path. The local HTTP port forward follows the installation example; use your deployment's private TLS endpoint if HTTP is disabled.
+Expect the saved Route, including its ID and the `/dr-check` path.
+For a different Workspace, use the Admin API path of that Workspace.
+The local HTTP port forward follows the installation example.
+If HTTP is disabled, use the private TLS endpoint of your deployment.
 
 ### Recover Keyring, if enabled
 
-The restored database contains the encrypted Keyring material, but the new control plane starts with an empty Keyring. Until you recover it, Admin API reads of encrypted entities fail with HTTP `500`.
+The restored database contains the encrypted Keyring material, but the new control plane starts with an empty Keyring.
+Until you recover the Keyring, Admin API reads of encrypted entities fail with HTTP `500`.
 
 Submit the recovery private key:
 
@@ -181,7 +242,8 @@ curl --fail-with-body -X POST \
   http://localhost:8001/keyring/recover
 ```
 
-Inspect the recovered and failed keys. Set `KEY_ID` to the recovered key to activate, then activate it:
+Inspect the recovered and failed keys in the response.
+Set `KEY_ID` to the recovered key that you want to activate, then activate it:
 
 ```bash
 curl --fail-with-body -X POST \
@@ -189,11 +251,15 @@ curl --fail-with-body -X POST \
   --data-urlencode "key=$KEY_ID" http://localhost:8001/keyring/activate
 ```
 
-Validate a request that uses encrypted configuration. A restored Route alone does not prove that encrypted credentials are usable. See [Keyring recovery](/gateway/keyring/#disaster-recovery) for the required preparation.
+Send a request that uses encrypted configuration, and make sure that it succeeds.
+A restored Route alone doesn't show that encrypted credentials work.
+For the required preparation, see [Keyring recovery](/gateway/keyring/#disaster-recovery).
 
 ## Restore and test the data plane
 
-The original data plane values reference the `kong-cp` Services in namespace `kong`. Keeping those names allows the replacement data plane to find the new control plane. If you used external control plane names, update those endpoints and their trust settings in `values-dp.yaml`.
+The original data plane values reference the `kong-cp` Services in the `kong` namespace.
+If you keep those names, the replacement data plane finds the new control plane.
+If you used external control plane names, update those endpoints and their trust settings in `values-dp.yaml`.
 
 Install the data plane:
 
@@ -209,20 +275,50 @@ Read its proxy address:
 kubectl --context "$RECOVERY_CONTEXT" -n kong get service kong-dp-kong-proxy
 ```
 
-Set `RECOVERY_ADDRESS` to the external address and request the saved Route:
+Set `RECOVERY_ADDRESS` to the external address, and send a request to the saved Route:
 
 ```bash
 curl --fail-with-body --insecure "https://${RECOVERY_ADDRESS}/dr-check"
 ```
 
-Expect the same application result recorded before the backup. `--insecure` is only for this direct-address check, because the replacement proxy presents its default self-signed certificate unless you configured your own. Adapt this request to the Route's hostname, TLS, and authentication requirements. A `404` indicates that the expected Route is not loaded or matched; inspect control plane synchronization before moving traffic. A `426` means the Route accepts only HTTPS.
+Expect the same application result that you recorded before the backup.
+Use `--insecure` only for this direct-address check.
+The replacement proxy presents its default self-signed certificate unless you configured your own certificate.
+If the Route uses a hostname, TLS, or authentication, add them to the request.
 
-Next, verify that the recovered control plane can distribute new configuration. Choose a temporary path that the Route doesn't already match, such as `/dr-verify`. Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`, and a request to that path succeeds before any change. Confirm that `/dr-verify` returns `404`, add it to the Route through your normal configuration workflow, and confirm that it returns the application response. Then remove it and confirm that it returns `404` again.
+If the request fails, check the status code:
+
+* `404`: The expected Route isn't loaded or doesn't match. Inspect control plane synchronization before you move traffic.
+* `426`: The Route accepts only HTTPS.
+
+Next, make sure that the recovered control plane can distribute new configuration.
+Use a temporary path that the Route doesn't already match, such as `/dr-verify`.
+Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`, and a request to that path succeeds before any change.
+
+1. Send a request to `/dr-verify`, and make sure that it returns `404`.
+1. Add the path to the Route through your normal configuration workflow.
+1. Send the request again, and make sure that it returns the application response.
+1. Remove the path, and make sure that the request returns `404` again.
 
 ## Move traffic and fail back
 
-Update the application's DNS record or external load balancer target to the validated proxy address, then repeat the baseline requests through the normal client endpoint.
+Update the DNS record or external load balancer target of the application to the validated proxy address.
+Then repeat the baseline requests through the normal client endpoint.
 
-Treat the recovered database as authoritative. To fail back, synchronize the original database from that state through your PostgreSQL recovery procedure, switch the control plane to the accepted writer, validate the original data planes, and return traffic. Do not reconnect the old independently writable database as though changes will merge.
+Treat the recovered database as authoritative.
+To fail back, do the following:
 
-Record the backup time, missing configuration changes, successful encrypted-credential checks, and the separate traffic and configuration recovery times in the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results).
+1. Synchronize the original database from the recovered state through your PostgreSQL recovery procedure.
+1. Switch the control plane to the accepted writer.
+1. Validate the original data planes.
+1. Return traffic to the original data planes.
+
+Don't reconnect the old database as an independent writer.
+Its changes don't merge with the recovered database.
+
+In the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results), record the following:
+
+* The backup time
+* The configuration changes that are missing
+* The results of the encrypted-credential checks
+* The traffic recovery time and the configuration recovery time

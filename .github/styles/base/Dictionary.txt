@@ -262,6 +262,7 @@ example_service
 exfiltrate
 exfiltration
 extra_body
+failback
 failover
 fapi
 Fargate
@@ -872,6 +873,7 @@ UDPRoute
 UDPRoutes
 uint
 uid
+UIDs
 UIs
 ulimit
 ulimits
@@ -965,6 +967,7 @@ VS Code
 Vue
 waf
 walkthrough
+walkthroughs
 Wallarm
 Wasm
 watchNamespaces
