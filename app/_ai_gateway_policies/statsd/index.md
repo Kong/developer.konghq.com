@@ -82,6 +82,18 @@ rows:
     name: "`kong.service.<entity>.kong_latency`"
     description: Tracks the time in milliseconds {{site.ai_gateway}} spent processing the request itself.
     type: "`timer`"
+  - metric: "`unique_users`"
+    name: "`kong.service.<entity>.user.uniques`"
+    description: Tracks the unique AI Consumers that made requests.
+    type: "`set`"
+  - metric: "`request_per_user`"
+    name: "`kong.service.<entity>.user.<consumer_identifier>.request.count`"
+    description: Counts the requests for each AI Consumer.
+    type: "`counter`"
+  - metric: "`status_count_per_user`"
+    name: "`kong.service.<entity>.user.<consumer_identifier>.status.<status>`"
+    description: Counts the responses for each HTTP status code and AI Consumer.
+    type: "`counter`"
   - metric: "`status_count_per_workspace`"
     name: "`kong.service.<entity>.workspace.<workspace_id>.status.<status>`"
     description: Counts the responses for each HTTP status code, with a workspace ID in the name.
@@ -137,8 +149,9 @@ Set the `consumer_identifier` field of the metric to choose the value that goes 
 * `username`: The name of the AI Consumer, for example `kong.service.<entity>.user.<username>.request.count`.
 * `consumer_id`: The ID of the AI Consumer, including its hyphens.
 
-For an authenticated request, the Policy doesn't send a per-consumer metric that has no `consumer_identifier`.
-The default [`config.consumer_identifier_default`](/ai-gateway/policies/statsd/reference/#schema--config-consumer-identifier-default) is `custom_id`, and AI Consumers don't have a custom ID.
+For an authenticated request, the Policy doesn't send a per-consumer metric without a `consumer_identifier`.
+The default [`config.consumer_identifier_default`](/ai-gateway/policies/statsd/reference/#schema--config-consumer-identifier-default) is `custom_id`, and `api-key` AI Consumers don't have a custom ID.
+`oauth` AI Consumers set their own `custom_id`, for example to the `sub` claim.
 For requests that authentication rejects, the default metrics include per-consumer metrics with the user name `anonymous`.
 
 For a configuration, see [Count requests per AI Consumer](/ai-gateway/policies/statsd/examples/count-requests-per-consumer/).
@@ -147,7 +160,8 @@ For a configuration, see [Count requests per AI Consumer](/ai-gateway/policies/s
 
 By default, the Policy puts the entity in the metric name.
 Set [`config.tag_style`](/ai-gateway/policies/statsd/reference/#schema--config-tag-style) to send the metrics with tags instead.
-The metric names then drop the entity, for example `kong.request.count`, and each metric carries the `route`, `workspace`, `node`, `status`, and `service` tags.
+The metric names then drop the entity, for example `kong.request.count`, and each metric carries the `route`, `workspace`, `node`, `status`, and `service` tags, plus a `consumer` tag when the request is authenticated.
+The `shdict_usage` metric carries only the `node` and `shdict` tags.
 The `route` tag holds a route name that {{site.ai_gateway}} generated for the entity, and `service` holds the entity name.
 
 The Policy supports four tag formats:
@@ -170,7 +184,7 @@ rows:
 {% endtable %}
 
 Choose the format that matches your backend, for example `dogstatsd` for Datadog, `influxdb` for InfluxDB, `librato` for Librato, and `signalfx` for SignalFx.
-With `tag_style` set, the Policy doesn't send the `status_count` metric.
+When you set `tag_style`, the Policy doesn't send the `status_count` metric.
 For a configuration, see [Send metrics with DogStatsD tags](/ai-gateway/policies/statsd/examples/use-dogstatsd-tags/).
 
 ## Metric names
