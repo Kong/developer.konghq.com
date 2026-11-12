@@ -140,14 +140,14 @@ prereqs:
       content: |
         The [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy requires an external PII Anonymizer service to detect and replace sensitive data. Kong publishes the [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) as public Docker images, with one image per supported language model.
 
-        1. Start the PII Anonymizer service. The image tag selects the language model in `version-lang_code` format, for example `v0.3.1-en` for English or `v0.3.1-es` for Spanish. See the [available language tags](/ai-gateway/policies/ai-sanitizer/#available-language-tags) for the full list. Each model needs at least 600 MB of memory:
+        1. Start the PII Anonymizer service. The image tag selects the language model in `version-lang_code` format, for example `v0.2.2-en` for English or `v0.2.2-es` for Spanish. See the [available language tags](/ai-gateway/policies/ai-sanitizer/#available-language-tags) for the full list. Each model needs at least 600 MB of memory:
 
            ```bash
            docker run -d \
              --name kong-pii-anonymizer \
              --memory=1g \
              -p 8080:8080 \
-             kong/ai-pii-service:v0.3.1-en
+             kong/ai-pii-service:v0.2.2-en
            ```
 
            Pulling this image requires no authentication. Kong publishes only an `amd64` build, so on Apple Silicon add `--platform linux/amd64` to the command above to run it under Rosetta.
