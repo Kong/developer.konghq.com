@@ -36,10 +36,15 @@ breadcrumbs:
 tldr:
   q: How do I get started with {{site.ai_cost_management}}?
   a: |
-    Add your OpenID Connect (OIDC) identity provider as a trusted IdP in Access Management with automatic user provisioning enabled, then create an `openid-connect` AI Auth Strategy with `principals.enabled` and `principals.jit` set, and attach it to a priced AI Model.
+    To get started with {{site.ai_cost_management}}, you'll need to:
+    1. Upload an org structure CSV with `kongctl import identity org-chart`.
+    1. Add your OIDC provider as a trusted IdP in Access Management with automatic user provisioning enabled.
+    1. Create a budget with a spend limit.
+    1. Create an `openid-connect` AI Auth Strategy with `principals.enabled` and `principals.jit` set, and attach it to the AI Model.
+    1. Install the attribution plugin so `ai-cost-` headers are captured as tags.
 
-    The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as `principal/PRINCIPAL_UUID`, for example `principal/01a1c15c-310d-79a6-acde-85f746946396`.
-
+    The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as `principal/PRINCIPAL_UUID`.
+    Requests to this model are priced from the catalog unless you set a price override.
 prereqs:
   inline:
     - title: OpenAI

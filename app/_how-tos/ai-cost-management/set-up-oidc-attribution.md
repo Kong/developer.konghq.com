@@ -87,11 +87,14 @@ cleanup:
 Automatic user provisioning creates a {{site.identity}} principal from any OIDC provider's token the first time its caller authenticates, without need to set up a {{site.identity}} directory, auth server, or client manually.
 Every usage event's `subject` resolves to `principal/PRINCIPAL_UUID`.
 
+{{site.ai_cost_management}} attributes usage in two independent tracks: the subject and tags, which record context like project or team through a separate mechanism.
+This guide covers subject attribution only. See [Tags and headers](/ai-cost-management/attribution/#tags-and-headers) for the other track.
+
 {:.info}
 > This guide attributes usage to a principal built from your own OIDC provider.
 > * For a principal built from Kong Identity's own auth server instead, see [Set up Kong Identity attribution](/ai-cost-management/kong-identity-attribution/).
 > * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/).
-> * For a full walkthrough that also covers budgets, pricing, and tags, see [Get started with {{site.ai_cost_management}}](/ai-cost-management/getting-started/).
+> * For a full walkthrough that also covers budgets, pricing, and tag attribution, see [Get started with {{site.ai_cost_management}}](/ai-cost-management/getting-started/).
 
 ## Upload an org structure
 
@@ -173,15 +176,10 @@ In this configuration example:
 * The strategy's `principals.jit.all_claims` field forwards every token claim to the provisioning lookup, including the `email` claim you mapped on the trusted IdP.
 * The target has no `input_cost` or `output_cost` set, so {{site.ai_cost_management}} falls back to the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
 
-## Install the attribution plugin
-
-{% include /ai-cost-management/install-attribution-plugin.md %}
-
 ## Send a request
 
 Get an access token from your OIDC provider, then send a chat completion to generate a usage event.
 The auth strategy verifies the bearer token and resolves it to a principal, creating one automatically from the token's forwarded claims if none matches yet.
-The `ai-cost-project` header sets the event's `project` tag.
 
 Request an access token using the client credentials grant.
 `/protocol/openid-connect/token` is Keycloak's token endpoint path.
@@ -217,7 +215,6 @@ method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $ACCESS_TOKEN'
-  - 'ai-cost-project: atlas'
 body:
   model: openai-chat
   messages:
@@ -230,14 +227,14 @@ status_code: 200
 ## Validate
 
 The events API returns the usage events for your organization, sorted by newest first.
-Filter it to the `project` tag you set earlier:
+Find the event your request generated:
 
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  curl -s "$KONNECT_CONTROL_PLANE_URL/v1/ai-cost-management/events?filter%5Btags.project%5D=atlas" \
+  curl -s "$KONNECT_CONTROL_PLANE_URL/v1/ai-cost-management/events" \
     -H "Authorization: Bearer $KONNECT_TOKEN" \
-    | jq '.data[] | {time, subject, context: .data.context, cost: .data.reported_cost, tags: .data.tags}'
+    | jq '.data[0] | {time, subject, context: .data.context, cost: .data.reported_cost}'
 expected:
   return_code: 0
 render_output: false
@@ -247,7 +244,6 @@ render_output: false
 Check the following in the response:
 * `subject` shows your principal as `principal/PRINCIPAL_UUID`.
 * `cost.value` is greater than `0`, using the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
-* `tags.project` shows `atlas`.
 
 If `cost.value` is `0` or `subject` is absent, see [Troubleshoot missing or wrong data](/ai-cost-management/analytics-and-debugging/#troubleshoot-missing-or-wrong-data).
 
