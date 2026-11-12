@@ -1,0 +1,38 @@
+title: 'Custom regex injection'
+
+description: 'Configure the Injection Protection Policy to block requests that match a custom regular expression.'
+extended_description: |
+  You can specify a custom regular expression by using the `custom_injections` parameter.
+  To create a custom regular expression, define the following:
+
+  * The name of the regular expression, which appears in the data plane log
+  * The regular expression string to match
+  * The content to check (for example, headers, path and query, and body)
+
+weight: 900
+
+name: custom
+display_name: 'Custom regex injection'
+type: injection-protection
+
+config:
+  injection_types: []
+  locations:
+    - path_and_query
+  custom_injections:
+    - name: Internal debug marker
+      regex: internal_debug
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

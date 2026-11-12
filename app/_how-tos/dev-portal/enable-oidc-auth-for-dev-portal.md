@@ -121,10 +121,11 @@ To map an application from the Dev Portal to Okta, you have to create a claim.
 
 When self-managed OIDC is enabled in Dev Portal, developers must create an application in Okta themselves.
 
-1. In Okta, navigate to **Applications > Applications** in the sidebar.
+1. In Okta, navigate to **Applications and Resources > Applications** in the sidebar.
 1. Click **Create App Integration**.
 1. Select **OIDC - OpenID Connect**.
 1. Select **Web Application**.
+1. In the **Client definition** field, select "Use Okta-generated client ID".
 1. Click **Client credentials** for the grant type.
 1. Export the client ID and client secret of your Okta app:
    ```sh

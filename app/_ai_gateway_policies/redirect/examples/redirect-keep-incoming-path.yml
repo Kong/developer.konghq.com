@@ -1,0 +1,27 @@
+description: |
+  Redirect requests to a new host and keep the path and query string of the incoming request.
+
+title: Redirect requests and keep the incoming path
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to attach the policy to.
+
+variables:
+  location:
+    description: The URL that callers are redirected to.
+    value: $REDIRECT_URL
+
+name: redirect-keep-incoming-path
+display_name: Redirect requests and keep the incoming path
+type: redirect
+
+config:
+  location: ${location}
+  keep_incoming_path: true
+  status_code: 308
+
+tools:
+  - konnect-api
+  - kongctl

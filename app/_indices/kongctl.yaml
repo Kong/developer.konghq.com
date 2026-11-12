@@ -89,6 +89,10 @@ groups:
         items:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
+      - title: Import Data
+        items:
+            - path: /kongctl/import/
+            - path: /kongctl/import/*/**
       - title: Inspect Resources
         items:
             - path: /kongctl/inspect/

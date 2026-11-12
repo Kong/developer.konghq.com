@@ -19,6 +19,7 @@ Available Commands:
   dcr-provider  List or get Konnect DCR providers
   event-gateway List or get Konnect Event Gateways
   gateway       Manage Konnect Kong Gateway resources
+  identity      Manage Kong Identity resources
   me            Get current user information
   mesh          Manage Kong Mesh control plane resources
   organization  Get current organization information

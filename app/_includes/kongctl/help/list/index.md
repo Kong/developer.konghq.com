@@ -27,6 +27,7 @@ Available Commands:
   dcr-provider  List or get Konnect DCR providers
   extensions    List installed kongctl CLI extensions
   gateway       Manage Konnect Kong Gateway resources
+  identity      Manage Kong Identity resources
   konnect       Manage Konnect resources
   organization  Get current organization information
   portal        List or get Konnect portals

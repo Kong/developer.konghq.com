@@ -1,5 +1,6 @@
 ai_gateway_enterprise
 ai_gateway_url
+on_prem_controllers
 graphql
 hmac
 how_to

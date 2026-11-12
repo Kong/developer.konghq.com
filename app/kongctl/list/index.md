@@ -35,9 +35,6 @@ columns:
     key: description
 rows:
   - command: |
-      [kongctl list ai-cost-management](/kongctl/list/ai-cost-management/)
-    description: "Manage regional AI cost capture."
-  - command: |
       [kongctl list ai-gateway](/kongctl/list/ai-gateway/)
     description: "List {{site.ai_gateway}}s."
   - command: |
@@ -55,6 +52,9 @@ rows:
   - command: |
       [kongctl list gateway](/kongctl/list/gateway/)
     description: "List gateways."
+  - command: |
+      [kongctl list identity](/kongctl/list/identity/)
+    description: "List Kong Identity resources."
   - command: |
       [kongctl list konnect](/kongctl/list/konnect/)
     description: "List {{site.konnect_short_name}} resources."
