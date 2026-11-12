@@ -86,16 +86,16 @@ Before enabling back-channel logout, keep the following in mind:
 ### Requirements
 
 * Your Dev Portal uses OIDC for SSO.
-* Your IdP supports OpenID Connect Back-Channel Logout 1.0. Check your IdP's documentation to confirm.
+* Your IdP supports OpenID Connect Back-Channel Logout 1.0.
 * Your IdP can reach your Dev Portal over the internet.
 
 ### Set up back-channel logout
 
-1. In your IdP, find the application you created for the Dev Portal and set its back-channel logout URL to:
+1. In your IdP, find the application you created for the Dev Portal and set its back-channel logout URL to one of the following:
    * If you're using a custom domain: `https://www.example.com/api/v3/oauth/backchannel-logout`
    * If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/api/v3/oauth/backchannel-logout`
 
-   If your IdP has a setting that includes the session ID in the logout request (often called "session required"), turn it on. This lets the Dev Portal end only the session that signed out, instead of every session for that developer.
+   If your IdP has a setting that includes the session ID in the logout request (often called "session required"), turn it on. This lets the Dev Portal only end the session that signed out, instead of every session for that developer.
 
 1. In the {{site.konnect_short_name}} sidebar, click [**{{site.dev_portal}}**](https://cloud.konghq.com/portals/).
 1. Click your {{site.dev_portal}}.
