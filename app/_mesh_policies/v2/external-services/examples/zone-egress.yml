@@ -1,5 +1,9 @@
 title: 'ExternalService and ZoneEgress'
 
+tools:
+  - kubernetes
+  - universal
+
 description: ExternalService and ZoneEgress
 
 extended_description: |

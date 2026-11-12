@@ -15,7 +15,7 @@ config:
       - matches:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.zone-1.mesh.local/ns/kong-mesh-demo/
+              value: spiffe://default.zone-1.mesh.local/ns/kong-mesh-demo/sa
         default:
           backends:
             - type: File

@@ -1,0 +1,20 @@
+title: 'Require mTLS on one service'
+
+description: 'Set Strict on a subset of proxies, to hold one service to mTLS while a mesh-wide policy is still permissive.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTLS
+  name: strict-mode
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: redis
+    rules:
+      - default:
+          mode: Strict

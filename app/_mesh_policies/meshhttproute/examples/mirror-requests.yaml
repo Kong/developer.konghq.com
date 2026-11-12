@@ -1,0 +1,43 @@
+title: 'Mirror a fraction of requests to another destination'
+
+description: 'Route only requests carrying the mirror-this-request: true header, and copy 30% of them to a second destination with a RequestMirror filter while the originals continue to backend. Other requests from this client to backend match no rule and receive a 404.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHTTPRoute
+  name: backend-mirror
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        rules:
+          - matches:
+              - headers:
+                  - type: Exact
+                    name: mirror-this-request
+                    value: "true"
+            default:
+              filters:
+                - type: RequestMirror
+                  requestMirror:
+                    percentage: 30
+                    backendRef:
+                      kind: MeshService
+                      labels:
+                        kuma.io/display-name: backend-shadow
+                      port: 8080
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend
+                  port: 8080

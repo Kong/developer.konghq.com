@@ -1,0 +1,22 @@
+title: 'Cap incoming connections to a service'
+
+description: 'Use MeshCircuitBreaker rules to limit the connections a proxy accepts, rather than the connections it opens to a destination.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshCircuitBreaker
+  name: backend-inbound
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          connectionLimits:
+            maxConnections: 100
+            maxPendingRequests: 50
