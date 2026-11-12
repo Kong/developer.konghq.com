@@ -129,7 +129,9 @@ sequenceDiagram
     AIGW-->>Client: Response
 {% endmermaid %}
 
-Most AI Policies run after authentication. A global AI Policy with a higher priority than the AI Auth Strategy runs before it. For details, see [Scopes and authentication](#scopes-and-authentication).
+Most AI Policies run after authentication. 
+A global AI Policy with a higher priority than the AI Auth Strategy runs before it. 
+For more information, see [Scopes and authentication](#scopes-and-authentication).
 An AI Policy runs at most once per request.
 
 ## AI Policy scopes
@@ -152,8 +154,10 @@ For example, an ACL AI Policy doesn't support AI Consumer or AI Consumer Group s
 
 ### Scopes and authentication
 
-A global AI Policy runs before authentication when its [priority](#ai-policy-priority) is higher than the priority of the [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/). Otherwise, it runs after authentication succeeds.
-An entity-scoped AI Policy always runs after authentication succeeds, whatever its priority. If the request fails authentication, the AI Policy doesn't run.
+A global AI Policy runs before authentication when its [priority](#ai-policy-priority) is higher than the priority of the [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/). 
+Otherwise, it runs after authentication succeeds.
+An entity-scoped AI Policy always runs after authentication succeeds, regardless of its priority. 
+If the request fails authentication, the AI Policy doesn't run.
 
 If an AI Policy must run before authentication, for example to modify a request header that the AI Auth Strategy reads, apply a type with a higher priority than the AI Auth Strategy globally.
 
