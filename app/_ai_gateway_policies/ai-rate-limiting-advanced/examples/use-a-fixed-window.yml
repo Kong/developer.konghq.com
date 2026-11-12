@@ -1,0 +1,32 @@
+description: |
+  Configure the AI Rate Limiting Advanced policy to count requests in fixed time windows.
+  The default is a sliding window, which also weighs the traffic from the previous window. A fixed window resets the counter when each window ends.
+
+title: Use a fixed window
+
+weight: 880
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+
+
+name: use-a-fixed-window
+display_name: Use a fixed window
+type: ai-rate-limiting-advanced
+
+config:
+  window_type: fixed
+  policies:
+    - match:
+        - type: ip
+          values:
+            - 127.0.0.1
+            - 192.0.2.0
+      limits:
+        - limit: 100
+          window_size: 60
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
