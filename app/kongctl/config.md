@@ -186,7 +186,7 @@ KONGCTL_DEFAULT_KONNECT_REGION=eu
 {:.info}
 > **Note:** The `KONGCTL_` prefix configures the kongctl CLI. To inject an
 > environment variable into a declarative resource, use the
-> [`!env` YAML tag](/kongctl/declarative/#loading-values-from-environment-variables).
+> [`!env` YAML tag](/kongctl/declarative/environment-values/#loading-values-from-environment-variables).
 
 
 ## Configuration file

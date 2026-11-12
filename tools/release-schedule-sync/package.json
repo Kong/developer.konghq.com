@@ -1,0 +1,12 @@
+{
+  "name": "release-schedule-sync",
+  "version": "1.0.0",
+  "description": "Syncs the Release Schedule project view with repo milestones",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "sync": "node index.js",
+    "dry-run": "node index.js --dry-run"
+  },
+  "license": "ISC"
+}

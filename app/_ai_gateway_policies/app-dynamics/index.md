@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -163,7 +164,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
+### Possible values for the KONG_APPD_LOGGING_LEVEL parameter
 
 The `KONG_APPD_LOGGING_LEVEL` environment variable is a numeric value that controls the desired logging level.
 

@@ -9,6 +9,7 @@ module Jekyll
       redirects << plugin_examples_redirects(site)
       redirects << mesh_examples_redirects(site)
       redirects << event_gateway_examples_redirects(site)
+      redirects << ai_gateway_examples_redirects(site)
       redirects << existing_redirects(site)
 
       site.pages << build_page(redirects, site)
@@ -51,6 +52,14 @@ module Jekyll
           ["#{policy.url}examples/",
            policy.data.fetch('get_started_url')].join("\t")
         end
+      end
+    end
+
+    def ai_gateway_examples_redirects(site)
+      site.data.fetch('ai_gateway_policies', {}).filter_map do |_slug, policy|
+        next unless policy.data['get_started_url']
+
+        ["#{policy.url}examples/", policy.data['get_started_url']].join("\t")
       end
     end
 

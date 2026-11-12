@@ -22,96 +22,16 @@
     "config": {
       "type": "object",
       "properties": {
-        "add": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json_types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "boolean",
-                  "number",
-                  "string"
-                ]
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "if_status": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "append": {
-          "type": "object",
-          "properties": {
-            "if_status": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json_types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "boolean",
-                  "number",
-                  "string"
-                ]
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "allow": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
         "transform": {
           "type": "object",
           "properties": {
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "json": {
               "type": "array",
               "items": {
@@ -120,13 +40,6 @@
               "default": []
             },
             "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "if_status": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -188,13 +101,6 @@
         "replace": {
           "type": "object",
           "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "if_status": {
               "type": "array",
               "items": {
@@ -224,6 +130,100 @@
                 ]
               },
               "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "add": {
+          "type": "object",
+          "properties": {
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ]
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "append": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ]
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "allow": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         }

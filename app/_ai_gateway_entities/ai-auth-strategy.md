@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayAuthStrategy
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -39,6 +40,8 @@ related_resources:
     url: /ai-gateway/set-up-kong-identity-for-a2a/
   - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
     url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
 faqs:
   - q: What is the difference between an AI Auth Strategy and an AI Model Provider?
     a: |
@@ -57,7 +60,7 @@ faqs:
   - q: Can an AI Agent use an AI Auth Strategy too?
     a: |
       Yes. Reference an AI Auth Strategy by `name` or `id` in the AI Agent's `access.auth_strategies`
-      array, the same field used on AI Models. An AI Agent currently accepts up to one AI Auth Strategy
+      array, the same field used on AI Models. An AI Agent accepts up to one AI Auth Strategy
       reference. Attaching an authentication AI Policy directly to an AI Agent's `policies` field isn't
       supported; AI Auth Strategies are the only supported way to authenticate AI Agent traffic.
 
@@ -65,7 +68,7 @@ faqs:
     a: |
       Yes, for `conversion-listener`, `listener`, and `passthrough-listener` AI MCP Servers. Reference an AI
       Auth Strategy by `name` or `id` in the AI MCP Server's `access.auth_strategies` array. An AI MCP
-      Server currently accepts up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers
+      Server accepts up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers
       authenticate to their upstream separately, through `config.server.tools_list_auth`, and
       `conversion-only` AI MCP Servers have no `access` field since they never accept incoming MCP traffic
       directly. As with AI Agents, attaching an authentication AI Policy directly to an AI MCP Server's
@@ -73,9 +76,10 @@ faqs:
 
   - q: What happens when a request carries no valid credentials?
     a: |
-      {{site.ai_gateway}} treats the request as an anonymous AI Consumer. A request-termination
-      policy on that anonymous AI Consumer returns `401 Unauthorized` before the request reaches
-      the AI Model, AI Agent, or AI MCP Server.
+      By default, {{site.ai_gateway}} routes it to a shared anonymous AI Consumer, which automatically is configured with a
+      Request Termination policy that returns `401 Unauthorized` before the request reaches
+      the AI Model, AI Agent, or AI MCP Server. This is set up automatically when you attach the
+      AI Auth Strategy. See [Default termination behavior](#default-termination-behavior) for more information.
 
   - q: Can I reuse the same AI Auth Strategy across multiple AI Models, AI Agents, or AI MCP Servers?
     a: |
@@ -140,6 +144,10 @@ AI Auth Strategies can be created and managed through:
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI Auth Strategy](#set-up-an-ai-auth-strategy).
 
+## Default termination behavior
+
+{% include /ai-gateway/auth-strategy-default-termination.md %}
+
 ## Authentication types
 
 {{site.ai_gateway}} supports two auth strategy types. Choose based on how your AI Consumers authenticate:
@@ -161,9 +169,14 @@ rows:
     credential: "JWT bearer token or OAuth 2.0 grant from an external IdP"
 {% endtable %}
 
+An AI Model can use both at once, since each caller population often needs a different credential. For example, attach `key-auth` for internal automation that you issue static keys to, and `openid-connect` for user-facing applications that already authenticate through your enterprise IdP. 
+A request from either population is authenticated if it satisfies either strategy. 
+
+AI Agents and AI MCP Servers accept only one AI Auth Strategy reference each.
+
 ### API key authentication
 
-The `key-auth` auth strategy validates an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The `key-auth` auth strategy validates an API key that the AI Consumer passes on every request. The gateway looks for the key in a configurable header or query parameter, checks it against the AI Consumer's registered key, and either authenticates the request or falls through to the [default termination behavior](#default-termination-behavior).
 
 By default, {{site.ai_gateway}} accepts the key in an `apikey` header or `apikey` query parameter. Override the key name with `config.key_names`. For example, set `config.key_names: ["X-API-Key"]` to enforce a standard header name across your APIs.
 
@@ -192,18 +205,39 @@ rows:
 
 ### OIDC token authentication
 
-The `openid-connect` auth strategy validates a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or routes it to the anonymous AI Consumer (which terminates with `401`).
+The [`openid-connect` auth strategy](/ai-gateway/openid-connect/) validates a JWT or OAuth 2.0 token that the AI Consumer obtains from an external IdP. The gateway verifies the token against the IdP's published keys, maps the token to an AI Consumer, and either authenticates the request or falls through to the [default termination behavior](#default-termination-behavior).
 
 Set `config.issuer` to the IdP's discovery URL (for example, `https://dev-123456.okta.com`). {{site.ai_gateway}} uses the OIDC discovery endpoint to fetch signing keys automatically.
 
 The default `config.auth_methods` are `bearer` and `client_credentials`. If your AI Consumers use a different grant flow, add it to the list. For a full list of supported values, see the [Schema](#schema) section.
 
-To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). If no mapping is needed, set `config.consumer_optional: true` to allow unauthenticated token holders through ACL checks.
+To map the token to an existing AI Consumer, set `config.consumer_claims` to an array of path segments locating the claim in the token that carries the AI Consumer identifier (for example, `[["user", "info", "id"]]` to map to a nested `user.info.id` claim). By default, a valid token that doesn't match any AI Consumer falls through to the [default termination behavior](#default-termination-behavior). Set `config.consumer_optional: true` to let that request proceed instead without an AI Consumer identity attached.
 
 `config.cache_tokens_salt` is required for `openid-connect` AI Auth Strategies. It's a string used to generate the cache key for token endpoint request caching; set it to any unique value for this provider instance.
 
 {:.warning}
 > All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.
+
+## Identity mapping
+
+An AI Auth Strategy can map a verified credential to an identity in two ways, and you can use either or both together.
+
+### AI Consumer mapping
+
+AI Consumer mapping maps a credential to an [AI Consumer](/ai-gateway/entities/ai-consumer/), a {{site.ai_gateway}}-local identity.
+For `key-auth`, this mapping is intrinsic: the matched API key already belongs to a specific AI Consumer, created through the credentials endpoint.
+For `openid-connect`, set `config.consumer_by`/`config.consumer_claims` to map a token claim to an AI Consumer instead.
+By mapping to an AI Consumer, you can also use [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership, `access.acls`, attached [AI Policies](/ai-gateway/entities/ai-policy/), and per-consumer usage attribution.
+
+### Principal mapping
+
+{{site.identity}} Principal mapping (`config.principals`) instead looks the credential up against a [Kong Identity Principal](/identity/principals/), an identity shared across {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}}.
+A Principal carries metadata you can use in conditional plugin execution, and scales past AI Consumer limits since Principals load on demand rather than living in data plane memory.
+Both auth strategy types support `config.principals`.
+
+You can configure both AI Consumer and Principal on the same `openid-connect` auth strategy.
+`config.principals.match_consumer` (enabled by default when Principals are enabled) loads the AI Consumer linked to the matched Principal, overriding whatever `config.consumer_by` would otherwise have resolved.
+This lets you manage identity centrally in {{site.identity}}, by linking a Principal to an AI Consumer through a `control_plane_consumer` identity, while still getting {{site.ai_gateway}}-native AI Consumer features (AI Policies, `access.acls`, AI Consumer Groups) for that same caller.
 
 ## Assigning an AI Auth Strategy
 
@@ -221,8 +255,8 @@ access:
 {:.info}
 > **Assignment rules**
 > * Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy. You can assign both types to the same AI Model; a request is authenticated if it satisfies either strategy.
-> * Each AI Agent currently supports up to one AI Auth Strategy reference.
-> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) currently supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
+> * Each AI Agent supports up to one AI Auth Strategy reference.
+> * Each AI MCP Server (`conversion-listener`, `listener`, or `passthrough-listener` mode) supports up to one AI Auth Strategy reference. `upstream-server` AI MCP Servers authenticate to their upstream separately, through `config.server.tools_list_auth`; `conversion-only` AI MCP Servers have no `access` field.
 > * AI Auth Strategies are the only supported way to authenticate inbound AI Consumer traffic to an AI Model, AI Agent, or AI MCP Server, and let each entity use different authentication independently. This is separate from outbound authentication to the upstream LLM, agent, or MCP server, which is configured on the AI Model Provider or the entity's own `config.upstream.auth`.
 
 If you plan to rename the AI Auth Strategy later, reference it by `id` rather than name. The ID is stable across renames.
@@ -271,5 +305,8 @@ data:
 {% endentity_example %}
 
 ## Schema
+
+{:.success}
+> **Looking for the OIDC auth strategy schema?** See the [OpenID Connect AI Auth Strategy reference](/ai-gateway/openid-connect/#schema).
 
 {% entity_schema %}

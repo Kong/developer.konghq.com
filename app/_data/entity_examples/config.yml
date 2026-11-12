@@ -127,6 +127,7 @@ formats:
       target:          '/upstreams/{upstream}/targets/'
       upstream:        '/upstreams/'
       vault:           '/vaults/'
+      workspace:       '/workspaces/'
       certificate:     '/certificates/'
       ca_certificate:  '/ca_certificates/'
       sni:             '/snis/'
@@ -142,6 +143,7 @@ formats:
     ai_endpoints:
       model:           '/models'
       policy:          '/policies'
+      custom_policy:   '/custom-policies'
       agent:           '/agents'
       mcp_server:      '/mcp-servers'
       provider:        '/providers'
@@ -255,6 +257,25 @@ targets:
     label: 'Route'
   service:
     label: 'Service'
+
+ai_gateway_scopes:
+  global:
+    label: 'Global'
+  ai-model:
+    label: 'AI Model'
+    url: '/ai-gateway/entities/ai-model/'
+  ai-agent:
+    label: 'AI Agent'
+    url: '/ai-gateway/entities/ai-agent/'
+  ai-mcp-server:
+    label: 'AI MCP Server'
+    url: '/ai-gateway/entities/ai-mcp-server/'
+  ai-consumer:
+    label: 'AI Consumer'
+    url: '/ai-gateway/entities/ai-consumer/'
+  ai-consumer-group:
+    label: 'AI Consumer Group'
+    url: '/ai-gateway/entities/ai-consumer-group/'
 
 phases:
   consume:

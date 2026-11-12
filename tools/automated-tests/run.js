@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import Dockerode from "dockerode";
 import minimist from "minimist";
 import { logResult, logResults, isFailureExpected } from "./reporting.js";
@@ -10,14 +10,17 @@ import {
   startBaseline,
   cleanupRuntime,
   resetRuntime,
+  provisionRuntime,
   getRuntimeConfig,
   afterAll,
   beforeAll,
+  licenseRequired,
 } from "./runtimes.js";
 import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
   instructionFileFromConfig,
   groupInstructionFilesByDeploymentModelAndProduct,
+  selectRunnableGroups,
 } from "./instructions-file.js";
 import "@dotenvx/dotenvx/config";
 
@@ -26,7 +29,10 @@ const docker = new Dockerode({
 });
 
 function checkEnvVariables() {
-  if (!process.env.KONG_LICENSE_DATA) {
+  const deploymentModels = process.env.DEPLOYMENT_MODEL
+    ? [process.env.DEPLOYMENT_MODEL]
+    : ["on-prem", "konnect"];
+  if (deploymentModels.some(licenseRequired) && !process.env.KONG_LICENSE_DATA) {
     console.error("Missing env variable KONG_LICENSE_DATA");
     process.exit(1);
   }
@@ -40,7 +46,7 @@ export async function loadConfig() {
   const configFile = "./config/tests.yaml";
 
   const fileContent = await fs.readFile(configFile, "utf8");
-  const config = yaml.load(fileContent);
+  const config = load(fileContent);
 
   return config;
 }
@@ -52,7 +58,7 @@ export async function loadConfig() {
 // ever starts, then boot it once for the rest of the batch as usual.
 async function usesStandaloneGateway(file) {
   const fileContent = await fs.readFile(file, "utf8");
-  const instructions = yaml.load(fileContent);
+  const instructions = load(fileContent);
   const { standaloneGateway } = await getSetupConfig(instructions.setup);
   return Boolean(standaloneGateway);
 }
@@ -70,6 +76,23 @@ async function partitionByStandaloneGateway(instructionFiles) {
   return { standalone, standard };
 }
 
+// A file that runs the quickstart itself (a `quickstart` validation in its prereqs or its
+// steps) provisions its own gateway, and usually its own cluster too. Provisioning the
+// shared baseline underneath it would collide with it, so the runtime only provisions when
+// the file declares no quickstart of its own.
+async function selfProvisions(file) {
+  const fileContent = await fs.readFile(file, "utf8");
+  const instructions = load(fileContent);
+  const declarations = [
+    ...(instructions.prereqs?.blocks || []),
+    ...(instructions.steps || []),
+  ];
+  return declarations.some(
+    (declaration) =>
+      typeof declaration === "object" && declaration.name === "quickstart",
+  );
+}
+
 // resetRuntime/runInstructionsFile can reject on infra-level failures (e.g. a
 // flaky `deck gateway reset -f`) outside the per-test try/catch. Uncaught,
 // that would abort every remaining file in the batch regardless of
@@ -78,6 +101,10 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
   try {
     if (reset) {
       await resetRuntime(runtimeConfig, container);
+
+      if (!(await selfProvisions(instructionFile))) {
+        await provisionRuntime(runtimeConfig, container);
+      }
     }
     return await runInstructionsFile(instructionFile, runtimeConfig, container);
   } catch (error) {
@@ -117,23 +144,36 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
     const filesByDeploymentModelAndProduct =
       await groupInstructionFilesByDeploymentModelAndProduct(files);
 
-    for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
+    const runnableGroups = selectRunnableGroups(
       filesByDeploymentModelAndProduct,
-    )) {
-      if (
-        process.env.DEPLOYMENT_MODEL &&
-        process.env.DEPLOYMENT_MODEL !== deploymentModel
-      ) {
-        continue;
-      }
+      products,
+      process.env.DEPLOYMENT_MODEL,
+    );
 
+    if (Object.keys(runnableGroups).length === 0) {
+      const filters = `PRODUCTS=${process.env.PRODUCTS}, DEPLOYMENT_MODEL=${process.env.DEPLOYMENT_MODEL || "all"}`;
+      console.error(`No instruction files match the active filters: ${filters}.`);
+      console.error("Run `npm run generate-instruction-files` to (re)generate instruction files, then try again.");
+      results.push({
+        file: "filters",
+        name: "Instruction-file selection",
+        status: "failed",
+        message: `No instruction files match the active filters: ${filters}.`,
+        assertions: [`No instruction files match the active filters: ${filters}.`],
+        duration: 0,
+      });
+      await logResults(results, start, Date.now(), products, {
+        includeGlobalSkips,
+      });
+      process.exit(1);
+    }
+
+    for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
+      runnableGroups,
+    )) {
       for (const [product, instructionFiles] of Object.entries(
         instructionFilesByProduct,
       )) {
-        if (!products.includes(product)) {
-          continue;
-        }
-
         productTestConfig = testsConfig.products[product] || {};
 
         const runtimeConfig = await getRuntimeConfig(deploymentModel, product);

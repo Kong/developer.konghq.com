@@ -2,7 +2,8 @@
 
 RSpec.describe Jekyll::Drops::KonnectApiRequest do
   let(:site_data) { { 'konnect_api_request' => { 'region' => 'us' } } }
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+  let(:site_config) { { 'konnect_domain' => 'konghq.com' } }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, config: site_config) }
 
   before { allow(Jekyll).to receive(:sites).and_return([site]) }
 
@@ -15,6 +16,24 @@ RSpec.describe Jekyll::Drops::KonnectApiRequest do
       let(:yaml) { { 'method' => 'POST' } }
 
       it { expect { drop }.to raise_error(ArgumentError, 'Missing `url` in {% konnect_api_request %}.') }
+    end
+  end
+
+  describe '#validate_section!' do
+    context 'when section is unrecognized' do
+      let(:yaml) { { 'url' => '/v2/control-planes', 'section' => 'prereq' } }
+
+      it 'raises an error naming the rejected value' do
+        expect { drop }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
+  end
+
+  describe '#config' do
+    let(:yaml) { { 'url' => '/v2/control-planes', 'section' => 'cleanup' } }
+
+    it 'drops section from the instruction config' do
+      expect(drop.config).not_to have_key('section')
     end
   end
 
@@ -37,6 +56,14 @@ RSpec.describe Jekyll::Drops::KonnectApiRequest do
 
       it 'targets that region' do
         expect(drop.snippet_config['url']).to eq('https://eu.api.konghq.com/v2/control-planes')
+      end
+    end
+
+    context 'when the site configures a Konnect domain' do
+      let(:site_config) { { 'konnect_domain' => 'konghq.tech' } }
+
+      it 'targets that domain' do
+        expect(drop.snippet_config['url']).to eq('https://us.api.konghq.tech/v2/control-planes')
       end
     end
 

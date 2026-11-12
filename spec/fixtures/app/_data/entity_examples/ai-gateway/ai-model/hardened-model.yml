@@ -1,0 +1,5 @@
+display_name: Hardened GPT-4o
+name: hardened-gpt-4o
+type: model
+policies:
+  - platform-rate-limit

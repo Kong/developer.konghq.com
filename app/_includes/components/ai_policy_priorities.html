@@ -1,0 +1,23 @@
+<div class="max-h-[50vh] overflow-y-auto rounded-lg">
+    <table class="table__sticky">
+        <thead>
+            <tr>
+                <th>AI Policy</th>
+                <th><span class="font-semibold text-primary">Priority</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td class="flex flex-col items-baseline">
+                        <span class="block text-primary">
+                            <a href="{{ row.url }}">{{ row.title | liquify | markdown }}</a>
+                            <br>(<code>{{ row.slug }}</code>)
+                        </span>
+                    </td>
+                    <td><code class="text-secondary px-1">{{ row.priority }}</code></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -41,6 +41,8 @@ related_resources:
     url: https://pangea.cloud/docs/aidr
   - text: CrowdStrike Falcon AIDR Response plugin
     url: /plugins/crowdstrike-aidr-response/
+  - text: CrowdStrike Falcon AIDR MCP plugin
+    url: /plugins/crowdstrike-aidr-mcp/
 ---
 
 The {{page.name}} plugin intercepts AI prompts before they reach the upstream LLM, evaluating them against CrowdStrike's AIDR [input rules](https://aidr-docs.crowdstrike.com/docs/aidr/policies/prompt-rules) in real time.
@@ -90,7 +92,7 @@ _**Figure 1**: Request flow showing how the {{page.name}} plugin evaluates user 
 
 ## Install the {{page.name}} plugin
 
-{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" other_plugin_slug="crowdstrike-aidr-response" other_plugin_name="CrowdStrike Falcon AIDR Response" name=page.name %}
+{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" name=page.name %}
 
 ## Enable the plugin
 

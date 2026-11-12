@@ -19,7 +19,7 @@
 {% endif %}
 
 {% if page.priority %}
-{% include_cached info_box/sections/priority.html priority=page.priority %}
+{% include_cached info_box/sections/priority.html priority=page.priority learn_more_url=page.priority_doc_url %}
 {% endif %}
 
 {% if page.scopes %}

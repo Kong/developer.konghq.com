@@ -1,0 +1,32 @@
+description: |
+  Configure the AI Lakera Guard policy to log the raw content of blocked requests and responses.
+  When a request or response is blocked, the original prompt or response body is captured in the
+  log entry under `ai.proxy.lakera-guard.input_faulty_prompt` and
+  `ai.proxy.lakera-guard.output_faulty_response`.
+
+title: Log blocked request and response content
+
+weight: 800
+
+requirements:
+  - You have a Lakera account and an API key.
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An existing logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) or [File Log](/ai-gateway/policies/file-log/).
+
+variables:
+  lakera_api_key:
+    description: The API key for your Lakera account.
+    value: $LAKERA_API_KEY
+
+name: lakera-guard-log-blocked-content
+display_name: Log blocked request and response content
+type: ai-lakera-guard
+
+config:
+  api_key: ${lakera_api_key}
+  log_blocked_content: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -51,17 +51,17 @@ When {{ site.kic_product_name }} starts running it looks for services that match
 {% mermaid %}
 flowchart LR
 
-A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
-KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
+A[fa:fa-kubernetes API Server]
+KIC1[fa:fa-gateway KIC 
 &amp;lpar;Active&amp;rpar;]
-KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+KIC2[fa:fa-gateway KIC
 &amp;lpar;Standby&amp;rpar;]
-KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+KIC3[fa:fa-gateway KIC
 &amp;lpar;Standby&amp;rpar;]
-DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-DP3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-DP4[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP1[fa:fa-gateway Data Plane]
+DP2[fa:fa-gateway Data Plane]
+DP3[fa:fa-gateway Data Plane]
+DP4[fa:fa-gateway Data Plane]
 
 A-.KIC watches 
 API server.- KIC1

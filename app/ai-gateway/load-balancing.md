@@ -7,6 +7,7 @@ breadcrumbs:
   - /ai-gateway/
 
 works_on:
+ - on-prem
  - konnect
 
 products:
@@ -74,6 +75,17 @@ rows:
   - algorithm: "Lowest-usage"
     description: |
       Routes requests to models with the lowest measured resource usage. The [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) parameter defines how usage is measured: prompt tokens, completion tokens, total tokens (the default), cost, or an LLM-accuracy score.
+
+      {:.warning}
+      > **Warning**: If a target has no cost fields and the model has no price in the catalog, {{site.ai_gateway}} counts its cost as `0`.
+      > With `lowest-usage` and `tokens_count_strategy: cost`, all traffic routes to any zero-priced model.
+      > Configure cost fields on the target or add a price for the model in the [price catalog](/ai-cost-management/price-catalog) to avoid this.
+      > <br><br>
+      > If you don't configure any cost fields on a target, {{site.ai_gateway}} falls back to the [price catalog](/ai-cost-management/price-catalog).
+      > <br><br>
+      > When dynamic pricing is off (`KONG_DYNAMIC_PRICING=off`), you must configure [cost fields](/ai-gateway/model-cost-management/) directly on each target.
+      > <br><br>
+      > For the full precedence order, see [How a request is priced](/ai-cost-management/price-catalog/#how-a-request-is-priced).
     considerations: |
       * Balances load based on actual consumption metrics.
       * Useful for cost optimization and avoiding overloading individual models.
@@ -186,7 +198,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize the {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The following table maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
@@ -214,6 +226,7 @@ rows:
     action: "Set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`"
     description: |
       Route requests by considering cost, balancing model performance with budget targets.
+      Targets with no cost fields are priced from the [price catalog](/ai-cost-management/price-catalog/#how-a-request-is-priced).
 {% endtable %}
 <!--vale on-->
 

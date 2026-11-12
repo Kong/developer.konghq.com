@@ -3,7 +3,7 @@
 sequenceDiagram
     autonumber
     participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
+    participant kong as Gateway
     participant idp as IdP <br>(e.g. Keycloak)
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client

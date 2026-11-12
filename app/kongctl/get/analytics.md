@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl adopt analytics
+    url: /kongctl/adopt/analytics/
 ---
 
 The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.

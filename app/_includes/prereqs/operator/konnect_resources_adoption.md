@@ -3,6 +3,7 @@ This example requires an existing {{site.konnect_short_name}} control plane and 
 Run the following command to create a control plane and save its ID to your environment:
 
 {% konnect_api_request %}
+section: prereqs
 url: /v2/control-planes
 status_code: 201
 method: POST
@@ -16,6 +17,7 @@ capture:
 Create a Gateway Service:
 
 {% konnect_api_request %}
+section: prereqs
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services
 status_code: 201
 method: POST
@@ -32,6 +34,7 @@ capture:
 Create a Route:
 
 {% konnect_api_request %}
+section: prereqs
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/routes
 status_code: 201
 method: POST
@@ -49,6 +52,7 @@ capture:
 Create a Rate Limiting plugin:
 
 {% konnect_api_request %}
+section: prereqs
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
 status_code: 201
 method: POST

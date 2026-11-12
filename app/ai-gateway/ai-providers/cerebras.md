@@ -10,6 +10,7 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/cerebras/
 
 works_on:
+ - on-prem
  - konnect
 
 products:

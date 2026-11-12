@@ -7,6 +7,7 @@
 <script>
 import observability from '@/icons/products/observability.svg'
 import AIGateway from '@/icons/products/ai-gateway.svg'
+import aiCostManagement from '@/icons/products/ai-cost-management.svg'
 import devPortal from '@/icons/products/dev-portal.svg'
 import gateway from '@/icons/products/gateway.svg'
 import insomnia from '@/icons/products/insomnia.svg'
@@ -23,6 +24,7 @@ import identity from '@/icons/products/identity.svg'
 const productIcons = {
   'observability': observability,
   'ai-gateway': AIGateway,
+  'ai-cost-management': aiCostManagement,
   'event-gateway': eventGateway,
   'dev-portal': devPortal,
   'gateway': gateway,

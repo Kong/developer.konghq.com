@@ -97,6 +97,7 @@ ai_gateway_agents:
   - ref: kongair-flight-booking-agent
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
+    name: kong-air-flight-booking-agent
     type: a2a
     enabled: true
     policies:
@@ -115,7 +116,6 @@ ai_gateway_agents:
         strip_path: true
       logging:
         payloads: true
-        statistics: true
         max_payload_size: 1048576
       max_request_body_size: 8388608
 {% endentity_examples %}

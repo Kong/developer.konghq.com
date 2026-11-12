@@ -28,8 +28,23 @@ groups:
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
+          - path: /kongctl/declarative/configuration/
+          - path: /kongctl/declarative/ownership/
+          - path: /kongctl/declarative/planning/
+          - path: /kongctl/declarative/sync/
+          - path: /kongctl/declarative/references/
+          - path: /kongctl/declarative/templates/
+          - path: /kongctl/declarative/files/
+          - path: /kongctl/declarative/environment-values/
+          - path: /kongctl/declarative/secrets/
+          - path: /kongctl/declarative/environments/
+          - path: /kongctl/declarative/resource-behavior/
+          - path: /kongctl/declarative/patching/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
+      - title: CI/CD
+        items:
+          - path: /kongctl/ci-cd/github-actions/
       - title: Other References
         items:
           - path: /kongctl/skills/
@@ -73,6 +88,14 @@ groups:
         items:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
+      - title: Import Data
+        items:
+            - path: /kongctl/import/
+            - path: /kongctl/import/*/**
+      - title: Inspect Resources
+        items:
+            - path: /kongctl/inspect/
+            - path: /kongctl/inspect/*/**
       - title: Install Assets
         items:
            - path: /kongctl/install/

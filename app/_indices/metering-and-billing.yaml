@@ -18,7 +18,7 @@ sections:
         url: /metering-and-billing/get-started/
       - title: LLM token metering
         description: Learn how to meter and bill AI Gateway LLM tokens.
-        url: /how-to/meter-llm-traffic/
+        url: /ai-gateway/meter-llm-traffic/
       - title: LLM token enforcement
         description: Cap per-customer LLM token usage by enforcing entitlements on {{site.ai_gateway}} traffic.
         url: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
@@ -76,6 +76,7 @@ sections:
       - title: Tax calculations
         description: Manage tax codes and configure tax behavior for invoices.
         url: /metering-and-billing/billing-invoicing/#tax-calculations
+      - path: /metering-and-billing/currencies/
       - path: /metering-and-billing/tax-codes/
       - path: /metering-and-billing/stripe-integration/
   - title: How-tos
@@ -84,9 +85,10 @@ sections:
         description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
         url: /how-to/get-started-with-metering-and-billing-generic-meters/
       - path: /metering-and-billing/get-started/
-      - path: /how-to/meter-llm-traffic/
+      - path: /ai-gateway/meter-llm-traffic/
       - path: /how-to/meter-and-bill-active-users/
       - path: /how-to/configure-metering-and-billing-tax-codes/
+      - path: /how-to/configure-metering-and-billing-custom-currencies/
       - path: /how-to/get-started-with-prepaid-credits/
       - path: /metering-and-billing/entitlement-enforcement/get-started/
       - path: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/

@@ -61,15 +61,15 @@ rows:
               diagram: |
                 flowchart TD
                 A(Dev Portal &bull; Analytics &bull; Catalog)
-                B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane
+                B(fa:fa-gateway Control Plane
                 #40;Kong Gateway instance#41;)
-                B2(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane 
+                B2(fa:fa-gateway Control Plane 
                 #40;Kong Gateway instance#41;)
-                C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 1
+                C(fa:fa-gateway Data Plane 1
                 #40;Kong Gateway instance#41;)
-                D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 2
+                D(fa:fa-gateway Data Plane 2
                 #40;Local Kong Gateway instance#41;)
-                E(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 3
+                E(fa:fa-gateway Data Plane 3
                 #40;Cloud-hosted Kong Gateway instance#41;)
                 subgraph id1 [Konnect]
                 A --- B & B2
@@ -138,9 +138,9 @@ rows:
                 flowchart TD
 
                 A[(Database)]
-                B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
-                C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
-                D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
+                B(fa:fa-gateway Kong Gateway instance)
+                C(fa:fa-gateway Kong Gateway instance)
+                D(fa:fa-gateway Kong Gateway instance)
 
                 A <---> B & C & D
   - header:

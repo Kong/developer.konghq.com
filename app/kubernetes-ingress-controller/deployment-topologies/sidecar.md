@@ -43,13 +43,13 @@ Sidecar deployments have been deprecated in favor of [Gateway Discovery](/kubern
 {% mermaid %}
 flowchart LR
 
-A1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
-A2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
-A3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
-B1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-B2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-B3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
-C[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
+A1[fa:fa-gateway Ingress Controller]
+A2[fa:fa-gateway Ingress Controller]
+A3[fa:fa-gateway Ingress Controller]
+B1[fa:fa-gateway Data Plane]
+B2[fa:fa-gateway Data Plane]
+B3[fa:fa-gateway Data Plane]
+C[fa:fa-kubernetes API Server]
 
 subgraph Pod 3
   A1 --> B1

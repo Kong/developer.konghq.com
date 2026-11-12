@@ -9,9 +9,10 @@ Flags:
                                    - Default   : [ https://us.api.konghq.com ]
       --color-theme string         Configures the CLI UI/theme (prompt, tables, TUI elements).
                                    - Config path: [ color-theme ]
-                                   - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                   - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                   - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                   - List       : [ kongctl list themes ] (default "auto")
       --config-file string         Path to the configuration file to load.
+                                   - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --default-namespace string   Default namespace to include in declarative output (_defaults.kongctl.namespace).
       --filter-id string           Filter resources by ID (exact match).
@@ -42,7 +43,7 @@ Flags:
   -p, --profile string             Specify the profile to use for this command. (default "default")
       --region string              Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                    - Config path: [ konnect.region ]
-      --resources string           Comma separated list of resource types to dump (ai_gateways, analytics.dashboards, apis, application_auth_strategies, control_planes, dcr_providers, event_gateways, organization.teams, portals).
+      --resources string           Comma separated list of resource types to dump (ai_gateways, analytics.dashboards, apis, application_auth_strategies, control_planes, dcr_providers, event_gateways, identity.auth_servers, identity.directories, organization.teams, portals).
       --skip-defaults              Omit fields whose values match defaults declared by the Konnect API.
       --text-id-format string      Configure UUID rendering in static text-table ID columns.
                                    - Config path: [ text.id-format ]

@@ -1,6 +1,6 @@
 ---
 title: kongctl get konnect
-description: "Get {{site.konnect_short_name}} account information."
+description: "Get {{site.konnect_short_name}} resources."
 content_type: reference
 layout: reference
 
@@ -20,7 +20,7 @@ related_resources:
     url: /kongctl/get/
 ---
 
-Get {{site.konnect_short_name}} account information.
+Get {{site.konnect_short_name}} resources.
 
 ## Command usage
 
@@ -28,84 +28,96 @@ Get {{site.konnect_short_name}} account information.
 
 ### kongctl get konnect ai-gateway
 
-Use the `get` verb with the `ai-gateway` command to query {{site.konnect_short_name}} {{site.ai_gateway}}s.
+List or get {{site.konnect_short_name}} {{site.ai_gateway}}s.
 
 {% include_cached /kongctl/help/get/konnect/ai-gateway.md %}
 
 ### kongctl get konnect analytics
 
-The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.
+Manage {{site.konnect_short_name}} {{site.observability}} resources.
 
 {% include_cached /kongctl/help/get/konnect/analytics.md %}
 
 ### kongctl get konnect api
 
-Get {{site.konnect_short_name}} API information.
+List or get {{site.konnect_short_name}} APIs.
 
 {% include_cached /kongctl/help/get/konnect/api.md %}
 
 ### kongctl get konnect audit-logs
 
-Get {{site.konnect_short_name}} audit logs.
+Get {{site.konnect_short_name}} organization audit logs.
 
 {% include_cached /kongctl/help/get/konnect/audit-logs.md %}
 
 ### kongctl get konnect auth-strategy
 
-Get {{site.konnect_short_name}} authentication strategy details.
+List or get {{site.konnect_short_name}} authentication strategies.
 
 {% include_cached /kongctl/help/get/konnect/auth-strategy.md %}
 
 ### kongctl get konnect dcr-provider
 
-Use the `get` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers.
+List or get {{site.konnect_short_name}} DCR providers.
 
 {% include_cached /kongctl/help/get/konnect/dcr-provider.md %}
 
 ### kongctl get konnect event-gateway
 
-Use the `get` verb with the `event-gateway` command to query {{site.konnect_short_name}} {{site.event_gateway_short}}s.
+List or get {{site.konnect_short_name}} {{site.event_gateway_short}}s.
 
 {% include_cached /kongctl/help/get/konnect/event-gateway.md %}
 
 ### kongctl get konnect gateway
 
-Get {{site.konnect_short_name}} gateway information.
+Manage {{site.konnect_short_name}} {{site.base_gateway}} resources.
 
 {% include_cached /kongctl/help/get/konnect/gateway.md %}
 
+### kongctl get konnect identity
+
+Manage Kong Identity resources.
+
+{% include_cached /kongctl/help/get/konnect/identity.md %}
+
 ### kongctl get konnect me
 
-Get {{site.konnect_short_name}} user information.
+Get current user information.
 
 {% include_cached /kongctl/help/get/konnect/me.md %}
 
+### kongctl get konnect mesh
+
+Manage {{site.mesh_product_name}} control plane resources.
+
+{% include_cached /kongctl/help/get/konnect/mesh.md %}
+
 ### kongctl get konnect organization
 
-Get {{site.konnect_short_name}} organization details.
+Get current organization information.
 
 {% include_cached /kongctl/help/get/konnect/organization.md %}
 
 ### kongctl get konnect pat
 
-Get {{site.konnect_short_name}} [personal access tokens](/konnect-api/#konnect-api-authentication).
+List or get {{site.konnect_short_name}} personal access tokens.
 
 {% include_cached /kongctl/help/get/konnect/pat.md %}
 
 ### kongctl get konnect portal
 
-Get {{site.konnect_short_name}} Portal configuration.
+List or get {{site.konnect_short_name}} portals.
 
 {% include_cached /kongctl/help/get/konnect/portal.md %}
 
 ### kongctl get konnect regions
 
-Get {{site.konnect_short_name}} available regions.
+List available {{site.konnect_short_name}} regions.
 
 {% include_cached /kongctl/help/get/konnect/regions.md %}
 
 ### kongctl get konnect spat
 
-Get {{site.konnect_short_name}} [system account access tokens](/konnect-api/#konnect-api-authentication).
+List or get {{site.konnect_short_name}} system account access tokens.
 
 {% include_cached /kongctl/help/get/konnect/spat.md %}

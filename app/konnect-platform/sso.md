@@ -68,6 +68,9 @@ faqs:
       ```
 
       You can find this URI in your Okta developer account, under **Security** > **API**.
+  - q: When are group membership changes synced from my IdP?
+    a: |
+      Group memberships are synced when a user logs in. Users will be asked to sign in again if session is inactive for 24 hours, or after 7 days, even when maximum lifetime of the session expires. Signing in again also refreshes your group memberships. Instant updates are not available because {{site.konnect_short_name}} does not yet support back-channel logout.
   - q: How do I debug my integration with Okta?
     a: |
       The Okta console provides a [Token Preview feature](https://help.okta.com/en-us/content/topics/security/api-config-test.htm) which will be useful in 
@@ -95,6 +98,9 @@ Keep built-in authentication enabled while you are testing IdP authentication. O
 * Keycloak
 
 ## SSO configuration
+
+{:.success}
+> For a complete SAML SSO in {{site.konnect_short_name}} guide, see [Configure SAML SSO for Konnect with Microsoft Entra ID](/konnect-platform/entra-saml-sso/).
 
 To configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
 * Add {{site.konnect_short_name}} to your IdP as an application
@@ -337,8 +343,8 @@ rows:
 
 When you configure team mappings for the {{site.konnect_short_name}} org, keep the following in mind:
 * You must have at least one group mapped to save configuration changes.
-* To manage user and team memberships in {{site.konnect_short_name}} from the Organization settings, select the **{{site.konnect_short_name}} Mapping Enabled** checkbox. If you enable this, approving new users is a two step process. New users logging in to {{site.konnect_short_name}} with their IdP credentials will get an access error and {{site.konnect_short_name}} administrators will need to map the new user to a valid team before the user is granted access.
-* To assign team memberships by the IdP during SSO login via group claims mapped to {{site.konnect_short_name}} teams, select the **IdP Mapping Enabled** checkbox and enter your IdP groups in the relevant fields.
+* To manage user and team memberships in {{site.konnect_short_name}} from the Organization settings, enable **{{site.konnect_short_name}} team mapping**. If you enable this, onboarding new users is a two step process. New users logging in to {{site.konnect_short_name}} with their IdP credentials will get an access error and {{site.konnect_short_name}} administrators will need to map the new user to a valid team before the user is granted access.
+* To assign team memberships by the IdP during SSO login via group claims mapped to {{site.konnect_short_name}} teams, enable **Identity provider mapping** and enter your IdP groups in the relevant fields.
 
 Once team mappings are set up:
 * IdP users belonging to the mapped groups can log in to {{site.konnect_short_name}}.
@@ -358,6 +364,39 @@ Any changes to the mapped IdP groups on the IdP side are reflected in
 * Moving a user from one group to another changes their team in {{site.konnect_short_name}}
 to align with the new group-to-team mapping.
 
+### Exclude teams from IdP synchronization
+
+When IdP mapping is enabled, team memberships are synced from your IdP for every {{site.konnect_short_name}} team by default. 
+{% include konnect/idp-sync-exclude-teams.md %}
+
+{% navtabs "exclude-teams" %}
+{% navtab "UI" %}
+The team list is available only when OIDC or SAML is configured and enabled for your org.
+
+1. In the {{site.konnect_short_name}} sidebar, click your organization name and click **Manage organization**.
+1. Click the **Settings** tab.
+1. Click the **Team mappings** tab.
+1. In the **Identity provider mapping** section, find the team in the list.
+1. Disable **Active** next to the team you want to exclude from IdP synchronization. 
+{% endnavtab %}
+{% navtab "API" %}
+Set `konnect_managed` on the team by sending a `PATCH` request to the [`/teams/{teamId}` endpoint](/api/konnect/identity/#/operations/update-team). 
+You can also set it when you create a team with the [`/teams` endpoint](/api/konnect/identity/#/operations/create-team).
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/teams/$TEAM_ID
+method: PATCH
+status_code: 200
+body:
+    konnect_managed: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+
+{:.warning}
+> If IdP mapping is enabled and a team is active but no IdP group is mapped to it, {{site.konnect_short_name}} treats the team as an empty IdP group. Users are removed from the team at their next login, even if they were added manually in {{site.konnect_short_name}}. To manage a team's membership manually, disable **Active** for that team.
 
 ## {{site.konnect_short_name}} Dev Portal Editor considerations
 

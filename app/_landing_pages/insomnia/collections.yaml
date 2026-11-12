@@ -1,36 +1,47 @@
 metadata:
-  title: Request collections in Insomnia
+  title: API Collections in Insomnia
   content_type: landing_page
-  description: This page is an introduction to request collections in Insomnia
+  description: This page is an introduction to API Collections in Insomnia, which hold your requests, environments, and OpenAPI spec.
   breadcrumbs:
     - /insomnia/
   products:
     - insomnia
+  tags:
+    - design-apis
+  search_aliases:
+    - design document
+    - documents
+    - collections
 rows:
   - header:
       type: h1
-      text: "Collections"
+      text: "API Collections"
     columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Request collections in Insomnia"
+                text: "API Collections in Insomnia"
               blocks:
                 - type: text
-                  text: | 
-                    Collections are a way to group requests in Insomnia. You can use them to:
+                  text: |
+                    An API Collection is the workspace where you do most of your work in Insomnia. It holds your requests, folders, environments, and an optional OpenAPI spec, so you can design an API and call it in the same place. You can use an API Collection to:
                 - type: unordered_list
-                  items: 
+                  items:
                     - "[Create and send requests](#send-requests)"
                     - "[Run multiple requests](#get-started-with-requests) with the Collection Runner"
+                    - "[Write and preview an OpenAPI spec](#design-apis-with-an-openapi-spec)"
                     - "[Write scripts](#write-scripts) to modify requests or check responses"
+                - type: text
+                  text: |
+                    {:.info}
+                    > {% new_in 13.3 %} Documents and collections are now a single workspace type called an API Collection. Your existing documents and collections keep working and open as API Collections. For more details, see [What happened to documents?](#what-happened-to-documents)
       - blocks:
           - type: image
             config:
               url: /assets/images/insomnia/collection.png
-              alt_text: Image of a collection
-  
+              alt_text: Image of an API Collection
+
   - header:
       type: h2
       text: "Send requests"
@@ -40,7 +51,7 @@ rows:
             config:
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     With Insomnia, you can send requests via HTTP, gRPC, GraphQL, and WebSockets. You can send a single request or run a series of requests in a specific order.
           - type: button
             config:
@@ -92,7 +103,77 @@ rows:
               text: Learn more
               url: /insomnia/request-authentication/
               align: end
- 
+
+  - header:
+      type: h2
+      text: "Design APIs with an OpenAPI spec"
+    columns:
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/design-document.png
+              alt_text: Image of an API spec in the Spec tab of an API Collection.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Every API Collection can hold one OpenAPI spec. Click the **Spec** tab on the API Collection screen to write or import a spec, then generate a request for each endpoint in it. The interactive spec renderer lets you develop and refine your spec in the same place where you test it.
+                - type: unordered_list
+                  items:
+                    - Built for spec-first development
+                    - View a generated preview of your spec
+                    - Automatic linting, with the ability to write custom linting rules
+                    - View the errors console
+                    - Automatically parse and categorize data from your spec, such as servers, request bodies, and schemas
+                    - Generate a request for each endpoint in the spec
+          - type: button
+            config:
+              align: left
+              text: Learn more about designing APIs
+              url: /insomnia/design/
+  - header:
+      type: h3
+      text: "Get started with API specs"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Create an API Collection
+            description: Create an API Collection and add an OpenAPI spec to it
+            cta:
+              text: Learn more
+              url: /how-to/create-an-api-collection/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Import an API specification
+            description: Import a spec from a file, a URL, or your clipboard
+            cta:
+              text: Learn more
+              url: /how-to/import-an-api-spec/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Generate requests from an API spec
+            description: Add a request to an API Collection for each endpoint in your spec
+            cta:
+              text: Learn more
+              url: /how-to/generate-requests-from-an-api-spec/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: API specs reference
+            description: Learn how Insomnia parses, lints, and previews your API specs
+            cta:
+              text: Learn more
+              url: /insomnia/api-specs/
+              align: end
+
   - header:
       type: h2
       text: "Write scripts"
@@ -102,7 +183,7 @@ rows:
             config:
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     The pre-request and after-response scripts allows you to interact with the request and its response. You can use these to:
                 - type: unordered_list
                   items:
@@ -123,7 +204,7 @@ rows:
         - type: card
           config:
             title: Scripts reference
-            description: Learn how to write pre-request and after-response scripts. 
+            description: Learn how to write pre-request and after-response scripts.
             cta:
               text: Learn more
               url: /insomnia/scripts/
@@ -132,7 +213,7 @@ rows:
         - type: card
           config:
             title: Write pre-request scripts to add dynamic behavior
-            description: Use pre-request scripts on a collection in Insomnia to carry out pre-processing such as setting variable values, parameters, headers, and body data for requests.
+            description: Use pre-request scripts on an API Collection in Insomnia to carry out pre-processing such as setting variable values, parameters, headers, and body data for requests.
             cta:
               text: Learn more
               url: /how-to/write-pre-request-scripts/
@@ -141,7 +222,7 @@ rows:
         - type: card
           config:
             title: Write after-response scripts to validate responses
-            description: Use after-response scripts on a collection in Insomnia to run tests such as validating values in responses.
+            description: Use after-response scripts on an API Collection in Insomnia to run tests such as validating values in responses.
             cta:
               text: Learn more
               url: /how-to/write-after-response-script/
@@ -153,22 +234,32 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: What's the difference between a collection and a design document?
-              a: Documents are a data object that can contain an API spec, a collection of API requests, and tests. Collections are simply a series of API requests that you intend to interact with Insomnia.
+            - q: What happened to documents?
+              a: |
+                {% new_in 13.3 %} Documents and collections are merged into a single workspace type called an API Collection, so you no longer have to choose between them when you start work. **Create** > **Design document** is no longer in the UI.
+
+                Nothing was removed. Every API Collection can hold requests, folders, environments, and one OpenAPI spec. Your existing documents and collections open as API Collections, and the spec that used to have its own workspace is now the **Spec** tab of the API Collection screen.
+            - q: Can collaborators on Insomnia 13.2 still open my API Collections?
+              a: |
+                Yes. Insomnia stores an API Collection that contains a spec in the same format as a 13.2 document, and an API Collection without a spec in the same format as a 13.2 collection, so both versions can work in the same Git repository or cloud project.
+
+                The difference is what collaborators see in the sidebar. In 13.3, the requests in an API Collection display in the sidebar under the API Collection. In 13.2, the requests in an API Collection that contains a spec don't display in the sidebar. To keep the experience consistent, upgrade everyone in your organization to 13.3.
+            - q: Does Insomnia support GraphQL?
+              a: Yes, Insomnia supports GraphQL.
             - q: Can I import requests from another tool?
               a: |
-                Yes, you can create requests in collections by importing:
+                Yes, you can create requests in API Collections by importing:
                 - Postman collections
                 - Swagger/OpenAPI specifications
                 - cURL commands
                 - Insomnia files
                 - HAR files
                 - WSDL files
-            - q: Can I run collections in CI/CD environments?
+            - q: Can I run API Collections in CI/CD environments?
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
             - q: Can I set authentication headers at the collection level so I do not repeat them on every request?
               a: |
                 No. As a workaround, group the relevant requests in a **folder** and then set authentication at the folder level for that group to avoid duplicating headers on each request.
-            - q: Can I hide other projects and collections to focus only on one collection?
+            - q: Can I hide other projects and API Collections to focus only on one?
               a: |
-                Yes. Go to **Preferences** > **General** > **Application** and enable **Sidebar focus for collections**. The sidebar then displays only the contents of the collection you select. This is enabled by default since Insomnia 13.2
+                Yes. Go to **Preferences** > **General** > **Application** and enable **Sidebar focus for collections**. The sidebar then displays only the contents of the API Collection you select. This is enabled by default since Insomnia 13.2, and since 13.3 it also applies to API Collections that contain a spec.

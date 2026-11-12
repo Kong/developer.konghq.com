@@ -45,8 +45,10 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Kong Identity resources
+      include_content: md/identity/delete_auth_server
 
-automated_tests: false
+
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
@@ -315,7 +317,7 @@ body:
         - name: describe_configs
         - name: read
         - name: write
-      resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
+      resource_names: '{% raw %}{{[context.auth.token.claims.topic_prefix + "*"]}}{% endraw %}'
 {% endkonnect_api_request %}
 <!--vale on-->
 

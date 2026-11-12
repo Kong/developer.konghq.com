@@ -22,6 +22,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Filter Kafka records by classification headers
+    url: /event-gateway/filter-records-by-classification/
 
 phases:
   - consume

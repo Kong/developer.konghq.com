@@ -1,5 +1,5 @@
 ---
-title: CEL expressions reference
+title: "{{site.base_gateway}} CEL expressions reference"
 
 description: Reference for the CEL expression language and fields available to plugin conditions and other CEL-driven plugin config in {{site.base_gateway}}.
 content_type: reference

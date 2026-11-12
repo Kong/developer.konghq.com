@@ -5,7 +5,7 @@ runs:
   steps:
     # Configure Ruby to build Jekyll site
     - name: Set up Ruby
-      uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
+      uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
       with:
         ruby-version: .ruby-version
 
@@ -28,11 +28,14 @@ runs:
     # Configure Node to build assets
     - name: Enable Corepack
       shell: bash
-      run: corepack enable
+      run: |
+        # Corepack is no longer bundled with Node.js 25 and later, so install it first
+        npm install -g corepack@0.36.0
+        corepack enable
 
-    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
       with:
-        node-version: "24"
+        node-version: "26"
         cache: 'yarn'
 
     - name: Install node packages

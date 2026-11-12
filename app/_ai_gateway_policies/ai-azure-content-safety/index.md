@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -16,7 +17,7 @@ tags:
 
 The AI Azure Content Safety Policy allows administrators to enforce 
 introspection with the [Azure AI Content Safety](https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety) service 
-for all requests and responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity.
+for requests and responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)).
 This Policy enables configurable thresholds for the different moderation categories 
 and you can specify an array set of pre-configured blocklist IDs from your Azure Content Safety instance.
 
@@ -33,41 +34,70 @@ Here's how it works if you apply it to both requests and responses:
 
 1. The AI Azure Content Safety Policy intercepts the request and sends the request body to the Azure AI Content Safety service.
    - The Azure AI Content Safety service analyzes the request against configured moderation categories and allows or blocks the request.
-1. If allowed, the request is forwarded upstream with the AI Model entity.
+1. If allowed, the request is forwarded upstream by the AI Model.
 1. On the way back, the Policy intercepts the response and sends the response body to the Azure AI Content Safety service.
    - The Azure AI Content Safety service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
-{% comment %}
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant Client
-    participant Gateway as {{site.ai_gateway}}
-    participant Policy as AI Azure Content Safety Policy
-    participant Safety as Azure AI Content Safety service
-    participant AI as Upstream AI Service
+{% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Azure AI Content Safety service" %}
 
-    Client->>Gateway: Send request
-    Gateway->>Policy: Route request
-    Policy->>Safety: Intercept & send request body
-    Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Policy: Allow or block request
-    Policy->>Gateway: Forward allowed request
-    Gateway->>AI: Process allowed request
-    AI->>Gateway: Return AI response
-    Gateway->>Policy: Forward response
-    Policy->>Safety: Intercept & send response body
-    Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Policy: Allow or block response
-    Policy->>Gateway: Forward allowed response
-    Gateway->>Client: Forward allowed response to client
-{% endmermaid %}
-<!--vale on-->
+## Rejection modes
 
-> _Figure 1: Diagram showing the request and response flow with the AI Azure Content Safety Policy._
-{% endcomment %}
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name %}
+
+For example, a request that breaches a category threshold returns the following response in `verbose` mode.
+The `detail.categories` field lists each breached category with its detected `severity` and the configured `threshold`:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-azure-content-safety",
+    "reason": "breached category [Violence] at level 2",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": {
+      "categories": [
+        {
+          "category": "Violence",
+          "severity": 4,
+          "threshold": 2
+        }
+      ],
+      "blocklists": {}
+    }
+  }
+}
+```
+
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-azure-content-safety/reference/#schema--config-rejection-mode) to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Azure Content Safety - Verbose Rejection
+  name: ai-azure-content-safety
+  type: ai-azure-content-safety
+  config:
+    content_safety_url: https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze
+    content_safety_key: ${azure_content_safety_key}
+    categories:
+    - name: Violence
+      rejection_level: 2
+    rejection_mode: verbose
+variables:
+  azure_content_safety_key:
+    value: $AZURE_CONTENT_SAFETY_KEY
+    description: Your Azure Content Safety key.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 ## TLS verification
 

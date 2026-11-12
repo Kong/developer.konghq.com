@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'kramdown'
+
 # Config fixtures below are adapted from real {% validation custom-command %} blocks in
 # app/_how-tos/**/*.md. Real docs only ever set `expected.return_code` (0 or non-zero) and
 # `render_output: false`; none use `expected.stdout` or `expected.stderr`, and none omit
@@ -51,6 +53,7 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
           echo "Did not receive the expected return code"
         fi
         ```
+        {:.no-copy-code}
 
       MD
     end
@@ -99,6 +102,7 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
           echo "Did not receive the expected return code"
         fi
         ```
+        {:.no-copy-code}
 
       MD
     end
@@ -113,11 +117,13 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
       expect(rendered).to eq(<<~'MD')
         ```bash
         kong version
-        ```You should see the following content on `stdout`:
+        ```
+        You should see the following content on `stdout`:
 
         ```bash
         3.9.0
         ```
+        {:.no-copy-code}
 
 
 
@@ -127,6 +133,7 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
           echo "Did not receive the expected return code"
         fi
         ```
+        {:.no-copy-code}
 
       MD
     end
@@ -146,17 +153,21 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
       expect(rendered).to eq(<<~'MD')
         ```bash
         kong version --verbose
-        ```You should see the following content on `stdout`:
+        ```
+        You should see the following content on `stdout`:
 
         ```bash
         3.9.0
         ```
+        {:.no-copy-code}
+
 
         You should also see the following content on `stderr`:
 
         ```bash
         warning: deprecated flag
         ```
+        {:.no-copy-code}
 
 
         Check the return code of the command to make sure it completed successfully:
@@ -165,8 +176,39 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
           echo "Did not receive the expected return code"
         fi
         ```
+        {:.no-copy-code}
 
       MD
+    end
+
+    let(:highlighter) { instance_double(CodeHighlighter) }
+
+    before do
+      allow(site).to receive(:site_payload).and_return({ 'site' => {} })
+      allow(CodeHighlighter).to receive(:new).and_return(highlighter)
+      allow(highlighter).to receive(:highlight) { |code, _lang, _id| code }
+    end
+
+    let(:html) { Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html) }
+
+    it 'renders the command fence with a copy action' do
+      command_block = html.find('div.custom-code-block', text: 'kong version --verbose')
+      expect(command_block).to have_css('clipboard-copy.copy-action')
+    end
+
+    it 'renders the stdout fence with no copy action' do
+      stdout_block = html.find('div.custom-code-block', text: '3.9.0')
+      expect(stdout_block).not_to have_css('clipboard-copy.copy-action')
+    end
+
+    it 'renders the stderr fence with no copy action' do
+      stderr_block = html.find('div.custom-code-block', text: 'warning: deprecated flag')
+      expect(stderr_block).not_to have_css('clipboard-copy.copy-action')
+    end
+
+    it 'renders the return-code fence with no copy action' do
+      return_code_block = html.find('div.custom-code-block', text: 'Did not receive the expected return code')
+      expect(return_code_block).not_to have_css('clipboard-copy.copy-action')
     end
   end
 
@@ -179,11 +221,13 @@ RSpec.describe 'how-tos/validations/custom-command/snippet.md' do
       expect(rendered).to eq(<<~'MD')
         ```bash
         kong version
-        ```You should see the following content on `stdout`:
+        ```
+        You should see the following content on `stdout`:
 
         ```bash
         3.9.0
         ```
+        {:.no-copy-code}
 
 
 

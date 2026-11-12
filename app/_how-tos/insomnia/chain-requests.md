@@ -13,7 +13,7 @@ tags:
 
 prereqs:
     inline:
-        - title: Create and configure a collection
+        - title: Create and configure an API Collection
           include_content: prereqs/collection
           icon_url: /assets/icons/menu.svg
 

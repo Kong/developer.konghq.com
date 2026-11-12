@@ -40,9 +40,33 @@ prereqs:
     - title: Provider Account ID
       include_content: /prereqs/provider-account-id
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectCloudGatewayNetwork` removes the network from {{ site.konnect_short_name }}. Deleting the `KonnectGatewayControlPlane` also deletes the control plane {{ site.operator_product_name }} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          konnectcloudgatewaynetwork/konnect-network-1 \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
+automated_tests: false
 ---
 
-## Create a `KonnectCloudGatewayNetwork`
+## Create a KonnectCloudGatewayNetwork
 
 Use the `KonnectCloudGatewayNetwork` resource to provision a Dedicated Cloud Gateway Network in your selected region and availability zones.
 

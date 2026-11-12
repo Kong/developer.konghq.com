@@ -12,8 +12,9 @@ description: >
   `{% konnect_api_request %}`, `{% control_plane_request %}`, `{% validation %}`), always
   ending in a Validate step. The writer adds the real words and tests the doc themselves.
   If the use
-  case is Kong Identity, DCGW Terraform, or a third-party plugin, prefer
-  kong-identity-how-to, dcgw-terraform-how-to, or third-party-plugin instead — those
+  case is Kong Identity, DCGW Terraform, Event Gateway, or a third-party plugin, prefer
+  kong-identity-how-to, dcgw-terraform-how-to, event-gateway-how-to, or
+  third-party-plugin instead — those
   write full prose for their domains. Not for revising an existing how-to.
 ---
 

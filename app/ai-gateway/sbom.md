@@ -35,6 +35,15 @@ columns:
   - title: Direct Download link
     key: download
 rows:
+  - version: 2.3.1
+    download: |
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.3.1 SBOM](https://packages.konghq.com/public/ai-gateway-23/raw/names/security-assets/versions/2.3.1/kong-aigw-2.3.1-security-assets.tar.gz)
+  - version: 2.2.0
+    download: |
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.2.0 SBOM](https://packages.konghq.com/public/ai-gateway-22/raw/names/security-assets/versions/2.2.0/kong-aigw-2.2.0-security-assets.tar.gz)
+  - version: 2.1.0
+    download: |
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.1.0 SBOM](https://packages.konghq.com/public/ai-gateway-21/raw/names/security-assets/versions/2.1.0/kong-aigw-2.1.0-security-assets.tar.gz)
   - version: 2.0.3
     download: |
       [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.0.3 SBOM](https://packages.konghq.com/public/ai-gateway-20/raw/names/security-assets/versions/2.0.3/kong-aigw-2.0.3-security-assets.tar.gz)

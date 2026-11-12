@@ -65,11 +65,17 @@ rows:
       [kongctl get gateway](/kongctl/get/gateway/)
     description: "Get gateway information."
   - command: |
+      [kongctl get identity](/kongctl/get/identity/)
+    description: "List or get Kong Identity resources."
+  - command: |
       [kongctl get konnect](/kongctl/get/konnect/)
     description: "Get {{site.konnect_short_name}} account information."
   - command: |
       [kongctl get me](/kongctl/get/me/)
     description: "Get current user information."
+  - command: |
+      [kongctl get mesh](/kongctl/get/mesh/)
+    description: "Work with resources on a {{site.mesh_product_name}} control plane."
   - command: |
       [kongctl get organization](/kongctl/get/organization/)
     description: "Get organization details."

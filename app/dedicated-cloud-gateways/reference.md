@@ -39,7 +39,7 @@ faqs:
       In {{site.konnect_short_name}}, go to [**API Gateway**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
   - q: How does network peering work with Dedicated Cloud Gateway nodes?
     a: |
-      Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
+      Each Cloud Gateway node is part of a dedicated network for its region (for example, `us-east-1`). 
       You can securely peer this network with your AWS network using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
   - q: What happens if {{site.konnect_short_name}} goes down?
     a: |
@@ -50,7 +50,7 @@ faqs:
     a: |
       AWS PrivateLink offers secure and private connectivity by routing traffic through an endpoint, but it only supports unidirectional communication. 
       This means that Dedicated Cloud Gateway can send requests to your upstream services, but your upstream services cannot initiate communication back to the gateway. 
-      For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream services—this limitation is a blocker. 
+      For many use cases requiring bidirectional communication (for example, callbacks or dynamic interactions between the gateway and your upstream services), this limitation is a blocker. 
       For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream services.
   - q: How do I manage custom plugins after uploading them?
     a: |
@@ -72,7 +72,7 @@ faqs:
     a: |
       Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
   - q: Can I use credential-less authentication (AWS workload identity or Azure managed identity) for Dedicated Cloud Gateways?
-    a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't currently supported for Dedicated Cloud Gateways. 
+    a: You can use AWS workload identity with Dedicated Cloud Gateways. Azure managed identity isn't supported for Dedicated Cloud Gateways. 
   - q: Can I set provider-specific Vault credentials, like `AZURE_CLIENT_SECRET`, `AWS_ACCESS_KEY_ID`, or `GCP_SERVICE_ACCOUNT`, as environment variables on a Dedicated Cloud Gateway?
     a: |
       No. Dedicated Cloud Gateways only accept environment variables prefixed with `KONG_` or `OTEL_`, so provider-specific credential env vars can't be set this way. 
@@ -94,6 +94,8 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
+  - text: Bot Detector
+    url: /dedicated-cloud-gateways/bot-detector/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -258,7 +260,7 @@ Using AWS workload identities with Dedicated Cloud Gateways provides the followi
 * **Compatibility:** Native and custom Kong plugins can seamlessly use AssumeRole credentials.
 
 {:.info}
-> This is currently only available for AWS. 
+> This is only available for AWS. 
 
 ### How AWS workload identities works
 
@@ -453,8 +455,9 @@ config:
 
 ### How do I set environment variables?
 
-In the {{site.konnect_short_name}} UI, you can add environment variables to a Dedicated Cloud Gateway when you create the data plane node. Navigate to your Dedicated Cloud Gateway control plane and from the **Actions** dropdown menu, select "Edit or Resize Cluster". Click **Advanced options** and enter the environment variable key and value pairs you want to use.
-
+You can configure environment variables for Dedicated Cloud Gateway data plane nodes.
+{% navtabs "env-vars" %}
+{% navtab "API" %}
 You can add environment variables using the Cloud Gateways API. When you [create a Dedicated Cloud Gateway Data Plane](#how-do-i-provision-a-control-plane) with a `PUT` request to the [`/cloud-gateways/configurations`](/api/konnect/cloud-gateways/#/operations/create-configuration) endpoint, add the `environment` array containing the `name` and `value` of each variable:
 <!--vale off -->
 {% konnect_api_request %}
@@ -478,6 +481,20 @@ body:
           value: "0.01"
 {% endkonnect_api_request %}
 <!-- vale on -->
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click your Dedicated Cloud Gateway.
+1. Click the **Data plane nodes** tab.
+1. Click **Configure data plane**.
+1. In the **Gateway configuration** section, click **View advanced settings**.
+1. Click **Add environment variable**.
+1. From the **Environment variables** dropdown menu, select the variable you want to set.
+1. From the **Scope** dropdown menu, select which data planes you want this variable to apply to.
+1. Configure the **Value** field as needed.
+1. Click **Save**.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## CIDR size requirements
 
@@ -487,6 +504,12 @@ body:
 
 {% include_cached /sections/managed-cache-intro.md %}
 For more information, see the [Managed cache for Redis reference](/dedicated-cloud-gateways/managed-cache/).
+
+## Bot Detector (beta) {% new_in 3.10 %}
+
+Bot Detector is a built-in Dedicated Cloud Gateway capability that identifies automated traffic using signals like user agents, request paths, and JA4 fingerprints, without requiring you to know which IPs or CIDR ranges to block in advance. 
+It runs in monitoring mode by default and is scoped per control plane.
+For more information, see the [Bot Detector reference](/dedicated-cloud-gateways/bot-detector/).
 
 ## Securing backend communication
 
@@ -526,6 +549,95 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 
 ### GCP VPC Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in GCP, VPC Network Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [GCP VPC Peering](/dedicated-cloud-gateways/gcp-vpc-peering/) documentation.
+
+## {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways 
+
+[{{site.ai_gateway}}](/ai-gateway/) on Dedicated Cloud Gateways gives you a fully managed, single-tenant {{site.ai_gateway}} 2.0 deployment.
+Kong hosts the control plane and data planes for you, including scaling, upgrades, and high availability, so you don't have to run and maintain your own {{site.ai_gateway}} data planes.
+
+In addition, {{site.ai_gateway}} on Dedicated Cloud Gateways supports a fully [managed cache for Redis](/dedicated-cloud-gateways/managed-cache/) so you don't have to host Redis infrastructure.
+You can use this with any {{site.ai_gateway}} Policy that uses Redis.
+
+If you want both {{site.base_gateway}} and {{site.ai_gateway}} to run in a Dedicated Cloud Gateway, you must use separate Dedicated Cloud Gateway control planes for them.
+Sharing networks is best practice.
+
+### Configure an {{site.ai_gateway}} control plane
+
+<!--vale off-->
+{% navtabs "configure-ai-gateway" %}
+{% navtab "UI" %}
+<!--vale on-->
+1. In {{site.konnect_short_name}}, click **{{site.ai_gateway}}** in the sidebar.
+1. Click **New {{site.ai_gateway}}**.
+1. Select **Dedicated Cloud**.
+1. Enter a **Display name** for your control plane.
+1. For the Node configuration, select the **Provider** and **Region** for your data plane.
+
+   Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
+   See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
+1. Under **API access**, choose **Public** or **Private**.
+1. Click **Create**.
+<!--vale off-->
+{% endnavtab %}
+{% navtab "API" %}
+<!--vale on-->
+1. Create an {{site.ai_gateway}} control plane by sending a `POST` request to the [`/ai-gateways` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway), setting `deployment_type` to `managed`:
+<!--vale off-->
+{% capture request %}
+{% konnect_api_request %}
+url: /v1/ai-gateways
+method: POST
+region: us
+status_code: 201
+body:
+  name: ai-gateway-dcgw
+  display_name: AI Gateway Dedicated Cloud
+  deployment_type: managed
+capture:
+  - variable: AI_GATEWAY_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ request | indent: 3 }}
+1. Create a Dedicated Cloud Gateway configuration for the {{site.ai_gateway}} control plane by sending a `PUT` request to the [`/cloud-gateways/configurations` endpoint](/api/konnect/cloud-gateways/#/operations/create-configuration):
+<!--vale off-->
+{% capture request %}
+{% konnect_api_request %}
+url: /v2/cloud-gateways/configurations
+method: PUT
+status_code: 200
+region: global
+body:
+  control_plane_id: $AI_GATEWAY_ID
+  control_plane_geo: us
+  type: ai
+  kind: dedicated.v0
+  api_access: private
+  dataplane_groups:
+    - provider: aws
+      region: us-east-2
+      cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ request | indent: 3 }}
+   
+   Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
+   See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
+   This example is for an AWS Dedicated Cloud Gateway, but Azure is also supported. For Azure, set `provider: azure` and use an Azure region.
+{% endnavtab %}
+{% endnavtabs %}
+<!--vale on-->
+
+{:.warning}
+> **Limitation:** {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways only supports AWS and Azure.
+
+Private networking and private DNS work the same way for {{site.ai_gateway}} control planes as they do for standard Dedicated Cloud Gateways.
+See the following for instructions:
+* [AWS VPC peering](/dedicated-cloud-gateways/aws-vpc-peering/)
+* [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/)
+* [Set up an AWS resource endpoint connection](/dedicated-cloud-gateways/aws-resource-endpoints/)
+* [Private hosted zones](/dedicated-cloud-gateways/private-hosted-zones/)
+* [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/)
 
 ## Custom plugins
 

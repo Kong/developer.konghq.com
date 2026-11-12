@@ -800,7 +800,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.18"
+    ee-version: "3.10.0.20"
     lts: true
     eol: 2028-03-31
     distributions:
@@ -1213,6 +1213,7 @@ releases:
   - release: "3.12"
     ee-version: "3.12.0.12"
     eol: 2026-10-01
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
@@ -1421,7 +1422,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.13"
-    ee-version: "3.13.0.10"
+    ee-version: "3.13.0.12"
     eol: 2026-12-18
     distributions:
       - amazonlinux2:
@@ -1632,7 +1633,7 @@ releases:
 
   - release: "3.14"
     lts: true
-    ee-version: "3.14.0.15"
+    ee-version: "3.14.0.17"
     eol: 2029-04-07
     distributions:
       - amazonlinux2:
@@ -1845,7 +1846,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.15"
-    ee-version: "3.15.0.6"
+    ee-version: "3.15.0.7"
     eol: 2027-07-02
     distributions:
       - amazonlinux2023:
@@ -2047,7 +2048,7 @@ releases:
 
   - release: "3.16"
     latest: true
-    ee-version: "3.16.0.0"
+    ee-version: "3.16.0.2"
     eol: 2027-09-15
     distributions:
       - amazonlinux2023:
@@ -2280,6 +2281,15 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.16.0.2': 2026/11/10
+  '3.15.0.7': 2026/11/10
+  '3.14.0.17': 2026/11/10
+  '3.13.0.12': 2026/11/10
+  '3.10.0.20': 2026/11/10
+  '3.14.0.16': 2026/10/14
+  '3.16.0.1': 2026/10/12
+  '3.13.0.11': 2026/09/28
+  '3.10.0.19': 2026/09/28
   '3.14.0.15': 2026/09/17
   '3.15.0.6': 2026/09/16
   '3.16.0.0': 2026/09/15
@@ -2476,6 +2486,9 @@ release_dates:
 
 public_keys:
   # e.g.: https://cloudsmith.io/~kong/repos/internal-gateway-37/pub-keys/
+  "316":
+    rsa_key: ED9BFD14895BAE33
+    gpg_key: 062FEF769BE6B8D4
   "315":
     rsa_key: AECCD277A6B82E42
     gpg_key: 70F548ACDD3D34DB

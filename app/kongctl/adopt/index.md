@@ -84,6 +84,9 @@ rows:
       [kongctl adopt event-gateway](/kongctl/adopt/event-gateway/)
     description: "Adopt an existing Konnect Event Gateway into namespace management."
   - command: |
+      [kongctl adopt identity](/kongctl/adopt/identity/)
+    description: "Adopt Kong Identity resources."
+  - command: |
       [kongctl adopt konnect](/kongctl/adopt/konnect/)
     description: "Adopt {{site.konnect_short_name}} resources."
   - command: |

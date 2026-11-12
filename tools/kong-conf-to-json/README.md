@@ -46,22 +46,18 @@ The command compares each version file with the version file before it, and adds
 
 The oldest version file is the baseline. Its params get no `min_version` key, because the tool has no earlier version to compare them to.
 
-### The `--set-min-version` argument
+### The `--baseline-min-version` argument
 
-`--set-min-version` writes the same `min_version` on **every** param in `index.json`. It replaces the values that the version comparison found.
+`--baseline-min-version=<version>` writes `min_version` only on the params that the version comparison did not stamp, that is, the params of the baseline (oldest) version file. It does not touch the `min_version` values that the comparison found, so params added in later versions keep their own version.
 
-Use it only to bootstrap a product that has one single version file. In that case the comparison cannot run, so no param gets a `min_version`, and the reference page shows no version information.
-
-`ai-gateway` was in this condition for its first release:
+Use it when the product must show a "Min Version" badge on its baseline params. For `ai-gateway`, 2.0 is the first release of the product, so the reference page must show `min_version: { "ai-gateway": "2.0" }` on the 2.0 params, while params that 2.1 adds keep `min_version: { "ai-gateway": "2.1" }`:
 
 ```bash
 node run --file=../../../kong-ee/kong.conf.default --version=2.0 --product=ai-gateway
-node index-file --product=ai-gateway --set-min-version=2.0
+node index-file --product=ai-gateway --baseline-min-version=2.0
 ```
 
-All the params in `app/_kong-conf/ai-gateway/index.json` then have `min_version: { "ai-gateway": "2.0" }`.
-
-Do not use `--set-min-version` when the product has more than one version file. It would overwrite the correct per-param values with one single version.
+When the product has one single version file, every param is a baseline param, so `--baseline-min-version` stamps all of them. It is safe to run on every regeneration, including after a new version file is added: the new version's params still get their own `min_version` from the comparison.
 
 ### How to add a new version
 
@@ -72,15 +68,15 @@ Do not use `--set-min-version` when the product has more than one version file. 
    node run --file=../../../kong-ee/kong.conf.default --version=2.1 --product=ai-gateway
    ```
 
-3. Generate the index file again, without `--set-min-version`:
+3. Generate the index file again. For `ai-gateway`, pass `--baseline-min-version=2.0`; for `gateway`, run it without an extra flag:
 
    ```bash
-   node index-file --product=ai-gateway
+   node index-file --product=ai-gateway --baseline-min-version=2.0
    ```
 
-4. Check the diff on `index.json`. The params that 2.1 adds must have `min_version: { "ai-gateway": "2.1" }`, and the params that 2.1 removes must have `removed_in: { "ai-gateway": "2.1" }`.
+4. Check the diff on `index.json`. The params that 2.1 adds must have `min_version: { "ai-gateway": "2.1" }`, the params that 2.1 removes must have `removed_in: { "ai-gateway": "2.1" }`, and the baseline 2.0 params must keep `min_version: { "ai-gateway": "2.0" }`.
 
-Step 3 also removes the `min_version` keys that `--set-min-version=2.0` wrote on the baseline params, because 2.0 is now the oldest version file. This agrees with the behavior of the `gateway` product, where the oldest version is the implicit baseline.
+For the `gateway` product, the oldest version is the implicit baseline: its params get no `min_version`, and regenerating the index after a new version file keeps that behavior.
 
 ## Where the data is used
 
@@ -90,4 +86,5 @@ Step 3 also removes the `min_version` keys that `--set-min-version=2.0` wrote on
 
 ## Automation
 
-The `.github/workflows/generate-kong-conf-json.yml` workflow runs both commands with the default product, so it supports `gateway` only. Run the commands locally for `ai-gateway`.
+- `.github/workflows/generate-kong-conf-json.yml` runs both commands with the default product, so it supports `gateway` only.
+- `.github/workflows/generate-aigw-kong-conf-json.yml` runs both commands with `--product=ai-gateway --baseline-min-version=2.0`.

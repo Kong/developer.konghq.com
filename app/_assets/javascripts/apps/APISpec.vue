@@ -30,22 +30,24 @@
     <KSkeleton v-if="loading" type="spinner" class="mx-auto items-center justify-center min-h-52 flex"/>
 
     <div v-if="!loading" class="flex gap-10 w-full">
-      <aside class="sticky top-24 left-0 flex-col gap-3 flex-shrink-0 w-64 hidden md:flex h-screen">
+      <aside class="sticky top-24 left-0 flex-col gap-3 flex-shrink-0 w-64 hidden md:flex h-[calc(100vh-6rem)]">
         <KSelect
           :items="versions"
           @selected="onVersionSelect"
           class="mt-2"
         />
 
-        <SpecRendererToc
-          v-if="!loading && tableOfContents && !slideoutTocVisible"
-          navigation-type="hash"
-          :base-path="basePath"
-          :table-of-contents="tableOfContents"
-          :control-address-bar="true"
-          :current-path="currentPathTOC"
-          @item-selected="itemSelected"
-        />
+        <div class="flex-1 min-h-0">
+          <SpecRendererToc
+            v-if="!loading && tableOfContents && !slideoutTocVisible"
+            navigation-type="hash"
+            :base-path="basePath"
+            :table-of-contents="tableOfContents"
+            :control-address-bar="true"
+            :current-path="currentPathTOC"
+            @item-selected="itemSelected"
+          />
+        </div>
       </aside>
 
       <div class="flex flex-col w-full">

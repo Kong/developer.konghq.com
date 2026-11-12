@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -88,7 +89,7 @@ For example, if you're metering AI request tokens to 100 per month, you must use
 
 ## Usage-based billing
 
-The Metering & Billing Policy can't bill customers. If you want to bill customers based on usage events from the Policy, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing-subscriptions/) or [OpenMeter self-hosted](https://openmeter.io/).
+The Metering & Billing Policy can't bill customers. If you want to bill customers based on usage events from the Policy, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing/) or [OpenMeter self-hosted](https://openmeter.io/).
 
 ## Examples
 

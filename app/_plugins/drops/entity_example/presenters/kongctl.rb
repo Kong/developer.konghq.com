@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './base'
+require_relative 'base'
 
 module Jekyll
   module Drops
@@ -27,6 +27,7 @@ module Jekyll
               'mcp_server' => 'mcp_servers',
               'auth-strategy' => 'auth_strategies',
               'policy' => 'policies',
+              'custom_policy' => 'custom_policies',
               'ca_certificate' => 'ca_certificates',
               'certificate' => 'certificates',
               'sni' => 'snis'
@@ -202,6 +203,34 @@ module Jekyll
                   }
                 ]
               }
+            end
+          end
+
+          class AIGatewayPolicy < Base
+            def missing_variables
+              @missing_variables ||= [formats['kongctl']['ai_gateway_variables']['ai_gateway']]
+            end
+          end
+
+          class AIGatewayPolicyAttachment < Base
+            private
+
+            def build_config_hash
+              entity_item = { 'ref' => yaml_data['name'],
+                              'ai_gateway' => Utils::VariableReplacer::KongctlData::AI_GATEWAY_LOOKUP_SENTINEL }
+                            .merge(yaml_data.except('ref', 'policies'))
+                            .merge('policies' => policy_refs)
+              { "ai_gateway_#{child_key}" => [entity_item] }
+            end
+
+            def policy_refs
+              yaml_data['policies'].map do |policy|
+                if policy == @example_drop.policy_name
+                  Utils::VariableReplacer::KongctlData.ref_sentinel(policy)
+                else
+                  policy
+                end
+              end
             end
           end
         end

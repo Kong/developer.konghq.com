@@ -47,47 +47,46 @@ To resolve this issue, follow these steps:
 
 1. **Cross-Account Lambda Function Invocation Setup:**
 
-In the AWS account owning the Lambda function:
+   In the AWS account owning the Lambda function:
 
-- Create an IAM Role that grants the necessary permissions for invoking Lambda functions. This role will be assumed by IAM users from another AWS account.
+   - Create an IAM Role that grants the necessary permissions for invoking Lambda functions. This role will be assumed by IAM users from another AWS account.
 
-- Define a trust relationship with the other AWS account, allowing IAM users from that account to assume the role.
+   - Define a trust relationship with the other AWS account, allowing IAM users from that account to assume the role.
 
-- Attach policies to the IAM role that grant permissions to invoke Lambda functions.
+   - Attach policies to the IAM role that grant permissions to invoke Lambda functions.
 
-In the other AWS account (the one used by the `aws-lambda` plugin):
+   In the other AWS account (the one used by the `aws-lambda` plugin):
 
-- Create an IAM user who will be invoking Lambda functions in the above AWS account.
+   - Create an IAM user who will be invoking Lambda functions in the above AWS account.
 
-- Attach a policy to the IAM user that allows assuming the IAM role created in the above account.
+   - Attach a policy to the IAM user that allows assuming the IAM role created in the above account.
 
 2. **{{site.base_gateway}} `aws-lambda` Plugin Configuration:**
 
-Ensure that the role ARN is added into the `aws-lambda` plugin configuration. This is crucial for cross-account Lambda function invocation. The relevant field in the plugin configuration is `aws_assume_role_arn`.
+   Ensure that the role ARN is added into the `aws-lambda` plugin configuration. This is crucial for cross-account Lambda function invocation. The relevant field in the plugin configuration is `aws_assume_role_arn`.
 
-Here is an example snippet of the `aws-lambda` plugin configuration with the `aws_assume_role_arn` field:
+   Here is an example snippet of the `aws-lambda` plugin configuration with the `aws_assume_role_arn` field:
 
-```json
+   ```json
+   {
+   "config": {
+   "function_name": "arn:aws:lambda:us-east-1:123456789012:function:your-function-name",
+   "aws_region": "us-east-1",
+   "aws_key": "your-aws-access-key",
+   "aws_secret": "your-aws-secret-key",
+   "aws_assume_role_arn": "arn:aws:iam::123456789012:role/your-assume-role",
+   "invocation_type": "RequestResponse",
+   "log_type": "Tail",
+   "timeout": 60000,
+   "forward_request_headers": true
+   }
+   }
+   ```
 
-{
-"config": {
-"function_name": "arn:aws:lambda:us-east-1:123456789012:function:your-function-name",
-"aws_region": "us-east-1",
-"aws_key": "your-aws-access-key",
-"aws_secret": "your-aws-secret-key",
-"aws_assume_role_arn": "arn:aws:iam::123456789012:role/your-assume-role",
-"invocation_type": "RequestResponse",
-"log_type": "Tail",
-"timeout": 60000,
-"forward_request_headers": true
-}
-}
-```
-
-Ensure that the `aws_assume_role_arn` field is correctly set with the ARN of the IAM role created for cross-account access.
+   Ensure that the `aws_assume_role_arn` field is correctly set with the ARN of the IAM role created for cross-account access.
 
 3. **Additional Tips:**
 
-- For logging purposes, if you encounter issues with logs not appearing when using the `aws-lambda` plugin, consider adjusting the `log_type` configuration based on your requirements for security monitoring and troubleshooting.
+   - For logging purposes, if you encounter issues with logs not appearing when using the `aws-lambda` plugin, consider adjusting the `log_type` configuration based on your requirements for security monitoring and troubleshooting.
 
 By following these steps, you should be able to configure the `aws-lambda` plugin in {{site.base_gateway}} for successful cross-account Lambda function invocation.

@@ -1,0 +1,31 @@
+name: datadog-request-count
+display_name: Datadog request count
+type: datadog
+title: 'Log request count'
+description: 'Send the request_count metric to a Datadog agent and identify the AI Consumers by their ID.'
+extended_description: |
+  Send the `request_count` metric to a Datadog agent.
+  The `consumer_id` identifier adds the ID of the AI Consumer that made the request as a tag.
+weight: 900
+
+requirements:
+  - "A [Datadog agent](https://docs.datadoghq.com/getting_started/agent/#setup) running and reachable from the data plane"
+
+config:
+  host: ${datadog_host}
+  port: 8125
+  metrics:
+    - name: request_count
+      stat_type: counter
+      consumer_identifier: consumer_id
+      sample_rate: 1
+
+variables:
+  datadog_host:
+    value: $DATADOG_HOST
+    description: The hostname or IP address of your Datadog agent.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

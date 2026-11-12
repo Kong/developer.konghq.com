@@ -13,6 +13,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: "Rate cards"
     url: /metering-and-billing/product-catalog/#rate-cards
 ---
@@ -47,6 +49,7 @@ When assigning an add-on to a plan, you choose how many instances are allowed pe
 
 * The billing cadences of the add-on must match the plan's billing cadence.
 * Any rate cards present in both the add-on and the plan must meet extendability rules.
+* The add-on's currency must be compatible with the currency of any plan it's attached to. An add-on priced in a [custom currency](/metering-and-billing/currencies/) can attach to a fiat plan when the custom currency has an active cost basis for the plan's fiat currency.
 
 {:.warning}
 > Once a plan version is published, the add-ons assigned to that plan **cannot** be changed.

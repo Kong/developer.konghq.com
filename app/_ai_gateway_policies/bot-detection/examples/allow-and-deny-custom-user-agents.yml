@@ -1,0 +1,33 @@
+name: allow-and-deny-custom-user-agents
+display_name: Bot Detection with custom patterns
+type: bot-detection
+description: 'Allow a client built on the Go HTTP library, and block any `User-Agent` header that contains `scraper`, in any case.'
+
+extended_description: |
+  Allow a client built on the Go HTTP library, and block any `User-Agent` header that contains `scraper`, in any case.
+
+  In this example:
+
+  * The `allow` pattern lets `Go-http-client` through, even though it's on the built-in list.
+  * The `deny` pattern blocks any `User-Agent` that contains `scraper`. The `(?i)` prefix makes the match case-insensitive.
+
+title: 'Allow and deny custom User-Agents'
+
+weight: 800
+
+scopes:
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - global
+
+config:
+  allow:
+    - Go-http-client
+  deny:
+    - (?i)scraper
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

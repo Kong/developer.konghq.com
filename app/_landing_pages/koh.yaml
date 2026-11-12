@@ -61,7 +61,10 @@ rows:
 
             This installs globally the skills into your agents `/skills/` directory. Point Koh at a different base directory by passing it as an argument, and add `--force` to replace previously installed skill files.
 
-            Under the hood, Koh operates on a local Insomnia Git project when you enable [Git Sync](/insomnia/storage/#git-sync). Your collections, documents, and requests are stored as `.yaml` files that Koh reads and updates directly, so any changes are reflected in Insomnia without an import or export step.
+            Under the hood, Koh operates on a local Insomnia Git project when you enable [Git Sync](/insomnia/storage/#git-sync). Your API Collections, specs, and requests are stored as `.yaml` files that Koh reads and updates directly, so any changes are reflected in Insomnia without an import or export step.
+
+            {:.info}
+            > Koh CLI still uses the `document` command for an API Collection that contains an OpenAPI spec, which is how Insomnia stores that collection on disk. Insomnia 13.3 [merged documents and collections](/insomnia/collections/#what-happened-to-documents) in the UI, but the file format and the Koh commands are unchanged.
 
             By default, Koh uses the current working directory as the project. Use the `--project <path>` option to point to a different project directory:
 

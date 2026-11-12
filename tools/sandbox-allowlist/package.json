@@ -1,0 +1,14 @@
+{
+  "name": "sandbox-allowlist",
+  "version": "1.0.0",
+  "description": "Extracts the Lua sandbox allowlists from the Kong Gateway source into a versioned data file",
+  "type": "module",
+  "main": "extract.js",
+  "scripts": {
+    "extract": "node extract.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

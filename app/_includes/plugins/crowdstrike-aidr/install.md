@@ -20,7 +20,7 @@ Register a collector in the [AIDR console](https://aidr.pangea.cloud) to obtain 
 1. Choose **Gateway** as the collector type, select **Kong**, and click **Next**.
 1. Configure the collector:
    * **Collector Name**: Enter a descriptive name to appear in dashboards and reports.
-   * **Logging**: Select whether to log full prompt and response content, or metadata only.
+   * **Logging**: Select whether to log full traffic content, or metadata only.
    * **Policy** *(optional)*: Assign a policy to apply detection rules to traffic. You can select an existing policy, create one on the **Policies** page, or select **No Policy, Log Only** to record activity without applying detection rules.
 1. Click **Save** to complete registration.
 
@@ -32,7 +32,7 @@ You'll need these when enabling the plugin.
 The following installation steps install and build the `{{include.plugin_slug}}` plugin and the `crowdstrike-aidr-shared` library.
 
 {:.info}
-> **Note**: If you want to set up the [{{include.other_plugin_name}}](/plugins/{{include.other_plugin_slug}}/) plugin at the same time, you can add `{{include.other_plugin_slug}}` to your installation and builds, alongside the other two packages.
+> **Note**: If you want to set up the [other Crowdstrike plugins](/plugins/?terms=crowdstrike) at the same time, you can add their names to your installation and builds, alongside the other two packages.
 
 {% navtabs 'deployment' %}
 {% navtab "Konnect" %}
@@ -62,15 +62,15 @@ In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the cont
 
    ```sh
    curl -X POST \
-     "https://us.api.konghq.com/v2/control-planes/${KONNECT_CP_ID}/core-entities/plugin-schemas" \
-     --header "Authorization: Bearer ${KONNECT_TOKEN}" \
+     "https://us.api.konghq.com/v2/control-planes/$KONNECT_CP_ID/core-entities/plugin-schemas" \
+     --header "Authorization: Bearer $KONNECT_TOKEN" \
      --header "Content-Type: application/json" \
      --data "{\"lua_schema\": $(jq -Rs . kong/plugins/{{include.plugin_slug}}/schema.lua)}"
    ```
 
-Your control plane ID is visible in the URL when viewing the control plane in {{site.konnect_short_name}}, or on the control plane's overview page.
+   Your control plane ID is visible in the URL when viewing the control plane in {{site.konnect_short_name}}, or on the control plane's overview page.
 
-1. Build the custom {{site.base_gateway}} image using the Dockerfile in the repository:
+1. Next, deploy your data planes. Build the custom {{site.base_gateway}} image using the Dockerfile in the repository:
 
    ```sh
    docker build -t kong-aidr-plugins:latest .

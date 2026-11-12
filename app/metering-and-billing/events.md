@@ -209,7 +209,12 @@ CloudEvents are unique by `id` and `source`. For more information, see [CloudEve
 > If a duplicate event is re-sent (for example, due to a network error) it may have the same `id`.
 > Consumers may assume that events with identical `source` and `id` are duplicates.
 
-{{site.metering_and_billing}} deduplicates events by `id` and `source`. This ensures that if multiple events with the same `id` and `source` are sent, they are only processed once. This is useful when you want to retry or replay events in your infrastructure.
+{{site.metering_and_billing}} deduplicates events by `id` and `source`.
+This ensures that if multiple events with the same `id` and `source` are sent, they are only processed once within a 24-hour window.
+This is useful when you want to retry events in your infrastructure.
+
+If an event with the same `id` and `source` arrives more than 24 hours after the original, it is ingested as a new event and counted again.
+When you replay or backfill historical events older than 24 hours, make sure you don't resend events that were already ingested.
 
 ## Event enrichment
 

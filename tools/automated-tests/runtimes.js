@@ -1,6 +1,6 @@
 import debug from "debug";
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
 import path from "path";
 import { dirname } from "path";
@@ -10,9 +10,22 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const PASSTHROUGH_VARIABLES = [
+  "KONNECT_DOMAIN",
+  "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT",
+  "KONNECT_EVENT_GATEWAY_MIN_VERSION",
+  "KONNECT_AI_GATEWAY_MIN_VERSION",
+];
+
+async function konnectRegion() {
+  const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
+  const fileContent = await fs.readFile(filePath, "utf8");
+  return load(fileContent).region;
+}
+
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
-  const configs = yaml.load(fileContent);
+  const configs = load(fileContent);
   const imageName = `automated-tests`;
 
   if (!configs[deploymentModel]) {
@@ -50,6 +63,23 @@ export async function runtimeEnvironment(runtimeConfig) {
 
   for (const [key, value] of Object.entries({ ...runtimeConfig.env })) {
     environment[`DECK_${key}`] = value;
+  }
+
+  for (const variable of PASSTHROUGH_VARIABLES) {
+    if (process.env[variable] !== undefined) {
+      environment[variable] = process.env[variable];
+    }
+  }
+
+  const konnectDomain = process.env.KONNECT_DOMAIN;
+  if (konnectDomain) {
+    const controlPlaneUrl = `https://${await konnectRegion()}.api.${konnectDomain}`;
+    environment["KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+    environment["DECK_KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+
+    if (konnectDomain === "konghq.tech") {
+      environment["KONGCTL_DEFAULT_KONNECT_ENVIRONMENT"] = "tech";
+    }
   }
 
   Object.entries(process.env)
@@ -94,16 +124,23 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
+export function licenseRequired(deploymentModel) {
+  return deploymentModel === "on-prem";
+}
+
 export async function setupRuntime(runtimeConfig, docker) {
   const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
-  // Add gateway license
-  if (!process.env.KONG_LICENSE_DATA) {
-    throw new Error("Missing env variable KONG_LICENSE_DATA");
+  // On-prem gateways run under a Kong license; Konnect-managed data planes
+  // get their entitlement from Konnect.
+  if (licenseRequired(runtimeConfig.deploymentModel)) {
+    if (!process.env.KONG_LICENSE_DATA) {
+      throw new Error("Missing env variable KONG_LICENSE_DATA");
+    }
+    environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
   }
-  environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
     log(`Setting up ${deploymentModel}/${product} version: ${runtimeConfig.version}...`);
@@ -195,6 +232,13 @@ export async function resetRuntime(runtimeConfig, container) {
     for (const command of runtimeConfig.reset.commands) {
       await executeCommand(container, command);
     }
+  }
+}
+
+export async function provisionRuntime(runtimeConfig, container) {
+  log("Provisioning...");
+  for (const command of runtimeConfig.reset?.provision?.commands || []) {
+    await executeCommand(container, command);
   }
 }
 

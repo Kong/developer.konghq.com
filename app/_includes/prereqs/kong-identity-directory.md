@@ -17,6 +17,9 @@ body:
   name: "kong-identity-directory"
   description: "Directory for this tutorial"
   allow_all_control_planes: true
+extract_body:
+  - name: 'id'
+    variable: DIRECTORY_ID
 capture:
   - variable: DIRECTORY_ID
     jq: ".id"
@@ -34,6 +37,9 @@ Look up an existing directory:
 url: /v2/directories
 status_code: 200
 method: GET
+extract_body:
+  - name: 'data.[0].id'
+    variable: DIRECTORY_ID
 capture:
   - variable: DIRECTORY_ID
     jq: ".data[0].id"

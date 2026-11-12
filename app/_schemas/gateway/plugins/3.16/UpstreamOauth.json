@@ -649,10 +649,6 @@
       },
       "type": "object"
     },
-    "expressions": {
-      "additionalProperties": true,
-      "type": "object"
-    },
     "protocols": {
       "default": [
         "grpc",

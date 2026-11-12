@@ -1,0 +1,8 @@
+extends: existence
+message: "Remove the inline code formatting from the heading '%s'. Backticks in headings break the sidenav."
+level: warning
+nonword: true
+scope: raw
+tokens:
+  # Starts at ## so shell and YAML comments (# ...) in code blocks and frontmatter are not matched.
+  - '(?m)^#{2,6}[ \t]+[^\n`]*`[^\n]*$'

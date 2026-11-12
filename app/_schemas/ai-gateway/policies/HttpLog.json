@@ -29,6 +29,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "keepalive": {
+          "type": "number",
+          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "default": 60000
+        },
         "flush_timeout": {
           "type": "number",
           "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
@@ -36,13 +41,33 @@
         "headers": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "type": "string",
+            "x-referenceable": true
           },
           "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
         },
         "queue": {
           "type": "object",
           "properties": {
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
             "concurrency_limit": {
               "type": "integer",
               "enum": [
@@ -76,25 +101,40 @@
             "max_bytes": {
               "type": "integer",
               "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            }
+          }
+        },
+        "log_sanitization": {
+          "type": "object",
+          "properties": {
+            "body_json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "JSONPath expressions selecting fields to redact from the AI request and response payloads, for example \"$.messages[*].content\". Paths are relative to a payload itself.",
+              "default": []
             },
-            "max_retry_time": {
-              "type": "number",
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "default": 60
+            "body_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "PCRE patterns to redact from the AI request and response payloads.",
+              "default": []
             },
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
             },
-            "max_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "default": 60
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
             }
           }
         },
@@ -103,23 +143,6 @@
           "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
           "x-referenceable": true,
           "x-encrypted": true
-        },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
-          "default": true
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
-          "default": 60000
-        },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
         },
         "method": {
           "type": "string",
@@ -130,6 +153,26 @@
           ],
           "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
           "default": "POST"
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": "Number of times to retry when sending data to the upstream server."
+        },
+        "queue_size": {
+          "type": "integer",
+          "description": "Maximum number of log entries to be sent on each message to the upstream server."
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "default": true
         },
         "content_type": {
           "type": "string",
@@ -144,14 +187,6 @@
           "type": "number",
           "description": "An optional timeout in milliseconds when sending data to the upstream server.",
           "default": 10000
-        },
-        "retry_count": {
-          "type": "integer",
-          "description": "Number of times to retry when sending data to the upstream server."
-        },
-        "queue_size": {
-          "type": "integer",
-          "description": "Maximum number of log entries to be sent on each message to the upstream server."
         }
       },
       "required": [

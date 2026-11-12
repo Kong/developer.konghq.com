@@ -1,0 +1,6 @@
+title: Uncompilable schema
+name: uncompilable
+display_name: Uncompilable
+type: ai-uncompilable
+config:
+  models: []

@@ -252,7 +252,7 @@ rows:
                   insomnia: true
                   postman: false  
                 - title: |
-                    [Documentation editing](/insomnia/documents/)
+                    [Documentation editing](/insomnia/collections/)
                   subtitle: Write and edit documentation within OpenAPI files or request descriptions.
                   insomnia: true
                   postman: true
@@ -328,8 +328,7 @@ rows:
 
                     Continue exploring Insomnia's capabilities:
 
-                    - Learn about [Documents](/insomnia/documents/).
-                    - Explore [Collections](/insomnia/collections/).
+                    - Explore [API Collections](/insomnia/collections/).
                     - Manage [Environments](/insomnia/environments/).
                     - Simulate APIs with [Mock servers](/insomnia/mock-servers/).
                     - Write tests with [Scripts](/insomnia/scripts/).

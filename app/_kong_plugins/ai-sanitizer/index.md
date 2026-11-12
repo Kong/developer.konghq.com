@@ -117,14 +117,14 @@ sequenceDiagram
 
 ## AI PII Anonymizer service
 
-Kong provides several AI PII Anonymizer service Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
+Kong distributes these images publicly on Docker Hub, under the `kong/ai-pii-service` repository. No authentication is required to pull them. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `service:v0.1.4-en`: English model, version 0.1.4
-* `service:v0.1.4-it`: Italian model, version 0.1.4
-* `service:v0.1.4-fr`: French model, version 0.1.4
+* `ai-pii-service:v0.2.2-en`: English model, version 0.2.2
+* `ai-pii-service:v0.2.2-it`: Italian model, version 0.2.2
+* `ai-pii-service:v0.2.2-fr`: French model, version 0.2.2
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.4`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.2.2`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 ### Access the Docker images
@@ -153,7 +153,7 @@ FROM kong/ai-pii-service:v0.2.2-en
 
 ### Available language tags
 
-The following language-specific images are currently available:
+The following language-specific images are available:
 
 * `-en` (English)
 * `-es` (Spanish)
@@ -173,6 +173,18 @@ This service takes the following optional environment variables at startup:
 * `GUNICORN_WORKERS`: Specifies the number of Gunicorn processes to run
 * `PII_SERVICE_ENGINE_CONF`: Specifies the natural language processing (NLP) engine configuration file
 * `GUNICORN_LOG_LEVEL`: Specifies log level
+* `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE`: Specifies TLS certificates for HTTPS access. 
+
+### Serve AI PII service securely
+
+To serve the AI PII service over https requires additional configuration:
+
+1. Ensure you have trusted TLS certificates for your environment.
+2. Set the `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE` environment variables when starting the AI PII service. The service will switch to serving HTTPS on port `8443`.
+3. Set `scheme: https` and `port: 8443` when configuring the AI PII Sanitizer Plugin. The plugin will connect with HTTPS.
+
+{:.info}
+> This plugin does not verify SSL/TLS connections directly, it follows the global [`tls_certificate_verify`](/ai-gateway/configuration/#tls-certificate-verify) setting.
 
 ### Sanitization endpoints
 
@@ -199,7 +211,7 @@ You can anonymize data in requests using the following redact modes:
 ### Custom patterns
 
 You can define an array of custom patterns on a per-request basis.
-Currently, only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
+Only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
 
 The `name` must be unique for each pattern.
 

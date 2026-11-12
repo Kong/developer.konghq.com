@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'kramdown'
+
 # Config fixtures below are adapted from real {% validation request-check %} blocks in
 # app/_how-tos/**/*.md, to make sure the curl commands we generate for real docs
-# are syntactically valid bash. A few (mtls, form_data, body_cmd, output, expected_headers)
+# are syntactically valid bash. A few (mtls, form_data, body_cmd, output)
 # have zero real-doc usage anywhere in the repo, so those fixtures are synthetic, built
 # directly from the snippet.md logic, to get full branch coverage.
 RSpec.describe 'how-tos/validations/request-check/snippet.md' do
@@ -34,11 +36,11 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     it 'renders syntactically valid bash' do
       validate_bash_syntax!(code)
     end
-  
+
     it 'renders the same command in both output formats' do
       html = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'html')))
       markdown = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'markdown')))
-  
+
       expect(markdown).to eq(html)
     end
   end
@@ -713,7 +715,7 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     end
   end
 
-  context 'expected_headers, a pluralized list (synthetic — no real doc uses expected_headers)' do
+  context 'expected_headers, a pluralized list' do
     let(:template) do
       <<~'LIQUID'
         {% validation request-check %}
@@ -733,6 +735,26 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
       expect(rendered).to include('You should see the following headers:')
       expect(rendered).to include('X-RateLimit-Remaining: 99')
       expect(rendered).to include('X-RateLimit-Limit: 100')
+    end
+
+    let(:highlighter) { instance_double(CodeHighlighter) }
+
+    before do
+      allow(site).to receive(:site_payload).and_return({ 'site' => {} })
+      allow(CodeHighlighter).to receive(:new).and_return(highlighter)
+      allow(highlighter).to receive(:highlight) { |code, _lang, _id| code }
+    end
+
+    let(:html) { Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html) }
+
+    it 'renders the curl fence with a copy action' do
+      curl_block = html.find('div.custom-code-block', text: 'curl -i -X GET')
+      expect(curl_block).to have_css('clipboard-copy.copy-action')
+    end
+
+    it 'renders the expected-headers fence with no copy action' do
+      headers_block = html.find('div.custom-code-block', text: 'X-RateLimit-Remaining: 99')
+      expect(headers_block).not_to have_css('clipboard-copy.copy-action')
     end
   end
 

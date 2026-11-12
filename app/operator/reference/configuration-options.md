@@ -148,6 +148,10 @@ rows:
     type: '`bool`'
     description: "Enable the Gateway controller."
     default: '`true`'
+  - flag: '`--enable-controller-gwadmin`'
+    type: '`bool`'
+    description: "Enable the GWAdmin controller, deploying gw-admin and managing its certificates."
+    default: '`false`'
   - flag: '`--enable-controller-kegdataplane`'
     type: '`bool`'
     description: "Enable the KEG (Kong Event Gateway) DataPlane controller."
@@ -159,6 +163,14 @@ rows:
   - flag: '`--enable-controller-konnect`'
     type: '`bool`'
     description: "Enable the Konnect controllers."
+    default: '`false`'
+  - flag: '`--enable-controller-onpremaigateway`'
+    type: '`bool`'
+    description: "Enable the on-prem AI Gateway (control plane) controller."
+    default: '`false`'
+  - flag: '`--enable-controller-onpremeventgateway`'
+    type: '`bool`'
+    description: "Enable the on-prem Event Gateway controller (alpha), pushing the OnPremEventGateways to gw-admin."
     default: '`false`'
   - flag: '`--enable-controlplane-config-dump`'
     type: '`bool`'
@@ -176,6 +188,10 @@ rows:
     type: '`bool`'
     description: "Enable the Gateway API experimental features."
     default: '`false`'
+  - flag: '`--enable-read-your-own-writes-consistency`'
+    type: '`bool`'
+    description: "Make cached reads wait until the cache has observed the operator's own preceding writes. Disable only if the cache does not watch every object the operator writes to."
+    default: '`true`'
   - flag: '`--enable-validating-webhook`'
     type: '`bool`'
     description: "Enable the validating webhook."
@@ -188,21 +204,41 @@ rows:
     type: '`string`'
     description: "Comma-separated list of feature gates to enable. Valid values: mcp-server."
     default: '`""`'
+  - flag: '`--gwadmin-ca-ttl`'
+    type: '`duration`'
+    description: "Validity of the certificate authorities created for a GWAdmin, renewed once two thirds of it have elapsed (e.g. '8760h'). At least 10m."
+    default: '`8760h (1 years)`'
+  - flag: '`--gwadmin-cert-ttl`'
+    type: '`duration`'
+    description: "Validity of the certificates issued for a GWAdmin, renewed once two thirds of it have elapsed, and capped at the expiry of their certificate authority (e.g. '2160h'). At least 10m, and at most gwadmin-ca-ttl."
+    default: '`2160h (90 days)`'
   - flag: '`--health-probe-bind-address`'
     type: '`string`'
     description: "The address the probe endpoint binds to."
     default: '`:8081`'
+  - flag: '`--ip-family`'
+    type: '`string`'
+    description: "IP family of the cluster, used e.g. to decide which IP family (or families) DataPlanes' Kong listens bind to. Possible values: auto, ipv4, ipv6, dual. When 'auto' (default), the operator detects the cluster's IP family at startup and exits with an error if detection fails."
+    default: '`"auto"`'
   - flag: '`--konnect-controller-max-concurrent-reconciles`'
     type: '`uint`'
     description: "Deprecated: Please use '--max-concurrent-reconciles-konnect-controller' instead."
     default: '`8`'
+  - flag: '`--konnect-list-page-size`'
+    type: '`int`'
+    description: "Page size requested when listing Konnect entities to find the Konnect entity of an object, e.g. one whose Konnect ID was lost or that is deleted without one. Must be between 1 and 100. Only lower it if Konnect rejects the default: a lower value means more requests."
+    default: '`100`'
   - flag: '`--konnect-request-timeout`'
     type: '`duration`'
     description: "Timeout for Konnect API requests."
     default: '`10s`'
+  - flag: '`--konnect-server-url-domains`'
+    type: '`string`'
+    description: "Comma-separated list of domains a KonnectAPIAuthConfiguration serverURL host must belong to. A host outside the list is refused and reported with an APIAuthValid=False condition. Must not be empty: a deployment that needs another domain adds it here. Default: konghq.com,konghq.tech."
+    default: '`"konghq.com,konghq.tech"`'
   - flag: '`--konnect-sync-period`'
     type: '`duration`'
-    description: "Sync period for Konnect entities. After a successful reconciliation of Konnect entities the controller will wait this duration before enforcing configuration on Konnect once again."
+    description: "Sync period for Konnect entities. Must be greater than 0. After a successful reconciliation of Konnect entities the controller will wait this duration before enforcing configuration on Konnect once again."
     default: '`1m0s`'
   - flag: '`--kubeconfig`'
     type: '`string`'

@@ -59,7 +59,8 @@ See the [declarative configuration guide](/kongctl/declarative/) for information
 
 ## File-level defaults
 
-Use `_defaults.kongctl` to apply default `namespace` and `protected` metadata to parent resources in this file. 
+Use `_defaults.kongctl` to apply default `namespace` and `protected` metadata to namespace-bearing resources in this file, including participating
+{{site.ai_gateway}} children.
 Resource-level kongctl values override these defaults.
 
 ```yaml
@@ -91,61 +92,37 @@ objects recursively override template objects. Scalars, arrays, explicit
 `null`, and values of a different type replace inherited values. Arrays don't
 append.
 
-See [Configuration templates](/kongctl/declarative/#configuration-templates)
+See [Configuration templates](/kongctl/declarative/templates/)
 for discovery, inheritance, tag, and sync-scope behavior.
 
 ## YAML tags
 
-Use YAML tags in field values to load files or reference other resources.
+Use tags in field values to load content or select related resources. Read
+only the relevant language reference when authoring a field:
 
-- `!file`: Load content from a file. 
-  Supports `path#extract.path` and `path`/`extract` map form.
-- `!env`: Load string content from an environment variable. 
-  Supports `VAR#extract.path` and `var`/`extract` map form.
-- `!ref`: Reference another declarative resource by `ref`.
-  `resource-ref#field` is supported; the default field is `id`.
-- `!lookup`: Resolve an existing resource directly in a relationship field.
-- `!external`: An exact alias for `!lookup`.
-- `!secret`: Defer a write-only value until execution and keep the resolved
-  value out of saved plans.
-- `!ref` is intended for string fields.
-- `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
-  In declarative config, prefer `!ref` and avoid literal UUID values.
-- For reusable unmanaged resources or external parents with managed children,
-  use `_external.selector` and reference the resource with `!ref`.
-- For a one-off unmanaged relationship, use `!lookup`.
-- Sync never changes or deletes an external parent. Explicitly scoped child
-  collections are still fully reconciled.
-- Large text/spec fields are commonly loaded with `!file`.
-- `!file` paths are resolved relative to the config file and must remain within the configured base directory boundary.
+- [File values](/kongctl/declarative/files/): `!file`, extraction, and path boundaries.
+- [Environment values](/kongctl/declarative/environment-values/): deferred strings,
+  stored typed values, and saved-plan behavior.
+- [Write-only secrets](/kongctl/declarative/secrets/): `!secret`, deferred sources,
+  composition, and intentional rotation.
+- [References and lookups](/kongctl/declarative/references/): `!ref`, `_external`,
+  `!lookup`, the `!external` alias, scoped parents, and supported tag nesting.
 
-```yaml
-portals:
-  - ref: docs-portal
-    _external:
-      selector:
-        matchFields:
-          name: "Docs Portal"
+`!ref resource-ref` selects the resource's ID by default. Use
+`!ref resource-ref#field` for a declared scalar field. Boolean and numeric
+values retain their types in arbitrary payload values; string destinations
+must be compatible.
 
-apis:
-  - ref: billing-api
-    publications:
-      - ref: billing-publication
-        portal_id: !ref docs-portal
-```
+API foreign keys, such as `portal_id`, and root-level parent selectors, such
+as `api` on `api_versions`, have different field names. See
+[parent selectors](/kongctl/declarative/configuration/#parent-selectors-and-references)
+for nested and root-level declarations and release compatibility guidance.
+Run `kongctl explain <resource>.<field>` to confirm targets, selectors, and
+scope requirements for your installed version.
 
-Use mapping syntax to compose `!env` inside `!lookup` or `!external`, or
-inside `!secret`:
-
-```yaml
-portal_id: !lookup
-  name: !env PORTAL_NAME
-
-value: !secret
-  parts:
-    - "Bearer "
-    - !env AI_PROVIDER_TOKEN
-```
+The `string (uuid)` and `array[string(uuid)]` annotations in this reference
+are API value types. Prefer references over literal UUIDs when the target is
+also declared in your configuration.
 
 ## Audit logs
 
@@ -301,7 +278,7 @@ catalog_services:
 ## Dashboards
 
 Dashboard names don't need to be unique in {{site.konnect_short_name}}, but kongctl follows the same resource matching pattern used elsewhere in declarative configuration.
-When planning against the live state, it considers dashboards with the matching `KONGCTL-namespace` label and matches the desired dashboard by name. 
+When planning against the live state, it considers dashboards with the matching `KONGCTL-namespace` label and matches the desired dashboard by name.
 Avoid using duplicate dashboard names within a kongctl namespace.
 
 Dashboard resources are declared under the `analytics` grouping key.
@@ -312,8 +289,8 @@ For dashboards created in the {{site.konnect_short_name}} UI:
 
 Name-based adoption fails if the name matches multiple dashboards.
 
-Use the dashboard definition JSON exported from {{site.konnect_short_name}} as the `definition` value. 
-The field accepts that API-shaped object either inline or loaded from a JSON/YAML file with `!file`. kongctl sends the parsed object as the dashboard definition without translating it to another schema. 
+Use the dashboard definition JSON exported from {{site.konnect_short_name}} as the `definition` value.
+The field accepts that API-shaped object either inline or loaded from a JSON/YAML file with `!file`. kongctl sends the parsed object as the dashboard definition without translating it to another schema.
 `!file` is preferred for larger dashboard definitions.
 
 * [Custom dashboards](/custom-dashboards/)
@@ -392,7 +369,7 @@ control_planes:
 ```
 
 Control plane data plane certificates can also be declared as root resources.
-The certificate contents identify a certificate within its control plane when a certificate ID is not available. 
+The certificate contents identify a certificate within its control plane when a certificate ID is not available.
 The `cert` field supports `!file` and `!env`.
 
 ```yaml
@@ -846,10 +823,12 @@ portals:
 Portal identity providers and integrations can also be declared as root
 resources.
 
+{% include_cached /kongctl/parent-selector-compatibility.md %}
+
 ```yaml
 portal_identity_providers:
  - ref: string
-   portal: string required # prefer: !ref <portal-ref>
+   portal: string required # parent ref; for example, docs-portal
    type: One of (oidc | saml) required
    enabled: boolean
    config: object required
@@ -866,7 +845,7 @@ portal_identity_providers:
 
 portal_integrations:
  - ref: string
-   portal: string required # prefer: !ref <portal-ref>
+   portal: string required # parent ref; for example, docs-portal
    google_tag_manager:
      enabled: boolean required
      type: tracking
@@ -893,7 +872,7 @@ Portal IP allow lists can also be declared as root resources.
 ```yaml
 portal_ip_allow_lists:
   - ref: string
-    portal: string required # prefer: !ref <portal-ref>
+    portal: string required # parent ref; for example, docs-portal
     allowed_ips: array[string] required # IP addresses or CIDR blocks
 ```
 
@@ -905,7 +884,7 @@ Portal audit-log webhooks can also be declared as root resources.
 ```yaml
 portal_audit_log_webhooks:
   - ref: string
-    portal: string required # prefer: !ref <portal-ref>
+    portal: string required # parent ref; for example, docs-portal
     enabled: boolean
     audit_log_destination_id: string (uuid) # prefer: !ref
 ```
@@ -1410,3 +1389,5 @@ supported.
 
 For examples, see the
 [{{site.ai_gateway}} declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/ai-gateway).
+
+[stored-env]: /kongctl/declarative/environment-values/#storing-typed-environment-values-in-plans

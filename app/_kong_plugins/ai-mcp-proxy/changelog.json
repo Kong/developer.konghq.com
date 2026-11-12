@@ -323,6 +323,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.11": [
+    {
+      "message": "Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",

@@ -5,8 +5,6 @@ extended_description: |
   This will return an `429 Too Many Requests` error after the third failed login attempt.
 weight: 900
 
-requirements: 
-- "A [Consumer](/gateway/entities/consumer/) with a username and password"
 min_version:
     gateway: '3.13'
 

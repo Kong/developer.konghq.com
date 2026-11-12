@@ -1,7 +1,9 @@
-Before you create a test, you need to create a test suite for the collection. 
+Before you create a test, you need to create a test suite for the API Collection.
 
-1. To do this, click the **Tests** tab and click **New test suite** in the sidebar.
-1. From the Test Suite you just created, click **New test**. Insomnia creates a default `Return 200` request for you:
+1. If your API Collection doesn't have a **Tests** tab, go to **Preferences** > **General** > **Application** and enable **Show legacy unit tests**.
+1. On the API Collection screen, click the **Tests** tab.
+1. In the sidebar, click **New test suite**.
+1. From the test suite you just created, click **New test**. Insomnia creates a default `Return 200` request for you:
    ```javascript
    const response1 = await insomnia.send();
    expect(response1.status).to.equal(200);

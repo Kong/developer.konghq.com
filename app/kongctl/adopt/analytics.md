@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: kongctl get analytics
+    url: /kongctl/get/analytics/
 ---
 
 The `analytics` command adopts [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources into namespace management.

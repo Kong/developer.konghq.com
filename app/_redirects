@@ -1,3 +1,6 @@
+# Konnect Reference Platform
+/konnect-reference-platform/how-to/ /konnect-reference-platform/patterns/
+
 # kongctl
 /kongctl/create/   /kongctl/
 /kongctl/create/*  /kongctl/
@@ -111,13 +114,17 @@
 /kongctl/tail/konnect/audit-logs/   /kongctl/tail/konnect/#kongctl-tail-konnect-audit-logs
 
 # Plugins
+/plugins/nonamesecurity/ /plugins/akamai-api-security/
+/plugins/nonamesecurity/reference/ /plugins/akamai-api-security/reference/
+/plugins/nonamesecurity/examples/enable-nonamesecurity-plugin/ /plugins/akamai-api-security/examples/enable-akamai-plugin/
 /plugins/traceableai/  /plugins/harness-waap/
 /plugins/traceableai/reference/  /plugins/harness-waap/reference/
 /plugins/traceableai/examples/enable-traceable/  /plugins/harness-waap/examples/enable-harness-waap/
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/
-/gateway/plugins/plugin-ordering/  /gateway/plugins/plugin-ordering-priority-preserving/
+/gateway/plugins/plugin-ordering-legacy/  /gateway/plugins/plugin-ordering/
+/gateway/plugins/plugin-ordering-priority-preserving/  /gateway/plugins/plugin-ordering/
 
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/
@@ -140,6 +147,7 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
+/ai-gateway/access-management/ /ai-cost-management/org-chart/
 /mesh/requirements/ /mesh/validated-versions/
 /mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
@@ -347,10 +355,17 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/konnect-reference-platform/orchestrator/ /konnect-reference-platform/
 /catalog/integrations/gateway-manager/ /catalog/integrations/api-gateway/
 /how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
 /how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
+
+# Self-managed GitLab and Dynatrace Catalog Classic integrations removed
+/how-to/install-and-map-gitlab-resources/ /catalog/integrations/gitlab/
+/catalog/integrations/dynatrace/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-api/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-ui/ /catalog-classic/
 
 # Cloud Gateways
 
@@ -404,7 +419,7 @@
 /ai-gateway/policies/mtls-auth/            /plugins/mtls-auth/            301
 /ai-gateway/policies/oauth2/               /plugins/oauth2/               301
 /ai-gateway/policies/oauth2-introspection/ /plugins/oauth2-introspection/ 301
-/ai-gateway/policies/openid-connect/       /plugins/openid-connect/       301
+/ai-gateway/policies/openid-connect/       /ai-gateway/openid-connect/       301
 /ai-gateway/policies/saml/                 /plugins/saml/                 301
 /ai-gateway/policies/session/              /plugins/session/              301
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
@@ -687,3 +702,15 @@
 # previously a separate "experimental" page, is the only form Kong Mesh 3 accepts.
 /mesh/policies/meshtrafficpermission_experimental/  /mesh/policies/meshtrafficpermission/  301
 /mesh/policies/meshtrafficpermission_experimental/reference/  /mesh/policies/meshtrafficpermission/reference/  301
+
+# Custom policies reference page moved to the AI Custom Policy entity page
+/ai-gateway/custom-policies/ /ai-gateway/entities/ai-custom-policy/ 301
+
+# Insomnia 13.3: documents and collections merged into API Collections
+/insomnia/documents/ /insomnia/collections/ 301
+/how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
+/how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
+/how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301
+
+# AI Access Management moved out of ai-gateway
+/ai-gateway/access-management/ /ai-access-management/ 301

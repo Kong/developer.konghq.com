@@ -1,0 +1,21 @@
+title: "{{site.ai_cost_management}} Documentation"
+description: Index containing all documentation for {{site.ai_cost_management}}.
+sections:
+  - title: Overview
+    items:
+      - path: /ai-cost-management/
+  - title: Get started
+    items:
+      - path: /ai-cost-management/set-up-a-budget-with-email-alerts/
+      - path: /ai-cost-management/set-up-a-budget-with-slack-alerts/
+  - title: References
+    items:
+      - path: /ai-cost-management/analytics-and-debugging/
+      - path: /ai-cost-management/attribution/
+      - path: /ai-cost-management/org-chart/
+      - path: /ai-cost-management/integrations/
+      - path: /ai-cost-management/budgets/
+      - path: /ai-cost-management/notification-channels/
+      - path: /ai-cost-management/price-catalog/
+      - path: /ai-cost-management/exports/
+      - path: /api/konnect/ai-cost-management/

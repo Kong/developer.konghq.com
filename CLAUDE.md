@@ -14,7 +14,7 @@ make vale                 # Lint changed .md files against style guide
 make kill-ports           # Kills the servers
 ```
 
-The dev server starts at `http://localhost:8888` (via Netlify CLI). To build only a subset of products:
+The dev server starts at `http://localhost:8888` (via Netlify CLI); the entry URL is also written to `tmp/dev-url`. A linked git worktree automatically claims its own port offset via `exe/dev-ports` (stored in `.dev-ports`), `PORT_OFFSET=20 make run` pins the ports for one invocation, and `make kill-ports` stops only the current checkout's ports. Point dev-server consumers at a shifted instance with `BASE_URL` (default `http://localhost:8888`), for example `BASE_URL=http://localhost:8908 npm run generate-instruction-files --prefix tools/automated-tests`. To build only a subset of products:
 
 ```bash
 KONG_PRODUCTS=ai-gateway,gateway make run

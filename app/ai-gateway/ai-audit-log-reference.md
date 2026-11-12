@@ -29,6 +29,7 @@ related_resources:
     url: /ai-gateway/model-cost-management/
 
 works_on:
+  - on-prem
   - konnect
 ---
 
@@ -49,7 +50,7 @@ Each {{site.ai_gateway}} Policy returns a set of tokens. Log entries include the
 {{site.ai_gateway}} logs capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
 
 {:.warning}
-> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
+> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) aren't supported.
 
 {% table %}
 columns:
@@ -65,37 +66,63 @@ rows:
   - property: "`ai.proxy.usage.prompt_tokens`"
     description: |
       The number of tokens used for prompting.
-      Used for text-based requests (chat, completions, embeddings).
+      The gateway reports this field only for text-based requests (chat, completions, embeddings).
+      This field is deprecated.
+      Use `ai.proxy.usage.input_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.prompt_tokens_details`"
     description: |
-      A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`).
+      A breakdown of prompt tokens (`cached_tokens`, `audio_tokens`, `cache_write_tokens`, `cache_write_tokens_by_ttl`).
+  - property: "`ai.proxy.usage.prompt_tokens_details.cached_tokens`"
+    description: |
+      The number of prompt tokens read from the provider's prompt cache. This counts cache reads only. Cache writes are reported in `cache_write_tokens`.
+  - property: "`ai.proxy.usage.prompt_tokens_details.cache_write_tokens`"
+    description: |
+      The total number of prompt tokens written to the provider's prompt cache, across all cache TTLs.
+  - property: "`ai.proxy.usage.prompt_tokens_details.cache_write_tokens_by_ttl`"
+    description: |
+      An object that breaks `cache_write_tokens` down by cache TTL, with the keys `5m` and `1h`.
+      For example, `{"5m": 3543, "1h": 0}`.
   - property: "`ai.proxy.usage.completion_tokens`"
     description: |
       The number of tokens used for completion.
-      Used for text-based responses (chat, completions).
+      The gateway reports this field only for text-based responses (chat, completions).
+      This field is deprecated.
+      Use `ai.proxy.usage.output_tokens` instead, which the gateway reports for every request category.
   - property: "`ai.proxy.usage.completion_tokens_details`"
     description: |
        A breakdown of completion tokens (`rejected_prediction_tokens`, `reasoning_tokens`, `accepted_prediction_tokens`, `audio_tokens`).
   - property: "`ai.proxy.usage.total_tokens`"
     description: |
       The total number of tokens used (input + output).
-      Includes prompt/completion tokens for text, and input/output tokens for non-text modalities.
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
-      The total number of input tokens (text + image + audio).
-      Used for non-text requests (e.g., image or audio generation).
+      The total number of input tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
-      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
+      A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`, `video_tokens`).
+      The breakdown also includes the cache fields `cached_tokens`, `cache_write_tokens`, and `cache_write_tokens_by_ttl`, with the same meaning as in `ai.proxy.usage.prompt_tokens_details`.
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
-      The total number of output tokens (text + audio).
-      Used for non-text responses (e.g., image or audio generation).
+      The total number of output tokens across all modalities (text, image, audio, and video).
+      The gateway reports this field for every request category, including text generation and embeddings.
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
-      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
+      A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`, `image_tokens`, `video_tokens`).
   - property: "`ai.proxy.usage.cost`"
-    description: The total cost of the request.
+    description: |
+      The total cost of the request.
+      This is the sum of `input_token_cost` and `output_token_cost`.
+  - property: "`ai.proxy.usage.input_token_cost`"
+    description: |
+      The cost of the input side of the request, including cache-read, cache-write, and other input tokens.
+  - property: "`ai.proxy.usage.output_token_cost`"
+    description: |
+      The cost of the output side of the request.
+  - property: "`ai.proxy.usage.service_tier`"
+    description: |
+      The service tier the provider reported for the request, for example `flex`.
+      The gateway logs this field only when the provider returns a service tier.
   - property: "`ai.proxy.usage.time_per_token`"
     description: |
       Average time to generate an output token (ms).
@@ -110,6 +137,8 @@ rows:
     description: The name of the AI service provider.
   - property: "`ai.proxy.meta.plugin_id`"
     description: Unique identifier of the Policy instance.
+  - property: "`ai.proxy.meta.model_id`"
+    description: The ID of the [AI Model](/ai-gateway/entities/ai-model/) entity that handled the request.
   - property: "`ai.proxy.meta.llm_latency`"
     description: |
       Time taken by the LLM provider to generate the full response (ms).
@@ -434,6 +463,34 @@ A blocked request or response also populates the shared `ai.proxy.guardrail_trig
 * `block_source`: The Policy that produced the block.
 * `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
+This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked.
+The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies also populate this object starting from {{site.ai_gateway}} 2.3.
+
+### AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard logs
+
+If you use the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/), or [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) Policy, {{site.ai_gateway}} 2.3 and later can log the content that the Policy blocked.
+Set `config.log_blocked_content` to `true` to enable it.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy[\"prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Semantic Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-response-guard\"].output_faulty_response`"
+    description: |
+       The raw response that the AI Semantic Response Guard Policy blocked. For streaming responses, this is the blocked chunk. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+The AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard Policies populate the shared `ai.proxy.guardrail_triggered` object starting from {{site.ai_gateway}} 2.3, including when `config.continue_on_detection` is `true`.
+
 ### AI PII Sanitizer logs
 
 If you use the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
@@ -472,7 +529,9 @@ rows:
 
 ### AI Prompt Compressor logs 
 
-When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
+When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, the number of compressed messages, the compression time, and metadata about the compression method and model used.
+
+The following fields summarize the compression for the whole request:
 
 {% table %}
 columns:
@@ -481,22 +540,47 @@ columns:
   - title: Description
     key: description
 rows:
+  - property: "`ai.compressor.provider`"
+    description: The compression provider, `kong` or `headroom`.
   - property: "`ai.compressor.original_token_count`"
-    description: The original number of tokens before compression.
+    description: The total number of tokens before compression.
   - property: "`ai.compressor.compress_token_count`"
-    description: The number of tokens after compression.
+    description: The total number of tokens after compression.
   - property: "`ai.compressor.save_token_count`"
-    description: The number of tokens saved by compression (original minus compressed).
-  - property: "`ai.compressor.compress_value`"
-    description: The compression ratio applied.
+    description: The total number of tokens saved by compression (original minus compressed).
+  - property: "`ai.compressor.compressed_message_count`"
+    description: The number of compressed messages.
+  - property: "`ai.compressor.duration`"
+    description: The time the compressor took, in milliseconds.
   - property: "`ai.compressor.compress_type`"
+    description: The type or method of compression used. Not set when the provider is `headroom`.
+{% endtable %}
+
+The `ai.compressor.compress_items` array holds one entry for each compressed message. The `headroom` provider reports one entry for the whole request. For more information, see [Headroom compressor service](/ai-gateway/policies/ai-prompt-compressor/#headroom-compressor-service) and [Compress agent traffic with Headroom using {{site.operator_product_name}}](/operator/konnect/how-to/ai-gateway-headroom/).
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`original_token_count`"
+    description: The number of tokens before compression.
+  - property: "`compress_token_count`"
+    description: The number of tokens after compression.
+  - property: "`save_token_count`"
+    description: The number of tokens saved by compression (original minus compressed).
+  - property: "`compress_value`"
+    description: The compression ratio applied.
+  - property: "`compress_type`"
     description: The type or method of compression used.
-  - property: "`ai.compressor.compressor_model`"
+  - property: "`compressor_model`"
     description: The model used to perform the compression.
-  - property: "`ai.compressor.msg_id`"
+  - property: "`msg_id`"
     description: The identifier of the message that was compressed.
-  - property: "`ai.compressor.information`"
-    description: A summary or message describing the result of compression.
+  - property: "`information`"
+    description: A summary of the compression result. For the `headroom` provider, it lists the transforms that Headroom applied and, when the request runs in a Headroom session, the Headroom session fields. For more information, see [Headroom session fields](/ai-gateway/policies/ai-prompt-compressor/#headroom-session-fields).
 {% endtable %}
 
 ### AI RAG Injector logs
@@ -585,7 +669,9 @@ rows:
 
 If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
-The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
+The MCP log structure groups traffic by **MCP session ID** for `2025-06-18` and `2025-11-25` traffic, with each session containing zero or more recorded JSON-RPC requests. 
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so each entry is a single stateless request with no `mcp_session_id` field. See [MCP version support](/ai-gateway/mcp-version-support/) for other differences between revisions.
 
 <!-- vale off -->
 {% table %}
@@ -596,9 +682,19 @@ columns:
     key: description
 rows:
   - property: "`ai.mcp.mcp_session_id`"
-    description: The ID of the MCP session. A session can contain multiple requests.
+    description: |
+      The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
+      
+      {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent for that traffic.
+  - property: '`ai.mcp.mcp_server_id` {% new_in 2.1 %}'
+    description: The UUID of the AI MCP Server entity that handled the request.
+  - property: '`ai.mcp.protocol_version` {% new_in 2.1 %}'
+    description: "The negotiated MCP protocol revision for the request (for example, `2026-07-28`)."
   - property: "`ai.mcp.rpc`"
-    description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+    description: |
+      An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+
+      A call denied by an access control rule doesn't produce an `rpc` entry at all, since the runtime rejects it before dispatching the request as an RPC. Only the `ai.mcp.audit` entry records a denied call.
   - property: "`ai.mcp.rpc[].id`"
     description: The ID of the JSON-RPC request. Not all JSON-RPC requests have an ID.
   - property: "`ai.mcp.rpc[].latency`"
@@ -610,7 +706,10 @@ rows:
   - property: "`ai.mcp.rpc[].method`"
     description: The JSON-RPC method name.
   - property: "`ai.mcp.rpc[].tool_name`"
-    description: If the method is a tool call, the name of the tool being invoked.
+    description: |
+      If the method is a tool call, the name of the tool being invoked:
+      - Parsed from the JSON-RPC body for `2025-06-18` and `2025-11-25` traffic
+      - {% new_in 2.1 %} Populated from the `Mcp-Name` header for `2026-07-28` traffic, since that revision requires the header on every call.
   - property: "`ai.mcp.rpc[].error`"
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
@@ -723,14 +822,25 @@ The following example shows a structured {{site.ai_gateway}} log entry:
       }
     },
     "compressor": {
+      "provider": "kong",
       "original_token_count": 845,
       "compress_token_count": 485,
       "save_token_count": 360,
-      "compress_value": 0.5,
+      "compressed_message_count": 1,
+      "duration": 120,
       "compress_type": "rate",
-      "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
-      "msg_id": 1,
-      "information": "Compression was performed and saved 360 tokens"
+      "compress_items": [
+        {
+          "original_token_count": 845,
+          "compress_token_count": 485,
+          "save_token_count": 360,
+          "compress_value": 0.5,
+          "compress_type": "rate",
+          "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
+          "msg_id": 1,
+          "information": "Compression was performed and saved 360 tokens"
+        }
+      ]
     },
     "sanitizer": {
       "pii_identified": 3,
@@ -761,7 +871,7 @@ The following example shows a structured {{site.ai_gateway}} log entry:
 
 ### MCP traffic entry
 
-The following example shows an MCP log entry:
+The following example shows an MCP log entry for `2025-06-18` or `2025-11-25` traffic, which is session-based:
 
 ```json
 {
@@ -788,6 +898,69 @@ The following example shows an MCP log entry:
           "scope": "primitive",
           "primitive": "tool",
           "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so there's no `mcp_session_id` field, and `tool_name` comes from the `Mcp-Name` header instead of the JSON-RPC body. An allowed call produces both an `rpc` entry and an `audit` entry:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 4,
+          "id": "3",
+          "response_body_size": 2210,
+          "tool_name": "list_orders"
+        }
+      ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+A call denied by an access control rule has no `rpc` entry, only the `audit` entry recording the decision:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
+      "audit": [
+        {
+          "primitive_name": "list_users",
+          "consumer": {
+            "id": "b2f6a2b1-6a15-4e3f-9e0b-6a2f7a1c9d10",
+            "name": "developer",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "deny"
         }
       ]
     }

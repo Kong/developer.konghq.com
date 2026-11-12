@@ -3,6 +3,7 @@ description: 'Block requests with bodies greater than a specified size.'
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
