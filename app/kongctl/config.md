@@ -20,6 +20,8 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
+  - text: kongctl telemetry and privacy
+    url: /kongctl/telemetry/
   - text: kongctl authentication reference
     url: /kongctl/authentication/
   - text: kongctl declarative configuration reference
