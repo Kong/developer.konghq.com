@@ -47,7 +47,7 @@ min_version:
   mesh: '3.0'
 ---
 
-This guide creates a {{site.konnect_short_name}}-managed global control plane, connects a Kubernetes zone, and verifies that one application can call another only with the permitted identity.
+This guide creates a {{site.konnect_short_name}}-managed global control plane, connects a Kubernetes zone, and verifies that the zone is online.
 
 ## Create a global control plane in {{site.konnect_short_name}}
 

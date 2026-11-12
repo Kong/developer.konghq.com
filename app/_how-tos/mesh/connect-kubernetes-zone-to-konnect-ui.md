@@ -17,8 +17,7 @@ tags:
 tldr:
   q: How do I connect a Kubernetes zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
   a: Create a new global control plane running v3, deploy a 3.x zone control plane
-    with its {{site.konnect_short_name}} credentials, and verify that the zone connects. Then configure
-    `MeshIdentity` and `MeshTrafficPermission` and test an application request.
+    with its {{site.konnect_short_name}} credentials, and verify that the zone connects.
 prereqs:
   inline:
     - title: Helm
@@ -45,7 +44,7 @@ min_version:
   mesh: '3.0'
 ---
 
-This guide creates a {{site.konnect_short_name}}-managed global control plane, connects a Kubernetes zone, and verifies that one application can call another only with the permitted identity.
+This guide creates a {{site.konnect_short_name}}-managed global control plane, connects a Kubernetes zone, and verifies that the zone is online.
 
 
 ## Create the global control plane

@@ -9,6 +9,8 @@ products:
   - mesh
 works_on:
   - konnect
+min_version:
+  mesh: '3.0'
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/

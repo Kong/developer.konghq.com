@@ -13,7 +13,6 @@ products:
   - mesh
 
 works_on:
-  - on-prem
   - konnect
 
 min_version:
@@ -294,7 +293,7 @@ To learn more about how observability policies share one collector, read [MeshOp
 
    The collector must run without a sidecar.
    `kuma-dp` exports telemetry as plaintext.
-   A collector with a sidecar and a workload identity rejects these connections, because `MeshTLS` defaults to `Strict` mode on that sidecar.
+   A collector with a sidecar and a workload identity rejects these connections, because [`MeshTLS`](/mesh/policies/meshtls/) defaults to `Strict` mode on that sidecar.
 
 1. Create a `ConfigMap` with the collector configuration:
 
@@ -442,7 +441,7 @@ To learn more about how observability policies share one collector, read [MeshOp
 
 ## Name the collector with MeshOpenTelemetryBackend
 
-`MeshMetric`, `MeshTrace`, and `MeshAccessLog` don't carry a collector address.
+[`MeshMetric`](/mesh/policies/meshmetric/), [`MeshTrace`](/mesh/policies/meshtrace/), and [`MeshAccessLog`](/mesh/policies/meshaccesslog/) don't carry a collector address.
 Each policy reaches the collector through a `backendRef` to a [`MeshOpenTelemetryBackend`](/mesh/meshopentelemetrybackend/).
 The address lives in that one resource, so you change one resource when you move the collector.
 

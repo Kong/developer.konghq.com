@@ -140,8 +140,7 @@ destination zone. Without them, remote services contribute no endpoints. For mor
 A client also needs the `MeshMultiZoneService` in its `reachableBackends` (the
 `kuma.io/reachable-backends` annotation on Kubernetes), or it gets no outbound for it.
 
-How traffic is distributed across the zones that remain is
-[`MeshLoadBalancingStrategy`](/mesh/policies/meshloadbalancingstrategy/) decides how traffic is distributed across the remaining zones. Locality awareness prefers the local zone, and `crossZone.failover` sets the order the others are tried in.
+[`MeshLoadBalancingStrategy`](/mesh/policies/meshloadbalancingstrategy/) sets how traffic is distributed across the remaining zones. Locality awareness prefers the local zone, and `crossZone.failover` sets the order the others are tried in.
 [`MeshHealthCheck`](/mesh/policies/meshhealthcheck/) and
 [`MeshCircuitBreaker`](/mesh/policies/meshcircuitbreaker/) cover the other case: endpoints that
 are present and reachable but answering badly, which nothing else detects.

@@ -219,8 +219,8 @@ workload resolve mesh hostnames. The workload reaches destinations by name rathe
 
 `reachableBackends` lists what the proxy can reach. Without it (and without outbounds), the
 proxy reaches nothing, unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
-The proxy also drops destinations outside the mesh unless a `MeshExternalService` or a
-`MeshPassthrough` policy allows them.
+The proxy also drops destinations outside the mesh unless a [`MeshExternalService`](/mesh/meshexternalservice/) or a
+[`MeshPassthrough`](/mesh/policies/meshpassthrough/) policy allows them.
 
 ```yaml
 networking:
@@ -299,7 +299,7 @@ allows:
   kongctl create mesh dataplane-token --workload backend --valid-for 24h
   ```
 
-Once a `MeshIdentity` derives the proxy's identity from `kuma.io/workload`,
+Once a [`MeshIdentity`](/mesh/policies/meshidentity/) derives the proxy's identity from `kuma.io/workload`,
 the token must carry `--workload`. 
 Proxies that are already connected keep running until they reconnect, so bind tokens to
 the workload from the start. `--tag` matches the `Dataplane`'s `labels`, and `--valid-for`

@@ -93,7 +93,7 @@ Before you connect the gateway to the mesh, you need:
 - A mesh and a working zone control plane
 - A gateway deployment with its own public Service or load balancer and routes
 - A registered backend destination with the correct port and protocol
-- A `MeshIdentity` that selects the gateway proxy and the backend proxies, with the trust
+- A [`MeshIdentity`](/mesh/policies/meshidentity/) that selects the gateway proxy and the backend proxies, with the trust
   needed for their mTLS connection
 - A backend permission that allows the gateway's workload identity
 
@@ -150,7 +150,7 @@ as public listeners. If a controller is also injected, review its own listening 
 
 Port exclusion and Service discovery are separate settings. Excluding a port removes its
 generated `Dataplane` inbound, but doesn't by itself prevent the Service from producing a
-`MeshService`. Mesh clients can then discover a destination with no endpoints for that port.
+[`MeshService`](/mesh/meshservice/). Mesh clients can then discover a destination with no endpoints for that port.
 
 Add this annotation to each gateway Service that should remain outside mesh discovery.
 Merge it into the existing Service metadata, preserving its ports, selector and type:
@@ -331,7 +331,7 @@ aggregate's VIP and port, it uses the normal `MeshMultiZoneService` connection c
   `spec.identities` of the `MeshService` resources selected by the aggregate. The alias's DNS name is
   not a workload identity and doesn't need to appear in a mesh certificate.
 - For a remote backend, zone ingress forwards the workload mTLS connection. The destination
-  proxy authenticates the gateway and evaluates its `MeshTrafficPermission` rules.
+  proxy authenticates the gateway and evaluates its [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) rules.
 
 Allow the gateway's actual SPIFFE ID on the backend proxies in every zone that can receive
 traffic, using the permission pattern shown in [Allow the gateway to call the backend](#allow-the-gateway-to-call-the-backend). Don't attach the permission to the ExternalName

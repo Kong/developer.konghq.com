@@ -67,7 +67,7 @@ rows:
     what: "Reads the destination name from TLS Server Name Indication (SNI) and forwards the encrypted connection to a local workload proxy. It doesn't terminate workload mTLS."
     where: "On the destination workload proxy, which authenticates the original caller."
   - role: "Zone egress"
-    destination: "A registered `MeshExternalService`"
+    destination: "A registered [`MeshExternalService`](/mesh/meshexternalservice/)"
     what: "Terminates mesh mTLS from the caller's proxy, then connects to the external endpoint."
     where: "On the egress, which authenticates the caller before forwarding traffic."
 {% endtable %}
@@ -189,7 +189,7 @@ external IP. A plain ClusterIP without an external address isn't sufficient for 
 Inspect the generated value and check that it's reachable from the other zones.
 
 Clients in other zones get endpoints for this zone's `MeshService` destinations only when this
-zone has a `MeshZoneAddress` for the mesh and the mesh has at least one `MeshIdentity`. Without
+zone has a `MeshZoneAddress` for the mesh and the mesh has at least one [`MeshIdentity`](/mesh/policies/meshidentity/). Without
 either, cross-zone requests to the zone fail; a missing address makes the control plane log
 `no MeshZoneAddress found for zone`.
 

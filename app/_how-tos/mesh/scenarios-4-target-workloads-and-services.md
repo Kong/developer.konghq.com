@@ -11,8 +11,9 @@ tools:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 series:
   id: mesh-kong-air-scenario
   position: 4
@@ -44,7 +45,7 @@ To learn more about what this guide does, read the following reference pages:
 ## Select a group of proxies with Dataplane labels
 
 Kong Air gives every sidecar in `zone1` a 30-second request timeout, which is longer than the 15-second default, because some `zone1` services call slow back-office systems.
-Create a `MeshTimeout` in the system namespace that selects these proxies by their computed `kuma.io/zone` label:
+Create a [`MeshTimeout`](/mesh/policies/meshtimeout/) in the system namespace that selects these proxies by their computed `kuma.io/zone` label:
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -78,7 +79,7 @@ The team that owns `check-in-api` wants every caller to retry failed requests to
 A policy in the destination's namespace becomes a producer policy when each `to[]` entry selects a local `MeshService` by `kuma.io/display-name`, `k8s.kuma.io/namespace`, and `kuma.io/zone`.
 A producer policy reaches every caller of that destination, in any namespace.
 
-1. Create a `MeshRetry` in `kong-air-production` that retries requests to `check-in-api` that fail with a `5xx` status:
+1. Create a [`MeshRetry`](/mesh/policies/meshretry/) in `kong-air-production` that retries requests to `check-in-api` that fail with a `5xx` status:
 
    ```sh
    echo 'apiVersion: kuma.io/v1alpha1

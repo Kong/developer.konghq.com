@@ -108,7 +108,7 @@
 
    ```sh
    KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_PATH="$MESH_INSTALL_DIR/cp-token" \
-     nohup "$MESH_INSTALL_DIR/kong-mesh-$MESH_VERSION/bin/kuma-cp" run --config-file config.yaml \
+     nohup "$MESH_INSTALL_DIR/kong-mesh-{{page.latest_release.version}}/bin/kuma-cp" run --config-file config.yaml \
      > kuma-cp.log 2>&1 &
    echo $! > kuma-cp.pid
    ```

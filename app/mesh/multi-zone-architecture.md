@@ -55,12 +55,12 @@ A cross-zone request succeeds only when three conditions are met:
 
 ## Service hostnames across zones
 
-Each zone control plane creates a `MeshService` for each local service and sends it to the other zones through the global control plane.
+Each zone control plane creates a [`MeshService`](/mesh/meshservice/) for each local service and sends it to the other zones through the global control plane.
 A caller reaches a service in one specific zone with a hostname that includes the zone, such as `payments.NAMESPACE.svc.zone2.mesh.local`.
 For how the control plane builds these hostnames, see [HostnameGenerator](/mesh/concepts/#hostnamegenerator).
 
 To give callers one hostname for a service that runs in several zones, create a `MeshMultiZoneService` on the global control plane.
-Callers reach it with a hostname of the form `NAME.mzsvc.mesh.local`, and `MeshLoadBalancingStrategy` decides which zone receives each request.
+Callers reach it with a hostname of the form `NAME.mzsvc.mesh.local`, and [`MeshLoadBalancingStrategy`](/mesh/policies/meshloadbalancingstrategy/) decides which zone receives each request.
 For more information, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
 
 A hostname doesn't grant access or establish trust.

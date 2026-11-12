@@ -9,7 +9,6 @@ breadcrumbs:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
 min_version:
   mesh: '3.0'
@@ -39,8 +38,8 @@ faqs:
       With one policy at a time, you can attribute each result to the policy that you applied.
   - q: How do I fault every caller instead of one?
     a: |
-      Replace the `Exact` match with a `Prefix` match on the trust domain, such as `spiffe://kong-air-mesh.zone1.mesh.local`.
-      The fault then applies to every caller whose SPIFFE ID starts with that value.
+      Remove the `matches` entry from the rule.
+      A rule without a caller match applies to every caller of `check-in-api`.
   - q: How do I keep the blast radius of a fault experiment small?
     a: |
       The blast radius is the set of requests that the fault affects.

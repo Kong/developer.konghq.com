@@ -35,8 +35,9 @@ It's the resource a policy names as a destination, in
 `spec.to[].targetRef` and in a route's `backendRefs`.
 
 A client proxy reaches a `MeshService` only if it lists it in `reachableBackends` (the
-`kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` gets
-no outbounds at all.
+`kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` doesn't
+get any outbounds. This restriction doesn't apply when the control plane sets
+`KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
 
 ## MeshService sources
 

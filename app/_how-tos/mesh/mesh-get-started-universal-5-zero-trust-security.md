@@ -132,7 +132,7 @@ applies to them.
 
 ## Allow the demo app to reach the key/value store
 
-Create a `MeshTrafficPermission` that allows traffic from `demo-app` to `kv`:
+Create a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) that allows traffic from `demo-app` to `kv`:
 
 ```sh
 cat <<'EOF' | kongctl apply mesh -f - \

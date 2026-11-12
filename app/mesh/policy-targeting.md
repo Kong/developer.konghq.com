@@ -154,7 +154,7 @@ rows:
     accepted: "`MeshAccessLog`, `MeshLoadBalancingStrategy`, `MeshRetry` and `MeshTimeout` only."
 {% endtable %}
 
-`MeshRateLimit` and `MeshFaultInjection` are even narrower: they accept `kind: Mesh` only, and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`, `to` must be empty.
+[`MeshRateLimit`](/mesh/policies/meshratelimit/) and [`MeshFaultInjection`](/mesh/policies/meshfaultinjection/) are even narrower: they accept `kind: Mesh` only, and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`, `to` must be empty.
 
 ### spec.rules[]
 

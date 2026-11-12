@@ -79,19 +79,19 @@ Follow the same steps as for the `kv` service to configure the container for the
    ```
 
 1. Start the container and include the `kv` URL:
-```sh
-docker run \
-  --detach \
-  --name kong-mesh-demo-app \
-  --hostname demo-app \
-  --network kong-mesh-demo \
-  --ip 172.18.78.3 \
-  --publish 25050:5050 \
-  --volume "$KONG_MESH_DEMO_DIR:/demo" \
-  --env KV_URL=http://kv.svc.mesh.local:5050 \
-  --env APP_VERSION=v1 \
-  ghcr.io/kumahq/kuma-counter-demo:debian-slim
-```
+   ```sh
+   docker run \
+     --detach \
+     --name kong-mesh-demo-app \
+     --hostname demo-app \
+     --network kong-mesh-demo \
+     --ip 172.18.78.3 \
+     --publish 25050:5050 \
+     --volume "$KONG_MESH_DEMO_DIR:/demo" \
+     --env KV_URL=http://kv.svc.mesh.local:5050 \
+     --env APP_VERSION=v1 \
+     ghcr.io/kumahq/kuma-counter-demo:debian-slim
+   ```
 
 1. Install the sidecar binaries:
 

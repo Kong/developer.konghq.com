@@ -53,7 +53,8 @@ the egress connects to the endpoints. This path requires the following:
 * A [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) on the egress that allows the
   caller.
 * The `MeshExternalService` in the client's `reachableBackends` (the `kuma.io/reachable-backends`
-  annotation on Kubernetes). A proxy gets no outbound for a destination it doesn't list.
+  annotation on Kubernetes). A proxy doesn't get an outbound for a destination it doesn't list,
+  unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
 
 ## Reach an external API over TLS
 

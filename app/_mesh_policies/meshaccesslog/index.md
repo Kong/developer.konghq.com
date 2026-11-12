@@ -29,6 +29,7 @@ With the default HTTP format, a record looks like this:
 ```text
 [2026-09-10T12:04:51.190Z] default "GET /api/orders HTTP/2" 200 - 0 1274 12 11 "10.42.0.9" "curl/8.4.0" "-" "b7c1e0f4-9a1d-4c86-9a02-1f0e6d3c55aa" "orders.kong-mesh-demo.svc.cluster.local" "unknown" "kri_dp_default_zone-1_kong-mesh-demo_orders-6f4c9b7d55-xk2vq_http" "10.42.0.9" "10.42.1.4:8080"
 ```
+{:.no-copy-code}
 
 ## Log all incoming traffic
 
@@ -188,6 +189,7 @@ That fragment produces:
   "bytes_received": "154"
 }
 ```
+{:.no-copy-code}
 
 ### Command operators
 

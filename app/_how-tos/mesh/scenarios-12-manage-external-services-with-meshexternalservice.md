@@ -9,7 +9,6 @@ breadcrumbs:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
 min_version:
   mesh: '3.0'

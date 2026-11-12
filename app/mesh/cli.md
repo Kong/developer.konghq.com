@@ -342,7 +342,7 @@ Both write the token to stdout with no trailing newline, so the output can be re
 straight into the file that `kuma-dp` or the zone control plane reads.
 
 Bind a data plane token as narrowly as the deployment allows rather than to the mesh alone. 
-Once a `MeshIdentity` derives identities from the
+Once a [`MeshIdentity`](/mesh/policies/meshidentity/) derives identities from the
 `kuma.io/workload` label, the control plane rejects a proxy carrying that label unless
 its token is bound with `--workload`. A token bound only by `--name`, or only to the mesh, no
 longer authenticates it.

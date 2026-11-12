@@ -131,9 +131,10 @@ spec:
 {% endpolicy_yaml %}
 
 `maxEjectionPercent` caps how much of the pool can be ejected at once, and defaults to 10%.
-In a small pool, this limit can prevent any endpoint from being ejected, because this policy
-doesn't enable Envoy's `always_eject_one_host` option. Test the limit with your actual
-endpoint count. For more information, see
+Envoy ejects an endpoint only if the ejected share, including that endpoint, stays within this
+limit, and this policy doesn't enable Envoy's `always_eject_one_host` option. With the default
+of 10%, a pool needs at least 10 endpoints before the proxy can eject any of them. Test the
+limit with your actual endpoint count. For more information, see
 [Envoy's outlier detection reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto).
 
 `outlierDetection` requires at least one detector. To turn the block off without deleting it,

@@ -43,7 +43,7 @@ two services from the same image:
 - `demo-app`: a web application that increments a counter.
 - `kv`: a key/value store that keeps the counter's value.
 
-For more information Universal, see [{{site.mesh_product_name}} on Universal](/mesh/universal/)
+For more information about Universal, see [{{site.mesh_product_name}} on Universal](/mesh/universal/).
 
 ## Create a working directory
 

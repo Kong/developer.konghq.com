@@ -523,7 +523,7 @@ either route policy. Name the destination directly.
 
 ## MeshTrafficPermission
 
-Shared changes that apply here:
+Shared changes that apply to [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [The `from` to `rules` move](#rules-instead-of-from)
@@ -618,7 +618,7 @@ rows:
 
 ## MeshAccessLog
 
-Shared changes that apply here:
+Shared changes that apply to [MeshAccessLog](/mesh/policies/meshaccesslog/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -668,7 +668,7 @@ error. Express the same backends as a `MeshAccessLog` targeting `kind: Mesh`.
 
 ## MeshCircuitBreaker
 
-Shared changes that apply here:
+Shared changes that apply to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -728,7 +728,7 @@ Circuit breaking applies to a whole destination rather than to individual routes
 
 ## MeshHTTPRoute
 
-Shared changes that apply here:
+Shared changes that apply to [MeshHTTPRoute](/mesh/policies/meshhttproute/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -762,7 +762,7 @@ implemented. Remove either field before migrating: setting `hostnames` is reject
 
 ## MeshTCPRoute
 
-Shared changes that apply here:
+Shared changes that apply to [MeshTCPRoute](/mesh/policies/meshtcproute/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -787,7 +787,7 @@ destination at all, and its connections fail at connect time.
 
 ## MeshIdentity
 
-`MeshIdentity` and [MeshTrust](#meshtrust) are how a mesh issues and verifies workload
+[MeshIdentity](/mesh/policies/meshidentity/) and [MeshTrust](#meshtrust) are how a mesh issues and verifies workload
 identities in 3.x. They aren't policies and have no `targetRef`, so the [changes that affect every
 policy](#changes-that-affect-every-policy) don't apply to them. What does apply is that they are now required.
 
@@ -825,7 +825,7 @@ domain in flight where certificates issued under the old one no longer verify.
 
 ## MeshTrust
 
-A `MeshIdentity` with a `Bundled` provider creates the `MeshTrust` for its CA, so a mesh issuing
+A `MeshIdentity` with a `Bundled` provider creates the [MeshTrust](/mesh/policies/meshtrust/) for its CA, so a mesh issuing
 its own identities doesn't need a `MeshTrust` written manually. Write one to trust a CA the mesh doesn't own, or to keep a second trust domain verifiable during a migration.
 
 {:.warning}
@@ -838,7 +838,7 @@ its own identities doesn't need a `MeshTrust` written manually. Write one to tru
 
 ## MeshLoadBalancingStrategy
 
-Shared changes that apply here:
+Shared changes that apply to [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -903,7 +903,7 @@ connections between zones, and no restriction on the top-level `targetRef` becau
 
 ## MeshRetry
 
-Shared changes that apply here:
+Shared changes that apply to [MeshRetry](/mesh/policies/meshretry/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -933,7 +933,7 @@ such as a status code, and check the generated configuration. For more informati
 
 ## MeshRateLimit
 
-Shared changes that apply here:
+Shared changes that apply to [MeshRateLimit](/mesh/policies/meshratelimit/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [The `from` to `rules` move](#rules-instead-of-from)
@@ -972,7 +972,7 @@ greater than 0. A shorter interval is rejected with `must be greater than: 50ms`
 
 ## MeshMetric
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshMetric](/mesh/policies/meshmetric/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -1040,7 +1040,7 @@ discovery against the endpoints this policy exposes instead.
 
 ## MeshOPA
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshOPA](/mesh/policies/meshopa/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Rewrite the agent config and Rego as secure data sources
 
@@ -1139,7 +1139,7 @@ contents into `spec.default.agentConfig` on a `MeshOPA` before upgrading.
 
 ## MeshPassthrough
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshPassthrough](/mesh/policies/meshpassthrough/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Allow external destinations explicitly
 
@@ -1266,7 +1266,7 @@ kubectl delete crd meshglobalratelimits.kuma.io
 
 ## MeshProxyPatch
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshProxyPatch](/mesh/policies/meshproxypatch/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Stop matching on the gateway origin
 
@@ -1297,7 +1297,7 @@ one described under
 
 ## MeshTLS
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshTLS](/mesh/policies/meshtls/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 The following two changes are silent, and both can leave an inbound stricter or looser than intended.
 
@@ -1367,7 +1367,7 @@ kubectl get meshtls -A -o yaml | grep -B5 'from:'
 
 ## MeshTrace
 
-Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
+Shared changes that apply to [MeshTrace](/mesh/policies/meshtrace/): [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -1407,7 +1407,7 @@ ignores the field, so mesh-wide tracing stops without an error. Express the same
 
 ## MeshTimeout
 
-`MeshTimeout` has no policy-specific field changes. It is still affected by the following shared
+[MeshTimeout](/mesh/policies/meshtimeout/) has no policy-specific field changes. It is still affected by the following shared
 changes:
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
@@ -1419,7 +1419,7 @@ changes:
 
 ## MeshHealthCheck
 
-Shared changes that apply here:
+Shared changes that apply to [MeshHealthCheck](/mesh/policies/meshhealthcheck/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [Labels-only selection](#label-based-references)
@@ -1432,7 +1432,7 @@ for where it goes and what happens if it is left behind.
 
 ## MeshFaultInjection
 
-Shared changes that apply here:
+Shared changes that apply to [MeshFaultInjection](/mesh/policies/meshfaultinjection/):
 
 - [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
 - [The `from` to `rules` move](#rules-instead-of-from)

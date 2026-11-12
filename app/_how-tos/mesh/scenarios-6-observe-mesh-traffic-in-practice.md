@@ -9,8 +9,9 @@ breadcrumbs:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 series:
   id: mesh-kong-air-scenario
   position: 6

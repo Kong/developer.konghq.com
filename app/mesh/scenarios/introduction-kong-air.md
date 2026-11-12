@@ -11,6 +11,8 @@ products:
 works_on:
   - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 next_steps:
   - text: "How-to: Install {{site.mesh_product_name}} and deploy Kong Air"
     url: "/mesh/install-kong-mesh-and-deploy-kong-air/"

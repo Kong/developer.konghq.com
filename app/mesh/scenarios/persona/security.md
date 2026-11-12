@@ -11,6 +11,8 @@ products:
 works_on:
   - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 related_resources:
   - text: "{{site.mesh_product_name}} scenarios"
     url: /mesh/scenarios/

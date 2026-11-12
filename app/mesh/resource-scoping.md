@@ -129,7 +129,8 @@ For the rules, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 ## Universal zones
 
-To create a resource on a Universal zone, run `kongctl` against the control plane that owns it:
+To create a resource on a Universal zone, run `kongctl` against the control plane that owns it.
+In the following commands, `MESH_CP` is the name of that control plane:
 
 ```sh
 kongctl apply mesh -f mesh-traffic-permission.yaml --control-plane-name "$MESH_CP"

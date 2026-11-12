@@ -11,6 +11,8 @@ products:
 works_on:
   - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 related_resources:
   - text: "{{site.mesh_product_name}} scenarios"
     url: /mesh/scenarios/
@@ -52,7 +54,7 @@ The operator keeps the platform available, observable, and efficient in every zo
 Kong Air runs one global control plane and one zone control plane in each zone:
 
 * Global control plane: {{site.konnect_short_name}} hosts and operates it for Kong Air. The operator creates `kong-air-mesh` on it with `kongctl`, and a policy created there reaches every zone.
-* Zone control plane: The operator installs one with Helm in each Kubernetes zone, `zone1` and `zone2`. It sends configuration to the local sidecars over xDS. A policy that a team creates on a zone control plane stays in that zone, unless it's a producer policy.
+* Zone control plane: The operator installs one with Helm in each Kubernetes zone, `zone1` and `zone2`. It sends configuration to the local sidecars over xDS. A policy that a team creates on a zone control plane stays in that zone, unless it's a [producer policy](/mesh/policy-targeting/#policy-scope).
 
 See [Install {{site.mesh_product_name}} and deploy Kong Air](/mesh/install-kong-mesh-and-deploy-kong-air/) and [Connect a second zone](/mesh/connect-a-second-zone/).
 For which control plane owns each resource, see [Resource scoping](/mesh/resource-scoping/).
