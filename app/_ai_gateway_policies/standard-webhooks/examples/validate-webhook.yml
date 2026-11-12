@@ -11,10 +11,10 @@ weight: 900
 requirements:
   - A secret that you also configure on the webhook sender.
 
-# variables:
-#   secret_v1:
-#     value: $WEBHOOK_SECRET_KEY
-#     description: The secret shared with the webhook sender.
+variables:
+  secret_v1:
+    value: $WEBHOOK_SECRET_KEY
+    description: The secret shared with the webhook sender.
 
 scopes:
   - ai-agent
