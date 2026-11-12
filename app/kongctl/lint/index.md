@@ -104,9 +104,8 @@ To lint multiple files, pass a directory to `-f` and use `-R` to process it recu
 
 By default, `kongctl lint` checks each input as written, including template
 definitions. Use `--expand` to lint values from local `!file` includes,
-principal `!csv` inputs, and `_templates` and `_extends` inheritance. With
-`--expand`, rules check included and inherited values after resource overrides
-apply.
+principal `!csv` inputs, and `_templates` and `_extends` inheritance. Rules can
+then check included and inherited values after resource overrides apply.
 
 For example, save a shared API template in `templates.yaml`:
 
