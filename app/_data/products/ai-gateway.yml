@@ -9,6 +9,7 @@ releases:
     version: "2.3.1"
     name: "v1"
     eol: 2026-12-04
+    sunset_eol: 2027-01-04
     distributions:
       - os: Ubuntu
         version: "26.04"
@@ -27,6 +28,7 @@ releases:
     name: "v1"
     stable: true
     eol: 2027-03-30
+    sunset_eol: 2027-06-30
     distributions:
       - os: Ubuntu
         version: "24.04"
