@@ -1,3 +1,4 @@
+<!-- vale off-->
 {% assign today = 'now' | date: '%s' | plus: 0 -%}
 {%- assign releases = site.data.products.ai-gateway.releases | where_exp: "r", "r.eol" -%}
 
@@ -24,3 +25,4 @@ rows:
 {%- endif -%}
 {%- endfor %}
 {% endtable %}
+<!-- vale on-->

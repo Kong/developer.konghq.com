@@ -1,3 +1,4 @@
+<!-- vale off-->
 {% table %}
 columns:
   - title: OS
@@ -19,3 +20,4 @@ rows:
     eol: "{{ d.eol | default: include.release.eol }}"
 {% endfor %}
 {% endtable %}
+<!-- vale on-->
