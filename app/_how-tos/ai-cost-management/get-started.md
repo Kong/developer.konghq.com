@@ -46,24 +46,7 @@ prereqs:
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
       icon_url: /assets/icons/openai.svg
     - title: ngrok
-      content: |
-        This guide uses [ngrok](https://ngrok.com/) to expose a local URL to the internet for local testing and development purposes.
-
-        1. [Install ngrok](https://ngrok.com/docs/getting-started/#step-1-install).
-        1. [Sign up for an ngrok account](https://dashboard.ngrok.com/) and find your [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken).
-        1. Install the authtoken and connect the ngrok agent to your account:
-           ```sh
-           ngrok config add-authtoken <TOKEN>
-           ```
-        1. Run ngrok:
-           ```sh
-           ngrok http 8080
-           ```
-        1. Copy the **Forwarding** URL from the output.
-        1. In a new terminal window, export it as an environment variable:
-           ```sh
-           export NGROK_HOST='YOUR_FORWARDING_URL'
-           ```
+      include_content: prereqs/ai-cost-management/ngrok-tunnel
       icon_url: /assets/icons/ngrok.png
     - title: OIDC provider
       include_content: prereqs/auth/oidc/keycloak-client-credentials-ai-gateway-org-chart
@@ -97,6 +80,15 @@ cleanup:
       icon_url: /assets/icons/key.svg
     - title: Delete the budget
       include_content: cleanup/ai-cost-management/delete-budget
+      icon_url: /assets/icons/money.svg
+    - title: Revert the price override
+      content: |
+        Delete the price override you set for `gpt-4o-mini`:
+
+        1. In the sidebar, click **Cost Management**.
+        1. Click **Price Catalog**.
+        1. In the effective rates table, open `gpt-4o-mini`.
+        1. Click **Revert to list price**.
       icon_url: /assets/icons/money.svg
 ---
 
@@ -305,6 +297,7 @@ render_output: false
 <!--vale on-->
 
 The event should look like this:
+
 ```json
 {
   "time": "2026-11-12T19:02:02.695Z",
@@ -349,11 +342,11 @@ Set up an override from the {{site.konnect_short_name}} UI:
 1. Click **Price Catalog**.
 1. In the effective rates table, search for `gpt-4o-mini` and note its base input price.
 1. Click **Add override**.
-1. Select **Custom rate override**.
+1. Select **Custom rate**.
 1. Click the **Provider** dropdown and select **OpenAI**.
 1. For **Model**, choose `gpt-4o-mini`.
 1. Set **Base input** and **Output** to a rate different from the list price, so the change is easy to spot.
-1. Click **Save**.
+1. Click **Add override**.
 
 Send another chat completion.
 If the `$ACCESS_TOKEN` expired, request a new one using the same client credentials grant as before:
@@ -393,7 +386,7 @@ Find the newest event and confirm that `cost.value` now matches your override's 
 For example, the previous event's cost was `0.00024915`.
 With a raised price, the event's cost becomes `0.000401`:
 
-```
+```json
 {
   "time": "2026-11-12T19:07:49.715Z",
   "subject": "principal/01a1c15c-310d-79a6-acde-85f746946396",
@@ -412,6 +405,7 @@ With a raised price, the event's cost becomes `0.000401`:
   }
 }
 ```
+{:.no-copy-code}
 
 ## What's next
 
