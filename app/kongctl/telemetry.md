@@ -115,11 +115,21 @@ running kongctl to disable collection in automation.
 
 ## Disable telemetry
 
-For a single invocation, use any one of these options:
+For a single invocation, use any one of the following options. Pass the flag:
 
 ```bash
 kongctl --no-telemetry get apis
+```
+
+Or set `KONGCTL_NO_TELEMETRY`:
+
+```bash
 KONGCTL_NO_TELEMETRY=true kongctl get apis
+```
+
+Or set `DO_NOT_TRACK`:
+
+```bash
 DO_NOT_TRACK=1 kongctl get apis
 ```
 
@@ -149,7 +159,7 @@ precedence over this setting.
 kongctl checks these settings in order:
 
 1. If `--no-telemetry`, `DO_NOT_TRACK=1`, or `KONGCTL_NO_TELEMETRY=true` is set,
-   telemetry is **off**, regardless of other settings.
+   telemetry is off, regardless of other settings.
 2. Otherwise, use the choice you saved at the initial login prompt.
 3. If you haven't saved a choice, use the profile's `telemetry.enabled` setting,
    which defaults to `true`.
