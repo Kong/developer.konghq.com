@@ -30,6 +30,7 @@ Flags:
       --config-file string      Path to the configuration file to load.
                                 - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+      --dry-run                 Validate adoption and show ownership metadata changes without writing resources
   -h, --help                    help for konnect
       --log-file string         Write execution logs to the specified file instead of STDERR.
                                 - Config path: [ log-file ]
