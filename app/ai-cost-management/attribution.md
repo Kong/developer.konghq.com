@@ -139,7 +139,7 @@ Groups and teams record the organizational context of the request's principal.
 {:.info}
 > Teams never come from request headers.
 > Under the attribution plugin, no header sets a group either.
-> On a data plane without the plugin, an `ai-cost-group` or `ai-cost-groups` header still sets groups.
+> On a data plane without the plugin, an `ai-cost-group` or `ai-cost-groups` header still sets OIDC groups, as `oidc/<name>`.
 > Install the [attribution plugin](#set-up-header-based-attribution) to stop clients from setting their own groups.
 
 ### Groups
