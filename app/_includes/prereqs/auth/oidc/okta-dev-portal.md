@@ -1,12 +1,13 @@
 
 This guide requires and OIDC provider. In this example, we'll use Okta, but the steps are similar in any standard OIDC provider. You can also run [Keycloak locally](https://www.keycloak.org/getting-started/getting-started-docker) and expose it with a tunnel.
 
-You need an [Okta](https://login.okta.com/) admin account with a developer organization. If you prefer a different provider, 
+You need an [Okta](https://login.okta.com/) admin account with a developer organization.
 
-1. In the Okta admin console, go to **Applications > Applications** and click **Create App Integration**.
+1. In the Okta admin console, go to **Applications and Resources > Applications** and click **Create App Integration**.
 1. Select **OIDC - OpenID Connect** and click **Next**.
 1. Select **Web Application** and click **Next**.
 1. In the **App integration name** field, enter a name such as `Dev Portal`.
+1. In the **Client definition** field, select "Use Okta-generated client ID".
 1. Under **Grant type**, make sure **Authorization Code** is checked.
 1. Under **Sign-in redirect URIs**, add your {{ site.dev_portal }} callback URL. Use the hostname you configured for your portal, for example: `https://portal.example.dev/callback`.
 1. Click **Save**.
