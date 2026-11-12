@@ -45,7 +45,6 @@ Attach it to an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gatew
 ## Consume messages
 
 The Policy serves messages on the route of the entity it's attached to.
-Reference it from the `policies` array on an AI Model, AI Agent, or AI MCP Server that defines `config.route`, then send requests to that path.
 For an AI Model, send a `POST` request to the model's `chat/completions` path.
 For an AI Agent or AI MCP Server, send a `GET` request to the entity's path.
 
@@ -80,9 +79,8 @@ When it's `noop` (default), `value` is the raw message as a string.
 ### Offsets and repeated reads
 
 The Confluent Consume Policy reads topics as a Kafka consumer group.
-By default ([`config.commit_strategy`](/ai-gateway/policies/confluent-consume/reference/#schema--config-commit-strategy) is `auto`), the Policy commits offsets after each read, so a repeated request returns only new messages.
+By default, the Policy commits offsets after each read, so a repeated request returns only new messages.
 When no new messages exist, `records` is an empty object.
-Set `commit_strategy` to `off` to return the same records on every request.
 
 Where a new consumer group starts reading depends on [`config.auto_offset_reset`](/ai-gateway/policies/confluent-consume/reference/#schema--config-auto-offset-reset):
 - `earliest` (default) reads from the beginning of the topic.
@@ -93,10 +91,10 @@ Where a new consumer group starts reading depends on [`config.auto_offset_reset`
 ## Modes
 
 Set [`config.mode`](/ai-gateway/policies/confluent-consume/reference/#schema--config-mode) to choose how the Policy delivers messages:
-- `http-get` (default): returns the available messages in one response.
-- `server-sent-events`: streams each message as a [server-sent event](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) with the fields `data`, `event`, `id`, and `topic`, and sends keep-alive comments while no messages arrive.
+- `http-get` (default): Returns the available messages in one response.
+- `server-sent-events`: Streams each message as a [server-sent event](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) with the fields `data`, `event`, `id`, and `topic`, and sends keep-alive comments while no messages arrive.
   Clients typically send `Accept: text/event-stream`.
-- `websocket`: sends each message as a JSON text frame over a [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) connection. Each frame has the fields `data`, `event`, `id`, and `topic`.
+- `websocket`: Sends each message as a JSON text frame over a [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) connection. Each frame has the fields `data`, `event`, `id`, and `topic`.
 
 ## Transform messages
 
@@ -114,16 +112,10 @@ return function(message)
 end
 ```
 
-## Authentication
-
-The Confluent Consume Policy authenticates to Confluent Cloud with a cluster API key and secret over SASL.
-Set [`config.cluster_api_key`](/ai-gateway/policies/confluent-consume/reference/#schema--config-cluster-api-key) and [`config.cluster_api_secret`](/ai-gateway/policies/confluent-consume/reference/#schema--config-cluster-api-secret) to the key and secret for your cluster.
-The Policy connects to the brokers over TLS and verifies the broker certificate by default, through [`config.security.ssl_verify`](/ai-gateway/policies/confluent-consume/reference/#schema--config-security-ssl-verify).
-If the credentials are wrong, requests fail with a `502` status code.
 
 ## Limitations
 
-- Messages that fail JSON deserialization aren't sent to the dead-letter topic, even when [`config.enable_dlq`](/ai-gateway/policies/confluent-consume/reference/#schema--config-enable-dlq) and [`config.dlq_topic`](/ai-gateway/policies/confluent-consume/reference/#schema--config-dlq-topic) are set.
+Messages that fail JSON deserialization aren't sent to the dead-letter topic, even when [`config.enable_dlq`](/ai-gateway/policies/confluent-consume/reference/#schema--config-enable-dlq) and [`config.dlq_topic`](/ai-gateway/policies/confluent-consume/reference/#schema--config-dlq-topic) are set.
 
 ## Scopes
 
