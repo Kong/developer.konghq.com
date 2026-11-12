@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -41,11 +42,10 @@ Set [`config.status_code`](/ai-gateway/policies/redirect/reference/#schema--conf
 ## Keep the incoming path
 
 Set [`config.keep_incoming_path`](/ai-gateway/policies/redirect/reference/#schema--config-keep-incoming-path) to `true` to keep the path and query string of the incoming request.
-The `Location` header then combines the host from `config.location` with that path and query string.
+The `Location` header then combines `config.location` with that path and query string.
 This is useful when the new host serves the same paths as the old one.
 
 The incoming path is the full path that the caller requested, including the route prefix of the AI Model or AI MCP Server.
-If `config.location` contains a path, the incoming path replaces it.
 
 The following table shows the result for a request to `/my-model/chat/completions?a=1`:
 
@@ -63,7 +63,7 @@ rows:
     result: "`https://new.example.com/my-model/chat/completions?a=1`"
   - location: "`https://new.example.com/base`"
     path: "`true`"
-    result: "`https://new.example.com/my-model/chat/completions?a=1`"
+    result: "`https://new.example.com/base/my-model/chat/completions?a=1`"
   - location: "`https://new.example.com/base`"
     path: "`false`"
     result: "`https://new.example.com/base`"
@@ -73,10 +73,10 @@ rows:
 
 Attach the Redirect Policy to an AI Model, AI Agent, or AI MCP Server to redirect only that entity.
 You can also attach it to an AI Consumer or AI Consumer Group, or apply it globally.
-Consumer and Consumer Group scopes apply after the caller authenticates.
+AI Consumer and AI Consumer Group scopes apply after the caller authenticates.
 
-To move a single endpoint, attach the policy to that entity.
-To move specific customers, attach it to their AI Consumer or AI Consumer Group.
+* To move a single endpoint, attach the policy to that entity.
+* To move specific customers, attach it to their AI Consumer or AI Consumer Group.
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
 {:.warning}

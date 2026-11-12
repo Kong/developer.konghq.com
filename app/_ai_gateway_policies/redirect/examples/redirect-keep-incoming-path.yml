@@ -10,7 +10,7 @@ requirements:
 
 variables:
   location:
-    description: The host that callers are redirected to.
+    description: The URL that callers are redirected to.
     value: $REDIRECT_URL
 
 name: redirect-keep-incoming-path
