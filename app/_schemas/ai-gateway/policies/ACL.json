@@ -24,6 +24,15 @@
     "config": {
       "type": "object",
       "properties": {
+        "deny_when": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 1024,
+            "minLength": 1
+          },
+          "description": "Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
+        },
         "allow": {
           "type": "array",
           "items": {
@@ -61,15 +70,6 @@
             "minLength": 1
           },
           "description": "Allow the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
-        },
-        "deny_when": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 1024,
-            "minLength": 1
-          },
-          "description": "Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
         }
       }
     },

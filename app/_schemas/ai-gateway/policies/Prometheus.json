@@ -1,34 +1,13 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "bandwidth_metrics": {
+          "type": "boolean",
+          "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `bandwidth_bytes` and `stream_sessions_total` metrics will be exported.",
+          "default": false
+        },
         "upstream_health_metrics": {
           "type": "boolean",
           "description": "A boolean value that determines if upstream metrics should be collected. If enabled, `upstream_target_health` metric will be exported.",
@@ -56,23 +35,34 @@
           "type": "boolean",
           "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong_latency_ms`, `upstream_latency_ms` and `request_latency_ms` metrics will be exported.",
           "default": false
-        },
-        "bandwidth_metrics": {
-          "type": "boolean",
-          "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `bandwidth_bytes` and `stream_sessions_total` metrics will be exported.",
-          "default": false
         }
       }
     },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
       },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "service": {
       "type": "object",
@@ -93,6 +83,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   }
 }
