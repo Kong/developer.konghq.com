@@ -1,0 +1,31 @@
+description: 'Redact a header and matching values from Syslog Policy log entries.'
+
+extended_description: |
+  Redact a header and matching values from Syslog Policy log entries.
+  The Policy replaces the `x-internal-token` header and any value that matches `SECRET-[0-9]+` with `********`.
+  Body patterns apply to logged request and response bodies, so payload logging must be enabled on the AI Model for them to have an effect.
+  Use this to keep secrets out of your syslog pipeline.
+
+title: Redact sensitive data
+
+weight: 890
+
+requirements:
+  - An [AI Model](/ai-gateway/entities/ai-model/) with payload logging enabled.
+
+name: syslog-redact
+display_name: Syslog with redaction
+type: syslog
+
+config:
+  log_sanitization:
+    enabled: true
+    redact_headers:
+      - x-internal-token
+    body_patterns:
+      - "SECRET-[0-9]+"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

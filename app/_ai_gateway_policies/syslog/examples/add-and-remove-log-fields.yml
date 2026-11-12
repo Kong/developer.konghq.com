@@ -1,0 +1,24 @@
+description: 'Add a custom field to and remove a field from Syslog Policy log entries.'
+
+extended_description: |
+  Add a custom field to and remove a field from Syslog Policy log entries.
+  The Lua code in `custom_fields_by_lua` removes the `client_ip` field and adds a `my_field` field with the value `hello`.
+  Use this to shape log entries before they reach your syslog pipeline.
+
+title: Add and remove log fields
+
+weight: 880
+
+name: syslog-custom-fields
+display_name: Syslog with custom fields
+type: syslog
+
+config:
+  custom_fields_by_lua:
+    client_ip: "return nil"
+    my_field: "return 'hello'"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
