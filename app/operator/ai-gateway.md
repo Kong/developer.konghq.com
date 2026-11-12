@@ -3,6 +3,7 @@ title: "{{ site.ai_gateway_name }} with {{ site.operator_product_name }}"
 description: "Understand the Kubernetes resources that make up an {{ site.ai_gateway_name }} deployment managed by {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
+permalink: /operator/ai-gateway/
 
 breadcrumbs:
   - /operator/
@@ -29,6 +30,12 @@ related_resources:
     url: /ai-gateway/entities/ai-model/
   - text: AI Policies
     url: /ai-gateway/entities/ai-policy/
+  - text: "Install {{ site.ai_gateway_name }} 2.x on-prem using Docker Compose"
+    url: /ai-gateway/install/docker/
+  - text: "Configure {{ site.ai_gateway_name }} on-prem"
+    url: /ai-gateway/configure-on-prem/
+  - text: "Migrate to {{ site.ai_gateway_name }} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: AI Data Plane Certificates
     url: /ai-gateway/entities/ai-data-plane-certificate/
   - text: AI Consumers
@@ -46,7 +53,7 @@ related_resources:
 
 {{site.operator_product_name}} manages three distinct layers:
 
-- **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
+- **Control plane**: You can either use `KonnectAIGateway` (which provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}) or [`OnPremAIGateway` in tech preview](#on-prem-control-plane) (which provisions a {{site.ai_gateway}} 2.x on-prem). All other resources reference it as their parent.
 - **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayAuthStrategy`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
 - **Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, {{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane.
 
@@ -66,6 +73,9 @@ rows:
   - resource: "`KonnectAIGateway`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Creates the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}
+  - resource: "`OnPremAIGateway` (Tech Preview)"
+    api_group: "`aigateway.konghq.com/v1alpha1`"
+    purpose: "Runs the {{ site.ai_gateway }} 2.x control plane inside {{ site.operator_product_name }} and pushes configuration to its data planes, without {{ site.konnect_short_name }}"
   - resource: "`AIGatewayModelProvider`"
     api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Configures an upstream LLM provider (OpenAI, Anthropic, Azure, Gemini, etc.)
@@ -119,6 +129,154 @@ All configuration resources anchor to the `KonnectAIGateway` as their root via `
 11. `AIGatewayMCPServer.spec.apiSpec.listener.sources[]` → other `AIGatewayMCPServer` resources (by name; `conversion-only` or `upstream-server` type only)
 12. `AIGatewayDataPlaneCertificate.spec.aiGatewayRef` → `KonnectAIGateway`
 13. `AIGatewayDataPlane.spec.controlPlaneRef` → `KonnectAIGateway`
+
+With an on-premises control plane, every `spec.aiGatewayRef` above points at an `OnPremAIGateway` instead, and `AIGatewayDataPlane.spec.controlPlaneRef` uses `type: onpremNamespacedRef`. See [On-premises control plane](#on-prem-control-plane).
+
+## On-prem control plane
+
+{% include operator/ai-gateway-on-prem-tech-preview.md %}
+
+An `OnPremAIGateway` replaces the {{ site.konnect_short_name }}-hosted control plane with one that runs inside {{site.operator_product_name}}. It doesn't create a Deployment or Pods of its own. For each `OnPremAIGateway`, {{site.operator_product_name}} runs a control plane instance that:
+
+1. Watches the {{ site.ai_gateway }} configuration resources whose `spec.aiGatewayRef` points at the `OnPremAIGateway`, and the Secrets they reference.
+1. Translates them into {{ site.ai_gateway }} configuration.
+1. Pushes that configuration to the Admin API of every `AIGatewayDataPlane` attached to the `OnPremAIGateway`.
+
+Nothing is sent to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-premises control plane, see [Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/install/).
+
+### Enable the on-premises controller
+
+The `OnPremAIGateway` controller is disabled by default. Enable it alongside the `AIGatewayDataPlane` controller when installing {{site.operator_product_name}}:
+
+```bash
+--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true \
+--set env.ENABLE_CONTROLLER_ONPREMAIGATEWAY=true
+```
+
+Apply a `KongLicense` to the cluster. {{site.operator_product_name}} injects the license into every `AIGatewayDataPlane` that references an `OnPremAIGateway`, and reports it in a `LicenseValid` condition on both resources. A missing license doesn't block `Ready`: the data plane runs without a license and reports `LicenseValid=False`.
+
+### Reference an OnPremAIGateway
+
+A configuration resource must set both `group` and `kind` in `spec.aiGatewayRef`:
+
+```yaml
+spec:
+  aiGatewayRef:
+    group: aigateway.konghq.com
+    kind: OnPremAIGateway
+    namespacedRef:
+      name: my-ai-gateway-cp
+```
+
+{:.warning}
+> When `group` and `kind` are omitted, the reference defaults to `group: konnect.konghq.com` and `kind: KonnectAIGateway`. The API server accepts the resource, but no on-premises control plane picks it up: it never gets a status, and its configuration is never pushed. Check `kubectl get <resource> -o jsonpath='{.spec.aiGatewayRef.kind}'` if a resource has no `Programmed` condition at all.
+
+You can't change `kind` on an existing resource to move it between a `KonnectAIGateway` and an `OnPremAIGateway`. Delete and recreate it instead.
+
+An `AIGatewayDataPlane` attaches to an `OnPremAIGateway` with `spec.controlPlaneRef.type: onpremNamespacedRef`:
+
+```yaml
+spec:
+  controlPlaneRef:
+    type: onpremNamespacedRef
+    onpremNamespacedRef:
+      name: my-ai-gateway-cp
+```
+
+For an on-premises data plane, {{site.operator_product_name}} creates a `ClusterIP` Service named `<data-plane-name>-admin` on port `8444`, and a TLS certificate for it. The control plane instance pushes configuration to the data plane's Admin API through this Service using mTLS. The `AIGatewayDataPlane` reports the certificate in an `AdminCertificateProvisioned` condition. You don't need to expose this Service outside the cluster.
+
+### Order of operations
+
+Deploy at least one `AIGatewayDataPlane` before you wait on configuration resources. Until a data plane is running, configuration resources report `Programmed=False` with the message `no Admin API endpoints discovered; configuration not pushed`. Once a data plane is `Ready`, pending configuration is pushed and the resources become `Programmed` without any further action.
+
+### OnPremAIGateway settings
+
+All `spec` fields are optional. An empty `spec` watches only the `OnPremAIGateway`'s own namespace and uses the operator's default sync settings.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`spec.watchNamespaces.type`"
+    description: "`own` (default) watches only the `OnPremAIGateway`'s namespace. `list` also watches the namespaces in `spec.watchNamespaces.list`. `all` watches every namespace, and requires {{site.operator_product_name}} to run cluster-wide, with an empty `--watch-namespaces`. Changing this field restarts the control plane instance."
+  - field: "`spec.dataplaneSync.intervalSeconds`"
+    description: Seconds between two rounds of pushing configuration to the data planes. When unset, the operator default is used.
+  - field: "`spec.dataplaneSync.timeoutSeconds`"
+    description: Timeout of a single push, in seconds. When unset, no timeout is applied.
+  - field: "`spec.objectFilters.secrets.matchLabels`"
+    description: "Additional labels a Secret must carry for this gateway to read it. They're combined with the operator's own Secret label selector, `konghq.com/secret=true` by default."
+{% endtable %}
+<!--vale on-->
+
+### Watch configuration in other namespaces
+
+To keep configuration resources in a different namespace from the `OnPremAIGateway`, list the namespace in `spec.watchNamespaces`, and create a `WatchNamespaceGrant` in that namespace allowing the `OnPremAIGateway`'s namespace to watch it:
+
+```yaml
+apiVersion: aigateway.konghq.com/v1alpha1
+kind: OnPremAIGateway
+metadata:
+  name: my-ai-gateway-cp
+  namespace: kong
+spec:
+  watchNamespaces:
+    type: list
+    list:
+      - ai-team-a
+---
+apiVersion: gateway-operator.konghq.com/v1alpha1
+kind: WatchNamespaceGrant
+metadata:
+  name: my-ai-gateway-cp
+  namespace: ai-team-a
+spec:
+  from:
+    - group: aigateway.konghq.com
+      kind: OnPremAIGateway
+      namespace: kong
+```
+
+Resources are in `ai-team-a`, then set `spec.aiGatewayRef.namespacedRef.namespace: kong`. Without the grant, the `OnPremAIGateway` reports `WatchNamespaceGrantValid=False` and `Ready=False`, and its control plane instance doesn't run.
+
+### Status conditions
+
+`OnPremAIGateway` reports these conditions:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Condition
+    key: condition
+  - title: Meaning
+    key: meaning
+rows:
+  - condition: "`Ready`"
+    meaning: The control plane instance is running and all configuration was translated. Wait on this condition rather than `Programmed`, which `KonnectAIGateway` uses.
+  - condition: "`LicenseValid`"
+    meaning: A `KongLicense` was found and applied.
+  - condition: "`OptionsValid`"
+    meaning: The `spec` is compatible with how {{site.operator_product_name}} is configured, for example its watched namespaces and Secret label selector.
+  - condition: "`WatchNamespaceGrantValid`"
+    meaning: Every namespace in `spec.watchNamespaces.list` has a matching `WatchNamespaceGrant`.
+  - condition: "`ConfigurationTranslated`"
+    meaning: All configuration resources were translated. On failure, the message names the resource that failed.
+  - condition: "`DataPlanesConfigured`"
+    meaning: "Configuration was pushed to the data planes. The message reports the number of Admin API endpoints, one per data plane replica."
+{% endtable %}
+<!--vale on-->
+
+Configuration resources report a `Programmed` condition, as they do with {{site.konnect_short_name}}. Their `ID` and `ORGID` columns stay empty because they're never created in {{site.konnect_short_name}}.
+
+### Tech Preview limitations
+
+The following behavior was observed with {{site.operator_product_name}} 2.4.0-rapid.3.0 and may change:
+
+- **A single invalid resource marks the whole gateway as not ready.** For example, an `AIGatewayModelProvider` that references a missing Secret sets `ConfigurationTranslated=False` and `Ready=False` on the `OnPremAIGateway`. The invalid resource is left out, and the rest of the configuration is still pushed to the data planes, so traffic for other AI Models keeps working.
+- **Configuration is pushed, not pulled, so new data plane Pods depend on {{site.operator_product_name}}.** Running data plane Pods keep serving their last pushed configuration if {{site.operator_product_name}} becomes unavailable. A data plane Pod that starts while {{site.operator_product_name}} is unavailable has no configuration, isn't ready, and doesn't receive traffic until {{site.operator_product_name}} recovers and pushes configuration to it. To work around this issue, run more than one data plane replica, and avoid restarting data planes and {{site.operator_product_name}} at the same time.
 
 ## Supported providers
 
@@ -186,12 +344,12 @@ Each resource type is covered end-to-end in the getting started series:
 
 ## Route to a model using a selector
 
-{{site.operator_product_name}} always places a model selector in front of an AI Model's targets, even when a single `AIGatewayModel` is the only one on its route. By default, the selector matches the request body's `model` field against the AI Model's own name (`spec.apiSpec.model.name`). **A request whose `model` value doesn't match never reaches any target** — it falls through instead of being proxied. This is why every request in the [deploy](/operator/get-started/ai-gateway/deploy/) and [policy](/operator/get-started/ai-gateway/policy/) guides includes `"model": "gpt-4o-mini"`: that value is what the selector uses to activate this AI Model, not just metadata for the upstream provider.
+{{site.operator_product_name}} always places a model selector in front of an AI Model's targets, even when a single `AIGatewayModel` is the only one on its route. By default, the selector matches the request body's `model` field against the AI Model's own name (`spec.apiSpec.model.name`). **A request whose `model` value doesn't match never reaches any target**; it falls through instead of being proxied. This is why every request in the [deploy](/operator/get-started/ai-gateway/deploy/) and [policy](/operator/get-started/ai-gateway/policy/) guides includes `"model": "gpt-4o-mini"`: that value is what the selector uses to activate this AI Model, not just metadata for the upstream provider.
 
 To accept a client-side alias instead of the AI Model's own name, set `config.route.model`:
 
 - `values`: the alias to match, as a single-item list. When omitted, the AI Model's own name is used.
-- `bodyParam`, `headerParam`, or `pathParam`: which part of the request to match the alias against — a JSON body property, a header, or a named regex capture group in `paths`, respectively. Set at most one of these; when none are set, the request body's `model` property is matched by default.
+- `bodyParam`, `headerParam`, or `pathParam`: which part of the request to match the alias against (a JSON body property, a header, or a named regex capture group in `paths`, respectively). Set at most one of these; when none are set, the request body's `model` property is matched by default.
 
 The following configuration accepts a client-side alias in the request body's `model` field:
 
@@ -223,7 +381,7 @@ config:
 A client that sends the header `x-model-route: my-gpt-4o` is routed to this AI Model.
 
 {:.warning}
-> **`config.route.model` is a different mechanism from `config.route.headers` and `config.route.paths`.** The latter are Kong's native route-matching criteria — they decide whether a request reaches this AI Model's route at all. `config.route.model` runs after the route matches, to select which AI Model's targets handle the request when multiple AI Models share a route. Setting `config.route.headers` to gate a route by header presence does not make that header usable as a model alias source, and combining the two produces a proxy error instead of the expected routing behavior.
+> **`config.route.model` is a different mechanism from `config.route.headers` and `config.route.paths`.** The latter are Kong's native route-matching criteria. They decide whether a request reaches this AI Model's route at all. `config.route.model` runs after the route matches, to select which AI Model's targets handle the request when multiple AI Models share a route. Setting `config.route.headers` to gate a route by header presence does not make that header usable as a model alias source, and combining the two produces a proxy error instead of the expected routing behavior.
 
 ## Load balancing across targets
 
@@ -254,7 +412,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-See [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/) for a full description of each algorithm's behavior and tradeoffs — the algorithms and their semantics are the same; only the configuration surface differs.
+See [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/) for a full description of each algorithm's behavior and tradeoffs. The algorithms and their semantics are the same; only the configuration surface differs.
 
 ## Exposing tools with AIGatewayMCPServer
 
@@ -447,6 +605,14 @@ kubectl get \
   -n kong
 ```
 
+With an on-premises control plane, replace `konnectaigateway` with `onpremaigateway`:
+
+```bash
+kubectl get \
+  onpremaigateway,aigatewaymodelprovider,aigatewaymodel,aigatewaypolicy,aigatewayauthstrategy,aigatewaydataplane \
+  -n kong
+```
+
 Describe any resource to see the full status and any operator error messages:
 
 ```bash
@@ -474,6 +640,28 @@ Verify `spec.aiGatewayRef.namespacedRef.name` matches your `KonnectAIGateway` na
 ```bash
 kubectl describe aigatewaypolicy -n kong
 ```
+
+### On-premises resource has no status
+
+A configuration resource with no conditions at all is usually missing `group: aigateway.konghq.com` and `kind: OnPremAIGateway` in `spec.aiGatewayRef`, so it targets a `KonnectAIGateway` instead. See [Reference an `OnPremAIGateway`](#reference-an-onpremaigateway).
+
+### On-premises resource not programmed
+
+Read the condition message:
+
+```bash
+kubectl get aigatewaymodelprovider/openai-provider -n kong \
+  -o jsonpath='{.status.conditions[?(@.type=="Programmed")].message}'
+```
+
+- `no Admin API endpoints discovered; configuration not pushed`: An `AIGatewayDataPlane` that is attached to the `OnPremAIGateway` isn't running yet. Deploy one, or check its `Ready` condition.
+- `failed to fetch Secret ... not found (note: the operator only reads Secrets carrying its Secret label selector, konghq.com/secret=true by default)`: The Secret is missing or lacks the `konghq.com/secret=true` label.
+
+### On-premises request returns a 500 DNS or balancer error
+
+A request returns `500` with a message like `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local' with: dns server error`.
+
+The request's `model` value doesn't match any AI Model on the route, so no target was selected. Send the AI Model's `spec.apiSpec.model.name`, or an alias from `config.route.model.values`. See [Route to a model using a selector](#route-to-a-model-using-a-selector).
 
 ### {{site.operator_product_name}} LOGS
 

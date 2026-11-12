@@ -21,6 +21,8 @@ rawLicenseString: '$(cat ./license.json)'
 {%- assign keg_install = include.keg_install | default: include["keg-install"] -%}
 {%- assign extra_set = include.set | default: prereqs.operator.set -%}
 {%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
+{%- comment -%} Controllers enabled only in the on-prem install command, for example ONPREMAIGATEWAY. {%- endcomment -%}
+{%- assign on_prem_controllers = include.on_prem_controllers | default: page.prereqs.operator.on_prem_controllers -%}
 {%- assign chart_version = include.chart_version -%}
 {%- if prereqs.operator.rapid -%}
 {%- assign chart_version = chart_version | default: site.data.products.operator.rapid.chart -%}
@@ -60,6 +62,7 @@ rawLicenseString: '$(cat ./license.json)'
         --devel{% endif %}{% else %}
         --set image.tag={{ site.data.operator_latest.release }}{% endif %}{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if on_prem_controllers %} \{% for controller in on_prem_controllers %}
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
 {%- endcapture -%}

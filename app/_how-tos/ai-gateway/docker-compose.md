@@ -37,6 +37,8 @@ related_resources:
     url: /ai-gateway/configure-on-prem/
   - text: Install {{site.base_gateway}} using Docker Compose
     url: /gateway/install/docker/
+  - text: "Install {{site.operator_product_name}} for {{site.ai_gateway_name}} (Tech Preview)"
+    url: /operator/get-started/ai-gateway/install/
 
 automated_tests: false
 ---

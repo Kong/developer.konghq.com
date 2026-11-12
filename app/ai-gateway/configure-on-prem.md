@@ -25,6 +25,8 @@ related_resources:
     url: /ai-gateway/v2-migration-guide/
   - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
     url: /ai-gateway/on-prem-migration/
+  - text: "Install {{site.ai_gateway_name}} on-prem with{{site.operator_product_name}} (Tech Preview)"
+    url: /operator/get-started/ai-gateway/install/
   - text: deck file ai2kong
     url: /deck/file/ai2kong/
   - text: deck ai sync
@@ -42,6 +44,8 @@ related_resources:
 {:.success}
 > **Setting up a new {{site.ai_gateway}} 2.x on-prem?**<br>
 > See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/) to get {{site.ai_gateway}} 2.x installed first, then use this guide to configure it.
+>
+> If you run on Kubernetes, see [Install {{site.ai_gateway_name}} on-prem with{{site.operator_product_name}} (Tech Preview)](/operator/get-started/ai-gateway/install/) instead. {{site.operator_product_name}} manages {{site.ai_gateway}} entities as Kubernetes resources, so you wouldn't use the plugin configuration on this page.
 
 This page is for self-managed {{site.base_gateway}} 3.x deployments that run {{site.ai_gateway}} through AI plugins on Services and Routes, and that will keep that model. 
 {{site.ai_gateway}} documentation describes [{{site.ai_gateway}} entities](/ai-gateway/entities/) like AI Models, AI Model Providers, AI MCP Servers, and AI Agents. 
