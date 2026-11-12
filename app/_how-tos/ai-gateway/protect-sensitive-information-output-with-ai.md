@@ -57,7 +57,7 @@ docker run --rm -d \
   --network kong-ai-quickstart-net \
   --network-alias host.docker.internal \
   -p 8080:8080 \
-  kong/ai-pii-service:v0.2.2-en
+  kong/ai-pii-service:v0.3.1-en
 ```
 {: data-test-step="block" }
 
