@@ -25,7 +25,7 @@ tags:
 api_specs:
   - konnect/ai-cost-management
 
-description: "Attribution integrations for {{site.ai_cost_management}} lists the tools that send standard tags automatically and those you configure with request headers."
+description: "Attribution integrations for {{site.ai_cost_management}} lists the tools that send standard tags through their own headers and those you configure with request headers."
 
 related_resources:
   - text: Attribution in {{site.ai_cost_management}}
@@ -34,15 +34,18 @@ related_resources:
 
 Attribution integrations are the AI tools and platforms that route requests through your {{site.ai_gateway}} and supply the tags {{site.ai_cost_management}} uses to attribute spend.
 
-Some of these integrations send standard tags automatically through their native headers.
+Some of these integrations send standard tags through their native headers.
+These headers become tags only when the [attribution plugin](/ai-cost-management/attribution/#set-up-header-based-attribution) is installed on the gateway and the tool is turned on in the plugin's integrations.
 For others, you need to configure the tools to send `ai-cost-` prefixed headers to add the tags you want.
+Those integrations work on any {{site.ai_gateway}} 2.3 or later data plane with nothing to turn on.
 
-* For a breakdown of automatically generated and available tags for each integration, see the [integrations tag reference table](#tag-reference).
+* For a breakdown of the native and header-based tags for each integration, see the [integrations tag reference table](#tag-reference).
 * For the full list of standard tag keys, see [Attribution in {{site.ai_cost_management}}](/ai-cost-management/attribution/#tags-and-headers).
 
 {:.info}
-> Tag capture requires each {{site.ai_gateway}} data plane to run with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on`.
-> Data planes without this flag don't capture `ai-cost-` headers or native integration headers.
+> Data planes on {{site.ai_gateway}} 2.3 or later capture `ai-cost-` headers without any setup.
+> The attribution plugin, which reads native integration headers, needs `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on` on every data plane.
+> While the plugin is installed, a data plane without the flag rejects the gateway's whole configuration.
 > See [Set up header-based attribution](/ai-cost-management/attribution/#set-up-header-based-attribution) for details.
 
 ## Integrations
@@ -68,14 +71,14 @@ Clicking a tile opens the integration in your {{site.konnect_short_name}} org, w
 
 ## Tag reference
 
-The following table lists the tags each integration sends automatically and those you can add with `ai-cost-KEY_NAME` headers.
+The following table lists the tags each integration sends with the attribution plugin and those you can add with `ai-cost-KEY_NAME` headers.
 
 <!--vale off-->
 {% table %}
 columns:
   - title: Integration
     key: integration
-  - title: Sends automatically
+  - title: Sends with the attribution plugin
     key: auto
   - title: Add with `ai-cost-KEY_NAME` headers
     key: headers
@@ -85,8 +88,8 @@ rows:
       - `agent-session`
       - `agent-id`
       - `agent-parent`
-      - `agent-request-kind`
-      - `agent-type`
+      - `agent-request-kind` (with `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1`)
+      - `agent-type` (with `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1`)
     headers: |-
       - `scm-provider`
       - `scm-repository`
@@ -268,7 +271,7 @@ rows:
       - Any `Helicone-Property-<Name>` header becomes a tag named `<name>`.
     headers: None
   - integration: Portkey
-    auto: Each key in the `x-portkey-metadata` JSON object becomes a tag of the same name.
+    auto: Each key in the `x-portkey-metadata` JSON object becomes a tag of the same name, except keys that start with `_`.
     headers: None
   - integration: Cloudflare AI Gateway
     auto: Each key in the `cf-aig-metadata` JSON object becomes a tag of the same name.

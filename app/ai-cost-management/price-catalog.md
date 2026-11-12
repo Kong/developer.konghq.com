@@ -23,7 +23,7 @@ tags:
   - governance
   - cost-management
 
-description: "The price catalog holds the price of each model that {{site.ai_cost_management}} can price, and rate overrides let you adjust those prices to the terms you negotiated with a provider."
+description: "The price catalog holds the model prices that {{site.ai_gateway}} uses to calculate the cost of each request, and rate overrides let you adjust those prices to the terms you negotiated with a provider."
 
 related_resources:
   - text: Analytics and debugging in {{site.ai_cost_management}}
@@ -86,11 +86,11 @@ When dynamic pricing is on, {{site.ai_gateway}} prices each request in the follo
 
 Since per-target cost fields take precedence over catalog overrides, this makes them useful when different targets using the same model need different prices.
 
-For example, you have a premium route at `/gold-tier-requests` and a standard route at `silver-tier-requests`.
-In this case, both routes use the same model, but only the premium target has cost fields set:
+For example, you have a premium route at `/gold-tier-requests` and a standard route at `/silver-tier-requests`.
+In this case, both routes use the same model, but only the premium route's target has cost fields set:
 
 * The standard route uses the catalog price or your negotiated override.
-* The premium target uses its own fixed price.
+* The premium route uses its target's fixed price.
 
 Catalog overrides apply across every {{site.ai_gateway}} in your organization for a given model or provider, so they are a better fit for a negotiated discount that covers all usage.
 
@@ -115,12 +115,13 @@ You can configure dynamic pricing using the following settings, which are set in
   
 ## Price catalog
 
-The price catalog lists the price of each model that {{site.ai_cost_management}} can price. 
-You can find it by navigating to the AI view, then opening **Cost Management** > **Price Catalog** from the sidebar.
+The price catalog lists the model prices that {{site.ai_gateway}} uses to calculate the cost of each request. 
+To open it, in the {{site.konnect_short_name}} sidebar, switch to the AI view and click **Cost Management** > **Price Catalog**.
+Only organization admins see the **Price Catalog** item.
 
 The price catalog shows effective rates, which include your overrides.
 All prices in the price catalog are in USD per million tokens.
-You can filter the list by exact model ID or by provider, and open a model to see its price history.
+You can search by part of a model's name or ID with **Search models**, filter by provider, and open a model to see its price history.
 
 * Models without an override show `List price` in the **Override** column.
 * Models with an override show `Custom rate` or `Provider discount`.
@@ -136,6 +137,9 @@ If a [rate card](#rate-cards) is applied to a model, each row shows the base inp
 ## Overrides
 
 An override adjusts the list price so the catalog shows the price your organization actually pays.
+
+An override changes the price of requests that {{site.ai_gateway}} prices after the override takes effect.
+{{site.ai_cost_management}} stores the cost of each request when it runs, so adding, scheduling, or deleting an override doesn't change spend that's already recorded.
 
 You can create a rate override with the **Add override** button on the [**Price Catalog**](https://cloud.konghq.com/us/ai-manager/cost-management/price-catalog) page.
 
@@ -216,12 +220,16 @@ columns:
   - title: Applies to
     key: applies_to
 rows:
+  - card: "**Batch**"
+    applies_to: "Requests sent through the provider's batch API."
   - card: "**Flex tier**"
     applies_to: "Requests on the flex service tier."
   - card: "**Priority tier**"
     applies_to: "Requests on the priority service tier."
   - card: "**Long context**"
     applies_to: "Requests with inputs above a token threshold."
+  - card: "**Region**"
+    applies_to: "Requests served in one inference region."
 {% endtable %}
 <!--vale on-->
 
@@ -256,6 +264,9 @@ rows:
   - parameter: "**Applies to**"
     card: "Long context"
     description: "The requests that the card prices, such as standard or batch requests. See the [rate card types](#rate-cards)."
+  - parameter: "**Region code**"
+    card: "Region"
+    description: "The inference region that the card prices, such as `us` or `eu`."
 {% endtable %}
 <!--vale on-->
 
@@ -268,7 +279,7 @@ The following limitations apply to rate overrides:
 * A percentage must be greater than 0 and at most 100.
 * A provider can have only one active percentage off override.
 * A new custom rate for a model ends the model's earlier custom rate at the time the new one takes effect.
-* A custom rate can have one flex tier and one priority tier rate card.
+* A custom rate can have at most one Batch, one Flex tier, and one Priority tier card, and at most one card for each region.
 * A custom rate can't have two long-context rate cards with the same threshold and **Applies to** value.
 * You can't edit an override, so to change one, you must delete the override and create a new one.
 
@@ -276,10 +287,9 @@ The following limitations apply to rate overrides:
 
 To create a rate override in the {{site.konnect_short_name}} UI:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Cost Management**.
-1. In the Cost Management sidebar, click **Price Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, switch to the AI view and click **Cost Management** > **Price Catalog**.
 1. Click **Add override**.
-1. From the **Provider** dropdown menu, select your provider.
+1. In the **Add rate override** drawer, from the **Provider** dropdown menu, select your provider.
 1. Select **Percentage off list** or **Custom rate**.
 1. Enter the values for your override type:
    * For **Percentage off list**, in the **Percent off (%)** field, enter a percentage, for example `10`.
@@ -291,11 +301,13 @@ To create a rate override in the {{site.konnect_short_name}} UI:
    1. Select the rate card type.
    1. Enter the prices and any other parameters for the card.
 1. *(Optional)* To schedule the override, in the **Effective from** field, pick a later date and time in UTC.
+   The field starts at the current minute. If you clear it, the override applies as soon as you add it.
+1. *(Optional)* In the **Note** field, enter a note about the override, for example `2026 enterprise agreement`.
 1. Click **Add override**.
 
 The new override appears on the **Provider overrides** tab.
 To check the resulting price, click the **Effective rates** tab and find the model.
 
 You can remove an override by opening it from the **Provider overrides** tab and deleting it, or by using **Revert to list price** on a model's details page.
-Removing a percentage off override returns every model of the provider to its list price, and removing a custom rate returns the model to the vendor's list price.
+Removing a percentage off override returns every model of the provider to its list price, and removing a custom rate returns the model to its catalog price, which includes the provider's percentage off override, if one exists.
 You can't undo a deletion.

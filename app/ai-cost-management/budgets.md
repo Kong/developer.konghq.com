@@ -148,7 +148,7 @@ You can also set a monthly limit on a team or person from the [org chart](/ai-co
 ### Filter operators and groups
 
 A filter uses an operator like `eq`, `neq`, `in`, `contains`, or `exists` to compare a field with a value.
-The [subject and group fields](#schema-aicost-limit-budget-input-scope-filters-aicost-budget-scope-predicate-input-aicost-budget-scope-value-predicate-input-field) don't accept `contains` or `ocontains`.
+The [subject, group, and team fields](#schema-aicost-limit-budget-input-scope-filters-aicost-budget-scope-predicate-input-aicost-budget-scope-value-predicate-input-field) don't accept `contains` or `ocontains`.
 
 A filter group combines several filters with `and` or `or`, and a group can contain further groups.
 A scope allows at most 15 conditions in total, nested at most 4 groups deep.
@@ -200,7 +200,10 @@ Set the limit as an amount in US dollars, for example `500` or `0.2`.
 The size of a budget window is fixed.
 Consecutive windows have the same length and align to an anchor.
 * The [interval](#schema-aicost-limit-budget-input-window-interval) sets the length of each window, like one month or one day.
-* The [anchor](#schema-aicost-limit-budget-input-window-anchor) sets a time when a window starts, in a specific time zone.
+* The [anchor](#schema-aicost-limit-budget-input-window-anchored-at) sets a time when a window starts, in a specific time zone.
+
+The interval is an ISO 8601 duration from one second to 100 years, like `P1M` or `P1D`.
+The anchor is a date-time with a UTC offset and an IANA time zone in brackets, like `2026-01-01T00:00:00+00:00[UTC]`, in a year from 1970 to 2200.
 
 Windows start a whole number of intervals before or after the anchor, in the local time of the anchor's time zone.
 Calendar units like months therefore stay aligned to the calendar.
@@ -211,7 +214,7 @@ A window that would start on a day its month doesn't have, like the 31st, starts
 The balance of a limit budget shows spend, the amount remaining, and projected spend for one budget window.
 
 By default, the balance covers the current budget window.
-It can also cover an earlier budget window, chosen by a time within the window.
+To get an earlier budget window, set the `evaluated_at` query parameter to a time within that window.
 The balance counts the usage stored when you request it, so a request that finished moments ago can take a short time to appear. 
 
 Each amount in a balance is a `value` and a `currency`, for example `{ "value": "499.9998412", "currency": "USD" }`.
@@ -226,8 +229,16 @@ columns:
   - title: Description
     key: description
 rows:
+  - field: "`window`"
+    description: "The budget window the balance covers, with its `starts_at` and `ends_at` times."
+  - field: "`evaluated_at`"
+    description: The time the balance is calculated for, which selects the budget window.
+  - field: "`limit`"
+    description: The limit that `remaining` is measured against.
   - field: "`consumed`"
-    description: The spend of all usage in the budget's scope during the budget window.
+    description: |
+      The spend of all usage in the budget's scope during the budget window.
+      For a budget with `each`, this total includes usage that has no value for the `each` field.
   - field: "`remaining`"
     description: The limit minus `consumed`. The value is negative once spend exceeds the limit.
   - field: "`projected`"
@@ -240,6 +251,8 @@ rows:
   - field: "`derived`"
     description: |
       For a budget with `each`, the balances of the derived budgets with the highest spend, highest first. The `size` query parameter sets how many, up to 100.
+  - field: "`derived_truncated`"
+    description: "`true` when more derived budgets exist than `derived` lists."
 {% endtable %}
 <!--vale on-->
 
@@ -262,7 +275,8 @@ A rule holds up to 10 thresholds, and each threshold uses a different percent.
 Each threshold triggers an alert at most once per budget window, derived budget, and limit.
 When one evaluation finds several thresholds reached, only the highest sends an alert.
 The lower thresholds still appear as notification events, with no deliveries.
-When you change the limit, the thresholds can trigger alerts again.
+When you change the limit, or change the window so that the current window starts at a different time, the thresholds can trigger alerts again.
+A change to the scope doesn't let a threshold that already sent an alert in the current budget window alert again.
 
 When you create or replace a rule, {{site.ai_cost_management}} evaluates it right away.
 A threshold that spend has already reached in the current budget window sends an alert, unless a higher threshold has already sent one.
@@ -319,7 +333,7 @@ rows:
   - placeholder: "`period.remaining`"
     value: "How long is left in the budget window, like `8 days` or `3 hours`."
   - placeholder: "`entity.field`"
-    value: "The `each` field as a noun: `group`, `user` for `subject`, or `env tag` for `tags.env`."
+    value: "The `each` field as a noun: `group`, `team`, `user` for `subject`, or `env tag` for `tags.env`."
   - placeholder: "`entity.value`"
     value: The value whose derived budget reached the threshold.
 {% endtable %}
@@ -331,32 +345,37 @@ An unknown placeholder, or an `entity` placeholder on a budget without `each`, i
 
 #### Example custom message
 
-The following custom message template uses placeholders for a budget that splits its limit by group:
+The following custom message template uses placeholders for a budget that splits its limit by group, and adds the projected spend and a link to the budget:
 
 {% raw %}
 ```text
-Subject: [Kong Konnect] Budget "{{budget.name}}" reached {{threshold}} of its limit
-Body: The {{entity.field}} {{entity.value}} used {{spend}} of its {{limit}} limit ({{percent}}), with {{period.remaining}} left in the period.
+Subject: {{entity.value}} is on track to spend {{projected}} this period
+Body: The {{entity.field}} {{entity.value}} has used {{spend}} ({{percent}}) of its {{limit}} limit, and is on track to spend {{projected}} by the end of the period. Review the budget: {{budget.url}}
 ```
 {:.wrap}
 {% endraw %}
 
-For example, if you have a budget named `Model spend` with an 80% threshold, the template produces this alert:
+For example, if the group `oidc/finance` in a budget with a monthly limit of $5,000 reaches an 80% threshold after 25 days of a 30-day window, the template produces this alert:
 
 ```text
-[Kong Konnect] Budget "Model spend" reached 80% of its limit
-The group group/example used $4,125.50 of its $5,000.00 limit (82.51%), with 5 days left in the period.
+oidc/finance is on track to spend $4,950.60 (99.01%) this period
+The group oidc/finance has used $4,125.50 (82.51%) of its $5,000.00 limit, and is on track to spend $4,950.60 (99.01%) by the end of the period. Review the budget: https://cloud.konghq.com/us/ai-manager/cost-management/budget-policies/0198c5b6-d000-7000-8000-000000000001
 ```
-{:.no-copy-code}
+{:.no-copy-code.wrap}
 
 ### Notification events
 
 A notification event records each time spend reaches a threshold for a budget.
-To list events or get one by ID, use the [`/v1/ai-cost-management/notification-events` endpoints](/api/konnect/ai-cost-management/v1/#/operations/list-notification-events).
+
+To see alert history in the {{site.konnect_short_name}} UI, go to **Cost Management** > **Budgets** and click the **Notification events** tab.
+To list events or get one by ID with the API, use the [`/v1/ai-cost-management/notification-events` endpoints](/api/konnect/ai-cost-management/v1/#/operations/list-cost-notification-events).
 
 {{site.ai_cost_management}} records an event only after it has stored and evaluated the usage that reached the threshold, so an event can show up some time after the request that caused it.
 
-The following sample event shows an 80% threshold reached by a pooled budget, with one delivery to an email channel:
+An event references its budget by `id`.
+To get the full budget in each event, add `expand=budget` to the request.
+
+The following sample event, requested with `expand=budget`, shows an 80% threshold reached by a pooled budget, with one delivery to an email channel:
 
 ```json
 {
@@ -385,8 +404,11 @@ The following sample event shows an 80% threshold reached by a pooled budget, wi
     "window": {
       "type": "fixed",
       "interval": "P1M",
-      "anchor": "2026-01-01T00:00:00+00:00[UTC]"
+      "anchored_at": "2026-01-01T00:00:00+00:00[UTC]"
     },
+    "posture": "advisory",
+    "validity": null,
+    "created_by": "0198c5b6-d000-7000-8000-000000000301",
     "created_at": "2026-06-01T09:00:00Z",
     "updated_at": "2026-06-01T09:00:00Z"
   },
@@ -395,8 +417,8 @@ The following sample event shows an 80% threshold reached by a pooled budget, wi
   },
   "value": null,
   "window": {
-    "start": "2026-07-01T00:00:00Z",
-    "end": "2026-08-01T00:00:00Z"
+    "starts_at": "2026-07-01T00:00:00Z",
+    "ends_at": "2026-08-01T00:00:00Z"
   },
   "limit": {
     "currency": "USD",
@@ -429,6 +451,10 @@ A lower threshold that didn't send an alert has the same shape, with an empty `d
 
 ## Set up a budget
 
+Which budgets you can see and manage depends on your role.
+An Individual User can create a personal budget but can't add a notification rule to it.
+For what each role can do, see [Roles and permissions](/ai-management/roles-and-permissions/#cost-management).
+
 {% navtabs "set-up-budget" %}
 {% navtab "Konnect UI" %}
 
@@ -437,12 +463,13 @@ To create a sample budget:
 1. In the Cost Management sidebar, click **Budgets**.
 1. Click **New budget**.
 1. Click **Express** for common presets, or **Advanced** for full customization. We'll use **Express** for this example.
+1. In the **Name** field, keep the generated name or enter your own, for example `organization-monthly-budget`.
 1. From the **Budget type** dropdown menu, select "Organization-wide".
 1. In the **Spend limit** field, enter a number in USD.
 1. From the **Resets** dropdown menu, select a time frame.
+1. Leave **At the limit** set to **Observe only**.
 1. *(Optional)* From the **Notification threshold** dropdown menu, select the thresholds that send alerts.
 1. *(Optional)* From the **Notify** dropdown menu, select the channels that receive alerts.
-1. In the **Name** field, enter `organization-monthly-budget`.
 1. Click **Create budget**.
 
 To set the scope with filters, add labels, choose a reset anchor and time zone, set the priority, or customize the alert message, click **Advanced** instead.
@@ -454,7 +481,7 @@ To create a notification channel, see [Set up a notification channel](/ai-cost-m
 
 Create the [notification channels](/ai-cost-management/notification-channels/#set-up-a-notification-channel) that should receive alerts before you add a notification rule.
 
-To create a budget, send a `POST` request to the [`/v1/ai-cost-management/budgets` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-budget). 
+To create a budget, send a `POST` request to the [`/v1/ai-cost-management/budgets` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-budget). 
 This budget covers all usage in your organization, with a limit of 500 US dollars for each calendar month in UTC:
 
 <!--vale off-->
@@ -476,11 +503,11 @@ body:
   window:
     type: fixed
     interval: P1M
-    anchor: "2026-01-01T00:00:00+00:00[UTC]"
+    anchored_at: "2026-01-01T00:00:00+00:00[UTC]"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To alert a channel as spend grows, send a `PUT` request to the [`/v1/ai-cost-management/budgets/{budgetId}/notification-rule` endpoint](/api/konnect/ai-cost-management/v1/#/operations/replace-notification-rule). 
+To alert a channel as spend grows, send a `PUT` request to the [`/v1/ai-cost-management/budgets/{budgetId}/notification-rule` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-notification-rule). 
 Replace `BUDGET_ID` with the `id` of the budget and `CHANNEL_ID` with the `id` of the channel, both from the create responses:
 
 <!--vale off-->
@@ -525,10 +552,10 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-A `PUT` request can change a budget's `name`, `labels`, `priority`, `limit`, and `posture`.
-
-The `scope` and `window` fields can't change after you create the budget.
-To change either one, delete the budget and create a new one.
+To change a budget, send a `PUT` request to the [`/v1/ai-cost-management/budgets/{budgetId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-budget).
+You can change any field except `effect`.
+The `PUT` request replaces the whole budget, so send every field.
+An omitted `labels`, `priority`, or `posture` resets to its default.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -538,7 +565,7 @@ To change either one, delete the budget and create a new one.
 * Budgets observe spend and send alerts. Requests continue after spend reaches the limit.
 * Budget windows are fixed and aligned to an anchor.
 * Limits use USD.
-* A budget's scope and budget window can't change after you create it.
+* The `posture` and `priority` fields are stored, but they don't change how a budget counts spend or sends alerts. A budget with `posture: enforce` doesn't block requests.
 
 ## Schema
 

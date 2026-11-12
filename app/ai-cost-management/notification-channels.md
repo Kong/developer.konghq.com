@@ -61,9 +61,15 @@ Several channels can share a name.
 * **Email**: {{site.ai_cost_management}} sends one message to each recipient address. A channel holds 1 to 10 addresses. Each address can appear only once, ignoring case.
 * **Slack**: {{site.ai_cost_management}} posts the message to the Slack incoming webhook URL, which you create in your own Slack workspace. The channel accepts only Slack incoming webhook URLs.
 
+Email channels don't accept some valid addresses yet: addresses with a quoted local part, IP address literals, and internationalized domain names.
+
+When you read a Slack channel back, the API replaces the secret token at the end of the webhook URL with `…`.
 When you replace a Slack channel, you can omit `slack.webhook_url` to keep the stored URL.
 
 ## Set up a notification channel
+
+Creating, changing, deleting, or testing a channel needs a role that can manage notification channels.
+For what each role can do, see [Roles and permissions](/ai-management/roles-and-permissions/#cost-management).
 
 {% navtabs "set-up-channel" %}
 {% navtab "UI" %}
@@ -78,7 +84,7 @@ To create an email or Slack channel:
 1. From the **Channel type** dropdown menu, select "Email" or "Slack".
 1. Enter the delivery details for the channel type:
    * For an email channel, in the **Recipients** field, enter an email address. Repeat for each address that should receive alerts.
-   * For a Slack channel, enter the webhook URL from your [Slack incoming webhook](/ai-cost-management/set-up-a-budget-with-slack-alerts/#prerequisites).
+   * For a Slack channel, in the **Webhook URL** field, enter the webhook URL from your [Slack incoming webhook](/ai-cost-management/set-up-a-budget-with-slack-alerts/#prerequisites).
 1. Click **Create channel**.
 
 {% endnavtab %}
@@ -133,6 +139,24 @@ To check a channel before you attach it to a budget, send it a test message.
 The test message looks like an alert, with test wording and example figures.
 Its title is `Test message from channel "<name>"`, with the name of the channel.
 {{site.ai_cost_management}} sends the test within seconds and records the outcome as a notification event.
+A test needs permission to edit the channel, and a failed test isn't retried.
+A test doesn't appear in the list of notification events, so you can read it only by its ID.
+
+{% navtabs "test-channel" %}
+{% navtab "UI" %}
+
+To send a test message from the {{site.konnect_short_name}} UI:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Cost Management**.
+1. In the Cost Management sidebar, click **Budgets**.
+1. Click the **Channels** tab.
+1. Click the channel you want to test.
+1. Click **Send a test**.
+
+The channel page shows whether the test was delivered or failed, with the reason for a failure.
+
+{% endnavtab %}
+{% navtab "Konnect API" %}
 
 To test a channel, send a `POST` request to the [`/v1/ai-cost-management/notification-channels/{channelId}/tests` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-notification-channel-test).
 Replace `CHANNEL_ID` with the `id` of the channel:
@@ -146,8 +170,12 @@ method: POST
 <!--vale on-->
 
 The response is the notification event that records the test.
-To read the outcome, get the event with the [`/v1/ai-cost-management/notification-events/{eventId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/get-notification-event).
-When a channel already has a pending test, a new request returns that test instead of queueing another.
+To read the outcome, get the event with the [`/v1/ai-cost-management/notification-events/{eventId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/get-cost-notification-event).
+
+{% endnavtab %}
+{% endnavtabs %}
+
+When a channel already has a pending test, a new test request returns that test instead of queueing another.
 
 ## Schema
 

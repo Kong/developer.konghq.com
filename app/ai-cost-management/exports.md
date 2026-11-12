@@ -37,9 +37,9 @@ api_specs:
 faqs:
   - q: Why did my export fail?
     a: |
-      Call [`GET /v1/ai-cost-management/exports/{exportId}`](/api/konnect/ai-cost-management/v1/#/operations/get-export) and check the `failure_reason` field in the response:
+      Call [`GET /v1/ai-cost-management/exports/{exportId}`](/api/konnect/ai-cost-management/v1/#/operations/get-cost-export) and check the `failure_reason` field in the response:
       * A `query_limit_exceeded` failure means the export read more data than one job can use.
-      Try a shorter range, narrower filters, fewer FOCUS tag keys, or a smaller charge period (for example, `hour` instead of `day`).
+      Try a shorter range, narrower filters, fewer FOCUS tag keys, or a `day` charge period instead of `hour`.
       * An `attempts_exhausted` failure means every attempt hit a transient error. If you see this error, create the same export again.
   - q: Why can't I download a file from my export?
     a: |
@@ -167,13 +167,14 @@ The charge period sets the length of each FOCUS row's aggregation window, in the
 * `day` produces one row per calendar day
 * `hour` produces one row per hour
 
-An `hour` charge period also reduces the risk of a `query_limit_exceeded` failure on large datasets.
+A `day` charge period produces fewer rows than `hour`, which reduces the risk of a `query_limit_exceeded` failure on large datasets.
 
 #### Tag keys
 
 Tag keys name the tag dimensions that split FOCUS rows.
 A row's `Tags` column holds each configured key and its value for the events the row aggregates.
-Each key must be between 1 and 128 characters, and a FOCUS export supports at most 64 tag keys.
+Each key is 1 to 128 characters of lowercase ASCII letters, digits, `.`, `_`, or `-`, and a FOCUS export supports at most 64 tag keys.
+A key with a different value for each run, such as `agent-session` or `ci-run`, produces about one row per run.
 
 ## Export lifecycle
 
@@ -238,7 +239,9 @@ To capture late events or fill a failed period, create a one-time export of the 
 When a schedule resumes from `paused`, the periods that ended while it was paused are skipped.
 After an outage, a schedule catches up on at most the 31 most recent periods that ended while it was `active`.
 
-To change a schedule, send a `PUT` request to the [`/v1/ai-cost-management/export-schedules/{scheduleId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/replace-export-schedule) with the full schedule, because an omitted `filters` clears the filters.
+To change a schedule, send a `PUT` request to the [`/v1/ai-cost-management/export-schedules/{scheduleId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-export-schedule) with the full schedule.
+An omitted field takes its default: `filters` and `labels` are cleared, `status` becomes `active`, which resumes a paused schedule, and `schema_version` becomes `1`.
+Repeat `cadence` and `time_zone` unchanged. An omitted `time_zone` reads as `UTC`, so the request fails for a schedule in another time zone.
 Set `status` to `paused` to pause the schedule and to `active` to resume it.
 The change applies to periods that end after it, and existing exports don't change.
 
@@ -273,7 +276,7 @@ Create a one-time export:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-cost-management/exports
-status_code: 201
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/json'
@@ -282,13 +285,17 @@ body:
   dataset: usage_events
   format: csv
   compression: none
-  from: "2026-10-01T00:00:00Z"
-  to: "2026-11-01T00:00:00Z"
+  starts_at: "2026-10-01T00:00:00Z"
+  ends_at: "2026-11-01T00:00:00Z"
   time_zone: UTC
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Poll [`GET /v1/ai-cost-management/exports/{exportId}`](/api/konnect/ai-cost-management/v1/#/operations/get-export) until the `status` is `succeeded`. You may have to wait a few seconds.
+The response holds the new export with `status: pending`.
+To export only some events, add a `filters` object. See [Filters in a JSON body](/ai-cost-management/analytics-and-debugging/#filters-in-a-json-body).
+
+Poll [`GET /v1/ai-cost-management/exports/{exportId}`](/api/konnect/ai-cost-management/v1/#/operations/get-cost-export) until `status` is `succeeded` or `failed`.
+An export waits while another export in the organization runs.
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-cost-management/exports/$EXPORT_ID
@@ -359,7 +366,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-For the full set of schedule parameters, see the [`/v1/ai-cost-management/export-schedules` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-export-schedule).
+For the full set of schedule parameters, see the [`/v1/ai-cost-management/export-schedules` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-export-schedule).
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -395,6 +402,7 @@ Exports that a schedule creates don't count toward the pending one-time export l
 The following limitations also apply:
 
 * An export runs once and is never refreshed. A later export of the same range can hold events an earlier one doesn't have, because events can arrive after the range ends.
+* An export includes only events that are still retained. Usage events are deleted 13 months after their time.
 * Export files stay in the region where they were created.
 * Labels on a one-time export can't change after creation.
 * A schedule's `cadence` and `time_zone` can't change after creation. Delete the schedule and create a new one to change either field.
