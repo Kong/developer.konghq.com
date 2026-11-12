@@ -42,45 +42,16 @@ The {{site.kic_product_name_short}} recovery example uses the following deployme
 * A TLS Secret named `echo-tls` for `echo.example.com`.
 * A replacement cluster with a working LoadBalancer implementation and access to the required container registry.
 
-Use two distinct kubeconfig contexts.
-Set `PRIMARY_CONTEXT` to the original cluster and `RECOVERY_CONTEXT` to the empty replacement cluster.
-Every cluster command in this guide names its context.
+Set `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT` to the kubeconfig contexts of the original and replacement clusters.
 
 If you use Gateway API instead of Ingress, save the GatewayClass, Gateway, HTTPRoutes, and any ReferenceGrants instead of the Ingress manifest.
 For an embedded controller in {{site.operator_product_name}}, use the [{{site.operator_product_name}} walkthrough](/operator/dataplanes/disaster-recovery/).
 
 ## Save the recovery files before the failure
 
-Create a protected working directory outside the cluster:
+{% include k8s/disaster-recovery/save-helm-release.md dir="kic" release="kong" namespace="kong" chart="kong/ingress" values_file="values.yaml" version_var="KIC_CHART_VERSION" %}
 
-```bash
-mkdir -p recovery/kic
-```
-
-Save the effective values of the release:
-
-```bash
-helm get values kong -n kong --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/kic/values.yaml
-```
-
-Read the installed chart version:
-
-```bash
-helm list -n kong --kube-context "$PRIMARY_CONTEXT"
-```
-
-Set `KIC_CHART_VERSION` to the version that follows `ingress-` in the `CHART` column.
-Download that exact chart from the configured Kong Helm repository:
-
-```bash
-helm pull kong/ingress --version "$KIC_CHART_VERSION" \
-  --destination recovery/kic
-```
-
-We recommend that you keep the remaining files in a Git repository that you deploy through CD or GitOps, because recovery is then a normal deployment of a known revision.
-For more information, see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
-Record the revision that you will restore.
+Record the revision of your [deployment repository](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code) that you will restore.
 If your routing resources aren't in a repository, [export them from the running cluster](#export-routing-resources-without-a-repository).
 
 Complete the recovery set from your deployment repository and secret store:
@@ -138,7 +109,6 @@ Supply a certificate that's valid for `echo.example.com`.
 For a drill, a private test CA is enough.
 Create `echo-tls` in the original cluster with the same Secret creation command that you use during recovery, but with `PRIMARY_CONTEXT` instead of `RECOVERY_CONTEXT`.
 
-Keep the complete set in protected storage outside the failed cluster, because Helm values and private keys can contain secrets.
 If your installation uses them, also include other Secrets, custom plugin artifacts, and cluster-scoped resources such as KongLicense.
 
 ### Export routing resources without a repository

@@ -68,8 +68,6 @@ rows:
     value: "Geo API URL, such as `https://us.api.konghq.com`"
   - variable: "`KONNECT_TOKEN`"
     value: Token that can read the control plane. Entity recovery also needs write access.
-  - variable: "`GATEWAY_CHART_VERSION`"
-    value: "Original `kong/kong` chart version"
 {% endtable %}
 
 The replacement cluster needs access to {{site.konnect_short_name}}, the upstream, the container registries, and any plugin dependencies.
@@ -77,25 +75,7 @@ For a drill, use a distinct cluster and client endpoint.
 
 ## Save the deployment and identities
 
-Create a protected directory outside the cluster for the recovery files:
-
-```bash
-mkdir -p recovery/konnect
-```
-
-Save the effective Helm values of the data plane release:
-
-```bash
-helm get values kong -n kong --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/konnect/values-dp.yaml
-```
-
-Read the chart version with `helm list -n kong --kube-context "$PRIMARY_CONTEXT"`, then save that chart:
-
-```bash
-helm pull kong/kong --version "$GATEWAY_CHART_VERSION" \
-  --destination recovery/konnect
-```
+{% include k8s/disaster-recovery/save-helm-release.md dir="konnect" release="kong" namespace="kong" chart="kong/kong" values_file="values-dp.yaml" version_var="GATEWAY_CHART_VERSION" %}
 
 Save the identity of the control plane from the [Control Planes API](/api/konnect/control-planes/v2/):
 
@@ -122,7 +102,6 @@ Record `ROUTE_ID` from the matching KongRoute in the same way.
 Save the specifications of both objects and their original Kubernetes UID tags.
 Don't rely on the lost cluster to retrieve them later.
 
-Keep the recovery files protected outside the cluster.
 During this recovery, the existing control plane remains the configuration source.
 Don't sync an old configuration export over its current state.
 
@@ -315,13 +294,9 @@ Put the recovery manifests in the managed repository before you resume synchroni
 
 ## Verify configuration updates and move traffic
 
-To check that configuration updates work, use a temporary path that the Route doesn't already match, such as `/dr-verify`.
-Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`.
+{% include k8s/disaster-recovery/verify-config-update.md owner="with the tool that now owns the Route" %}
 
-1. Send a request to `/dr-verify` through the replacement data plane, and expect `404`.
-1. Add the temporary path to the Route with the tool that now owns the Route. For {{site.operator_product_name}}, update the adopted KongRoute manifest.
-1. Send the request again, and expect the same application response as `/dr-check`.
-1. Remove the path, and make sure that the request returns `404` again.
+If {{site.operator_product_name}} owns the Route, add and remove the path in the adopted KongRoute manifest.
 
 Update the DNS record or load balancer target of the application to the address of the replacement proxy.
 Repeat the baseline requests of the application through the normal client endpoint, and record when traffic recovered.

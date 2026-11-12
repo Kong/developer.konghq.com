@@ -49,40 +49,14 @@ The {{site.operator_product_name}} recovery example uses the self-hosted deploym
 Use an {{site.operator_product_name}} version with the embedded controller that the [architecture reference](/operator/reference/architecture/) describes.
 Keep the same {{site.operator_product_name}}, {{site.base_gateway}}, chart, and CRD versions during recovery.
 
-Set `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT` to two distinct kubeconfig contexts for the original and replacement clusters.
+Set `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT` to the kubeconfig contexts of the original and replacement clusters.
 The replacement cluster must support LoadBalancer Services and have access to the required registries.
 
 ## Save the recovery files
 
-Create a protected directory outside the cluster:
+{% include k8s/disaster-recovery/save-helm-release.md dir="operator" release="kong-operator" namespace="kong-system" chart="kong/kong-operator" values_file="values.yaml" version_var="OPERATOR_CHART_VERSION" %}
 
-```bash
-mkdir -p recovery/operator
-```
-
-Save the effective {{site.operator_product_name}} Helm values:
-
-```bash
-helm get values kong-operator -n kong-system --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/operator/values.yaml
-```
-
-Read the installed chart version:
-
-```bash
-helm list -n kong-system --kube-context "$PRIMARY_CONTEXT"
-```
-
-Set `OPERATOR_CHART_VERSION` to the version that follows `kong-operator-` in the `CHART` column, then save that chart:
-
-```bash
-helm pull kong/kong-operator --version "$OPERATOR_CHART_VERSION" \
-  --destination recovery/operator
-```
-
-We recommend that you keep these manifests in a Git repository that you deploy through CD or GitOps, because recovery is then a normal deployment of a known revision.
-For more information, see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
-Record the revision that you will restore.
+Record the revision of your [deployment repository](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code) that you will restore.
 If the manifests aren't in a repository, [export them from the running cluster](#export-gateway-resources-without-a-repository).
 
 Copy these desired manifests from the deployment repository into the recovery directory:

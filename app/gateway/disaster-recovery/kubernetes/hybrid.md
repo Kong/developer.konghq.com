@@ -64,8 +64,6 @@ rows:
     value: Original PostgreSQL host, used only to take the backup
   - variable: "`RECOVERY_PG_HOST`"
     value: Replacement PostgreSQL host
-  - variable: "`GATEWAY_CHART_VERSION`"
-    value: "Original `kong/kong` chart version"
   - variable: "`KONG_ADMIN_TOKEN`"
     value: Existing Admin API token, if RBAC is enabled
 {% endtable %}
@@ -82,10 +80,13 @@ New Routes accept only HTTPS unless you set `protocols`, so the requests in this
 
 ## Save the database and deployment files
 
-Create the protected backup directory:
+{% include k8s/disaster-recovery/save-helm-release.md dir="hybrid" release="kong-cp" namespace="kong" chart="kong/kong" values_file="values-cp.yaml" version_var="GATEWAY_CHART_VERSION" %}
+
+Save the effective Helm values of the `kong-dp` release:
 
 ```bash
-mkdir -p recovery/hybrid
+helm get values kong-dp -n kong --kube-context "$PRIMARY_CONTEXT" \
+  --all -o yaml > recovery/hybrid/values-dp.yaml
 ```
 
 Take a complete database backup in the PostgreSQL custom format:
@@ -99,27 +100,6 @@ Record the time of the backup and the last configuration change that it includes
 The `pg_dump` command backs up the database only.
 It doesn't back up PostgreSQL roles, cloud resources, or certificate files.
 
-Save the control plane values:
-
-```bash
-helm get values kong-cp -n kong --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/hybrid/values-cp.yaml
-```
-
-Save the data plane values:
-
-```bash
-helm get values kong-dp -n kong --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/hybrid/values-dp.yaml
-```
-
-Read the chart version from `helm list -n kong --kube-context "$PRIMARY_CONTEXT"`, then save that version:
-
-```bash
-helm pull kong/kong --version "$GATEWAY_CHART_VERSION" \
-  --destination recovery/hybrid
-```
-
 Also save the following files:
 
 * The `kong-cluster-cert` certificate and private key, as `tls.crt` and `tls.key`
@@ -129,7 +109,6 @@ Also save the following files:
 If [Keyring](/gateway/keyring/) is enabled, also save its recovery private key as `keyring-recovery.pem`, and the Secret that mounts the public key named by `keyring_recovery_public_key`.
 Make sure that you configured Keyring recovery before you took this backup.
 
-Keep all of these files in protected storage outside the original environment.
 Record the exact {{site.base_gateway}} image, so that recovery doesn't select a newer image.
 
 ## Restore the database before starting Kong
@@ -291,14 +270,7 @@ If the request fails, check the status code:
 * `404`: The expected Route isn't loaded or doesn't match. Inspect control plane synchronization before you move traffic.
 * `426`: The Route accepts only HTTPS.
 
-Next, make sure that the recovered control plane can distribute new configuration.
-Use a temporary path that the Route doesn't already match, such as `/dr-verify`.
-Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`, and a request to that path succeeds before any change.
-
-1. Send a request to `/dr-verify`, and make sure that it returns `404`.
-1. Add the path to the Route through your normal configuration workflow.
-1. Send the request again, and make sure that it returns the application response.
-1. Remove the path, and make sure that the request returns `404` again.
+{% include k8s/disaster-recovery/verify-config-update.md owner="through your normal configuration workflow" %}
 
 ## Move traffic and fail back
 
