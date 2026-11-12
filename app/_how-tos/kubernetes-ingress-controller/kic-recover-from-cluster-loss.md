@@ -54,9 +54,6 @@ cleanup:
       content: |
         ```bash
         k3d cluster delete kong-dr
-        ```
-
-        ```bash
         rm -rf recovery
         ```
 
@@ -173,6 +170,7 @@ A DB-less gateway can need its routing configuration to pass its readiness check
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+   echo $PROXY_IP
    ```
 
 1. Send the baseline request again:

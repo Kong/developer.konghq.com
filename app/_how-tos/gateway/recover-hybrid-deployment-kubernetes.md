@@ -60,9 +60,6 @@ cleanup:
       content: |
         ```bash
         k3d cluster delete kong-dr
-        ```
-
-        ```bash
         rm -rf recovery
         ```
 
@@ -82,6 +79,7 @@ For what to save, Keyring recovery, and how to adapt the procedure to an externa
 
    ```bash
    export PROXY_IP=$(kubectl get service --namespace kong kong-dp-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+   echo $PROXY_IP
    ```
 
 1. Send a request through the data plane to record the baseline response:
@@ -240,6 +238,7 @@ helm install kong-dp "recovery/kong-${GATEWAY_CHART_VERSION}.tgz" -n kong \
 
    ```bash
    export PROXY_IP=$(kubectl get service --namespace kong kong-dp-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+   echo $PROXY_IP
    ```
 
 1. Send the baseline request again:

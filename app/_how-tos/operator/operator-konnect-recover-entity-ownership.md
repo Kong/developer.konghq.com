@@ -1,7 +1,7 @@
 ---
 title: Recover {{site.operator_product_name}} ownership of {{site.konnect_short_name}} entities after a cluster loss
 short_title: Recover entity ownership after a cluster loss
-description: "Reconnect a new {{site.operator_product_name}} installation to Konnect Gateway Services and Routes that the operator managed in a lost Kubernetes cluster, without creating duplicates."
+description: "Reconnect a new {{site.operator_product_name}} installation to Konnect Gateway Services and Routes that {{site.operator_product_name}} managed in a lost Kubernetes cluster, without creating duplicates."
 content_type: how_to
 
 permalink: /operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/
@@ -39,15 +39,6 @@ prereqs:
       position: before
       icon_url: /assets/icons/kubernetes.svg
       include_content: prereqs/kubernetes/k3d-dr-cluster
-    - title: jq
-      icon_url: /assets/icons/code.svg
-      content: |
-        This guide uses [jq](https://jqlang.org/) to read values from API responses.
-        Install it with your package manager, for example on macOS:
-
-        ```bash
-        brew install jq
-        ```
     - title: Create a Gateway Service and Route
       icon_url: /assets/icons/kubernetes.svg
       include_content: prereqs/operator/dr-konnect-entities
@@ -71,13 +62,7 @@ cleanup:
       content: |
         ```bash
         kubectl delete kongroute dr-check -n kong
-        ```
-
-        ```bash
         kubectl delete kongservice dr-check -n kong
-        ```
-
-        ```bash
         curl -X DELETE "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID" \
           -H "Authorization: Bearer $KONNECT_TOKEN"
         ```
@@ -86,9 +71,6 @@ cleanup:
       content: |
         ```bash
         k3d cluster delete kong-dr
-        ```
-
-        ```bash
         rm -rf recovery
         ```
 
@@ -135,7 +117,7 @@ Create a new, empty cluster with the same name:
 
 {% include k8s/disaster-recovery/k3d-cluster.md %}
 
-## Reinstall the operator
+## Reinstall {{site.operator_product_name}}
 
 1. Install the saved chart with the saved values:
 
@@ -145,7 +127,7 @@ Create a new, empty cluster with the same name:
      -f recovery/operator-values.yaml --wait --timeout 5m
    ```
 
-1. Recreate the KonnectAPIAuthConfiguration that the operator uses to call {{site.konnect_short_name}}:
+1. Recreate the KonnectAPIAuthConfiguration that {{site.operator_product_name}} uses to call {{site.konnect_short_name}}:
 
    {% capture auth_config %}
    <!-- vale off -->
@@ -198,7 +180,7 @@ Create a new, empty cluster with the same name:
    kubectl apply -f recovery/control-plane.yaml
    ```
 
-1. Wait for the operator to resolve the control plane:
+1. Wait for {{site.operator_product_name}} to resolve the control plane:
 
    ```bash
    kubectl wait --for=condition=Programmed konnectgatewaycontrolplane/gateway-control-plane \
@@ -263,7 +245,7 @@ So you fetch each entity, remove only the stale tag, and send the complete entit
 
 ## Adopt the Gateway Service and Route
 
-In `match` mode, the operator takes ownership of an entity without changing it, as long as the manifest matches the entity.
+In `match` mode, {{site.operator_product_name}} takes ownership of an entity without changing it, as long as the manifest matches the entity.
 
 1. Add an `adopt` block in `match` mode to the saved KongService:
 

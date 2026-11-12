@@ -44,16 +44,6 @@ prereqs:
         ```bash
         export KONNECT_TOKEN='YOUR KONNECT TOKEN'
         ```
-
-    - title: jq
-      icon_url: /assets/icons/code.svg
-      content: |
-        This guide uses [jq](https://jqlang.org/) to read values from API responses.
-        Install it with your package manager, for example on macOS:
-
-        ```bash
-        brew install jq
-        ```
     - title: "{{site.base_gateway}} data plane connected to {{site.konnect_short_name}}"
       icon_url: /assets/icons/gateway.svg
       include_content: prereqs/kubernetes/konnect-dr-data-plane
@@ -80,9 +70,6 @@ cleanup:
       content: |
         ```bash
         k3d cluster delete kong-dr
-        ```
-
-        ```bash
         rm -rf recovery
         ```
 
@@ -102,6 +89,7 @@ For what to save and how to adapt the procedure to your deployment, see [Recover
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+   echo $PROXY_IP
    ```
 
 1. Send a request through the data plane to record the baseline response:
@@ -210,6 +198,7 @@ Create a new, empty cluster with the same name:
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+   echo $PROXY_IP
    ```
 
 1. Send the baseline request again:

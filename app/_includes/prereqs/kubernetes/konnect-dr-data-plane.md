@@ -45,6 +45,7 @@ This guide starts from a data plane that runs in the `kong-dr` cluster and is co
 
    ```bash
    export CERT=$(awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' tls.crt)
+   echo $CERT
    ```
 
 1. Register the certificate with the control plane:

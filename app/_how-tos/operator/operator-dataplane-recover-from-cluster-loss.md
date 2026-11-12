@@ -1,7 +1,7 @@
 ---
 title: Recover a Gateway managed by {{site.operator_product_name}} after a cluster loss
 short_title: Recover from a cluster loss
-description: "Save the {{site.operator_product_name}} Helm release and the Gateway API resources that you wrote, then restore them in a replacement Kubernetes cluster so that the operator recreates the Gateway."
+description: "Save the {{site.operator_product_name}} Helm release and the Gateway API resources that you wrote, then restore them in a replacement Kubernetes cluster so that {{site.operator_product_name}} recreates the Gateway."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/recover-from-cluster-loss/
@@ -30,9 +30,9 @@ tags:
 tldr:
   q: How do I recover a Gateway managed by {{site.operator_product_name}} after I lose its Kubernetes cluster?
   a: |
-    Before the failure, save the operator's Helm values and chart archive, and the GatewayConfiguration, GatewayClass, Gateway, and route manifests that you wrote.
+    Before the failure, save {{site.operator_product_name}}'s Helm values and chart archive, and the GatewayConfiguration, GatewayClass, Gateway, and route manifests that you wrote.
     In the replacement cluster, install the saved chart, then apply the saved manifests.
-    The operator creates new data plane workloads from them.
+    {{site.operator_product_name}} creates new data plane workloads from them.
 
 prereqs:
   enterprise: true
@@ -60,9 +60,6 @@ cleanup:
       content: |
         ```bash
         k3d cluster delete kong-dr
-        ```
-
-        ```bash
         rm -rf recovery
         ```
 
@@ -70,8 +67,8 @@ automated_tests: false
 ---
 
 {{site.operator_product_name}} creates the data plane Deployments and Services of a Gateway from the Gateway API resources that you write.
-To recover a Gateway after a cluster loss, you only need those resources and the operator's Helm release.
-You don't save the Deployments and Services that the operator generates, because it recreates them.
+To recover a Gateway after a cluster loss, you only need those resources and {{site.operator_product_name}}'s Helm release.
+You don't save the Deployments and Services that {{site.operator_product_name}} generates, because it recreates them.
 
 In this guide, you'll save a recovery set for the Gateway that you created in the prerequisites, delete the cluster, and restore the Gateway in a new cluster.
 For the full list of what to save and how to adapt the procedure to your deployment, see [Disaster recovery for Gateways managed by {{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/).
@@ -82,6 +79,7 @@ For the full list of what to save and how to adapt the procedure to your deploym
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   echo $PROXY_IP
    ```
 
 1. Send a request through the Gateway:
@@ -95,7 +93,7 @@ For the full list of what to save and how to adapt the procedure to your deploym
 ## Save the recovery set
 
 The `recovery` directory already holds the Gateway resources that you created in the prerequisites.
-Add the operator's Helm release and the license.
+Add {{site.operator_product_name}}'s Helm release and the license.
 
 {% include k8s/disaster-recovery/save-helm-release.md release="kong-operator" namespace="kong-system" chart="kong/kong-operator" values_file="values.yaml" version_var="OPERATOR_CHART_VERSION" %}
 
@@ -108,7 +106,7 @@ Add the operator's Helm release and the license.
 ## Simulate the cluster loss
 
 Delete the cluster.
-The operator, the Gateway, and the data plane workloads are deleted with it:
+{{site.operator_product_name}}, the Gateway, and the data plane workloads are deleted with it:
 
 ```bash
 k3d cluster delete kong-dr
@@ -120,7 +118,7 @@ Create a new, empty cluster with the same name:
 
 {% include k8s/disaster-recovery/k3d-cluster.md %}
 
-## Reinstall the operator
+## Reinstall {{site.operator_product_name}}
 
 1. Install the saved chart with the saved values.
    The chart also installs the CRDs that the saved resources use, including the Gateway API CRDs:
@@ -165,6 +163,7 @@ Create a new, empty cluster with the same name:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   echo $PROXY_IP
    ```
 
 1. Send the baseline request again:
@@ -175,7 +174,7 @@ Create a new, empty cluster with the same name:
 
    You'll see a response from a pod in the replacement cluster.
 
-1. To make sure that the operator still processes new configuration, send a request to a path that no HTTPRoute matches yet:
+1. To make sure that {{site.operator_product_name}} still processes new configuration, send a request to a path that no HTTPRoute matches yet:
 
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" "http://$PROXY_IP/echo-recovered"

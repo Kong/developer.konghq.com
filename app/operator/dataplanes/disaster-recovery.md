@@ -31,7 +31,7 @@ related_resources:
 ---
 
 {{site.operator_product_name}} creates the data plane workloads and Services of a self-hosted Gateway from the Gateway API resources that you write.
-To recover a Gateway after a cluster loss, you reinstall {{site.operator_product_name}} and reapply those resources, and the operator creates new workloads from them.
+To recover a Gateway after a cluster loss, you reinstall {{site.operator_product_name}} and reapply those resources, and {{site.operator_product_name}} creates new workloads from them.
 You don't copy the generated Deployments, and you don't depend on a gateway that kept its old configuration.
 
 For data planes connected to {{site.konnect_short_name}}, see [Recover {{site.konnect_short_name}}-managed data planes on Kubernetes](/gateway/disaster-recovery/kubernetes/konnect/).
@@ -67,8 +67,8 @@ rows:
 {% endtable %}
 
 Save the manifests that you wrote, without old UIDs, owner references, or `.status`.
-Don't save the `DataPlane`, Deployments, and Services that the operator generates.
-They're outputs of reconciliation, and the operator recreates them.
+Don't save the `DataPlane`, Deployments, and Services that {{site.operator_product_name}} generates.
+They're outputs of reconciliation, and {{site.operator_product_name}} recreates them.
 
 ## Restore order
 
@@ -95,13 +95,7 @@ Export the namespaced resources:
 
 ```bash
 kubectl -n kong get gatewayconfiguration -o yaml > recovery/gateway-configuration.yaml
-```
-
-```bash
 kubectl -n kong get gateway -o yaml > recovery/gateway.yaml
-```
-
-```bash
 kubectl -n kong get httproute -o yaml > recovery/routes.yaml
 ```
 

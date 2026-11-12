@@ -9,6 +9,7 @@
 
    ```bash
    export {{include.version_var}}=$(helm get metadata {{include.release}} -n {{include.namespace}} | awk '/^VERSION:/ {print $2}')
+   echo ${{include.version_var}}
    ```
 
 1. Save that exact chart version:
