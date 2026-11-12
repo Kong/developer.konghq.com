@@ -133,7 +133,6 @@ The specific hostnames depend on your runtime or application.
 The following [geographic regions](/konnect-platform/geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
 * EU (Europe): `eu`
-* ME (Middle East): `me`
 * IN (India): `in`
 * SG (Singapore) (beta): `sg`
 * US (United States): `us`
