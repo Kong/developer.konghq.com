@@ -33,9 +33,8 @@ Test one complete deployment before you expand the drill to a regional failure o
 Choose the [{{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/), [{{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/), [{{site.konnect_short_name}}](/gateway/disaster-recovery/kubernetes/konnect/), or [hybrid](/gateway/disaster-recovery/kubernetes/hybrid/) walkthrough, then prepare the drill:
 
 1. Create the starting deployment that the walkthrough describes, and make sure that its baseline request succeeds.
-1. Assemble the recovery files for the walkthrough, and move them to storage that you can reach without the original cluster.
+1. Complete the steps in [Prepare for disaster recovery](/gateway/disaster-recovery/kubernetes/prepare/) to assemble the recovery set and provision the recovery target.
 1. Record the exact versions of Kubernetes, the Helm chart, {{site.base_gateway}}, and the controller.
-1. Provision a separate, empty recovery cluster. For hybrid mode, also provision a separate PostgreSQL instance.
 1. Assign an owner who can stop the drill and restore the original traffic path.
 
 For a first drill, use a dedicated test hostname and control plane.
@@ -52,7 +51,7 @@ For a first rehearsal, keep the original environment intact as a rollback path, 
 This rehearsal tests that you can rebuild from the saved material.
 It doesn't measure a regional outage or automatic failure detection.
 
-For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, stop or isolate the original entity controller before you change ownership.
+For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, follow [Release stale ownership for one entity](/gateway/disaster-recovery/kubernetes/konnect/#release-stale-ownership-for-one-entity).
 Don't simulate cluster loss by deleting the resources that the controller manages.
 Deleting them can remove the remote entities that the walkthrough expects to survive.
 
@@ -107,9 +106,6 @@ To measure data loss against your recovery point objective (RPO), compare the la
 In the hybrid walkthrough, make a known test change after you take the backup, then make sure that the change is absent after the restore.
 This test shows the actual recovery point, instead of assuming it from a successful backup job.
 
-In a {{site.konnect_short_name}} recovery, inspect the surviving control plane before you restore an export.
-Reconnected data planes use the current configuration of the control plane, so don't revert it to an older backup.
-
 ## Complete failback
 
 Failback returns traffic to the original environment after a recovery:
@@ -120,8 +116,7 @@ Failback returns traffic to the original environment after a recovery:
 1. Change the test hostname or load balancer target back, and repeat the baseline requests.
 1. Make sure that backups and monitoring work in the final active environment.
 
-For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, keep one controller responsible for each entity.
-You can return traffic to the original data planes without returning entity ownership to the original {{site.operator_product_name}}.
+For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, you can return traffic to the original data planes without returning entity ownership to the original {{site.operator_product_name}}.
 
 ## Record the results
 

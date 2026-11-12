@@ -33,26 +33,10 @@ The walkthrough for your deployment lists the files and commands that you need t
 
 ## Choose the failure you will test
 
-Each walkthrough covers one failure and one recovery source:
+Each walkthrough covers one failure and one recovery source.
+To find the walkthrough that matches how you manage {{site.base_gateway}} configuration, see [Disaster recovery for {{site.base_gateway}} on Kubernetes](/gateway/disaster-recovery/kubernetes/).
 
-{% table %}
-columns:
-  - title: Walkthrough
-    key: walkthrough
-  - title: Failure and recovery source
-    key: failure
-rows:
-  - walkthrough: "[{{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/)"
-    failure: "You lose the cluster. Reinstall the saved Helm chart, then restore the application, routing, and TLS files."
-  - walkthrough: "[{{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/)"
-    failure: "You lose the cluster. Reinstall {{site.operator_product_name}} and reapply the desired Gateway resources so that it creates new workloads."
-  - walkthrough: "[{{site.konnect_short_name}}](/gateway/disaster-recovery/kubernetes/konnect/)"
-    failure: "You lose the data plane cluster, but the original {{site.konnect_short_name}} control plane survives. Reconnect replacement data planes and recover entity ownership where needed."
-  - walkthrough: "[Self-managed hybrid](/gateway/disaster-recovery/kubernetes/hybrid/)"
-    failure: "You lose the {{site.base_gateway}} cluster and its database. Restore PostgreSQL, start the control plane, and reconnect data planes."
-{% endtable %}
-
-Start with one of these scenarios.
+Start with one walkthrough.
 A successful cluster replacement doesn't show that you can recover during a {{site.konnect_short_name}} outage, or when you also lose the application database.
 
 ## Manage configuration as code
@@ -77,11 +61,9 @@ Configure CD to apply resources in dependency order: CRDs first, then controller
 The walkthroughs use explicit `helm` and `kubectl` commands so that you can check each step.
 If you use CD, follow the same sequence and sync each application against the recovery cluster.
 
-A repository doesn't hold everything:
-
-* The hybrid walkthrough still needs a database backup for entities created outside the repository, and for Keyring material.
-* {{site.konnect_short_name}} assigns entity IDs, so record them.
-* For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, pause automated sync during recovery. A sync can apply manifests before you release stale ownership.
+A repository doesn't hold everything.
+The hybrid walkthrough still needs a database backup for entities created outside the repository, and for Keyring material.
+{{site.konnect_short_name}} assigns entity IDs, so record them.
 
 If your configuration isn't in source control yet, the {{site.kic_product_name_short}} and {{site.operator_product_name}} walkthroughs include a fallback that exports routing resources from the running cluster.
 Use the export only as a temporary measure, and move that configuration into a repository.
@@ -120,8 +102,8 @@ Configure two distinct kubeconfig contexts, and store their names in `PRIMARY_CO
 The walkthroughs pass the context explicitly in each command.
 Make sure that each variable points to the correct cluster before you collect files or restore resources.
 
-Stop deployment automation from applying stale configuration during recovery.
-For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, stop or isolate the original controller before a replacement controller takes ownership.
+Pause deployment automation during recovery, so that it doesn't apply stale configuration.
+For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, see [Release stale ownership for one entity](/gateway/disaster-recovery/kubernetes/konnect/#release-stale-ownership-for-one-entity).
 
 Document the exact external routing change, and record the current value and the rollback value.
 For example, the change can replace the CNAME target for `api.example.com` with the new LoadBalancer hostname.
