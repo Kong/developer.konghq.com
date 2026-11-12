@@ -421,7 +421,12 @@ Reference AI Policies through the [`policies`](#schema-aigateway-model-policies)
 
 ### AI Policy execution order
 
-Authentication runs first, through the AI Model's assigned [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), not through an attached AI Policy. Attached AI Policies then execute in a defined order based on policy type. If execution order matters for your use case, refer to the [plugin priority documentation](/gateway/entities/plugin/#plugin-priority).
+Authentication happens through the AI Model's assigned [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/).
+AI Policies attached to an AI Model run only after authentication succeeds, regardless of their [priority](/ai-gateway/entities/ai-policy/#ai-policy-priority). 
+If the request fails authentication, they don't run.
+This differs from a global AI Policy, which can run before authentication.
+If an AI Policy must run before authentication, apply it globally.
+For more information, see [Scopes and authentication](/ai-gateway/entities/ai-policy/#scopes-and-authentication).
 
 ## Upstream proxy configuration
 
