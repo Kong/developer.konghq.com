@@ -396,7 +396,6 @@ The following sample event, requested with `expand=budget`, shows an 80% thresho
       ],
       "each": null
     },
-    "priority": 100,
     "limit": {
       "currency": "USD",
       "value": "5000"
@@ -406,7 +405,6 @@ The following sample event, requested with `expand=budget`, shows an 80% thresho
       "interval": "P1M",
       "anchored_at": "2026-01-01T00:00:00+00:00[UTC]"
     },
-    "posture": "advisory",
     "validity": null,
     "created_by": "0198c5b6-d000-7000-8000-000000000301",
     "created_at": "2026-06-01T09:00:00Z",
@@ -472,7 +470,7 @@ To create a sample budget:
 1. *(Optional)* From the **Notify** dropdown menu, select the channels that receive alerts.
 1. Click **Create budget**.
 
-To set the scope with filters, add labels, choose a reset anchor and time zone, set the priority, or customize the alert message, click **Advanced** instead.
+To set the scope with filters, add labels, choose a reset anchor and time zone, or customize the alert message, click **Advanced** instead.
 
 To create a notification channel, see [Set up a notification channel](/ai-cost-management/notification-channels/#set-up-a-notification-channel).
 
@@ -555,7 +553,7 @@ body:
 To change a budget, send a `PUT` request to the [`/v1/ai-cost-management/budgets/{budgetId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-budget).
 You can change any field except `effect`.
 The `PUT` request replaces the whole budget, so send every field.
-An omitted `labels`, `priority`, or `posture` resets to its default.
+An omitted optional field resets to its default.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -565,7 +563,6 @@ An omitted `labels`, `priority`, or `posture` resets to its default.
 * Budgets observe spend and send alerts. Requests continue after spend reaches the limit.
 * Budget windows are fixed and aligned to an anchor.
 * Limits use USD.
-* The `posture` and `priority` fields are stored, but they don't change how a budget counts spend or sends alerts. A budget with `posture: enforce` doesn't block requests.
 
 ## Schema
 
