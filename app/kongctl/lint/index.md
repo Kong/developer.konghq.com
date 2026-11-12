@@ -104,9 +104,9 @@ To lint multiple files, pass a directory to `-f` and use `-R` to process it recu
 
 By default, `kongctl lint` checks each input as written, including template
 definitions. Use `--expand` to lint values from local `!file` includes,
-principal `!csv` inputs, and `_templates` and `_extends` inheritance. This lets
-rules check included and inherited values after resource overrides have been
-applied.
+principal `!csv` inputs, and `_templates` and `_extends` inheritance. With
+`--expand`, rules check included and inherited values after resource overrides
+apply.
 
 For example, save a shared API template in `templates.yaml`:
 
@@ -125,7 +125,7 @@ apis:
     name: Task API
 ```
 
-Lint both files with the description ruleset from the example:
+Lint both files with the `ruleset.yaml` file from the [kongctl lint example](#kongctl-lint-example):
 
 ```bash
 kongctl lint -f templates.yaml -f kong.yaml -r ruleset.yaml --expand
@@ -161,13 +161,13 @@ inherited through templates. Includes must stay within the source root:
 Included fragments are checked as part of the file that includes them. A
 fragment also selected as an input is checked independently, including lists
 and scalars. Keep fragments outside selected inputs to avoid independent
-checks. Vacuum may report `index-failure` for standalone scalars.
+checks. The vacuum linter may report `index-failure` for standalone scalars.
 
 ### Expansion limits and findings
 
 `!env` (including `store: true`), `!ref`, `!secret`, and lookup tags remain
 unresolved placeholders. Expansion doesn't read environment values, fetch
-secrets, or contact Konnect. Rules that expect concrete values must account for
+secrets, or contact {{site.konnect_short_name}}. Rules that expect concrete values must account for
 these placeholders. Existing OpenAPI `$ref` resolution and ruleset inheritance
 can still access the network.
 
