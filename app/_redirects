@@ -573,10 +573,8 @@
 /mesh/dataplane-health/                                                    /mesh/v2/dataplane-health/  301
 /mesh/dataplane/                                                           /mesh/v2/dataplane/  301
 /mesh/delegated-gateways/                                                  /mesh/v2/delegated-gateways/  301
-/mesh/deploy-an-opentelemetry-collector/                                   /mesh/v2/deploy-an-opentelemetry-collector/  301
 /mesh/deploy-mesh-on-kubernetes/                                           /mesh/v2/deploy-mesh-on-kubernetes/  301
 /mesh/deploy-mesh-self-managed/                                            /mesh/v2/deploy-mesh-self-managed/  301
-/mesh/deploy-mesh-using-terraform-and-konnect/                             /mesh/v2/deploy-mesh-using-terraform-and-konnect/  301
 /mesh/deploy-multi-zone-global-control-plane-universal-docker/             /mesh/v2/deploy-multi-zone-global-control-plane-universal-docker/  301
 /mesh/deploy-universal-self-managed/                                       /mesh/v2/deploy-universal-self-managed/  301
 /mesh/disaster-recovery/                                                   /mesh/v2/disaster-recovery/  301
