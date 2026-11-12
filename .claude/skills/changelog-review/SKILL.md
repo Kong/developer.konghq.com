@@ -11,7 +11,7 @@ Fix spelling, grammar, run-on sentences, and unclear or awkward phrasing — a r
 
 ## Rules
 
-1. **Leave contractions as written.** Don't add or remove them ("do not" and "don't" both stay as given). This is the one place changelogs diverge from the general style guide, which avoids contractions outside warnings.
+1. **Leave contractions as written.** Don't add or remove them ("do not" and "don't" both stay as given).
 
 2. **Backtick every parameter, config key, identifier, and code-shaped literal.** `verify_signature`, `completion_tokens`, a header name, or a literal string the code actually produces (`"userdata: NULL"`) all need backticks if they don't have them. Check every such token in an entry — it's easy to backtick the obvious one and miss a second.
 
@@ -45,7 +45,7 @@ Ask whether to save the review to a file or print it inline, unless the user alr
 
 Either way, include only entries you changed, each as one bullet:
 
-```markdown
+````markdown
 - Original entry: _<original text>_
 
   Fixed entry:
@@ -53,7 +53,7 @@ Either way, include only entries you changed, each as one bullet:
   <corrected text>
   ```
   Changed: <what changed and why>
-```
+````
 
 Skip untouched entries entirely — don't list them as "no change." If nothing needed a fix, say so in the file instead of listing entries.
 
