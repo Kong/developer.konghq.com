@@ -8,15 +8,51 @@ releases:
     latest: true
     version: "2.3.1"
     name: "v1"
+    eol: 2026-12-04
+    sunset_eol: 2027-01-04
+    distributions:
+      - os: Ubuntu
+        version: "26.04"
+        arm: true
+        fips: true
+      - os: RHEL
+        version: "10.x"
+        arm: true
+        fips: true
+      - os: Distroless
+        version: "N/A"
+        arm: true
+        fips: true
   - release: "2.2"
     version: "2.2.1"
     name: "v1"
+    stable: true
+    eol: 2027-03-30
+    sunset_eol: 2027-06-30
+    distributions:
+      - os: Ubuntu
+        version: "24.04"
+        arm: true
+        fips: true
+      - os: RHEL
+        version: "9.x"
+        arm: true
+        fips: true
+      - os: Distroless
+        version: "N/A"
+        arm: true
+        fips: true
   - release: "2.1"
     version: "2.1.0"
     name: "v1"
+    eol: 2026-10-24
+    sunset_eol: 2026-11-24
   - release: "2.0"
     version: "2.0.0"
     name: "v1"
+    release_date: 2026-08-31
+    eol: 2026-09-30
+    sunset_eol: 2026-10-31
   - release: "1.0"
 
 release_dates:
