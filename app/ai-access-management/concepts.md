@@ -29,6 +29,8 @@ related_resources:
     url: /ai-gateway/entities/ai-vault/
   - text: "AI Consumers"
     url: /ai-gateway/entities/ai-consumer/
+  - text: "AI Auth Strategies"
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: "Token Vault"
     url: /identity/token-vault/
   - text: "Org chart in {{site.ai_cost_management}}"
@@ -182,6 +184,13 @@ Use virtual keys to:
 * **Attribute and control costs:** Requests made with a personal virtual key are attributed to its holder. The spend limits set on the user apply to that traffic.
 
 The gateway treats whoever holds the key as the caller.
+
+Virtual keys require {{site.identity}} and [principals](/identity/principals/). To use a virtual key with an [AI Model](/ai-gateway/entities/ai-model/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), or [AI Agent](/ai-gateway/entities/ai-agent/), do the following:
+
+1. Choose the user or group that holds the key.
+1. Assign the entity an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) of type `key-auth` that authenticates against {{site.identity}} (`config.principals.enabled: true`). See [Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+1. Create the virtual key.
+1. Send the virtual key in requests to the entity, in the header or query parameter that the AI Auth Strategy defines.
 
 To create a key, you provide a name and choose a user as the holder. You can also add a new user inline.
 
