@@ -34,7 +34,7 @@ related_resources:
 
 Dashboards that show traffic and latency per entity help you find slow upstreams, error spikes, and unexpected usage before users report them.
 The StatsD Policy is an [AI Policy](/ai-gateway/entities/ai-policy/) that sends request metrics from {{site.ai_gateway}}, such as request count, request and response size, and latency, to a StatsD server.
-The policy sends the metrics over UDP by default, or over TCP when you set [`config.use_tcp`](/ai-gateway/policies/statsd/reference/#schema--config-use-tcp), so the server must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/statsd/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/statsd/reference/#schema--config-port).
+The Policy sends the metrics over UDP by default, or over TCP when you set [`config.use_tcp`](/ai-gateway/policies/statsd/reference/#schema--config-use-tcp), so the server must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/statsd/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/statsd/reference/#schema--config-port).
 
 ## Metrics
 
@@ -95,12 +95,12 @@ rows:
     type: "`gauge`"
 {% endtable %}
 
-When you set `config.metrics`, the policy sends only the metrics in the list.
+When you set `config.metrics`, the Policy sends only the metrics in the list.
 
 ### Metric types
 
 The `stat_type` field of each metric in `config.metrics` sets the metric type.
-The policy sends each type to the StatsD server as a type code:
+The Policy sends each type to the StatsD server as a type code:
 
 {% table %}
 columns:
@@ -124,10 +124,10 @@ rows:
 {% endtable %}
 
 Metrics of type `counter` or `gauge` require a `sample_rate`.
-{{site.ai_gateway}} rejects the policy when a `counter` or `gauge` metric doesn't set one.
-The policy reports every request and appends the rate to the metric, for example `kong.service.<entity>.request.count:1|c|@0.5`, so your StatsD server can scale the counts.
+{{site.ai_gateway}} rejects the Policy when a `counter` or `gauge` metric doesn't set one.
+The Policy reports every request and appends the rate to the metric, for example `kong.service.<entity>.request.count:1|c|@0.5`, so your StatsD server can scale the counts.
 
-For `unique_users` and `status_count`, the policy ignores `stat_type` and sends a `set` and a `counter`.
+For `unique_users` and `status_count`, the Policy ignores `stat_type` and sends a `set` and a `counter`.
 
 ## Per-consumer metrics
 
@@ -137,7 +137,7 @@ Set the `consumer_identifier` field of the metric to choose the value that goes 
 * `username`: The name of the AI Consumer, for example `kong.service.<entity>.user.<username>.request.count`.
 * `consumer_id`: The ID of the AI Consumer, including its hyphens.
 
-For an authenticated request, the policy doesn't send a per-consumer metric that has no `consumer_identifier`.
+For an authenticated request, the Policy doesn't send a per-consumer metric that has no `consumer_identifier`.
 The default [`config.consumer_identifier_default`](/ai-gateway/policies/statsd/reference/#schema--config-consumer-identifier-default) is `custom_id`, and AI Consumers don't have a custom ID.
 For requests that authentication rejects, the default metrics include per-consumer metrics with the user name `anonymous`.
 
@@ -145,12 +145,12 @@ For a configuration, see [Count requests per AI Consumer](/ai-gateway/policies/s
 
 ## Tags
 
-By default, the policy puts the entity in the metric name.
+By default, the Policy puts the entity in the metric name.
 Set [`config.tag_style`](/ai-gateway/policies/statsd/reference/#schema--config-tag-style) to send the metrics with tags instead.
 The metric names then drop the entity, for example `kong.request.count`, and each metric carries the `route`, `workspace`, `node`, `status`, and `service` tags.
 The `route` tag holds a route name that {{site.ai_gateway}} generated for the entity, and `service` holds the entity name.
 
-The policy supports four tag formats:
+The Policy supports four tag formats:
 
 {% table %}
 columns:
@@ -170,7 +170,7 @@ rows:
 {% endtable %}
 
 Choose the format that matches your backend, for example `dogstatsd` for Datadog, `influxdb` for InfluxDB, `librato` for Librato, and `signalfx` for SignalFx.
-With `tag_style` set, the policy doesn't send the `status_count` metric.
+With `tag_style` set, the Policy doesn't send the `status_count` metric.
 For a configuration, see [Send metrics with DogStatsD tags](/ai-gateway/policies/statsd/examples/use-dogstatsd-tags/).
 
 ## Metric names
@@ -198,20 +198,20 @@ rows:
     effect: "Uses the entity name. This is the default."
 {% endtable %}
 
-## Which requests the policy reports
+## Which requests the Policy reports
 
 The StatsD Policy reports every request sent to the entity it's attached to, including requests that authentication rejects.
-For example, the policy reports a request that authentication rejects with the `401` status code.
+For example, the Policy reports a request that authentication rejects with the `401` status code.
 
 To report only some responses, set [`config.allow_status_codes`](/ai-gateway/policies/statsd/reference/#schema--config-allow-status-codes) to a list of status code ranges, for example `200-205` and `400-499`.
-The policy then skips every response with another status code.
+The Policy then skips every response with another status code.
 For a configuration, see [Report requests in a status range](/ai-gateway/policies/statsd/examples/log-on-status-range/).
 
 ## Packet size and transport
 
-By default, the policy sends each metric in its own UDP datagram.
-Set [`config.udp_packet_size`](/ai-gateway/policies/statsd/reference/#schema--config-udp-packet-size) to the largest datagram size, in bytes, that the policy may fill with several metrics.
-The policy separates the metrics in a datagram with newlines.
+By default, the Policy sends each metric in its own UDP datagram.
+Set [`config.udp_packet_size`](/ai-gateway/policies/statsd/reference/#schema--config-udp-packet-size) to the largest datagram size, in bytes, that the Policy may fill with several metrics.
+The Policy separates the metrics in a datagram with newlines.
 The value can't be larger than `65507`, so consider the MTU of your network when you set it.
 
 Set `config.use_tcp` to `true` to send the metrics over TCP.
@@ -220,7 +220,7 @@ Set `config.use_tcp` to `true` to send the metrics over TCP.
 
 {% include md/ai-gateway/v2/policies/queues.md name="StatsD" slug="statsd" %}
 
-The policy sends the metrics of a request up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/statsd/reference/#schema--config-queue-max-coalescing-delay) seconds late.
+The Policy sends the metrics of a request up to [`config.queue.max_coalescing_delay`](/ai-gateway/policies/statsd/reference/#schema--config-queue-max-coalescing-delay) seconds late.
 Keep this value low for near-real-time dashboards.
 
 ## Scopes
@@ -228,12 +228,12 @@ Keep this value low for near-real-time dashboards.
 You can apply the StatsD Policy globally, or attach it to an [AI Model](/ai-gateway/entities/ai-model/), an AI Agent, an AI MCP Server, or an AI Consumer.
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
-* At AI Agent and AI MCP Server scope, the policy reports requests to that entity.
-* At AI Model scope, the policy reports requests to that AI Model.
+* At AI Agent and AI MCP Server scope, the Policy reports requests to that entity.
+* At AI Model scope, the Policy reports requests to that AI Model.
   See [Limitations](#limitations) for the metric names.
-* At AI Consumer scope, the policy reports only requests authenticated as that AI Consumer.
-* At global scope, the policy reports requests to every entity on the gateway.
-  To report only some traffic, set a [condition](/ai-gateway/conditions/) on the policy.
+* At AI Consumer scope, the Policy reports only requests authenticated as that AI Consumer.
+* At global scope, the Policy reports requests to every entity on the gateway.
+  To report only some traffic, set a [condition](/ai-gateway/conditions/) on the Policy.
   For example, the following condition reports only requests that include the header `x-rt: on`:
 
   ```yaml
@@ -251,4 +251,4 @@ The StatsD Policy has the following limitations:
 
 {:.warning}
 > **AI Consumer Group scope:** {{site.ai_gateway}} accepts a StatsD Policy attached to an AI Consumer Group, but the data plane fails to apply the change.
-> The data plane stays on its previous configuration until you detach the policy from the AI Consumer Group.
+> The data plane stays on its previous configuration until you detach the Policy from the AI Consumer Group.

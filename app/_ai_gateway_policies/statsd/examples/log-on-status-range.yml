@@ -5,7 +5,7 @@ title: 'Report requests in a status range'
 description: 'Send metrics to a StatsD server only for responses with a status code from 200 to 205 or from 400 to 499.'
 extended_description: |
   Send metrics to a StatsD server only for responses with a status code from 200 to 205 or from 400 to 499.
-  The policy reports a request when its response status is in `200-205` or `400-499`, and skips every other response.
+  The Policy reports a request when its response status is in `200-205` or `400-499`, and skips every other response.
 weight: 900
 
 scopes:
