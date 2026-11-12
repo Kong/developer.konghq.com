@@ -17,6 +17,8 @@ related_resources:
   url: "/mesh/policies/meshtrust/"
 - text: MeshTrafficPermission policy
   url: "/mesh/policies/meshtrafficpermission/"
+- text: "Concepts: Identity and trust"
+  url: "/mesh/concepts/#identity-and-trust"
 ---
 
 The `MeshIdentity` resource gives workloads an identity and configures the provider that issues

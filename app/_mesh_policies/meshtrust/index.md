@@ -15,6 +15,8 @@ related_resources:
   url: "/mesh/policies/meshidentity/"
 - text: MeshTLS policy
   url: "/mesh/policies/meshtls/"
+- text: "Concepts: Identity and trust"
+  url: "/mesh/concepts/#identity-and-trust"
 ---
 
 The `MeshTrust` resource tells proxies which certificate authorities (CAs) can verify workload

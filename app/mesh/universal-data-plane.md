@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/meshservice/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+  - text: "Concepts: Data plane"
+    url: /mesh/concepts/#data-plane
 min_version:
   mesh: '3.0'
 ---

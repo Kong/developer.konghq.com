@@ -5,6 +5,9 @@ sections:
     items:
       - path: /mesh/
       - path: /mesh/konnect/
+      - path: /mesh/service-mesh/
+      - path: /mesh/concepts/
+      - path: /mesh/architecture-overview/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -35,6 +38,27 @@ sections:
       - path: /mesh/policy-targeting/
       - path: /mesh/mesh-scoped-zone-proxies/
       - path: /mesh/application-ingress/
+      - path: /mesh/multi-zone-architecture/
+      - path: /mesh/resource-scoping/
+
+  - title: Kong Air scenarios
+    items:
+      - path: /mesh/scenarios/
+      - path: /mesh/install-kong-mesh-and-deploy-kong-air/
+      - path: /mesh/create-a-security-policy/
+      - path: /mesh/split-traffic-with-meshservice-resources/
+      - path: /mesh/target-workloads-and-services/
+      - path: /mesh/deploy-an-opentelemetry-collector/
+      - path: /mesh/observe-mesh-traffic-in-practice/
+      - path: /mesh/connect-a-second-zone/
+      - path: /mesh/manage-workload-identity-and-mtls/
+      - path: /mesh/integrate-an-external-ca/
+      - path: /mesh/send-traffic-between-zones/
+      - path: /mesh/secure-the-perimeter-with-meshpassthrough/
+      - path: /mesh/manage-external-services-with-meshexternalservice/
+      - path: /mesh/validate-resilience-with-fault-injection/
+      - path: /mesh/prepare-the-mesh-for-production/
+      - path: /mesh/production-readiness-checklist/
 
   - title: Upgrade
     items:

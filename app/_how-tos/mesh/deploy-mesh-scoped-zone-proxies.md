@@ -12,6 +12,8 @@ related_resources:
     url: '/mesh/meshmultizoneservice/'
   - text: 'Connect a Kubernetes zone to {{site.konnect_short_name}} with the API'
     url: '/mesh/connect-kubernetes-zone-to-konnect-api/'
+  - text: 'Architecture overview'
+    url: '/mesh/architecture-overview/'
 
 min_version:
   mesh: '3.0'

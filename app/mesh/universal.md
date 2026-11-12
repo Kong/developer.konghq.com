@@ -21,6 +21,10 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
   - text: Changes in {{site.mesh_product_name}} 3.x that affect Universal resources
     url: /mesh/migrate-policies-to-3/#changes-that-affect-universal-resources
+  - text: Service meshes
+    url: /mesh/service-mesh/
+  - text: Concepts
+    url: /mesh/concepts/
 next_steps:
   - text: Learn about the Universal control plane
     url: /mesh/universal-control-plane/
