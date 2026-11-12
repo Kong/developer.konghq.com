@@ -62,6 +62,10 @@ compatible_versions:
   "3.10.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
   "3.11.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
   "3.12.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
+  "3.13.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
+  "3.14.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
+  "3.15.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
+  "3.16.x": ["2.12", "3.0", "3.1", "3.2", "3.3", "3.4", "3.5"]
 {% endversion_compatibility_table %}
 
 ## Kubernetes
@@ -97,7 +101,7 @@ compatible_versions:
 
 ### Gateway API
 
-The following table presents the compatibility of {{site.kic_product_name}}'s [Gateway API](https://github.com/kubernetes-sigs/gateway-api) with specific Kubernetes minor versions. As {{site.kic_product_name}} implements Gateway API features using the upstream project, which defines [its own compatibility declarations](https://gateway-api.sigs.k8s.io/concepts/versioning/#supported-versions), the expected compatibility of Gateway API features might be limited to those.
+The following table presents the compatibility of {{site.kic_product_name}}'s [Gateway API](https://github.com/kubernetes-sigs/gateway-api) with specific Kubernetes minor versions. As {{site.kic_product_name}} implements Gateway API features using the upstream project, which defines [its own compatibility declarations](https://gateway-api.sigs.k8s.io/docs/concepts/versioning/#supported-versions), the expected compatibility of Gateway API features might be limited to those.
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
