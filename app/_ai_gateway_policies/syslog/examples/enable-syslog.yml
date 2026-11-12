@@ -1,0 +1,22 @@
+description: 'Enable the Syslog Policy and set the log level.'
+
+extended_description: |
+  Enable the Syslog Policy and set the log level.
+  The `log_level` setting is the least severe level that the Policy logs, and the default is `info`.
+  Entries with a less severe level are dropped.
+
+title: 'Enable the Syslog Policy'
+
+weight: 900
+
+name: enable-syslog
+display_name: Enable Syslog
+type: syslog
+
+config:
+  log_level: info
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
