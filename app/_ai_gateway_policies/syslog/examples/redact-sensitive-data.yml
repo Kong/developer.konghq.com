@@ -25,6 +25,9 @@ config:
     body_patterns:
       - "SECRET-[0-9]+"
 
+attach:
+  ai-model: payload-logging
+
 tools:
   - konnect-api
   - terraform
