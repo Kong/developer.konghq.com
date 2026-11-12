@@ -26,6 +26,10 @@ related_resources:
     url: /ai-gateway/entities/ai-mcp-server/
 ---
 
+{:.warning}
+> Don't attach the Injection Protection Policy to an [AI Consumer](/ai-gateway/entities/ai-consumer/) or an [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/).
+> Doing so stops the data plane from applying configuration changes. The data plane keeps running its previous configuration until you detach the policy.
+
 Requests that carry SQL, script, or other injection payloads in a path, query string, header, or body can reach your models and tools unchecked.
 The Injection Protection [AI Policy](/ai-gateway/entities/ai-policy/) compares each request against regular expressions for known injection patterns, and either rejects matching requests or logs them.
 This policy can complement your existing firewall solution by adding a layer of customizable protection to prevent injection attacks, or it can eliminate some content-based attacks if you don’t have an existing firewall.
@@ -68,9 +72,4 @@ Global scope applies the same patterns to all traffic, so a pattern that matches
 To limit that risk, attach the policy to one entity first, or start with `log_only`.
 
 On an AI MCP Server, the policy inspects every MCP request, including `initialize` and `tools/list`.
-
-## Limitations
-
-Attaching the Injection Protection Policy to an [AI Consumer](/ai-gateway/entities/ai-consumer/) or an [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) stops the data plane from applying configuration changes.
-The data plane keeps running its previous configuration until you detach the policy.
 
