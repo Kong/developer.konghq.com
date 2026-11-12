@@ -200,7 +200,7 @@ When two sources give the same tag key, the attribution plugin keeps the value f
 1. Mapped headers (`headers`)
 1. Mapped prefixes (`prefixes`)
 1. `ai-cost-` headers
-1. Other AI gateways' headers, such as Helicone, Portkey, and Cloudflare AI Gateway metadata
+1. Other AI gateways' metadata headers, listed in [Integrations](/ai-cost-management/integrations/)
 1. Tools' own headers, such as Claude Code and Codex CLI headers
 
 ### Standard tag keys
