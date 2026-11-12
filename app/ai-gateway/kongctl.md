@@ -121,27 +121,30 @@ See the [kongctl declarative resource reference](/kongctl/supported-resources/#a
 
 If you create an {{site.ai_gateway}} using declarative configuration, kongctl tracks it in the namespace automatically.
 
-If an {{site.ai_gateway}} already exists in {{site.konnect_product_name}} (for example, one provisioned outside of kongctl), use [`kongctl adopt`](/kongctl/adopt/) to bring it into a namespace before managing it declaratively:
+If an {{site.ai_gateway}} already exists in {{site.konnect_product_name}}, use
+[`kongctl adopt`](/kongctl/adopt/) to assign a namespace and save its
+configuration in one command:
 
-```sh
+```shell
 kongctl adopt ai-gateway "$AI_GATEWAY_ID" \
-    --namespace my-namespace \
-    --pat "$KONNECT_TOKEN"
+  --namespace my-namespace \
+  --declarative-output ai-gateway.yaml \
+  --pat "$KONNECT_TOKEN"
 ```
 
-`adopt` registers the existing {{site.ai_gateway}} with a kongctl namespace so it can be tracked.
-Pre-existing resources need to be adopted before kongctl includes them in plan and sync operations.
+The output path must be a new file in an existing directory. You can edit
+`ai-gateway.yaml`, commit it to source control, and include it in your
+`kongctl apply` or `kongctl sync` inputs. Add `--dry-run` with a different
+output path to preview ownership changes and save proposed configuration
+before adopting.
 
-After adopting, run `kongctl dump declarative` to export the current configuration as a YAML file you can use as the starting point for declarative management:
-
-```bash
-kongctl dump declarative \
-  --default-namespace my-namespace \
-  --resources ai_gateways,ai_gateway_models,ai_gateway_model_providers \
-  --pat "$KONNECT_TOKEN" > ai-gateway.yaml
-```
-
-From here you can edit `ai-gateway.yaml`, commit it to source control, and manage the resource going forward with commands like `kongctl apply` or `kongctl sync`.
+This command adopts and exports the gateway only. Existing independently
+owned children, such as models and model providers, need separate adoption
+commands. Each child command can save its selected resources with
+`--declarative-output`. See [Adopt a gateway and its existing
+children](/kongctl/declarative/adoption/#adopt-a-gateway-and-its-existing-children)
+for a complete workflow, including `--all`, name filters, and linking child
+files to the gateway declaration with `--parent-ref`.
 
 ### Referencing external resources
 

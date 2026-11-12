@@ -118,16 +118,33 @@ deleted data or secret material that {{site.konnect_short_name}} does not return
 
 ## Choose a command
 
-| Goal | Command |
-| --- | --- |
-| Preview creates and updates | `kongctl diff --mode apply -f config.yaml` |
-| Preview sync deletes | `kongctl diff --mode sync -f config.yaml` |
-| Create or update resources | `kongctl apply -f config.yaml` |
-| Reconcile explicitly scoped collections | `kongctl sync -f config.yaml` |
-| Delete resources selected by a manifest | `kongctl delete -f config.yaml` |
-| Inspect a saved plan of any mode | `kongctl diff --plan plan.json` |
-| Establish ownership of existing resources | `kongctl adopt --help` |
-| Export current state | `kongctl dump declarative --help` |
+{% table %}
+columns:
+  - title: Goal
+    key: goal
+  - title: Command
+    key: command
+rows:
+  - goal: Preview creates and updates
+    command: '`kongctl diff --mode apply -f config.yaml`'
+  - goal: Preview sync deletes
+    command: '`kongctl diff --mode sync -f config.yaml`'
+  - goal: Create or update resources
+    command: '`kongctl apply -f config.yaml`'
+  - goal: Reconcile explicitly scoped collections
+    command: '`kongctl sync -f config.yaml`'
+  - goal: Delete resources selected by a manifest
+    command: '`kongctl delete -f config.yaml`'
+  - goal: Inspect a saved plan of any mode
+    command: '`kongctl diff --plan plan.json`'
+  - goal: Establish ownership of existing resources
+    command: '`kongctl adopt --help`'
+  - goal: Export current state
+    command: '`kongctl dump declarative --help`'
+{% endtable %}
+
+See [Adopt existing resources](/kongctl/declarative/adoption/) for ownership
+previews and exporting selected resources into declarative inputs.
 
 Use `kongctl <command> --help` for flags and supported resource types.
 `kongctl plan` writes executable JSON; redacted diff output is for review. For
