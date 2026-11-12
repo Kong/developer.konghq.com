@@ -126,3 +126,11 @@ Use one of the following options to avoid the loop:
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
 {% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="vectordb" %}
+
+## Known limitations
+
+{:.warning}
+> Denied-topic matching compares the [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider) similarity score of a prompt to the `deny` prompts, and scores for the same prompt can differ by language.
+> A prompt in another language can fall below the similarity threshold and bypass a `deny` prompt.
+> Test the embedding model with the languages your users send.
+> Combine the {{page.name}} plugin with other controls to block content.

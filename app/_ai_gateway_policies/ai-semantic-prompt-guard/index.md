@@ -156,3 +156,11 @@ Use one of the following options to avoid the loop:
 ## Forward proxy support
 
 {% include md/ai-gateway/v2/forward-proxy.md %}
+
+## Known limitations
+
+{:.warning}
+> Denied-topic matching compares the [embedding model](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider) similarity score of a prompt to the `deny` prompts, and scores for the same prompt can differ by language.
+> A prompt in another language can fall below the similarity threshold and bypass a `deny` prompt.
+> Test the embedding model with the languages your users send.
+> Combine the {{page.name}} Policy with other controls to block content.

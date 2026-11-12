@@ -220,7 +220,7 @@ When using the request prompt provider, it will call the function to get the tok
 
 See the following [example configuration](/plugins/ai-rate-limiting-advanced/examples/request-prompt-count-function/) for more detail.
 
-## Known limitations of AI Rate Limiting Advanced
+## Known limitations
 
 The cost for the AI Proxy or AI Proxy Advanced is only reflected during the next request.
 
@@ -229,3 +229,6 @@ For example, if a request is made and the AI Proxy plugin returns a token cost o
 * If the rate limit is reached, the next request will be blocked
 
 Additionally, [`config.disable_penalty`](./reference/#schema--config-disable-penalty) only works for the `requestPrompt` function.
+
+Because token usage is only known after the model responds, concurrent requests can exceed the configured limit.
+
