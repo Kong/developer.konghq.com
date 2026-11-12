@@ -1,48 +1,12 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "host": {
-          "type": "string",
-          "description": "The IP address or host name to send data to."
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "The port to send data to on the upstream server."
-        },
-        "timeout": {
+        "keepalive": {
           "type": "number",
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-          "default": 10000
+          "description": "An optional value in milliseconds that defines how long an idle connection lives before being closed.",
+          "default": 60000
         },
         "tls": {
           "type": "boolean",
@@ -68,14 +32,6 @@
         "log_sanitization": {
           "type": "object",
           "properties": {
-            "redact_headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
-              "default": []
-            },
             "enabled": {
               "type": "boolean",
               "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
@@ -96,18 +52,62 @@
               },
               "description": "PCRE patterns to redact from the AI request and response payloads.",
               "default": []
+            },
+            "redact_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
+              "default": []
             }
           }
         },
-        "keepalive": {
+        "host": {
+          "type": "string",
+          "description": "The IP address or host name to send data to."
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "The port to send data to on the upstream server."
+        },
+        "timeout": {
           "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection lives before being closed.",
-          "default": 60000
+          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "default": 10000
         }
       },
       "required": [
         "host",
         "port"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

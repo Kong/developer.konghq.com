@@ -29,14 +29,28 @@
     "config": {
       "type": "object",
       "properties": {
-        "keepalive": {
-          "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
-          "default": 60000
+        "http_endpoint": {
+          "type": "string",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "x-encrypted": true,
+          "x-referenceable": true
         },
-        "flush_timeout": {
-          "type": "number",
-          "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
+        "content_type": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/json; charset=utf-8"
+          ],
+          "description": "Indicates the type of data sent. The only available option is `application/json`.",
+          "default": "application/json"
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": "Number of times to retry when sending data to the upstream server."
+        },
+        "queue_size": {
+          "type": "integer",
+          "description": "Maximum number of log entries to be sent on each message to the upstream server."
         },
         "headers": {
           "type": "object",
@@ -49,18 +63,6 @@
         "queue": {
           "type": "object",
           "properties": {
-            "max_retry_time": {
-              "type": "number",
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "default": 60
-            },
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
-            },
             "max_retry_delay": {
               "type": "number",
               "maximum": 1000000,
@@ -101,12 +103,65 @@
             "max_bytes": {
               "type": "integer",
               "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            },
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
             }
           }
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "default": true
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "PATCH",
+            "POST",
+            "PUT"
+          ],
+          "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
+          "default": "POST"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "default": 10000
+        },
+        "keepalive": {
+          "type": "number",
+          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "default": 60000
+        },
+        "flush_timeout": {
+          "type": "number",
+          "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
         },
         "log_sanitization": {
           "type": "object",
           "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
+              "default": false
+            },
             "body_json_paths": {
               "type": "array",
               "items": {
@@ -130,63 +185,8 @@
               },
               "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
               "default": []
-            },
-            "enabled": {
-              "type": "boolean",
-              "description": "When enabled, redacts sensitive data from logging payloads. Some default redactions are applied automatically even without the user specifying `body_json_paths`, `body_patterns`, or `redact_headers`.",
-              "default": false
             }
           }
-        },
-        "http_endpoint": {
-          "type": "string",
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "method": {
-          "type": "string",
-          "enum": [
-            "PATCH",
-            "POST",
-            "PUT"
-          ],
-          "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
-          "default": "POST"
-        },
-        "retry_count": {
-          "type": "integer",
-          "description": "Number of times to retry when sending data to the upstream server."
-        },
-        "queue_size": {
-          "type": "integer",
-          "description": "Maximum number of log entries to be sent on each message to the upstream server."
-        },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
-          "default": true
-        },
-        "content_type": {
-          "type": "string",
-          "enum": [
-            "application/json",
-            "application/json; charset=utf-8"
-          ],
-          "description": "Indicates the type of data sent. The only available option is `application/json`.",
-          "default": "application/json"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-          "default": 10000
         }
       },
       "required": [
