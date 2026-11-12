@@ -43,14 +43,11 @@ Choose one selection method per child command:
 
 {% table %}
 columns:
-  - title: |
-      Selection
+  - title: Selection
     key: selection
-  - title: |
-      Example
+  - title: Example
     key: example
-  - title: |
-      Behavior
+  - title: Behavior
     key: behavior
 rows:
   - selection: |
@@ -73,11 +70,11 @@ rows:
       Select children whose full names match the quoted glob.
 {% endtable %}
 
-Don't combine an identifier, `--all`, or `--name-pattern`. Patterns support
+Use only one of an identifier, `--all`, or `--name-pattern`. Patterns support
 `*`, `?`, and character classes such as `[ab]`. Quote patterns so your shell
 doesn't expand them. Selection fails when no resources match or an exact
-identifier is ambiguous. Patterns match resource names, or basic-auth
-usernames, rather than display names.
+identifier is ambiguous. Patterns match resource names, or usernames for
+basic-auth, not display names.
 
 ### {{site.ai_gateway}} children
 
@@ -86,11 +83,9 @@ Each family supports exact selection, `--all`, and `--name-pattern`:
 
 {% table %}
 columns:
-  - title: |
-      Child subcommand
+  - title: Child subcommand
     key: command
-  - title: |
-      Resource
+  - title: Resource
     key: resource
 rows:
   - command: |
@@ -151,10 +146,10 @@ kongctl adopt ai-gateway models --name-pattern 'legacy-*' \
 ```
 
 These children store independent ownership in `managed_by`. Adopting models
-doesn't adopt their providers or policies. Adopting consumers doesn't change
+doesn't adopt their providers or policies. Adopting Consumers doesn't change
 their credentials or group membership.
 
-### Kong Identity children
+### {{site.identity}} children
 
 Directory-scoped commands use the directory named `default` when you omit
 both directory flags. Use `--directory-id` to override that default, or
@@ -163,14 +158,11 @@ explicit auth server selector.
 
 {% table %}
 columns:
-  - title: |
-      Command under `kongctl adopt identity`
+  - title: Command under `kongctl adopt identity`
     key: command
-  - title: |
-      Selection
+  - title: Selection
     key: selection
-  - title: |
-      Parent selector
+  - title: Parent selector
     key: parent
 rows:
   - command: |
@@ -236,9 +228,9 @@ passed to `apply --plan` or `sync --plan`. Run adoption again without
 
 Every supported adoption command accepts `--declarative-output PATH`,
 including parent adoption commands for portals, APIs, control planes,
-{{site.ai_gateway}} instances, Event Gateway control planes, dashboards,
-application auth strategies, DCR providers, organization teams, and Kong
-Identity directories and auth servers.
+{{site.ai_gateway}} instances, {{site.event_gateway_short}} control planes, dashboards,
+application auth strategies, DCR providers, organization teams, and
+{{site.identity}} directories and auth servers.
 
 The file contains the selected resources with explicit namespace and
 protection metadata where applicable. It doesn't add file-level defaults,
@@ -259,45 +251,24 @@ configuration inputs.
 ### Choose a parent reference
 
 For child exports, `--parent-ref` controls how the generated configuration
-links to the parent:
+links to the parent.
 
-{% table %}
-columns:
-  - title: |
-      Export option
-    key: option
-  - title: |
-      Generated configuration
-    key: configuration
-  - title: |
-      Files needed for planning
-    key: files
-rows:
-  - option: |
-      Omit `--parent-ref`
-    configuration: |
-      The selected children and an external parent declaration using the
-      parent's exact remote ID.
-    files: |
-      The exported file. Other referenced resources must already exist or have
-      declarations.
-  - option: |
-      Set `--parent-ref REF`
-    configuration: |
-      Root-level children with `!ref REF#id` parent links and no parent
-      declaration.
-    files: |
-      The exported file and a declaration with that ref for the same remote
-      parent.
-{% endtable %}
+If you omit `--parent-ref`, the export contains the selected children and an
+external parent declaration that uses the parent's exact remote ID. Planning
+needs only the exported file, as long as other referenced resources already
+exist or have declarations.
+
+If you set `--parent-ref REF`, the export contains root-level children with
+`!ref REF#id` parent links and no parent declaration. Planning needs the
+exported file and a declaration with that ref for the same remote parent.
 
 `--parent-ref` names a local declarative ref. It doesn't select the remote
 parent or read existing input files. The gateway, directory, principal, or
 auth server selectors still identify the remote parent. A missing ref fails
 normal reference validation when you load the files together.
 
-For {{site.ai_gateway}} children, the parent ref names the gateway. For Kong
-Identity, it names the nearest parent: a directory for groups and principals,
+For {{site.ai_gateway}} children, the parent ref names the gateway. For
+{{site.identity}}, it names the nearest parent: a directory for groups and principals,
 a principal for identities and basic-auth usernames, or an auth server for
 OAuth clients. Without the flag, exports under an external principal also
 include the external directory needed to resolve that principal.
@@ -415,10 +386,14 @@ interface.
 Keep `api_keys` omitted from the principal declaration, and don't add separate
 `identity.principal_api_keys` declarations for these keys. Both apply-mode
 and sync-mode planning then leave the key collection outside reconciliation.
-An explicit `api_keys: []` has different meaning: sync can delete eligible
-kongctl-managed keys in that collection. It doesn't delete foreign or
-unmanaged keys. See [sync scope](/kongctl/declarative/sync/) for omission and
-empty-collection behavior.
+
+{:.warning}
+> An explicit `api_keys: []` has a different meaning. Sync can delete eligible
+> kongctl-managed keys in that collection. It does not delete foreign or
+> unmanaged keys.
+
+See [sync scope](/kongctl/declarative/sync/) for omission and empty-collection
+behavior.
 
 Verify the exported principal with a fresh plan:
 
@@ -433,12 +408,15 @@ before the first remote write. A known ownership conflict or unsupported
 operation stops that selection without changing any resources. Use a narrower
 selection, or deliberately transfer ownership with `--overwrite-namespace`.
 
-After validation, writes run individually. Batches aren't atomic and don't
-roll back completed adoptions. If a later API request fails, kongctl stops,
-reports completed adoptions, and retains those declarations in the output.
-A failing request can still have reached the API. Inspect receipts and
-remote state before retrying; previously adopted resources require
-`--overwrite-namespace` even for the same namespace.
+After validation, writes run individually. If a later API request fails,
+kongctl stops, reports completed adoptions, and retains those declarations in
+the output.
+
+{:.warning}
+> Batches are not atomic and do not roll back completed adoptions. A failing
+> request can still have reached the API. Inspect receipts and remote state
+> before retrying. Previously adopted resources require `--overwrite-namespace`
+> even for the same namespace.
 
 If saving the file fails after a successful adoption, the error identifies
 the adopted resource and output path. Stdout still reports that adoption,
@@ -454,8 +432,8 @@ Supported credential handling remains unchanged:
 - Runtime TLS certificates, config stores and their secrets, and data plane
   certificates remain outside {{site.ai_gateway}} adoption.
 - HashiCorp Vault AppRole adoption fails before writing when reads redact
-  `secret_id` and no `secret_id_file` is configured. This prevents an ownership
-  update from losing the credential.
+  `secret_id` and no `secret_id_file` is configured. The failure prevents an
+  ownership update from losing the credential.
 - API-key adoption is unavailable. Managing a principal's declaration doesn't
   require managing its keys. Removing a managed principal requires removing
   its attached credentials first.

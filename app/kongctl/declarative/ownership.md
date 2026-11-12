@@ -92,31 +92,90 @@ specified or omitted. The following tables summarize the behavior.
 
 Namespace values can use `!env` in file defaults or resource metadata. They
 resolve before validation and sync scoping, and remain fixed in saved plans. See
-[Environment Management](/kongctl/declarative/environments/) for a reusable
+[Managing multiple environments](/kongctl/declarative/environments/) for a reusable
 example.
 
 ### namespace field behavior
 
-| File Default | Resource Value | Final Result | Notes                        |
-|--------------|----------------|--------------|------------------------------|
-| Not set      | Not set        | "default"    | System default               |
-| Not set      | "team-a"       | "team-a"     | Resource explicit            |
-| Not set      | "" (empty)     | ERROR        | Empty namespace not allowed  |
-| "team-b"     | Not set        | "team-b"     | Inherits default             |
-| "team-b"     | "team-a"       | "team-a"     | Resource overrides           |
-| "team-b"     | "" (empty)     | ERROR        | Empty namespace not allowed  |
-| "" (empty)   | Any value      | ERROR        | Empty default not allowed    |
+{% table %}
+columns:
+  - title: File default
+    key: default
+  - title: Resource value
+    key: resource
+  - title: Final result
+    key: result
+  - title: Notes
+    key: notes
+rows:
+  - default: Not set
+    resource: Not set
+    result: '"default"'
+    notes: System default
+  - default: Not set
+    resource: '"team-a"'
+    result: '"team-a"'
+    notes: Resource explicit
+  - default: Not set
+    resource: '"" (empty)'
+    result: ERROR
+    notes: Empty namespace not allowed
+  - default: '"team-b"'
+    resource: Not set
+    result: '"team-b"'
+    notes: Inherits default
+  - default: '"team-b"'
+    resource: '"team-a"'
+    result: '"team-a"'
+    notes: Resource overrides
+  - default: '"team-b"'
+    resource: '"" (empty)'
+    result: ERROR
+    notes: Empty namespace not allowed
+  - default: '"" (empty)'
+    resource: Any value
+    result: ERROR
+    notes: Empty default not allowed
+{% endtable %}
 
 ### protected field behavior
 
-| File Default | Resource Value | Final Result | Notes              |
-|--------------|----------------|--------------|-------------------|
-| Not set      | Not set        | false        | System default     |
-| Not set      | true           | true         | Resource explicit  |
-| Not set      | false          | false        | Explicit false     |
-| true         | Not set        | true         | Inherits default   |
-| true         | false          | false        | Resource overrides |
-| false        | true           | true         | Resource overrides |
+{% table %}
+columns:
+  - title: File default
+    key: default
+  - title: Resource value
+    key: resource
+  - title: Final result
+    key: result
+  - title: Notes
+    key: notes
+rows:
+  - default: Not set
+    resource: Not set
+    result: "false"
+    notes: System default
+  - default: Not set
+    resource: "true"
+    result: "true"
+    notes: Resource explicit
+  - default: Not set
+    resource: "false"
+    result: "false"
+    notes: Explicit false
+  - default: "true"
+    resource: Not set
+    result: "true"
+    notes: Inherits default
+  - default: "true"
+    resource: "false"
+    result: "false"
+    notes: Resource overrides
+  - default: "false"
+    resource: "true"
+    result: "true"
+    notes: Resource overrides
+{% endtable %}
 
 Portal and API children follow the parent's ownership. Independently owned
 {{site.ai_gateway}} children inherit file defaults, rather than the gateway's

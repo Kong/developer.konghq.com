@@ -65,8 +65,8 @@ kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
 ```
 
 If the resource already has namespace ownership metadata, the command fails
-without making changes unless you pass `--overwrite-namespace`. This also
-applies when the existing namespace matches the requested namespace.
+without making changes unless you pass `--overwrite-namespace`. The same
+rule applies when the existing namespace matches the requested namespace.
 
 ## Subcommands
 
@@ -96,10 +96,10 @@ rows:
     description: "Adopt control plane configuration."
   - command: |
       [kongctl adopt dcr-provider](/kongctl/adopt/dcr-provider/)
-    description: "Adopt an existing Konnect DCR provider into namespace management."
+    description: "Adopt an existing {{site.konnect_short_name}} DCR provider into namespace management."
   - command: |
       [kongctl adopt event-gateway](/kongctl/adopt/event-gateway/)
-    description: "Adopt an existing Konnect Event Gateway into namespace management."
+    description: "Adopt an existing {{site.konnect_short_name}} {{site.event_gateway_short}} into namespace management."
   - command: |
       [kongctl adopt konnect](/kongctl/adopt/konnect/)
     description: "Adopt {{site.konnect_short_name}} resources."
