@@ -29,14 +29,14 @@ related_resources:
 
 A recovery set is the collection of files, secrets, and records that you need to rebuild a {{site.base_gateway}} deployment on Kubernetes.
 Prepare a recovery set that you can use without access to the original Kubernetes cluster.
-The walkthrough for your deployment lists the files and commands that you need to restore it.
+The recovery reference for your deployment lists what to save, and its how-to shows the commands to restore it.
 
 ## Choose the failure you will test
 
-Each walkthrough covers one failure and one recovery source.
-To find the walkthrough that matches how you manage {{site.base_gateway}} configuration, see [Disaster recovery for {{site.base_gateway}} on Kubernetes](/gateway/disaster-recovery/kubernetes/).
+Each recovery guide covers one failure and one recovery source.
+To find the guide that matches how you manage {{site.base_gateway}} configuration, see [Disaster recovery for {{site.base_gateway}} on Kubernetes](/gateway/disaster-recovery/kubernetes/).
 
-Start with one walkthrough.
+Start with one deployment type.
 A successful cluster replacement doesn't show that you can recover during a {{site.konnect_short_name}} outage, or when you also lose the application database.
 
 ## Manage configuration as code
@@ -58,19 +58,19 @@ The recovery cluster needs access to that store.
 Any decryption keys must survive the loss of the original cluster.
 
 Configure CD to apply resources in dependency order: CRDs first, then controllers, then the configuration that uses them.
-The walkthroughs use explicit `helm` and `kubectl` commands so that you can check each step.
+The how-tos use explicit `helm` and `kubectl` commands so that you can check each step.
 If you use CD, follow the same sequence and sync each application against the recovery cluster.
 
 A repository doesn't hold everything.
-The hybrid walkthrough still needs a database backup for entities created outside the repository, and for Keyring material.
+A hybrid deployment still needs a database backup for entities created outside the repository, and for Keyring material.
 {{site.konnect_short_name}} assigns entity IDs, so record them.
 
-If your configuration isn't in source control yet, the {{site.kic_product_name_short}} and {{site.operator_product_name}} walkthroughs include a fallback that exports routing resources from the running cluster.
+If your configuration isn't in source control yet, the [{{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/#export-routing-resources-without-a-repository) and [{{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/#export-gateway-resources-without-a-repository) recovery references include a fallback that exports routing resources from the running cluster.
 Use the export only as a temporary measure, and move that configuration into a repository.
 
 ## Assemble the recovery set
 
-Each walkthrough uses a directory under `recovery/`.
+Each how-to uses a `recovery` directory.
 Assemble the recovery set while the original deployment works, then store it outside that environment.
 
 Include the following items:
@@ -78,8 +78,8 @@ Include the following items:
 * The exact Helm chart archive and the saved values. Record the image versions or digests for {{site.base_gateway}} and the controller.
 * The manifests you wrote for application Services, routing, Kong configuration, and any required cluster-scoped resources.
 * Certificates, private keys, license material, and credentials, or a tested way to retrieve them independently.
-* For the hybrid walkthrough, a PostgreSQL backup and the Keyring recovery material.
-* For the {{site.konnect_short_name}} walkthrough, the existing control plane and entity IDs.
+* For a hybrid deployment, a PostgreSQL backup and the Keyring recovery material.
+* For a {{site.konnect_short_name}} deployment, the existing control plane and entity IDs.
 
 Preserve application configuration and dependencies, not only the gateway configuration.
 Restoring a Service doesn't restore the application data behind it.
@@ -99,7 +99,7 @@ Provision a replacement cluster with the following:
 For hybrid recovery, also provision a separate PostgreSQL target and its database role.
 
 Configure two distinct kubeconfig contexts, and store their names in `PRIMARY_CONTEXT` and `RECOVERY_CONTEXT`.
-The walkthroughs pass the context explicitly in each command.
+Pass the context explicitly in each recovery command, so that a command can't run against the wrong cluster.
 Make sure that each variable points to the correct cluster before you collect files or restore resources.
 
 Pause deployment automation during recovery, so that it doesn't apply stale configuration.
@@ -141,5 +141,5 @@ Agree on two targets before the drill:
 
 Measure traffic recovery separately from the ability to apply a new configuration change.
 
-Then run the walkthrough for your deployment and complete the [recovery drill](/gateway/disaster-recovery/kubernetes/test/).
+Then run the how-to for your deployment and complete the [recovery drill](/gateway/disaster-recovery/kubernetes/test/).
 Use the measured results to decide whether the recovery set and the prepared capacity meet your targets.

@@ -23,7 +23,7 @@ rows:
       type: h1
       text: "Disaster recovery for {{site.base_gateway}} on Kubernetes"
       sub_text: |
-        Save your recovery files, rebuild a lost Kubernetes deployment, and verify traffic and configuration updates with a recovery walkthrough.
+        Save your recovery files, rebuild a lost Kubernetes deployment, and verify traffic and configuration updates with a hands-on guide.
 
   - columns:
       - blocks:
@@ -59,17 +59,23 @@ rows:
               columns:
                 - title: Where is Gateway configuration managed?
                   key: configuration
-                - title: Recovery guide
+                - title: Recovery reference
                   key: guide
+                - title: Hands-on guide
+                  key: howto
               rows:
-                - configuration: "A surviving {{site.konnect_short_name}} hybrid control plane, including Services and Routes managed by {{site.operator_product_name}}"
+                - configuration: "A surviving {{site.konnect_short_name}} hybrid control plane, including Gateway Services and Routes managed by {{site.operator_product_name}}"
                   guide: "[Recover {{site.konnect_short_name}}-managed data planes](/gateway/disaster-recovery/kubernetes/konnect/)"
+                  howto: "[Reconnect data planes](/how-to/reconnect-konnect-data-planes-after-cluster-loss/), [Recover {{site.operator_product_name}} entity ownership](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/)"
                 - configuration: "A self-managed hybrid control plane backed by PostgreSQL"
                   guide: "[Recover a self-managed hybrid deployment](/gateway/disaster-recovery/kubernetes/hybrid/)"
+                  howto: "[Recover a hybrid deployment](/how-to/recover-hybrid-deployment-after-cluster-loss/)"
                 - configuration: "Standalone {{site.kic_product_name}} reading Kubernetes routing resources for a DB-less gateway"
-                  guide: "[Recover a deployment managed by {{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/)"
+                  guide: "[Disaster recovery for {{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/)"
+                  howto: "[Recover a {{site.kic_product_name_short}} deployment](/kubernetes-ingress-controller/recover-from-cluster-loss/)"
                 - configuration: "An embedded controller in {{site.operator_product_name}} managing a local Gateway deployment"
-                  guide: "[Recover a deployment managed by {{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/)"
+                  guide: "[Disaster recovery for {{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/)"
+                  howto: "[Recover a Gateway managed by {{site.operator_product_name}}](/operator/dataplanes/how-to/recover-from-cluster-loss/)"
 
   - columns:
       - blocks:
@@ -85,7 +91,7 @@ rows:
             config:
               title: Test recovery and failback
               description: |
-                Run the recovery walkthrough for your deployment, measure recovery, and record the changes needed before the next drill.
+                Run the recovery for your deployment, measure recovery, and record the changes needed before the next drill.
               cta:
                 url: /gateway/disaster-recovery/kubernetes/test/
 
@@ -98,11 +104,12 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Each walkthrough defines a starting deployment, the files to save, the restore commands, and the expected application response.
-                    Run the walkthrough against a separate recovery cluster before you adapt it to your production deployment.
+                    Each recovery reference lists what to save, the restore order, and how to adapt the recovery to your deployment.
+                    Each hands-on guide builds a starting deployment in a local k3d cluster, deletes the cluster, and restores the deployment from the saved files.
+                    Run the hands-on guide before you adapt the procedure to your production deployment.
                     To provision that cluster and change external DNS or load balancer targets, use the tools of your infrastructure provider.
 
-                    The {{site.konnect_short_name}} walkthrough uses Helm-managed data planes and a surviving control plane.
+                    The {{site.konnect_short_name}} guides use Helm-managed data planes and a surviving control plane.
                     The following scenarios need separate drills:
 
                     * Recovery during a {{site.konnect_short_name}} outage

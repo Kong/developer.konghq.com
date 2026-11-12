@@ -90,7 +90,9 @@ groups:
       - title: Disaster Recovery
         items:
           - path: /operator/dataplanes/disaster-recovery/
+          - path: /operator/dataplanes/how-to/recover-from-cluster-loss/
           - path: /gateway/disaster-recovery/kubernetes/konnect/
+          - path: /operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/
       - title: Upgrading
         items:
           - path: /operator/migrate/migrate-1.6.x-2.0.0/

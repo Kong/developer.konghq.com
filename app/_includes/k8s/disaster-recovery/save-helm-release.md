@@ -1,26 +1,19 @@
-{% assign chart_name = include.chart | split: "/" | last %}
-Create a protected directory outside the cluster for the recovery files:
+1. Save the effective Helm values of the `{{include.release}}` release:
 
-```bash
-mkdir -p recovery/{{include.dir}}
-```
+   ```bash
+   helm get values {{include.release}} -n {{include.namespace}} \
+     --all -o yaml > recovery/{{include.values_file}}
+   ```
 
-Save the effective Helm values of the `{{include.release}}` release:
+1. Read the chart version of the release:
 
-```bash
-helm get values {{include.release}} -n {{include.namespace}} --kube-context "$PRIMARY_CONTEXT" \
-  --all -o yaml > recovery/{{include.dir}}/{{include.values_file}}
-```
+   ```bash
+   export {{include.version_var}}=$(helm get metadata {{include.release}} -n {{include.namespace}} | awk '/^VERSION:/ {print $2}')
+   ```
 
-Read the installed chart version:
+1. Save that exact chart version:
 
-```bash
-helm list -n {{include.namespace}} --kube-context "$PRIMARY_CONTEXT"
-```
-
-Set `{{include.version_var}}` to the version that follows `{{chart_name}}-` in the `CHART` column, then save that chart:
-
-```bash
-helm pull {{include.chart}} --version "${{include.version_var}}" \
-  --destination recovery/{{include.dir}}
-```
+   ```bash
+   helm pull {{include.chart}} --version "${{include.version_var}}" \
+     --destination recovery
+   ```

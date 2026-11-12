@@ -114,6 +114,8 @@ sections:
       - path: /gateway/disaster-recovery/kubernetes/konnect/
       - path: /gateway/disaster-recovery/kubernetes/hybrid/
       - path: /gateway/disaster-recovery/kubernetes/test/
+      - path: /how-to/reconnect-konnect-data-planes-after-cluster-loss/
+      - path: /how-to/recover-hybrid-deployment-after-cluster-loss/
 
   - title: Upgrade and Migration
     items:

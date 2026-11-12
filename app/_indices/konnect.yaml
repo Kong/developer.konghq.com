@@ -15,6 +15,7 @@ sections:
   - title: Disaster Recovery
     items:
       - path: /gateway/disaster-recovery/kubernetes/konnect/
+      - path: /how-to/reconnect-konnect-data-planes-after-cluster-loss/
 
   - title: Konnect Applications
     items:

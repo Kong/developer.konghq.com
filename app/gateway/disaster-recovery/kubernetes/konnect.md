@@ -1,6 +1,6 @@
 ---
 title: "Recover {{site.konnect_short_name}}-managed data planes on Kubernetes"
-description: "Recover customer-managed Kubernetes data planes connected to Konnect, including Operator-managed configuration resources."
+description: "Learn what to save to reconnect Kubernetes data planes to a surviving Konnect control plane after a cluster loss, and how to recover Kong Operator ownership of Konnect entities."
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -27,286 +27,97 @@ related_resources:
     url: /operator/konnect/crd/adoption/gateway/
 ---
 
-When you lose the Kubernetes cluster that runs your {{site.konnect_short_name}} data planes, you can reconnect replacement data planes to the same {{site.konnect_short_name}} control plane.
-The control plane and its configuration survive.
+When you lose the Kubernetes cluster that runs your {{site.konnect_short_name}} data planes, the {{site.konnect_short_name}} control plane and its configuration survive.
 The data plane pods, the Helm release, and the Kubernetes Secrets don't.
+To recover traffic, you install replacement data planes that connect to the same control plane.
+If {{site.operator_product_name}} managed your Gateway entities, you also give the new {{site.operator_product_name}} installation ownership of the surviving entities.
 
-This walkthrough uses Helm-managed data planes.
-It also includes a separate recovery step for Gateway entities that {{site.operator_product_name}} manages.
-This procedure needs the original control plane to be reachable.
-If the {{site.konnect_short_name}} control plane is unavailable, or if you fail over to another geo, you need a different drill.
+This recovery needs the original control plane to be reachable.
+If the {{site.konnect_short_name}} control plane is unavailable, or if you fail over to another geo, you need a different procedure.
 
-## Starting deployment
+{:.success}
+> To run the procedures end to end in a local cluster, see:
+> * [Reconnect {{site.konnect_short_name}} data planes after a Kubernetes cluster loss](/how-to/reconnect-konnect-data-planes-after-cluster-loss/)
+> * [Recover {{site.operator_product_name}} ownership of {{site.konnect_short_name}} entities after a cluster loss](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/)
 
-The {{site.konnect_short_name}} recovery example uses the [{{site.konnect_short_name}} Kubernetes installation](/gateway/install/kubernetes/konnect/) with the following values:
+## What to save
 
-* Release: `kong`
-* Chart: `kong/kong`
-* Namespace: `kong`
-* Client certificate Secret: `kong-cluster-cert`
-
-Before the drill, configure a Route named `dr-check` with the path `/dr-check`.
-The Route must point to an upstream that the recovery cluster can reach.
-Record its successful application response and any authentication checks.
-
-Set these variables from your installation:
+Save the following items while the original deployment works:
 
 {% table %}
 columns:
-  - title: Variable
-    key: variable
-  - title: Value
-    key: value
+  - title: Item
+    key: item
+  - title: Why you need it
+    key: why
 rows:
-  - variable: "`PRIMARY_CONTEXT`"
-    value: Original Kubernetes context
-  - variable: "`RECOVERY_CONTEXT`"
-    value: Replacement Kubernetes context
-  - variable: "`CONTROL_PLANE_ID`"
-    value: UUID of the existing {{site.konnect_short_name}} control plane
-  - variable: "`KONNECT_API_URL`"
-    value: "Geo API URL, such as `https://us.api.konghq.com`"
-  - variable: "`KONNECT_TOKEN`"
-    value: Token that can read the control plane. Entity recovery also needs write access.
+  - item: Helm values from `helm get values --all`, and the chart archive from `helm pull`
+    why: Lets you install the same data plane version with the same control plane endpoints.
+  - item: Client certificate and key
+    why: The replacement data plane must present the pair that's registered with the control plane, and that the saved values mount.
+  - item: Control plane ID and geo
+    why: Identifies the control plane to reconnect to, and the API URL to call.
+  - item: License and plugin Secrets
+    why: Any license or plugin Secrets that you configured separately from the control plane.
+  - item: "{{site.operator_product_name}} manifests and IDs"
+    why: "If {{site.operator_product_name}} manages your entities, save the KongService and KongRoute manifests, the {{site.konnect_short_name}} ID of each entity, and the UID of each Kubernetes object. You can't read them from the lost cluster."
 {% endtable %}
 
-The replacement cluster needs access to {{site.konnect_short_name}}, the upstream, the container registries, and any plugin dependencies.
-For a drill, use a distinct cluster and client endpoint.
-
-## Save the deployment and identities
-
-{% include k8s/disaster-recovery/save-helm-release.md dir="konnect" release="kong" namespace="kong" chart="kong/kong" values_file="values-dp.yaml" version_var="GATEWAY_CHART_VERSION" %}
-
-Save the identity of the control plane from the [Control Planes API](/api/konnect/control-planes/v2/):
-
-```bash
-curl --fail-with-body -H "Authorization: Bearer $KONNECT_TOKEN" \
-  "$KONNECT_API_URL/v2/control-planes/$CONTROL_PLANE_ID" \
-  -o recovery/konnect/control-plane.json
-```
-
-Copy the client certificate and key from your secret store to `recovery/konnect/tls.crt` and `recovery/konnect/tls.key`.
-They must be the pair that's registered with this control plane and mounted by the saved values.
-Include any license or plugin secrets that you configured separately.
-
-If {{site.operator_product_name}} manages your entities, also save their manifests and remote IDs.
-For example, read the remote ID of a KongService from the original cluster:
-
-```bash
-kubectl --context "$PRIMARY_CONTEXT" -n kong get kongservice dr-check \
-  -o jsonpath='{.status.konnect.id}'
-```
-
-Save this value as `SERVICE_ID` in the protected recovery inventory.
-Record `ROUTE_ID` from the matching KongRoute in the same way.
-Save the specifications of both objects and their original Kubernetes UID tags.
-Don't rely on the lost cluster to retrieve them later.
-
+You don't need to save the Gateway configuration.
 During this recovery, the existing control plane remains the configuration source.
 Don't sync an old configuration export over its current state.
 
-## Reconnect the replacement data plane
+## Reconnect data planes
 
-Make sure that the saved control plane still exists:
+A replacement data plane that uses the saved values and certificate connects to the same control plane, and receives its current configuration.
 
-```bash
-curl --fail-with-body -H "Authorization: Bearer $KONNECT_TOKEN" \
-  "$KONNECT_API_URL/v2/control-planes/$CONTROL_PLANE_ID"
-```
-
-Expect HTTP `200` and the saved control plane ID.
-Compare its endpoints with the endpoints in `values-dp.yaml`.
-If the control plane is missing, this walkthrough doesn't apply.
-
-Make sure that `RECOVERY_CONTEXT` selects the replacement cluster, then create the namespace:
-
-```bash
-kubectl --context "$RECOVERY_CONTEXT" create namespace kong
-```
-
-Restore the client certificate Secret:
-
-```bash
-kubectl --context "$RECOVERY_CONTEXT" -n kong create secret tls kong-cluster-cert \
-  --cert=recovery/konnect/tls.crt --key=recovery/konnect/tls.key
-```
-
-If this certificate is expired or revoked, register a replacement with the same control plane before you install the data plane.
-Use the [certificate setup procedure](/gateway/install/kubernetes/konnect/) to do this.
+If the client certificate is expired or revoked, register a replacement certificate with the same control plane before you install the data plane.
+For the registration steps, see [Install {{site.base_gateway}} in {{site.konnect_short_name}} with Helm](/gateway/install/kubernetes/konnect/).
 Recreating a Secret doesn't register its certificate in {{site.konnect_short_name}}.
 
-Install the saved release:
+If the replacement data plane doesn't connect, inspect the proxy logs of the new pod.
+Check the certificate validity, the control plane endpoints in the values, the network access to {{site.konnect_short_name}}, and the image or plugin compatibility.
 
-```bash
-helm install kong "recovery/konnect/kong-${GATEWAY_CHART_VERSION}.tgz" \
-  --kube-context "$RECOVERY_CONTEXT" -n kong \
-  -f recovery/konnect/values-dp.yaml --wait --timeout 5m
-```
+After traffic works through the replacement data plane, data plane recovery is complete, even if you're still recovering the configuration management tool.
 
-In {{site.konnect_short_name}}, make sure that the replacement data plane shows as connected under the original control plane.
-If it doesn't connect, inspect the proxy logs of the new pod.
-Check the certificate validity, the endpoints, the network access, and the image or plugin compatibility.
+## Recover operator ownership of {{site.konnect_short_name}} entities
 
-Read the proxy address:
+{{site.operator_product_name}} tags each {{site.konnect_short_name}} entity that it manages with a `k8s-uid` tag that contains the UID of the Kubernetes object that owns it.
+When you lose the cluster, the entities and their tags stay in {{site.konnect_short_name}}.
+A new Kubernetes object has a new UID, so {{site.operator_product_name}} rejects adoption while the old tag is on the entity, even when the configuration matches.
+In that case, the KongService reports `Adopted` as `False` with the reason `UIDConflict`, and {{site.operator_product_name}} doesn't create a duplicate.
 
-```bash
-kubectl --context "$RECOVERY_CONTEXT" -n kong get service kong-kong-proxy
-```
+To recover ownership, the new installation:
 
-Set `RECOVERY_ADDRESS` to its external IP or hostname, and send a request to the saved Route:
-
-```bash
-curl --fail-with-body "http://${RECOVERY_ADDRESS}/dr-check"
-```
-
-Expect the application response that you recorded before the failure.
-If the Route uses a hostname, TLS, or authentication, add them to the request.
-When traffic works, data plane recovery is complete, even if you're still recovering the configuration management tool.
-
-## Recover Operator-managed Konnect resources
-
-Use this section only if {{site.operator_product_name}} managed the surviving Gateway Service and Route.
-This section requires the following:
-
-* {{site.operator_product_name}} 2.1 or later
-* An existing remote control plane
-* Saved KongService and KongRoute manifests
-
-This procedure doesn't adopt every kind of {{site.konnect_short_name}} resource.
-
-Reinstall the same {{site.operator_product_name}} chart.
-Then restore its token Secret and KonnectAPIAuthConfiguration with the [{{site.operator_product_name}} installation](/operator/get-started/konnect-crds/install/) and [authentication procedure](/operator/get-started/konnect-crds/authentication/).
-Keep automated application of the entity manifests paused.
-
-### Reference the existing control plane
-
-In the saved KonnectGatewayControlPlane manifest, set `source` to `Mirror` and set the original control plane ID:
-
-```yaml
-spec:
-  source: Mirror
-  mirror:
-    konnect:
-      id: <CONTROL_PLANE_ID>
-  konnect:
-    authRef:
-      name: konnect-api-auth
-```
-
-Replace `<CONTROL_PLANE_ID>` with the UUID of the control plane, and save the complete resource as `recovery/konnect/control-plane.yaml`.
-Keep its original name and namespace so that the saved Service references still resolve.
-
-Apply the KonnectGatewayControlPlane manifest:
-
-```bash
-kubectl --context "$RECOVERY_CONTEXT" apply \
-  -f recovery/konnect/control-plane.yaml
-```
-
-Make sure that its status reports the original remote ID.
-Mirroring the control plane doesn't adopt its Gateway Services or Routes.
-
-### Release stale ownership for one entity
+1. Mirrors the existing control plane with a KonnectGatewayControlPlane that uses `source: Mirror` and the original ID.
+   Mirroring the control plane doesn't adopt its Gateway Services or Routes.
+1. Removes the stale `k8s-uid` tag from each entity.
+1. Adopts each entity in `match` mode: the Gateway Service first, then the Routes that reference it.
 
 {:.warning}
 > Before you change ownership tags, make sure that the original {{site.operator_product_name}} cannot resume reconciliation. Pause its GitOps application, and stop or isolate the original controller if it survives. To isolate the controller, revoke the {{site.konnect_short_name}} token that it uses. Deleting its token Secret does not isolate it, because {{site.operator_product_name}} adds a finalizer to that Secret while resources reference it. Two controllers must not manage the same remote entity.
 
-A new Kubernetes object has a new UID.
-{{site.operator_product_name}} rejects adoption when the remote entity still has the `k8s-uid` tag of another object, even when its configuration matches.
-In that case, the KongService reports `Adopted` as `False` with the reason `UIDConflict`, and {{site.operator_product_name}} doesn't create a duplicate.
+When you remove the stale tags, follow these rules:
 
-Fetch the surviving Gateway Service by its recorded ID:
+* Remove only the tag of the lost object. Don't remove a tag that belongs to a different or active owner, and don't remove every Kubernetes tag.
+* The entity endpoints accept `PUT` but not `PATCH`, and `PUT` replaces the whole entity. Send the complete entity back, and compare it with the original before you send it.
+* Don't edit unrelated entities.
 
-```bash
-curl --fail-with-body -H "Authorization: Bearer $KONNECT_TOKEN" \
-  "$KONNECT_API_URL/v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/$SERVICE_ID" \
-  -o recovery/konnect/service.json
-```
+When you adopt the entities, follow these rules:
 
-Inspect the response, and compare its ID, configuration, and tags with the inventory.
-Set `OLD_SERVICE_UID_TAG` to the exact tag of the lost object, including the `k8s-uid:` prefix.
-Don't remove a tag that belongs to a different or active owner.
+* Keep the original name and namespace of the KonnectGatewayControlPlane, so that the saved KongService references still resolve.
+* If matching fails, compare the saved specification with the surviving entity. Don't switch to `override` mode only to make the recovery pass.
+* Adoption in `match` mode doesn't write a `k8s-uid` tag for the new object. {{site.operator_product_name}} adds the tag the next time it updates the entity.
+* Keep automated application of the entity manifests paused until adoption is complete, then put the recovery manifests in the managed repository before you resume synchronization.
 
-The entity endpoint accepts `PUT` but not `PATCH`, and `PUT` replaces the whole entity.
-Use [`jq`](https://jqlang.org/) to create a copy of the complete saved Gateway Service that removes only that tag and keeps every other field and tag:
+This procedure doesn't adopt every kind of {{site.konnect_short_name}} resource.
+For resource-specific fields and restrictions, see [Adopt existing entities from {{site.konnect_short_name}}](/operator/konnect/crd/adoption/gateway/).
 
-```bash
-jq --arg old "$OLD_SERVICE_UID_TAG" \
-  'del(.created_at, .updated_at) | .tags |= map(select(. != $old))' \
-  recovery/konnect/service.json > recovery/konnect/service-update.json
-```
-
-Compare `service-update.json` with `service.json`, and make sure that the only difference is the removed tag.
-
-Send the updated Gateway Service to {{site.konnect_short_name}}:
-
-```bash
-curl --fail-with-body --request PUT \
-  -H "Authorization: Bearer $KONNECT_TOKEN" -H "Content-Type: application/json" \
-  --data @recovery/konnect/service-update.json \
-  "$KONNECT_API_URL/v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/$SERVICE_ID"
-```
-
-Do this only for a verified stale owner.
-Repeat the same process for the Route with `routes/$ROUTE_ID`, its own saved response and update file, and its own original UID tag.
-Don't remove every Kubernetes tag, and don't edit unrelated entities.
-
-### Adopt the Gateway Service, then the Route
-
-Add the following adoption block to the `spec` of the saved KongService.
-Keep its original configuration and control plane reference.
-
-```yaml
-adopt:
-  from: konnect
-  mode: match
-  konnect:
-    id: <SERVICE_ID>
-```
-
-Replace `<SERVICE_ID>` with the recorded UUID, and save the complete resource as `recovery/konnect/service.yaml`.
-
-Apply the KongService manifest:
-
-```bash
-kubectl --context "$RECOVERY_CONTEXT" apply -f recovery/konnect/service.yaml
-```
-
-Check the conditions and remote ID of the KongService:
-
-```bash
-kubectl --context "$RECOVERY_CONTEXT" -n kong get kongservice dr-check -o yaml
-```
-
-Expect successful reconciliation, and a `status.konnect.id` value equal to `SERVICE_ID`.
-If matching fails, compare the saved specification with the surviving Gateway Service.
-Don't switch to overwrite mode only to make the recovery pass.
-
-Add the same adoption block to the saved KongRoute with `ROUTE_ID`, and keep its Service reference.
-Apply that file only after the KongService reconciles, then make sure that the Route has the correct remote ID and conditions.
-For resource-specific fields and restrictions, see [entity adoption](/operator/konnect/crd/adoption/gateway/).
-
-Retrieve the Gateway Service and Route through the API again.
-Make sure that their IDs and relationship didn't change, that their configuration is correct, and that the next reconciliation doesn't create duplicate entities.
-In `match` mode, adoption doesn't write a `k8s-uid` tag for the new object.
-{{site.operator_product_name}} adds the tag the next time it updates the entity.
-Put the recovery manifests in the managed repository before you resume synchronization.
-
-## Verify configuration updates and move traffic
-
-{% include k8s/disaster-recovery/verify-config-update.md owner="with the tool that now owns the Route" %}
-
-If {{site.operator_product_name}} owns the Route, add and remove the path in the adopted KongRoute manifest.
+## Move traffic and fail back
 
 Update the DNS record or load balancer target of the application to the address of the replacement proxy.
-Repeat the baseline requests of the application through the normal client endpoint, and record when traffic recovered.
+Then repeat the baseline requests through the normal client endpoint, and record when traffic recovered.
 
 For failback, reconnect the rebuilt original data planes to the same control plane, and validate them before you move traffic back.
 Keep a single active owner for each remote entity.
 Don't restart the former {{site.operator_product_name}} with stale manifests.
-
-In the [drill record](/gateway/disaster-recovery/kubernetes/test/#record-the-results), record the following:
-
-* The control plane, Gateway Service, and Route IDs before and after recovery
-* The certificate that you used
-* The times when traffic and configuration updates worked

@@ -24,15 +24,23 @@ related_resources:
     url: /gateway/disaster-recovery/kubernetes/prepare/
 ---
 
-A recovery drill is a planned run of a recovery walkthrough against a separate environment.
+A recovery drill is a planned run of a recovery procedure against a separate environment.
 Run the drill, then record whether its checks passed.
 Test one complete deployment before you expand the drill to a regional failure or to more dependencies.
 
 ## Set up the drill
 
-Choose the [{{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/), [{{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/), [{{site.konnect_short_name}}](/gateway/disaster-recovery/kubernetes/konnect/), or [hybrid](/gateway/disaster-recovery/kubernetes/hybrid/) walkthrough, then prepare the drill:
+Choose the how-to for your deployment:
 
-1. Create the starting deployment that the walkthrough describes, and make sure that its baseline request succeeds.
+* [Recover a {{site.kic_product_name_short}} deployment after a cluster loss](/kubernetes-ingress-controller/recover-from-cluster-loss/)
+* [Recover a Gateway managed by {{site.operator_product_name}} after a cluster loss](/operator/dataplanes/how-to/recover-from-cluster-loss/)
+* [Reconnect {{site.konnect_short_name}} data planes after a Kubernetes cluster loss](/how-to/reconnect-konnect-data-planes-after-cluster-loss/)
+* [Recover {{site.operator_product_name}} ownership of {{site.konnect_short_name}} entities after a cluster loss](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/)
+* [Recover a self-managed hybrid {{site.base_gateway}} deployment after a Kubernetes cluster loss](/how-to/recover-hybrid-deployment-after-cluster-loss/)
+
+To prepare the drill, do the following:
+
+1. Create the starting deployment that the how-to describes, and make sure that its baseline request succeeds.
 1. Complete the steps in [Prepare for disaster recovery](/gateway/disaster-recovery/kubernetes/prepare/) to assemble the recovery set and provision the recovery target.
 1. Record the exact versions of Kubernetes, the Helm chart, {{site.base_gateway}}, and the controller.
 1. Assign an owner who can stop the drill and restore the original traffic path.
@@ -53,15 +61,15 @@ It doesn't measure a regional outage or automatic failure detection.
 
 For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, follow [Release stale ownership for one entity](/gateway/disaster-recovery/kubernetes/konnect/#release-stale-ownership-for-one-entity).
 Don't simulate cluster loss by deleting the resources that the controller manages.
-Deleting them can remove the remote entities that the walkthrough expects to survive.
+Deleting them can remove the remote entities that the recovery expects to survive.
 
 ## Check the result for your deployment
 
-Each walkthrough passes when you see the following result:
+Each recovery passes when you see the following result:
 
 {% table %}
 columns:
-  - title: Walkthrough
+  - title: Deployment
     key: walkthrough
   - title: Required result
     key: result
@@ -84,10 +92,12 @@ Requests with valid credentials must succeed.
 Requests with missing or invalid credentials must still fail with the expected status.
 Record the response that you get, and don't count every HTTP response as a success.
 
-Each walkthrough adds and removes a temporary route path to check that configuration updates work.
-Complete that step, then save the final desired configuration in the managed repository.
-The path must fail before the change and after you remove it.
+Each how-to adds a temporary route path to check that configuration updates work.
+The path must fail before the change.
 If an existing route already matches the path, the check doesn't test the update.
+For example, Route paths in {{site.base_gateway}} are prefixes, so `/dr-check` already matches `/dr-check-recovered`.
+In a drill on your own deployment, remove the temporary path afterward, and make sure that it fails again.
+Then save the final desired configuration in the managed repository.
 
 ## Measure recovery time and data loss
 
@@ -103,7 +113,7 @@ Compare it with your [recovery time objective (RTO)](/gateway/disaster-recovery/
 If you only declared the failure during a rehearsal, state that limitation in the result.
 
 To measure data loss against your recovery point objective (RPO), compare the latest change in the recovered state with the original history.
-In the hybrid walkthrough, make a known test change after you take the backup, then make sure that the change is absent after the restore.
+In a hybrid recovery, make a known test change after you take the backup, then make sure that the change is absent after the restore.
 This test shows the actual recovery point, instead of assuming it from a successful backup job.
 
 ## Complete failback
@@ -131,7 +141,7 @@ columns:
     key: record
 rows:
   - field: Scenario
-    record: Walkthrough, simulated failure, and what the drill didn't test
+    record: Recovery procedure, simulated failure, and what the drill didn't test
   - field: Versions
     record: Kubernetes, chart, {{site.base_gateway}}, {{site.kic_product_name_short}} or {{site.operator_product_name}}, and PostgreSQL where used
   - field: Recovery source
@@ -153,4 +163,4 @@ rows:
 {% endtable %}
 
 A failed step is part of the result.
-Update the walkthrough or the recovery set, and repeat the drill before you rely on it during an incident.
+Update the procedure or the recovery set, and repeat the drill before you rely on it during an incident.
