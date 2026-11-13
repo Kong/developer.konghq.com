@@ -16,6 +16,7 @@ products:
 tools:
   - admin-api
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -158,7 +159,7 @@ At the quality end, it selects the target with the best benchmark result for the
 Values in between balance both.
 
 {{site.ai_gateway}} classifies a conversation once.
-Follow-up turns and retries of a single request reuse the original decision, so a long conversation doesn't re-rank targets or trigger another classification call, unless a target fails.
+Follow-up turns and retries of a single request reuse the original decision, so a long conversation doesn't re-rank targets or trigger another classification call.
 Follow-up turns go to the target that served earlier turns, as described in [Session affinity](#session-affinity).
 Intelligent routing always uses session affinity.
 
@@ -494,7 +495,7 @@ If developers use coding assistants that all call one endpoint, you can let the 
 The following AI Model classifies each new conversation with a classifier service, then selects between `gpt-4.1-mini` and `claude-sonnet-4-6`, which have different benchmark results, based on the task category.
 Both models accept image input and have a context window of at least 1 million tokens, which intelligent routing requires.
 
-With `cost_quality_tradeoff` set to `balanced`, {{site.ai_gateway}} weighs each model's benchmark quality for that task against its cost:
+When `cost_quality_tradeoff` is `balanced`, {{site.ai_gateway}} weighs each model's benchmark quality for that task against its cost:
 
 {% entity_example %}
 type: model
@@ -636,7 +637,7 @@ rows:
     when: |
       You run more than one data plane node.
     tradeoffs: |
-      The state is shared through a Datastore of type `redis-ee`, so affinity holds across all nodes.
+      The state is shared through a Datastore of type `redis-ee`, so any node can look up the conversation's target.
       You need to provision and monitor Redis.
 {% endtable %}
 
