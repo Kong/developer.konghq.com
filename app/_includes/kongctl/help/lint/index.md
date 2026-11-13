@@ -21,6 +21,9 @@ Examples:
   # Fail on warnings and above
   kongctl lint -f config.yaml -r ruleset.yaml --fail-severity warn
   
+  # Lint declarative configuration after expanding templates and !file
+  kongctl lint -f ./templates/ -f ./team/ -r ruleset.yaml --expand
+  
   # Read from stdin
   cat config.yaml | kongctl lint -f - -r ruleset.yaml
 
@@ -34,6 +37,7 @@ Flags:
                                 - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -D, --display-only-failures   Only output results with severity equal to or greater than --fail-severity
+      --expand                  Lint declarative configuration after including !file content and expanding _templates/_extends across all inputs (!env, !ref and !secret stay unresolved)
   -F, --fail-severity string    Results of this severity or above will trigger a failure exit code. Allowed: [ error | warn | info | hint ] (default "error")
   -f, --filename strings        Input file(s) or directory to lint. Use '-' to read from stdin.
   -h, --help                    help for lint
@@ -55,7 +59,7 @@ Flags:
                                 - Allowed    : [ json|yaml|text ] (default "text")
   -p, --profile string          Specify the profile to use for this command. (default "default")
   -R, --recursive               Process the directory used in -f, --filename recursively
-  -r, --ruleset string          Local YAML or JSON ruleset for vacuum (partial Spectral compatibility; no custom functions). Input tags/templates are not expanded; extends paths use the working directory (URLs allowed in extends).
+  -r, --ruleset string          Local YAML or JSON ruleset for vacuum (partial Spectral compatibility; no custom functions). Input tags/templates are not expanded unless --expand is set; extends paths use the working directory (URLs allowed in extends).
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]

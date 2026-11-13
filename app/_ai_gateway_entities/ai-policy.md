@@ -93,7 +93,7 @@ For configuration examples and step-by-step setup instructions, see [Set up a gl
 
 {{site.ai_gateway}} processes each request in the following order:
 
-1. The [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) authenticates the caller. AI Policies don't perform authentication.
+1. The [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) authenticates the caller. AI Policies don't perform authentication. A global AI Policy with a higher [priority](#ai-policy-priority) than the AI Auth Strategy, such as a global [Pre-Function](/ai-gateway/policies/pre-function/), runs before this step. See [Scopes and authentication](#scopes-and-authentication).
 1. {{site.ai_gateway}} identifies the AI Consumer and its AI Consumer Groups.
 1. {{site.ai_gateway}} selects the AI Model, AI Agent, or AI MCP Server.
 1. {{site.ai_gateway}} collects the AI Policies that apply to the request, based on [scope](#ai-policy-scopes), and resolves any [scope conflicts](#scope-precedence).
@@ -129,7 +129,9 @@ sequenceDiagram
     AIGW-->>Client: Response
 {% endmermaid %}
 
-AI Policies scoped to an AI Consumer or AI Consumer Group apply only to authenticated requests, because authentication runs first.
+Most AI Policies run after authentication. 
+A global AI Policy with a higher priority than the AI Auth Strategy runs before it. 
+For more information, see [Scopes and authentication](#scopes-and-authentication).
 An AI Policy runs at most once per request.
 
 ## AI Policy scopes
@@ -149,6 +151,15 @@ To apply an identical configuration in multiple places, create an entity-scoped 
 Not every AI Policy type supports every scope.
 For example, an ACL AI Policy doesn't support AI Consumer or AI Consumer Group scopes.
 {{site.ai_gateway}} rejects the request with an error when you attach an AI Policy at a scope its type doesn't support.
+
+### Scopes and authentication
+
+A global AI Policy runs before authentication when its [priority](#ai-policy-priority) is higher than the priority of the [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/). 
+Otherwise, it runs after authentication succeeds.
+An entity-scoped AI Policy always runs after authentication succeeds, regardless of its priority. 
+If the request fails authentication, the AI Policy doesn't run.
+
+If an AI Policy must run before authentication, for example to modify a request header that the AI Auth Strategy reads, apply a type with a higher priority than the AI Auth Strategy globally.
 
 ### Scope precedence
 

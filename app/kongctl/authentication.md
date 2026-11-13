@@ -20,6 +20,8 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
+  - text: kongctl telemetry and privacy
+    url: /kongctl/telemetry/
   - text: kongctl configuration reference
     url: /kongctl/config/
   - text: Manage {{site.konnect_short_name}} resources declaratively
@@ -96,11 +98,11 @@ kongctl logout
 
 [{{site.konnect_short_name}} access tokens](/konnect-api/#personal-access-tokens) come in two forms: Personal Access Tokens (PAT) or 
 System Access Tokens (sPAT). PATs grant access to APIs as your personal user account, while
-sPATs grant access based on the permissions of a system account, which may be more
-limited than a user account. 
+System access tokens grant access based on the permissions of a system account,
+which may be more limited than a user account.
 
-You can manage PATs and sPATs directly with kongctl. You can also create them
-in the {{site.konnect_short_name}} UI:
+You can manage PATs and system access tokens directly with kongctl. You can also
+create them in the {{site.konnect_short_name}} UI:
 
 - Create a PAT on the
   [personal access token page](https://cloud.konghq.com/global/account/tokens).
@@ -159,8 +161,9 @@ kongctl create spat \
   --output env
 ```
 
-You can use `--system-account-id` instead of `--system-account-name`. sPATs
-have the same expiration limits and one-time secret output behavior as PATs.
+You can use `--system-account-id` instead of `--system-account-name`. System
+access tokens have the same expiration limits and one-time secret output
+behavior as PATs.
 
 List, retrieve, or delete sPAT metadata within a system account:
 
