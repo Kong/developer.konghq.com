@@ -1,5 +1,18 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "tls_client_certificate": {
+          "type": "string",
+          "enum": [
+            "REQUEST"
+          ],
+          "description": "TLS Client Certificate",
+          "default": "REQUEST"
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -15,19 +28,6 @@
         "grpcs",
         "https"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "tls_client_certificate": {
-          "type": "string",
-          "enum": [
-            "REQUEST"
-          ],
-          "description": "TLS Client Certificate",
-          "default": "REQUEST"
-        }
-      }
     },
     "route": {
       "type": "object",

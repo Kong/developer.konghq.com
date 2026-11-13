@@ -912,7 +912,11 @@ rows:
   {%- endif -%}
 {%- endfor -%}
 
-{% if compare_provider %}
+{% if compare_provider and provider.url_is_user_defined %}
+{{site.ai_gateway}} doesn't set a default URL for {{ include.variant_label }} or {{ include.compare_variant_label }}. Set `config.base_url` on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) to the vendor's base URL. The `{capability_path}` is determined by the AI capability.
+
+To use {{ include.compare_variant_label }}, {{ compare_provider.variant_trigger }}.
+{% elsif compare_provider %}
 By default, {{site.ai_gateway}} routes {{ provider.name }} requests to {{ include.variant_label }} at `{{ provider.url_patterns.first }}`.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 
 To route requests to {{ include.compare_variant_label }}, {{ compare_provider.variant_trigger }}. {{site.ai_gateway}} then sends them to `{{ compare_provider.url_patterns.first }}`.
