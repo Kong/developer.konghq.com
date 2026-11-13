@@ -20,6 +20,8 @@ api_specs:
 related_resources:
   - text: Get started with the {{site.identity}} Token Vault
     url: /how-to/get-started-with-token-vault/
+  - text: Authenticate to a GitHub MCP server with Token Vault and Okta
+    url: /ai-gateway/use-token-vault-with-github-mcp-server/
   - text: Principals
     url: /identity/principals/
   - text: Directories
