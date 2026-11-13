@@ -463,7 +463,7 @@ You should see an output like the following:
 NAME            ID             PROGRAMMED   ORGID        AGE
 team-platform   <konnect-id>   True         <org-id>     2m
 ```
-{: data-test-step="block" }
+{:.no-copy-code}
 
 {% on_prem %}
 content: |
