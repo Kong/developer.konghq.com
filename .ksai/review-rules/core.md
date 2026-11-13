@@ -20,6 +20,8 @@ Post at most one finding per rule per PR. List repeats in the same comment.
 - **Link to reference pages.** The first mention in a section of a policy, plugin, endpoint, config field or entity that has a reference page is not linked. Do not require links to pages that do not exist or on every mention.
 - **Repeated content.** The same text is repeated across tabs, providers or pages. Suggest extracting an include, in prose. Not a violation: text inside a step list where an include would break numbering.
 
+- **Broken anchors after a rename or split.** The PR renames a heading, moves a section to another page, or splits a page, and a link elsewhere in the repo still points at the old `#anchor` or the old page section. Search for the old slug in `app/` and suggest the corrected link. Cite the linking file and line. Not a violation: a link whose target is added by a sibling PR.
+
 ## Raise as a question, never a suggestion
 
 - Whether to split a long step, reorder a section, or move a limitation under its own heading, when the order clearly fights the reader's sequence. Whole-page length on concept and reference pages is covered by `overload.md`; do not raise it here.
