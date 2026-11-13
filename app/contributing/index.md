@@ -79,7 +79,7 @@ You can use certain Liquid syntax blocks in how-to and reference pages to help r
 
 ### Entity examples
 
-The `entity_examples` block generates an [Gateway entity](/gateway/entities/) example, with support for multiple entities in a block. This renders in _one_ format based on the tool you've specified in the page metadata.
+The `entity_examples` block generates a [Gateway entity](/gateway/entities/) example, with support for multiple entities in a block. This renders in _one_ format based on the tool you've specified in the page metadata.
 
 If you want an entity example rendered in multiple formats, use [`entity_example`](#entity-example).
 
@@ -162,7 +162,7 @@ formats:
 
 ### Control plane requests
 
-Use this block when you are writing a how to for both {{site.base_gateway}} and {{site.konnect_short_name}} and you want to send a request via the control plane.
+Use this block when you are writing a how-to for both {{site.base_gateway}} and {{site.konnect_short_name}} and you want to send a request via the control plane.
 
 {% navtabs "control plane request" %}
 {% navtab "Code example" %}
@@ -909,7 +909,7 @@ Displays a regular table that contains text.
 
 The Kong Developer site uses tools to help with automation.
 
-### Broken link checker: ignore URls
+### Broken link checker: ignore URLs
 
 For more information, see the [broken link checker README](https://github.com/Kong/developer.konghq.com/tree/main/tools/broken-link-checker#readme).
 
