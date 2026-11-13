@@ -17,6 +17,8 @@ works_on:
   - konnect
 
 related_resources:
+  - text: Disaster recovery for Operator-managed Gateways
+    url: /operator/dataplanes/disaster-recovery/
   - text: "Managed Gateways"
     url: /operator/dataplanes/managed-gateways/
   - text: "Gateway API"

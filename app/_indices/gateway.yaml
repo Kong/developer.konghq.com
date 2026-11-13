@@ -106,6 +106,16 @@ sections:
       - path: /how-to/build-a-custom-docker-image/
       - path: /gateway/cloud-provider-support-matrix/
 
+  - title: Disaster Recovery
+    items:
+      - path: /gateway/disaster-recovery/kubernetes/
+      - path: /gateway/disaster-recovery/kubernetes/prepare/
+      - path: /gateway/disaster-recovery/kubernetes/konnect/
+      - path: /gateway/disaster-recovery/kubernetes/hybrid/
+      - path: /gateway/disaster-recovery/kubernetes/test/
+      - path: /how-to/reconnect-konnect-data-planes-after-cluster-loss/
+      - path: /how-to/recover-hybrid-deployment-after-cluster-loss/
+
   - title: Upgrade and Migration
     items:
       - path: /gateway/upgrade/

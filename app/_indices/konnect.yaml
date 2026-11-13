@@ -12,6 +12,11 @@ sections:
       - path: /gateway/topology-hosting-options/
       - path: /konnect-platform/kai/
   
+  - title: Disaster Recovery
+    items:
+      - path: /gateway/disaster-recovery/kubernetes/konnect/
+      - path: /how-to/reconnect-konnect-data-planes-after-cluster-loss/
+
   - title: Konnect Applications
     items:
       - path: /dev-portal/

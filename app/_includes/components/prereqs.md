@@ -33,7 +33,7 @@
 {% include prereqs/products/gateway.md rbac=page.rbac env_variables=variables %}
 {%- endif -%}
 {%- endif -%}
-{%- if page.products contains 'kic'  -%}
+{%- if page.products contains 'kic' and page.works_on contains 'konnect' -%}
 {% include prereqs/kubernetes/kic-konnect-cp.md prereqs=prereqs %}
 {%- endif -%}
 {%- for product_map in prereqs.product_includes_map %}{% assign product = product_map[0] %}{% assign product_include = product_map[1] %}
