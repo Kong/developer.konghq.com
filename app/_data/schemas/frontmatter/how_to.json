@@ -22,7 +22,11 @@
         "a"
       ]
     },
-    "min_version": { "$ref": "schema:base#/definitions/min_version" }
+    "min_version": { "$ref": "schema:base#/definitions/min_version" },
+    "run_in_kai": {
+      "type": "string",
+      "minLength": 1
+    }
   },
   "required": ["tldr", "content_type", "title", "products", "permalink"]
 }

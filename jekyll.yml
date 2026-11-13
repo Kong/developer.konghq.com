@@ -24,6 +24,8 @@ links:
   share: https://developer.konghq.com
   web: https://developer.konghq.com
   direct: https://packages.konghq.com/public
+  kai_prompt_url: https://cloud.konghq.com/us/overview?agent=true&agent-prompt=
+  claude_prompt_url: https://claude.ai/new?q=
 
 plugins:
   - jekyll-include-cache

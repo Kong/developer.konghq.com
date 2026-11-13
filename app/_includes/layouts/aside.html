@@ -8,10 +8,13 @@
 <div class="info-box">
 {% comment %}XXX: Unfortunately, this needs to be here because contentblock caches the content.{% endcomment %}
 {% if page.content_type == 'how_to' %}
+    {% include info_box/sections/run_in_kai.html %}
     {% include_cached info_box/sections/controls.html works_on=page.works_on mobile=include.mobile %}
 {% endif %}
 
 {% contentblock info_box %}
+
+{% include info_box/sections/related_skills.html %}
 </div>
 {% endifhascontent %}
 
