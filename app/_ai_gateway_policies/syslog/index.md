@@ -131,7 +131,7 @@ The Syslog AI Policy supports the following scopes:
 Use global scope to ship all {{site.ai_gateway}} traffic to syslog.
 The data plane logs every request that it processes, including requests to AI Models without an attached Policy, so expect a higher log volume.
 Attach the Policy to an AI Model, AI Agent, or AI MCP Server to log one entity, or to an AI Consumer or AI Consumer Group to log one caller.
-The Consumer scopes log only requests that the data plane has authenticated as that caller.
+The Consumer scopes only log requests that the data plane has authenticated as that caller.
 Only one Syslog Policy applies to a request. When you attach the Policy to an entity and also apply one globally, the Policy attached to the entity applies to that entity's requests.
 
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
