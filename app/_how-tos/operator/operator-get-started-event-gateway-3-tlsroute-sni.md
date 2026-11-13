@@ -350,7 +350,7 @@ This guide uses a separate control plane so that it can run alongside the `portM
              sniSuffix: ".keg.test.local"
              brokerHostFormat:
                type: per_cluster_suffix
-             advertisedPort: 9092
+             advertisedPort: 19092
      eventGatewayListenerRef:
        type: namespacedRef
        namespacedRef:

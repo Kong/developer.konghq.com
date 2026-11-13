@@ -79,6 +79,13 @@ rows:
   - resource: "`EventGatewayListenerPolicy`"
     api_group: "`configuration.konghq.com/v1alpha1`"
     purpose: Configures routing and TLS behavior on the listener
+  - resource: "`EventGatewayVirtualClusterPolicy`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: |
+      Applies a cluster-level policy to a virtual cluster, such as [ACLs](/event-gateway/policies/acl/) or [request rule validation](/event-gateway/policies/request-rule-validator/)
+  - resource: "`EventGatewayVirtualClusterPolicyChain`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Sets the execution order of a virtual cluster's cluster-level policies. List every `EventGatewayVirtualClusterPolicy` of the virtual cluster exactly once.
   - resource: "`EventGatewayVirtualClusterConsumePolicy`"
     api_group: "`configuration.konghq.com/v1alpha1`"
     purpose: Applies consume-side policy to a virtual cluster
@@ -88,6 +95,17 @@ rows:
   - resource: "`EventGatewaySchemaRegistry`"
     api_group: "`configuration.konghq.com/v1alpha1`"
     purpose: Connects to a schema registry for consume and produce schema validation policies
+  - resource: "`EventGatewayStaticKey`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: |
+      Stores a [static key](/event-gateway/entities/static-key/) used by encryption and decryption policies
+  - resource: "`EventGatewayTLSTrustBundle`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: |
+      Stores the CA certificates in a [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/), used to verify client certificates for mTLS authentication
+  - resource: "`EventGatewayDataPlaneCertificate`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Registers a data plane certificate with the control plane. The operator creates one for each `KegDataPlane`, so you don't usually create it yourself.
   - resource: "`KegDataPlane`"
     api_group: "`eventgateway.konghq.com/v1alpha1`"
     purpose: Deploys the {{ site.event_gateway_short }} data plane in Kubernetes
@@ -100,9 +118,19 @@ Resources reference each other in this order:
 2. `EventGatewayVirtualCluster.spec.eventGatewayBackendClusterRef` points to an `EventGatewayBackendCluster`
 3. `EventGatewayListener.spec.gatewayRef` points to the same `KonnectEventGateway`
 4. `EventGatewayListenerPolicy.spec.eventGatewayListenerRef` points to an `EventGatewayListener`
-5. Consume and produce policies point to an `EventGatewayVirtualCluster`
+5. Cluster, consume, and produce policies point to an `EventGatewayVirtualCluster`, and an `EventGatewayVirtualClusterPolicyChain` lists the cluster policies of that virtual cluster in execution order
 6. `EventGatewaySchemaRegistry.spec.gatewayRef` points to the same `KonnectEventGateway`, and consume or produce policies reference it by name via `schemaValidation.config.{json,confluentSchemaRegistry}.schemaRegistry`
-7. `KegDataPlane.spec.controlPlaneRef` points to the `KonnectEventGateway`
+7. `EventGatewayStaticKey.spec.gatewayRef` and `EventGatewayTLSTrustBundle.spec.gatewayRef` point to the same `KonnectEventGateway`
+8. `KegDataPlane.spec.controlPlaneRef` points to the `KonnectEventGateway`
+
+{:.info}
+> Starting in {{ site.operator_product_name }} 2.4, gateway-scoped resources accept `spec.parentRef` in place of `spec.gatewayRef`.
+> `spec.parentRef` references the control plane by `group`, `kind`, `name`, and an optional `namespace`, for example `group: konnect.konghq.com` and `kind: KonnectEventGateway`.
+> `spec.gatewayRef` is deprecated but still works. Set exactly one of the two.
+> You can replace `spec.gatewayRef` with a `spec.parentRef` that references the same gateway, but not the other way around.
+
+The parent references of these resources can't be changed after the resource has been created in {{ site.konnect_short_name }}.
+For example, to move a virtual cluster to a different backend cluster, you must recreate the `EventGatewayVirtualCluster`.
 
 ## Deployment patterns
 
@@ -196,6 +224,8 @@ spec:
     namespacedRef:
       name: sni-listener
 ```
+
+Set `advertisedPort` to the port that clients connect to, which is the port of the `Gateway` listener, not the port of the `KegDataPlane` Service or the upstream Kafka brokers.
 
 With a virtual cluster `dnsLabel` of `vc-tls-1`, clients receive metadata like:
 
