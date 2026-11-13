@@ -16,6 +16,8 @@ tags:
   - restore
   - failover
 related_resources:
+  - text: "Recover a {{site.kic_product_name_short}} deployment after a cluster loss"
+    url: /kubernetes-ingress-controller/recover-from-cluster-loss/
   - text: Kubernetes disaster recovery guides
     url: /gateway/disaster-recovery/kubernetes/
   - text: Prepare for disaster recovery
@@ -27,7 +29,7 @@ related_resources:
 ---
 
 A [DB-less](/gateway/db-less-mode/) {{site.base_gateway}} managed by {{site.kic_product_name}} doesn't have a database.
-{{site.kic_product_name_short}} builds the gateway configuration from Kubernetes resources, such as Ingresses, HTTPRoutes, and KongPlugins.
+{{site.kic_product_name_short}} builds the {{site.base_gateway}} configuration from Kubernetes resources, such as Ingresses, HTTPRoutes, and KongPlugins.
 When you lose the cluster, you lose those resources, the Helm release, and the Secrets.
 No running gateway or last known good configuration is available, so you rebuild the deployment from files that you saved outside the cluster.
 
@@ -58,7 +60,7 @@ rows:
   - item: Secrets
     why: "TLS certificates and keys, the license, and credentials. Restore them from your secret store, not from a plaintext export."
   - item: Application manifests
-    why: The Deployments and Services that the routes send traffic to.
+    why: The Deployments and Services that the routing resources send traffic to.
   - item: Custom plugin artifacts
     why: The code or images of any custom plugins that the gateway loads.
 {% endtable %}
@@ -75,7 +77,7 @@ In the replacement cluster, restore the deployment in the following order:
 1. Restore the application and the routing resources.
 
 Don't wait for the DB-less gateway to become ready before you restore the routing resources.
-The gateway can need that configuration to pass its readiness check.
+The gateway may need that configuration to pass its readiness check.
 For the same reason, don't use `helm install --wait` for the restore.
 
 ## Export routing resources without a repository

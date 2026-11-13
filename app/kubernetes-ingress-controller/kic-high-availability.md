@@ -15,6 +15,8 @@ works_on:
   - konnect
 
 related_resources:
+  - text: "Recover a {{site.kic_product_name_short}} deployment after a cluster loss"
+    url: /kubernetes-ingress-controller/recover-from-cluster-loss/
   - text: Disaster recovery for KIC-managed Gateways
     url: /kubernetes-ingress-controller/disaster-recovery/
 

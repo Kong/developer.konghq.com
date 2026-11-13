@@ -63,7 +63,6 @@ automated_tests: false
 A DB-less {{site.base_gateway}} managed by {{site.kic_product_name}} gets all of its configuration from Kubernetes resources.
 When you lose the cluster, you rebuild the deployment from a recovery set: files and Secrets that you saved outside the cluster.
 
-In this guide, you'll save a recovery set for the routing configuration that you created in the prerequisites, delete the cluster, and restore the deployment in a new cluster.
 For the full list of what to save and how to adapt the procedure to your deployment, see [Disaster recovery for DB-less deployments managed by {{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/).
 
 ## Record the baseline response
@@ -147,7 +146,7 @@ The chart values and the Ingress reference Secrets, so restore them before you i
    ```
 
 Don't wait for the gateway to become ready.
-A DB-less gateway can need its routing configuration to pass its readiness check, and you restore that configuration in the next step.
+A DB-less gateway may need its routing configuration to pass its readiness check.
 
 ## Restore the application and routes
 
@@ -166,7 +165,7 @@ A DB-less gateway can need its routing configuration to pass its readiness check
 ## Validate
 
 1. The replacement cluster has a new load balancer address.
-   Read it:
+   Export it:
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')

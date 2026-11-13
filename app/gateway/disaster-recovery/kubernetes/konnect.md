@@ -1,5 +1,5 @@
 ---
-title: "Recover {{site.konnect_short_name}}-managed data planes on Kubernetes"
+title: "Disaster recovery for {{site.konnect_short_name}}-managed data planes on Kubernetes"
 description: "Learn what to save to reconnect Kubernetes data planes to a surviving Konnect control plane after a cluster loss, and how to recover {{site.operator_product_name}} ownership of Konnect entities."
 content_type: reference
 layout: reference
@@ -17,6 +17,10 @@ tags:
   - restore
   - failover
 related_resources:
+  - text: "Reconnect {{site.konnect_short_name}} data planes after a Kubernetes cluster loss"
+    url: /how-to/reconnect-konnect-data-planes-after-cluster-loss/
+  - text: "Recover {{site.operator_product_name}} ownership of {{site.konnect_short_name}} entities after a cluster loss"
+    url: /operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/
   - text: Prepare for disaster recovery
     url: /gateway/disaster-recovery/kubernetes/prepare/
   - text: Test disaster recovery
@@ -30,7 +34,7 @@ related_resources:
 When you lose the Kubernetes cluster that runs your {{site.konnect_short_name}} data planes, the {{site.konnect_short_name}} control plane and its configuration survive.
 The data plane pods, the Helm release, and the Kubernetes Secrets don't.
 To recover traffic, you install replacement data planes that connect to the same control plane.
-If {{site.operator_product_name}} managed your Gateway entities, you also give the new {{site.operator_product_name}} installation ownership of the surviving entities.
+If {{site.operator_product_name}} managed your {{site.base_gateway}} entities, you also give the new {{site.operator_product_name}} installation ownership of the surviving entities.
 
 This recovery needs the original control plane to be reachable.
 If the {{site.konnect_short_name}} control plane is unavailable, or if you fail over to another geo, you need a different procedure.
@@ -63,7 +67,7 @@ rows:
     why: "If {{site.operator_product_name}} manages your entities, save the KongService and KongRoute manifests, the {{site.konnect_short_name}} ID of each entity, and the UID of each Kubernetes object. You can't read them from the lost cluster."
 {% endtable %}
 
-You don't need to save the Gateway configuration.
+You don't need to save the {{site.base_gateway}} configuration.
 During this recovery, the existing control plane remains the configuration source.
 Don't sync an old configuration export over its current state.
 
@@ -92,7 +96,7 @@ To recover ownership, the new installation:
 1. Mirrors the existing control plane with a KonnectGatewayControlPlane that uses `source: Mirror` and the original ID.
    Mirroring the control plane doesn't adopt its Gateway Services or Routes.
 1. Removes the stale `k8s-uid` tag from each entity.
-1. Adopts each entity in `match` mode: the Gateway Service first, then the Routes that reference it.
+1. Adopts each entity in `match` mode: the Service first, then the Routes that reference it.
 
 {:.warning}
 > Before you change ownership tags, make sure that the original {{site.operator_product_name}} cannot resume reconciliation. Pause its GitOps application, and stop or isolate the original controller if it survives. To isolate the controller, revoke the {{site.konnect_short_name}} token that it uses. Deleting its token Secret does not isolate it, because {{site.operator_product_name}} adds a finalizer to that Secret while resources reference it. Two controllers must not manage the same remote entity.

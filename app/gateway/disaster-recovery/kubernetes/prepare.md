@@ -30,14 +30,7 @@ related_resources:
 A recovery set is the collection of files, secrets, and records that you need to rebuild a {{site.base_gateway}} deployment on Kubernetes.
 Prepare a recovery set that you can use without access to the original Kubernetes cluster.
 The recovery reference for your deployment lists what to save, and its how-to shows the commands to restore it.
-
-## Choose the failure you will test
-
-Each recovery guide covers one failure and one recovery source.
 To find the guide that matches how you manage {{site.base_gateway}} configuration, see [Disaster recovery for {{site.base_gateway}} on Kubernetes](/gateway/disaster-recovery/kubernetes/).
-
-Start with one deployment type.
-A successful cluster replacement doesn't show that you can recover during a {{site.konnect_short_name}} outage, or when you also lose the application database.
 
 ## Manage configuration as code
 
@@ -45,12 +38,12 @@ We recommend that you keep all Kubernetes configuration in source control and de
 With this approach, recovery is a normal deployment: you point the pipeline at the replacement cluster and apply the revision that was running before the failure.
 That revision is your recovery point.
 
-Keep these items in the repository:
+Keep the following items in the repository:
 
 * Helm chart versions and values files, or the CD application definitions that reference them.
 * CRD bundles, including Gateway API CRDs, at the versions you run.
 * Gateway API resources, Ingresses, and Kong configuration resources such as KongPlugins.
-* Gateway entities for {{site.konnect_short_name}} and self-managed hybrid control planes, as declarative configuration such as decK files, Terraform, or {{site.operator_product_name}} manifests.
+* {{site.base_gateway}} entities for {{site.konnect_short_name}} and self-managed hybrid control planes, as declarative configuration such as decK files, Terraform, or {{site.operator_product_name}} manifests.
 
 Don't commit Secrets in plaintext.
 Keep certificates, keys, tokens, and licenses in an external secret store, and reference them from the repository with a tool such as External Secrets Operator or Sealed Secrets.
@@ -81,7 +74,7 @@ Include the following items:
 * For a hybrid deployment, a PostgreSQL backup and the Keyring recovery material.
 * For a {{site.konnect_short_name}} deployment, the existing control plane and entity IDs.
 
-Preserve application configuration and dependencies, not only the gateway configuration.
+Preserve application configuration and dependencies, not only the {{site.base_gateway}} configuration.
 Restoring a Service doesn't restore the application data behind it.
 
 Protect the recovery set as secret material, because Helm values and database backups can contain credentials.
@@ -103,7 +96,7 @@ Pass the context explicitly in each recovery command, so that a command can't ru
 Make sure that each variable points to the correct cluster before you collect files or restore resources.
 
 Pause deployment automation during recovery, so that it doesn't apply stale configuration.
-For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, see [Release stale ownership for one entity](/gateway/disaster-recovery/kubernetes/konnect/#release-stale-ownership-for-one-entity).
+For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, see [Release stale ownership tags](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/#release-the-stale-ownership-tags).
 
 Document the exact external routing change, and record the current value and the rollback value.
 For example, the change can replace the CNAME target for `api.example.com` with the new LoadBalancer hostname.

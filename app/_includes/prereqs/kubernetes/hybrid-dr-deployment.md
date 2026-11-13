@@ -147,7 +147,7 @@ This guide starts from a hybrid {{site.base_gateway}} in the `kong-dr` cluster: 
    kubectl port-forward -n kong service/kong-cp-kong-admin 8001 > /dev/null 2>&1 &
    ```
 
-1. Create a [Gateway Service](/gateway/entities/service/) named `dr-check` that points to an upstream:
+1. Create a [Service](/gateway/entities/service/) named `dr-check` that points to an upstream:
 
    ```bash
    curl -X POST localhost:8001/services \

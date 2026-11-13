@@ -70,12 +70,11 @@ In a self-managed [hybrid mode](/gateway/hybrid-mode/) deployment, the control p
 When you lose the cluster and its database, you restore the database from a backup, start a control plane on top of it, and connect new data planes.
 The recovered configuration is the configuration at the time of the backup.
 
-In this guide, you'll back up the hybrid {{site.base_gateway}} that you deployed in the prerequisites, delete the cluster, and restore the deployment in a new cluster.
 For what to save, Keyring recovery, and how to adapt the procedure to an external database, see [Recover a self-managed hybrid deployment on Kubernetes](/gateway/disaster-recovery/kubernetes/hybrid/).
 
 ## Record the baseline response
 
-1. Read the address of the data plane proxy:
+1. Export the address of the data plane proxy:
 
    ```bash
    export PROXY_IP=$(kubectl get service --namespace kong kong-dp-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
@@ -234,7 +233,7 @@ helm install kong-dp "recovery/kong-${GATEWAY_CHART_VERSION}.tgz" -n kong \
 ## Validate
 
 1. The replacement data plane has a new load balancer address.
-   Read it:
+   Export it:
 
    ```bash
    export PROXY_IP=$(kubectl get service --namespace kong kong-dp-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
@@ -249,8 +248,7 @@ helm install kong-dp "recovery/kong-${GATEWAY_CHART_VERSION}.tgz" -n kong \
 
    You'll see the same `HTTP/1.1 200 OK` response from httpbin.
 
-1. To make sure that the recovered control plane distributes new configuration, send a request to a path that the `dr-check` Route doesn't match yet.
-   Route paths are prefixes, so `/dr-check-recovered` would already match:
+1. To make sure that the recovered control plane distributes new configuration, send a request to a path that the `dr-check` Route doesn't match yet:
 
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" "http://$PROXY_IP/dr-verify/anything"

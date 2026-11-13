@@ -18,6 +18,8 @@ tags:
     - restore
 
 related_resources:
+  - text: "Recover a self-managed hybrid {{site.base_gateway}} deployment after a Kubernetes cluster loss"
+    url: /how-to/recover-hybrid-deployment-after-cluster-loss/
   - text: Disaster recovery on Kubernetes
     url: /gateway/disaster-recovery/kubernetes/
   - text: "Upgrade and migrate {{site.base_gateway}}"

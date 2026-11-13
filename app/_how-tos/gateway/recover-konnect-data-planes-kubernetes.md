@@ -39,11 +39,7 @@ prereqs:
     - title: "{{site.konnect_short_name}} personal access token"
       icon_url: /assets/icons/gateway.svg
       content: |
-        Create a [personal access token](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}, then export it:
-
-        ```bash
-        export KONNECT_TOKEN='YOUR KONNECT TOKEN'
-        ```
+        {% include prereqs/products/konnect-auth-only.md raw=true %}
     - title: "{{site.base_gateway}} data plane connected to {{site.konnect_short_name}}"
       icon_url: /assets/icons/gateway.svg
       include_content: prereqs/kubernetes/konnect-dr-data-plane
@@ -78,14 +74,13 @@ automated_tests: false
 
 When you lose the Kubernetes cluster that runs your data planes, the {{site.konnect_short_name}} control plane and its configuration survive.
 To recover traffic, you install replacement data planes that connect to the same control plane.
-They receive the current configuration of the control plane, so you don't restore any Gateway configuration.
+They receive the current configuration of the control plane, so you don't restore any {{site.base_gateway}} configuration.
 
-In this guide, you'll save a recovery set for the data plane that you created in the prerequisites, delete the cluster, and reconnect a data plane from a new cluster.
 For what to save and how to adapt the procedure to your deployment, see [Recover {{site.konnect_short_name}}-managed data planes on Kubernetes](/gateway/disaster-recovery/kubernetes/konnect/).
 
 ## Record the baseline response
 
-1. Read the address of the data plane proxy:
+1. Export the address of the data plane proxy:
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
@@ -194,7 +189,7 @@ Create a new, empty cluster with the same name:
    You'll see a node whose `hostname` matches the new data plane pod.
 
 1. The replacement data plane has a new load balancer address.
-   Read it:
+   Export it:
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-kong-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
@@ -209,8 +204,7 @@ Create a new, empty cluster with the same name:
 
    You'll see the same `HTTP/1.1 200 OK` response from httpbin.
 
-1. To make sure that the data plane receives new configuration, send a request to a path that the `dr-check` Route doesn't match yet.
-   Route paths are prefixes, so `/dr-check-recovered` would already match:
+1. To make sure that the data plane receives new configuration, send a request to a path that the `dr-check` Route doesn't match yet:
 
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" "http://$PROXY_IP/dr-verify/anything"

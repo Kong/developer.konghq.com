@@ -37,7 +37,7 @@ rows:
                     High availability keeps a deployment running when one of its components fails.
                     Disaster recovery restores service when the failure is too large for the deployment to recover in place.
 
-                    We recommend that you keep all Kubernetes configuration in source control and deploy it through CD or GitOps, because recovery is then a normal deployment.
+                    We recommend that you keep all Kubernetes configuration in source control and deploy it through CD or GitOps, because that makes recovery a normal deployment.
                     You apply a known revision to a replacement cluster.
                     For more information, see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
 
@@ -57,7 +57,7 @@ rows:
           - type: table
             config:
               columns:
-                - title: Where is Gateway configuration managed?
+                - title: "Where is {{site.base_gateway}} configuration managed?"
                   key: configuration
                 - title: Recovery reference
                   key: guide
@@ -65,10 +65,10 @@ rows:
                   key: howto
               rows:
                 - configuration: "A surviving {{site.konnect_short_name}} hybrid control plane, including Gateway Services and Routes managed by {{site.operator_product_name}}"
-                  guide: "[Recover {{site.konnect_short_name}}-managed data planes](/gateway/disaster-recovery/kubernetes/konnect/)"
+                  guide: "[Disaster recovery for {{site.konnect_short_name}}-managed data planes](/gateway/disaster-recovery/kubernetes/konnect/)"
                   howto: "[Reconnect data planes](/how-to/reconnect-konnect-data-planes-after-cluster-loss/), [Recover {{site.operator_product_name}} entity ownership](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/)"
                 - configuration: "A self-managed hybrid control plane backed by PostgreSQL"
-                  guide: "[Recover a self-managed hybrid deployment](/gateway/disaster-recovery/kubernetes/hybrid/)"
+                  guide: "[Disaster recovery for self-managed hybrid deployments](/gateway/disaster-recovery/kubernetes/hybrid/)"
                   howto: "[Recover a hybrid deployment](/how-to/recover-hybrid-deployment-after-cluster-loss/)"
                 - configuration: "Standalone {{site.kic_product_name}} reading Kubernetes routing resources for a DB-less gateway"
                   guide: "[Disaster recovery for {{site.kic_product_name_short}}](/kubernetes-ingress-controller/disaster-recovery/)"
@@ -94,34 +94,3 @@ rows:
                 Run the recovery for your deployment, measure recovery, and record the changes needed before the next drill.
               cta:
                 url: /gateway/disaster-recovery/kubernetes/test/
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "What these guides cover"
-              blocks:
-                - type: text
-                  text: |
-                    Each recovery reference lists what to save, the restore order, and how to adapt the recovery to your deployment.
-                    Each hands-on guide builds a starting deployment in a local k3d cluster, deletes the cluster, and restores the deployment from the saved files.
-                    Run the hands-on guide before you adapt the procedure to your production deployment.
-                    To provision that cluster and change external DNS or load balancer targets, use the tools of your infrastructure provider.
-
-                    The {{site.konnect_short_name}} guides use Helm-managed data planes and a surviving control plane.
-                    The following scenarios need separate drills:
-
-                    * Recovery during a {{site.konnect_short_name}} outage
-                    * Failover to another geo
-                    * Recovery of {{site.konnect_short_name}} Gateways that {{site.operator_product_name}} generates
-
-                    These guides don't cover the following deployments:
-
-                    * Traditional database-backed gateways
-                    * Manually configured DB-less gateways
-                    * Kong-managed cloud data planes
-                    * Recovery of a whole {{site.konnect_short_name}} organization
-
-                    For other backup methods, see [Back up and restore {{site.base_gateway}}](/gateway/upgrade/backup-and-restore/).
-                    For {{site.mesh_product_name}}, see [{{site.mesh_product_name}} disaster recovery](/mesh/disaster-recovery/).

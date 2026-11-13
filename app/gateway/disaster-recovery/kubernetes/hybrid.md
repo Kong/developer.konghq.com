@@ -1,5 +1,5 @@
 ---
-title: "Recover a self-managed hybrid deployment on Kubernetes"
+title: "Disaster recovery for self-managed hybrid deployments on Kubernetes"
 description: "Learn what to save to recover a self-managed {{site.base_gateway}} hybrid deployment on Kubernetes, how to restore its PostgreSQL database and Keyring, and how to fail back."
 content_type: reference
 layout: reference
@@ -16,6 +16,8 @@ tags:
   - restore
   - failover
 related_resources:
+  - text: "Recover a self-managed hybrid {{site.base_gateway}} deployment after a Kubernetes cluster loss"
+    url: /how-to/recover-hybrid-deployment-after-cluster-loss/
   - text: Prepare for disaster recovery
     url: /gateway/disaster-recovery/kubernetes/prepare/
   - text: Test disaster recovery

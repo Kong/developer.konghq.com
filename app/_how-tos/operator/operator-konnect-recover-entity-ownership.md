@@ -81,7 +81,6 @@ When {{site.operator_product_name}} manages {{site.konnect_short_name}} entities
 If you lose the cluster, the entities stay in {{site.konnect_short_name}}, but their owners are gone.
 A new Kubernetes object has a new UID, so {{site.operator_product_name}} rejects adoption while the old `k8s-uid` tag is on the entity.
 
-In this guide, you'll take the Gateway Service and Route that you created with {{site.operator_product_name}} in the prerequisites, delete the cluster, and adopt the same entities from a new cluster.
 For the ownership rules and the risks of this procedure, see [Recover {{site.konnect_short_name}}-managed data planes on Kubernetes](/gateway/disaster-recovery/kubernetes/konnect/#recover-operator-ownership-of-konnect-entities).
 
 ## Save the recovery set
@@ -243,7 +242,7 @@ So you fetch each entity, remove only the stale tag, and send the complete entit
      "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/routes/$ROUTE_ID"
    ```
 
-## Adopt the Gateway Service and Route
+## Adopt the Service and Route
 
 In `match` mode, {{site.operator_product_name}} takes ownership of an entity without changing it, as long as the manifest matches the entity.
 

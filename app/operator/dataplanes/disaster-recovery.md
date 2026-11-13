@@ -18,6 +18,8 @@ tags:
   - restore
   - failover
 related_resources:
+  - text: "Recover a Gateway managed by {{site.operator_product_name}} after a cluster loss"
+    url: /operator/dataplanes/how-to/recover-from-cluster-loss/
   - text: Kubernetes disaster recovery guides
     url: /gateway/disaster-recovery/kubernetes/
   - text: Prepare for disaster recovery
@@ -32,7 +34,7 @@ related_resources:
 
 {{site.operator_product_name}} creates the data plane workloads and Services of a self-hosted Gateway from the Gateway API resources that you write.
 To recover a Gateway after a cluster loss, you reinstall {{site.operator_product_name}} and reapply those resources, and {{site.operator_product_name}} creates new workloads from them.
-You don't copy the generated Deployments, and you don't depend on a gateway that kept its old configuration.
+You don't copy the generated Deployments, and you don't depend on a data plane that kept its old configuration.
 
 For data planes connected to {{site.konnect_short_name}}, see [Recover {{site.konnect_short_name}}-managed data planes on Kubernetes](/gateway/disaster-recovery/kubernetes/konnect/).
 
@@ -58,10 +60,10 @@ rows:
     why: Holds the data plane settings, including the pinned {{site.base_gateway}} image.
   - item: GatewayClass and Gateway
     why: The GatewayClass references the GatewayConfiguration, and the Gateway defines the listeners.
-  - item: Routes and Kong resources
+  - item: HTTPRoutes and Kong resources
     why: HTTPRoutes and the Kong resources that they reference, such as KongPlugins.
   - item: Application manifests
-    why: The Deployments and Services that the routes send traffic to.
+    why: The Deployments and Services that the HTTPRoutes send traffic to.
   - item: License and other Secrets
     why: "The KongLicense, and any external CA, issuer, registry credentials, or TLS Secrets that the Helm values or the resources reference."
 {% endtable %}
@@ -135,8 +137,8 @@ Applying old generated Deployments doesn't fix a failed Gateway reconciliation.
 
 If a request through the recovered Gateway fails, check the response:
 
-* `404`: The Gateway is programmed, but the route doesn't match. Check the HTTPRoute and its parent reference.
-* `503`: The gateway can't reach the backend. Check the backend readiness and the Service endpoints.
+* `404`: The Gateway is programmed, but the request doesn't match the HTTPRoute. Check the HTTPRoute rules and its parent reference.
+* `503`: The data plane can't reach the backend. Check the backend readiness and the Service endpoints.
 
 If your deployment uses TLS or authentication, repeat the HTTPS, authorized, and unauthorized requests that you recorded before the failure.
 
@@ -156,4 +158,4 @@ Update the external DNS or load balancer entry of the application to point to it
 Then send a request through the normal hostname, and compare the result with a request to the address directly.
 
 To fail back, repeat the restore against the rebuilt original environment, validate its new address, and update the client entry point again.
-Keep the accepted Gateway and route files in the deployment repository, so that GitOps keeps the recovered state.
+Keep the accepted Gateway and HTTPRoute files in the deployment repository, so that GitOps keeps the recovered state.

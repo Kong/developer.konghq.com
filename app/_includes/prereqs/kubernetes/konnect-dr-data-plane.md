@@ -114,7 +114,7 @@ This guide starts from a data plane that runs in the `kong-dr` cluster and is co
    helm install kong kong/kong -n kong -f values-dp.yaml --wait --timeout 5m
    ```
 
-1. Create a [Gateway Service](/gateway/entities/service/) named `dr-check` that points to an upstream:
+1. Create a [Service](/gateway/entities/service/) named `dr-check` that points to an upstream:
 
    {% capture create_service %}
    <!--vale off-->

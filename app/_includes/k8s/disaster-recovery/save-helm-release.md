@@ -5,7 +5,7 @@
      --all -o yaml > recovery/{{include.values_file}}
    ```
 
-1. Read the chart version of the release:
+1. Export the chart version of the release:
 
    ```bash
    export {{include.version_var}}=$(helm get metadata {{include.release}} -n {{include.namespace}} | awk '/^VERSION:/ {print $2}')

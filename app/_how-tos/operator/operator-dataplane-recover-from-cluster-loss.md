@@ -30,7 +30,7 @@ tags:
 tldr:
   q: How do I recover a Gateway managed by {{site.operator_product_name}} after I lose its Kubernetes cluster?
   a: |
-    Before the failure, save {{site.operator_product_name}}'s Helm values and chart archive, and the GatewayConfiguration, GatewayClass, Gateway, and route manifests that you wrote.
+    Before the failure, save {{site.operator_product_name}}'s Helm values and chart archive, and the GatewayConfiguration, GatewayClass, Gateway, and HTTPRoute manifests that you wrote.
     In the replacement cluster, install the saved chart, then apply the saved manifests.
     {{site.operator_product_name}} creates new data plane workloads from them.
 
@@ -70,12 +70,11 @@ automated_tests: false
 To recover a Gateway after a cluster loss, you only need those resources and {{site.operator_product_name}}'s Helm release.
 You don't save the Deployments and Services that {{site.operator_product_name}} generates, because it recreates them.
 
-In this guide, you'll save a recovery set for the Gateway that you created in the prerequisites, delete the cluster, and restore the Gateway in a new cluster.
 For the full list of what to save and how to adapt the procedure to your deployment, see [Disaster recovery for Gateways managed by {{site.operator_product_name}}](/operator/dataplanes/disaster-recovery/).
 
 ## Record the baseline response
 
-1. Read the address of the Gateway:
+1. Export the address of the Gateway:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
@@ -141,7 +140,7 @@ Create a new, empty cluster with the same name:
    " | kubectl apply -f -
    ```
 
-## Restore the Gateway and routes
+## Restore the Gateway and HTTPRoute
 
 1. Apply the saved manifest.
    It lists the resources in dependency order, so each resource exists before the next one references it:
@@ -159,7 +158,7 @@ Create a new, empty cluster with the same name:
 ## Validate
 
 1. The recovered Gateway has a new address.
-   Read it:
+   Export it:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')

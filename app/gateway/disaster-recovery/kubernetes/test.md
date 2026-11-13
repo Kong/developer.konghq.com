@@ -59,7 +59,7 @@ For a first rehearsal, keep the original environment intact as a rollback path, 
 This rehearsal tests that you can rebuild from the saved material.
 It doesn't measure a regional outage or automatic failure detection.
 
-For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, follow [Release stale ownership for one entity](/gateway/disaster-recovery/kubernetes/konnect/#release-stale-ownership-for-one-entity).
+For {{site.operator_product_name}}-managed {{site.konnect_short_name}} entities, follow [Release stale ownership tags](/operator/konnect/how-to/recover-entity-ownership-after-cluster-loss/#release-the-stale-ownership-tags).
 Don't simulate cluster loss by deleting the resources that the controller manages.
 Deleting them can remove the remote entities that the recovery expects to survive.
 
@@ -75,9 +75,9 @@ columns:
     key: result
 rows:
   - walkthrough: "{{site.kic_product_name_short}}"
-    result: "The replacement serves the saved Ingress over HTTPS with the restored certificate. A new route path also works."
+    result: "The replacement serves the saved Ingress over HTTPS with the restored certificate. A new Ingress path also works."
   - walkthrough: "{{site.operator_product_name}}"
-    result: "The Gateway becomes programmed, the new workloads serve the saved HTTPRoute, and a route update reaches them."
+    result: "The Gateway becomes programmed, the new workloads serve the saved HTTPRoute, and an HTTPRoute update reaches them."
   - walkthrough: "{{site.konnect_short_name}}"
     result: "New data planes connect to the original control plane. The IDs of the adopted Gateway Service and Route don't change. No duplicate entities appear."
   - walkthrough: Hybrid
@@ -147,7 +147,7 @@ rows:
   - field: Recovery source
     record: Manifest revision, archive filenames, backup time, and secret versions
   - field: Identity checks
-    record: Expected and observed control plane, Gateway Service, and Route IDs
+    record: Expected and observed control plane, Service, and Route IDs
   - field: Request checks
     record: Direct and client-hostname responses, for both authorized and rejected requests
   - field: Configuration check
