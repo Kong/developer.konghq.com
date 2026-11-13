@@ -14,6 +14,8 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: AI Custom Guardrail Policy
     url: /ai-gateway/policies/ai-custom-guardrail/
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
     
 faqs:
   - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
@@ -184,8 +186,8 @@ rows:
   - field: |
       `response_buffer_size`
     description: Tune how much of the upstream response is buffered before inspection; smaller values reduce latency.
-  - field: Default last message inspection with `text_source`
-    description: Keep the default behavior of checking only the last user prompt message for highest accuracy.
+  - field: Default last message inspection
+    description: Keep the default behavior of checking only the last user prompt message for highest accuracy. To inspect other content, such as tool results, use [`message_selection`](/ai-gateway/guardrail-message-selection/). The `text_source` field is deprecated.
 {% endtable %}
 
 {:.warning}

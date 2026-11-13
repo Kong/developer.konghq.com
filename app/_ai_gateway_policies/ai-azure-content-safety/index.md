@@ -13,6 +13,9 @@ categories:
 tags:
   - ai
   - safety
+related_resources:
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI Azure Content Safety Policy allows administrators to enforce 
@@ -40,6 +43,8 @@ Here's how it works if you apply it to both requests and responses:
 1. If allowed, the response is forwarded to the client.
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Azure AI Content Safety service" %}
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md %}
 
 ## Rejection modes
 

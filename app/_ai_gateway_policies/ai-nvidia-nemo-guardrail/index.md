@@ -33,6 +33,8 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 
 icon: ai-nvidia-nemo-guardrail.png
 ---
@@ -108,7 +110,9 @@ rows:
     description: "Checks both requests and responses."
 {% endtable %}
 
-To control which parts of the conversation the Policy sends for evaluation, use [`config.text_source`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-text-source). Set it to `concatenate_user_content` to check only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
+To control which parts of the conversation the Policy sends for evaluation, use [`config.message_selection`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-message-selection). It can select user, system, and assistant messages, tool calls, tool results, and reasoning, each with its own window. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+
+The [`config.text_source`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-text-source) field is deprecated and still works. To move a Policy off it, see [Migrate from legacy fields](/ai-gateway/guardrail-message-selection/#migrate-from-legacy-fields).
 
 {:.info}
 > Match the rails defined in your NeMo guardrail configuration to the phases named in `config.guarding_mode`. A configuration used with `guarding_mode: INPUT` should define only an input rail; a configuration used with `guarding_mode: OUTPUT` should define only an output rail. NeMo evaluates whichever rails a configuration defines every time it's called, regardless of `guarding_mode`, so an output rail included in an input-only check runs against an empty response.
