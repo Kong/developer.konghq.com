@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ page.feed.title | xml_escape }}</title>
+    <description>{{ page.feed.description | xml_escape }}</description>
+    <link>{{ site.links.web }}{{ page.feed.link }}</link>
+    <atom:link href="{{ site.links.web }}{{ page.url }}" rel="self" type="application/rss+xml" />
+    {%- for item in page.feed.items %}
+    <item>
+      <title>{{ item.title | liquify | xml_escape }}</title>
+      <link>{{ site.links.web }}{{ item.url }}</link>
+      <guid isPermaLink="true">{{ site.links.web }}{{ item.url }}</guid>
+      <pubDate>{{ item.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>

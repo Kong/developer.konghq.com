@@ -1,4 +1,5 @@
 name: Kong Event Gateway
+icon: /_assets/icons/products/event-gateway.svg
 releases:
   - release: "1.1.0"
     name: "Sunset"
