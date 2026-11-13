@@ -16,7 +16,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 - **The page is the level.** Nothing is hand-authored per page; every docs page must produce a playable level, including hub pages without `<main>`.
 - **The story is Kong's.** You are the gateway: each terminal is a real Kong plugin whose effect fits its purpose (Bot Detection slows bots, OpenID Connect de-authenticates agents). The mission text says so in the prompt, the opening toast, and the HUD.
 - **Leave no trace.** Esc twice restores the page exactly: no stray classes, scroll position restored, canvas removed.
-- **Discoverable, not obvious.** The only clue is a tooltip on the header logo: "This game is very ## **immersive** ##..." (`0451` is the classic immersive-sim door code).
+- **Discoverable, not obvious.** The only clue is the header logo: hover it for 3 seconds and it flips to show the Konami code with "input this" under it (`logo_flip.js`).
 
 ## Working with the owner
 
@@ -100,7 +100,8 @@ The game lives in `app/_assets/javascripts/arcade/`; the trigger is one level up
 | File | Owns |
 |---|---|
 | `../arcade.js` (trigger) | Trigger: listens for `0451` and the Konami code, lazy-loads `game.js`, calls `initTrophy()` |
-| `trophy.js` | Logo hint tooltip, completion star, best-time storage, `CAREERS_URL` |
+| `logo_flip.js` | Header logo flip that reveals the Konami code after a 3 s hover |
+| `trophy.js` | Completion star, best-time storage, `CAREERS_URL` |
 | `game.js` | State machine (`rain` → `prompt` → `playing` → `won`/`lost`), lifecycle and teardown, camera, terminals and plugin effects, cut-off countdown, win/lose |
 | `player.js` | Player physics: run, jump, double jump, drop-through, knockback |
 | `agents.js` | Agent spawning, steering, ledge infection, hits, de-authentication |
