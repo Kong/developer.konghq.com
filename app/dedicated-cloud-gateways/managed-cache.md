@@ -6,6 +6,7 @@ description: "Learn how to configure and scale a Dedicated Cloud Gateway managed
 
 products:
     - gateway
+    - ai-gateway
 breadcrumbs:
   - /dedicated-cloud-gateways/
 works_on:
@@ -343,6 +344,10 @@ You can use it with the following {{site.ai_gateway}} Policies:
 * [GraphQL Rate Limiting Advanced](/ai-gateway/policies/graphql-rate-limiting-advanced/)
 * [Service Protection](/ai-gateway/policies/service-protection/)
 * [Datakit](/ai-gateway/policies/datakit/)
+* [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/)
+* [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/)
+* [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/)
+* [AI RAG Injector](/ai-gateway/policies/ai-rag-injector/)
 
 {:.warning}
 > **Data plane required to use a managed cache**: Before you create a managed cache, make sure you've created the following:
@@ -384,6 +389,9 @@ To create a managed cache, use the following steps:
    <!--vale on-->
    {% endcapture %}
    {{ create_ai_addon | indent: 3}}
+
+   In this example, we're using a `micro` sized cache. 
+   Use the cache size that [meets the requirements](#managed-cache-sizing-recommendations) of your environment and the AI policies you plan to use.
 
 1. Export the ID of your managed cache from the response:
 
