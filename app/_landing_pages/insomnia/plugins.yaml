@@ -44,6 +44,47 @@ rows:
               url: /how-to/create-an-insomnia-plugin/
   
   - header:
+      type: h2
+      text: "Reference and guides"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Plugin reference
+            description: The context APIs available to your plugin.
+            icon: /assets/icons/document.svg
+            cta:
+              text: Learn more
+              url: /insomnia/plugins/plugin-reference/
+      - blocks:
+        - type: card
+          config:
+            title: Sandbox and trust model
+            description: How plugin code runs, pluginSandboxEnabled, and Full host access.
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Learn more
+              url: /insomnia/plugins/sandbox-and-trust/
+      - blocks:
+        - type: card
+          config:
+            title: Plugin permissions
+            description: Declare the modules and capabilities a sandboxed plugin needs.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn more
+              url: /insomnia/plugins/permissions/
+      - blocks:
+        - type: card
+          config:
+            title: Troubleshooting
+            description: Fix a plugin that failed to load, plus known limitations.
+            icon: /assets/icons/warning.svg
+            cta:
+              text: Learn more
+              url: /insomnia/plugins/troubleshooting/
+
+  - header:
       text: "How to use plugins"
       type: h2
     columns:
