@@ -234,6 +234,7 @@ sitemap:
     - /_redirects
     - /sources_urls_mapping.json
     - /sitemap.xml
+    - /feeds/security-advisories.xml
 
 # Mesh specific config
 mesh_namespace: kong-mesh-system
