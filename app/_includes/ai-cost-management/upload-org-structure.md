@@ -1,6 +1,8 @@
-{{site.ai_cost_management}} matches each automatically provisioned principal against your organization's reporting structure. Upload an org chart before you send a request.
+{{site.ai_cost_management}} matches each automatically provisioned principal against your organization's reporting structure.
+Upload an org chart if you want spend to roll up to a cost center, user, or team.
+If you skip this step, the principal is still created and the usage event still gets a subject, just without that reporting data.
 
-In production, you'll export an org chart file from your HR system, such as Workday.
+In production, you'll export this file from your HR system (HRIS).
 The file must be in CSV format and a maximum of 10 MB.
 
 For this example, we'll create a small CSV file directly, then upload it with `kongctl import`.

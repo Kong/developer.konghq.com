@@ -100,7 +100,7 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 
 {% include /ai-cost-management/add-trusted-idp.md %}
 
-## Upload an org structure
+## Upload an org structure (Optional)
 
 {% include /ai-cost-management/upload-org-structure.md %}
 
@@ -160,7 +160,7 @@ ai_gateway_models:
           values:
             - openai-chat
     targets:
-      - name: gpt-4o-mini
+      - name: gpt-5.4-nano
         provider: !ref openai-provider#name
         config:
           type: openai

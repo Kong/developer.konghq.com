@@ -1,5 +1,5 @@
 ---
-title: Get started with {{site.ai_cost_management}}
+title: Manage costs across your {{site.konnect_short_name}} org
 permalink: /ai-cost-management/getting-started/
 content_type: how_to
 description: "Set up {{site.ai_cost_management}} end-to-end: attribute usage to a principal provisioned from your OIDC provider, price a model, track spend with a budget, and capture custom tags."
@@ -34,9 +34,10 @@ breadcrumbs:
   - /ai-cost-management/
 
 tldr:
-  q: How do I get started with {{site.ai_cost_management}}?
+  q: How do I manage costs across my entire {{site.konnect_short_name}} org?
   a: |
-    To get started with {{site.ai_cost_management}}, you'll need to:
+    {{site.ai_cost_management}} enables you to manage costs across your entire {{site.konnect_short_name}} org, or in any segment of the org that you need.
+    To set up cost management, you'll need to:
     1. Add your OIDC provider as a trusted IdP in Access Management with automatic user provisioning enabled.
     1. Upload an org structure CSV with `kongctl import identity org-chart`.
     1. Create a budget with a spend limit.
@@ -88,11 +89,11 @@ cleanup:
       icon_url: /assets/icons/money.svg
     - title: Delete the price override
       content: |
-        Delete the price override you set for `gpt-4o-mini`:
+        Delete the price override you set for `gpt-5.4-nano`:
 
         1. In the sidebar, click **Cost Management**.
         1. Click **Price Catalog**, then the **Provider overrides** tab.
-        1. Open the menu for the `gpt-4o-mini` row and click **View details**.
+        1. Open the menu for the `gpt-5.4-nano` row and click **View details**.
         1. Click **Delete custom rate**, then confirm.
       icon_url: /assets/icons/money.svg
 ---
@@ -151,7 +152,7 @@ sequenceDiagram
 
 {% include /ai-cost-management/add-trusted-idp.md %}
 
-## Upload an org structure
+## Upload an org structure (Optional)
 
 {% include /ai-cost-management/upload-org-structure.md %}
 
@@ -214,7 +215,7 @@ ai_gateway_models:
           values:
             - openai-chat
     targets:
-      - name: gpt-4o-mini
+      - name: gpt-5.4-nano
         provider: !ref openai-provider#name
         config:
           type: openai
@@ -309,12 +310,12 @@ The event should look like this:
   "subject": "principal/01a1c15c-310d-79a6-acde-85f746946396",
   "context": {
     "provider": "openai",
-    "model": "gpt-4o-mini-2024-07-18",
+    "model": "gpt-5.4-nano-2026-03-17",
     "model_id": "5382d282-c9d3-4c96-910e-76af70e3c883",
     "request_mode": "oneshot"
   },
   "cost": {
-    "value": "0.00024915",
+    "value": "0.000016",
     "currency": "USD"
   },
   "tags": {
@@ -345,11 +346,11 @@ Set up an override from the {{site.konnect_short_name}} UI:
 
 1. In the sidebar, click **Cost Management**.
 1. Click **Price Catalog**.
-1. In the effective rates table, search for `gpt-4o-mini` and note a base input price for reference, for example $0.15 per million tokens.
+1. In the effective rates table, search for `gpt-5.4-nano` and note its base input price for reference.
 1. Click **Add override**.
 1. Select **Custom rate**.
 1. Click the **Provider** dropdown and select **OpenAI**.
-1. For **Model**, choose `gpt-4o-mini`.
+1. For **Model**, choose `gpt-5.4-nano`.
 1. Set **Base input** and **Output** to a rate different from the list price, so the change is easy to spot.
 1. Click **Add override**.
 
@@ -388,8 +389,8 @@ render_output: false
 <!--vale on-->
 
 Find the newest event and confirm that `cost.value` now matches your override's rate instead of the list price from the earlier validate step.
-For example, the previous event's cost was `0.00024915`.
-With a raised price, the event's cost becomes `0.000401`:
+For example, the previous event's cost was `0.000016`.
+With a raised price, the event's cost becomes `0.00022`:
 
 ```json
 {
@@ -397,12 +398,12 @@ With a raised price, the event's cost becomes `0.000401`:
   "subject": "principal/01a1c15c-310d-79a6-acde-85f746946396",
   "context": {
     "provider": "openai",
-    "model": "gpt-4o-mini-2024-07-18",
+    "model": "gpt-5.4-nano-2026-03-17",
     "model_id": "5382d282-c9d3-4c96-910e-76af70e3c883",
     "request_mode": "oneshot"
   },
   "cost": {
-    "value": "0.000401",
+    "value": "0.00022",
     "currency": "USD"
   },
   "tags": {
