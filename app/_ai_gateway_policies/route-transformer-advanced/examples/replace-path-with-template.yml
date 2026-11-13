@@ -1,0 +1,24 @@
+description: |
+  Configure the Route Transformer Advanced policy to replace the upstream path with a value that the client provides in the Custom-Path header.
+
+title: Replace a path with a template
+
+weight: 900
+
+name: replace-path-with-template
+display_name: Replace path with template
+type: route-transformer-advanced
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - global
+
+config:
+  path: /$(headers["Custom-Path"])
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
