@@ -41,6 +41,22 @@ search_aliases:
 
 The JWE Decrypt plugin makes it possible to decrypt an inbound token (JWE) in a request.
 
+## Supported algorithms
+This plugin supports the following algorithms:
+
+* RSA-OAEP
+* {% new_in 3.17 %} RSA-OAEP-256
+* ECDH-ES
+* {% new_in 3.11 %} A128KW
+* {% new_in 3.11 %} A192KW
+* {% new_in 3.11 %} A256KW
+* {% new_in 3.11 %} ECDH-ES+A128KW
+* {% new_in 3.11 %} ECDH-ES+A192KW
+* {% new_in 3.11 %} ECDH-ES+A256KW
+* {% new_in 3.11 %} A128GCMKW
+* {% new_in 3.11 %} A192GCMKW
+* {% new_in 3.11 %} A256GCMKW
+
 ## Supported content encryption algorithms
 This plugin supports the following encryption algorithms:
 
