@@ -67,7 +67,7 @@ faqs:
       tool through [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
 
-  - q: Can I apply ACLs to MCP prompts and resources? {% new_in 2.4 %}
+  - q: Can I apply ACLs to MCP prompts and resources?
     a: |
       Yes. Set `access.default_prompt_acls` and `access.default_resource_acls` on the AI MCP Server, and override per entry through `prompts[].access.acls` and `resources[].access.acls`. Prompt and resource ACLs follow the same evaluation order as tool ACLs. See [Prompts and resources](#prompts-and-resources).
       <!-- TODO(AI-66 OQ2): confirm whether `conversion-only` servers support prompts and resources. Current spec: they don't. -->
@@ -168,7 +168,7 @@ rows:
       
       `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
 
-      {% new_in 2.4 %} The `listener` mode also supports `cache.prompts_list` and `cache.resources_list` for the `prompts/list`, `resources/list`, and `resources/templates/list` responses. The same `cache_scope: public` restriction is expected to apply when `default_prompt_acls`, `default_resource_acls`, or an entry's own `access.acls` filters those lists per subject.
+      The `listener` mode also supports `cache.prompts_list` and `cache.resources_list` for the `prompts/list`, `resources/list`, and `resources/templates/list` responses. The same `cache_scope: public` restriction is expected to apply when `default_prompt_acls`, `default_resource_acls`, or an entry's own `access.acls` filters those lists per subject.
       <!-- TODO(AI-66 OQ5): confirm that the `cache_scope: public` rejection extends to prompts_list and resources_list. -->
   - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
     modes: "`upstream-server`"
@@ -448,7 +448,7 @@ Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-
 
 [Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
 
-## Prompts and resources {% new_in 2.4 %}
+## Prompts and resources
 
 In addition to tools, an AI MCP Server can govern the MCP prompts and resources that an upstream MCP server exposes. Prompts and resources use the same ACL model as tools.
 
@@ -810,7 +810,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 > - A tool's own `acls` fully overrides the default ACL for that tool.
 > - [`sources`](#schema-aigateway-mcpserver-sources) is used for tool aggregation, not for inheriting ACLs from other AI MCP Servers.
 
-{% new_in 2.4 %} Prompts and resources use the same ACL model as tools. Set [`default_prompt_acls`](#prompts-and-resources) and `default_resource_acls` alongside `default_tool_acls` in `access`, in both the consumer and OAuth variants. For the evaluation order that applies to all three primitives, see [ACL evaluation order across tools, prompts, and resources](#acl-evaluation-order-across-tools-prompts-and-resources).
+Prompts and resources use the same ACL model as tools. Set [`default_prompt_acls`](#prompts-and-resources) and `default_resource_acls` alongside `default_tool_acls` in `access`, in both the consumer and OAuth variants. For the evaluation order that applies to all three primitives, see [ACL evaluation order across tools, prompts, and resources](#acl-evaluation-order-across-tools-prompts-and-resources).
 
 ### Attribute types
 
@@ -897,7 +897,7 @@ rows:
     response: 200
 {% endtable %}
 
-### ACL evaluation order across tools, prompts, and resources {% new_in 2.4 %}
+### ACL evaluation order across tools, prompts, and resources
 
 For tools, prompts, and resources, {{site.ai_gateway}} evaluates ACLs in the following order:
 
