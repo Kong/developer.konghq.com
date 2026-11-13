@@ -169,6 +169,7 @@ Send a legitimate on-topic prompt. It should pass through to the model:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
@@ -187,6 +188,7 @@ Send an off-topic prompt. It should be rejected because it doesn't match the all
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
@@ -205,6 +207,7 @@ Send a prompt injection attempt. It should also be rejected:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:

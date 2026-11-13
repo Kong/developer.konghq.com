@@ -459,6 +459,7 @@ Send a request to the AI Model Route you configured:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:

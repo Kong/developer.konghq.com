@@ -317,6 +317,7 @@ Send an authenticated request using the API key:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
@@ -336,6 +337,7 @@ Send an unauthenticated request:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
@@ -461,7 +463,7 @@ You should see an output like the following:
 NAME            ID             PROGRAMMED   ORGID        AGE
 team-platform   <konnect-id>   True         <org-id>     2m
 ```
-{: data-test-step="block" }
+{:.no-copy-code}
 
 {% on_prem %}
 content: |
