@@ -16,6 +16,8 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: AI Custom Guardrail Policy
     url: /ai-gateway/policies/ai-custom-guardrail/
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI Prompt Guard Policy lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists, to guard against misuse of text completion requests.
@@ -28,7 +30,7 @@ For chat requests, this means the Policy only evaluates the `messages[].content`
 
 You can use a combination of `allow` and `deny` rules to preserve integrity and compliance when serving an LLM model using {{site.ai_gateway}}.
 
-* **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message.
+* **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message. The `allow_all_conversation_history` and `match_all_roles` fields that control this are deprecated. To choose which messages the Policy scans, including tool calls and tool results, use `message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 * **For `llm/v1/completions` type models**: There is only one `prompt` field, thus the whole prompt is scanned on every request.
 
 ## How it works

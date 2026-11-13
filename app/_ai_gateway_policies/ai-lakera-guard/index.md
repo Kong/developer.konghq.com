@@ -26,6 +26,8 @@ related_resources:
     url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI Lakera Guard Policy evaluates requests and responses that pass through {{site.ai_gateway}} to Large Language Models (LLMs). It uses the [Lakera Guard SaaS service](https://www.lakera.ai/) to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The AI Lakera Guard Policy supports multiple inspection modes and guards both inbound prompts and outbound model outputs.
@@ -41,6 +43,8 @@ The AI Lakera Guard Policy inspects model traffic at three points in the LLM req
 The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not support.
 
 ## Inspected content
+
+To choose which parts of the conversation the Policy sends to Lakera Guard, such as only the newest user message or tool results, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 {% table %}
 columns:

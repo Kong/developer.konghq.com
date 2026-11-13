@@ -22,6 +22,8 @@ related_resources:
     url: /ai-gateway/policies/ai-custom-guardrail/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/#ai-pii-sanitizer-logs
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI PII Sanitizer Policy for {{site.ai_gateway}} helps protect sensitive information in client request bodies before they reach upstream AI providers or tools.
@@ -40,6 +42,8 @@ The AI PII Sanitizer Policy can be applied to:
 * Input data (requests)
 * Output data (responses)
 * Both input and output data
+
+To choose which parts of the request the Policy sends to the PII service, use `config.message_selection`. This replaces `allow_all_conversation_history`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 Here's how it works if you apply it to both requests and responses:
 

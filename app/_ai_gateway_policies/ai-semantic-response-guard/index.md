@@ -30,6 +30,8 @@ related_resources:
     url: /ai-gateway/policies/ai-semantic-cache/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies
     url: /ai-gateway/semantic-similarity/
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 
 icon: ai-semantic-response-guard.png
 
@@ -62,6 +64,8 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 1. Generates embeddings for the extracted text.
 1. Searches the vector database (Redis or pgvector) against configured `allow_responses` or `deny_responses`.
 1. Applies the decision rules described in [How it works](#how-it-works).
+
+To choose which parts of the response the Policy evaluates, such as the answer text without tool calls or reasoning, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
