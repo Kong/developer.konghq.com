@@ -67,6 +67,10 @@ faqs:
       tool through [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
 
+  - q: Can I apply ACLs to MCP prompts and resources?
+    a: |
+      Yes. Set `access.default_prompt_acls` and `access.default_resource_acls` on the AI MCP Server, and override per entry through `prompts[].access.acls` and `resources[].access.acls`. Prompt and resource ACLs follow the same evaluation order as tool ACLs. See [Prompts and resources](#prompts-and-resources).
+
   - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
       Set [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type) to `oauth_access_token` and provide [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (a jq
@@ -162,6 +166,8 @@ rows:
       Caches hints (`ttl_ms` and `cache_scope`) that {{site.ai_gateway}} emits on the `tools/list` and `server/discover` responses it serves. 
       
       `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
+
+      The `listener` mode also supports `cache.prompts_list` and `cache.resources_list` for the `prompts/list`, `resources/list`, and `resources/templates/list` responses. The same `cache_scope: public` restriction is expected to apply when `default_prompt_acls`, `default_resource_acls`, or an entry's own `access.acls` filters those lists per subject.
   - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
     modes: "`upstream-server`"
     description: |
@@ -439,6 +445,84 @@ For richer mapping, supply [`request_body`](#schema-aigateway-mcpserver-tools-re
 Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-annotations) that hint at tool behavior to clients (for example, whether a tool is read-only, idempotent, or destructive). Annotations don't change runtime behavior; they help clients decide whether to surface a tool, confirm before invocation, or treat it as safe to retry.
 
 [Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
+
+## Prompts and resources
+
+In addition to tools, an AI MCP Server can govern the MCP prompts and resources that an upstream MCP server exposes. Prompts and resources use the same ACL model as tools.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Primitive
+    key: primitive
+  - title: Governed operations
+    key: ops
+  - title: Entry fields
+    key: fields
+rows:
+  - primitive: "Prompts (`prompts[]`)"
+    ops: "`prompts/get`, and visibility in `prompts/list`"
+    fields: |
+      * `name` (required): 1 to 128 characters matching `^[A-Za-z0-9._-]+$`, unique per server. {{site.ai_gateway}} matches it to the upstream prompt by name.
+      * `title`, `description`: optional display metadata.
+      * `access.acls`: per-prompt `allow` and `deny` lists.
+  - primitive: "Resources (`resources[]`)"
+    ops: "`resources/read`, `resources/subscribe`, and visibility in `resources/list` and `resources/templates/list`"
+    fields: |
+      * `uri` (required): 1 to 2048 characters, unique per server. It matches the upstream resource `uri` or resource template `uriTemplate`. A [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570) template entry governs every concrete URI that it expands to.
+      * `name`: display only. {{site.ai_gateway}} doesn't use it for matching.
+      * `title`, `description`, `mime_type`: optional display metadata.
+      * `access.acls`: per-resource `allow` and `deny` lists.
+{% endtable %}
+<!-- vale on -->
+
+How the entries behave depends on the mode:
+
+* `passthrough-listener`: entries are ACL-only. A prompt entry takes `name` and `access`. A resource entry takes `uri` and `access`.
+* `upstream-server`: entries can also override metadata. Prompt entries override `title` and `description`. Resource entries override `name`, `title`, `description`, and `mime_type`. Fields that you don't set fall back to the values that the upstream MCP server reports.
+* `listener`: governs aggregated prompts and resources through the server-level defaults and the cache hints. 
+* `conversion-only`: no prompts or resources.
+
+The following example governs prompts and resources on a `passthrough-listener`. All AI Consumers get read access to resources by default, but only the `admins` group can read the `file:///secrets/{name}` template and run the `deploy-checklist` prompt:
+
+```yaml
+type: passthrough-listener
+display_name: docs-mcp
+name: docs-mcp
+access:
+  acl_attribute_type: consumer
+  auth_strategies:
+    - my-key-auth
+  acls:
+    allow:
+      - users
+      - admins
+  default_prompt_acls:
+    allow:
+      - users
+      - admins
+  default_resource_acls:
+    allow:
+      - users
+      - admins
+config:
+  url: http://mcp-upstream.internal:8080
+  route:
+    paths:
+      - /docs-mcp
+prompts:
+  - name: deploy-checklist
+    access:
+      acls:
+        allow:
+          - admins
+resources:
+  - uri: "file:///secrets/{name}"
+    access:
+      acls:
+        allow:
+          - admins
+```
 
 ## Sessions
 
@@ -721,6 +805,8 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 > - A tool's own `acls` fully overrides the default ACL for that tool.
 > - [`sources`](#schema-aigateway-mcpserver-sources) is used for tool aggregation, not for inheriting ACLs from other AI MCP Servers.
 
+Prompts and resources use the same ACL model as tools. Set [`default_prompt_acls`](#prompts-and-resources) and `default_resource_acls` alongside `default_tool_acls` in `access`, in both the consumer and OAuth variants. For the evaluation order that applies to all three primitives, see [ACL evaluation order across tools, prompts, and resources](#acl-evaluation-order-across-tools-prompts-and-resources).
+
 ### Attribute types
 
 For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
@@ -805,6 +891,16 @@ rows:
     proxy: Yes
     response: 200
 {% endtable %}
+
+### ACL evaluation order across tools, prompts, and resources
+
+For tools, prompts, and resources, {{site.ai_gateway}} evaluates ACLs in the following order:
+
+1. The server-level `access.acls` gates every MCP operation.
+1. The primitive default applies: `default_tool_acls`, `default_prompt_acls`, or `default_resource_acls`.
+1. The entry's own `access.acls` overrides the primitive default.
+
+{{site.ai_gateway}} omits denied prompts and resources from list results, and rejects `prompts/get`, `resources/read`, and `resources/subscribe` calls on them. If you don't set a primitive default, the server-level `access.acls` is the only governing rule for that primitive.
 
 ### ACL tool control request flow
 
