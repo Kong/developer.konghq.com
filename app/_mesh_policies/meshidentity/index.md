@@ -1,252 +1,331 @@
 ---
 title: Mesh Identity
 name: MeshIdentities
-description: Define how workloads obtain cryptographic identity with MeshIdentity, supporting SPIFFE IDs and multiple certificate providers.
 products:
-  - mesh
+- mesh
+description: Give workloads a SPIFFE identity and the certificates that prove it.
 content_type: plugin
-type: policy
 icon: policy.svg
-tags:
-  - certificates
-  - security
-  - mtls
-
-min_version:
-  mesh: '2.12'
-
 related_resources:
-  - text: Issue identity with MeshIdentity bundled provider
-    url: /mesh/issue-identity-with-meshidentity/
-  - text: Issue identity with MeshIdentity Spire provider
-    url: /mesh/issue-identity-with-meshidentity-spire/
-  - text: MeshService
-    url: /mesh/meshservice/
-  - text: MeshTLS
-    url: /mesh/policies/meshtls/
-  - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission_experimental/
+- text: Migrate mesh mTLS to MeshIdentity
+  url: "/mesh/migrate-mtls-to-meshidentity/"
+- text: Policy targeting
+  url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
+  url: "/mesh/migrate-policies-to-3/#meshidentity"
+- text: MeshTrust resource
+  url: "/mesh/policies/meshtrust/"
+- text: MeshTrafficPermission policy
+  url: "/mesh/policies/meshtrafficpermission/"
+- text: "Concepts: Identity and trust"
+  url: "/mesh/concepts/#identity-and-trust"
 ---
 
-{:.warning}
-> This resource is experimental.
-> It requires [MeshService](/mesh/meshservice/) to be enabled.
-> It works on Kubernetes since version 2.12, and on Universal since version 2.13.
+The `MeshIdentity` resource gives workloads an identity and configures the provider that issues
+their certificates. A workload presents its certificate when it connects to another proxy over
+mTLS. The certificate contains a SPIFFE ID, such as
+`spiffe://payments.eu.mesh.local/ns/storefront/sa/frontend`, that identifies the caller.
 
-`MeshIdentity` is a resource that defines how workloads in a mesh obtain their cryptographic identity.
-It separates the responsibility of issuing identities from establishing trust,
-enabling {{site.mesh_product_name}} to adopt [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/) compliant practices
-while remaining flexible and easy to use.
+Identity works together with the following resources:
 
-With `MeshIdentity`, users can:
-
-* Enable secure mTLS between services, using trusted certificate authorities.
-* Switch identity providers without downtime, for example when migrating from built-in certificates to [Spire](https://spiffe.io/docs/latest/spire-about/).
-* Assign different identity providers to subsets of workloads, allowing more granular control.
-
-The following example shows the full structure:
-
-{% navtabs "meshidentity-structure" %}
-{% navtab "Kubernetes" %}
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: default
-spec:
-  selector:
-    dataplane:
-      matchLabels: {}
-  spiffeID:
-    trustDomain: "{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}"
-    path: "{% raw %}/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}{% endraw %}"
-  provider:
-    type: Bundled
-    bundled:
-      meshTrustCreation: Enabled
-      insecureAllowSelfSigned: true
-      certificateParameters:
-        expiry: 24h
-      autogenerate:
-        enabled: true
-```
-{% endnavtab %}
-{% navtab "Universal (2.13+)" %}
-{% raw %}
-```yaml
-type: MeshIdentity
-name: identity
-mesh: default
-spec:
-  selector:
-    dataplane:
-      matchLabels: {}
-  spiffeID:
-    trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
-    path: "/workload/{{ .Workload }}"
-  provider:
-    type: Bundled
-    bundled:
-      meshTrustCreation: Enabled
-      insecureAllowSelfSigned: true
-      certificateParameters:
-        expiry: 24h
-      autogenerate:
-        enabled: true
-```
-{% endraw %}
-{% endnavtab %}
-{% endnavtabs %}
-
-## Configuration
-
-`MeshIdentity` controls how data plane proxies receive identity certificates.
-The following key fields define how identities are issued and applied:
-
-* [`selector`](#selector): Which data plane proxies this identity applies to.
-* [`spiffeID`](#spiffeid): How the SPIFFE ID is constructed (trust domain and path).
-* [`provider`](#provider): Which system issues the certificates (`Bundled` or `Spire`).
-
-### Selector
-
-The selector field controls which data plane proxies a `MeshIdentity` applies to.
-It uses `matchLabels` selectors on data plane proxy tags.
-You can scope an identity to all workloads, a subset of workloads, or none at all.
-
-When multiple `MeshIdentity` resources apply to the same data plane proxy,
-the one with the most specific selector (the greatest number of matching labels) takes precedence.
-If two policies have selectors with the same number of labels, {{site.mesh_product_name}} compares their names lexicographically.
-The policy whose name comes first in alphabetical order takes precedence.
-
-#### Examples
-
-The following table contains examples of the selector field with different scopes:
-
-<!-- vale off -->
 {% table %}
 columns:
-  - title: Description
-    key: description
-  - title: Example
-    key: example
+  - title: Resource
+    key: resource
+  - title: Responsibility
+    key: responsibility
 rows:
-  - description: Apply to all data plane proxies
-    example: |
-      ```yaml
-      spec:
-        selector:
-          dataplane:
-            matchLabels: {}
-      ```
-  - description: Apply to a group of data plane proxies
-    example: |
-      ```yaml
-      spec:
-        selector:
-          dataplane:
-            matchLabels:
-              app: my-app
-      ```
-  - description: Apply to nothing
-    example: |
-      ```yaml
-      spec:
-        selector: {}
-      ```
+  - resource: "`MeshIdentity`"
+    responsibility: "Selects workloads and configures their identities and certificate provider."
+  - resource: "[MeshTrust](/mesh/policies/meshtrust/)"
+    responsibility: "Publishes the CA certificates that proxies use to verify peers."
+  - resource: "[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)"
+    responsibility: "Decides whether an authenticated caller can connect to a destination."
 {% endtable %}
-<!-- vale on -->
 
-### SPIFFE ID
+A certificate doesn't grant access, so configure traffic permissions before or alongside
+identities. [MeshTLS](/mesh/policies/meshtls/) controls whether a destination also accepts
+plaintext and which TLS settings it uses.
 
-The `spiffeID` field lets you override how SPIFFE IDs are constructed for the data plane proxies selected by this `MeshIdentity`.
-By default, {{site.mesh_product_name}} generates a SPIFFE ID based on the mesh and zone.
-With `spiffeID`, you can customize the `trustDomain` and the `path` template.
-The default `path` template depends on the environment:
+A proxy that no `MeshIdentity` matches gets no identity and no mTLS. `Mesh.mtls` is removed
+from the API, so `MeshIdentity` is the only way to issue identities.
 
-{% navtabs "spiffeid-default-path" %}
-{% navtab "Kubernetes" %}
+`MeshIdentity` isn't a policy in the usual sense. It has no `targetRef`, `to`, or `rules`, and
+selects proxies with a label selector instead. On Kubernetes, it's only accepted in the system
+namespace.
+
+## Issue identities for every workload in the mesh
+
+The following example issues identities to every proxy the resource reaches in the `default`
+mesh, from a certificate authority (CA) that the control plane generates. On Kubernetes, create
+it in the mesh system namespace:
+
+{% policy_yaml %}
+```yaml
+type: MeshIdentity
+mesh: default
+name: default-identity
+spec:
+  selector:
+    dataplane: {}
+  provider:
+    type: Bundled
+    bundled:
+      autogenerate:
+        enabled: true
+      insecureAllowSelfSigned: true
+      meshTrustCreation: Enabled
+```
+{% endpolicy_yaml %}
+
+What each field does:
+
+* `selector.dataplane: {}` selects every proxy the resource reaches. For more information, see
+  [Multi-zone meshes](#multi-zone-meshes).
+* `type: Bundled` keeps the CA in the control plane.
+* `autogenerate.enabled: true` creates the CA.
+* `insecureAllowSelfSigned: true` allows the generated self-signed CA, and is required with
+  `autogenerate`. It doesn't disable certificate verification: peers verify certificates against
+  the CA published in `MeshTrust`.
+* `meshTrustCreation: Enabled` publishes the CA in a `MeshTrust`, so peers can verify the
+  identities it issues.
+
+To use certificates from your existing PKI, see [Use your own CA](#use-your-own-ca).
+
+### Multi-zone meshes
+
+An identity created on a zone control plane covers only that zone. Neither the identity nor its
+`MeshTrust` is distributed to other zones. In a multi-zone mesh, create the identity on the
+global control plane so every zone receives the same configuration.
+
+Each zone still initializes the identity separately. With `autogenerate`, each zone generates
+its own CA and publishes it in a `MeshTrust` in that zone. With the default trust domain
+template, each zone also issues in its own trust domain. A generated `MeshTrust` syncs to the
+global control plane, but isn't sent to other zones, so by default proxies don't trust
+certificates issued in another zone.
+
+For cross-zone mTLS, read each zone's generated `MeshTrust` on the global control plane, and
+create a `MeshTrust` with the same `trustDomain` and `caBundles` on the global control plane,
+which distributes it to every zone. If a zone's CA changes, update its copy too. Also allow the
+other zones' trust domains in [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
+rules.
+
+{:.warning}
+> A zone with no applicable `MeshIdentity` has no workload certificates, so its proxies get no
+> inbound TLS listener. Traffic inside that zone is plaintext, and
+> [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) cannot apply, because it only
+> attaches to TLS filter chains. Requests still succeed, so the zone looks healthy, but
+> cross-zone requests into it fail with `503`, because the calling proxy attempts mTLS.
+
+## Proxy selection
+
+`spec.selector.dataplane.matchLabels` selects the proxies. An empty `dataplane: {}` matches
+every proxy the resource reaches.
+
+When several identities match a proxy, the one with the most match labels wins. If two tie, the
+one whose name sorts first alphabetically wins. Providers aren't combined.
+
+For example, an identity with `matchLabels: {app: payments}` overrides a mesh-wide
+`dataplane: {}` identity for the payments proxies, and other proxies keep the mesh-wide one. If
+the narrower identity has a different trust domain, the payments proxies' trust domain changes
+too. Before changing a selector, check that peers trust the new provider's CA and that
+authorization rules allow the new caller identity.
+
+## Providers
+
+`spec.provider.type` sets where certificates come from:
+
+{% table %}
+columns:
+  - title: "`type`"
+    key: type
+  - title: Where certificates come from
+    key: what
+rows:
+  - type: "`Bundled`"
+    what: "A CA held by the control plane, either generated by it or supplied by you."
+  - type: "`Spire`"
+    what: "A SPIRE agent on the node, reached over its socket. `spire.agent.timeout` limits the connection time, and defaults to 1s."
+  - type: "`Extension`"
+    what: "An enterprise CA, set with `extension.name` and an `extension.config` validated for that provider. `extension.name` accepts `acmpca`, `vault`, or `certmanager` (Kubernetes only)."
+{% endtable %}
+
+### Use your own CA
+
+To use your own CA, leave `autogenerate` off and give `bundled.ca` a CA certificate and its
+private key, each as a secure data source. Both are required, and `ca` can't be combined with
+`autogenerate.enabled: true`. A `Bundled` provider with neither `autogenerate` nor `ca` is
+rejected.
+
+The CA certificate must have the `CA:TRUE` basic constraint and the `keyCertSign` key usage, and
+must not have the `keyAgreement` key usage. A self-signed root CA also needs
+`insecureAllowSelfSigned: true`. Otherwise, the identity reports `Provider: False` and issues
+no certificates.
+
+The following example reads an intermediate CA from the `mesh-ca-cert` and `mesh-ca-key`
+secrets, and issues leaf certificates that last 24 hours. Create both secrets before applying
+it. They hold signing credentials, not a workload's certificate and key:
+
+{% policy_yaml %}
+```yaml
+type: MeshIdentity
+mesh: default
+name: corporate-ca
+spec:
+  selector:
+    dataplane: {}
+  provider:
+    type: Bundled
+    bundled:
+      ca:
+        certificate:
+          type: Secret
+          secretRef:
+            kind: Secret
+            name: mesh-ca-cert
+        privateKey:
+          type: Secret
+          secretRef:
+            kind: Secret
+            name: mesh-ca-key
+      certificateParameters:
+        expiry: 24h
+```
+{% endpolicy_yaml %}
+
+Secure data sources use the following field for each type:
+
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Value field
+    key: value
+rows:
+  - type: "`Secret`"
+    value: "`secretRef.name`, with `secretRef.kind: Secret`"
+  - type: "`File`"
+    value: "`file.path`"
+  - type: "`EnvVar`"
+    value: "`envVar.name`"
+  - type: "`InsecureInline`"
+    value: "`insecureInline.value`"
+{% endtable %}
+
+The control plane loads the CA, so file paths and environment variables must be available to
+the control plane. Don't embed the private key in a policy that other users can read.
+
+## SPIFFE ID
+
+A SPIFFE ID has two parts after `spiffe://`: the trust domain and the workload path. In
+`spiffe://payments.eu.mesh.local/ns/storefront/sa/frontend`, the trust domain is
+`payments.eu.mesh.local` and the path is `/ns/storefront/sa/frontend`.
+
+`spec.spiffeID` sets both parts as Go templates, using the following variables:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Variables it can use
+    key: vars
+rows:
+  - field: "`trustDomain`"
+    vars: "`.Mesh`, `.Zone`"
+  - field: "`path`"
+    vars: "`.TrustDomain`, `.Namespace`, `.ServiceAccount`, `.Workload`"
+{% endtable %}
+
+{{site.mesh_product_name}} uses the following defaults:
 
 {% raw %}
-
 ```yaml
-spec:
-  spiffeID:
-    trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
-    path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+spiffeID:
+  # trustDomain, on every environment
+  trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
+  # path, on Kubernetes
+  path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+  # path, on Universal
+  # path: "/workload/{{ .Workload }}"
 ```
-
 {% endraw %}
 
-{% endnavtab %}
-{% navtab "Universal (2.13+)" %}
+With the default Kubernetes path, replicas that share a namespace and service account share an
+identity.
 
-{% raw %}
+Both fields also accept a `label` function, so `{% raw %}{{ label "team" }}{% endraw %}` reads
+a label from the resource. A missing label fails rendering instead of resolving to an empty
+string. A template that doesn't parse is rejected on apply, with the Go template error.
 
-```yaml
-spec:
-  spiffeID:
-    trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
-    path: "/workload/{{ .Workload }}"
+### Change an identity without losing access
+
+`spec.spiffeID.trustDomain` and `spec.spiffeID.path` are immutable. The API rejects an update
+that changes either one.
+
+The control plane renders the trust domain once, when it first initializes the identity, and
+records it in `status.trustDomain`. Later changes to template inputs, such as renaming a zone,
+don't change the domain that the identity issues in or that its `MeshTrust` publishes.
+
+To change identities, create a second `MeshIdentity` with a different name, so the old issuer
+and its trust material stay in place while you move workloads:
+
+1. Configure the new identity, and make sure receiving proxies trust its CA.
+1. Update destination `MeshTrafficPermission` rules to allow both the old and new caller IDs.
+1. Move a small group of workloads to the new identity with `selector.dataplane.matchLabels`.
+   Make sure the new selector wins under the [selection rules](#proxy-selection).
+1. Check the workloads' issued certificates and their calls to destinations.
+1. Move the remaining workloads. Remove the old permissions and trust only when no workload
+   needs them.
+
+Trusting both CAs isn't enough: authorization rules must also match the new IDs. Deleting and
+recreating an issuer can replace CA material that's still needed to verify existing
+certificates.
+
+## MeshTrust creation
+
+A `Bundled` provider creates a [MeshTrust](/mesh/policies/meshtrust/) that publishes its CA
+bundle, so other proxies can verify the certificates it issues. If your mesh publishes trust
+bundles another way, set `bundled.meshTrustCreation: Disabled`.
+
+## Validating identity issuance
+
+Read the resource's status after applying it, replacing `$IDENTITY_NAME` with your identity's
+name:
+
+```sh
+kubectl get meshidentity $IDENTITY_NAME -n {{site.mesh_namespace}} -o yaml
 ```
 
-{% endraw %}
+For the autogenerated `Bundled` example, the following conditions should be `True`:
 
-{% endnavtab %}
-{% endnavtabs %}
+{% table %}
+columns:
+  - title: Condition
+    key: condition
+  - title: Means
+    key: what
+rows:
+  - condition: "`Provider`"
+    what: "The provider generated or loaded the CA."
+  - condition: "`MeshTrustCreated`"
+    what: "The `MeshTrust` publishing the CA bundle exists."
+  - condition: "`Ready`"
+    what: "The identity is initialized and issuing certificates."
+{% endtable %}
 
-Supported variables in the `trustDomain` field are:
+`MeshTrustCreated` is only reported when the provider publishes a CA for automatic trust
+creation, so it can be missing when trust is managed separately. If a condition is false, its
+`reason` and `message` name the step that failed.
 
-* `.Mesh`
-* `.Zone`
+A resource with no `provider` runs in SPIFFE-ID-only mode: it advertises service identities
+without issuing workload certificates. Its status shows `SpiffeIDProvider: True` and
+`Ready: False` with reason `PartiallyReady`. This status doesn't prove mTLS.
 
-Supported variables in the `path` field are:
+A ready resource only confirms initialization. To check certificate delivery, peer trust, and
+permissions together:
 
-* `.Namespace` - The Kubernetes namespace
-* `.ServiceAccount` - The Kubernetes service account
-* `.Workload` - The workload identifier
-
-You can also use resource `labels` in both `trustDomain` and `path`, for example:
-
-{% raw %}
-
-```yaml
-spec:
-  spiffeID:
-    trustDomain: '{{ label "kuma.io/mesh" }}.{{ label "kuma.io/zone" }}.mesh.local'
-    path: '/ns/{{ label "k8s.kuma.io/namespace" }}/sa/{{ label "k8s.kuma.io/service-account" }}'
-```
-
-{% endraw %}
-
-#### Workload label requirement {% new_in 2.13 %}
-
-When using {% raw %}`{{ label "kuma.io/workload" }}`{% endraw %} or {% raw %}`{{ .Workload }}`{% endraw %} in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
-
-* Via a [data plane proxy token](/mesh/data-plane-proxy-authentication/#workload-label-in-tokens) generated with the `--workload` parameter
-* Directly on the data plane proxy resource
-
-Connections from data plane proxies lacking the required label will be rejected.
-
-Here's an example using the workload identifier in the path:
-
-{% raw %}
-
-```yaml
-spec:
-  spiffeID:
-    trustDomain: '{{ .Mesh }}.{{ .Zone }}.mesh.local'
-    path: '/workload/{{ label "kuma.io/workload" }}'
-```
-
-{% endraw %}
-
-### Provider
-
-The `provider` field defines how identity certificates are issued.
-This field is required and must specify one of the supported provider types:
-
-* `Bundled`: Certificates are issued by {{site.mesh_product_name}}'s control plane, either autogenerated or supplied by the user.
-* `Spire`: Certificates are issued directly by a SPIRE Agent through SDS.
+1. Read `MeshTrust.spec.trustDomain` on the generated trust resource to see the domain it
+   publishes.
+1. Inspect a selected proxy's certificate through Envoy's `/certs` admin endpoint, and confirm
+   that its SPIFFE URI matches the expected trust domain and path.
+1. Make an authorized mTLS request to a peer.

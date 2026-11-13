@@ -1,6 +1,6 @@
 ---
-title: Set up the {{site.mesh_product_name}} key/value store
-description: "Deploy the kv service as a Docker container and configure a data plane proxy and transparent proxy in {{site.mesh_product_name}} Universal mode."
+title: Add the key/value store to the mesh
+description: "Run the key/value store with a kuma-dp sidecar and the transparent proxy, and watch the control plane generate its MeshService."
 content_type: how_to
 permalink: /mesh/get-started/universal/kv/
 breadcrumbs:
@@ -9,34 +9,44 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
   - docker
-min_version:
-  mesh: '2.10'
 series:
-  id: mesh-get-started-universal
+  id: mesh-get-started-universal-3
   position: 3
 tldr:
-  q: How do I set up the key/value store service in {{site.mesh_product_name}} Universal mode?
-  a: Deploy the kv container, install the {{site.mesh_product_name}} binaries and data plane proxy inside it, and configure the transparent proxy to intercept all traffic automatically.
+  q: How do I add a Universal workload to the mesh?
+  a: Issue a workload-bound data plane token, install the transparent proxy, and start `kuma-dp` beside the workload with a `Dataplane` resource describing its ports. The control plane generates the `MeshService` from the `kuma.io/workload` label.
+related_resources:
+  - text: Universal data plane
+    url: /mesh/universal-data-plane/
+  - text: MeshService
+    url: /mesh/meshservice/
+min_version:
+  mesh: '3.0'
 ---
 
-## Generate a data plane token
+## Issue a data plane token
 
-Create a token for the `kv` data plane proxy to authenticate with the control plane:
+A Universal proxy proves who it is with a data plane token. Bind it to the proxy's name and to
+its workload:
 
 ```sh
-kumactl generate dataplane-token \
-  --tag kuma.io/service=kv \
-  --valid-for 720h \
-  > "$KONG_MESH_DEMO_TMP/token-kv"
+kongctl create mesh dataplane-token \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
+  --name kv \
+  --workload kv \
+  --valid-for 24h > "$KONG_MESH_DEMO_DIR/token-kv"
 ```
 
 ## Start the container
 
-1. Run the container:
+1. Start the container for the `kv` service:
 
    ```sh
    docker run \
@@ -45,159 +55,136 @@ kumactl generate dataplane-token \
      --hostname kv \
      --network kong-mesh-demo \
      --ip 172.18.78.2 \
-     --volume "$KONG_MESH_DEMO_TMP:/demo" \
+     --volume "$KONG_MESH_DEMO_DIR:/demo" \
      ghcr.io/kumahq/kuma-counter-demo:debian-slim
    ```
 
-1. Check the container logs to confirm it started:
+1. Check that the store is listening on port `5050`:
 
    ```sh
    docker logs kong-mesh-demo-kv
    ```
 
-   You should see something like this:
+   You should get the following response:
 
-   ```txt
+   ```text
    time=2025-03-14T12:17:34.630Z level=INFO ... msg="server running" addr=:5050
    ```
    {:.no-copy-code}
 
-## Configure the container
+## Install the sidecar binaries
 
-Enter the container for the remaining steps. Inside it, you'll configure the zone name in the key-value store, start the data plane proxy, and install the transparent proxy.
-
-```sh
-docker exec --tty --interactive --privileged kong-mesh-demo-kv bash
-```
-
-{:.warning}
-> The following steps must be executed inside the container.
-
-### Install tools and create data plane proxy user
-
-1. Install the required tools:
-
-   * `curl`: Downloads the {{site.mesh_product_name}} binaries.
-   * `iptables`: Configures the [transparent proxy](/mesh/transparent-proxying/).
-
-   ```sh
-   apt-get update && \
-     apt-get install --yes curl iptables
-   ```
-
-1. Download and install {{site.mesh_product_name}}:
-   ```sh
-   curl --location https://developer.konghq.com/mesh/installer.sh | sh -
-   ```
-
-1. Move {{site.mesh_product_name}} binaries to `/usr/local/bin/` for global availability:
-   ```sh
-   mv kong-mesh-*/bin/* /usr/local/bin/
-   ```
-
-1. Create a dedicated user for the data plane proxy
-   ```sh
-   useradd --uid 5678 --user-group kong-mesh-data-plane-proxy
-   ```
-
-### Set the zone name
-
-Give the `kv` instance a name. The demo application will use this name to identify which `kv` instance is accessed:
+Run the setup script created in the [install step](/mesh/get-started/universal/install/#write-the-sidecar-setup-script) inside the container:
 
 ```sh
-curl localhost:5050/api/key-value/zone \
-  --header 'Content-Type: application/json' \
-  --data '{"value":"local-demo-zone"}'
+docker exec kong-mesh-demo-kv sh /demo/setup-sidecar.sh
 ```
 
-You should see the following output:
+## Set the zone name
 
-```json
-{"value":"local-demo-zone"}
+Set the zone name that the demo app will need:
+
+```sh
+docker exec kong-mesh-demo-kv \
+  curl -s localhost:5050/api/key-value/zone \
+    --header 'Content-Type: application/json' \
+    --data '{"value":"local-demo-zone"}'
+```
+
+## Install the transparent proxy
+
+`kumactl install transparent-proxy` writes the iptables rules that redirect the container's
+traffic through the sidecar. It needs root and the `NET_ADMIN` capability. 
+
+{:.danger}
+> Run this command only inside the container. It redirects all of the host's traffic to a data
+> plane proxy, so running it on your own machine or a VM without one can cut off its network
+> access.
+
+Run the following command:
+
+```sh
+docker exec --privileged kong-mesh-demo-kv \
+  kumactl install transparent-proxy \
+    --config /demo/transparent-proxy.yaml
+```
+
+The last line of the output should be:
+
+```text
+# transparent proxy setup completed successfully. You can now run kuma-dp with the transparent-proxy feature enabled
 ```
 {:.no-copy-code}
 
-### Start the data plane proxy
+## Start the sidecar
 
-1. Start the proxy:
-
-   ```sh
-   runuser --user kong-mesh-data-plane-proxy -- \
-     /usr/local/bin/kuma-dp run \
-       --cp-address https://control-plane:5678 \
-       --skip-verify \
-       --dataplane-token-file /demo/token-kv \
-       --dataplane-file /demo/dataplane.yaml \
-       --dataplane-var name=kv \
-       --dataplane-var address=172.57.78.2 \
-       --dataplane-var port=5050 \
-       > /demo/logs-data-plane-proxy-kv.log 2>&1 &
-   ```
-
-   {% capture warning %}
-   {% include /mesh/skip-verify.md %}
-   {% endcapture %}
-   {{warning | indent}}
-
-1. After a few seconds, check the logs to verify the proxy is running:
-
-   ```sh
-   tail /demo/logs-data-plane-proxy-kv.log
-   ```
-
-   You should see entries like these:
-
-   ```
-   [2025-03-14 12:24:54.779][3088][info][config] [source/common/listener_manager/listener_manager_impl.cc:944] all dependencies initialized. starting workers
-   [2025-03-14 12:24:59.595][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:32] cds: add 8 cluster(s), remove 2 cluster(s)
-   [2025-03-14 12:24:59.623][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:71] cds: added/updated 1 cluster(s), skipped 7 unmodified cluster(s)
-   [2025-03-14 12:24:59.628][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
-   [2025-03-14 12:24:59.649][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.0:5050'
-   ```
-   {:.no-copy-code}
-
-### Install the transparent proxy
-
-{:.danger}
-> Make sure this command is executed **inside the container**. It changes iptables rules to redirect all traffic to the data plane proxy. Running it on your computer or a virtual machine without the data plane proxy can disrupt network connectivity. On a virtual machine, this might lock you out until you restart it.
-
-1. Install the transparent proxy:
-
-   ```sh
-   kumactl install transparent-proxy \
-     --config-file /demo/config-transparent-proxy.yaml \
-     > /demo/logs-transparent-proxy-install-kv.log 2>&1
-   ```
-
-1. Confirm the installation succeeded by checking the last line of the log:
-
-   ```sh
-   tail -n1 /demo/logs-transparent-proxy-install-kv.log
-   ```
-
-   You should see the following output:
-
-   ```sh
-   # transparent proxy setup completed successfully
-   ```
-   {:.no-copy-code}
-
-### Exit the container
-
-The key/value store is set up. Exit the container:
+Run `kuma-dp` in the same container, as the `kuma-dp` user the iptables rules exclude, pointing
+it at the template created in the [install step](/mesh/get-started/universal/install/#write-the-dataplane-template):
 
 ```sh
-exit
+docker exec --detach kong-mesh-demo-kv sh -c '
+  runuser -u kuma-dp -- kuma-dp run \
+    --cp-address https://control-plane:5678 \
+    --skip-verify \
+    --dataplane-file /demo/dataplane.yaml \
+    --dataplane-var name=kv \
+    --dataplane-var address=172.18.78.2 \
+    --dataplane-var port=5050 \
+    --dataplane-token-file /demo/token-kv \
+    --transparent-proxy-config /demo/transparent-proxy.yaml \
+    > /demo/logs-kv.log 2>&1'
 ```
 
-## Check if service is running
+{:.warning}
+> `--skip-verify` skips TLS verification of the control plane certificate. It is here because the
+> demo control plane uses a self-signed certificate. Never use it outside a demo. Give
+> `kuma-dp` the CA with `--ca-cert-file` instead.
 
-To confirm the service is set up correctly and running, use [kumactl](/mesh/cli/) to inspect the `MeshService` resources:
+In this example:
+* `--dataplane-file` applies the `Dataplane` as the proxy starts
+* The three `--dataplane-var` flags fill the template's placeholders
+* `--transparent-proxy-config` turns on transparent proxying for this proxy and tells the control plane how the rules are set up
+* The sidecar's output goes to `$KONG_MESH_DEMO_DIR/logs-kv.log`.
 
-```sh
-kumactl get meshservices
-```
+## Check that the sidecar is connected
 
-The output should show a single service, `kv`.
+1. Check that the `kv` data plane appears in the control plane:
+   ```sh
+   kongctl get mesh dataplanes \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-You can also open the {{site.mesh_product_name}} UI at <http://127.0.0.1:25681/gui/meshes/default/services/mesh-services>. Look for the `kv` service, and verify that its state is `Available`.
+1. Check that the `kv` data plane is online:
+
+   ```sh
+   kongctl inspect mesh dataplanes \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+   If `kv` doesn't appear, check `$KONG_MESH_DEMO_DIR/logs-kv.log` for the reason.
+
+## Inspect the generated MeshService
+
+The control plane generates a `MeshService` from the `kuma.io/workload: kv` label on the `Dataplane`, with one port per inbound.
+
+1. Check that the `MeshService` was created:
+
+   ```sh
+   kongctl get mesh meshservices \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+1. Check the generated configuration:
+
+   ```sh
+   kongctl get mesh meshservices kv -o yaml \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+The selector matches on the workload label, the port carries the `protocol` you set on the
+inbound, and the status reports the VIP and the `kv.svc.mesh.local` hostname the demo app will
+reach it on.

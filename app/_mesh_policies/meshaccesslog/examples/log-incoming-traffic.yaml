@@ -4,7 +4,7 @@ description: 'Log all incoming traffic with MeshAccessLog.'
 
 weight: 900
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 
 config:
   type: MeshAccessLog

@@ -2,459 +2,260 @@
 title: Mesh Circuit Breaker
 name: MeshCircuitBreakers
 products:
-    - mesh
-description: 'Look for errors in the live traffic between data plane proxies and mark a as unhealthy if conditions are met.'
+- mesh
+description: Cap the connections a proxy opens to a destination, and eject failing endpoints from the load balancing pool.
 content_type: plugin
-type: policy
 icon: meshcircuitbreaker.png
+related_resources:
+- text: Policy targeting
+  url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
+  url: "/mesh/migrate-policies-to-3/#meshcircuitbreaker"
+- text: MeshRetry policy
+  url: "/mesh/policies/meshretry/"
+- text: MeshHealthCheck policy
+  url: "/mesh/policies/meshhealthcheck/"
 ---
 
-This policy looks for errors in the live traffic being exchanged between our data plane proxies. It marks a data plane
-proxy as unhealthy if certain conditions are met. The policy ensures that no additional traffic can reach an
-unhealthy data plane proxy until it is healthy again.
+The `MeshCircuitBreaker` policy does two separate jobs:
 
-Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthcheck/) - do not send
-additional traffic to our data plane proxies but they rather inspect the existing service traffic. They are also
-commonly used to prevent cascading failures.
+* With `connectionLimits`, it caps connections, active requests, pending requests, and
+  concurrent retries at a proxy. Requests can wait for a connection up to the pending limit,
+  and anything beyond that is rejected.
+* With `outlierDetection`, it removes endpoints that fail more often than their peers from the
+  load balancing pool. Unlike [MeshHealthCheck](/mesh/policies/meshhealthcheck/), it judges
+  endpoints from real traffic, not probes.
 
-Like a real-world circuit breaker when the circuit is **closed** then traffic between a source and destination data
-plane proxy is allowed to freely flow through it. When it is **open** then the traffic is interrupted.
+Both mechanisms work locally at each proxy, so callers don't share limits or health
+observations.
 
-The conditions that determine when a circuit breaker is closed or open are being configured on connection limits or
-outlier detection basis. For outlier detection to open circuit breaker you can configure what we call _detectors_.
-This policy provides 5 different types of detectors, and they are triggered on some deviations in the upstream service
-behavior. All detectors could coexist on the same outbound interface.
+## Cap connections to a destination
 
-Once one of the detectors has been triggered the corresponding data plane proxy is ejected from the set of the load
-balancer for a period equal to [baseEjectionTime](#outlier-detection). Every further ejection of the same data plane
-proxy extends the [baseEjectionTime](#outlier-detection) multiplied by the number of ejections: for example
-the fourth ejection lasts for a period of `4 * baseEjectionTime`.
+The following example limits the connections that proxies labeled `app: web` open to
+`backend`. The limits are small to simplify testing, so size production limits for your
+expected concurrency:
 
-This policy provides **passive** checks.
-If you want to configure **active** checks, please use the [MeshHealthCheck](/mesh/policies/meshhealthcheck/)
-policy.
-Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
-target proxies are healthy or not.
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshCircuitBreaker
+mesh: default
+name: web-to-backend
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+    - targetRef:
+        kind: MeshService
+        labels:
+          kuma.io/display-name: backend
+      default:
+        connectionLimits:
+          maxConnections: 2
+          maxPendingRequests: 8
+          maxRequests: 2
+          maxRetries: 2
+```
+{% endpolicy_yaml %}
 
-## TargetRef support matrix
+What each field does:
 
-{% navtabs "support-matrix" %}
-{% navtab "Sidecar" %}
-<!-- vale off -->
+* `targetRef` selects the proxies the limits apply to: `Mesh`, or `Dataplane` with `labels`.
+* `to[].targetRef` selects the destination to protect: `Mesh`, `MeshService`,
+  `MeshExternalService`, or `MeshMultiZoneService`. `MeshHTTPRoute` isn't accepted, because
+  circuit breaking applies to a whole destination, not to one route.
+* `connectionLimits` sets the limits.
+
+A policy needs `to`, `rules`, or both. Each `default` needs `connectionLimits`,
+`outlierDetection`, or both.
+
+`connectionLimits` accepts the following limits:
+
 {% table %}
 columns:
-  - title: "`targetRef`"
-    key: targetref
-  - title: Allowed kinds
-    key: allowed_kinds
+  - title: Limit
+    key: limit
+  - title: Caps
+    key: caps
 rows:
-  - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
-  - targetref: "`to[].targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshService`"
+  - limit: "`maxConnections`"
+    caps: "Connections to the destination."
+  - limit: "`maxPendingRequests`"
+    caps: "Requests waiting for a connection. For non-HTTP traffic, it acts as a connection limit."
+  - limit: "`maxRequests`"
+    caps: "Parallel requests. It has no effect on non-HTTP traffic."
+  - limit: "`maxRetries`"
+    caps: "Parallel retries across all requests to the destination. [MeshRetry](/mesh/policies/meshretry/) `numRetries` caps attempts for one request, so set both to keep retries from amplifying a failure."
+  - limit: "`maxConnectionPools`"
+    caps: "Connection pools per cluster. Only relevant when a cluster creates many pools."
 {% endtable %}
-<!-- vale on -->
-{% endnavtab %}
 
-{% navtab "Built-in Gateway" %}
-<!-- vale off -->
+A new mesh has no `MeshCircuitBreaker`, so Envoy's own limits apply: `maxConnections`,
+`maxPendingRequests`, and `maxRequests` of 1024, `maxRetries` of 3, and no outlier detection.
+
+## Eject failing endpoints
+
+`outlierDetection` temporarily removes failing endpoints from a proxy's healthy pool.
+Consecutive-failure detectors react to failures as they happen, and statistical detectors
+evaluate each interval. `baseEjectionTime` sets how long an endpoint stays out, and repeated
+ejections extend it. An endpoint that returns to the pool gets another attempt, which doesn't
+mean it has recovered.
+
+The following example ejects `backend` endpoints after 10 consecutive failures:
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshCircuitBreaker
+mesh: default
+name: backend-outlier-detection
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+    - targetRef:
+        kind: MeshService
+        labels:
+          kuma.io/display-name: backend
+      default:
+        outlierDetection:
+          interval: 5s
+          baseEjectionTime: 30s
+          maxEjectionPercent: 20
+          detectors:
+            totalFailures:
+              consecutive: 10
+```
+{% endpolicy_yaml %}
+
+`maxEjectionPercent` caps how much of the pool can be ejected at once, and defaults to 10%.
+Envoy ejects an endpoint only if the ejected share, including that endpoint, stays within this
+limit, and this policy doesn't enable Envoy's `always_eject_one_host` option. With the default
+of 10%, a pool needs at least 10 endpoints before the proxy can eject any of them. Test the
+limit with your actual endpoint count. For more information, see
+[Envoy's outlier detection reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto).
+
+`outlierDetection` requires at least one detector. To turn the block off without deleting it,
+set `disabled: true`. The block still needs a detector while disabled, but the detector is
+ignored.
+
+### Detectors
+
 {% table %}
 columns:
-  - title: "`targetRef`"
-    key: targetref
-  - title: Allowed kinds
-    key: allowed_kinds
+  - title: Detector
+    key: detector
+  - title: Ejects an endpoint when
+    key: when
 rows:
-  - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
-  - targetref: "`to[].targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshService`"
+  - detector: "`totalFailures`"
+    when: "It returns `consecutive` server errors in a row: 5xx for HTTP, connection failures for TCP."
+  - detector: "`gatewayFailures`"
+    when: "It returns `consecutive` gateway errors in a row (502, 503, or 504), including local failures such as timeouts or resets."
+  - detector: "`localOriginFailures`"
+    when: "It has `consecutive` local failures in a row, such as timeouts, TCP resets, or ICMP errors. Requires `splitExternalAndLocalErrors: true`."
+  - detector: "`successRate`"
+    when: "Its success rate is more than `standardDeviationFactor` below the cluster mean."
+  - detector: "`failurePercentage`"
+    when: "Its failure rate is above a fixed `threshold`, regardless of its peers."
 {% endtable %}
-<!-- vale on -->
-{% endnavtab %}
 
-{% navtab "Delegated Gateway" %}
-<!-- vale off -->
+`successRate` and `failurePercentage` need enough traffic to be meaningful.
+`requestVolume` sets the minimum requests an endpoint must see in an interval to be evaluated,
+and `minimumHosts` sets how many endpoints must reach that volume before the detector runs.
+
+### Distinguish local failures from upstream errors
+
+`splitExternalAndLocalErrors` controls what the detectors count:
+
+* `false` (default): connection resets and 503 responses count the same.
+* `true`: `totalFailures` and `successRate` count only errors returned by the destination, and
+  `localOriginFailures` counts connection-level failures.
+
+Use `true` when the destination is healthy but the network path to it isn't. Otherwise, the
+detectors can't tell the two apart.
+
+### Panic threshold
+
+If too few healthy endpoints remain, Envoy enters panic mode and sends traffic to all
+endpoints, including ejected ones, instead of failing requests. `healthyPanicThreshold` sets
+the percentage of healthy endpoints below which this happens, and defaults to 50%. Set it to
+`0` to disable panic mode. `healthyPanicThreshold` applies only while outlier detection is
+enabled. When outlier detection is disabled, the 50% default applies.
+
+## Cap incoming connections
+
+`rules` limits the proxy's own inbound traffic instead of what it sends to a destination:
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshCircuitBreaker
+mesh: default
+name: backend-inbound
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: backend
+  rules:
+    - default:
+        connectionLimits:
+          maxConnections: 100
+          maxPendingRequests: 50
+```
+{% endpolicy_yaml %}
+
+`rules` applies to all inbound traffic at the selected proxies. It has no L7 matching, so use
+a single catch-all entry.
+
+Inbound limits apply to the connections between the destination proxy and its local
+application, not across every replica. To limit one named inbound on a proxy with several
+ports, set `targetRef.sectionName`.
+
+## Overlapping policies
+
+A narrower policy overrides only the fields it sets. For example, setting only
+`maxConnections: 100` for web-to-backend traffic keeps the broader request and retry limits.
+To turn off inherited outlier detection, set `outlierDetection.disabled: true`. The block still
+needs a `detectors` entry, for example `detectors: {totalFailures: {consecutive: 5}}`, which is
+ignored while disabled. Leaving the block out of the narrower policy doesn't remove it.
+
+## Validating the circuit breaker
+
+1. Send more concurrent requests than `connectionLimits` allows, and confirm that the excess
+   fails at the client proxy without reaching the destination.
+1. If retries are enabled, confirm that concurrent retries stop at `maxRetries`.
+1. Make one endpoint return the failures your `detectors` count, and keep enough traffic
+   flowing for the detector to evaluate it.
+1. Confirm that traffic stops reaching the ejected endpoint and returns when the ejection
+   period ends.
+1. Make enough endpoints unhealthy to cross `healthyPanicThreshold`, and confirm that traffic
+   reaches all endpoints again.
+
+To check the results, inspect the selected proxy's Envoy admin endpoints:
+
+* `/stats`: the cluster's `circuit_breakers` gauges, overflow counters, and
+  `outlier_detection` counters.
+* `/clusters`: endpoint health.
+
+Compare values before and after the test, because a nonzero counter can come from older
+traffic.
+
 {% table %}
 columns:
-  - title: "`targetRef`"
-    key: targetref
-  - title: Allowed kinds
-    key: allowed_kinds
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
 rows:
-  - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshSubset`"
-  - targetref: "`to[].targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshService`"
+  - unexpected: "The service receives more concurrency than the limit"
+    check: "Limits apply per caller proxy and destination cluster, not mesh-wide."
+  - unexpected: "Requests queue instead of failing immediately"
+    check: "`maxPendingRequests`, and whether an open connection can accept more requests."
+  - unexpected: "No endpoint is ejected"
+    check: "Detector thresholds, `requestVolume`, and whether the detector counts that type of failure."
+  - unexpected: "An ejected endpoint receives traffic again"
+    check: "Panic mode, the ejection period, and whether other proxies still see the endpoint as healthy."
 {% endtable %}
-<!-- vale on -->
-{% endnavtab %}
-{% endnavtabs %}
-
-
-
-
-## Configuration
-
-### Connection limits
-
-- **`maxConnections`** - (optional) The maximum number of connections allowed to be made to the upstream Envoy Cluster.
-  If not specified then equal to _1024_.
-- **`maxConnectionPools`** - (optional) The maximum number of connection pools per Envoy Cluster that are concurrently
-  supported at once. Set this for Envoy Clusters which create a large number of connection pools. If not specified, the
-  default is unlimited.
-- **`maxPendingRequests`** - (optional) The maximum number of pending requests that are allowed to the upstream Envoy
-  Cluster. This limit is applied as a connection limit for non-HTTP traffic. If not specified then equal to _1024_.
-- **`maxRetries`** - (optional) The maximum number of parallel retries that will be allowed to the upstream Envoy
-  Cluster. If not specified then equal to _3_.
-- **`maxRequests`** - (optional) The maximum number of parallel requests that are allowed to be made to the upstream
-  Envoy Cluster. This limit does not apply to non-HTTP traffic. If not specified then equal to _1024_.
-
-### Outlier detection
-
-Outlier detection can be configured for HTTP, TCP or gRPC traffic.
-
-{:.warning}
-> For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
-
-- **`disabled`** - (optional) When set to true, `outlierDetection` configuration won't take any effect.
-- **`interval`** - (optional) The time interval between ejection analysis sweeps. This can result in both new ejections
-  and hosts being returned to service.
-- **`baseEjectionTime`** - (optional) The base time that a host is ejected for. The real time is equal to the base time
-  multiplied by the number of times the host has been ejected.
-- **`maxEjectionPercent`** - (optional) The maximum % of an upstream Envoy Clusters that can be ejected due to outlier
-  detection. Defaults to 10% but will eject at least one host regardless of the value.
-- **`splitExternalAndLocalErrors`** - (optional) Determines whether to distinguish local origin failures from external
-  errors. If set to true the following configuration parameters are taken into
-  account: `detectors.localOriginFailures.consecutive`.
-- **`detectors`** - Contains configuration for supported outlier detectors. At least one detector needs to be configured
-  when policy is configured for outlier detection.
-- {% new_in 2.10 %} **`healthyPanicThreshold`** - (optional) Allows to configure panic threshold for Envoy cluster. If not specified,
-  the default is 50%. To disable panic mode, set to 0%.
-
-#### Detectors configuration
-
-Configuration for supported outlier detectors. At least one detector needs to be configured when policy is configured for outlier detection.
-
-{% navtabs "detectors" %}
-{% navtab "Total Failures" %}
-
-Depending on mode the outlier detection can take into account all or externally originated (transaction) errors only. 
-
-{% navtabs "totalFailures-modes" %}
-{% navtab "Default Mode" %}
-
-{:.info}
-> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-
-This detection type takes into account all generated errors: **locally originated** and **externally originated** (transaction) errors.
-
-**Configuration**
-
-- **`totalFailures.consecutive`** - The number of consecutive server-side error responses
-  (for HTTP traffic, 5xx responses; for TCP traffic, connection failures; etc.) before a consecutive total failure ejection occurs.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        detectors:
-          totalFailures:
-            consecutive: 10
-```
-
-{% endnavtab %}
-
-{% navtab "Split Mode" %}
-
-{:.info}
-> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-
-This detection type takes into account only externally originated (transaction) errors, ignoring locally originated ones.
-
-**HTTP**
-
-If an upstream host is an HTTP-server, only 5xx types of error are taken into account (see Consecutive Gateway Failure for exceptions).
-
-{:.warning}
-> Properly formatted responses, even when they carry an operational error (like index not found, access denied) are not taken into account.
-
-**Configuration**
-
-- **`totalFailures.consecutive`** - The number of consecutive server-side error responses (for HTTP traffic, 5xx responses) before a consecutive total failure ejection occurs.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        splitExternalAndLocalErrors: true
-        detectors:
-          totalFailures:
-            consecutive: 10
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-{% endnavtab %}
-{% navtab "Gateway Failures" %}
-
-Depending on mode the outlier detection can take into account gateway failures with locally originated failures (default mode) or gateway failures only (split mode).
-
-{% navtabs "gatewayFailures-modes" %}
-{% navtab "Default Mode" %}
-
-{:.info}
-> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-
-This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code) and local origin failures, such as **timeout**, **TCP reset** and so on
-
-**Configuration**
-
-- **`gatewayFailures.consecutive`** - The number of consecutive gateway failures (502, 503, 504 status codes) before a consecutive
-  gateway failure ejection occurs.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        detectors:
-          gatewayFailures:
-            consecutive: 10
-```
-
-{% endnavtab %}
-
-{% navtab "Split Mode" %}
-
-{:.info}
-> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-
-This detection type takes into account a subset of **5xx** errors, called "gateway errors" (**502**, **503** or **504** status code).
-
-{:.warning}
-> This detector is supported only for HTTP traffic.
-
-**Configuration**
-
-- **`gatewayFailures.consecutive`** - The number of consecutive gateway failures (502, 503, 504 status codes) before a consecutive
-  gateway failure ejection occurs.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        splitExternalAndLocalErrors: true
-        detectors:
-          gatewayFailures:
-            consecutive: 10
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-{% endnavtab %}
-{% navtab "Locally Originated Failures" %}
-
-{:.warning}
-> This detection is supported only in Split Mode
-
-This detection takes into account only locally originated errors (timeout, reset, etc).
-
-If Envoy repeatedly cannot connect to an upstream host or communication with the upstream host is repeatedly interrupted, it will be ejected. Various locally originated problems are detected: timeout, TCP reset, ICMP errors, and so on
-
-{% navtabs "localOriginFailures-modes" %}
-{% navtab "Split Mode" %}
-
-{:.info}
-> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-
-**Configuration**
-
-- **`localOriginFailures.consecutive`** - The number of consecutive locally originated failures before ejection occurs.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        splitExternalAndLocalErrors: true
-        detectors:
-          localOriginFailures:
-            consecutive: 10
-```
-{% endnavtab %}
-{% navtab "Default Mode" %}
-
-This detection is not supported in the Default Mode
-
-{% endnavtab %}
-{% endnavtabs %}
-
-{% endnavtab %}
-{% navtab "Success Rate" %}
-
-Success Rate based outlier detection aggregates success rate data from every host in an Envoy Cluster. Then at given intervals ejects hosts based on statistical outlier detection.
-
-Success Rate outlier detection is not calculated for a host if its request volume over the aggregation interval is less than the value of `successRate.requestVolume`
-value.
-
-Moreover, detection is not performed for a cluster if the number of hosts with the minimum required request volume in an interval is less than the `successRate.minimumHosts` value.
-
-{% navtabs "successRate-modes" %}
-{% navtab "Default Mode" %}
-
-{:.info}
-> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-
-This detection type takes into account all types of errors: locally and externally originated.
-
-{% endnavtab %}
-{% navtab "Split Mode" %}
-
-{:.info}
-> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-
-Locally originated errors and externally originated (transaction) errors are counted and treated separately.
-
-{% endnavtab %}
-{% endnavtabs %}
-
-**Configuration**
-
-- **`successRate.minimumHosts`** - The number of hosts in an Envoy Cluster that must have enough request volume to detect success rate outliers. If the number of hosts is less than this setting, outlier detection via success rate statistics is not performed for any host in the Cluster.
-- **`successRate.requestVolume`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration configured in `outlierDetection` section) to include this host in success rate based outlier detection. If the volume is lower than this setting, outlier detection via success rate statistics is not performed for that host.
-- **`successRate.standardDeviationFactor`** - This factor is used to determine the ejection threshold for success rate outlier ejection. The ejection threshold is the difference between the mean success rate, and the product of this factor and the standard deviation of the mean success rate: mean - (`standard_deviation` `*success_rate_standard_deviation_factor`). Either int or decimal represented as string.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        splitExternalAndLocalErrors: true
-        detectors:
-          successRate:
-            minimumHosts: 5
-            requestVolume: 10
-            standardDeviationFactor: "1.9"
-```
-
-{% endnavtab %}
-{% navtab "Failure Percentage" %}
-
-Failure Percentage based outlier detection functions similarly to success rate detection, in that it relies on success rate data from each host in an Envoy Cluster. However, rather than compare those values to the mean success rate of the Cluster as a whole, they are compared to a flat user-configured threshold. This threshold is configured via the [`failurePercentageThreshold`](#outlier-detection) field.
-
-The other configuration fields for failure percentage based detection are similar to the fields for success rate detection. As with success rate detection, detection will not be performed for a host if its request volume over the aggregation interval is less than the `failurePercentage.requestVolume` value.
-
-Detection is also not performed for an Envoy Cluster if the number of hosts with the minimum required request volume in an interval is less than the `failurePercentage.minimumHosts` value.
-
-{% navtabs "failurePercentage-modes" %}
-{% navtab "Default Mode" %}
-
-{:.info}
-> Default mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is not set or equal `false`
-
-This detection type takes into account all types of errors: locally and externally originated.
-
-{% endnavtab %}
-{% navtab "Split Mode" %}
-
-{:.info}
-> Split Mode is when [`splitExternalAndLocalErrors`](#outlier-detection) is equal `true`
-
-Locally originated errors and externally originated (transaction) errors are counted and treated separately.
-
-{% endnavtab %}
-{% endnavtabs %}
-
-**Configuration**
-
-- **`failurePercentage.requestVolume`** - The minimum number of hosts in an Envoy Cluster to perform failure percentage-based ejection. If the total number of hosts in the Cluster is less than this value, failure percentage-based ejection is not performed.
-- **`failurePercentage.minimumHosts`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration above) to perform failure percentage-based ejection for this host. If the volume is lower than this setting, failure percentage-based ejection is not performed for this host.
-- **`failurePercentage.threshold`** - The failure percentage to use when determining failure percentage-based outlier detection. If the failure percentage of a given host is greater than or equal to this value, it is ejected.
-
-**Example**
-
-```yaml
-type: MeshCircuitBreaker
-mesh: default
-name: circuit-breaker
-spec:
-  targetRef:
-    kind: Mesh
-  to:
-  - targetRef:
-      kind: Mesh
-    default:
-      outlierDetection:
-        splitExternalAndLocalErrors: true
-        detectors:
-          failurePercentage:
-            requestVolume: 10
-            minimumHosts: 5
-            threshold: 85
-```
-
-{% endnavtab %}
-
-{% endnavtabs %}
-
-<hr />

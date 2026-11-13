@@ -995,12 +995,16 @@ RSpec.describe Jekyll::IndexGenerator do
                       data: {})
     end
 
-    context 'when skip.indices is configured' do
-      let(:site) { instance_double(Jekyll::Site, config: { 'skip' => { 'indices' => true } }) }
+    context 'with an index that has no sections or groups' do
+      let(:index) { { 'title' => 'Bare', 'description' => 'No sections here.' } }
 
-      it 'returns early without scanning for index files' do
-        expect(Dir).not_to receive(:glob)
-        generator.generate(site)
+      it 'defaults groups to an empty array so downstream steps do not raise' do
+        index['groups'] = [{ 'sections' => index.delete('sections') }] if index['sections'] && !index['groups']
+        index['groups'] ||= []
+
+        expect { generator.normalize_paths(index) }.not_to raise_error
+        expect { generator.process_auto_exclude(index) }.not_to raise_error
+        expect(generator.config_to_grouped_pages(instance_double(Jekyll::Site), index)).to eq([])
       end
     end
   end

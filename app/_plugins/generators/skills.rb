@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class SkillsGenerator < Jekyll::Generator
-    priority :high
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class SkillsGenerator < OrderedGenerator
     def generate(site)
       site.data['skills'] = {}
       site.data['skills_plugins'] = []

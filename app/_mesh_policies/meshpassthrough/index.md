@@ -1,116 +1,261 @@
 ---
-title: Mesh Pass Through
-name: meshpassthroughs
+title: Mesh Passthrough
+name: MeshPassthroughs
 products:
-    - mesh
-description: 'Configure traffic to external destinations that is allowed to pass outside the mesh.'
+- mesh
+description: Control which destinations outside the mesh a proxy may reach, by domain, IP or CIDR range.
 content_type: plugin
-type: policy
-min_version:
-  mesh: '2.8'
-
 icon: policy.svg
+related_resources:
+- text: Policy targeting
+  url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
+  url: "/mesh/migrate-policies-to-3/#meshpassthrough"
+- text: MeshTrafficPermission policy
+  url: "/mesh/policies/meshtrafficpermission/"
 ---
-This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.
-When using this policy, the passthrough mode flag is ignored.
 
-## TargetRef support matrix
+The `MeshPassthrough` policy controls intercepted outbound traffic to destinations the mesh
+doesn't know. The caller's sidecar either forwards that traffic or rejects it. Use this policy
+to allow selected third-party APIs or database addresses without registering each one as a
+mesh resource.
 
-{% navtabs "support-matrix" %}
-{% navtab "Sidecar" %}
-<!-- vale off -->
-{% table %}
-columns:
-  - title: "`targetRef`"
-    key: targetref
-  - title: Allowed kinds
-    key: allowed_kinds
-rows:
-  - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
-{% endtable %}
-<!-- vale on -->
-{% endnavtab %}
-{% navtab "Delegated Gateway" %}
-<!-- vale off -->
-{% table %}
-columns:
-  - title: "`targetRef`"
-    key: targetref
-  - title: Allowed kinds
-    key: allowed_kinds
-rows:
-  - targetref: "`targetRef.kind`"
-    allowed_kinds: "`Mesh`, `MeshSubset`"
-{% endtable %}
-<!-- vale on -->
-{% endnavtab %}
-{% endnavtabs %}
+This policy doesn't cover all traffic leaving the mesh. A destination represented by a
+[MeshExternalService](/mesh/meshexternalservice/) has its own routing and policies, and
+`passthroughMode: None` doesn't block it. Use `MeshExternalService` when a destination needs a
+stable mesh name, a VIP, or its own policies.
 
+Proxies that no `MeshPassthrough` selects reject traffic to unknown external destinations, as
+if `passthroughMode: None` applied. To allow every unknown destination by default instead, set
+`KUMA_DEFAULTS_RESTRICT_OUTBOUND=false` on the control plane. That setting also lets proxies
+without `reachableBackends` reach every mesh destination.
 
-
-## Configuration
+The policy needs transparent proxying. A proxy without it, or one that binds its outbounds
+directly, skips the policy and gets a policy warning.
 
 {:.warning}
-> This policy doesn't work with sidecars without [transparent-proxy](/mesh/transparent-proxying/).
+> This policy only controls traffic intercepted by the sidecar. Traffic excluded from
+> transparent proxying is outside its scope. Do not use it as the only boundary for a
+> workload that can bypass interception. Enforce network restrictions too.
 
-The following describes the default configuration settings of the `MeshPassthrough` policy:
+## Allow two external destinations
 
-- **`passthroughMode`**: (Optional) Defines behavior for handling traffic. Allowed values: `All`, `None` and `Matched`. Default: `None`
-  - **`All`** enables all traffic to pass through.
-  - **`Matched`** allows only the traffic defined in `appendMatch`.
-  - **`None`** disallows all traffic.
-- **`appendMatch`**: List of destinations that are allowed to pass through. When `passthroughMode` is `All` or `None` this list is not used. It only takes effect when `passthroughMode` is `Matched`.
-  - **`type`**: Defines what type of destination is allowed. Either `Domain`, `IP` or `CIDR`.
-  - **`value`**: Destination address based on the defined `type`.
-  - **`port`**: Port at which external destination is available. When not defined it caches all traffic to the address.
-  - **`protocol`**: Defines protocol of the external destination.
-    - **`tcp`**: **Can't be used when `type` is `Domain` (at TCP level we are not able to distinguish domain, in this case it is going to hijack whole traffic on this port)**.
-    - **`tls`**: Should be used when TLS traffic is originated by the client application.
-    - **`http`**
-    - **`http2`**
-    - **`grpc`**
-    - {% new_in 2.10 %} **`mysql`**
-  
-### Wildcard DNS matching
+The following example allows TLS traffic to one API and TCP traffic to a database port across
+a subnet. Replace the domain and subnet with the destinations your workloads need:
 
-`MeshPassthrough` policy allows you to create a match for a wildcard subdomain.
-
-{:.warning}
-> Currently, support for partial subdomain matching is not implemented. For example, a match for `*w.example.com` will be rejected.
-
-{% policy_yaml %}
+{% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshPassthrough
-name: wildcard-passthrough
 mesh: default
+name: allow-external-apis
 spec:
   targetRef:
-    kind: Dataplane
+    kind: Mesh
   default:
     passthroughMode: Matched
     appendMatch:
-    - type: Domain
-      value: '*.cluster-1.kafka.aws.us-east-2.com'
-      protocol: tls
-      port: 443
+      - type: Domain
+        value: api.example.com
+        port: 443
+        protocol: tls
+      - type: CIDR
+        value: 10.42.0.0/16
+        port: 5432
+        protocol: tcp
 ```
 {% endpolicy_yaml %}
 
-### Security
+What each field does:
 
-We advise that the Mesh Operator is responsible for managing the `MeshPassthrough` policy.
-This policy can introduce traffic outside of the mesh or even the cluster, and the Mesh Operator should be aware of this.
-If you want to restrict access to `MeshPassthrough` to specific services, you must choose them manually.
-If you rely on tags in the top-level `targetRef` you might consider securing them by using one of the following techniques:
+- `targetRef` selects the proxies the policy applies to: `Mesh`, or `Dataplane` with `labels`.
+  `sectionName` isn't supported. `kind: Mesh` means every proxy in the policy's own namespace. If you create the policy in
+  `{{site.mesh_namespace}}`, it applies to the whole zone. To cover every zone, create the
+  policy on the global control plane. For more information, see
+  [Policy scope](/mesh/policy-targeting/#policy-scope).
+- `passthroughMode: Matched` rejects destinations not listed in `appendMatch`.
+- The `Domain` entry allows TLS traffic to `api.example.com:443`.
+- The `CIDR` entry allows TCP traffic to port `5432` anywhere in `10.42.0.0/16`.
 
-* Make sure that service owners can't freely modify them (using something like [`kyverno`](https://kyverno.io/), [`OPA`](https://www.openpolicyagent.org/) or similar)
-* Accept the risk of being able to "impersonate" a passthrough label and rely on auditing to figure out any violations.
+The policy has no `to` or `rules`; its whole configuration sits under `default`.
 
-### Limitations
+The `CIDR` entry allows every address in the range on that port. To allow only one database,
+use `type: IP` with one address. Before applying a mesh-wide allowlist, list the other unknown
+destinations your workloads use, and test with a narrow `Dataplane` selector.
 
-* Due to the nature of some traffic, it is not possible to combine certain protocols on the same port. You can create a `MeshPassthrough` policy that handles `tcp`, `tls`, and one of `http`, `http2`, or `grpc` traffic on the same port. Layer 7 protocols cannot be distinguished, which could introduce unexpected behavior.
-* It isn't possible to route passthrough traffic through the [zone egress](/mesh/zone-egress/#zone-egress).
-* Wildcard domains with L7 protocol and all ports is not supported.
-* Built-in gateway is not supported.
-* Envoy prioritizes matches in the following order: [first by Port, second by Address IP, and third by SNI](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch). For example, if you have an HTTP domain match configured for a specific port (for example, 80) and a CIDR match also configured for port 80, a request to this domain may match the CIDR configuration if the domain's address falls within the CIDR range. However, if the domain's address does not match the CIDR, the request might fail to match entirely due to the absence of an appropriate matcher for that IP. This behavior is a limitation and could potentially be addressed in the future with the adoption of the [Matcher API](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/advanced/matching/matching_api).
+## Modes
+
+`default.passthroughMode` accepts the following modes:
+
+{% table %}
+columns:
+  - title: "`passthroughMode`"
+    key: mode
+  - title: What passes
+    key: what
+rows:
+  - mode: "`Matched`"
+    what: "Only the destinations in `appendMatch`. With an empty `appendMatch`, nothing passes. This is the default."
+  - mode: "`All`"
+    what: "Every unknown destination the proxy intercepts. `appendMatch` has no effect."
+  - mode: "`None`"
+    what: "No unknown destination. Known mesh destinations are unaffected. `appendMatch` has no effect."
+{% endtable %}
+
+A policy that leaves out the mode uses `Matched`. With no policy at all, passthrough is closed
+unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
+
+## Describe a destination
+
+Each entry in `appendMatch` names one destination with the following fields:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Value
+    key: value
+rows:
+  - field: "`type`"
+    value: "`Domain`, `IP`, or `CIDR`."
+  - field: "`value`"
+    value: "The domain name, IP address, or CIDR range. A CIDR is normalized before comparison, so `10.0.0.1/24` and `10.0.0.0/24` are the same range."
+  - field: "`port`"
+    value: "The destination port, from 1 to 65535. Required for every non-wildcard `Domain`, for wildcard domains with `http`, `http2`, or `grpc`, and for `protocol: mysql`. When left out on an IP, CIDR, or wildcard domain, the match covers all ports not matched more specifically. Set it for a narrow allowlist."
+  - field: "`protocol`"
+    value: "`tcp` (default), `tls`, `http`, `http2`, `grpc`, or `mysql`. `tcp` and `mysql` can't be used with `type: Domain`, because they carry no name to match on."
+{% endtable %}
+
+Pick the protocol the client actually speaks:
+
+- `tls`: traffic the application encrypts itself. The sidecar reads the SNI and forwards the
+  connection without terminating it.
+- `http`, `http2`, `grpc`: cleartext traffic the sidecar parses, so it can match on the `Host`
+  header.
+
+`protocol: tls` doesn't add encryption or validate the server's certificate. The application
+still performs TLS and must validate the server itself. A TLS client that sends no matching SNI
+can't use a domain allowance.
+
+## Domain matches
+
+An exact `Domain` matches the TLS SNI or HTTP authority. The sidecar then resolves the domain
+itself and connects to the resolved address on `port`, whatever address the application dialed.
+A wildcard `Domain` can't be resolved, so it forwards to the address the application dialed.
+
+To allow the same domain on more than one port, add one entry per port.
+
+{:.warning}
+> With a wildcard domain, a client can dial any address while presenting a matching SNI or HTTP
+> authority. When the destination address must be constrained, use IP or CIDR restrictions, a registered external destination,
+> and network controls. Separate `appendMatch` entries are alternatives, not an AND condition:
+> adding an IP entry does not restrict a domain entry.
+
+### Wildcard domains
+
+A wildcard such as `*.example.com` allows a set of names instead of one. Unlike an exact domain,
+it restricts only the SNI or HTTP authority, so a workload can dial any address and present a
+matching name. Prefer exact domains, or IP and CIDR matches when you know the addresses.
+
+Partial wildcards like `*w.example.com` aren't supported. A wildcard needs a `port` when the
+protocol is `http`, `http2`, or `grpc`, because those share one filter chain per port.
+
+The following example allows TLS traffic on port 9093 to any host in a Kafka cluster's domain:
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshPassthrough
+mesh: default
+name: allow-kafka-cluster
+spec:
+  targetRef:
+    kind: Mesh
+  default:
+    appendMatch:
+      - type: Domain
+        value: "*.cluster-1.kafka.aws.us-east-2.com"
+        port: 9093
+        protocol: tls
+```
+{% endpolicy_yaml %}
+
+## Conflicting matches
+
+Each match becomes a filter chain on the passthrough listener. Two matches that produce the same
+chain are rejected. That happens when they use the same port, or both use no port, with:
+
+- two of `grpc`, `http`, and `http2`, which share one chain per port
+- the same address written differently: an IP and a CIDR covering only that IP, a CIDR with
+  host bits set, or another form of the same IPv6 address
+- `tcp` and `mysql` on the same address, which produce the same TCP proxy chain
+
+Two entries with the same `value`, `port`, and `protocol` are also rejected.
+
+Matches that produce distinct chains are fine, such as `tls` and `http` on one port, or `http`
+on an IP and `grpc` on a domain. Several `http` domains on the same port are also fine, because
+they become separate routes in one chain.
+
+A match with a port and a match without one aren't automatically a conflict. The all-ports
+match stays a
+fallback, and the control plane also applies it to explicit ports where compatible, so a
+port-specific entry doesn't hide other allowed destinations. If both use the same address and
+chain shape, the explicit port's configuration wins on that port.
+
+A policy that's already applied isn't re-validated for conflicts. The control plane keeps
+the first of the two matches in `appendMatch` order, drops the second, and reports it in a debug
+log and a policy warning on the affected proxy. The next edit of that policy is rejected until
+the conflict is fixed. Conflicts can also appear only when separate policies' `appendMatch`
+lists combine, so check the proxy's policy warnings even if each policy was accepted.
+
+## Overlapping policies
+
+All policies that apply to a proxy combine into one configuration:
+
+- `appendMatch` lists are appended, not replaced. For example, a mesh-wide policy allowing
+  `api.example.com:443` and a workload policy allowing a database give that workload both,
+  when the effective mode is `Matched`.
+- Conflicting `passthroughMode` values follow policy precedence. A more specific `None` blocks
+  all unknown traffic for the selected workloads, and a more specific `All` opens it.
+- A policy that only adds matches inherits an explicit mode, so it doesn't narrow an inherited
+  `All`. Set `passthroughMode: Matched` explicitly.
+
+You can't deny or remove an inherited `appendMatch` entry, and an empty list on a narrower
+policy doesn't clear it. To drop one inherited destination, change which workloads get the
+broader allowlist. Removing the last applicable policy closes passthrough again, unless
+`KUMA_DEFAULTS_RESTRICT_OUTBOUND` is `false`.
+
+## Validating external access
+
+1. Confirm that the selected proxy uses transparent proxying. A policy warning on the proxy
+   means the sidecar skipped the policy.
+1. Connect to every destination and port in `appendMatch`, and confirm that each connection
+   succeeds with the configured protocol.
+1. Connect to a destination not in `appendMatch`, and confirm that `Matched` rejects it. Use a
+   reachable server that isn't a `MeshService`, `MeshMultiZoneService`, or
+   `MeshExternalService`, because known destinations don't test passthrough.
+1. Repeat with an unlisted port on a listed address. Use new connections after each policy
+   change, so an existing connection doesn't hide the result.
+1. For a `Domain`, confirm that the application sends the expected SNI or HTTP authority. For
+   an exact domain, the sidecar resolves the name, so confirm that it resolves from the sidecar
+   to the intended server.
+1. For wildcard domains, confirm that allowing any address with a matching SNI or
+   `Host` value is an acceptable security boundary.
+
+A rejected connection doesn't always return an HTTP response:
+
+- Unmatched TCP or TLS traffic fails at the connection level.
+- HTTP traffic that matches no domain route gets a `503` that names the `MeshPassthrough`
+  policy. Rule out DNS failures and errors from the external application before changing the
+  allowlist.
+
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "An unlisted destination is reachable"
+    check: "A known mesh destination, excluded interception, an inherited `All` mode, or another policy adding an entry."
+  - unexpected: "An allowed destination fails"
+    check: "Its port, protocol, SNI or HTTP authority, DNS resolution (from the sidecar for an exact domain), and dropped-match warnings."
+{% endtable %}

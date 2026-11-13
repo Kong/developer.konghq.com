@@ -23,7 +23,7 @@ module Jekyll
           url
         end
 
-        def data # rubocop:disable Metrics/MethodLength
+        def data # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           @policy
             .metadata
             .merge(
@@ -38,7 +38,15 @@ module Jekyll
               'plugin?' => true,
               'release' => @policy.latest_release_in_range,
               'icon' => icon
-            ).merge(publication_info)
+            )
+            .merge(major_version_data)
+            .merge(publication_info)
+        end
+
+        def major_version_data
+          return {} unless @policy.explicit_major
+
+          { 'major_version' => { @policy.product => @policy.policy_major } }
         end
 
         def relative_path

@@ -1,4 +1,7 @@
 {
     "$id": "schema:policy",
-    "allOf": [{ "$ref": "schema:base" }]
+    "allOf": [{ "$ref": "schema:base" }],
+    "properties": {
+        "major_version": { "$ref": "schema:base#/definitions/major_version" }
+    }
   }

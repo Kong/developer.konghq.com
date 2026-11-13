@@ -18,11 +18,13 @@ module Jekyll
       @config = @param.split('.').reduce(context) { |c, key| c[key] } || @param
       @policy_slug = @config.is_a?(Hash) ? @config['slug'] : @config
 
-      policy = @site.data['mesh_policies'][@policy_slug]
+      major = @page['major_version']&.dig('mesh') || 'latest'
+      policy = @site.data['mesh_policies'].dig(major, @policy_slug)
 
       unless policy
         raise ArgumentError,
-              "Error rendering {% policy %} on page: #{@page['path']}. The policy `#{@policy_slug}` doesn't exist."
+              "Error rendering {% policy %} on page: #{@page['path']}. " \
+              "The policy `#{@policy_slug}` doesn't exist in policy major `#{major}`."
       end
 
       return '' if policy.data['published'] == false

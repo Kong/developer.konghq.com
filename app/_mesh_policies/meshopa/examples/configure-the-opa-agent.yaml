@@ -1,0 +1,31 @@
+title: 'Configure the OPA agent'
+
+description: 'Enable console decision logs for a diagnostic workload. Retain your real authorization modules in production, and mask sensitive request data before sending decision logs to shared storage.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshOPA
+  name: opa-decision-logs
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      agentConfig:
+        type: InsecureInline
+        insecureInline:
+          value: |
+            decision_logs:
+              console: true
+      appendPolicies:
+        - rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package diagnostics.allow_all
+                default allow = true

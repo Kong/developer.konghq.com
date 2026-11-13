@@ -25,7 +25,8 @@ RSpec.describe ReleaseMap do
                                            'app/_how-tos/ai-gateway/v1/self-canonical.md',
                                            'app/_how-tos/ai-gateway/v1/pending-page.md',
                                            'app/_how-tos/ai-gateway/v1/blank-url-page.md',
-                                           'app/_how-tos/ai-gateway/v1/bad-url-page.md'
+                                           'app/_how-tos/ai-gateway/v1/bad-url-page.md',
+                                           'app/_how-tos/mesh/v1/valid-page.md'
                                          ])
     end
 
@@ -34,6 +35,36 @@ RSpec.describe ReleaseMap do
 
       it 'returns an empty hash' do
         expect(result).to eq({})
+      end
+    end
+
+    context 'when KONG_PRODUCTS is set' do
+      subject(:result) { described_class.load_all(site, build_filter: build_filter) }
+
+      let(:build_filter) { Jekyll::BuildFilter.new(env: { 'KONG_PRODUCTS' => 'ai-gateway' }) }
+
+      before { allow(Jekyll).to receive(:env).and_return('development') }
+
+      it 'only loads config for the selected products' do
+        expect(result.keys).to match_array([
+                                             'app/_how-tos/ai-gateway/v1/valid-page.md',
+                                             'app/_how-tos/ai-gateway/v1/self-canonical.md',
+                                             'app/_how-tos/ai-gateway/v1/pending-page.md',
+                                             'app/_how-tos/ai-gateway/v1/blank-url-page.md',
+                                             'app/_how-tos/ai-gateway/v1/bad-url-page.md'
+                                           ])
+      end
+    end
+
+    context 'when KONG_PRODUCTS is set but not in development' do
+      subject(:result) { described_class.load_all(site, build_filter: build_filter) }
+
+      let(:build_filter) { Jekyll::BuildFilter.new(env: { 'KONG_PRODUCTS' => 'ai-gateway' }) }
+
+      before { allow(Jekyll).to receive(:env).and_return('test') }
+
+      it 'loads config for all products' do
+        expect(result.keys).to include('app/_how-tos/mesh/v1/valid-page.md')
       end
     end
   end

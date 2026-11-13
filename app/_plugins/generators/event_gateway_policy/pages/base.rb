@@ -8,7 +8,7 @@ module Jekyll
       class Base # rubocop:disable Style/Documentation
         include Policies::Pages::Base
 
-        def self.base_url
+        def self.base_url(_policy)
           '/event-gateway/policies/'
         end
 

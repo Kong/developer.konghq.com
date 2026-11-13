@@ -1,6 +1,6 @@
 ---
-title: Introduce zero-trust security with {{site.mesh_product_name}}
-description: "Enable mTLS and configure the built-in gateway to secure {{site.mesh_product_name}} services and allow external traffic into the mesh."
+title: Introduce zero-trust security
+description: "Issue workload identities with MeshIdentity, watch traffic default to deny, and allow only what you mean to with MeshTrafficPermission."
 content_type: how_to
 permalink: /mesh/get-started/universal/zero-trust-security/
 breadcrumbs:
@@ -9,228 +9,193 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
-  - docker
-min_version:
-  mesh: '2.10'
+  - security
 series:
-  id: mesh-get-started-universal
+  id: mesh-get-started-universal-3
   position: 5
 tldr:
-  q: How do I secure services in {{site.mesh_product_name}} with zero-trust security?
-  a: Enable mTLS with a built-in CA to encrypt all traffic, apply MeshTrafficPermission policies to control access, and configure a built-in gateway to route external traffic into the mesh.
+  q: How do I turn on mTLS and restrict traffic in {{site.mesh_product_name}} 3.x?
+  a: Create a `MeshIdentity` so workloads get certificates, which makes traffic default to deny, then allow specific callers with a `MeshTrafficPermission` matching on their SPIFFE ID.
+related_resources:
+  - text: MeshIdentity
+    url: /mesh/policies/meshidentity/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
+  - text: MeshTLS
+    url: /mesh/policies/meshtls/
+  - text: Application ingress
+    url: /mesh/application-ingress/
 cleanup:
   inline:
-    - title: Clean up Docker resources
+    - title: Remove the demo containers and network
       content: |
-        Remove the Docker containers, network, temporary directory, and the control plane configuration from [kumactl](/mesh/cli/):
+        Remove the demo containers:
 
         ```sh
-        kumactl config control-planes remove --name kong-mesh-demo
-
-        docker rm --force \
-           kong-mesh-demo-control-plane \
-           kong-mesh-demo-kv \
-           kong-mesh-demo-app \
-           kong-mesh-demo-edge-gateway
-
-        docker network rm kong-mesh-demo
-
-        rm -rf /tmp/kong-mesh-demo
+        docker rm --force kong-mesh-demo-app kong-mesh-demo-kv kong-mesh-demo-control-plane
         ```
-next_steps:
-  - text: Explore {{site.mesh_product_name}} enterprise features
-    url: /mesh/enterprise/
-  - text: Visualize your mesh with the {{site.mesh_product_name}} GUI
-    url: /mesh/interact-with-control-plane/
-  - text: Read the full {{site.mesh_product_name}} documentation
-    url: /mesh/
-  - text: Deploy in single-zone mode
-    url: /mesh/single-zone/
-  - text: Deploy in multi-zone mode
-    url: /mesh/mesh-multizone-service-deployment/
+
+        Remove the Docker network:
+
+        ```sh
+        docker network rm kong-mesh-demo
+        ```
+
+        Remove the working directory:
+
+        ```sh
+        rm -rf "$KONG_MESH_DEMO_DIR"
+        ```
+min_version:
+  mesh: '3.0'
 ---
 
-By default, the network is insecure and unencrypted. With {{site.mesh_product_name}}, you can enable the [Mutual TLS (mTLS)](/mesh/policies/mutual-tls/) policy to secure the network. It sets up a Certificate Authority (CA) that automatically provides TLS certificates to your services, specifically to the data plane proxies running next to each service.
+## Issue identities
 
-## Enable Mutual TLS
+A workload gets a certificate from a [MeshIdentity](/mesh/policies/meshidentity/). Without one,
+proxies have no identity, serve plaintext, and neither `MeshTLS` nor `MeshTrafficPermission`
+applies to them.
 
-Enable Mutual TLS using a `builtin` CA backend:
+1. Create a `MeshIdentity` for every proxy in the mesh:
+
+   ```sh
+   cat <<'EOF' | kongctl apply mesh -f - \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   type: MeshIdentity
+   mesh: default
+   name: demo-identity
+   spec:
+     selector:
+       dataplane: {}
+     spiffeID:
+       trustDomain: default.mesh.local
+     provider:
+       type: Bundled
+       bundled:
+         autogenerate:
+           enabled: true
+         insecureAllowSelfSigned: true
+         meshTrustCreation: Enabled
+   EOF
+   ```
+
+   In this example:
+   * `selector.dataplane: {}` matches every proxy in the mesh. 
+   * `insecureAllowSelfSigned` accepts a CA the control plane generates itself, for testing purposes. In a real mesh, provide a CA under `bundled.ca`.
+   * `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it's generated based on the following template: `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
+
+1. Check that the identity initialized:
+
+   ```sh
+   kongctl get mesh meshidentities demo-identity -o yaml \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+   `status.conditions` should report `Provider`, `MeshTrustCreated` and `Ready` as true, and
+   `status.trustDomain` shows the domain issuance is pinned to.
+
+1. Check the `MeshTrust` the control plane created to publish the CA bundle:
+
+   ```sh
+   kongctl get mesh meshtrusts \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+## Confirm that traffic is denied
+
+1. Send a request from inside the demo application's container, so the application calls the
+   key/value store through its sidecar:
+
+   ```sh
+   docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
+   ```
+
+   The request fails. Proxies now have identities, so `MeshTrafficPermission` applies, and no
+   permission exists yet, so the `kv` proxy rejects the call from `demo-app`.
+
+1. Send the same request from your host, outside the mesh:
+
+   ```sh
+   curl -XPOST http://127.0.0.1:25050/api/counter
+   ```
+
+   This request also fails. Inbounds are `Strict` unless a [MeshTLS](/mesh/policies/meshtls/)
+   policy says otherwise, so the `demo-app` proxy rejects plaintext from outside the mesh.
+
+## Allow the demo app to reach the key/value store
+
+Create a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) that allows traffic from `demo-app` to `kv`:
 
 ```sh
-echo 'type: Mesh
-name: default
-meshServices:
-  mode: Exclusive
-mtls:
-  enabledBackend: ca-1
-  backends:
-  - name: ca-1
-    type: builtin' | kumactl apply -f -
-```
-
-After enabling mTLS, all traffic is encrypted and secure. However, you can no longer access the `demo-app` directly, meaning <http://127.0.0.1:25050> will no longer work. This happens for two reasons:
-
-* {{site.mesh_product_name}} doesn't create traffic permissions by default when mTLS is enabled. No traffic will flow until you define a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy.
-* Browsers and HTTP clients outside the mesh don't have a valid certificate signed by the `ca-1` CA, so their connections are rejected.
-
-## Allow traffic between `demo-app` and `kv`
-
-Apply a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy to allow traffic between the `kv` and `demo-app` services:
-
-```sh
-echo 'type: MeshTrafficPermission 
-name: allow-kv-from-demo-app
-mesh: default 
-spec: 
+cat <<'EOF' | kongctl apply mesh -f - \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+type: MeshTrafficPermission
+mesh: default
+name: allow-demo-app-to-kv
+spec:
   targetRef:
     kind: Dataplane
     labels:
       app: kv
-  from: 
-  - targetRef: 
-      kind: MeshSubset 
-      tags:
-        kuma.io/service: demo-app
-    default: 
-      action: Allow' | kumactl apply -f -
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://default.mesh.local/workload/demo-app
+EOF
 ```
 
-To allow external traffic into the mesh, we'll use the [built-in gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
+## Inspect the applied policy
 
-## Create a `Dataplane` resource
+1. Check that the `MeshTrafficPermission` policy applies to the `kv` proxy:
 
-The built-in gateway needs its own `Dataplane` resource, separate from the service data plane proxies. Unlike the service `Dataplane` template used in previous steps, the gateway uses a static configuration since there's only one instance:
+   ```sh
+   kongctl inspect mesh dataplane kv \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-```sh
-echo 'type: Dataplane
-mesh: default
-name: edge-gateway-instance-1
-networking:
-  gateway:
-    type: BUILTIN
-    tags:
-      kuma.io/service: edge-gateway
-  address: 172.57.78.4' > "$KONG_MESH_DEMO_TMP/dataplane-edge-gateway.yaml"
-```
+1. Check which proxies the policy matches:
 
-## Generate a data plane token
+   ```sh
+   kongctl inspect mesh meshtrafficpermission allow-demo-app-to-kv \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-The gateway proxy requires a data plane token to securely register with the control plane. Generate the token using the following command:
+To let traffic from outside the mesh reach the demo application, see
+[Application ingress](/mesh/application-ingress/).
 
-```sh
-kumactl generate dataplane-token \
-  --tag kuma.io/service=edge-gateway \
-  --valid-for 720h \
-  > "$KONG_MESH_DEMO_TMP/token-edge-gateway"
-```
+## Validate
 
-## Start the gateway container
+1. Send the request from inside the demo application's container again:
 
-With the configuration and token in place, we can start the gateway proxy as a container:
+   ```sh
+   docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
+   ```
 
-```sh
-docker run \
-  --detach \
-  --name kong-mesh-demo-edge-gateway \
-  --hostname gateway \
-  --network kong-mesh-demo \
-  --ip 172.18.78.4 \
-  --publish 28080:8080 \
-  --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  kong/kuma-dp:{{site.data.mesh_latest.version}} run \
-    --cp-address https://control-plane:5678 \
-    --dataplane-token-file /demo/token-edge-gateway \
-    --dataplane-file /demo/dataplane-edge-gateway.yaml \
-    --dns-enabled=false
-```
+   The response returns the incremented counter and the `local-demo-zone` zone name. The
+   application reached `kv` over mTLS, and the `kv` proxy admitted it because `demo-app`'s SPIFFE
+   ID is allowed.
 
-This command starts the gateway proxy and registers it with the control plane. However, the gateway is not yet ready to route traffic.
+   {:.info}
+   > It can take a few seconds for the `MeshTrafficPermission` to be applied. If the request still fails, wait and try again.
 
-## Configure the gateway with `MeshGateway`
+1. Send the same request from your host again:
 
-To enable the gateway to accept external traffic, configure it with a [`MeshGateway`](/mesh/meshgateway/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) or [`MeshTCPRoute`](/mesh/policies/meshtcproute/) to route traffic to services:
+   ```sh
+   curl -XPOST http://127.0.0.1:25050/api/counter
+   ```
 
-```sh
-echo 'type: MeshGateway
-mesh: default
-name: edge-gateway
-selectors:
-- match:
-    kuma.io/service: edge-gateway
-conf:
-  listeners:
-  - port: 8080
-    protocol: HTTP
-    tags:
-      port: http-8080' | kumactl apply -f -
-```
-
-This sets up the gateway to listen on port `8080` using the HTTP protocol and adds the tag `port: http-8080` to identify this listener in routing policies.
-
-You can test the gateway by visiting <http://127.0.0.1:28080>. You should see a message saying no routes match this `MeshGateway`. This means the gateway is running, but no routes are set up yet to handle traffic.
-
-## Create a route to connect the gateway to `demo-app`
-
-To route traffic from the gateway to the service, create a [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) policy:
-
-```sh
-echo 'type: MeshHTTPRoute
-name: edge-gateway-demo-app-route
-mesh: default
-spec:
-  targetRef:
-    kind: MeshGateway
-    name: edge-gateway
-    tags:
-      port: http-8080
-  to:
-  - targetRef:
-      kind: Mesh
-    rules:
-    - matches:
-      - path:
-          type: PathPrefix
-          value: "/"
-      default:
-        backendRefs:
-        - kind: MeshService
-          name: demo-app' | kumactl apply -f -
-```
-
-This route connects the gateway and its listener to the `demo-app` service. It forwards any requests with the path prefix `/` to `demo-app`.
-
-After setting up this route, the gateway will try to send traffic to `demo-app`. However, if you test it by visiting <http://127.0.0.1:28080>, you'll see:
-
-```
-RBAC: access denied
-```
-{:.no-copy-code}
-
-This happens because there is no [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`.
-
-## Allow traffic from the gateway to `demo-app`
-
-To fix the `RBAC: access denied` error, create a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy to allow the gateway to send traffic to `demo-app`:
-
-```sh
-echo 'type: MeshTrafficPermission
-name: allow-demo-app-from-edge-gateway
-mesh: default
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: demo-app
-  from:
-  - targetRef:
-      kind: MeshSubset
-      tags:
-        kuma.io/service: edge-gateway
-    default:
-      action: Allow' | kumactl apply -f -
-```
-
-This policy allows traffic from the gateway to `demo-app`. After applying it, you can access <http://127.0.0.1:28080>, and the traffic will reach the `demo-app` service successfully.
+   It still fails: `curl` presents no mesh identity, and the inbound is `Strict`. Traffic between
+   the two workloads is encrypted and authorized, and traffic from outside the mesh isn't admitted.

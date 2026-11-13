@@ -1,0 +1,199 @@
+---
+title: Mesh Retry
+name: MeshRetries
+products:
+    - mesh
+description: 'Configure retry behaviour for HTTP, gRPC and TCP protocols.'
+content_type: plugin
+type: policy
+min_version:
+  mesh: '2.6'
+
+icon: meshretry.png
+major_version:
+  mesh: 2
+---
+
+This policy enables {{site.mesh_product_name}} to know how to behave if there are failed requests which could be retried.
+
+## TargetRef support matrix
+
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+
+## Configuration
+
+The policy let you configure retry behavior for `HTTP`, `GRPC` and `TCP` protocols.
+The protocol is selected by picking the most specific protocol.
+
+Each protocol has a separate section under `default` in the policy yaml.
+Some sections are common between protocols or have similar meaning.
+
+### Retry on
+
+The field `retryOn` is a list of conditions which will cause a retry.
+
+For `HTTP` these are related to the response status code or method (`5xx`, `429`, `HttpMethodGet`).
+For `gRPC` these are status codes in response headers (`canceled`, `deadline-exceeded`, etc.).
+There is no equivalent for `TCP`.
+
+One or more conditions can be specified, for example:
+
+```yaml
+retryOn:
+  - "429"
+  - "503"
+```
+
+means that it the policy will retry on a status code 429 **or** 503.
+
+Full list of available `HTTP` conditions:
+
+```yaml
+retryOn:
+  - 5XX
+  - GatewayError
+  - Reset
+  - Retriable4xx
+  - ConnectFailure
+  - EnvoyRatelimited
+  - RefusedStream
+  - Http3PostConnectFailure
+  - HttpMethodConnect
+  - HttpMethodDelete
+  - HttpMethodGet
+  - HttpMethodHead
+  - HttpMethodOptions
+  - HttpMethodPatch
+  - HttpMethodPost
+  - HttpMethodPut
+  - HttpMethodTrace
+  - "429" # any HTTP status code
+  - "503"
+```
+
+Full list of available `gRPC` conditions:
+
+```yaml
+retryOn:
+  - Canceled
+  - DeadlineExceeded
+  - Internal
+  - ResourceExhausted
+  - Unavailable
+```
+
+### Back off
+
+This parameter is applicable to both `HTTP` and `GRPC`.
+
+It consists of `BaseInterval` (the amount of time between retries) and 
+`MaxInterval` (the maximal amount of time taken between retries).
+
+We use an exponential back-off algorithm with jitter for retries.
+Given a base interval B and retry number N,
+the back-off for the retry is in the range **[0, (2<sup>N</sup> - 1) × B)**.
+
+For example, given a 25 ms interval, the first retry will be delayed randomly by 0-24 ms,
+the second by 0-74 ms,
+the third by 0-174 ms, 
+and so on.
+
+The interval is capped at a `MaxInterval`, which defaults to 10 times the `BaseInterval`.
+
+### Rate limited back off
+
+This parameter is applicable to both `HTTP` and `GRPC`.
+
+`MeshRetry` can be configured in such a way that
+when the upstream server rate limits the request and responds with a header like `retry-after` or `x-ratelimit-reset`
+it uses the value from the header to determine **when** to send the retry request instead of the [back off](#back-off) algorithm.
+
+#### Example
+
+Given this configuration:
+
+```yaml
+retryOn:
+  - "503"
+rateLimitedBackOff:
+  resetHeaders:
+    - name: retry-after
+      format: Seconds
+    - name: x-ratelimit-reset
+      format: UnixTimestamp
+```
+
+and an HTTP response:
+
+```
+HTTP/1.1 503 Service Unavailable
+retry-after: 15
+```
+
+The retry request will be issued after 15 seconds.
+
+If the response is as follows:
+
+```
+HTTP/1.1 503 Service Unavailable
+x-ratelimit-reset: 1706096119
+```
+
+The request will be retried at `Wed Jan 24 2024 11:35:19 GMT+0000`.
+
+If the response does not contain `retry-after` or `x-ratelimit-reset` header (with valid integer value)
+then the amount of time to wait before issuing a request is determined by [back off](#back-off) algorithm.

@@ -1,0 +1,9 @@
+name: Kong Mesh
+icon: /_assets/icons/products/mesh.svg
+previous_major_url_segment: v<major>
+
+releases:
+  - release: "3.0"
+    latest: true
+  - release: "2.2"
+  - release: "2.1"
