@@ -34,12 +34,12 @@ related_resources:
 
 Dashboards that show traffic and latency per entity help you find slow upstreams, error spikes, and unexpected usage before users report them.
 The StatsD Policy is an [AI Policy](/ai-gateway/entities/ai-policy/) that sends request metrics from {{site.ai_gateway}}, such as request count, request and response size, and latency, to a StatsD server.
-The Policy sends the metrics over UDP by default, or over TCP when you set [`config.use_tcp`](/ai-gateway/policies/statsd/reference/#schema--config-use-tcp), so the server must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/statsd/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/statsd/reference/#schema--config-port).
+The Policy sends the metrics over UDP by default, or over TCP, so the server must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/statsd/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/statsd/reference/#schema--config-port).
 
 ## Metrics
 
 When you don't set [`config.metrics`](/ai-gateway/policies/statsd/reference/#schema--config-metrics), the StatsD Policy sends the following metrics for each request.
-Each metric name starts with the [`config.prefix`](/ai-gateway/policies/statsd/reference/#schema--config-prefix) value, which is `kong` by default.
+Each metric name starts with the configured prefix.
 In the names, `<entity>` is the name of the [AI Agent](/ai-gateway/entities/ai-agent/) or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) that handled the request.
 For [AI Models](/ai-gateway/entities/ai-model/), see [Limitations](#limitations).
 
@@ -144,13 +144,8 @@ For `unique_users` and `status_count`, the Policy ignores `stat_type` and sends 
 ## Per-consumer metrics
 
 The `request_per_user`, `status_count_per_user`, and `unique_users` metrics report a value for each [AI Consumer](/ai-gateway/entities/ai-consumer/).
-Set the `consumer_identifier` field of the metric to choose the value that goes in the metric name:
-
-* `username`: The name of the AI Consumer, for example `kong.service.<entity>.user.<username>.request.count`.
-* `consumer_id`: The ID of the AI Consumer, including its hyphens.
-
 For an authenticated request, the Policy doesn't send a per-consumer metric without a `consumer_identifier`.
-The default [`config.consumer_identifier_default`](/ai-gateway/policies/statsd/reference/#schema--config-consumer-identifier-default) is `custom_id`, and `api-key` AI Consumers don't have a custom ID.
+Since `api-key` AI Consumers don't have a custom ID, you'll need to configure this identifier.
 `oauth` AI Consumers set their own `custom_id`, for example to the `sub` claim.
 For requests that authentication rejects, the default metrics include per-consumer metrics with the user name `anonymous`.
 
@@ -160,7 +155,7 @@ For a configuration, see [Count requests per AI Consumer](/ai-gateway/policies/s
 
 By default, the Policy puts the entity in the metric name.
 Set [`config.tag_style`](/ai-gateway/policies/statsd/reference/#schema--config-tag-style) to send the metrics with tags instead.
-The metric names then drop the entity, for example `kong.request.count`, and each metric carries the `route`, `workspace`, `node`, `status`, and `service` tags, plus a `consumer` tag when the request is authenticated.
+The metric names then drop the entity, for example `kong.request.count`, and each metric carries the `node`, and `status` tags, plus a `consumer` tag when the request is authenticated.
 The `shdict_usage` metric carries only the `node` and `shdict` tags.
 The `route` tag holds a route name that {{site.ai_gateway}} generated for the entity, and `service` holds the entity name.
 
@@ -260,7 +255,7 @@ Use AI Consumer scope to count requests per caller, and use global scope when ev
 
 The StatsD Policy has the following limitations:
 
-* **AI Model names:** at AI Model scope, and at global scope for AI Model traffic, every metric name contains `ai-gateway` as the entity, regardless of which AI Model handled the request.
+* **AI Model names:** At AI Model scope, and at global scope for AI Model traffic, every metric name contains `ai-gateway` as the entity, regardless of which AI Model handled the request.
   As a result, you can't tell AI Models apart in your StatsD server by the entity part of the name.
 
 {:.warning}
