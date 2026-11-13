@@ -37,8 +37,8 @@ tldr:
   q: How do I get started with {{site.ai_cost_management}}?
   a: |
     To get started with {{site.ai_cost_management}}, you'll need to:
-    1. Upload an org structure CSV with `kongctl import identity org-chart`.
     1. Add your OIDC provider as a trusted IdP in Access Management with automatic user provisioning enabled.
+    1. Upload an org structure CSV with `kongctl import identity org-chart`.
     1. Create a budget with a spend limit.
     1. Create an `openid-connect` AI Auth Strategy with `principals.enabled` and `principals.jit` set, and attach it to the AI Model.
     1. Install the attribution plugin so `ai-cost-` headers are captured as tags.
@@ -86,14 +86,14 @@ cleanup:
     - title: Delete the budget
       include_content: cleanup/ai-cost-management/delete-budget
       icon_url: /assets/icons/money.svg
-    - title: Revert the price override
+    - title: Delete the price override
       content: |
         Delete the price override you set for `gpt-4o-mini`:
 
         1. In the sidebar, click **Cost Management**.
-        1. Click **Price Catalog**.
-        1. In the effective rates table, open `gpt-4o-mini`.
-        1. Click **Revert to list price**.
+        1. Click **Price Catalog**, then the **Provider overrides** tab.
+        1. Open the menu for the `gpt-4o-mini` row and click **View details**.
+        1. Click **Delete custom rate**, then confirm.
       icon_url: /assets/icons/money.svg
 ---
 
@@ -147,13 +147,13 @@ sequenceDiagram
 > * For a principal built from Kong Identity's own auth server instead, see [Set up Kong Identity attribution](/ai-cost-management/kong-identity-attribution/).
 > * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/).
 
-## Upload an org structure
-
-{% include /ai-cost-management/upload-org-structure.md %}
-
 ## Add a trusted IdP
 
 {% include /ai-cost-management/add-trusted-idp.md %}
+
+## Upload an org structure
+
+{% include /ai-cost-management/upload-org-structure.md %}
 
 ## Set a budget
 
@@ -345,7 +345,7 @@ Set up an override from the {{site.konnect_short_name}} UI:
 
 1. In the sidebar, click **Cost Management**.
 1. Click **Price Catalog**.
-1. In the effective rates table, search for `gpt-4o-mini` and note its base input price.
+1. In the effective rates table, search for `gpt-4o-mini` and note a base input price for reference, for example $0.15 per million tokens.
 1. Click **Add override**.
 1. Select **Custom rate**.
 1. Click the **Provider** dropdown and select **OpenAI**.
@@ -353,7 +353,7 @@ Set up an override from the {{site.konnect_short_name}} UI:
 1. Set **Base input** and **Output** to a rate different from the list price, so the change is easy to spot.
 1. Click **Add override**.
 
-Send another chat completion.
+Wait a few minutes for the override to take effect, then send another chat completion.
 If the `$ACCESS_TOKEN` expired, request a new one using the same client credentials grant as before:
 
 <!--vale off-->

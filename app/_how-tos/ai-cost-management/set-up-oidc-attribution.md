@@ -84,7 +84,7 @@ cleanup:
       icon_url: /assets/icons/money.svg
 ---
 
-Automatic user provisioning creates a {{site.identity}} principal from any OIDC provider's token the first time its caller authenticates, without need to set up a {{site.identity}} directory, auth server, or client manually.
+Automatic user provisioning creates a {{site.identity}} principal from any OIDC provider's token the first time its caller authenticates, without needing to set up a {{site.identity}} directory, auth server, or client manually.
 Every usage event's `subject` resolves to `principal/PRINCIPAL_UUID`.
 
 {{site.ai_cost_management}} attributes usage in two independent tracks: the subject and tags, which record context like project or team through a separate mechanism.
@@ -96,13 +96,13 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 > * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/).
 > * For a full walkthrough that also covers budgets, pricing, and tag attribution, see [Get started with {{site.ai_cost_management}}](/ai-cost-management/getting-started/).
 
-## Upload an org structure
-
-{% include /ai-cost-management/upload-org-structure.md %}
-
 ## Add a trusted IdP
 
 {% include /ai-cost-management/add-trusted-idp.md %}
+
+## Upload an org structure
+
+{% include /ai-cost-management/upload-org-structure.md %}
 
 ## Set a budget
 
@@ -227,7 +227,7 @@ status_code: 200
 ## Validate
 
 The events API returns the usage events for your organization, sorted by newest first.
-Find the event your request generated:
+Find the event your request generated. If your org has other traffic, check that `time` matches when you sent the request:
 
 <!--vale off-->
 {% validation custom-command %}

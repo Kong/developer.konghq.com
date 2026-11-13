@@ -3,7 +3,11 @@
 In production, you'll export an org chart file from your HR system, such as Workday.
 The file must be in CSV format and a maximum of 10 MB.
 
-For this example, we'll create a small CSV file directly.
+For this example, we'll create a small CSV file directly, then upload it with `kongctl import`.
+
+{:.info}
+> The `kongctl import` command is available starting in kongctl 1.27.0.
+
 Create a file named `org-structure.csv`:
 
 <!--vale off-->

@@ -4,7 +4,7 @@ Mapping the token's `email` claim lets a newly authenticated caller match an exi
 Add a trusted IdP through the {{site.konnect_short_name}} UI:
 1. In the {{site.konnect_short_name}} sidebar, click **Access Management**.
 1. Click **Identity Providers**.
-1. Click **Add trusted IdP**.
+1. Click **New identity provider** if this is your first IdP, or **Add trusted IdP** if you already have one.
 1. In the **Name** field, enter a label for this IdP, for example `My OIDC Provider`.
 1. In the **Issuer URL** field, enter your issuer URL (run `echo $OIDC_ISSUER_URL` to print the value you exported in the [prerequisites](#oidc-provider)).
 1. Enable **Automatic user provisioning**.
