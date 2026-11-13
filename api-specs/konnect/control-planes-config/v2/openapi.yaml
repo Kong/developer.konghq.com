@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.16.0
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -10474,7 +10474,6 @@ components:
           type: string
           enum:
             - embeddings
-          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -10888,7 +10887,6 @@ components:
           type: string
           enum:
             - model
-          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -11121,7 +11119,6 @@ components:
           type: string
           enum:
             - redis-ce
-          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -11443,7 +11440,6 @@ components:
           type: string
           enum:
             - redis-ee
-          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer
@@ -11854,7 +11850,6 @@ components:
           type: string
           enum:
             - vectordb
-          x-terraform-transform-const: true
         updated_at:
           description: Unix epoch when the resource was last updated.
           type: integer

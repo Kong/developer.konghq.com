@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.15
+  version: 1.3.17
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@32f4f1e31eddae7cae3632bda76f89b15dac7361
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/32f4f1e31eddae7cae3632bda76f89b15dac7361'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2152,7 +2152,6 @@ components:
       anyOf:
         - $ref: '#/components/schemas/VirtualClusterReferenceById'
         - $ref: '#/components/schemas/VirtualClusterReferenceByName'
-      x-terraform-preferred: '#/components/schemas/VirtualClusterReferenceById'
     VirtualClusterReferenceById:
       description: Reference a virtual cluster by its unique identifier.
       type: object
@@ -2229,7 +2228,6 @@ components:
           type: string
           enum:
             - anonymous
-          x-terraform-transform-const: true
       required:
         - type
     VirtualClusterAuthenticationClientCertificate:
@@ -2243,7 +2241,6 @@ components:
           type: string
           enum:
             - client_certificate
-          x-terraform-transform-const: true
         fetch_kong_identity_principal:
           $ref: '#/components/schemas/FetchKongIdentityPrincipal'
       example:
@@ -2326,7 +2323,6 @@ components:
       anyOf:
         - $ref: '#/components/schemas/TLSTrustBundleReferenceById'
         - $ref: '#/components/schemas/TLSTrustBundleReferenceByName'
-      x-terraform-preferred: '#/components/schemas/TLSTrustBundleReferenceById'
     TLSTrustBundleReferenceById:
       type: object
       properties:
@@ -2352,7 +2348,6 @@ components:
           type: string
           enum:
             - sasl_plain
-          x-terraform-transform-const: true
         mediation:
           description: The mediation type for SASL/PLAIN authentication.
           type: string
@@ -2379,7 +2374,6 @@ components:
           type: string
           enum:
             - sasl_plain
-          x-terraform-transform-const: true
         mediation:
           description: The mediation type for SASL/PLAIN authentication.
           type: string
@@ -2458,7 +2452,6 @@ components:
           type: string
           enum:
             - sasl_scram
-          x-terraform-transform-const: true
         algorithm:
           description: The algorithm used for SASL/SCRAM authentication.
           type: string
@@ -2479,7 +2472,6 @@ components:
           type: string
           enum:
             - oauth_bearer
-          x-terraform-transform-const: true
         mediation:
           description: |
             Methods to mediate authentication:
@@ -2799,7 +2791,6 @@ components:
           type: string
           enum:
             - anonymous
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -2812,7 +2803,6 @@ components:
           type: string
           enum:
             - sasl_plain
-          x-terraform-transform-const: true
         username:
           $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
         password:
@@ -2829,7 +2819,6 @@ components:
           type: string
           enum:
             - sasl_plain
-          x-terraform-transform-const: true
         username:
           $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
         password:
@@ -2848,7 +2837,6 @@ components:
           type: string
           enum:
             - sasl_scram
-          x-terraform-transform-const: true
         algorithm:
           description: The algorithm used for SASL/SCRAM authentication.
           type: string
@@ -2872,7 +2860,6 @@ components:
           type: string
           enum:
             - sasl_scram
-          x-terraform-transform-const: true
         algorithm:
           description: The algorithm used for SASL/SCRAM authentication.
           type: string
@@ -2901,7 +2888,6 @@ components:
           type: string
           enum:
             - sasl_aws_iam
-          x-terraform-transform-const: true
         sasl_aws_iam:
           type: object
           discriminator:
@@ -2932,7 +2918,6 @@ components:
           type: string
           enum:
             - default_provider_chain
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -2948,7 +2933,6 @@ components:
           type: string
           enum:
             - assume_role
-          x-terraform-transform-const: true
         arn:
           description: |
             The [ARN](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns)
@@ -3025,7 +3009,6 @@ components:
           type: string
           enum:
             - confluent
-          x-terraform-transform-const: true
         config:
           description: The configuration of the schema registry.
           type: object
@@ -3056,7 +3039,6 @@ components:
           type: string
           enum:
             - confluent
-          x-terraform-transform-const: true
         config:
           description: The configuration of the schema registry.
           type: object
@@ -3134,7 +3116,9 @@ components:
         - schema_type
         - endpoint
     SchemaRegistryAuthenticationSensitiveDataAwareScheme:
-      description: The authentication configuration for the schema registry.
+      description: |
+        The authentication configuration for the schema registry.
+        The Event Gateway only requires read-only access to the schema registry to fetch schemas for validation, so we recommend using credentials with read-only scope.
       discriminator:
         propertyName: type
         mapping:
@@ -3142,7 +3126,9 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SchemaRegistryAuthenticationBasicSensitiveDataAware'
     SchemaRegistryAuthenticationScheme:
-      description: The authentication configuration for the schema registry.
+      description: |
+        The authentication configuration for the schema registry.
+        The Event Gateway only requires read-only access to the schema registry to fetch schemas for validation, so we recommend using credentials with read-only scope.
       discriminator:
         propertyName: type
         mapping:
@@ -3156,7 +3142,6 @@ components:
           type: string
           enum:
             - basic
-          x-terraform-transform-const: true
         username:
           $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
         password:
@@ -3172,7 +3157,6 @@ components:
           type: string
           enum:
             - basic
-          x-terraform-transform-const: true
         username:
           $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
         password:
@@ -3186,7 +3170,6 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SchemaRegistryReferenceById'
         - $ref: '#/components/schemas/SchemaRegistryReferenceByName'
-      x-terraform-preferred: '#/components/schemas/SchemaRegistryReferenceById'
     SchemaRegistryReferenceById:
       type: object
       properties:
@@ -3340,7 +3323,6 @@ components:
             - tls_server
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -3379,7 +3361,6 @@ components:
             - tls_server
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -3717,7 +3698,6 @@ components:
             - forward_to_virtual_cluster
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -3773,7 +3753,6 @@ components:
           type: string
           enum:
             - port_mapping
-          x-terraform-transform-const: true
         destination:
           $ref: '#/components/schemas/VirtualClusterReference'
         advertised_host:
@@ -3812,7 +3791,6 @@ components:
           type: string
           enum:
             - sni
-          x-terraform-transform-const: true
         sni_suffix:
           description: |
             Optional suffix for TLS SNI validation.
@@ -3957,7 +3935,6 @@ components:
             - encrypt
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4042,6 +4019,9 @@ components:
 
         Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
 
+        This policy only runs on records that the parent schema validation policy successfully parses.
+        If the parent policy's `failure_mode` is `passthrough` or `mark`, records that fail schema validation are sent to the backend cluster without parsing, so this policy doesn't run on them and their fields aren't encrypted.
+
         **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
@@ -4052,7 +4032,6 @@ components:
             - encrypt_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4171,6 +4150,9 @@ components:
 
         Note this policy can only be used as a child of a `EventGatewayProduceSchemaValidationPolicy` policy.
 
+        This policy only runs on records that the parent schema validation policy successfully parses.
+        If the parent policy's `failure_mode` is `passthrough` or `mark`, records that fail schema validation are sent to the backend cluster without parsing, so this policy doesn't run on them and their fields aren't encrypted.
+
         **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
@@ -4181,7 +4163,6 @@ components:
             - encrypt_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4395,7 +4376,6 @@ components:
             - decrypt
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4484,6 +4464,9 @@ components:
 
         Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
 
+        This policy only runs on records that the parent schema validation policy successfully parses.
+        If the parent policy's `failure_mode` is `passthrough` or `mark`, records that fail schema validation are delivered to the client without parsing, so this policy doesn't run on them and their fields stay encrypted.
+
         **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
@@ -4494,7 +4477,6 @@ components:
             - decrypt_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4613,6 +4595,9 @@ components:
 
         Note this policy can only be used as a child of a `EventGatewayConsumeSchemaValidationPolicy` policy.
 
+        This policy only runs on records that the parent schema validation policy successfully parses.
+        If the parent policy's `failure_mode` is `passthrough` or `mark`, records that fail schema validation are delivered to the client without parsing, so this policy doesn't run on them and their fields stay encrypted.
+
         **Requires a minimum runtime version of `1.2`**.
       type: object
       properties:
@@ -4623,7 +4608,6 @@ components:
             - decrypt_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4800,7 +4784,6 @@ components:
             - transcode
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -4930,7 +4913,6 @@ components:
             - transcode
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5073,7 +5055,6 @@ components:
           type: string
           enum:
             - avro
-          x-terraform-transform-const: true
       required:
         - failure_mode
         - output_format
@@ -5096,7 +5077,6 @@ components:
             - transcode
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5226,7 +5206,6 @@ components:
             - transcode
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5369,7 +5348,6 @@ components:
           type: string
           enum:
             - json
-          x-terraform-transform-const: true
       required:
         - failure_mode
         - output_format
@@ -5391,7 +5369,6 @@ components:
           type: string
           enum:
             - avro
-          x-terraform-transform-const: true
       required:
         - failure_mode
         - output_format
@@ -5417,7 +5394,6 @@ components:
           type: string
           enum:
             - inline
-          x-terraform-transform-const: true
         inline:
           description: The raw schema text (e.g. an Avro JSON schema) to use for the transcoded output data.
           type: string
@@ -5432,7 +5408,6 @@ components:
           type: string
           enum:
             - reference
-          x-terraform-transform-const: true
         schema_registry:
           $ref: '#/components/schemas/SchemaRegistryReference'
         subject:
@@ -5498,7 +5473,6 @@ components:
           type: string
           enum:
             - confluent_format
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayParsedRecordTranscodeSchemaRefDestinationRecordHeader:
@@ -5509,7 +5483,6 @@ components:
           type: string
           enum:
             - record_header
-          x-terraform-transform-const: true
         name:
           description: The name is compatible with Confluent's serializer by default but can be changed.
           type: string
@@ -5525,7 +5498,6 @@ components:
           type: string
           enum:
             - none
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayParsedRecordMaskFieldsProducePolicy:
@@ -5547,7 +5519,6 @@ components:
             - mask_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5679,7 +5650,6 @@ components:
             - mask_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5832,7 +5802,6 @@ components:
             - mask_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -5964,7 +5933,6 @@ components:
             - mask_fields
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6134,7 +6102,6 @@ components:
           type: string
           enum:
             - keep_chars
-          x-terraform-transform-const: true
         first:
           description: Number of leading characters to keep unmasked.
           type: integer
@@ -6161,7 +6128,6 @@ components:
           type: string
           enum:
             - email
-          x-terraform-transform-const: true
         local_part:
           $ref: '#/components/schemas/EventGatewayMaskEmailLocalPartStrategy'
         domain:
@@ -6200,7 +6166,6 @@ components:
           type: string
           enum:
             - keep_all
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayMaskStrategyReplace:
@@ -6211,7 +6176,6 @@ components:
           type: string
           enum:
             - replace
-          x-terraform-transform-const: true
         phrase:
           description: The phrase to replace the value with.
           type: string
@@ -6231,7 +6195,6 @@ components:
             - modify_headers
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6360,7 +6323,6 @@ components:
             - modify_headers
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6493,7 +6455,6 @@ components:
             - skip_record
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6610,7 +6571,6 @@ components:
             - skip_record
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6739,7 +6699,6 @@ components:
           type: string
           enum:
             - remove
-          x-terraform-transform-const: true
         key:
           description: The key of the header to remove.
           type: string
@@ -6754,7 +6713,6 @@ components:
           type: string
           enum:
             - set
-          x-terraform-transform-const: true
         key:
           description: The key of the header to set.
           type: string
@@ -6776,7 +6734,6 @@ components:
             - schema_validation
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -6879,7 +6836,6 @@ components:
           type: string
           enum:
             - json
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig:
@@ -6912,7 +6868,6 @@ components:
           type: string
           enum:
             - confluent_schema_registry
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayProduceSchemaValidationPolicy:
@@ -6926,7 +6881,6 @@ components:
             - schema_validation
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -7029,7 +6983,6 @@ components:
           type: string
           enum:
             - json
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayProduceSchemaValidationPolicySchemaRegistryConfig:
@@ -7062,7 +7015,6 @@ components:
           type: string
           enum:
             - confluent_schema_registry
-          x-terraform-transform-const: true
       required:
         - type
     EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfig:
@@ -7096,7 +7048,6 @@ components:
           type: string
           enum:
             - inline_schema
-          x-terraform-transform-const: true
         key:
           $ref: '#/components/schemas/SchemaValidationInlineSchemaConfig'
         value:
@@ -7135,7 +7086,6 @@ components:
           type: string
           enum:
             - inline_schema
-          x-terraform-transform-const: true
         key:
           $ref: '#/components/schemas/SchemaValidationInlineSchemaConfig'
         value:
@@ -7171,7 +7121,6 @@ components:
           type: string
           enum:
             - json
-          x-terraform-transform-const: true
       required:
         - schema
         - schema_type
@@ -7190,7 +7139,6 @@ components:
           type: string
           enum:
             - avro
-          x-terraform-transform-const: true
       required:
         - schema
         - schema_type
@@ -7206,7 +7154,6 @@ components:
             - acls
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -7405,7 +7352,6 @@ components:
             - request_rule_validator
           maxLength: 255
           minLength: 1
-          x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
@@ -7532,7 +7478,6 @@ components:
           type: string
           enum:
             - create_topics
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each topic in the request.
@@ -7643,7 +7588,6 @@ components:
           type: string
           enum:
             - create_partitions
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each topic in the request.
@@ -7728,7 +7672,6 @@ components:
           type: string
           enum:
             - alter_configs
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each resource in the request.
@@ -7819,7 +7762,6 @@ components:
           type: string
           enum:
             - incremental_alter_configs
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each configuration entry in the request.
@@ -7919,7 +7861,6 @@ components:
           type: string
           enum:
             - alter_client_quotas
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each quota operation in the request.
@@ -8007,7 +7948,6 @@ components:
           type: string
           enum:
             - alter_user_scram_credentials
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against each credential in the request.
@@ -8092,7 +8032,6 @@ components:
           type: string
           enum:
             - produce
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8180,7 +8119,6 @@ components:
           type: string
           enum:
             - fetch
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8271,7 +8209,6 @@ components:
           type: string
           enum:
             - join_group
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8353,7 +8290,6 @@ components:
           type: string
           enum:
             - consumer_group_heartbeat
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8435,7 +8371,6 @@ components:
           type: string
           enum:
             - offset_commit
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8517,7 +8452,6 @@ components:
           type: string
           enum:
             - offset_fetch
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8599,7 +8533,6 @@ components:
           type: string
           enum:
             - txn_offset_commit
-          x-terraform-transform-const: true
         rules:
           description: |
             Every rule in this list is evaluated independently against the request.
@@ -8698,7 +8631,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -8711,7 +8643,6 @@ components:
           type: string
           enum:
             - static
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -8730,6 +8661,9 @@ components:
         * `reject` - rejects the record batch.
         * `passthrough` - passes the record silently to the backend cluster even though policy execution failed.
         * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+        The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway.
+        The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it.
+        If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.
 
         **Requires a minimum runtime version of `1.2`**.
       type: string
@@ -8742,9 +8676,13 @@ components:
       description: |-
         Describes how to handle a failure in a policy applied to consumed records.
         * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it.
+        A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset.
+        The error the client receives contains the policy failure reason, which can include runtime-specific configuration details.
         * `skip` - the record is not delivered to the client.
         * `passthrough` - passes the record to the client even though policy execution failed.
         * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).
+        The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets.
+        If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.
 
         **Requires a minimum runtime version of `1.2`**.
       type: string
@@ -8790,7 +8728,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
         arn:
           description: The AWS KMS key ARN.
           type: string
@@ -8812,7 +8749,6 @@ components:
           type: string
           enum:
             - static
-          x-terraform-transform-const: true
         key:
           $ref: '#/components/schemas/EncryptionKeyStaticReference'
       required:
@@ -8824,7 +8760,6 @@ components:
       anyOf:
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceById'
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceByName'
-      x-terraform-preferred: '#/components/schemas/EncryptionKeyStaticReferenceById'
     EncryptionKeyStaticReferenceById:
       description: A static encryption key reference by ID.
       type: object
@@ -9133,7 +9068,6 @@ components:
           type: string
           enum:
             - glob
-          x-terraform-transform-const: true
         glob:
           description: 'Expose any backend topic that matches this glob pattern (e.g., `operations_data_*`).'
           type: string
@@ -9160,7 +9094,6 @@ components:
           type: string
           enum:
             - exact_list
-          x-terraform-transform-const: true
         exact_list:
           description: Explicit allow-list of backend topic names.
           type: array
@@ -9206,7 +9139,6 @@ components:
           type: string
           enum:
             - glob
-          x-terraform-transform-const: true
         glob:
           description: 'Expose any id that matches this glob pattern (e.g., `my_id_*`).'
           type: string
@@ -9223,7 +9155,6 @@ components:
           type: string
           enum:
             - exact_list
-          x-terraform-transform-const: true
         exact_list:
           type: array
           items:

@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes
-  version: 2.1.3
+  version: 2.1.4
   description: The API for Kong Konnect Control Planes.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@dfe8c733058be7a51a83f7d1da520cc59ee4022d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dfe8c733058be7a51a83f7d1da520cc59ee4022d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -640,6 +640,7 @@ components:
           description: Whether this control-plane can be used for cloud-gateways.
           type: boolean
           example: false
+          default: false
           nullable: false
         proxy_urls:
           $ref: '#/components/schemas/ProxyURLs'
@@ -717,6 +718,7 @@ components:
               description: The ClusterType value of the cluster associated with the Control Plane.
               type: string
               example: CLUSTER_TYPE_CONTROL_PLANE
+              default: CLUSTER_TYPE_CONTROL_PLANE
               enum:
                 - CLUSTER_TYPE_CONTROL_PLANE
                 - CLUSTER_TYPE_K8S_INGRESS_CONTROLLER
@@ -728,15 +730,30 @@ components:
               description: The auth type value of the cluster associated with the Runtime Group.
               type: string
               example: pinned_client_certs
+              default: pinned_client_certs
               enum:
                 - pinned_client_certs
                 - pki_client_certs
             cloud_gateway:
               description: Whether the Control Plane can be used for cloud-gateways.
               type: boolean
+              example: false
+              default: false
               nullable: false
             proxy_urls:
-              $ref: '#/components/schemas/ProxyURLs'
+              description: Array of proxy URLs associated with reaching the data-planes connected to a control-plane.
+              type: array
+              items:
+                $ref: '#/components/schemas/ProxyURL'
+              format: set
+              example:
+                - host: example.com
+                  port: 443
+                  protocol: https
+              maxItems: 5
+              readOnly: true
+              title: ProxyURLs
+          readOnly: true
           required:
             - control_plane_endpoint
             - telemetry_endpoint
@@ -1730,15 +1747,17 @@ components:
       description: |
         Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
 
-        Keys must be 1–63 characters long and start with an alphanumeric character.
+        Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+        Values must be 1–127 characters long and must not be empty.
+        Keys and values must not contain spaces or control characters.
       type: object
       example:
         owner: terraform
       additionalProperties:
         type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        pattern: '^[^\s\x00-\x1F\x7F-\x9F]+$'
         minLength: 1
-        maxLength: 63
+        maxLength: 127
       maxProperties: 5
       title: ManagedBy
     PaginationNextResponse:
@@ -2393,6 +2412,7 @@ components:
                 description: Details about the error.
                 type: string
                 example: Could not retrieve permissions to check resource accessibility.
+                readOnly: true
             required:
               - status
               - title
