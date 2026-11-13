@@ -134,6 +134,7 @@ groups:
           - path: /operator/konnect/how-to/secret-cross-namespace-reference/
           - path: /operator/konnect/how-to/config-store-certificate-keys/
           - path: /operator/konnect/how-to/static-naming/
+          - path: /operator/konnect/how-to/private-link/
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/
