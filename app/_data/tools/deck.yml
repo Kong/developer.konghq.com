@@ -2,9 +2,9 @@ name: deck
 
 releases:
   - release: "1.70"
-    version: "1.70.0"
+    version: "1.70.1"
     latest: true
-    released: 2026-11-05
+    released: 2026-11-12
   - release: "1.69"
     version: "1.69.0"
     released: 2026-10-21
