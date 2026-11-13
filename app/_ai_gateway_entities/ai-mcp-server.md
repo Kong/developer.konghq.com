@@ -70,7 +70,6 @@ faqs:
   - q: Can I apply ACLs to MCP prompts and resources?
     a: |
       Yes. Set `access.default_prompt_acls` and `access.default_resource_acls` on the AI MCP Server, and override per entry through `prompts[].access.acls` and `resources[].access.acls`. Prompt and resource ACLs follow the same evaluation order as tool ACLs. See [Prompts and resources](#prompts-and-resources).
-      <!-- TODO(AI-66 OQ2): confirm whether `conversion-only` servers support prompts and resources. Current spec: they don't. -->
 
   - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
@@ -169,7 +168,6 @@ rows:
       `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
 
       The `listener` mode also supports `cache.prompts_list` and `cache.resources_list` for the `prompts/list`, `resources/list`, and `resources/templates/list` responses. The same `cache_scope: public` restriction is expected to apply when `default_prompt_acls`, `default_resource_acls`, or an entry's own `access.acls` filters those lists per subject.
-      <!-- TODO(AI-66 OQ5): confirm that the `cache_scope: public` rejection extends to prompts_list and resources_list. -->
   - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
     modes: "`upstream-server`"
     description: |
@@ -478,21 +476,18 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-<!-- TODO(AI-66 OQ3): confirm how the data plane matches RFC 6570 templates, and which entry wins when both a concrete URI entry and a template entry match the same URI. -->
-
 How the entries behave depends on the mode:
 
 * `passthrough-listener`: entries are ACL-only. A prompt entry takes `name` and `access`. A resource entry takes `uri` and `access`.
 * `upstream-server`: entries can also override metadata. Prompt entries override `title` and `description`. Resource entries override `name`, `title`, `description`, and `mime_type`. Fields that you don't set fall back to the values that the upstream MCP server reports.
 * `listener`: governs aggregated prompts and resources through the server-level defaults and the cache hints. 
-  <!-- TODO(AI-66 OQ4): confirm whether the `listener` gets its own prompts[] and resources[] override list. -->
 * `conversion-only`: no prompts or resources.
-  <!-- TODO(AI-66 OQ2): confirm conversion-only support for prompts and resources. -->
 
 The following example governs prompts and resources on a `passthrough-listener`. All AI Consumers get read access to resources by default, but only the `admins` group can read the `file:///secrets/{name}` template and run the `deploy-checklist` prompt:
 
 ```yaml
 type: passthrough-listener
+display_name: docs-mcp
 name: docs-mcp
 access:
   acl_attribute_type: consumer
