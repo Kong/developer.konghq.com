@@ -5,7 +5,7 @@ require 'date'
 module Jekyll
   module Feeds
     module Sources
-      # Security advisories from the support collection, newest first, undated last.
+      # Security advisories from the support collection, newest first.
       class SecurityAdvisories
         def self.items(site)
           new(site).items
@@ -26,10 +26,9 @@ module Jekyll
           docs.select { |doc| doc.data['advisory'] }
         end
 
-        # Dated items first, newest first; undated last; ties by title.
+        # Newest first; ties by title.
         def sort_key(item)
-          date = item['date']
-          [date ? 0 : 1, date ? -date.to_i : 0, item['title'].to_s]
+          [-item['date'].to_i, item['title'].to_s]
         end
 
         def item(doc)

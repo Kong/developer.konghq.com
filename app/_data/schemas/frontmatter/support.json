@@ -140,6 +140,9 @@
           }
         }
       },
+      "required": [
+        "published"
+      ],
       "additionalProperties": false
     }
   },

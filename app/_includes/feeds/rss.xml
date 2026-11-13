@@ -10,9 +10,7 @@
       <title>{{ item.title | liquify | xml_escape }}</title>
       <link>{{ site.links.web }}{{ item.url }}</link>
       <guid isPermaLink="true">{{ site.links.web }}{{ item.url }}</guid>
-      {%- if item.date %}
       <pubDate>{{ item.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
-      {%- endif %}
     </item>
     {%- endfor %}
   </channel>

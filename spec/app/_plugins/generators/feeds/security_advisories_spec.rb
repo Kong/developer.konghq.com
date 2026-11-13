@@ -7,21 +7,9 @@ RSpec.describe Jekyll::Feeds::Sources::SecurityAdvisories do
 
   let(:site) { JekyllSite.instance }
 
-  # Every example but the malformed-date one needs a collection without the
-  # invalid fixtures, so the source's strict parsing does not derail them.
-  def valid_items
-    advisory_docs = site.collections['support'].docs.reject do |doc|
-      published = doc.data.dig('advisory', 'published')
-      published == 'not-a-date' || published.nil?
-    end
-    collection = instance_double(Jekyll::Collection, docs: advisory_docs)
-    valid_site = instance_double(Jekyll::Site, collections: { 'support' => collection })
-    described_class.items(valid_site)
-  end
+  subject(:items) { described_class.items(site) }
 
-  subject(:items) { valid_items }
-
-  it 'sorts dated items newest first and undated items last' do
+  it 'sorts items newest first' do
     expect(items.map { |i| i['title'] }).to eq(
       [
         'Security Advisory: {{site.base_gateway}} Lua sandbox bypass',
@@ -34,7 +22,7 @@ RSpec.describe Jekyll::Feeds::Sources::SecurityAdvisories do
     expect(items.map { |i| i['title'] }).not_to include('How to upgrade {{site.base_gateway}}')
   end
 
-  it 'returns a Time for dated items and nil for undated ones' do
+  it 'returns a Time for every item' do
     expect(items.first['date']).to eq(Time.utc(2026, 6, 5))
     expect(items.last['date']).to eq(Time.utc(2024, 4, 11))
   end
@@ -44,7 +32,15 @@ RSpec.describe Jekyll::Feeds::Sources::SecurityAdvisories do
   end
 
   it 'fails on a published value that is not a date' do
-    expect { described_class.items(site) }
-      .to raise_error(ArgumentError, /fixture-bad-date-advisory/)
+    bad_doc = instance_double(
+      Jekyll::Document,
+      data: { 'title' => 'Bad', 'advisory' => { 'published' => 'not-a-date' } },
+      url: '/support/security/bad/',
+      relative_path: '_support/security/bad.md'
+    )
+    collection = instance_double(Jekyll::Collection, docs: [bad_doc])
+    bad_site = instance_double(Jekyll::Site, collections: { 'support' => collection })
+    expect { described_class.items(bad_site) }
+      .to raise_error(ArgumentError, /bad\.md/)
   end
 end

@@ -19,17 +19,8 @@ RSpec.describe Jekyll::Feeds::Generator do
   end
 
   describe '#run' do
-    # The #run examples need the source to parse every fixture advisory, so the
-    # invalid-date fixture is hidden from the collection for this block only.
-    before do
-      advisory_docs = site.collections['support'].docs.reject do |doc|
-        published = doc.data.dig('advisory', 'published')
-        published == 'not-a-date' || published.nil?
-      end
-      collection = instance_double(Jekyll::Collection, docs: advisory_docs)
-      allow(site).to receive(:collections).and_return({ 'support' => collection })
-    end
-
+    # The #run examples need the source to parse every fixture advisory; the
+    # fixture collection now only carries dated, valid advisories.
     let!(:pages) { generator.run && site.pages }
 
     it 'publishes the feed at /feeds/security-advisories.xml' do
