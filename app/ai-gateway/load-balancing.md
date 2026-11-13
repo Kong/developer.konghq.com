@@ -16,6 +16,7 @@ products:
 tools:
   - admin-api
   - konnect-api
+  - kongctl
 
 tags:
   - ai
@@ -98,6 +99,19 @@ rows:
       * Prioritizes models with the fastest response times.
       * Suited for latency-sensitive applications.
       * Less suitable for long-lived connections like WebSockets.
+  - algorithm: "Intelligent"
+    description: |
+      Uses a [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier) service to sort the first prompt of each conversation by task type, such as code generation, debugging, or general chat.
+      It then selects a target by weighing published benchmark quality for that task against cost.
+      The [`cost_quality_tradeoff`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-cost-quality-tradeoff) setting controls how much weight quality and cost get.
+      <br><br>
+      For details, see [How intelligent routing works](#how-intelligent-routing-works).
+    considerations: |
+      * Works without a vector database, target descriptions, or embeddings.
+      * Reads the whole request instead of comparing an embedding to a similarity threshold.
+      * Sends request content to the classifier service.
+      * Targets must have benchmark and price data, accept image input, and support at least 1 million tokens of context.
+      * Best for pools of models with different strengths and prices.
   - algorithm: "Semantic"
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. Embeddings are generated using a specified model (for example, `text-embedding-3-small`), and similarity is calculated using vector search.
@@ -117,7 +131,556 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples of each algorithm, see [Algorithm examples](/ai-gateway/entities/ai-model/#algorithm-examples) in the [AI Model entity](/ai-gateway/entities/ai-model/) reference.
+For configuration examples, see [Algorithm examples](#algorithm-examples).
+
+### How intelligent routing works
+
+Intelligent routing selects a target from the content of each conversation, so you don't maintain a routing rule for every case.
+Static routing rules and the [`semantic`](/ai-gateway/semantic-similarity/) algorithm both require you to describe ahead of time which prompts belong to which target.
+The `intelligent` algorithm instead works out what kind of task the prompt describes, then selects a target using published benchmark results for that task and each model's cost.
+Use it when coding assistants or other agents send all requests to one endpoint, and you want {{site.ai_gateway}} to choose the model for each conversation instead of each client.
+It fits a pool of models that differ in capability and price.
+
+Intelligent routing requires {{site.ai_gateway}} 2.4 or later.
+
+For each new conversation, {{site.ai_gateway}} does the following:
+
+1. Sends the conversation to the [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier), which assigns it one of a fixed set of task categories.
+   The categories are code generation, code review, debugging, shell execution, agent dispatcher, and general.
+1. Removes targets that don't meet the [intelligent routing requirements](#intelligent-routing-requirements).
+1. Scores each remaining target.
+   The score combines the target's published benchmark result for the task category with its expected cost, based on the typical mix of input, cached, and output tokens for that category.
+   If the eligible models don't share a benchmark for the task category, {{site.ai_gateway}} scores all of them on a general-purpose benchmark instead.
+1. Selects the highest-scoring target.
+
+The [`cost_quality_tradeoff`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-cost-quality-tradeoff) setting controls the score.
+At the cost end of the range, {{site.ai_gateway}} selects the cheapest eligible target.
+At the quality end, it selects the target with the best benchmark result for the task.
+Values in between balance both.
+
+{{site.ai_gateway}} classifies a conversation once.
+Follow-up turns and retries of a single request reuse the original decision, so a long conversation doesn't re-rank targets or trigger another classification call.
+Follow-up turns go to the target that served earlier turns, as described in [Session affinity](#session-affinity).
+Intelligent routing always uses session affinity.
+
+If the selected target fails, the usual [retry and fallback](#retry-and-fallback) behavior applies.
+{{site.ai_gateway}} tries the remaining targets in their ranked order and doesn't classify the request again.
+
+{:.warning}
+> **Warning**: The classifier receives the content of the conversation, so prompts leave the data plane.
+
+<!-- TODO (AG-2164): The classifier `model` type uses the Typesafe provider. Confirm with engineering the exact name to use for the hosted classifier, and whether sending prompts to it needs a data-handling statement. -->
+<!-- TODO (AG-2164): Confirm the failure behavior when the classifier times out or can't pick a category. The engineering plan describes an error response (no CATCHALL fallback) and distinct status codes. Document the codes once confirmed. -->
+<!-- TODO (AG-2164): Confirm the type of `cost_quality_tradeoff`. The platform API spec uses `balanced`, `cost`, and `quality`. The plugin schema uses a number from 0 to 1. -->
+
+#### Intelligent routing requirements
+
+Intelligent routing has the following requirements:
+
+* Targets can't use the `passthrough` route type.
+* Targets must accept image input and have a context window of at least 1 million tokens.
+  Text-only models and models with smaller context windows can't be targets.
+* Targets must use models in the {{site.ai_gateway}} benchmark catalog.
+  Each target must also have a price from its cost fields or from the [price catalog](/ai-cost-management/price-catalog/).
+  {{site.ai_gateway}} excludes a target if its model isn't in the catalog or if it doesn't have a price.
+* The AI Model must configure a [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier).
+  Use `type: model` to call a classifier through a configured provider, or `type: custom` to call your own classifier service by URL.
+
+### Choose an algorithm
+
+Choosing a load balancing algorithm depends on what you know about your traffic and what you want to optimize.
+The following table maps common goals to algorithms:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: If you want to
+    key: goal
+  - title: Use
+    key: algorithm
+rows:
+  - goal: "Split traffic by fixed percentages"
+    algorithm: "`round-robin`"
+  - goal: "Keep a user or tenant on one target by an identity you choose"
+    algorithm: "`consistent-hashing`"
+  - goal: "Send each request to the least busy or fastest target"
+    algorithm: "`least-connections` or `lowest-latency`"
+  - goal: "Spread traffic by token use or spend"
+    algorithm: "`lowest-usage`"
+  - goal: "Prefer a primary target and use others only as fallback"
+    algorithm: "`priority`"
+  - goal: "Route by topic to specialist targets that you describe, and can run a vector database"
+    algorithm: "`semantic`"
+  - goal: "Let {{site.ai_gateway}} choose a model by task type, balancing benchmark quality and cost, without writing descriptions or running a vector database"
+    algorithm: "`intelligent`"
+{% endtable %}
+<!--vale on-->
+
+#### Semantic and intelligent routing
+
+The `semantic` and `intelligent` algorithms both use the content of the prompt to select a target, but they work differently:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: ""
+    key: aspect
+  - title: Semantic
+    key: semantic
+  - title: Intelligent
+    key: intelligent
+rows:
+  - aspect: "What you configure"
+    semantic: "A description for each target, plus an embedding model and a vector database."
+    intelligent: "A classifier and a cost and quality trade-off. {{site.ai_gateway}} ignores target descriptions."
+  - aspect: "How it chooses"
+    semantic: "Compares the embedding of the prompt to the description of each target. The closest match within the threshold is selected."
+    intelligent: "Classifies the task, then scores each target on benchmark quality for that task and on cost."
+  - aspect: "Long prompts that cover several topics"
+    semantic: "The embedding blends all the topics, which weakens the match and often falls back to the catch-all target."
+    intelligent: "The classifier reads the whole request and assigns one task category. No similarity threshold applies."
+  - aspect: "You control"
+    semantic: "Which target handles which topic, through your descriptions. Suits domain-specific targets, such as a fine-tuned legal model."
+    intelligent: "How much you prioritize cost over quality. The selection uses published benchmark results for the task category."
+  - aspect: "Target requirements"
+    semantic: "A semantic description for each target."
+    intelligent: "Models with benchmark and price data that accept image input and have at least 1 million tokens of context."
+  - aspect: "Request content"
+    semantic: "The prompt text goes to your embedding provider. The vector database stores and compares embeddings."
+    intelligent: "Conversation text and tool descriptions go to the classifier service. Images don't."
+  - aspect: "Re-evaluation"
+    semantic: "Every request, unless you enable [session affinity](#session-affinity)."
+    intelligent: "Once per conversation. Follow-up turns stay on the same target."
+{% endtable %}
+<!--vale on-->
+
+Choose `semantic` when you know which topics belong to which target, such as a fine-tuned model for one domain, and you want exact control.
+Choose `intelligent` when your targets are general-purpose models that differ mainly in capability and price, and you want {{site.ai_gateway}} to select a model by task type without a vector database.
+
+To move from `semantic` to `intelligent`, change the algorithm, remove the vector database and embeddings configuration, and add a classifier.
+The `intelligent` algorithm ignores the target descriptions you wrote for `semantic`.
+
+### Algorithm examples
+
+The following examples show the `config.balancer` settings for common load balancing scenarios.
+They reference [AI Model Providers](/ai-gateway/entities/ai-model-provider/) named `my-openai-account` and `my-anthropic-account`.
+To create them, see [Set up an AI Model Provider](/ai-gateway/entities/ai-model-provider/#set-up-an-ai-model-provider).
+
+{% navtabs "algorithm-examples" %}
+{% navtab "Round-robin" %}
+
+If you want to try a second provider on a small share of production traffic, give it a low [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-weight).
+The following AI Model sends about 90% of requests to the OpenAI target and 10% to the Anthropic target:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-with-canary
+  name: chat-with-canary
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-5.1
+      weight: 90
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-5
+      weight: 10
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-with-canary
+    balancer:
+      algorithm: round-robin
+{% endentity_example %}
+
+To shift more traffic to the Anthropic target as you gain confidence, raise its weight and lower the other.
+
+{% endnavtab %}
+{% navtab "Consistent-hashing" %}
+
+If your clients send a stable user identifier, you can keep each user on one provider so the provider's prompt cache stays warm across that user's requests.
+The following AI Model hashes the `X-User-ID` header, so requests with the same value always go to the same target:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-sticky-by-user
+  name: chat-sticky-by-user
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-5.1
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-5
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-sticky-by-user
+    balancer:
+      algorithm: consistent-hashing
+      hash_on_header: X-User-ID
+{% endentity_example %}
+
+This works when clients send a stable value on every request. If yours don't, use [session affinity](#session-affinity) instead.
+
+{% endnavtab %}
+{% navtab "Least-connections" %}
+
+If one target can handle more concurrent requests than the other, weight it higher so it receives a proportionally larger share of in-flight requests.
+The following AI Model gives the OpenAI target twice the capacity weight of the Anthropic target, and sends each new request to the target with the most spare capacity:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-by-capacity
+  name: chat-by-capacity
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-5.1
+      weight: 100
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-5
+      weight: 50
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-by-capacity
+    balancer:
+      algorithm: least-connections
+{% endentity_example %}
+
+A target that responds slowly accumulates open connections, so it receives fewer new requests until it catches up.
+
+{% endnavtab %}
+{% navtab "Lowest-latency" %}
+
+If your application is interactive, you can route each request to the target that has been responding fastest.
+The following AI Model measures end-to-end response time with [`latency_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-latency-strategy).
+The default, `tpot`, measures time per output token instead:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-fastest-response
+  name: chat-fastest-response
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-5.1
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-5
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-fastest-response
+    balancer:
+      algorithm: lowest-latency
+      latency_strategy: e2e
+{% endentity_example %}
+
+{% endnavtab %}
+{% navtab "Lowest-usage" %}
+
+If each provider enforces a token quota, you can keep consumption even across providers so one account doesn't exhaust its quota first.
+The following AI Model sends each request to the target that has consumed the fewest tokens, counting prompt and completion tokens together:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-even-token-use
+  name: chat-even-token-use
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-5.1
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-5
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-even-token-use
+    balancer:
+      algorithm: lowest-usage
+      tokens_count_strategy: total-tokens
+{% endentity_example %}
+
+To balance by spend instead, set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`.
+
+{% endnavtab %}
+{% navtab "Intelligent" %}
+
+If developers use coding assistants that all call one endpoint, you can let {{site.ai_gateway}} choose the model for each conversation instead of configuring each client.
+
+The following AI Model classifies each new conversation with a classifier service, then selects between `gpt-4.1-mini` and `claude-sonnet-4-6`, which have different benchmark results, based on the task category.
+Both models accept image input and have a context window of at least 1 million tokens, which intelligent routing requires.
+
+When `cost_quality_tradeoff` is `balanced`, {{site.ai_gateway}} weighs each model's benchmark quality for that task against its cost:
+
+{% entity_example %}
+type: model
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: chat-routed-by-task
+  name: chat-routed-by-task
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: gpt-4.1-mini
+      provider: my-openai-account
+      config:
+        type: openai
+    - name: claude-sonnet-4-6
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+      model:
+        body_param: model
+        values:
+          - chat-routed-by-task
+    balancer:
+      algorithm: intelligent
+      cost_quality_tradeoff: balanced
+      classifier:
+        type: custom
+        url: https://classifier.example.com
+        format: /v1/systemone
+        auth:
+          type: basic
+          headers:
+            - name: Authorization
+              value: ${classifier_auth_header}
+variables:
+  classifier_auth_header:
+    value: $CLASSIFIER_AUTH_HEADER
+    secret: true
+    description: The full Authorization header value for your classifier service, for example `Bearer <token>`.
+{% endentity_example %}
+
+To select the cheapest eligible model, set `cost_quality_tradeoff` to `cost`.
+To select the model with the best benchmark results for each task, set it to `quality`.
+
+{% endnavtab %}
+{% endnavtabs %}
+
+<!-- TODO (AG-2164): gpt-4.1-mini and claude-sonnet-4-6 are in the kong-ee benchmark catalog (benchmarks.lua) with image input and at least 1M context. Confirm with engineering that the catalog and the per-category scores ship in 2.4 as written. Add priority and semantic tabs. Priority: the repo's AI Model spec has no field on targets for priority groups. Semantic: needs embeddings and vectordb examples. The intelligent tab follows the platform-api spec (kong-ee#24442 uses a numeric cost_quality_tradeoff and a different classifier auth shape), so recheck it when the spec merges. -->
+
+### Session affinity
+
+Session affinity keeps a multi-turn conversation on the target that served its earlier turns.
+The configured algorithm places the first turn of a conversation, and session affinity sends later turns to that same target as long as it can take them.
+Session affinity requires {{site.ai_gateway}} 2.4 or later.
+
+Configure session affinity in [`config.balancer.session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) on the AI Model.
+It works with every algorithm except `consistent-hashing`.
+
+#### Why use session affinity
+
+LLM providers cache the prompt prefix on the target that served it.
+In a long conversation, such as one with a coding agent, each turn includes the full history again.
+When a turn goes to a different target than the earlier turns, the provider reprocesses the whole history at full cost and latency instead of reusing its cached prefix.
+
+Before session affinity, the only way to keep a conversation on one target was `consistent-hashing`.
+That forced a choice between prompt-cache savings and your preferred strategy (round-robin, latency, cost, or priority).
+It also depended on clients sending a stable header on every request, which most clients don't do.
+
+Use session affinity when you want to balance new conversations by cost, latency, or priority, but keep each running conversation on one target.
+
+Session affinity is a performance optimization, not a correctness feature.
+If a turn goes to a different target, the conversation still works and you only lose the provider's cached prefix.
+
+#### How a conversation is bound to a target
+
+Clients don't need to send a session header or key.
+{{site.ai_gateway}} identifies a conversation from what the client already sends:
+
+1. If the request includes the provider's identifier for the previous response, {{site.ai_gateway}} uses it.
+   This applies to `previous_response_id` in OpenAI Responses requests and the previous message ID in Anthropic Messages requests.
+1. Otherwise, {{site.ai_gateway}} uses a fingerprint of the conversation history up to the latest assistant message.
+   This applies to Chat Completions and compatible providers, which don't return a stable response ID.
+
+The binding works as follows:
+
+1. The configured algorithm selects a target for the first turn.
+1. After a successful response, {{site.ai_gateway}} records which target served the conversation.
+1. For each follow-up turn, {{site.ai_gateway}} sends the request to the recorded target if that target can take it.
+
+Only a successful response updates the recorded target.
+A failed final attempt doesn't change which target a conversation is bound to.
+
+#### Failover and re-binding
+
+If the recorded target can't take a follow-up request, the configured algorithm selects a new target.
+A target can't take a request when it's unhealthy, over its rate limit, or no longer part of the AI Model.
+After a successful response, {{site.ai_gateway}} binds the conversation to the new target.
+Later turns go to the new target, and the client doesn't see an error.
+
+Retries and failover follow the [retry and fallback](#retry-and-fallback) settings.
+When a retry or failover ends on a different target, that target becomes the conversation's new target after a successful response.
+
+#### Relationship to consistent hashing
+
+`consistent-hashing` is an algorithm that routes by a hash of a header value you control, such as a user ID.
+Session affinity is a layer on top of an algorithm that routes by conversation, so it doesn't need a header.
+You can't combine the two.
+
+We recommend session affinity when your goal is prompt-cache reuse within a conversation, because it works with any algorithm and without client changes.
+Keep `consistent-hashing` when you need requests routed by an identity you choose, such as a user ID.
+
+#### Storage and requirements
+
+{{site.ai_gateway}} stores which target served each conversation.
+Set `storage.type` based on how your data plane is deployed:
+
+{% table %}
+columns:
+  - title: Storage
+    key: storage
+  - title: Choose it when
+    key: when
+  - title: Trade-offs
+    key: tradeoffs
+rows:
+  - storage: "`local`"
+    when: |
+      You run a single data plane node, or you are evaluating the feature.
+    tradeoffs: |
+      The state is held in the memory of each node and isn't shared.
+      If a follow-up turn is sent to a different node, that node doesn't have a record of the conversation, and the configured algorithm selects a target.
+      Restarting a node clears its state.
+  - storage: "`redis`"
+    when: |
+      You run more than one data plane node.
+    tradeoffs: |
+      The state is shared through a Datastore of type `redis-ee`, so any node can look up the conversation's target.
+      You need to provision and monitor Redis.
+{% endtable %}
+
+We recommend `redis` for any multi-node data plane because `local` storage only preserves affinity when consecutive turns reach the same node.
+
+Use `ttl` to control how long {{site.ai_gateway}} remembers a conversation's target.
+Memory use grows with the number of active conversations and the TTL.
+{{site.ai_gateway}} stores a small record per turn, not the conversation history.
+
+#### Limitations
+
+* **Context compaction can break the link.** Clients such as coding agents sometimes compact or summarize the history.
+  When a request includes a provider response ID, affinity continues to work after compaction.
+  When {{site.ai_gateway}} relies on the history fingerprint alone, the compacted history no longer matches, and the configured algorithm selects the target.
+* **Fallback to the configured algorithm.** If the state store is unavailable, or a conversation's entry expired or was evicted, the configured algorithm selects the target without returning an error.
+  The cost is a provider prompt-cache miss.
+* **Identical conversations.** {{site.ai_gateway}} identifies conversations by their content, so two clients that send identical message histories can be sent to the same target.
+* **Single Datastore scope.** Affinity isn't shared across gateways.
+  State is shared only among the data plane nodes that use the same Datastore.
+
+<!-- TODO (observability): AI-186 lists affinity outcome (hit, miss, rebound), identity source, and provider cached-token counts per session in Konnect observability. Add the metric and span attribute names once engineering confirms them. -->
+
+#### Configure session affinity
+
+The following AI Model `config.balancer` fragment enables session affinity on the `lowest-latency` algorithm and shares state through Redis:
+
+```yaml
+config:
+  balancer:
+    algorithm: lowest-latency
+    session_affinity:
+      enabled: true
+      ttl: 21600
+      storage:
+        type: redis
+        datastore:
+          name: shared-redis
+```
 
 ### Request routing rules
 
@@ -222,6 +785,10 @@ rows:
     action: "Use [`hash_on_header`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-hash-on-header)"
     description: |
       Ensure that the same user consistently routes to the same target model, enabling sticky sessions and reliable fallback behavior.
+  - scenario: "Keep a conversation on one target without giving up your balancing algorithm"
+    action: "Enable [`session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity)"
+    description: |
+      Route follow-up turns to the target that served earlier turns to benefit from provider prompt caching, regardless of the algorithm that places new conversations. See [Session affinity](#session-affinity).
   - scenario: "Models have different costs"
     action: "Set [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) to `cost`"
     description: |
