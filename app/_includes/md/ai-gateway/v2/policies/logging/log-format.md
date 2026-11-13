@@ -14,99 +14,128 @@ content: |
     ```json
     {
         "response": {
-            "size": 9982,
+            "size": 1815,
             "headers": {
-                "access-control-allow-origin": "*",
-                "content-length": "9593",
-                "date": "Thu, 19 Sep 2024 22:10:39 GMT",
-                "content-type": "text/html; charset=utf-8",
-                "via": "1.1 kong/3.8.0.0-enterprise-edition",
+                "content-type": "application/json",
                 "connection": "close",
-                "server": "gunicorn/19.9.0",
-                "access-control-allow-credentials": "true",
-                "x-kong-upstream-latency": "171",
-                "x-kong-proxy-latency": "1",
-                "x-kong-request-id": "2f6946328ffc4946b8c9120704a4a155"
+                "x-kong-llm-model": "openai/gpt-4o-mini",
+                "via": "1.1 kong/2.3.0-ai-gateway",
+                "x-kong-proxy-latency": "3",
+                "content-length": "822",
+                "x-kong-upstream-latency": "1155",
+                "date": "Fri, 13 Nov 2026 05:03:37 GMT",
+                "x-kong-request-id": "85ece81c8acb560be3bff743303c9326",
+                "server": "cloudflare"
             },
             "status": 200
         },
-        "route": {
-            "updated_at": 1726782477,
-            "tags": [],
-            "response_buffering": true,
-            "path_handling": "v0",
-            "protocols": [
-                "http",
-                "https"
-            ],
-            "service": {
-                "id": "fb4eecf8-dec2-40ef-b779-16de7e2384c7"
-            },
-            "https_redirect_status_code": 426,
-            "regex_priority": 0,
-            "name": "example_route",
-            "id": "0f1a4101-3327-4274-b1e4-484a4ab0c030",
-            "strip_path": true,
-            "preserve_host": false,
-            "created_at": 1726782477,
-            "request_buffering": true,
-            "ws_id": "f381e34e-5c25-4e65-b91b-3c0a86cfc393",
-            "paths": [
-                "/example-route"
-            ]
-        },
-        "workspace": "f381e34e-5c25-4e65-b91b-3c0a86cfc393",
-        "workspace_name": "default",
         "tries": [
             {
-                "balancer_start": 1726783839539,
-                "balancer_start_ns": 1.7267838395395e+18,
-                "ip": "34.237.204.224",
+                "balancer_start": 1794546216834,
+                "hostname": "api.openai.com",
                 "balancer_latency": 0,
-                "port": 80,
-                "balancer_latency_ns": 27904
+                "balancer_latency_ns": 15872,
+                "ip": "203.0.113.10",
+                "port": 443,
+                "balancer_start_ns": 1.7945462168348e+18,
+                "target_id": "unknown",
+                "keepalive": true
             }
         ],
-        "client_ip": "192.168.65.1",
+        "client_ip": "203.0.113.5",
         "request": {
-            "id": "2f6946328ffc4946b8c9120704a4a155",
             "headers": {
-                "accept": "*/*",
-                "user-agent": "HTTPie/3.2.3",
                 "host": "localhost:8000",
-                "connection": "keep-alive",
-                "accept-encoding": "gzip, deflate"
+                "accept": "*/*",
+                "user-agent": "curl/8.7.1",
+                "authorization": "REDACTED",
+                "content-length": "90",
+                "accept-encoding": "identity",
+                "content-type": "application/json"
             },
-            "uri": "/example-route",
-            "size": 139,
-            "method": "GET",
-            "querystring": {},
-            "url": "http://localhost:8000/example-route"
+            "method": "POST",
+            "size": 242,
+            "uri": "/chat/completions",
+            "id": "85ece81c8acb560be3bff743303c9326",
+            "url": "http://localhost:8000/chat/completions",
+            "querystring": {}
         },
-        "upstream_uri": "/",
-        "started_at": 1726783839538,
+        "upstream_uri": "/v1/chat/completions",
+        "started_at": 1794546216831,
         "source": "upstream",
-        "upstream_status": "200",
+        "upstream_status": 200,
         "latencies": {
-            "kong": 1,
-            "proxy": 171,
-            "request": 173,
-            "receive": 1
+            "request": 1162,
+            "dns": 0.006912,
+            "third_party": 0.006912,
+            "kong_internal": 6.4322299261473,
+            "socket": 0,
+            "http_client": 0,
+            "receive": 4,
+            "redis": 0,
+            "client": 0.723712,
+            "kong": 3,
+            "proxy": 1155
         },
-        "service": {
-            "write_timeout": 60000,
-            "read_timeout": 60000,
-            "updated_at": 1726782459,
-            "host": "httpbin.konghq.com",
-            "name": "example_service",
-            "id": "fb4eecf8-dec2-40ef-b779-16de7e2384c7",
-            "port": 80,
-            "enabled": true,
-            "created_at": 1726782459,
-            "protocol": "http",
-            "ws_id": "f381e34e-5c25-4e65-b91b-3c0a86cfc393",
-            "connect_timeout": 60000,
-            "retries": 5
+        "ai": {
+            "proxy": {
+                "usage": {
+                    "input_tokens": 13,
+                    "input_tokens_details": {
+                        "cached_tokens": 0,
+                        "audio_tokens": 0
+                    },
+                    "service_tier": "default",
+                    "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "rejected_prediction_tokens": 0,
+                        "reasoning_tokens": 0
+                    },
+                    "output_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "rejected_prediction_tokens": 0,
+                        "reasoning_tokens": 0
+                    },
+                    "output_token_cost": 3.6e-06,
+                    "cost": 5.55e-06,
+                    "time_to_first_token": 1157,
+                    "output_tokens": 6,
+                    "time_per_token": 193.33333333333,
+                    "total_tokens": 19,
+                    "input_token_cost": 1.95e-06,
+                    "prompt_tokens": 13,
+                    "completion_tokens": 6,
+                    "prompt_tokens_details": {
+                        "cached_tokens": 0,
+                        "audio_tokens": 0
+                    }
+                },
+                "meta": {
+                    "model_id": "1bc79836-f5b0-4895-80a1-7486a0e8b439",
+                    "response_model": "gpt-4o-mini-2024-07-18",
+                    "llm_latency": 1160,
+                    "request_mode": "oneshot",
+                    "otel_provider_name": "openai",
+                    "operation_name": "chat",
+                    "plugin_id": "75ff22ed-6245-594b-895f-6a9fa36f4581",
+                    "request_model": "gpt-4o-mini",
+                    "provider_name": "openai"
+                },
+                "tried_targets": [
+                    {
+                        "host": "api.openai.com",
+                        "upstream_scheme": "https",
+                        "route_type": "llm/v1/chat",
+                        "port": 443,
+                        "ip": "203.0.113.10",
+                        "upstream_uri": "/v1/chat/completions",
+                        "provider": "openai",
+                        "model": "gpt-4o-mini"
+                    }
+                ]
+            }
         }
     }
     ```
