@@ -23,6 +23,8 @@ rawLicenseString: '$(cat ./license.json)'
 {%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
 {%- comment -%} Controllers enabled only in the on-prem install command, for example ONPREMAIGATEWAY. {%- endcomment -%}
 {%- assign on_prem_controllers = include.on_prem_controllers | default: page.prereqs.operator.on_prem_controllers -%}
+{%- comment -%} Skip the on-prem KongLicense step, for example for Event Gateway, whose license is provided to gw-admin instead. {%- endcomment -%}
+{%- assign skip_license = include.skip_license | default: page.prereqs.operator.skip_license -%}
 {%- assign chart_version = include.chart_version -%}
 {%- if prereqs.operator.rapid -%}
 {%- assign chart_version = chart_version | default: site.data.products.operator.rapid.chart -%}
@@ -168,7 +170,7 @@ rawLicenseString: '$(cat ./license.json)'
 {% endif %}
 {% unless skip_cert_manager %}{{cert-manager | indent: 3}}{% endunless %}
 {{cert | indent: 3}}
-{%- if page.works_on contains 'on-prem' -%}
+{%- if page.works_on contains 'on-prem' and skip_license != true -%}
 {% on_prem %}
 content: |
   Apply a `KongLicense`. This assumes that your license is available in `./license.json`
