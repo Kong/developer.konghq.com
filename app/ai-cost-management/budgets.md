@@ -200,7 +200,7 @@ Set the limit as an amount in US dollars, for example `500` or `0.2`.
 The size of a budget window is fixed.
 Consecutive windows have the same length and align to an anchor.
 * The [interval](#schema-aicost-limit-budget-input-window-interval) sets the length of each window, like one month or one day.
-* The [anchor](#schema-aicost-limit-budget-input-window-anchor) sets a time when a window starts, in a specific time zone.
+* The [anchor](#schema-aicost-limit-budget-input-window-anchored-at) (`anchored_at`) sets a time when a window starts, in a specific time zone.
 
 Windows start a whole number of intervals before or after the anchor, in the local time of the anchor's time zone.
 Calendar units like months therefore stay aligned to the calendar.
@@ -385,7 +385,7 @@ The following sample event shows an 80% threshold reached by a pooled budget, wi
     "window": {
       "type": "fixed",
       "interval": "P1M",
-      "anchor": "2026-01-01T00:00:00+00:00[UTC]"
+      "anchored_at": "2026-01-01T00:00:00+00:00[UTC]"
     },
     "created_at": "2026-06-01T09:00:00Z",
     "updated_at": "2026-06-01T09:00:00Z"
@@ -476,7 +476,7 @@ body:
   window:
     type: fixed
     interval: P1M
-    anchor: "2026-01-01T00:00:00+00:00[UTC]"
+    anchored_at: "2026-01-01T00:00:00+00:00[UTC]"
 {% endkonnect_api_request %}
 <!--vale on-->
 
