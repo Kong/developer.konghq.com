@@ -1,0 +1,105 @@
+{% comment %}
+  Install modal opened by info_box/sections/set_up_agent.html.
+  Rendered once per skill page (the info box renders twice, so ids must not live there).
+  Reuses the global Tabs component (components/tabs.js).
+{% endcomment %}
+{% assign marketplace = site.skills_repo_slug | split: '/' | last %}
+{% assign plugin_slug = page.plugin_slug %}
+{% if page.content_type == 'how_to' %}
+  {% assign plugin_slug = 'kong-konnect' %}
+  {% assign tabs = 'kai,claude-code,codex' | split: ',' %}
+  {% capture default_prompt %}Walk me through this guide and run its steps: {{ site.links.web }}{{ page.url }}{% endcapture %}
+  {% assign kai_prompt = page.run_in_kai | default: default_prompt | liquify | url_encode %}
+{% elsif page.plugin_slug %}
+  {% assign tabs = 'claude-code,codex,cursor,skills-only' | split: ',' %}
+{% else %}
+  {% assign tabs = 'skills-only' | split: ',' %}
+{% endif %}
+
+<dialog id="set-up-agent-dialog" class="set-up-agent-dialog w-[min(92vw,34rem)] max-h-[90vh] p-0 rounded-lg border border-primary bg-primary text-primary shadow-primary" aria-labelledby="set-up-agent-title">
+  <div class="flex flex-col gap-4 p-6">
+    <div class="flex items-start justify-between gap-4">
+      <h2 id="set-up-agent-title" class="!m-0 text-xl font-semibold">Install agent tools</h2>
+      <button type="button" class="set-up-agent__close shrink-0 p-1 rounded text-terciary hover:text-primary" data-set-up-agent-close aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    {% if page.content_type == 'how_to' %}
+    <p class="!m-0">Let an agent run this guide for you. <a href="/skills/install/">Learn more</a></p>
+    {% else %}
+    <p class="!m-0">Install the {{ page.title }} skill in your coding agent. <a href="/skills/install/">Learn more</a></p>
+    {% endif %}
+
+    <div class="tabs flex flex-col" data-tab-group="set-up-agent">
+      <ul class="tablist flex flex-wrap" role="tablist">
+        {% for tab in tabs %}
+          {% case tab %}
+            {% when 'kai' %}{% assign label = 'Run in Kai' %}{% assign icon = '/assets/icons/ai-tools/other-tools.svg' %}
+            {% when 'claude-code' %}{% assign label = 'Claude Code' %}{% assign icon = '/assets/icons/ai-tools/claude-code.svg' %}
+            {% when 'codex' %}{% assign label = 'Codex' %}{% assign icon = '/assets/icons/ai-tools/codex.svg' %}
+            {% when 'cursor' %}{% assign label = 'Cursor' %}{% assign icon = '/assets/icons/ai-tools/cursor.svg' %}
+            {% else %}{% assign label = 'Skills only' %}{% assign icon = '/assets/icons/ai-tools/other-tools.svg' %}
+          {% endcase %}
+          <button
+            id="set-up-agent-tab-{{ forloop.index }}"
+            class="tab-button__horizontal"
+            aria-controls="set-up-agent-tabpanel-{{ forloop.index }}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+            data-slug="set-up-agent-{{ tab }}"
+          >{% include_svg icon width="16" height="16" %} {{ label }}</button>
+        {% endfor %}
+      </ul>
+
+      <div class="mt-4 flex flex-col">
+        {% for tab in tabs %}
+          <div
+            class="flex flex-col gap-3{% unless forloop.first %} hidden{% endunless %}"
+            role="tabpanel"
+            data-id="set-up-agent-tabpanel-{{ forloop.index }}"
+            tabindex="0"
+            aria-labelledby="set-up-agent-tab-{{ forloop.index }}"
+            data-panel="set-up-agent-{{ tab }}"
+          >
+            {% case tab %}
+              {% when 'kai' %}
+                <p class="!m-0">Open Kai in {{ site.konnect_short_name }} with this guide as the prompt.</p>
+                <a class="button button--primary justify-center" href="{{ site.links.kai_prompt_url }}{{ kai_prompt }}" target="_blank" rel="noopener">Run this guide in Kai</a>
+                {% assign cmd = nil %}
+              {% when 'claude-code' %}
+                <p class="!m-0">Add the marketplace and install the <code>{{ plugin_slug }}</code> plugin, which gives your agent Kong skills.{% if page.content_type != 'how_to' %} It includes this skill.{% endif %}</p>
+                {% capture cmd %}/plugin marketplace add {{ site.skills_repo_slug }}
+/plugin install {{ plugin_slug }}@{{ marketplace }}{% endcapture %}
+                {% if page.content_type == 'how_to' %}<p class="!m-0">Or <a href="{{ site.links.claude_prompt_url }}{{ kai_prompt }}" target="_blank" rel="noopener">open this guide in Claude</a>.</p>{% endif %}
+              {% when 'codex' %}
+                <p class="!m-0">Add the marketplace and install the <code>{{ plugin_slug }}</code> plugin, which gives your agent Kong skills.{% if page.content_type != 'how_to' %} It includes this skill.{% endif %}</p>
+                {% capture cmd %}codex plugin marketplace add {{ site.skills_repo_slug }}
+codex plugin add {{ plugin_slug }}@{{ marketplace }}{% endcapture %}
+              {% when 'cursor' %}
+                <p class="!m-0">Cursor installs the <code>{{ plugin_slug }}</code> plugin from a local copy or its plugin UI. See the <a href="/skills/install/?tab=cursor">Cursor install steps</a>.</p>
+                {% assign cmd = nil %}
+              {% else %}
+                <p class="!m-0">Install only this skill, without a plugin, using the <code>skills</code> CLI.</p>
+                {% capture cmd %}npx skills add {{ site.skills_repo_slug }} --skill {{ page.slug }}{% endcapture %}
+            {% endcase %}
+
+            {% if cmd %}
+            <div class="set-up-agent__code relative flex items-start justify-between gap-3 rounded-lg border border-primary bg-secondary px-4 py-3">
+              <pre id="set-up-agent-cmd-{{ forloop.index }}" class="!m-0 !p-0 !bg-transparent text-sm overflow-x-auto"><code>{{ cmd | strip | escape }}</code></pre>
+              <div class="flex shrink-0">
+                <div class="absolute right-10 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+                <clipboard-copy for="set-up-agent-cmd-{{ forloop.index }}" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group cursor-pointer">
+                  <svg width="14" height="14" viewBox="0 0 24 24" class="flex group-[.success]:hidden" fill="none" aria-hidden="true"><path d="M5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6H5V20H16V22H5ZM9 18C8.45 18 7.97917 17.8042 7.5875 17.4125C7.19583 17.0208 7 16.55 7 16V4C7 3.45 7.19583 2.97917 7.5875 2.5875C7.97917 2.19583 8.45 2 9 2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V16C20 16.55 19.8042 17.0208 19.4125 17.4125C19.0208 17.8042 18.55 18 18 18H9ZM9 16H18V4H9V16Z" fill="currentColor"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" class="hidden group-[.success]:flex" fill="none" stroke="rgb(var(--color-semantic-green-primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                </clipboard-copy>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</dialog>

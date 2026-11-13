@@ -1165,3 +1165,32 @@ dialog.expandable-image-dialog.is-open::backdrop {
     transition: none;
   }
 }
+
+/* Skill "Set up agent" dialog (see javascripts/set_up_agent.js) */
+dialog.set-up-agent-dialog {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin: auto;
+}
+
+dialog.set-up-agent-dialog.is-open {
+  opacity: 1;
+  transform: none;
+}
+
+dialog.set-up-agent-dialog::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition: background 0.2s ease;
+}
+
+dialog.set-up-agent-dialog.is-open::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.set-up-agent-dialog,
+  dialog.set-up-agent-dialog::backdrop {
+    transition: none;
+  }
+}

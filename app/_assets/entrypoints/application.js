@@ -28,6 +28,7 @@ import "@/javascripts/clipboard_copy";
 import "@/javascripts/llm_dropdown";
 import "@/javascripts/collapsible_code";
 import "@/javascripts/expandable_image";
+import "@/javascripts/set_up_agent";
 import "@/javascripts/tooltip";
 import "@/javascripts/arcade";
 import "@github/clipboard-copy-element";
