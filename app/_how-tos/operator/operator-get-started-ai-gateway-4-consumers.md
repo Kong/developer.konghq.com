@@ -317,6 +317,7 @@ Send an authenticated request using the API key:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
@@ -336,6 +337,7 @@ Send an unauthenticated request:
 <!--vale off-->
 {% validation request-check %}
 konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
 url: /v1/chat/completions
 method: POST
 headers:
