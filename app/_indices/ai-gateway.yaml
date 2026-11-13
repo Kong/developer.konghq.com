@@ -57,6 +57,9 @@ sections:
       - title: "{{site.ai_gateway}} resource sizing guidelines"
         description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
+      - title: Size memory for AI payload logging
+        description: Estimate and bound the memory that AI payload logging uses, and choose container memory limits.
+        url: /ai-gateway/performance/ai-payload-logging-memory/
       - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
         description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/

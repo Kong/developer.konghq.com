@@ -17,7 +17,7 @@ related_resources:
 faqs:
   - q: When does the HTTP Log Policy record log entries in a request/response timeline?
     a: The log is executed after {{site.ai_gateway}} sends the last response byte to the client.
-  - q: Can the HTTP Log Policy expose latency metrics for individual phases of the request lifecycle (such as `rewrite`, `access`, `header_filter`, and `body_filter`)?
+  - q: Can the HTTP Log Policy expose latency metrics for individual phases of the request lifecycle (for example, `rewrite`, `access`, `header_filter`, and `body_filter`)?
     a: The HTTP Log Policy doesn't provide latency metrics at this granular level. Instead, use [{{site.konnect_short_name}} Debugger](/observability/debugger/).
 ---
 
@@ -47,6 +47,12 @@ In contrast to other Policies that use queues, all HTTP Log Policy instances tha
 * [`config.content_type`](/ai-gateway/policies/http-log/reference/#schema--config-content-type)
 * [`config.timeout`](/ai-gateway/policies/http-log/reference/#schema--config-timeout)
 * [`config.keepalive`](/ai-gateway/policies/http-log/reference/#schema--config-keepalive)
+
+### Payload logging and memory
+
+When an [AI Model](/ai-gateway/entities/ai-model/) logs request and response payloads, each queue entry contains the full request and response bodies and can reach hundreds of kilobytes or more.
+The default queue limits count entries, not bytes, so size the queue and the data plane before you enable payload logging.
+See [Size memory for AI payload logging](/ai-gateway/performance/ai-payload-logging-memory/).
 
 ## Custom fields by Lua
 
