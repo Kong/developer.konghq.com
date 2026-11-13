@@ -44,7 +44,7 @@ The AI Lakera Guard Policy inspects request and response bodies for routes that 
 
 ## Inspected content
 
-To choose which parts of the conversation the Policy sends to Lakera Guard, such as only the newest user message or tool results, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md action="sends to Lakera Guard" %}
 
 {% table %}
 columns:

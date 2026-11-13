@@ -44,7 +44,7 @@ Here's how it works if you apply it to both requests and responses:
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Azure AI Content Safety service" %}
 
-To choose which parts of the conversation the Policy sends for evaluation, such as only the newest user message or tool results, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md %}
 
 ## Rejection modes
 

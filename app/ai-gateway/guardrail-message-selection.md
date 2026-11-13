@@ -15,7 +15,7 @@ breadcrumbs:
 
 tags:
   - ai
-  - guardrails
+  - safety
 
 min_version:
   ai-gateway: '2.4'
@@ -143,8 +143,6 @@ config:
 `message_countback` counts only messages that carry content of that key's kind.
 `user` with `message_countback: 1` is therefore the newest user message, even when the conversation ends with tool messages.
 
-<!-- TODO: Confirm with engineering how this behaves on native Anthropic and Bedrock bodies, where a tool result sits inside a user-role message. In PR 24277 message_feeds always feeds `user` for a user-role message, so the budget could be spent on a message that holds only tool results. No spec covers it. -->
-
 ### Tool output
 
 Tool results come from outside your control, such as a web page, a file, or an API response.
@@ -165,8 +163,6 @@ To inspect every tool result in the conversation, use `tool_result: {}`.
 Each result is sent as `tool_name: output`, so the guardrail knows which tool produced it.
 A result that the provider marks as failed is sent as `tool_name: error: output`.
 The text of each result is sent, and media inside a result that also holds text stays in {{site.ai_gateway}}.
-
-<!-- TODO: Confirm with engineering what native bodies send for a tool result whose content has no text entries, such as an image-only Anthropic result. In PR 24277, block_text falls back to JSON-encoding the value, which could include base64 data. No spec covers it. -->
 
 ### Agent loops
 
@@ -272,8 +268,6 @@ Select `reasoning` to inspect the reasoning on its own.
 [AI AWS Guardrails](/ai-gateway/policies/ai-aws-guardrails/) and [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/) can mask content instead of blocking it.
 Their guardrail services return one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
 
-<!-- TODO: Confirm with engineering that AI Custom Guardrail masks. In PR 24277 only the AI AWS Guardrails handler has masked write-back code, and a comment in the ai-custom-guardrail schema says its response template carries only block and block_message. The save-time check applies to both Policies. -->
-
 When you set `allow_masking`, select one message:
 
 ```yaml
@@ -314,8 +308,6 @@ config:
 
 #### Streamed responses
 
-<!-- TODO: The buffering switch is implemented in Kong/kong-ee PR 24277 (can_streaming = false and enable_buffering in the response guard handler, guard-buffering filter). Chunk cutting of streamed responses depends on Kong/kong-ee PR 24360, which hasn't been reviewed, and this section doesn't describe it. Confirm with engineering that both ship in 2.4. -->
-
 A selection that names only `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
 
 A selection that names `tool_call`, `reasoning`, or `tool_result` turns buffering on, because that content isn't available in the stream.
@@ -347,7 +339,7 @@ AI Azure Content Safety skips the check instead.
 > Review any anchored allow or deny patterns. See [Behavior changes](#behavior-changes).
 
 The legacy fields keep working and keep their meaning.
-Nothing changes for a Policy until you set `message_selection`.
+The legacy fields stay in force until you set `message_selection`.
 When you set both, `message_selection` wins, so you can roll back by removing it.
 
 The legacy fields are deprecated and will be removed in 3.0.0.
@@ -433,8 +425,6 @@ A Policy that moves to `message_selection` also gains words that the legacy path
 
 * Each tool result is prefixed with the tool name, and failed results carry an `error:` mark.
 * A selection that names `tool_call` adds the calls.
-
-<!-- TODO: Confirm with engineering whether the tool name prefix and error mark also apply to legacy Policies on native Anthropic, Bedrock, and Gemini bodies. In PR 24277 the native walkers call render_tool_output without checking decorate_results, and no spec covers it. -->
 
 Patterns without an anchor don't need changes.
 

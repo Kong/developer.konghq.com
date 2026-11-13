@@ -52,7 +52,7 @@ You can use a combination of `allow` and `deny` rules to maintain integrity and 
 
 By default, the Policy only evaluates the latest message from the `user` role. To also match earlier turns in a multi-turn conversation, set [`config.rules.match_all_conversation_history`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-conversation-history) to `true`. To also match messages from roles other than `user`, set [`config.rules.match_all_roles`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-roles) to `true`.
 
-These two fields are deprecated. To choose precisely which messages the Policy evaluates, including tool calls and tool results, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+These two fields are deprecated. To choose precisely which messages the Policy evaluates, including tool calls and tool results, use [`config.message_selection`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-message-selection). See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 The matching behavior is as follows:
 * If any `deny` prompts are set and the request matches a prompt in the `deny` list, the request is blocked.
