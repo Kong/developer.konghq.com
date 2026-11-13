@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 ENV['JEKYLL_ENV'] ||= 'test'
+ENV['VITE_PORTAL_API_URL'] ||= 'https://developer.konghq.com/'
 
 PROJECT_ROOT = File.expand_path('..', __dir__)
 

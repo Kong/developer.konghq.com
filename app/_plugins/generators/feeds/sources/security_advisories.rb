@@ -5,7 +5,7 @@ require 'date'
 module Jekyll
   module Feeds
     module Sources
-      # Security advisories from the support collection, newest first, undated last.
+      # Security advisories from the support collection, newest first.
       class SecurityAdvisories
         def self.items(site)
           new(site).items
@@ -26,13 +26,13 @@ module Jekyll
           docs.select { |doc| doc.data['advisory'] }
         end
 
-        # Dated items first, newest first; undated last; ties by title.
+        # Newest first; ties by title.
         def sort_key(item)
-          date = item['date']
-          [date ? 0 : 1, date ? -date.to_i : 0, item['title'].to_s]
+          [-item['date'].to_i, item['title'].to_s]
         end
 
         def item(doc)
+          @doc = doc
           {
             'title' => doc.data['title'],
             'url' => doc.url,
@@ -41,12 +41,21 @@ module Jekyll
         end
 
         def parse_date(value)
-          return if value.nil? || value.to_s.strip.empty?
+          string = value.to_s
+          unless string.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+            raise ArgumentError,
+                  "Invalid advisory.published '#{value}' in #{advisory_path}: expected a YYYY-MM-DD date"
+          end
 
-          date = value.respond_to?(:to_time) && !value.is_a?(String) ? value.to_time : Date.parse(value.to_s)
+          date = Date.strptime(string, '%Y-%m-%d')
           Time.utc(date.year, date.month, date.day)
-        rescue ArgumentError
-          nil
+        rescue Date::Error => e
+          raise ArgumentError,
+                "Invalid advisory.published '#{value}' in #{advisory_path}: #{e.message}"
+        end
+
+        def advisory_path
+          @doc&.relative_path || 'advisory'
         end
       end
     end
