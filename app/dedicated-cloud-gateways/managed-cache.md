@@ -390,6 +390,9 @@ To create a managed cache, use the following steps:
    {% endcapture %}
    {{ create_ai_addon | indent: 3}}
 
+   In this example, we're using a `micro` sized cache. 
+   Use the cache size that [meets the requirements](#managed-cache-sizing-recommendations) of your environment and the AI policies you plan to use.
+
 1. Export the ID of your managed cache from the response:
 
    ```sh
