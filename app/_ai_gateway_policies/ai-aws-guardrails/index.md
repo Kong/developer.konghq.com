@@ -16,6 +16,8 @@ tags:
 related_resources:
   - text: Use the AI AWS Guardrails Policy
     url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 
@@ -35,7 +37,11 @@ The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/a
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
 
-For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
+For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use [`message_selection`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-message-selection). It can select user, system, and assistant messages, tool calls, tool results, and reasoning, each with its own window. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+
+When you set `allow_masking`, `message_selection` must select exactly one message, such as `user` with `message_countback: 1`. See [Masking](/ai-gateway/guardrail-message-selection/#masking).
+
+The [`text_source`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-text-source) field is deprecated and still works. To move a Policy off it, see [Migrate from legacy fields](/ai-gateway/guardrail-message-selection/#migrate-from-legacy-fields).
 
 ## Rejection modes
 

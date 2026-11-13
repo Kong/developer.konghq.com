@@ -13,6 +13,9 @@ categories:
 tags:
   - ai
   - safety
+related_resources:
+  - text: AI guardrail message selection
+    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)). It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
@@ -34,6 +37,8 @@ Here's how it works if you apply it to both requests and responses:
 1. If allowed, the response is forwarded to the client.
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Guardrail service" masking=true %}
+
+To choose which parts of the conversation the Policy sends for evaluation, such as only the newest user message or tool results, use `config.message_selection`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 ## Configuration
 

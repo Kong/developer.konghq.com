@@ -293,6 +293,10 @@ rows:
                         Enforce guardrails through a cloud vendor's own trust and safety service if you're already using one
                       feature: |
                         [AI AWS Guardrails](/ai-gateway/policies/ai-aws-guardrails/), [AI Azure Content Safety](/ai-gateway/policies/ai-azure-content-safety/), or [AI GCP Model Armor](/ai-gateway/policies/ai-gcp-model-armor/)
+                    - outcome: |
+                        Choose which parts of a conversation guardrails inspect, such as the newest user message, tool calls, or tool results
+                      feature: |
+                        [AI guardrail message selection](/ai-gateway/guardrail-message-selection/)
                 - usecase: |
                     **Keep AI traffic online when a provider fails**
                   outcomes:
