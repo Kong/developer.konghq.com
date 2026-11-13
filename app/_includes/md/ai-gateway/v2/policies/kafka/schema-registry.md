@@ -83,4 +83,8 @@ autonumber
 
 ### Configure schema registry
 
+{% if include.workflow == 'consumer' %}
 To configure Schema Registry with the {{ include.name }} Policy, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter for a Policy-wide registry, or [`config.topics[].schema_registry`](./reference/#schema--config-topics) to override it for an individual topic.
+{% else %}
+To configure Schema Registry with the {{ include.name }} Policy, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter.
+{% endif %}
