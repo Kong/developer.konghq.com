@@ -1,0 +1,36 @@
+name: statsd-log-on-status-range
+display_name: StatsD log on status range
+type: statsd
+title: 'Report requests in a status range'
+description: 'Send metrics to a StatsD server only for responses with a status code from 200 to 205 or from 400 to 499.'
+extended_description: |
+  Send metrics to a StatsD server only for responses with a status code from 200 to 205 or from 400 to 499.
+  The Policy reports a request when its response status is in `200-205` or `400-499`, and skips every other response.
+weight: 900
+
+scopes:
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - global
+
+requirements:
+  - "A [StatsD server](https://github.com/statsd/statsd) reachable from the data plane"
+
+variables:
+  host:
+    value: $HOST
+    description: The IP address or hostname of the StatsD server to send data to.
+
+config:
+  host: ${host}
+  port: 8125
+  allow_status_codes:
+    - 200-205
+    - 400-499
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
