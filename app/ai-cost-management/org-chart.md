@@ -60,7 +60,7 @@ The org chart is the structure of your organization in {{site.konnect_short_name
 {{site.ai_cost_management}} uses it to attribute AI spend to teams and people.
 You can set a [spend limit](#set-a-spend-limit-on-a-team-or-user) on any team or user from the org chart.
 
-You build the org chart by uploading your org structure as a CSV file.
+You build the org chart by uploading your org structure as a CSV file, typically exported from your HR system (HRIS).
 {{site.konnect_short_name}} creates teams from the reporting lines in the file.
 Teams and team membership change only when you upload a file.
 
@@ -73,7 +73,8 @@ Only organization admins can upload an org structure or set spend limits.
 
 ## Org structure file
 
-The org structure file is a CSV file of up to 10 MB and 50,000 rows, with one row per user.
+The org structure file is a CSV file of up to 10 MB and 50,000 rows, with one row per user and a reporting chain at most 200 levels deep.
+Save the file as UTF-8. {{site.konnect_short_name}} removes the byte-order mark that Excel adds.
 The first row is a header with the following columns:
 
 {% table %}
@@ -102,9 +103,85 @@ Leave `manager_external_id` empty for the one user at the top of the org.
 
 You can download a sample file from the upload dialog by clicking **Download sample CSV**.
 
+### Avoiding common import failures
+
+Most failed imports have the same causes.
+Keep the following in mind when you build the export:
+* Export the whole org every time. {{site.konnect_short_name}} treats the file as the complete org chart and deactivates anyone from an earlier import who isn't in the new file.
+* Include one row per person. Filter out duplicate rows for people with multiple jobs, positions, or employments.
+* Use the same ID type in `external_id` and `manager_external_id`. For example, if `external_id` is an employee number, `manager_external_id` must be an employee number too, not a position ID or a name.
+* Include active people and people on leave, since their direct reports still need them as a manager. Exclude terminated people and future hires.
+* Don't filter out managers. If a filter removes a manager, every direct report of that manager fails to import.
+* Only the person at the top of the org should have no manager. A vacant manager position can leave other people without one too, so assign those people an interim manager before you export.
+
+### Import errors
+
+If any row has a problem, {{site.konnect_short_name}} rejects the whole file and changes nothing.
+The following are the most common import errors and their usual causes:
+
+{% table %}
+columns:
+  - title: Column
+    key: column
+  - title: Problem
+    key: problem
+  - title: Cause and fix
+    key: fix
+rows:
+  - column: "`external_id`"
+    problem: is required
+    fix: "The person has no ID in the export. Filter to rows that have one, or add it in your HR system."
+  - column: "`external_id`"
+    problem: is duplicated within the file
+    fix: "The export has more than one row for this person, for example one per job, position, or employment. Filter to the primary one."
+  - column: "`email`"
+    problem: is required
+    fix: "A new hire doesn't have a work email yet. Add the email in your HR system, or import after it's created."
+  - column: "`email`"
+    problem: must be a valid email address
+    fix: "The value isn't in the form `name@domain`. Fix the address in your HR system."
+  - column: "`email`"
+    problem: is duplicated within the file
+    fix: "Two people share a mailbox, or one person has two rows. Give each person their own address, and keep one row per person."
+  - column: "`email`"
+    problem: already exists in this directory
+    fix: "A different principal in this directory already has this email address. Give each person a unique email, or update the other principal's identity first."
+  - column: "`given_name`, `family_name`"
+    problem: both are empty
+    fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`, and at least one of them must have a value."
+  - column: "`given_name`, `family_name`"
+    problem: exceed 255 characters combined
+    fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`. Together, they can be at most 255 characters."
+  - column: "`cost_center`"
+    problem: must be at most 255 characters
+    fix: "The value is longer than 255 characters. Shorten it in your HR system."
+  - column: "`manager_external_id`"
+    problem: does not match a row in the file
+    fix: |
+      There's a mismatch due to one of the following reasons:
+      * The manager isn't in the file, because of a filter or because they left.
+      * The manager ID is of a different type, such as a position ID.
+  - column: "`manager_external_id`"
+    problem: must be a single manager
+    fix: "The cell has several IDs separated by a comma or semicolon. Pick one manager in the export."
+  - column: "`manager_external_id`"
+    problem: only one person may have no manager
+    fix: "People under a vacant manager position have no manager. Assign them an interim manager."
+  - column: "`manager_external_id`"
+    problem: never reaches a person with no manager
+    fix: "The reporting chain is a loop, such as two people who are each other's manager, or it's more than 200 levels deep."
+  - column: file
+    problem: 'duplicate column "`<name>`" in the CSV header'
+    fix: "Two columns in the header have the same name. The error names the duplicate. Rename or remove one of them."
+  - column: file
+    problem: wrong number of fields
+    fix: "A row has more or fewer cells than the header. Common causes are an unquoted comma in a name, a title line above the header, or a totals row at the end. The error names the line number."
+{% endtable %}
+
 ## Upload an org structure
 
 You can build or update an org chart by uploading an org structure file.
+To automate imports instead of using the dialog each time, use `kongctl` or the API.
 
 {% navtabs "upload-org-structure" %}
 {% navtab "Konnect UI" %}
@@ -113,10 +190,12 @@ You can build or update an org chart by uploading an org structure file.
 1. Click **Upload org structure**.
 1. Drop your CSV file in the dialog, or choose one.
    {{site.konnect_short_name}} checks the file and shows a preview without changing anything.
-1. Review the summary:
+1. Review the summary and fix any errors or warnings:
    * The number of users and teams to create, update, deactivate, or delete.
+     Everyone with at least one direct report gets a team named after them and their ID.
+     For example, the manager `Marcus Lee` with the team code `E003` will have a team named `MarcusLee-E003`.
    * Any errors, listed by row and column.
-     Fix them and choose the file again.
+     See [Import errors](#import-errors) for the most common ones.
    * Any warnings.
      For example, if a team name is already taken, the new team gets a number after its name, like "Platform (2)".
 1. Click **Import**.
@@ -150,29 +229,53 @@ kongctl import identity org-chart \
 Each run writes a JSON report to `--report-output-dir`, listing the users and teams it created, updated, or deactivated.
 
 {% endnavtab %}
+{% navtab "API" %}
+
+Send the file to the import endpoint with `dry_run` set to `true` first.
+A dry run returns the counts, errors, and warnings without changing anything:
+
+```bash
+curl -X POST "https://us.api.konghq.com/v2/directories/$DIRECTORY_ID/org-chart/import" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" \
+  -F "file=@org.csv" -F "dry_run=true"
+```
+
+If the dry run returns no errors, import the file by sending the same request with `dry_run` set to `false`:
+
+```bash
+curl -X POST "https://us.api.konghq.com/v2/directories/$DIRECTORY_ID/org-chart/import" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" \
+  -F "file=@org.csv" -F "dry_run=false"
+```
+
+If you run this on a schedule, have the job stop when `counts.users.inactive` in the dry run is much higher than usual.
+A sudden jump usually means the HRIS export was incomplete.
+
+{% endnavtab %}
 {% endnavtabs %}
 
 ### Update an org chart
 
-An upload makes the org structure match the file, so upload an updated org structure file whenever people or reporting lines change.
-An upload applies the following changes:
+A re-upload matches the org structure to the file, so re-upload an updated org structure file whenever people or reporting lines change, for example monthly or after a reorganization.
+
+A re-upload applies the following changes:
 
 * {{site.konnect_short_name}} uses `external_id` to find each person who is already in the org chart.
-  If a row's `external_id` matches an existing user, the upload replaces that person's email, name, and manager with the values in the file.
-  If it doesn't match, the upload creates a new user.
+  If a row's `external_id` matches an existing user, the re-upload replaces that person's email, name, and manager with the values in the file.
+  If it doesn't match, the re-upload creates a new user.
 * {{site.konnect_short_name}} deactivates users that the file no longer lists.
   They're not deleted.
-* An upload never reactivates an inactive user, even if the file lists them.
-  This applies whether you deactivated the user manually or an earlier upload deactivated them.
+* A re-upload never reactivates an inactive user, even if the file lists them.
+  This applies whether you deactivated the user manually or an earlier re-upload deactivated them.
   The preview shows a warning for each of these users.
   To reactivate a user, click **Reactivate** in the users table or on the user's details page.
 * Teams and team memberships follow the reporting lines in the file.
   Managers get the Team Manager role for their team. See [AI Management roles](/ai-management/roles-and-permissions/#roles).
-* An upload doesn't invite anyone to {{site.konnect_short_name}}. To give people access, [invite them](/ai-management/roles-and-permissions/#invite-a-user-to-ai-management).
+* A re-upload doesn't invite anyone to {{site.konnect_short_name}}. To give people access, [invite them](/ai-management/roles-and-permissions/#invite-a-user-to-ai-management).
 
-An upload deletes a team that has no members in the new file.
-An upload doesn't delete a team that only changed.
-For example, if a manager's name changes, the upload renames the team and keeps its ID.
+A re-upload deletes a team that has no members in the new file.
+A re-upload doesn't delete a team that only changed.
+For example, if a manager's name changes, the re-upload renames the team and keeps its ID.
 
 Deleting a team doesn't change your budget list.
 Budgets that you set on a deleted team still appear in **Cost Management** > **Budgets**.
