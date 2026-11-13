@@ -64,15 +64,16 @@ faqs:
     a: |
       {{site.ai_cost_management}} groups spend by the time of the usage event, and an event can arrive after its time has passed.
       An event is late when it reaches {{site.ai_cost_management}} more than one hour after its time, and a late event changes the total of a period you have already viewed.
-      To find late events, filter the Events debugger by [**Arrival**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) or use the `arrival` filter in the [usage events API](/api/konnect/ai-cost-management/v1/#/operations/list-usage-events).
+      To find late events, filter the Events debugger by [**Arrival**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) or use the `arrival` filter in the [usage events API](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events).
 ---
 
 {{site.ai_cost_management}} records the cost of each AI request that passes through {{site.ai_gateway}} as a usage event.
 If you need to see where AI spend goes, or check what the gateway reported for a request, you can use the **Cost Management** > **Dashboard** views in {{site.konnect_short_name}}.
-They include an overview dashboard, an events explorer, and a debugger to further dig into individual events.
+The Dashboard has four tabs: **Overview**, **Coding harnesses**, **Explorer**, and **Events debugger**.
 
 The views read stored usage events, so a request can take a short time to appear after it finishes.
 All times in the console are in UTC.
+Usage events are kept for 13 months, then deleted.
 
 An event is considered late when it reaches {{site.ai_cost_management}} more than one hour after its time.
 {{site.ai_cost_management}} groups spend by the time of the event, so a late event changes the total for a period you've already viewed.
@@ -98,19 +99,27 @@ rows:
     use: "To check your own spend."
     access: "Individual, Team manager, Admin"
   - view: "[**Dashboard**](#dashboard)"
-    shows: "Organization-wide spend, projected spend, budget status, and spend grouped by user, group, team, provider, model, harness, or tag."
+    shows: "Spend, projected spend, budget status, and spend grouped by user, group, team, provider, model, harness, or tag."
     use: "To check overall spend, find where it goes, and see which budgets are close to their limits."
-    access: "Team manager, Admin"
+    access: "Individual, Team manager, Admin"
+  - view: "**Coding harnesses**"
+    shows: "Spend by coding agent, such as Claude Code or Codex, with the developers who use each one and its prompt cache hit rate."
+    use: "To compare what each coding agent costs and who drives that spend."
+    access: "Individual, Team manager, Admin"
   - view: "[**Explorer**](#explorer)"
-    shows: "Spend, requests, or tokens over time, grouped by one dimension."
+    shows: "Spend, requests, or tokens over time, grouped by up to two dimensions."
     use: "To answer a specific question, for example which model costs the most each day."
-    access: "Team manager, Admin"
+    access: "Individual, Team manager, Admin"
   - view: "[**Events debugger**](#events-debugger)"
     shows: "The individual usage events, with their cost, tokens, user, and model."
     use: "To check what the gateway reported for a request, or to find out why a cost or a user is missing."
-    access: "Admin"
+    access: "Individual, Team manager, Admin"
 {% endtable %}
 <!--vale on-->
+
+Admins see the usage of the whole organization.
+Team managers and individual users see only the usage their role covers: a team manager sees their teams' usage, and an individual user sees their own.
+For them, the Dashboard is titled **Group usage** or **My usage**.
 
 ## My Usage
 
@@ -122,8 +131,13 @@ My Usage shows your own spend. To open it, click **Cost Management** > **My Usag
 
 ## Dashboard
 
-The Dashboard summarizes spend for a time range and shows where it goes.
+The Dashboard opens on the **Overview** tab, which summarizes spend for a time range and shows where it goes.
+The time range defaults to month to date.
 The chart and breakdown update every minute, and **Refresh** reloads every section.
+
+The Overview starts with five cards: **Spend**, **Projection**, **Ceiling**, **Unattributed spend**, and **Unpriced calls**.
+Click **Unattributed spend** or **Unpriced calls** to open the Events debugger filtered to those events.
+Team managers and individual users don't see the **Ceiling** and **Unattributed spend** cards.
 
 <!--vale off-->
 {% table %}
@@ -173,11 +187,11 @@ columns:
     key: does
 rows:
   - control: "**Group by**"
-    does: "The dimension to split the results by."
+    does: "Up to two dimensions to split the results by. The default is User."
   - control: "**Add filter**"
     does: "Narrows the events. See [Filters and dimensions](#filters-and-dimensions)."
   - control: "**Time range**"
-    does: "The same presets as the Dashboard."
+    does: "The same presets as the Dashboard. The default is month to date."
   - control: "**Granularity**"
     does: "The size of each chart bucket: hour, day, week, or month. The default is Day."
   - control: "**Chart**"
@@ -188,19 +202,20 @@ rows:
 The chart shows stacked bars, one series for each of the ten largest groups and an Other series for the rest.
 The group table title includes the dimension, for example **Spend by User**, and lists each group with its share, spend, requests, and tokens.
 Usage with no user appears with an **unattributed** badge.
-The [query endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-usage-events) (`POST /v1/ai-cost-management/events/query`) supports the same grouping and filtering.
+The [query endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-cost-usage-events) (`POST /v1/ai-cost-management/events/query`) supports the same grouping and filtering.
 
 <!--TO DO: screenshot-->
 
 ## Events debugger
 
 The Events debugger lists the individual usage events in the time range, newest first.
+When you open it without a time range, it shows the last 24 hours.
 You can narrow the list with filters. See [Filters and dimensions](#filters-and-dimensions).
 
 You can select a row to open the **Usage event** panel, which shows the full event details.
 
 Here's what a sample event might look like. 
-For the full schema, see the [`/v1/ai-cost-management/events` API reference](/api/konnect/ai-cost-management/v1/#/operations/list-usage-events).
+For the full schema, see the [`/v1/ai-cost-management/events` API reference](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events).
 
 ```json
 {
@@ -231,8 +246,7 @@ For the full schema, see the [`/v1/ai-cost-management/events` API reference](/ap
       "service_id": "b3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8",
       "route_id": "c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9",
       "consumer_id": "d5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0",
-      "plugin_id": "e6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1",
-      "plugin_name": "ai-proxy-advanced"
+      "plugin_id": "e6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1"
     },
     "tags": {
       "project": "payments-api",
@@ -248,6 +262,8 @@ For the full schema, see the [`/v1/ai-cost-management/events` API reference](/ap
 
 The Explorer, the Events debugger, and the [usage events API](/api/konnect/ai-cost-management/v1/) filter events using the same fields.
 An event must match every filter you add.
+The **Operators** column lists the operators of the list endpoint's query string, in the form `filter[field][operator]=value`.
+For the JSON `filters` of the query endpoint, exports, and export schedules, see [Filters in a JSON body](#filters-in-a-json-body).
 
 <!--vale off-->
 {% table %}
@@ -283,7 +299,7 @@ rows:
     operators: "`eq`, `neq`, `oeq`, `contains`, `ocontains`"
   - filter: "Source"
     field: "`source`"
-    matches: "The producer of the usage event: a gateway's control plane, as `control-planes/{uuid}`, or a principal that reported usage."
+    matches: "The producer of the usage event: a gateway's control plane, as `//control-planes/{uuid}`, or a principal that reported usage, as `//principals/{uuid}`."
     operators: "`eq`, `neq`, `oeq`, `contains`, `ocontains`"
   - filter: "Service"
     field: "`service_id`"
@@ -307,7 +323,7 @@ rows:
     operators: "`eq`, `oeq`"
   - filter: "Groups"
     field: "`groups`"
-    matches: "The groups that the usage belongs to, as group references, for example `principal/{uuid}` or `oidc/{group}`."
+    matches: "The groups that the usage belongs to, as group references: `principal/{uuid}`, `consumer_group/{uuid}`, or `oidc/{group}`."
     operators: "`eq`, `oeq`"
   - filter: "Teams"
     field: "`teams`"
@@ -320,7 +336,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-The Events debugger has additional filters. In the API, these are available on the [list endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-usage-events) only.
+The Events debugger also filters on the following fields.
+In the API, Time range, Price, and Token usage are available as filters on the [list endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) only.
+Arrival also works in the JSON `filters` of the query endpoint, exports, and export schedules.
 
 <!--vale off-->
 {% table %}
@@ -334,6 +352,10 @@ columns:
   - title: Operators
     key: operators
 rows:
+  - filter: "Time range"
+    field: "`time`"
+    matches: "The time of the event. The list endpoint takes a range as `filter[time][gte]` and `filter[time][lt]`. The query endpoint and exports take it as `starts_at` and `ends_at` instead."
+    operators: "`eq`, `gt`, `gte`, `lt`, `lte`"
   - filter: "Price"
     field: "`reported_cost`"
     matches: "The cost of the event, compared with an amount in US dollars."
@@ -348,6 +370,29 @@ rows:
     operators: "`exists`, `nexists`"
 {% endtable %}
 <!--vale on-->
+
+### Filters in a JSON body
+
+The query endpoint, exports, and export schedules take a JSON `filters` object that maps each field to one operator.
+These filters don't accept `oeq`, `ocontains`, or `nexists`.
+They use the following operators instead, where `exists` takes `true` or `false`:
+
+* `provider`, `model`, `subject`, `request_mode`, `client`, `source`, `arrival`, and `tags.<key>` take `eq`, `neq`, `in`, `nin`, `contains`, `ncontains`, and `exists`.
+* `service_id`, `route_id`, `consumer_id`, and `application_id` take `eq`, `neq`, `in`, `nin`, and `exists`.
+* `groups`, `teams`, and `consumer_group_ids` take `has`, `has_any`, `nhas`, `nhas_any`, and `exists`.
+* `and` and `or` combine several operators on one field.
+
+For example, the following filters select the usage served by Anthropic for members of the `oidc/team-koko` group:
+
+```json
+{
+  "filters": {
+    "provider": { "eq": "anthropic" },
+    "groups": { "has_any": ["oidc/team-koko"] }
+  }
+}
+```
+{:.no-copy-code}
 
 ## Troubleshoot missing or wrong data
 
@@ -365,7 +410,7 @@ columns:
 rows:
   - symptom: "No events appear"
     cause: "Only successful gateway requests become usage events. Failed or canceled requests produce no event."
-    check: "Send a request that returns a successful response, wait a short time, and select **Refresh**."
+    check: "Check the time range. The Events debugger shows the last 24 hours when you open it without a range. Then send a request that returns a successful response, wait a short time, and select **Refresh**."
   - symptom: "An event has a cost of $0"
     cause: "The model had no price when the request ran, and {{site.ai_cost_management}} stores an omitted cost as zero."
     check: "Check the model's price in the [price catalog](/ai-cost-management/price-catalog/), then send a new request. The Unpriced calls card counts these events."
@@ -383,20 +428,20 @@ rows:
 
 ## Query usage data with the API
 
-You can also use the [events API](/api/konnect/ai-cost-management/v1/#/operations/list-usage-events) to query usage.
+You can also use the [usage query endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-cost-usage-events) to total usage.
 A query can group by up to two dimensions and span up to 400 buckets.
 
-To list the usage events that arrived late, send a `GET` request to the [`/v1/ai-cost-management/events` endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-usage-events) with the [`arrival`](#filters-and-dimensions) filter set to `late`:
+To list the usage events of October 2026 that arrived late, send a `GET` request to the [`/v1/ai-cost-management/events` endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) with the [`arrival`](#filters-and-dimensions) filter set to `late` and a [time range](#filters-and-dimensions):
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/ai-cost-management/events?filter%5Barrival%5D=late
+url: /v1/ai-cost-management/events?filter%5Barrival%5D=late&filter%5Btime%5D%5Bgte%5D=2026-10-01T00:00:00Z&filter%5Btime%5D%5Blt%5D=2026-11-01T00:00:00Z
 status_code: 200
 method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To total the cost and the unpriced requests for each provider and day of a month, send a `POST` request to the [`/v1/ai-cost-management/events/query` endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-usage-events):
+To total the cost and the unpriced requests for each provider and day of a month, send a `POST` request to the [`/v1/ai-cost-management/events/query` endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-cost-usage-events):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -407,8 +452,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, application/problem+json'
 body:
-  from: "2026-10-01T00:00:00Z"
-  to: "2026-11-01T00:00:00Z"
+  starts_at: "2026-10-01T00:00:00Z"
+  ends_at: "2026-11-01T00:00:00Z"
   granularity: P1D
   dimensions:
     - provider

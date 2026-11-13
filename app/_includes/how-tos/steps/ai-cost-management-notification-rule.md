@@ -1,4 +1,4 @@
-Add a notification rule to the budget using the [`/v1/ai-cost-management/budgets/{budgetId}/notification-rule` endpoint](/api/konnect/ai-cost-management/v1/#/operations/replace-notification-rule).
+Add a notification rule to the budget using the [`/v1/ai-cost-management/budgets/{budgetId}/notification-rule` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-notification-rule).
 
 The rule alerts the {{include.channel}} channel when spend reaches 50, 80, and 100 percent of the limit.
 Each threshold triggers an alert at most once per budget window:

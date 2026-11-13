@@ -1,4 +1,4 @@
-Create a limit budget using the [`/v1/ai-cost-management/budgets` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-budget).
+Create a limit budget using the [`/v1/ai-cost-management/budgets` endpoint](/api/konnect/ai-cost-management/v1/#/operations/create-cost-budget).
 The scope filter selects requests to the `openai` provider, and the limit applies to all of them together.
 Each budget window lasts one month (`P1M`).
 The anchor is January 1, 2026 in UTC, so every window starts on the first day of a month:
@@ -25,7 +25,7 @@ body:
   window:
     type: fixed
     interval: P1M
-    anchor: "2026-01-01T00:00:00+00:00[UTC]"
+    anchored_at: "2026-01-01T00:00:00+00:00[UTC]"
 extract_body:
   - name: 'id'
     variable: BUDGET_ID

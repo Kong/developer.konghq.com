@@ -44,7 +44,8 @@ faqs:
       Fix the listed errors and choose the file again.
   - q: Why is the cost center **Unattributed**?
     a: |
-      A user's spend stays unattributed until the user has a cost center.
+      Until a user has a cost center, their details show **Unattributed** as the cost center.
+      Cost center doesn't change how {{site.ai_cost_management}} reports spend.
       Add a `cost_center` column to the org structure file, or set the cost center in the user's details.
 
 related_resources:
@@ -177,8 +178,7 @@ For example, if a manager's name changes, the upload renames the team and keeps 
 Deleting a team doesn't change your budget list.
 Budgets that you set on a deleted team still appear in **Cost Management** > **Budgets**.
 You can keep them for your records, or [delete them manually](/ai-cost-management/budgets/).
-You can't change a budget's scope, so a budget can't move to a different team.
-To limit a new team, [create a new budget](/ai-cost-management/budgets/#set-up-a-budget).
+To limit a different team, edit the budget's scope in **Budgets**, or [create a new budget](/ai-cost-management/budgets/#set-up-a-budget).
 
 You can't delete the whole org chart.
 
@@ -196,7 +196,8 @@ Select a team or user to see its details:
 
 A cost center is where a user's spend is charged.
 You set it per user, either with the optional `cost_center` column in the org structure file or in the [user's details](/ai-access-management/concepts/#users).
-Until a user has one, the user's spend shows as **Unattributed**.
+Until a user has one, their details show **Unattributed** as the cost center.
+Cost center doesn't change how {{site.ai_cost_management}} reports spend.
 Teams don't have cost centers, only individual users.
 
 The `cost_center` column works as follows:
@@ -225,8 +226,10 @@ The following rules apply to limits set from the org chart:
   Use the details page of the user or [group](/ai-access-management/concepts/#groups) instead.
   Both pages offer daily, weekly, and monthly periods and **Remove limit**.
 * The org chart shows only the limit set directly on the selected team or user. It doesn't show limits that apply through a parent team, a group, or an organization-wide budget.
-* If several limits apply to a user, the lowest limit applies.
-* Like any budget, a spend limit tracks spend and sends notifications, but it doesn't block requests. See [Budgets in {{site.ai_cost_management}}](/ai-cost-management/budgets/).
+* If several limits cover a user, each one tracks the user's spend and sends its own alerts.
+* Like any budget, a spend limit tracks spend but doesn't block requests.
+  It sends alerts only when the budget has notification thresholds and channels, which you set in **Cost Management** > **Budgets**.
+  See [Budgets in {{site.ai_cost_management}}](/ai-cost-management/budgets/).
 
 ### Team scope in budgets
 

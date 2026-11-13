@@ -35,7 +35,7 @@ related_resources:
     url: /ai-cost-management/price-catalog/
 ---
 
-Cost is one of the primary signals AI governance acts on: budget enforcement, per-consumer spend limits, and chargeback all depend on an accurate cost figure for each request. {{site.ai_gateway}} calculates that figure for every request to a large language model (LLM) provider, matching what the provider actually bills. It feeds cost reporting and any policy that enforces spend against it, such as [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/).
+Cost is one of the primary signals AI governance acts on: cost limits enforced by AI Rate Limiting Advanced, spend reporting in {{site.ai_cost_management}}, and chargeback all depend on an accurate cost figure for each request. {{site.ai_gateway}} calculates that figure for every request to a large language model (LLM) provider, matching what the provider actually bills. It feeds cost reporting and any policy that enforces spend against it, such as [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/).
 
 This page explains how that cost figure feeds governance and reporting, and the pricing configuration behind it, so you can confirm your governance policies are enforcing against a number that reflects real provider spend.
 
