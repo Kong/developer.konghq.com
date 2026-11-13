@@ -36,7 +36,7 @@ breadcrumbs:
 tldr:
   q: How do I manage costs across my entire organization structure?
   a: |
-    {{site.ai_cost_management}} enables you to manage costs across your entire organizaton, or in any segment of the org that you need.
+    {{site.ai_cost_management}} enables you to manage costs across your entire organization, or in any segment of the org that you need.
     To set up cost management for your org, you'll need to:
     1. Add your OIDC provider as a trusted IdP in Access Management with automatic user provisioning enabled.
     1. Upload an org structure CSV with `kongctl import identity org-chart`.
@@ -63,12 +63,10 @@ prereqs:
 
 
 related_resources:
-  - text: Set up OIDC sub claim attribution
-    url: /ai-cost-management/oidc-sub-claim-attribution/
-  - text: Set up Kong Identity attribution
-    url: /ai-cost-management/kong-identity-attribution/
-  - text: Token Vault
-    url: /identity/token-vault/
+  # - text: Set up OIDC sub claim attribution
+  #   url: /ai-cost-management/oidc-sub-claim-attribution/
+  # - text: Set up Kong Identity attribution
+  #   url: /ai-cost-management/kong-identity-attribution/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
   - text: Attribution integrations

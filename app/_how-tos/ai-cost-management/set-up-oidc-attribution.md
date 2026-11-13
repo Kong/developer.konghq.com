@@ -58,12 +58,10 @@ prereqs:
 related_resources:
   - text: Get started with {{site.ai_cost_management}}
     url: /ai-cost-management/getting-started/
-  - text: Set up OIDC sub claim attribution
-    url: /ai-cost-management/oidc-sub-claim-attribution/
-  - text: Set up Kong Identity attribution
-    url: /ai-cost-management/kong-identity-attribution/
-  - text: Token Vault
-    url: /identity/token-vault/
+  # - text: Set up OIDC sub claim attribution
+  #   url: /ai-cost-management/oidc-sub-claim-attribution/
+  # - text: Set up Kong Identity attribution
+  #   url: /ai-cost-management/kong-identity-attribution/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
   - text: Attribution integrations
