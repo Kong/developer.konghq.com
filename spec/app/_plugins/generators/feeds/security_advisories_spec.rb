@@ -32,15 +32,33 @@ RSpec.describe Jekyll::Feeds::Sources::SecurityAdvisories do
   end
 
   it 'fails on a published value that is not a date' do
+    expect { items_for_published('not-a-date') }
+      .to raise_error(ArgumentError, /bad\.md/)
+  end
+
+  # Date.parse accepts these, so they only fail if the parse is strict about
+  # the YYYY-MM-DD shape the frontmatter schema requires.
+  ['August 10, 2026', '2026/06/05', '06/05/2026', 'June 5', '20260605', '2026-6-5'].each do |value|
+    it "fails on a published value of #{value.inspect} that is not YYYY-MM-DD" do
+      expect { items_for_published(value) }
+        .to raise_error(ArgumentError, /bad\.md/)
+    end
+  end
+
+  it 'fails on a published value that matches the shape but is not a real date' do
+    expect { items_for_published('2026-02-30') }
+      .to raise_error(ArgumentError, /bad\.md/)
+  end
+
+  def items_for_published(value)
     bad_doc = instance_double(
       Jekyll::Document,
-      data: { 'title' => 'Bad', 'advisory' => { 'published' => 'not-a-date' } },
+      data: { 'title' => 'Bad', 'advisory' => { 'published' => value } },
       url: '/support/security/bad/',
       relative_path: '_support/security/bad.md'
     )
     collection = instance_double(Jekyll::Collection, docs: [bad_doc])
     bad_site = instance_double(Jekyll::Site, collections: { 'support' => collection })
-    expect { described_class.items(bad_site) }
-      .to raise_error(ArgumentError, /bad\.md/)
+    described_class.items(bad_site)
   end
 end

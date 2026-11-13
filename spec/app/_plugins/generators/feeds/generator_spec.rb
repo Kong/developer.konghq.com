@@ -5,39 +5,50 @@ require_relative '../../../../spec_helper'
 RSpec.describe Jekyll::Feeds::Generator do
   before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
 
+  # JekyllSite.instance is a process-global singleton. #run appends a feed page
+  # to its pages on each call, so without restoring the list the duplicates
+  # leak into every later example that reads site.pages.
+  around do |example|
+    original_pages = site.pages.dup
+    example.run
+  ensure
+    site.pages.replace(original_pages)
+  end
+
   let(:site) { JekyllSite.instance }
   let(:generator) { described_class.new(site) }
 
+  # Mirrors Jekyll::Renderer: one merged payload with "page" set, so filters
+  # like `liquify` (which read @context.environments.first) see `site`.
   def render_page(page)
-    context = Liquid::Context.new(
-      [{ 'page' => page.data.merge('url' => page.url) }, site.site_payload],
+    payload = site.site_payload
+    payload['page'] = page.data.merge('url' => page.url)
+
+    Liquid::Context.new(
+      [payload],
       {},
-      { site: site, page: page.data },
+      { site: site, page: payload['page'] },
       true
-    )
-    Liquid::Template.parse(page.content).render!(context)
+    ).then { |context| Liquid::Template.parse(page.content).render!(context) }
   end
 
   describe '#run' do
     # The #run examples need the source to parse every fixture advisory; the
     # fixture collection now only carries dated, valid advisories.
     let!(:pages) { generator.run && site.pages }
+    let(:feed) { pages.find { |p| p.url == '/feeds/security-advisories.xml' } }
 
     it 'publishes the feed at /feeds/security-advisories.xml' do
-      feed = pages.find { |p| p.url == '/feeds/security-advisories.xml' }
       expect(feed).not_to be_nil
     end
 
     it 'marks the page llm: false with no layout' do
-      feed = pages.find { |p| p.url == '/feeds/security-advisories.xml' }
       expect(feed.data['llm']).to be(false)
       expect(feed.data['layout']).to be_nil
     end
 
     it 'renders an atom:link self-href at the feed URL' do
-      feed = pages.find { |p| p.url == '/feeds/security-advisories.xml' }
-      rendered = render_page(feed)
-      expect(rendered).to include(
+      expect(render_page(feed)).to include(
         '<atom:link href="https://developer.konghq.com/feeds/security-advisories.xml" rel="self" type="application/rss+xml" />'
       )
     end
@@ -50,13 +61,31 @@ RSpec.describe Jekyll::Feeds::Generator do
     end
 
     it 'emits pubDate as an absolute UTC timestamp' do
-      feed = pages.find { |p| p.url == '/feeds/security-advisories.xml' }
+      expect(render_page(feed)).to include('<pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>')
+    end
+
+    it 'resolves site variables in an item title' do
+      expect(render_page(feed)).to include('<title>Security Advisory: Kong Gateway Lua sandbox bypass</title>')
+    end
+
+    it 'points each item at its advisory as link and permalink guid' do
       rendered = render_page(feed)
-      expect(rendered).to include('<pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>')
+      expect(rendered).to include(
+        '<link>https://developer.konghq.com/support/security/fixture-lua-sandbox-bypass/</link>'
+      )
+      expect(rendered).to include(
+        '<guid isPermaLink="true">https://developer.konghq.com/support/security/fixture-lua-sandbox-bypass/</guid>'
+      )
+    end
+
+    it 'carries the configured channel metadata' do
+      rendered = render_page(feed)
+      expect(rendered).to include('<title>Kong Security Advisories</title>')
+      expect(rendered).to include('<description>Security advisories for Kong products.</description>')
+      expect(rendered).to include('<link>https://developer.konghq.com/support/security/</link>')
     end
 
     it 'emits a byte-identical pubDate regardless of the build machine timezone' do
-      feed = pages.find { |p| p.url == '/feeds/security-advisories.xml' }
       utc_output = render_page(feed)
 
       ENV['TZ'] = 'Asia/Tokyo'

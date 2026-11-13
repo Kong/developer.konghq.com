@@ -41,11 +41,21 @@ module Jekyll
         end
 
         def parse_date(value)
-          date = Date.parse(value.to_s)
+          string = value.to_s
+          unless string.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+            raise ArgumentError,
+                  "Invalid advisory.published '#{value}' in #{advisory_path}: expected a YYYY-MM-DD date"
+          end
+
+          date = Date.strptime(string, '%Y-%m-%d')
           Time.utc(date.year, date.month, date.day)
-        rescue ArgumentError => e
+        rescue Date::Error => e
           raise ArgumentError,
-                "Invalid advisory.published '#{value}' in #{@doc&.relative_path || 'advisory'}: #{e.message}"
+                "Invalid advisory.published '#{value}' in #{advisory_path}: #{e.message}"
+        end
+
+        def advisory_path
+          @doc&.relative_path || 'advisory'
         end
       end
     end
