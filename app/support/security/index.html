@@ -6,7 +6,7 @@ description: Security advisories for Kong products, including affected and fixed
 breadcrumbs:
   - "/support/"
 ---
-{% assign advisories = site.support | where_exp: "item", "item.advisory" | sort: "advisory.published" | reverse %}
+{% assign advisories = site.support | where_exp: "item", "item.advisory" | security_advisories_sort %}
 {% if advisories.size > 0 %}
 {% table %}
 columns:
