@@ -22,6 +22,12 @@ works_on:
 
 description: "Learn about the settings you can configure for Dev Portal."
 
+faqs:
+  - q: |
+      {% include faqs/dev-portal-search.md section='question' %}
+    a: |
+      {% include faqs/dev-portal-search.md section='answer' %}
+
 related_resources:
   - text: Pages and content
     url: /dev-portal/pages-and-content/

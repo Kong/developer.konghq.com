@@ -81,6 +81,11 @@ faqs:
     a: |
       {% include faqs/portal-markdown.md section='answer' %}
 
+  - q: |
+      {% include faqs/dev-portal-search.md section='question' %}
+    a: |
+      {% include faqs/dev-portal-search.md section='answer' %}
+
 related_resources:
   - text: Dev Portal Markdown components reference
     url: https://portaldocs.konghq.com/

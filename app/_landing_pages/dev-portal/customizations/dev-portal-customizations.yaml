@@ -335,3 +335,7 @@ rows:
             - q: How do I customize the reply-to and from for {{site.dev_portal}} emails?
               a: |
                 {% include faqs/portal-email.md %}
+            - q: |
+                {% include faqs/dev-portal-search.md section='question' %}
+              a: |
+                {% include faqs/dev-portal-search.md section='answer' %}
