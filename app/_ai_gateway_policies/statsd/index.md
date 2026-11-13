@@ -36,6 +36,10 @@ Dashboards that show traffic and latency per entity help you find slow upstreams
 The StatsD Policy is an [AI Policy](/ai-gateway/entities/ai-policy/) that sends request metrics from {{site.ai_gateway}}, such as request count, request and response size, and latency, to a StatsD server.
 The Policy sends the metrics over UDP by default, or over TCP, so the server must be reachable from the data plane at the address set in [`config.host`](/ai-gateway/policies/statsd/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/statsd/reference/#schema--config-port).
 
+{:.warning}
+> **AI Consumer Group scope:** {{site.ai_gateway}} accepts a StatsD Policy attached to an AI Consumer Group, but the data plane fails to apply the change.
+> The data plane stays on its previous configuration until you detach the Policy from the AI Consumer Group.
+
 ## Metrics
 
 When you don't set [`config.metrics`](/ai-gateway/policies/statsd/reference/#schema--config-metrics), the StatsD Policy sends the following metrics for each request.
@@ -257,7 +261,3 @@ The StatsD Policy has the following limitations:
 
 * **AI Model names:** At AI Model scope, and at global scope for AI Model traffic, every metric name contains `ai-gateway` as the entity, regardless of which AI Model handled the request.
   As a result, you can't tell AI Models apart in your StatsD server by the entity part of the name.
-
-{:.warning}
-> **AI Consumer Group scope:** {{site.ai_gateway}} accepts a StatsD Policy attached to an AI Consumer Group, but the data plane fails to apply the change.
-> The data plane stays on its previous configuration until you detach the Policy from the AI Consumer Group.

@@ -5,7 +5,7 @@ title: 'Send metrics with DogStatsD tags'
 description: 'Send request metrics with DogStatsD-style tags instead of putting the entity in the metric name.'
 extended_description: |
   Send request metrics with DogStatsD-style tags instead of putting the entity in the metric name.
-  Each metric carries the `route`, `workspace`, `node`, `status`, and `service` tags, for example `kong.request.count:1|c|#route:<route>,status:200`.
+  Each metric carries the `route`, `node`, `status`, and `service` tags, for example `kong.request.count:1|c|#route:<route>,status:200`.
 weight: 700
 
 scopes:
