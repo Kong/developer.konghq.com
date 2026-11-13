@@ -1,8 +1,8 @@
 ---
-title: Manage costs across your {{site.konnect_short_name}} org
+title: Manage costs across your organization structure
 permalink: /ai-cost-management/getting-started/
 content_type: how_to
-description: "Set up {{site.ai_cost_management}} end-to-end: attribute usage to a principal provisioned from your OIDC provider, price a model, track spend with a budget, and capture custom tags."
+description: "Set up {{site.ai_cost_management}} end-to-end: attribute usage to a principal provisioned from your OIDC provider, price a model, track spend with a budget, capture custom tags, and set up custom price overrides."
 
 products:
   - ai-cost-management
@@ -34,10 +34,10 @@ breadcrumbs:
   - /ai-cost-management/
 
 tldr:
-  q: How do I manage costs across my entire {{site.konnect_short_name}} org?
+  q: How do I manage costs across my entire organization structure?
   a: |
-    {{site.ai_cost_management}} enables you to manage costs across your entire {{site.konnect_short_name}} org, or in any segment of the org that you need.
-    To set up cost management, you'll need to:
+    {{site.ai_cost_management}} enables you to manage costs across your entire organizaton, or in any segment of the org that you need.
+    To set up cost management for your org, you'll need to:
     1. Add your OIDC provider as a trusted IdP in Access Management with automatic user provisioning enabled.
     1. Upload an org structure CSV with `kongctl import identity org-chart`.
     1. Create a budget with a spend limit.
