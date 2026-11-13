@@ -43,7 +43,7 @@ The AI PII Sanitizer Policy can be applied to:
 * Output data (responses)
 * Both input and output data
 
-To choose which parts of the request the Policy sends to the PII service, use `config.message_selection`. This replaces `allow_all_conversation_history`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+To choose which parts of the request the Policy sends to the PII service, use [`config.message_selection`](/ai-gateway/policies/ai-sanitizer/reference/#schema--config-message-selection). This replaces `allow_all_conversation_history`. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
 
 Here's how it works if you apply it to both requests and responses:
 
