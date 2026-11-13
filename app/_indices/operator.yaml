@@ -60,8 +60,8 @@ groups:
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/faq/license/
-          - path: /operator/konnect/event-gateway/
-          - path: /operator/konnect/ai-gateway/
+          - path: /operator/event-gateway/
+          - path: /operator/ai-gateway/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/

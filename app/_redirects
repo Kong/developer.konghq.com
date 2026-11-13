@@ -349,6 +349,7 @@
 /operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
 /operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
 /operator/konnect/ai-gateway/   /operator/ai-gateway/
+/operator/konnect/event-gateway/   /operator/event-gateway/
 
 # Service Catalog rename
 

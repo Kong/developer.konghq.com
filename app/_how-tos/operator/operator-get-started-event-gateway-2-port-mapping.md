@@ -24,6 +24,7 @@ min_version:
 
 works_on:
   - konnect
+  - on-prem
 
 prereqs:
   show_works_on: true
@@ -34,7 +35,9 @@ prereqs:
 
 tldr:
   q: How do I deploy Kong Event Gateway with {{site.operator_product_name}}?
-  a: Create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
+  a: |
+    With {{site.konnect_short_name}}, create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
+    For on-prem (Tech Preview), create an `OnPremEventGateway` served by your `GWAdmin` instead, attach the backend cluster and listener to it with `spec.parentRef`, and set `spec.controlPlaneRef.type: onpremNamespacedRef` on the `KegDataPlane`.
 
 next_steps:
   - text: Learn more about {{ site.event_gateway }}
@@ -42,7 +45,7 @@ next_steps:
 
 related_resources:
   - text: "{{ site.event_gateway }} with {{ site.operator_product_name }}"
-    url: /operator/konnect/event-gateway/
+    url: /operator/event-gateway/
   - text: Backend clusters
     url: /event-gateway/entities/backend-cluster/
   - text: Virtual clusters
@@ -59,36 +62,76 @@ This deployment pattern is the simplest way to validate {{ site.event_gateway }}
 
 It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker. For production environments, we recommend using {{ site.base_gateway }} with {{ site.operator_product_name }} to set up a TLSRoute and an SNI wildcard.
 
-## Create the `KonnectEventGateway`
+{% on_prem %}
+content: |
+  {% include operator/event-gateway-on-prem-tech-preview.md %}
+{% endon_prem %}
 
-The `KonnectEventGateway` resource creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
+{% konnect %}
+title: Create the `KonnectEventGateway`
+step: true
+content: |
+  The `KonnectEventGateway` resource creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
 
-1. Create the `KonnectEventGateway` resource:
+  1. Create the `KonnectEventGateway` resource:
 
-   ```bash
-   echo '
-   apiVersion: konnect.konghq.com/v1alpha1
-   kind: KonnectEventGateway
-   metadata:
-     name: cp-event-1
-     namespace: kong
-   spec:
-     apiSpec:
+     ```bash
+     echo '
+     apiVersion: konnect.konghq.com/v1alpha1
+     kind: KonnectEventGateway
+     metadata:
        name: cp-event-1
-       description: Event Gateway control plane managed by Kubernetes
-     konnect:
-       authRef:
-         name: konnect-api-auth
-   ' | kubectl apply -f -
-   ```
+       namespace: kong
+     spec:
+       apiSpec:
+         name: cp-event-1
+         description: Event Gateway control plane managed by Kubernetes
+       konnect:
+         authRef:
+           name: konnect-api-auth
+     ' | kubectl apply -f -
+     ```
 
-1. Wait for the resource to be ready:
+  1. Wait for the resource to be ready:
 
-   ```bash
-   kubectl wait konnecteventgateway/cp-event-1 -n kong \
-     --for=condition=Programmed=True \
-     --timeout=10m
-   ```
+     ```bash
+     kubectl wait konnecteventgateway/cp-event-1 -n kong \
+       --for=condition=Programmed=True \
+       --timeout=10m
+     ```
+{% endkonnect %}
+
+{% on_prem %}
+title: Create the `OnPremEventGateway`
+step: true
+content: |
+  The `OnPremEventGateway` resource is the on-prem {{ site.event_gateway_short }} control plane, and gives the rest of the resources in this guide a parent to attach to. It doesn't create any Pods. {{site.operator_product_name}} collects the resources attached to it and pushes their configuration to the gw-admin Pods of the `GWAdmin` you created in the [install guide](/operator/get-started/event-gateway/install/).
+
+  1. Create the `OnPremEventGateway` resource:
+
+     ```bash
+     echo '
+     apiVersion: eventgateway.konghq.com/v1alpha1
+     kind: OnPremEventGateway
+     metadata:
+       name: cp-event-1
+       namespace: kong
+     spec:
+       gwAdminRef:
+         name: gw-admin
+     ' | kubectl apply -f -
+     ```
+
+  1. Wait for the resource to be ready:
+
+     ```bash
+     kubectl wait onpremeventgateway/cp-event-1 -n kong \
+       --for=condition=Programmed=True \
+       --timeout=5m
+     ```
+
+     If the `OnPremEventGateway` doesn't become `Programmed`, check its `GWAdminResolved` condition. It reports `NotFound` when the `GWAdmin` doesn't exist, and `NotReady` while gw-admin has no running Pod.
+{% endon_prem %}
 
 ## Create the backend cluster
 
@@ -96,30 +139,65 @@ The `EventGatewayBackendCluster` resource tells {{ site.event_gateway }} which u
 
 1. Create the `EventGatewayBackendCluster` resource:
 
-   ```bash
-   echo '
-   apiVersion: configuration.konghq.com/v1alpha1
-   kind: EventGatewayBackendCluster
-   metadata:
-     name: default-backend-cluster
-     namespace: kong
-   spec:
-     gatewayRef:
-       type: namespacedRef
-       namespacedRef:
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayBackendCluster
+     metadata:
+       name: default-backend-cluster
+       namespace: kong
+     spec:
+       gatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: cp-event-1
+       apiSpec:
+         name: default_backend_cluster
+         bootstrapServers:
+           - kafka-cluster.kafka.svc.cluster.local:9092
+         authentication:
+           type: anonymous
+           anonymous: {}
+         insecureAllowAnonymousVirtualClusterAuth: Enabled
+         tls:
+           enabled: Disabled
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     Set `spec.parentRef` to the `OnPremEventGateway`, with its `group` and `kind`:
+
+     ```bash
+     echo '
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayBackendCluster
+     metadata:
+       name: default-backend-cluster
+       namespace: kong
+     spec:
+       parentRef:
+         group: eventgateway.konghq.com
+         kind: OnPremEventGateway
          name: cp-event-1
-     apiSpec:
-       name: default_backend_cluster
-       bootstrapServers:
-         - kafka-cluster.kafka.svc.cluster.local:9092
-       authentication:
-         type: anonymous
-         anonymous: {}
-       insecureAllowAnonymousVirtualClusterAuth: Enabled
-       tls:
-         enabled: Disabled
-   ' | kubectl apply -f -
-   ```
+       apiSpec:
+         name: default_backend_cluster
+         bootstrapServers:
+           - kafka-cluster.kafka.svc.cluster.local:9092
+         authentication:
+           type: anonymous
+           anonymous: {}
+         insecureAllowAnonymousVirtualClusterAuth: Enabled
+         tls:
+           enabled: Disabled
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the resource to be ready:
 
@@ -135,46 +213,97 @@ The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clien
 
 1. Create the `EventGatewayVirtualCluster` and `EventGatewayListener` resources:
 
-   ```bash
-   echo '
-   apiVersion: configuration.konghq.com/v1alpha1
-   kind: EventGatewayVirtualCluster
-   metadata:
-     name: example-virtual-cluster
-     namespace: kong
-   spec:
-     eventGatewayBackendClusterRef:
-       type: namespacedRef
-       namespacedRef:
-         name: default-backend-cluster
-     apiSpec:
-       name: example_virtual_cluster
-       dnsLabel: vcluster-1
-       aclMode: passthrough
-       authentication:
-         - type: anonymous
-       namespace:
-         prefix: "vc1_"
-         mode: hide_prefix
-   ---
-   apiVersion: configuration.konghq.com/v1alpha1
-   kind: EventGatewayListener
-   metadata:
-     name: example-listener
-     namespace: kong
-   spec:
-     apiSpec:
-       name: example_listener
-       addresses:
-         - 0.0.0.0
-       ports:
-         - "9092-9095"
-     gatewayRef:
-       type: namespacedRef
-       namespacedRef:
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayVirtualCluster
+     metadata:
+       name: example-virtual-cluster
+       namespace: kong
+     spec:
+       eventGatewayBackendClusterRef:
+         type: namespacedRef
+         namespacedRef:
+           name: default-backend-cluster
+       apiSpec:
+         name: example_virtual_cluster
+         dnsLabel: vcluster-1
+         aclMode: passthrough
+         authentication:
+           - type: anonymous
+         namespace:
+           prefix: "vc1_"
+           mode: hide_prefix
+     ---
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayListener
+     metadata:
+       name: example-listener
+       namespace: kong
+     spec:
+       apiSpec:
+         name: example_listener
+         addresses:
+           - 0.0.0.0
+         ports:
+           - "9092-9095"
+       gatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: cp-event-1
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     The virtual cluster attaches to its backend cluster, so only the listener references the `OnPremEventGateway`:
+
+     ```bash
+     echo '
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayVirtualCluster
+     metadata:
+       name: example-virtual-cluster
+       namespace: kong
+     spec:
+       eventGatewayBackendClusterRef:
+         type: namespacedRef
+         namespacedRef:
+           name: default-backend-cluster
+       apiSpec:
+         name: example_virtual_cluster
+         dnsLabel: vcluster-1
+         aclMode: passthrough
+         authentication:
+           - type: anonymous
+         namespace:
+           prefix: "vc1_"
+           mode: hide_prefix
+     ---
+     apiVersion: configuration.konghq.com/v1alpha1
+     kind: EventGatewayListener
+     metadata:
+       name: example-listener
+       namespace: kong
+     spec:
+       apiSpec:
+         name: example_listener
+         addresses:
+           - 0.0.0.0
+         ports:
+           - "9092-9095"
+       parentRef:
+         group: eventgateway.konghq.com
+         kind: OnPremEventGateway
          name: cp-event-1
-   ' | kubectl apply -f -
-   ```
+     ' | kubectl apply -f -
+     ```
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the resources to be ready:
 
@@ -192,39 +321,89 @@ The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clien
 
 The `KegDataPlane` resource runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
-Deploy the `KegDataPlane`:
+{% konnect %}
+content: |
+  Deploy the `KegDataPlane`:
 
-```bash
-echo '
-apiVersion: eventgateway.konghq.com/v1alpha1
-kind: KegDataPlane
-metadata:
-  name: my-event-gateway-dp
-  namespace: kong
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: cp-event-1
-  network:
-    services:
-      kafka:
-        type: LoadBalancer
-        ports:
-          - name: kafka
-            port: 9092
-            targetPort: 9092
-          - name: broker-1
-            port: 9093
-            targetPort: 9093
-          - name: broker-2
-            port: 9094
-            targetPort: 9094
-          - name: broker-3
-            port: 9095
-            targetPort: 9095
-' | kubectl apply -f -
-```
+  ```bash
+  echo '
+  apiVersion: eventgateway.konghq.com/v1alpha1
+  kind: KegDataPlane
+  metadata:
+    name: my-event-gateway-dp
+    namespace: kong
+  spec:
+    controlPlaneRef:
+      type: konnectNamespacedRef
+      konnectNamespacedRef:
+        name: cp-event-1
+    network:
+      services:
+        kafka:
+          type: LoadBalancer
+          ports:
+            - name: kafka
+              port: 9092
+              targetPort: 9092
+            - name: broker-1
+              port: 9093
+              targetPort: 9093
+            - name: broker-2
+              port: 9094
+              targetPort: 9094
+            - name: broker-3
+              port: 9095
+              targetPort: 9095
+  ' | kubectl apply -f -
+  ```
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  1. Deploy the `KegDataPlane`. Set `spec.controlPlaneRef.type` to `onpremNamespacedRef` to attach it to the `OnPremEventGateway`:
+
+     ```bash
+     echo '
+     apiVersion: eventgateway.konghq.com/v1alpha1
+     kind: KegDataPlane
+     metadata:
+       name: my-event-gateway-dp
+       namespace: kong
+     spec:
+       controlPlaneRef:
+         type: onpremNamespacedRef
+         onpremNamespacedRef:
+           name: cp-event-1
+       network:
+         services:
+           kafka:
+             type: LoadBalancer
+             ports:
+               - name: kafka
+                 port: 9092
+                 targetPort: 9092
+               - name: broker-1
+                 port: 9093
+                 targetPort: 9093
+               - name: broker-2
+                 port: 9094
+                 targetPort: 9094
+               - name: broker-3
+                 port: 9095
+                 targetPort: 9095
+     ' | kubectl apply -f -
+     ```
+
+     {{site.operator_product_name}} issues the data plane a client certificate and registers it on gw-admin. The data plane uses it to pull its configuration from gw-admin.
+
+  1. Wait for the data plane to be ready:
+
+     ```bash
+     kubectl wait kegdataplane/my-event-gateway-dp -n kong \
+       --for=condition=Ready=True \
+       --timeout=5m
+     ```
+{% endon_prem %}
 
 ## Export the `LoadBalancer` address
 
@@ -240,7 +419,7 @@ echo $KAFKA_LB_HOST
 
 The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. In this mode, `portMapping` maps one external bootstrap port and one external port per broker. For more information, see the [{{ site.event_gateway_short }} policy docs](/event-gateway/entities/policy/).
 
-1. Create the `EventGatewayListenerPolicy` resource:
+1. Create the `EventGatewayListenerPolicy` resource. Set `destination.name` to the name of the `EventGatewayVirtualCluster` resource, `example-virtual-cluster`, not to its `apiSpec.name`:
 
    ```bash
    echo '
@@ -260,7 +439,7 @@ The `EventGatewayListenerPolicy` connects the listener to the virtual cluster. I
              advertisedHost: '"$KAFKA_LB_HOST"'
              bootstrapPort: at_start
              destination:
-               name: example_virtual_cluster
+               name: example-virtual-cluster
      eventGatewayListenerRef:
        type: namespacedRef
        namespacedRef:
@@ -364,3 +543,26 @@ pod "kcat-portmap" deleted from kong namespace
 ```
 {:.no-copy-code}
 
+## Produce and consume a record
+
+Create a topic, produce a record, and consume it back through {{ site.event_gateway }} with `kafkactl`:
+
+```bash
+kubectl run kafkactl-roundtrip --rm -i --restart=Never \
+  --image=deviceinsight/kafkactl:v5.21.0 -n kong \
+  --env=BROKERS=${KAFKA_LB_HOST}:9092 \
+  --command -- sh -c '
+    kafkactl create topic orders --partitions 1 --replication-factor 3 &&
+    kafkactl produce orders --value hello &&
+    sleep 3 &&
+    kafkactl consume orders --from-beginning --exit --print-headers'
+```
+
+The `sleep` gives the new topic's metadata time to propagate before the consumer reads it. The consumed record carries the headers that both policies added:
+
+```text
+x-kong-consume-policy:example,x-kong-produce-policy:example#hello
+```
+{:.no-copy-code}
+
+The virtual cluster hides its `vc1_` prefix from clients: in the backend Kafka cluster, the topic is named `vc1_orders`.
