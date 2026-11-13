@@ -33,7 +33,7 @@ module Jekyll
       attr_reader :site
 
       def build_page(name, config)
-        PageWithoutAFile.new(site, site.source, '_api/feeds', "#{name}.xml").tap do |page|
+        PageWithoutAFile.new(site, site.source, 'feeds', "#{name}.xml").tap do |page|
           page.data['llm'] = false
           page.data['layout'] = nil
           page.data['feed'] = feed_data(name, config)

@@ -1,6 +1,6 @@
 # RSS feeds
 
-The site publishes RSS feeds at `/_api/feeds/<name>.xml`. The first feed is `/_api/feeds/security-advisories.xml`.
+The site publishes RSS feeds at `/feeds/<name>.xml`. The first feed is `/feeds/security-advisories.xml`.
 
 ## How it works
 
@@ -19,7 +19,7 @@ Titles go through `liquify`, so `{{site.*}}` variables in a title work.
 5. Run `make run`, then check the feed:
 
 ```bash
-curl -s http://localhost:8888/_api/feeds/<name>.xml | xmllint --noout -
+curl -s http://localhost:8888/feeds/<name>.xml | xmllint --noout -
 ```
 
 ## Next sources
