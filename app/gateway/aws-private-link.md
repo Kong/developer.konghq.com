@@ -51,6 +51,9 @@ PrivateLink support is available in the following AWS regions:
 
 If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
+{:.info}
+> **Note:** PrivateLink is not available for {{site.ai_gateway}} data planes that you deploy with {{site.operator_product_name}}.
+
 ## AWS configuration for PrivateLink
 
 Before creating a PrivateLink connection, ensure that you have a VPC, subnets, and a security group configured in your AWS account. For instructions, see the [{{ site.amazon }} VPC documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
