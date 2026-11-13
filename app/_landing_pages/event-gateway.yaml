@@ -487,7 +487,9 @@ rows:
                 The {{site.event_gateway}} control plane is part of the {{site.konnect_product_name}} platform.
             
             - q: Does {{site.event_gateway}} run on-prem?
-              a: No, {{site.event_gateway}} is only available through the {{site.konnect_product_name}} platform.
+              a: |
+                {{site.event_gateway}} is available through the {{site.konnect_product_name}} platform.
+                On Kubernetes, you can also run it with an on-prem control plane using [{{site.operator_product_name}}](/operator/get-started/event-gateway/install/). This is in Tech Preview.
             
             - q: Can I proxy multiple Kafka clusters?
               a: |

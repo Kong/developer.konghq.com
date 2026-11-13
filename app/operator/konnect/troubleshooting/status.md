@@ -109,3 +109,40 @@ rows:
 
 While the reference is unresolved, {{site.operator_product_name}} doesn't push the `KongVault` to
 {{site.konnect_short_name}}, so that a Vault is never created with a missing or wrong Config Store ID.
+
+### Private endpoint conditions
+
+When a `KonnectAPIAuthConfiguration` uses a private `serverURL`, for example to connect [over AWS PrivateLink](/operator/konnect/how-to/private-link/), {{site.operator_product_name}} doesn't start a component with a configuration that would send its traffic over the public internet. It holds the component and reports one of the following conditions:
+
+{% table %}
+columns:
+  - title: Resource
+    key: resource
+  - title: Condition and reason
+    key: condition
+  - title: Meaning
+    key: meaning
+rows:
+  - resource: "`KonnectAPIAuthConfiguration`"
+    condition: "`APIAuthValid=False`, `Invalid`"
+    meaning: |
+      The `serverURL` host isn't under an allowed {{site.konnect_short_name}} domain, so {{site.operator_product_name}} sends no request to it. The message names the allowed domains. They default to `konghq.com` and `konghq.tech`, and are set with the `--konnect-server-url-domains` flag.
+  - resource: "`KonnectExtension`"
+    condition: "`Ready=False`, `InvalidEndpoint`"
+    meaning: |
+      An endpoint for the {{ site.kic_product_name }} in {{site.konnect_short_name}} has a path. There's no private route for its API yet.
+  - resource: "`KonnectExtension`"
+    condition: "`Ready=False`, `EndpointMismatch`"
+    meaning: |
+      The `serverURL` has a path, but {{site.konnect_short_name}} returned public endpoints, because the geo doesn't return private endpoints yet. The condition clears on its own once it does.
+  - resource: "`AIGatewayDataPlane`"
+    condition: "`KonnectAIGatewayResolved=False`, `EndpointMismatch`"
+    meaning: |
+      The `serverURL` and the endpoints that {{site.konnect_short_name}} returned don't match, or an endpoint has a path. {{ site.ai_gateway }} data planes can't use private endpoints yet.
+  - resource: "`KegDataPlane`"
+    condition: "`KonnectEventGatewayResolved=False`, `EndpointMismatch`"
+    meaning: |
+      The `serverURL` of the `KonnectEventGateway` has a path. {{ site.event_gateway }} data planes can't use a path. Setting `spec.config.konnect.domain` lifts the check, but the data plane then connects over the public internet.
+{% endtable %}
+
+A held data plane keeps serving, but {{site.operator_product_name}} doesn't apply spec, image, or certificate changes to it, and doesn't deploy a data plane that wasn't deployed yet, until the condition clears.

@@ -60,8 +60,8 @@ groups:
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/faq/license/
-          - path: /operator/konnect/event-gateway/
-          - path: /operator/konnect/ai-gateway/
+          - path: /operator/event-gateway/
+          - path: /operator/ai-gateway/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
@@ -134,6 +134,7 @@ groups:
           - path: /operator/konnect/how-to/secret-cross-namespace-reference/
           - path: /operator/konnect/how-to/config-store-certificate-keys/
           - path: /operator/konnect/how-to/static-naming/
+          - path: /operator/konnect/how-to/private-link/
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/

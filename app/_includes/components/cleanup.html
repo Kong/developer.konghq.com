@@ -25,6 +25,7 @@ kubectl delete -n kong -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
   {% endfor %}
 
   {% for step in cleanup.inline %}
+    {% assign deployment_topology = step.topology %}
     {% if step.include_content == 'cleanup/products/gateway' %}
       {% assign deployment_topology = 'on-prem' %}
     {% elsif step.include_content == 'cleanup/platform/konnect' %}
