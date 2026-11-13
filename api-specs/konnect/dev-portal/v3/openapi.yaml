@@ -2,12 +2,12 @@ openapi: 3.0.3
 info:
   title: Portal API
   description: Portal API
-  version: 3.4.3
+  version: 3.6.1
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@75f67e9c148d0225a8321c01ceabf1a53b08467c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/75f67e9c148d0225a8321c01ceabf1a53b08467c'
+  x-oas-source: kong/platform-api@c883aab36c9956a1a72305fb4aad40fc11240bf0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c883aab36c9956a1a72305fb4aad40fc11240bf0'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -3109,20 +3109,6 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AuthStrategyKeyAuth'
         - $ref: '#/components/schemas/AuthStrategyClientCredentials'
-    TryItUIAudience:
-      description: |
-        The audience for the Try It UI feature.
-
-        `all` means that the Try It UI will be available to all users, including unauthenticated users.
-
-        `authenticated` means that the Try It UI will only be available to authenticated users.
-
-        `registered` means that the Try It UI will only be available to users who have registered for the API.
-      type: string
-      enum:
-        - all
-        - authenticated
-        - registered
     ApiSpecType:
       description: |
         The type of specification being stored. This allows us to render the specification correctly.
@@ -4949,6 +4935,7 @@ components:
         - rbac_enabled
         - name
         - canonical_domain
+        - ai
       title: PortalContext
     PortalIntegrations:
       description: Configuration data for Dev Portal integrations
@@ -5447,9 +5434,20 @@ components:
               type: boolean
               default: true
             try_it_ui_audience:
-              allOf:
-                - $ref: '#/components/schemas/TryItUIAudience'
-                - default: all
+              description: |
+                The audience for the Try It UI feature.
+
+                `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                `registered` means that the Try It UI will only be available to users who have registered for the API.
+              type: string
+              default: all
+              enum:
+                - all
+                - authenticated
+                - registered
           title: PortalCustomizationSpecRenderer
         robots:
           type: string

@@ -24,8 +24,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3772,7 +3772,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
         data_plane_groups:
@@ -4004,7 +4003,6 @@ components:
           type: string
           enum:
             - control-plane
-          x-terraform-transform-const: true
         type:
           $ref: '#/components/schemas/ControlPlaneAddOnOwnerType'
         control_plane_id:
@@ -4029,7 +4027,6 @@ components:
           type: string
           enum:
             - control-plane-group
-          x-terraform-transform-const: true
         control_plane_group_id:
           description: ID of the control-plane group that owns this add-on.
           type: string
@@ -4058,7 +4055,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
       additionalProperties: false
@@ -4091,7 +4087,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
       additionalProperties: false
@@ -4114,7 +4109,6 @@ components:
           type: string
           enum:
             - tiered
-          x-terraform-transform-const: true
         tier:
           description: |
             Capacity tier that determines both cache size and performance characteristics:
