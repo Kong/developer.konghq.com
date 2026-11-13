@@ -427,7 +427,7 @@
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
 /ai-gateway/policies/vault-auth/           /plugins/vault-auth/           301
 /ai-gateway/policies/forward-proxy/           /ai-gateway/forward-proxy/  301
-/ai-gateway/policies/forward-proxy/reference/  /plugins/forward-proxy/           301
+/ai-gateway/policies/forward-proxy/reference/  /ai-gateway/forward-proxy/           301
 
 # AIGW policies overview -> reference for now
 /ai-gateway/policies/:slug/  /ai-gateway/policies/:slug/reference 301
