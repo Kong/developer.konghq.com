@@ -33,6 +33,7 @@ module Jekyll
         end
 
         def item(doc)
+          @doc = doc
           {
             'title' => doc.data['title'],
             'url' => doc.url,
@@ -41,12 +42,11 @@ module Jekyll
         end
 
         def parse_date(value)
-          return if value.nil? || value.to_s.strip.empty?
-
-          date = value.respond_to?(:to_time) && !value.is_a?(String) ? value.to_time : Date.parse(value.to_s)
+          date = Date.parse(value.to_s)
           Time.utc(date.year, date.month, date.day)
-        rescue ArgumentError
-          nil
+        rescue ArgumentError => e
+          raise ArgumentError,
+                "Invalid advisory.published '#{value}' in #{@doc&.relative_path || 'advisory'}: #{e.message}"
         end
       end
     end

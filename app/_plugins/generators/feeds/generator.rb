@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/site_accessor'
 require_relative 'sources/security_advisories'
 
 module Jekyll
   module Feeds
     # Builds one RSS page per entry in app/_data/feeds.yml.
     class Generator
-      include Jekyll::SiteAccessor
-
       # Maps the `source` value in feeds.yml to a class that responds to `.items(site)`.
       SOURCES = {
         'security_advisories' => Sources::SecurityAdvisories
@@ -43,7 +40,11 @@ module Jekyll
 
       def feed_data(name, config)
         items = source_for(name, config['source']).items(site)
-        config.merge('name' => name, 'items' => items)
+        title = config.fetch('title') do
+          raise ArgumentError,
+                "Feed '#{name}' in app/_data/feeds.yml is missing its title."
+        end
+        config.merge('name' => name, 'title' => title, 'items' => items)
       end
 
       def source_for(name, source)
