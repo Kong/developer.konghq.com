@@ -138,7 +138,7 @@ For configuration examples, see [Algorithm examples](#algorithm-examples).
 Intelligent routing selects a target from the content of each conversation, so you don't maintain a routing rule for every case.
 Static routing rules and the [`semantic`](/ai-gateway/semantic-similarity/) algorithm both require you to describe ahead of time which prompts belong to which target.
 The `intelligent` algorithm instead works out what kind of task the prompt describes, then selects a target using published benchmark results for that task and each model's cost.
-Use it when coding assistants or other agents send all requests to one endpoint, and you want the gateway to choose the model for each conversation instead of each client.
+Use it when coding assistants or other agents send all requests to one endpoint, and you want {{site.ai_gateway}} to choose the model for each conversation instead of each client.
 It fits a pool of models that differ in capability and price.
 
 Intelligent routing requires {{site.ai_gateway}} 2.4 or later.
@@ -211,7 +211,7 @@ rows:
     algorithm: "`priority`"
   - goal: "Route by topic to specialist targets that you describe, and can run a vector database"
     algorithm: "`semantic`"
-  - goal: "Let the gateway choose a model by task type, balancing benchmark quality and cost, without writing descriptions or running a vector database"
+  - goal: "Let {{site.ai_gateway}} choose a model by task type, balancing benchmark quality and cost, without writing descriptions or running a vector database"
     algorithm: "`intelligent`"
 {% endtable %}
 <!--vale on-->
@@ -255,7 +255,7 @@ rows:
 <!--vale on-->
 
 Choose `semantic` when you know which topics belong to which target, such as a fine-tuned model for one domain, and you want exact control.
-Choose `intelligent` when your targets are general-purpose models that differ mainly in capability and price, and you want the gateway to select a model by task type without a vector database.
+Choose `intelligent` when your targets are general-purpose models that differ mainly in capability and price, and you want {{site.ai_gateway}} to select a model by task type without a vector database.
 
 To move from `semantic` to `intelligent`, change the algorithm, remove the vector database and embeddings configuration, and add a classifier.
 The `intelligent` algorithm ignores the target descriptions you wrote for `semantic`.
@@ -490,7 +490,7 @@ To balance by spend instead, set [`tokens_count_strategy`](/ai-gateway/entities/
 {% endnavtab %}
 {% navtab "Intelligent" %}
 
-If developers use coding assistants that all call one endpoint, you can let the gateway choose the model for each conversation instead of configuring each client.
+If developers use coding assistants that all call one endpoint, you can let {{site.ai_gateway}} choose the model for each conversation instead of configuring each client.
 
 The following AI Model classifies each new conversation with a classifier service, then selects between `gpt-4.1-mini` and `claude-sonnet-4-6`, which have different benchmark results, based on the task category.
 Both models accept image input and have a context window of at least 1 million tokens, which intelligent routing requires.
@@ -539,7 +539,12 @@ data:
           type: basic
           headers:
             - name: Authorization
-              value: Bearer {vault://env/classifier-api-key}
+              value: ${classifier_auth_header}
+variables:
+  classifier_auth_header:
+    value: $CLASSIFIER_AUTH_HEADER
+    secret: true
+    description: The full Authorization header value for your classifier service, for example `Bearer <token>`.
 {% endentity_example %}
 
 To select the cheapest eligible model, set `cost_quality_tradeoff` to `cost`.
