@@ -124,6 +124,8 @@ You may need to customize what {{site.ai_gateway}} logs. For instance, you may w
 
 These changes can be made to {{site.ai_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.ai_gateway}}'s [logging Policies](/ai-gateway/policies/?category=logging).
 
+To capture the prompts and responses that pass through {{site.ai_gateway}} instead, see [Conversation capture](/ai-gateway/conversation-capture/).
+
 Let's look at an example where you want to remove any instances of an email address from your {{site.ai_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
 Make a copy of {{site.ai_gateway}}'s Nginx template, then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
