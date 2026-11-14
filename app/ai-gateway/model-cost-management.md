@@ -256,3 +256,9 @@ rows:
 <!--vale on-->
 
 This split means changing a model's pricing (for example, updating `input_cost` after a provider rate change) never requires touching the AI Rate Limiting Advanced configuration, and changing a rate limit never requires touching the AI Model. The cost figure produced by the calculation in this page is reported by {{site.ai_gateway}} regardless of whether any rate-limiting policy is attached.
+
+## Investigate cost drivers
+
+The cost figure shows how much a model, consumer, or request cost.
+When spend rises unexpectedly, turn on [conversation capture](/ai-gateway/conversation-capture/) for the affected traffic.
+Captured prompts and responses show what is behind the cost, such as unusually long prompts or repeated retries.
