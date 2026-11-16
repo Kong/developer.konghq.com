@@ -3,6 +3,8 @@
   Link: </llms.txt>; rel="llms-txt"
   Link: </api/>; rel="service-doc"
   X-Llms-Txt: /llms.txt
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://api.consentjs.datagrail.io https://cdn.segment.com https://www.googletagmanager.com https://assets.adobedtm.com https://widget.kapa.ai https://www.google.com https://www.gstatic.com https://tag.clearbitscripts.com https://x.clearbitjs.com; script-src-attr 'none'; connect-src 'self' https://api.segment.io https://cdn.segment.com https://region1.google-analytics.com https://www.google-analytics.com https://www.googletagmanager.com https://assets.adobedtm.com https://adobedc.demdex.net https://*.algolia.net https://*.algolianet.com https://*.portal.konghq.com https://widget.kapa.ai https://proxy.kapa.ai; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com https://img.shields.io https://insomnia.rest; frame-src 'self' https://www.googletagmanager.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 
 /mesh/latest_version
