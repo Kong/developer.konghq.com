@@ -98,7 +98,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {% include gateway/enterprise-portal-vitals-removed.md %}
+                    {% include_cached gateway/enterprise-portal-vitals-removed.md %}
 
   - header:
       type: h2
