@@ -21,6 +21,7 @@ const NETWORK_LEVEL_CODES = new Set([
   "EAI_AGAIN",
   "ENOTFOUND",
   "ECONNRESET",
+  "UND_ERR_SOCKET"
 ]);
 
 const NULL_BODY_STATUSES = new Set([204, 205, 304]);
