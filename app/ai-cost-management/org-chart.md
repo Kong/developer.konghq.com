@@ -148,10 +148,10 @@ rows:
     problem: already exists in this directory
     fix: "A different principal in this directory already has this email address. Give each person a unique email, or update the other principal's identity first."
   - column: "`given_name`, `family_name`"
-    problem: both are empty
+    problem: is required
     fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`, and at least one of them must have a value."
   - column: "`given_name`, `family_name`"
-    problem: exceed 255 characters combined
+    problem: must be at most 255 characters
     fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`. Together, they can be at most 255 characters."
   - column: "`cost_center`"
     problem: must be at most 255 characters
