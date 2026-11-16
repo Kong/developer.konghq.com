@@ -216,6 +216,7 @@ Intelligent routing has the following requirements:
 * Targets must accept image input and have a context window of at least 1 million tokens.
   Text-only models and models with smaller context windows can't be targets.
 * Targets must use models in the {{site.ai_gateway}} benchmark catalog.
+  <!-- TODO (AG-2164, PR review): Check with engineering whether the benchmark catalog is available to users, and where. If it is, link it here; if not, explain how users can tell which models qualify. -->
   Each target must also have a price from its cost fields or from the [price catalog](/ai-cost-management/price-catalog/).
   {{site.ai_gateway}} excludes a target if its model isn't in the catalog or if it doesn't have a price.
 * The AI Model must configure a [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier).
