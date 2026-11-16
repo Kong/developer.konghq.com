@@ -1,17 +1,17 @@
 ---
-title: "Conversation capture in {{site.ai_gateway_name}}"
+title: "Conversation capture in {{site.konnect_short_name}}"
 content_type: reference
 layout: reference
-published: false
 
 products:
+  - observability
   - ai-gateway
 
 works_on:
   - konnect
 
 breadcrumbs:
-  - /ai-gateway/
+  - /observability/
 
 tags:
   - ai
@@ -22,7 +22,7 @@ tags:
 min_version:
   ai-gateway: '2.4'
 
-description: "Conversation capture records the prompts and responses that pass through {{site.ai_gateway}} and exports them to {{site.konnect_short_name}}, independent of the OpenTelemetry policy and Debugger sessions. Covers use cases, capture controls, and PII scrubbing."
+description: "Conversation capture records the prompts and responses that pass through {{site.ai_gateway}}, so you can find out why costs rise, tool calls fail, or agents misbehave."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -41,20 +41,36 @@ related_resources:
 
 <!-- TODO (AG-2227 / AI-240): feature is in design and targets 2.4.0. Confirm publish timing before removing `published: false`. -->
 
+<!-- TODO: placement. Moved from app/ai-gateway/ to app/observability/ because the PM says the UI lives under Observability > Sessions. Confirm with the PM whether this is an AI Gateway feature or a general {{site.konnect_short_name}} observability feature, then adjust breadcrumbs, products and the folder. -->
+
 Conversation capture records the prompts and responses that pass through {{site.ai_gateway}} and exports them to {{site.konnect_short_name}}, so you can read the conversation behind a metric.
 You turn it on from {{site.konnect_short_name}}.
 It runs independently of the [OpenTelemetry policy](/ai-gateway/policies/opentelemetry/) and of [Debugger](/observability/debugger/) sessions, so you don't need to change an existing observability setup to use it.
 
 ## Use cases
 
-Conversation capture is most useful after another signal has pointed at a problem:
+Conversation capture is most useful after another signal has pointed at a problem.
 
-- **Cost management:** a [cost view](/ai-cost-management/analytics-and-debugging/) shows spend rising for a model or consumer. Captured conversations show what is driving it, such as unusually long prompts or repeated retries.
-- **Tool-call failures on a cheaper model:** after you move traffic to a cheaper model, some tool calls start failing. Captured conversations show the exact request the model received and the tool call it produced.
-- **Poorly defined tools:** a model picks the wrong tool or passes the wrong arguments. Captured conversations show how the model read the tool definitions, so you can see which descriptions are ambiguous.
-- **Agent debugging:** an agent behaves unexpectedly. Captured conversations show each turn the agent took, so you can trace where it went wrong.
-- **Prompt review:** you want to know what prompts your applications and agents send. Captured conversations show the prompts as the gateway received them.
-- **Audit:** you need to show what was sent to an LLM provider. Captured conversations record each request and response.
+{% table %}
+columns:
+  - title: Use case
+    key: scenario
+  - title: What captured conversations show
+    key: shows
+rows:
+  - scenario: "Cost management: a [cost view](/ai-cost-management/analytics-and-debugging/) shows spend rising for a model or consumer"
+    shows: "What drives the cost, such as unusually long prompts, repeated retries, or a cheaper model that misfired a tool call."
+  - scenario: "Tool calls fail after you move traffic to a cheaper model"
+    shows: "The exact request the model received and the tool call it produced."
+  - scenario: "A model picks the wrong tool or passes the wrong arguments"
+    shows: "How the model read the tool definitions, so you can find ambiguous descriptions."
+  - scenario: "An agent behaves unexpectedly"
+    shows: "Each turn the agent took, so you can trace where it went wrong."
+  - scenario: "Prompt review"
+    shows: "The prompts your applications and agents send, as the gateway received them."
+  - scenario: "Audit"
+    shows: "Each request sent to an LLM provider and its response."
+{% endtable %}
 
 <!-- TODO: the agent debugging, prompt review and audit use cases are the PM's suggestions from a meeting, not from the PRD. Confirm with the PM before publishing. -->
 
@@ -63,7 +79,7 @@ Conversation capture is most useful after another signal has pointed at a proble
 ## How conversation capture differs from other tracing
 
 {{site.ai_gateway}} already has two ways to get request detail out of the data plane.
-Conversation capture is a third, separate mechanism.
+Conversation capture is a third, separate mechanism with its own tracer.
 
 {% table %}
 columns:
@@ -96,11 +112,8 @@ Use Debugger when you need detailed, high-verbosity data about gateway behavior 
 Use conversation capture when you need the prompts and responses behind LLM traffic over time.
 Use the OpenTelemetry policy when you need to send telemetry to your own collector.
 
-Because conversation capture uses its own tracer, enabling it doesn't change the output of the OpenTelemetry policy, and an active Debugger session doesn't block it.
-If both conversation capture and the OpenTelemetry policy are enabled, each produces its own spans for the same request.
-
-Conversation capture propagates trace IDs the same way the OpenTelemetry policy does, using the incoming `traceparent` header.
-You can correlate captured traces with traces from downstream applications.
+Enabling conversation capture doesn't change the output of the OpenTelemetry policy, and an active Debugger session doesn't block it.
+If you enable both capture and the OpenTelemetry policy, each produces its own spans for the same request.
 
 ## What is captured
 
@@ -109,23 +122,11 @@ Conversation capture exports two kinds of data from the data plane:
 - **Access logs:** the same access log data that the OpenTelemetry policy exports. When payload capture is on, prompts and responses are included in the access log.
 - **Traces:** spans that follow the Gen AI OpenTelemetry semantic conventions. See the [spans attributes reference](/ai-gateway/llm-open-telemetry/). Payloads aren't duplicated into trace attributes, because they are already in the access log.
 
-<!--vale off-->
-{% mermaid %}
-flowchart LR
-  Client --> DP[Data plane]
-  DP --> LLM[LLM provider]
-  DP -- "access logs and traces (mTLS)" --> Konnect[Konnect telemetry endpoint]
-{% endmermaid %}
-> _Figure 1: Captured access logs and traces leave the data plane for {{site.konnect_short_name}} over mTLS._
-<!--vale on-->
-
-The data plane authenticates the export with mutual TLS (mTLS), reusing the certificate it already uses to connect to {{site.konnect_short_name}}.
-You don't configure certificates for capture.
+The data plane exports this data over mutual TLS (mTLS), reusing the certificate it already uses to connect to {{site.konnect_short_name}}.
 
 ## Capture controls
 
 Conversation capture is off by default, so nothing is traced, exported, or captured until you turn it on.
-Capture controls determine how much data leaves the data plane.
 
 <!-- TODO: confirm names, defaults and limits against the Konnect API spec and UI. The ERD examples disagree on field names (`enabled` vs `enable`) and on the default max payload size (1,000,000 bytes in the settings table, 5 MB in the payload capture section). -->
 
@@ -153,7 +154,6 @@ Requests that match the rule have their payloads captured.
 For other requests, the data plane removes the payload from the access log and the trace.
 
 For example, a rule that matches a single consumer captures conversations only for that consumer.
-Sampling rules let you capture the conversations behind a problem without storing every conversation.
 
 <!-- TODO: confirm available CEL variables (model, provider, consumer) and the exact default behavior with the feature team. -->
 
@@ -166,7 +166,7 @@ Sampling rules let you capture the conversations behind a problem without storin
 
 You can't configure these rules, and custom sanitization rules aren't supported.
 
-<!-- TODO: PM (Greg, meeting notes) says PII is scrubbed with "local and dp regex". The ERD only describes static data plane rules (Luhn, auth headers) and no local (client-side?) scrubbing. Confirm with the feature team what "local" means and whether regex rules exist, then rewrite this section. Until then the section documents only the ERD rules. -->
+<!-- TODO: PM (Greg, meeting notes, repeated 2026-11-16) says PII is scrubbed with "local and dp regex". The ERD only describes static data plane rules (Luhn, auth headers) and no local (client-side?) scrubbing. Confirm with the feature team what "local" means and whether regex rules exist, then rewrite this section. Until then the section documents only the ERD rules. -->
 
 <!-- TODO: open PRD question: are LLM API key headers used by common coding agents (for example Claude Code, OpenCode) in the predefined header list? Do not document until confirmed. -->
 
