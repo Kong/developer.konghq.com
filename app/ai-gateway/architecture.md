@@ -163,7 +163,7 @@ Configuration changes are push-triggered: the control plane notifies connected n
 
 Data plane nodes also stream telemetry (analytics, logs, health) back to {{site.konnect_short_name}}, which powers {{site.konnect_short_name}} Analytics (Explorer and Dashboards) and attached logging policies. By default, this telemetry includes only usage, cost, and latency metadata, not the LLM, MCP, or A2A request and response bodies. Two opt-in settings change that, and both are off by default:
 
-- `log_payloads`, on [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/), includes full request and response bodies in what attached logging policies receive (including {{site.konnect_short_name}}-bound ones). [Conversation capture](/ai-gateway/conversation-capture/) also uses this setting to decide whether payloads are captured.
+- `log_payloads`, on [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/), includes full request and response bodies in what attached logging policies receive (including {{site.konnect_short_name}}-bound ones). [Conversation capture](/observability/conversation-capture/) also uses this setting to decide whether payloads are captured.
 - `log_blocked_content`, on [guardrail AI Policies](/ai-gateway/policies/?terms=guardrail), forwards only the specific content that triggered a block.
 
 ## Multi-tenancy and isolation
