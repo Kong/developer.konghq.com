@@ -22,16 +22,9 @@
     "config": {
       "type": "object",
       "properties": {
-        "add": {
+        "replace": {
           "type": "object",
           "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "json": {
               "type": "array",
               "items": {
@@ -50,6 +43,45 @@
                 ]
               },
               "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "add": {
+          "type": "object",
+          "properties": {
+            "json_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ]
+              },
+              "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
               "default": []
             }
           }
@@ -108,43 +140,11 @@
         "rename": {
           "type": "object",
           "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "json": {
               "type": "array",
               "items": {
                 "type": "string"
               },
-              "default": []
-            }
-          }
-        },
-        "replace": {
-          "type": "object",
-          "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json_types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "boolean",
-                  "number",
-                  "string"
-                ]
-              },
-              "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
               "default": []
             },
             "headers": {

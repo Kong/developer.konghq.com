@@ -3,6 +3,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "latency_metrics": {
+          "type": "boolean",
+          "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong_latency_ms`, `upstream_latency_ms` and `request_latency_ms` metrics will be exported.",
+          "default": false
+        },
         "bandwidth_metrics": {
           "type": "boolean",
           "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `bandwidth_bytes` and `stream_sessions_total` metrics will be exported.",
@@ -29,11 +34,6 @@
         "ai_metrics": {
           "type": "boolean",
           "description": "A boolean value that determines if ai metrics should be collected. If enabled, the `ai_llm_requests_total`, `ai_llm_cost_total` and `ai_llm_tokens_total` metrics will be exported.",
-          "default": false
-        },
-        "latency_metrics": {
-          "type": "boolean",
-          "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong_latency_ms`, `upstream_latency_ms` and `request_latency_ms` metrics will be exported.",
           "default": false
         }
       }

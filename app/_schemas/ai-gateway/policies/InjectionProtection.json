@@ -22,6 +22,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "error_message": {
+          "type": "string",
+          "description": "The response message when validation fails",
+          "default": "Bad Request"
+        },
         "injection_types": {
           "type": "array",
           "items": {
@@ -63,13 +68,13 @@
           "items": {
             "type": "object",
             "properties": {
-              "regex": {
-                "type": "string",
-                "description": "The regex to match against."
-              },
               "name": {
                 "type": "string",
                 "description": "A unique name for this injection."
+              },
+              "regex": {
+                "type": "string",
+                "description": "The regex to match against."
               }
             },
             "required": [
@@ -94,11 +99,6 @@
           "minimum": 400,
           "description": "The response status code when validation fails.",
           "default": 400
-        },
-        "error_message": {
-          "type": "string",
-          "description": "The response message when validation fails",
-          "default": "Bad Request"
         }
       }
     },

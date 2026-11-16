@@ -22,6 +22,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "keep_incoming_path": {
+          "type": "boolean",
+          "description": "Use the incoming request's path and query string in the redirect URL",
+          "default": false
+        },
         "status_code": {
           "type": "integer",
           "maximum": 599,
@@ -32,26 +37,11 @@
         "location": {
           "type": "string",
           "description": "The URL to redirect to"
-        },
-        "keep_incoming_path": {
-          "type": "boolean",
-          "description": "Use the incoming request's path and query string in the redirect URL",
-          "default": false
         }
       },
       "required": [
         "location"
       ]
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -82,6 +72,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   },
   "required": [

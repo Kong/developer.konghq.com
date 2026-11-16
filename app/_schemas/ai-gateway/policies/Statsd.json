@@ -29,27 +29,62 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow_status_codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of status code ranges that are allowed to be logged in metrics."
+        "flush_timeout": {
+          "type": "number"
         },
-        "use_tcp": {
+        "hostname_in_prefix": {
           "type": "boolean",
           "default": false
+        },
+        "consumer_identifier_default": {
+          "type": "string",
+          "enum": [
+            "consumer_id",
+            "custom_id",
+            "username"
+          ],
+          "default": "custom_id"
+        },
+        "retry_count": {
+          "type": "integer"
+        },
+        "tag_style": {
+          "type": "string",
+          "enum": [
+            "dogstatsd",
+            "influxdb",
+            "librato",
+            "signalfx"
+          ]
+        },
+        "host": {
+          "type": "string",
+          "description": "The IP address or hostname of StatsD server to send data to.",
+          "default": "localhost"
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "The port of StatsD server to send data to.",
+          "default": 8125
+        },
+        "service_identifier_default": {
+          "type": "string",
+          "enum": [
+            "service_host",
+            "service_id",
+            "service_name",
+            "service_name_or_host"
+          ],
+          "default": "service_name_or_host"
+        },
+        "queue_size": {
+          "type": "integer"
         },
         "queue": {
           "type": "object",
           "properties": {
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
-            },
             "max_retry_delay": {
               "type": "number",
               "maximum": 1000000,
@@ -95,6 +130,13 @@
               "type": "number",
               "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
               "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
             }
           }
         },
@@ -103,52 +145,11 @@
           "description": "String to prefix to each metric's name.",
           "default": "kong"
         },
-        "service_identifier_default": {
-          "type": "string",
-          "enum": [
-            "service_host",
-            "service_id",
-            "service_name",
-            "service_name_or_host"
-          ],
-          "default": "service_name_or_host"
-        },
-        "retry_count": {
-          "type": "integer"
-        },
-        "queue_size": {
-          "type": "integer"
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "The port of StatsD server to send data to.",
-          "default": 8125
-        },
         "metrics": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "service_identifier": {
-                "type": "string",
-                "enum": [
-                  "service_host",
-                  "service_id",
-                  "service_name",
-                  "service_name_or_host"
-                ],
-                "description": "Service detail."
-              },
-              "workspace_identifier": {
-                "type": "string",
-                "enum": [
-                  "workspace_id",
-                  "workspace_name"
-                ],
-                "description": "Workspace detail."
-              },
               "name": {
                 "type": "string",
                 "enum": [
@@ -194,6 +195,24 @@
                   "username"
                 ],
                 "description": "Authenticated user detail."
+              },
+              "service_identifier": {
+                "type": "string",
+                "enum": [
+                  "service_host",
+                  "service_id",
+                  "service_name",
+                  "service_name_or_host"
+                ],
+                "description": "Service detail."
+              },
+              "workspace_identifier": {
+                "type": "string",
+                "enum": [
+                  "workspace_id",
+                  "workspace_name"
+                ],
+                "description": "Workspace detail."
               }
             },
             "required": [
@@ -203,13 +222,14 @@
           },
           "description": "List of metrics to be logged."
         },
-        "udp_packet_size": {
-          "type": "number",
-          "maximum": 65507,
-          "minimum": 0,
-          "default": 0
+        "allow_status_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of status code ranges that are allowed to be logged in metrics."
         },
-        "hostname_in_prefix": {
+        "use_tcp": {
           "type": "boolean",
           "default": false
         },
@@ -221,31 +241,11 @@
           ],
           "default": "workspace_id"
         },
-        "tag_style": {
-          "type": "string",
-          "enum": [
-            "dogstatsd",
-            "influxdb",
-            "librato",
-            "signalfx"
-          ]
-        },
-        "consumer_identifier_default": {
-          "type": "string",
-          "enum": [
-            "consumer_id",
-            "custom_id",
-            "username"
-          ],
-          "default": "custom_id"
-        },
-        "flush_timeout": {
-          "type": "number"
-        },
-        "host": {
-          "type": "string",
-          "description": "The IP address or hostname of StatsD server to send data to.",
-          "default": "localhost"
+        "udp_packet_size": {
+          "type": "number",
+          "maximum": 65507,
+          "minimum": 0,
+          "default": 0
         }
       }
     },

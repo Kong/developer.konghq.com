@@ -22,6 +22,13 @@
     "config": {
       "type": "object",
       "properties": {
+        "status_code": {
+          "type": "integer",
+          "maximum": 599,
+          "minimum": 100,
+          "description": "The response code to send. Must be an integer between 100 and 599.",
+          "default": 503
+        },
         "message": {
           "type": "string",
           "description": "The message to send, if using the default response generator."
@@ -42,13 +49,6 @@
         "trigger": {
           "type": "string",
           "description": "A string representing an HTTP header name."
-        },
-        "status_code": {
-          "type": "integer",
-          "maximum": 599,
-          "minimum": 100,
-          "description": "The response code to send. Must be an integer between 100 and 599.",
-          "default": 503
         }
       }
     },

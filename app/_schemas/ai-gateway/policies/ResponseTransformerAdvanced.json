@@ -22,9 +22,21 @@
     "config": {
       "type": "object",
       "properties": {
+        "dots_in_keys": {
+          "type": "boolean",
+          "description": "Whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects..",
+          "default": true
+        },
         "remove": {
           "type": "object",
           "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "headers": {
               "type": "array",
               "items": {
@@ -33,13 +45,6 @@
               "default": []
             },
             "if_status": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -112,20 +117,6 @@
         "add": {
           "type": "object",
           "properties": {
-            "if_status": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "json_types": {
               "type": "array",
               "items": {
@@ -139,6 +130,20 @@
               "default": []
             },
             "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "if_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -221,23 +226,8 @@
               "default": []
             }
           }
-        },
-        "dots_in_keys": {
-          "type": "boolean",
-          "description": "Whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects..",
-          "default": true
         }
       }
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -268,6 +258,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

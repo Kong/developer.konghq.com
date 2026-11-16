@@ -1,11 +1,51 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Custom type for representing a foreign key with a null value allowed.",
+      "x-foreign": true
+    },
     "config": {
       "type": "object",
       "properties": {
-        "realm": {
+        "uri_param_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of querystring parameters that Kong will inspect to retrieve JWTs.",
+          "default": [
+            "jwt"
+          ]
+        },
+        "key_claim_name": {
           "type": "string",
-          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
+          "description": "The name of the claim in which the key identifying the secret must be passed. The policy will attempt to read this claim from the JWT payload and the header, in that order.",
+          "default": "iss"
         },
         "claims_to_verify": {
           "type": "array",
@@ -44,16 +84,6 @@
             "authorization"
           ]
         },
-        "uri_param_names": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of querystring parameters that Kong will inspect to retrieve JWTs.",
-          "default": [
-            "jwt"
-          ]
-        },
         "cookie_names": {
           "type": "array",
           "items": {
@@ -62,56 +92,16 @@
           "description": "A list of cookie names that Kong will inspect to retrieve JWTs.",
           "default": []
         },
-        "key_claim_name": {
-          "type": "string",
-          "description": "The name of the claim in which the key identifying the secret must be passed. The policy will attempt to read this claim from the JWT payload and the header, in that order.",
-          "default": "iss"
-        },
         "secret_is_base64": {
           "type": "boolean",
           "description": "If true, the policy assumes the credential’s secret to be base64 encoded. You will need to create a base64-encoded secret for your Consumer, and sign your JWT with the original secret.",
           "default": false
+        },
+        "realm": {
+          "type": "string",
+          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
-    "model": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "description": "Custom type for representing a foreign key with a null value allowed.",
-      "x-foreign": true
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "route": {
       "type": "object",
@@ -122,6 +112,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

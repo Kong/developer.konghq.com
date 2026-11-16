@@ -1,5 +1,28 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
     "model": {
       "type": "object",
       "properties": {
@@ -13,11 +36,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "key_in_query": {
-          "type": "boolean",
-          "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
-          "default": true
-        },
         "run_on_preflight": {
           "type": "boolean",
           "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
@@ -26,36 +44,6 @@
         "realm": {
           "type": "string",
           "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
-        },
-        "principals": {
-          "type": "object",
-          "properties": {
-            "error_on_miss": {
-              "type": "boolean",
-              "description": "When true (default), return 401 if no matching principal is found in Kong Identity. When false, allow the request to continue unauthenticated instead.",
-              "default": true
-            },
-            "enabled": {
-              "type": "boolean",
-              "description": "When true, authenticate against Kong Identity instead of local credentials.",
-              "default": false
-            },
-            "directory": {
-              "type": "string",
-              "description": "The Kong Identity directory instance to authenticate against.",
-              "default": "default"
-            }
-          }
-        },
-        "hide_credentials": {
-          "type": "boolean",
-          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy strips the credential from the request.",
-          "default": true
-        },
-        "key_in_body": {
-          "type": "boolean",
-          "description": "If enabled, the policy reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
-          "default": false
         },
         "identity_realms": {
           "type": "array",
@@ -92,6 +80,36 @@
             "apikey"
           ]
         },
+        "hide_credentials": {
+          "type": "boolean",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy strips the credential from the request.",
+          "default": true
+        },
+        "key_in_query": {
+          "type": "boolean",
+          "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
+          "default": true
+        },
+        "principals": {
+          "type": "object",
+          "properties": {
+            "error_on_miss": {
+              "type": "boolean",
+              "description": "When true (default), return 401 if no matching principal is found in Kong Identity. When false, allow the request to continue unauthenticated instead.",
+              "default": true
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "When true, authenticate against Kong Identity instead of local credentials.",
+              "default": false
+            },
+            "directory": {
+              "type": "string",
+              "description": "The Kong Identity directory instance to authenticate against.",
+              "default": "default"
+            }
+          }
+        },
         "anonymous": {
           "type": "string",
           "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`."
@@ -100,41 +118,13 @@
           "type": "boolean",
           "description": "If enabled (default), the policy reads the request header and tries to find the key in it.",
           "default": true
+        },
+        "key_in_body": {
+          "type": "boolean",
+          "description": "If enabled, the policy reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
+          "default": false
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
-      ]
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -145,6 +135,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   }
 }
