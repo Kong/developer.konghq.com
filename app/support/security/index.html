@@ -22,13 +22,14 @@ rows:
 {%- for item in advisories %}
 {%- assign adv = item.advisory %}
 {%- include support/advisory_severity.html advisory=adv %}
+{%- assign affected_count = 0 %}{%- for cve in adv.cves %}{%- unless cve.status == "not_affected" %}{%- assign affected_count = affected_count | plus: 1 %}{%- endunless %}{%- endfor %}
 {%- assign fixed = adv.fixed_versions %}
 {%- unless fixed.size > 0 %}{%- assign fixed = "" | split: "" %}{%- for entry in adv.products %}{%- assign fixed = fixed | concat: entry.fixed_versions %}{%- endfor %}{%- endunless %}
 {%- capture link %}[{{ item.title }}]({{ item.url }}){% endcapture %}
   - advisory: {{ link | jsonify }}
-    severity: {{ advisory_severity | capitalize | jsonify }}
+    severity: {% if affected_count == 0 %}"N/A"{% else %}{{ advisory_severity | capitalize | jsonify }}{% endif %}
     published: {{ adv.published | default: "" | jsonify }}
-    fixed: {{ fixed | join: ", " | jsonify }}
+    fixed: {% if affected_count == 0 %}"All"{% else %}{{ fixed | join: ", " | jsonify }}{% endif %}
 {%- endfor %}
 {% endtable %}
 {% else %}
