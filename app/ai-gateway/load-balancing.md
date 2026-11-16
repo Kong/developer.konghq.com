@@ -104,6 +104,7 @@ rows:
       Uses a [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier) service to sort the first prompt of each conversation by task type, such as code generation, debugging, or general chat.
       It then selects a target by weighing published benchmark quality for that task against cost.
       The [`cost_quality_tradeoff`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-cost-quality-tradeoff) setting controls how much weight quality and cost get.
+      Use intelligent load balancing instead of semantic load balancing.
       <br><br>
       For details, see [How intelligent routing works](#how-intelligent-routing-works).
     considerations: |
@@ -117,6 +118,8 @@ rows:
       Routes requests based on semantic similarity between the prompt and model descriptions. Embeddings are generated using a specified model (for example, `text-embedding-3-small`), and similarity is calculated using vector search.
       <br><br>
       Multiple targets can share identical descriptions. When they do, the balancer performs round-robin fallback among them if the primary target fails. Weights affect fallback order.
+      <br>
+      Kong recommends using [intelligent load balancing](#how-intelligent-routing-works) instead of semantic load balancing.
     considerations: |
       * Requires a vector database (for example, Redis) for similarity matching.
       * The `distance_metric` and `threshold` settings control matching sensitivity.
@@ -133,13 +136,45 @@ rows:
 
 For configuration examples, see [Algorithm examples](#algorithm-examples).
 
+## Choose an algorithm
+
+Choosing a load balancing algorithm depends on what you know about your traffic and what you want to optimize.
+The following table maps common goals to algorithms:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: If you want to
+    key: goal
+  - title: Use
+    key: algorithm
+rows:
+  - goal: "Split traffic by fixed percentages"
+    algorithm: "`round-robin`"
+  - goal: "Keep a user or tenant on one target by an identity you choose"
+    algorithm: "`consistent-hashing`"
+  - goal: "Send each request to the least busy or fastest target"
+    algorithm: "`least-connections` or `lowest-latency`"
+  - goal: "Spread traffic by token use or spend"
+    algorithm: "`lowest-usage`"
+  - goal: "Prefer a primary target and use others only as fallback"
+    algorithm: "`priority`"
+  - goal: "Let {{site.ai_gateway}} choose a model by task type, balancing benchmark quality and cost, without writing descriptions or running a vector database"
+    algorithm: "`intelligent`"
+{% endtable %}
+<!--vale on-->
+
 ### How intelligent routing works
 
 Intelligent routing selects a target from the content of each conversation, so you don't maintain a routing rule for every case.
-Static routing rules and the [`semantic`](/ai-gateway/semantic-similarity/) algorithm both require you to describe ahead of time which prompts belong to which target.
-The `intelligent` algorithm instead works out what kind of task the prompt describes, then selects a target using published benchmark results for that task and each model's cost.
-Use it when coding assistants or other agents send all requests to one endpoint, and you want {{site.ai_gateway}} to choose the model for each conversation instead of each client.
+Static routing rules and the [semantic](/ai-gateway/semantic-similarity/) algorithm both require you to describe ahead of time which prompts belong to which target.
+The intelligent algorithm instead determines what kind of task the prompt describes, then selects a target using published benchmark results for that task and each model's cost.
+Use intelligent load balancing when coding assistants or other agents send all requests to one endpoint, and you want {{site.ai_gateway}} to choose the model for each conversation instead of each client.
 It fits a pool of models that differ in capability and price.
+
+We recommend using intelligent load balancing instead of semantic load balancing.
+To move from semantic to intelligent, change the algorithm, remove the vector database and embeddings configuration, and add a classifier.
+The intelligent algorithm ignores the target descriptions you wrote for semantic.
 
 Intelligent routing requires {{site.ai_gateway}} 2.4 or later.
 
@@ -186,79 +221,7 @@ Intelligent routing has the following requirements:
 * The AI Model must configure a [classifier](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-classifier).
   Use `type: model` to call a classifier through a configured provider, or `type: custom` to call your own classifier service by URL.
 
-### Choose an algorithm
 
-Choosing a load balancing algorithm depends on what you know about your traffic and what you want to optimize.
-The following table maps common goals to algorithms:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: If you want to
-    key: goal
-  - title: Use
-    key: algorithm
-rows:
-  - goal: "Split traffic by fixed percentages"
-    algorithm: "`round-robin`"
-  - goal: "Keep a user or tenant on one target by an identity you choose"
-    algorithm: "`consistent-hashing`"
-  - goal: "Send each request to the least busy or fastest target"
-    algorithm: "`least-connections` or `lowest-latency`"
-  - goal: "Spread traffic by token use or spend"
-    algorithm: "`lowest-usage`"
-  - goal: "Prefer a primary target and use others only as fallback"
-    algorithm: "`priority`"
-  - goal: "Route by topic to specialist targets that you describe, and can run a vector database"
-    algorithm: "`semantic`"
-  - goal: "Let {{site.ai_gateway}} choose a model by task type, balancing benchmark quality and cost, without writing descriptions or running a vector database"
-    algorithm: "`intelligent`"
-{% endtable %}
-<!--vale on-->
-
-#### Semantic and intelligent routing
-
-The `semantic` and `intelligent` algorithms both use the content of the prompt to select a target, but they work differently:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: ""
-    key: aspect
-  - title: Semantic
-    key: semantic
-  - title: Intelligent
-    key: intelligent
-rows:
-  - aspect: "What you configure"
-    semantic: "A description for each target, plus an embedding model and a vector database."
-    intelligent: "A classifier and a cost and quality trade-off. {{site.ai_gateway}} ignores target descriptions."
-  - aspect: "How it chooses"
-    semantic: "Compares the embedding of the prompt to the description of each target. The closest match within the threshold is selected."
-    intelligent: "Classifies the task, then scores each target on benchmark quality for that task and on cost."
-  - aspect: "Long prompts that cover several topics"
-    semantic: "The embedding blends all the topics, which weakens the match and often falls back to the catch-all target."
-    intelligent: "The classifier reads the whole request and assigns one task category. No similarity threshold applies."
-  - aspect: "You control"
-    semantic: "Which target handles which topic, through your descriptions. Suits domain-specific targets, such as a fine-tuned legal model."
-    intelligent: "How much you prioritize cost over quality. The selection uses published benchmark results for the task category."
-  - aspect: "Target requirements"
-    semantic: "A semantic description for each target."
-    intelligent: "Models with benchmark and price data that accept image input and have at least 1 million tokens of context."
-  - aspect: "Request content"
-    semantic: "The prompt text goes to your embedding provider. The vector database stores and compares embeddings."
-    intelligent: "Conversation text and tool descriptions go to the classifier service. Images don't."
-  - aspect: "Re-evaluation"
-    semantic: "Every request, unless you enable [session affinity](#session-affinity)."
-    intelligent: "Once per conversation. Follow-up turns stay on the same target."
-{% endtable %}
-<!--vale on-->
-
-Choose `semantic` when you know which topics belong to which target, such as a fine-tuned model for one domain, and you want exact control.
-Choose `intelligent` when your targets are general-purpose models that differ mainly in capability and price, and you want {{site.ai_gateway}} to select a model by task type without a vector database.
-
-To move from `semantic` to `intelligent`, change the algorithm, remove the vector database and embeddings configuration, and add a classifier.
-The `intelligent` algorithm ignores the target descriptions you wrote for `semantic`.
 
 ### Algorithm examples
 
@@ -555,22 +518,22 @@ To select the model with the best benchmark results for each task, set it to `qu
 
 <!-- TODO (AG-2164): gpt-4.1-mini and claude-sonnet-4-6 are in the kong-ee benchmark catalog (benchmarks.lua) with image input and at least 1M context. Confirm with engineering that the catalog and the per-category scores ship in 2.4 as written. Add priority and semantic tabs. Priority: the repo's AI Model spec has no field on targets for priority groups. Semantic: needs embeddings and vectordb examples. The intelligent tab follows the platform-api spec (kong-ee#24442 uses a numeric cost_quality_tradeoff and a different classifier auth shape), so recheck it when the spec merges. -->
 
-### Session affinity
+## Session affinity
 
-Session affinity keeps a multi-turn conversation on the target that served its earlier turns.
-The configured algorithm places the first turn of a conversation, and session affinity sends later turns to that same target as long as it can take them.
+Session affinity ensures a multi-turn conversation stays on the target that served its earlier turns.
+The configured algorithm determines the first turn of a conversation, and session affinity sends later turns to that same target as long as it can accept them.
 Session affinity requires {{site.ai_gateway}} 2.4 or later.
 
 Configure session affinity in [`config.balancer.session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) on the AI Model.
-It works with every algorithm except `consistent-hashing`.
+It works with every algorithm except consistent-hashing.
 
-#### Why use session affinity
+### Why use session affinity
 
 LLM providers cache the prompt prefix on the target that served it.
 In a long conversation, such as one with a coding agent, each turn includes the full history again.
 When a turn goes to a different target than the earlier turns, the provider reprocesses the whole history at full cost and latency instead of reusing its cached prefix.
 
-Before session affinity, the only way to keep a conversation on one target was `consistent-hashing`.
+Before session affinity, the only way to keep a conversation on one target was consistent hashing.
 That forced a choice between prompt-cache savings and your preferred strategy (round-robin, latency, cost, or priority).
 It also depended on clients sending a stable header on every request, which most clients don't do.
 
@@ -785,7 +748,7 @@ rows:
     action: "Use [`hash_on_header`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-hash-on-header)"
     description: |
       Ensure that the same user consistently routes to the same target model, enabling sticky sessions and reliable fallback behavior.
-  - scenario: "Keep a conversation on one target without giving up your balancing algorithm"
+  - scenario: "Keep a conversation on one target while using another load balancing algorithm"
     action: "Enable [`session_affinity`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity)"
     description: |
       Route follow-up turns to the target that served earlier turns to benefit from provider prompt caching, regardless of the algorithm that places new conversations. See [Session affinity](#session-affinity).
