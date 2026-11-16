@@ -9,7 +9,7 @@ works_on:
   - konnect
 advisory:
   id: KONGSA-00000000            # optional
-  published: "2026-01-01"        # optional, only a full date with a year
+  published: "2026-01-01"        # required, YYYY-MM-DD
   updated: "2026-01-01"          # optional
   cves:
     - id: CVE-0000-00000
@@ -24,6 +24,7 @@ advisory:
     - "3.y.y.z"
   products:                      # optional, instead of the flat lists for multi-product advisories
     - product: mesh              # gateway | ai-gateway | mesh | kic | operator
+      status: affected           # optional: affected | not_affected
       affected_versions:
         - "2.x.x to 2.y.y"
       fixed_versions:

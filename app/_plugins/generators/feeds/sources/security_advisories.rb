@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'date'
+require_relative '../../../lib/security_advisory_summary'
 
 module Jekyll
   module Feeds
@@ -36,7 +37,8 @@ module Jekyll
           {
             'title' => doc.data['title'],
             'url' => doc.url,
-            'date' => parse_date(doc.data.dig('advisory', 'published'))
+            'date' => parse_date(doc.data.dig('advisory', 'published')),
+            'description' => Jekyll::SecurityAdvisorySummary.new(doc.data, @site.config).description
           }
         end
 

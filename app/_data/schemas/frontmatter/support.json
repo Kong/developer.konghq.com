@@ -131,6 +131,13 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "affected",
+                  "not_affected"
+                ]
               }
             },
             "required": [

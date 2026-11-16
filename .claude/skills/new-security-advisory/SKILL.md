@@ -20,7 +20,7 @@ Read these at run time. Don't copy them into your head from memory:
 
 - **Never fabricate.** Versions, dates, CVSS values, mitigations, and impact statements come from the draft or the author. If the draft doesn't say, ask or leave it out.
 - **Never infer severity.** Use a severity only when the draft states it for that CVE (for example "7.7 / High" or "Kong severity: Low"), verbatim. Never derive it from a CVSS score. Interactive run: ask the author for missing severities. Batch run (the user said not to ask): omit `severity` and log it.
-- **Skip, don't invent.** If a field isn't in the draft, leave it out and log it (field, CVE or section, reason). Only `advisory.cves[].id` is required by the schema; `published`, `severity`, `summary`, versions, and `products` are optional. A page with missing fields is correct; a page with a guessed field isn't.
+- **Skip, don't invent.** If a field isn't in the draft, leave it out and log it (field, CVE or section, reason). The schema requires `advisory.published` and `advisory.cves[].id`; `severity`, `summary`, versions, and `products` are optional. Never guess a `published` date: ask for it. A page with missing fields is correct; a page with a guessed field isn't.
 - **Never read or publish customer data.** Spreadsheets of impacted accounts or customer lists in a Drive folder stay untouched. Don't open them.
 - **Never stage or commit.** Leave the new file untracked. No `Co-Authored-By` or "Generated with Claude Code" lines anywhere.
 - **No TL;DR.** Advisories have no `tldr`. Don't add one.
@@ -51,7 +51,7 @@ From the draft only, pull out:
 - Affected versions and fixed versions (overall, and per CVE if they differ).
 - Per CVE: description, exploit conditions, recommendation, impacted and unaffected products (for example Konnect, or a version series).
 - The patch table (impacted range to patched version).
-- Publish date, but only a full date with a year ("July 29, 2026"). "Monday August 10th" has no year: omit `published` and flag it. Don't take the year from the advisory ID or the file's Drive date.
+- Publish date, but only a full date with a year ("July 29, 2026"). "Monday August 10th" has no year: ask for the full date, because `published` is required. Don't take the year from the advisory ID or the file's Drive date.
 - References and any acknowledgements.
 - Which products the advisory covers, for `products` and `works_on`.
 
@@ -84,7 +84,7 @@ works_on:
   - konnect
 advisory:
   id: KONGSA-YYYYMMDD       # only when the draft has one
-  published: "YYYY-MM-DD"   # only a full date with a year
+  published: "YYYY-MM-DD"   # required, a full date with a year
   updated: "YYYY-MM-DD"     # only for revisions
   cves:
     - id: CVE-YYYY-NNNN
@@ -99,6 +99,7 @@ advisory:
     - "3.10.0.9"
   products:                 # instead of the flat lists when versions span products
     - product: mesh         # gateway | ai-gateway | mesh | kic | operator
+      status: affected      # affected | not_affected, only when this product is not affected
       affected_versions:
         - "2.13.0 to 2.13.7"
       fixed_versions:
@@ -106,7 +107,14 @@ advisory:
 ---
 ```
 
-Use the flat `affected_versions`/`fixed_versions` for a single product group and `products` when the advisory spans products with their own versions (for example Gateway and Mesh, or KIC and Operator). Don't use both for the same versions. The layout hides any block whose data is missing, and ignores `not_affected` CVEs when it computes the advisory severity.
+Use the flat `affected_versions`/`fixed_versions` for a single product group and `products` when the advisory spans products with their own versions (for example Gateway and Mesh, or KIC and Operator). Don't use both for the same versions.
+
+The index at `/support/security/` and the RSS feed read the same frontmatter through `app/_plugins/lib/security_advisory_summary.rb`, so what you write here is what they show:
+
+- **Product** column: the products in `advisory.products`, or the page `products` when that list is absent. Every `advisory.products[].product` must also be in the page `products`.
+- **Fixed versions** column: one list for a flat advisory. When more than one product lists fixed versions, they are grouped by product (for example `Kong Gateway: 3.4.1.2; Kong Mesh: 2.13.8`).
+- **Not affected:** when every CVE is `not_affected`, severity shows `N/A` and fixed versions show `All`. A product with `status: not_affected` is left out of the Product and Fixed versions columns.
+- **Feed:** each item's description repeats the severity, products and fixed versions. The layout hides any block whose data is missing, and ignores `not_affected` CVEs when it computes the advisory severity.
 
 - Dates are quoted strings.
 - `title` is `Security Advisory: ` plus the IDs, joined with commas and a final "and".
@@ -180,7 +188,7 @@ Print a short summary:
 - The file path.
 - What came from the draft versus what the author supplied.
 - Judgment calls and flags from Step 6, and any link flagged in Step 5.
-- Skipped fields: a table of field, CVE or section, and reason (for example `published`, "draft says 'Monday August 10th' with no year").
+- Skipped fields: a table of field, CVE or section, and reason (for example `severity`, "draft gives no severity").
 - Drive items that weren't converted (FAQs, notices, spreadsheets) with their links.
 - Open questions for the author.
 - Validator and Vale results.
@@ -211,7 +219,7 @@ Advisories sometimes live as articles in the Salesforce knowledge base (`https:/
 
   Save each article's text to the scratchpad so you can re-read and diff it. If the `ANSWER` section comes back empty, retry with a longer wait. If it's still empty, the article has no content; report it and don't invent any.
 - **Strip the wrapper.** Remove the `QUESTION` and `ANSWER` labels, "Was this article helpful?", the "see our installation guide" and "upgrade guide" sentences, and the "(Available)" suffixes in patch tables.
-- **Published date.** The header line (for example `Jun 5, 26 • Knowledge • Article Number: 000002925`) gives the KB date. Use it as `advisory.published` (`"2026-06-05"`), except when the article is an obvious republish of an older advisory (for example a 2023 CVE with a 2025 KB date). In that case omit `published` and log it.
+- **Published date.** The header line (for example `Jun 5, 26 • Knowledge • Article Number: 000002925`) gives the KB date. Use it as `advisory.published` (`"2026-06-05"`), except when the article is an obvious republish of an older advisory (for example a 2023 CVE with a 2025 KB date). In that case ask for the date, because `published` is required, and log it.
 - **Check for an existing page.** Before creating a page, grep `app/_support/security/` for the CVE ID. Many CVEs are already covered by a per-CVE section in a cumulative advisory page. Don't create a duplicate.
 - **Skip OSS and Kuma content.** The docs don't support Kong Gateway OSS/Community or Kuma. Drop those sections and tables, and log what you dropped.
 - **Severity and status.** Set `severity`, `cvss_score`, and `cvss_version` only when the article states them. Set `status: not_affected` only when the article explicitly says Kong isn't impacted. "Not in the default configuration" with a warning about custom templates isn't `not_affected`.

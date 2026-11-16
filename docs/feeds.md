@@ -5,7 +5,7 @@ The site publishes RSS feeds at `/feeds/<name>.xml`. The first feed is `/feeds/s
 ## How it works
 
 - `app/_data/feeds.yml` lists the feeds. Each entry has a `title`, `description`, `link` (the HTML page the feed belongs to), and `source`.
-- Each `source` is a Ruby class in `app/_plugins/generators/feeds/sources/`. It returns a list of items, each with a `title`, `url`, and a `date`.
+- Each `source` is a Ruby class in `app/_plugins/generators/feeds/sources/`. It returns a list of items, each with a `title`, `url`, `date`, and an optional `description`.
 - `app/_plugins/generators/feeds/generator.rb` builds one page per entry and renders it with `app/_includes/feeds/rss.xml`.
 
 Titles go through `liquify`, so `{{site.*}}` variables in a title work.
@@ -25,3 +25,7 @@ curl -s http://localhost:8888/feeds/<name>.xml | xmllint --noout -
 ## Next sources
 
 The Gateway versions (`SupportedVersionAPI` in `app/_plugins/hooks/site_post_write.rb`) and the changelog JSON files (`app/_changelogs/*.json`, read in `app/_plugins/drops/gateway_changelog.rb`) are the likely next sources.
+
+## Security advisory rows
+
+The security index (`app/support/security/index.html`) and the feed read each advisory through `Jekyll::SecurityAdvisorySummary` (`app/_plugins/lib/security_advisory_summary.rb`). Change what an advisory shows there, not in the index or the feed.
