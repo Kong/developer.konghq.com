@@ -111,10 +111,12 @@ Use the flat `affected_versions`/`fixed_versions` for a single product group and
 
 The index at `/support/security/` and the RSS feed read the same frontmatter through `app/_plugins/lib/security_advisory_summary.rb`, so what you write here is what they show:
 
-- **Product** column: the products in `advisory.products`, or the page `products` when that list is absent. Every `advisory.products[].product` must also be in the page `products`.
-- **Fixed versions** column: one list for a flat advisory. When more than one product lists fixed versions, they are grouped by product (for example `Kong Gateway: 3.4.1.2; Kong Mesh: 2.13.8`).
+- **Product** column: the products in `advisory.products`, or the page `products` when that list is absent, as a bulleted list when there is more than one. Every `advisory.products[].product` must also be in the page `products`.
+- **Fixed versions** column: a bulleted list of the flat `fixed_versions`. When more than one product lists fixed versions, there is one bullet per product with its versions nested under it. The feed shows the same data on one line (for example `Kong Gateway: 3.4.1.2; Kong Mesh: 2.13.8`).
 - **Not affected:** when every CVE is `not_affected`, severity shows `N/A` and fixed versions show `All`. A product with `status: not_affected` is left out of the Product and Fixed versions columns.
-- **Feed:** each item's description repeats the severity, products and fixed versions. The layout hides any block whose data is missing, and ignores `not_affected` CVEs when it computes the advisory severity.
+- **Feed:** each item's description repeats the severity, products and fixed versions.
+
+The layout hides any block whose data is missing, and ignores `not_affected` CVEs when it computes the advisory severity.
 
 - Dates are quoted strings.
 - `title` is `Security Advisory: ` plus the IDs, joined with commas and a final "and".
@@ -162,10 +164,15 @@ Apply to the whole file:
 
 ## Step 7: Validate
 
+Run every command from the repo root. This repo needs the Ruby version in `mise`, so prefix Ruby commands with `mise x --` (without it, Bundler reports missing gems).
+
 ```bash
 npm --prefix tools/frontmatter-validator run validate
 vale app/_support/security/<file>.md
+mise x -- bundle exec rspec spec/app/_plugins/lib
 ```
+
+The spec checks every advisory page, not only the new one. It fails when a page has no product, no fixed versions (unless the severity is empty), or an `advisory.products[].product` that isn't in the page `products`. Fix the page, not the spec.
 
 Run `vale` on the file directly. `make vale` only checks files committed since `origin/main`, so it skips new uncommitted files.
 
@@ -179,7 +186,7 @@ awk 'BEGIN{c=0}/^---$/{c++;next}c==1{print}c>=2{exit}' "$F" \
 vale --config=./.vale.ini "$D/$(basename $F)"
 ```
 
-After the last page of a batch, run a production build once (`JEKYLL_ENV=production bundle exec jekyll build --config jekyll.yml,<cache config> --destination <scratch dir>`) and confirm exit 0 and no "Liquid Exception". The dev server skips generators, so some failures only show there. Fix mechanical issues (term substitutions, dashes, quoting) and re-run until clean. Report anything you couldn't fix.
+After the last page of a batch, run a production build once with `mise x -- make build` (it writes to `dist/` and takes several minutes) and confirm exit 0 and no "Liquid Exception". The dev server skips generators, so some failures only show there. Fix mechanical issues (term substitutions, dashes, quoting) and re-run until clean. Report anything you couldn't fix.
 
 ## Step 8: Report
 
@@ -192,10 +199,11 @@ Print a short summary:
 - Drive items that weren't converted (FAQs, notices, spreadsheets) with their links.
 - Open questions for the author.
 - Validator and Vale results.
-- How to preview: run `make run` and open `/support/security/<slug>/`.
+- How to preview: run `PAGE_PATHS=/support/security/,/feeds/ mise x -- make run`, then open `/support/security/<slug>/`, the index at `/support/security/`, and the feed at `/feeds/security-advisories.xml`. Don't use `KONG_PRODUCTS`: it drops the security pages because they have no product. The first build takes a few minutes, and a plugin change needs a restart.
+- What the index row and the feed item show for the new page (product, severity, fixed versions), so the author can check them against the draft.
 - "Nothing was staged or committed."
 
-Don't start the dev server yourself unless the user asks.
+Don't start the dev server yourself unless the user asks. If the preview shows empty cells after you change a plugin or an include, restart the server and `touch` the page.
 
 ## Drafts without a CVE, old drafts, and multi-notice docs
 
