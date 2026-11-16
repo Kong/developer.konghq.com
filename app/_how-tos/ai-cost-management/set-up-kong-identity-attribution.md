@@ -1,8 +1,8 @@
 ---
-title: Set up Kong Identity attribution for {{site.ai_cost_management}}
+title: Set up {{site.kong_identity}} attribution for {{site.ai_cost_management}}
 permalink: /ai-cost-management/kong-identity-attribution/
 content_type: how_to
-description: "Attribute AI usage events to Kong Identity principals that are created automatically on first login, so each caller appears by name in cost reports and budgets."
+description: "Attribute AI usage events to {{site.kong_identity}} principals that are created automatically on first login, so each caller appears by name in cost reports and budgets."
 
 products:
   - ai-cost-management
@@ -33,7 +33,7 @@ breadcrumbs:
   - /ai-cost-management/
 
 tldr:
-  q: How do I attribute AI usage to a Kong Identity principal?
+  q: How do I attribute AI usage to a {{site.kong_identity}} principal?
   a: Upload your organization's structure, then create an openid-connect AI Auth Strategy with principals.enabled set to true and attach it to the model. The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as principal/{uuid}.
 
 prereqs:
@@ -41,10 +41,10 @@ prereqs:
     - title: OpenAI
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
       icon_url: /assets/icons/openai.svg
-    - title: Kong Identity directory
+    - title: "{{site.kong_identity}} directory"
       include_content: prereqs/kong-identity-directory
       icon_url: /assets/icons/identity.svg
-    - title: Kong Identity auth server and client
+    - title: "{{site.kong_identity}} auth server and client"
       include_content: prereqs/kong-identity-auth-server-client
       icon_url: /assets/icons/identity.svg
   konnect:
@@ -63,8 +63,8 @@ related_resources:
     url: /ai-cost-management/getting-started/
   - text: Set up OIDC attribution with automatic user provisioning
     url: /ai-cost-management/oidc-attribution/
-  - text: Set up OIDC sub claim attribution
-    url: /ai-cost-management/oidc-sub-claim-attribution/
+  # - text: Set up OIDC sub claim attribution
+  #   url: /ai-cost-management/oidc-sub-claim-attribution/
   - text: Attribution in {{site.ai_cost_management}}
     url: /ai-cost-management/attribution/
   - text: Attribution integrations
@@ -87,7 +87,7 @@ cleanup:
       icon_url: /assets/icons/money.svg
 ---
 
-Kong Identity attribution links each AI request to a {{site.identity}} principal, the strongest form of attribution {{site.ai_cost_management}} supports.
+{{site.kong_identity}} attribution links each AI request to a {{site.identity}} principal, the strongest form of attribution {{site.ai_cost_management}} supports.
 Every usage event's `subject` resolves to `principal/{uuid}`, which the Dashboard and Explorer show by the principal's display name.
 
 {{site.ai_cost_management}} attributes usage in two independent tracks: the subject and tags, which record context like project or team through a separate mechanism.
@@ -96,52 +96,8 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 {:.info}
 > This guide attributes usage to a principal built from {{site.identity}}'s own auth server.
 > * For a principal built from your own OIDC provider instead, see [Set up OIDC attribution](/ai-cost-management/oidc-attribution/).
-> * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/).
+<!-- > * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/). -->
 > * For a full walkthrough that also covers budgets, pricing, and tag attribution, see [Get started with {{site.ai_cost_management}}](/ai-cost-management/getting-started/).
-
-## Upload an org structure (Optional)
-
-{{site.ai_cost_management}} matches each automatically provisioned principal against your organization's reporting structure. Upload an org chart before you send a request.
-
-In production, you'll export an org chart file from your HR system, such as Workday.
-The file must be in CSV format and a maximum of 10 MB.
-
-For this example, we'll create a small CSV file directly.
-Create a file named `org-structure.csv`:
-
-<!--vale off-->
-{% validation custom-command %}
-command: |
-  cat <<EOF > org-structure.csv
-  external_id,email,given_name,family_name,manager_external_id,cost_center
-  EMP1001,jordan.lee@example.com,Jordan,Lee,,ENG-100
-  EMP1002,alex.morgan@example.com,Alex,Morgan,EMP1001,ENG-100
-  EMP1003,sam.rivera@example.com,Sam,Rivera,EMP1001,ENG-100
-  EMP1004,taylor.kim@example.com,Taylor,Kim,EMP1001,ENG-100
-  EMP1005,casey.nguyen@example.com,Casey,Nguyen,EMP1001,ENG-100
-  EOF
-expected:
-  return_code: 0
-render_output: false
-{% endvalidation %}
-<!--vale on-->
-
-Apply the CSV to the default {{site.identity}} directory:
-
-<!--vale off-->
-{% validation custom-command %}
-command: |
-  kongctl import identity org-chart \
-    --pat "$KONNECT_TOKEN" \
-    --file org-structure.csv \
-    --execute \
-    --report-output-dir ./import-reports
-expected:
-  return_code: 0
-{% endvalidation %}
-<!--vale on-->
-
-See [Org chart in {{site.ai_cost_management}}](/ai-cost-management/org-chart/) for the full column reference and import behavior.
 
 ## Add a trusted IdP
 
@@ -150,8 +106,8 @@ A trusted IdP is the OIDC issuer {{site.konnect_short_name}} verifies tokens aga
 
 1. In the {{site.konnect_short_name}} sidebar, click **Access Management**.
 1. Click **Identity Providers**.
-1. Click **Add trusted IdP**.
-1. In the **Name** field, enter a label for this IdP, for example `Kong Identity`.
+1. Click **New identity provider** if this is your first IdP, or **Add trusted IdP** if you already have one.
+1. In the **Name** field, enter a label for this IdP, for example `{{site.kong_identity}}`.
 1. In the **Issuer URL** field, enter your issuer URL (run `echo $ISSUER_URL` to print the value you exported earlier).
 1. Enable **Automatic user provisioning**.
 1. Click **Add IdP**.
@@ -161,6 +117,14 @@ A trusted IdP is the OIDC issuer {{site.konnect_short_name}} verifies tokens aga
 > For an interactive sign-in flow, your provider's token can include richer claims: under **User provisioning claim mapping**, enable **Set display name**, **Set email**, **Map groups**, or **Set metadata** and map each to its claim.
 > **Trusted by Token Vault** is a separate toggle for [Token Vault](/identity/token-vault/)'s own credential brokering.
 > <!-- TODO: confirm whether this toggle needs to be enabled for AI Cost Management attribution, or is independent of it. -->
+
+## Upload an org structure (Optional)
+
+{% include /ai-cost-management/upload-org-structure.md %}
+
+## Set a budget
+
+{% include /ai-cost-management/set-a-budget.md %}
 
 ## Create an AI Model Provider, AI Auth Strategy, and AI Model
 
@@ -229,40 +193,6 @@ ai_gateway_models:
 
 The target has no `input_cost` or `output_cost` set, so {{site.ai_cost_management}} falls back to the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
 
-## Set a budget
-
-A [budget](/ai-cost-management/budgets/) in {{site.ai_cost_management}} tracks spend against a limit and alerts you as spend grows.
-
-Create a monthly budget with a $100 limit:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/ai-cost-management/budgets
-method: POST
-status_code: 201
-body:
-  name: monthly-org-budget
-  effect: limit
-  scope:
-    filters: []
-  limit:
-    value: "100"
-    currency: USD
-  window:
-    type: fixed
-    interval: P1M
-    anchored_at: "2026-01-01T00:00:00+00:00[UTC]"
-extract_body:
-  - name: id
-    variable: BUDGET_ID
-capture:
-  - variable: BUDGET_ID
-    jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-The `scope.filters` empty array means this budget covers all organization-wide usage.
-
 ## Send a request
 
 Get an access token from your {{site.identity}} issuer, then send a chat completion to generate a usage event.
@@ -313,7 +243,7 @@ status_code: 200
 ## Validate
 
 The events API returns the usage events for your organization, sorted by newest first.
-Find the event your request generated:
+Find the event your request generated. If your org has other traffic, check that `time` matches when you sent the request:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -334,12 +264,12 @@ The event should look like this:
   "subject": "principal/01a1c15c-310d-79a6-acde-85f746946396",
   "context": {
     "provider": "openai",
-    "model": "gpt-5.4-nano",
+    "model": "gpt-5.4-nano-2026-03-17",
     "model_id": "5382d282-c9d3-4c96-910e-76af70e3c883",
     "request_mode": "oneshot"
   },
   "cost": {
-    "value": "0.00024915",
+    "value": "0.000016",
     "currency": "USD"
   }
 }
