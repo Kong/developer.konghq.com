@@ -33,8 +33,6 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
 
 icon: ai-nvidia-nemo-guardrail.png
 ---
@@ -109,10 +107,6 @@ rows:
   - value: "`BOTH`"
     description: "Checks both requests and responses."
 {% endtable %}
-
-To control which parts of the conversation the Policy sends for evaluation, use [`config.message_selection`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-message-selection). It can select user, system, and assistant messages, tool calls, tool results, and reasoning, each with its own window. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
-
-The [`config.text_source`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-text-source) field is deprecated and still works. To move a Policy off it, see [Migrate from legacy fields](/ai-gateway/guardrail-message-selection/#migrate-from-legacy-fields).
 
 {:.info}
 > Match the rails defined in your NeMo guardrail configuration to the phases named in `config.guarding_mode`. A configuration used with `guarding_mode: INPUT` should define only an input rail; a configuration used with `guarding_mode: OUTPUT` should define only an output rail. NeMo evaluates whichever rails a configuration defines every time it's called, regardless of `guarding_mode`, so an output rail included in an input-only check runs against an empty response.
@@ -208,6 +202,12 @@ For the full set of supported keys, see the [NeMo Guardrails configuration refer
 
 When you use an inline configuration, make sure the model you name in `guardrails.config.models` is available to the NeMo microservice. Depending on how you deploy NeMo, you might need to register it first with the `POST /v1/guardrail/models` endpoint. For more information, see [Manage models](https://docs.nvidia.com/nemo/microservices/latest/guardrails/manage-models.html) in the NVIDIA documentation.
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-nvidia-nemo-guardrail" %}
+
+This Policy sends NeMo a `messages` array with roles instead of one block of text, and the selection works the same way. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
+
 ## Authentication
 
 The NeMo Guardrails microservice needs credentials for the LLM that evaluates your rails. Set the key in [`config.auth.api_key`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-auth-api-key), and {{site.ai_gateway}} forwards it to NeMo on every check.
@@ -222,7 +222,6 @@ Two fields control how {{site.ai_gateway}} builds the header:
 {:.warning}
 > * **Do not** change `config.auth.header` unless your NeMo deployment expects a different header. The NeMo microservice reads `X-Model-Authorization` to resolve which LLM provider to use for the guardrail check. If the header is missing, NeMo falls back to its configured default provider, and your rails may run against a model you did not intend.
 > * For a NeMo model configured with `engine: openai`, set `config.auth.prefix` to an empty string (`""`). NeMo passes the `X-Model-Authorization` header value straight to its OpenAI client as the API key, without stripping a `Bearer ` scheme from it first, so the default prefix becomes part of the credential and the check fails to authenticate.
-
 
 ## Blocking behavior
 

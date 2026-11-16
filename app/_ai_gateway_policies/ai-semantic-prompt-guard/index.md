@@ -25,8 +25,6 @@ related_resources:
     url: /ai-gateway/policies/ai-semantic-cache/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies
     url: /ai-gateway/semantic-similarity/
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard Policy support multilingual input?
@@ -52,13 +50,17 @@ You can use a combination of `allow` and `deny` rules to maintain integrity and 
 
 By default, the Policy only evaluates the latest message from the `user` role. To also match earlier turns in a multi-turn conversation, set [`config.rules.match_all_conversation_history`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-conversation-history) to `true`. To also match messages from roles other than `user`, set [`config.rules.match_all_roles`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-roles) to `true`.
 
-These two fields are deprecated. To choose precisely which messages the Policy evaluates, including tool calls and tool results, use [`config.message_selection`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-message-selection). See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+These two fields are deprecated. To choose precisely which messages the Policy evaluates, including tool calls and tool results, see [Message selection](#message-selection).
 
 The matching behavior is as follows:
 * If any `deny` prompts are set and the request matches a prompt in the `deny` list, the request is blocked.
 * If any `allow` prompts are set, but the request matches none of the allowed prompts, the request is also blocked.
 * If any `allow` prompts are set and the request matches one of the `allow` prompts, the request passes through to the LLM.
 * If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list is blocked, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
+
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-semantic-prompt-guard" action="evaluates" %}
 
 ## Rejection modes
 

@@ -30,8 +30,6 @@ related_resources:
     url: /ai-gateway/policies/ai-semantic-cache/
   - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies
     url: /ai-gateway/semantic-similarity/
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
 
 icon: ai-semantic-response-guard.png
 
@@ -65,7 +63,24 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 1. Searches the vector database (Redis or pgvector) against configured `allow_responses` or `deny_responses`.
 1. Applies the decision rules described in [How it works](#how-it-works).
 
+## Response selection
+
 {% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" %}
+
+For responses, the Policy accepts a narrower set of keys, because a response holds one turn from the model:
+
+* It accepts `assistant`, `tool_call`, `tool_result`, and `reasoning`, and rejects `user` and `system`.
+* It accepts only `scope: history`, because a response doesn't have a round.
+* `tool_result` selects the output of tools that the provider runs on its own side. Tools that you run yourself answer in the next request, so they never appear in a response.
+* It doesn't support masking, so you can't combine `allow_masking` with a selection.
+* It doesn't support `message_selection` on routes that use passthrough mode.
+
+### Streamed responses
+
+A selection that names only `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
+A selection that names `tool_call`, `reasoning`, or `tool_result` turns buffering on, because that content isn't available in the stream.
+The Policy then guards the whole response once it is complete, so clients receive it only after it is complete.
+Choose `assistant` alone if you need the response to keep streaming.
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.

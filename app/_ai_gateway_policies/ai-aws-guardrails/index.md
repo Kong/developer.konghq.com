@@ -16,10 +16,7 @@ tags:
 related_resources:
   - text: Use the AI AWS Guardrails Policy
     url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
 ---
-
 
 The AI AWS Guardrails Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the {{site.ai_gateway}} level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
@@ -37,11 +34,31 @@ The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/a
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
 
-For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use [`message_selection`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-message-selection). It can select user, system, and assistant messages, tool calls, tool results, and reasoning, each with its own window. See [AI guardrail message selection](/ai-gateway/guardrail-message-selection/).
+For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`.
 
-When you set `allow_masking`, `message_selection` must select exactly one message, such as `user` with `message_countback: 1`. See [Masking](/ai-gateway/guardrail-message-selection/#masking).
+## Message selection
 
-The [`text_source`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-text-source) field is deprecated and still works. To move a Policy off it, see [Migrate from legacy fields](/ai-gateway/guardrail-message-selection/#migrate-from-legacy-fields).
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-aws-guardrails" %}
+
+### Masking
+
+When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
+Select one of `user`, `system`, or `tool_result`, each with `message_countback: 1`:
+
+```yaml
+config:
+  allow_masking: true
+  message_selection:
+    user:
+      message_countback: 1
+```
+
+`assistant`, `tool_call`, and `reasoning` can't be masked, because they don't have a single text field to write into.
+{{site.ai_gateway}} rejects a configuration that selects more than one key or more than one message when you save it.
+To mask across several messages, keep using the legacy fields.
+
+{:.info}
+> On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
 
 ## Rejection modes
 

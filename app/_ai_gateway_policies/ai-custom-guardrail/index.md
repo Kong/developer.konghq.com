@@ -13,9 +13,6 @@ categories:
 tags:
   - ai
   - safety
-related_resources:
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
 ---
 
 The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)). It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
@@ -38,7 +35,29 @@ Here's how it works if you apply it to both requests and responses:
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Guardrail service" masking=true %}
 
-{% include_cached md/ai-gateway/v2/guardrail-message-selection.md %}
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-custom-guardrail" %}
+
+### Masking
+
+When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
+Select one of `user`, `system`, or `tool_result`, each with `message_countback: 1`:
+
+```yaml
+config:
+  allow_masking: true
+  message_selection:
+    user:
+      message_countback: 1
+```
+
+`assistant`, `tool_call`, and `reasoning` can't be masked, because they don't have a single text field to write into.
+{{site.ai_gateway}} rejects a configuration that selects more than one key or more than one message when you save it.
+To mask across several messages, keep using the legacy fields.
+
+{:.info}
+> On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
 
 ## Configuration
 

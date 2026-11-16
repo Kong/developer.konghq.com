@@ -14,8 +14,6 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: AI Custom Guardrail Policy
     url: /ai-gateway/policies/ai-custom-guardrail/
-  - text: AI guardrail message selection
-    url: /ai-gateway/guardrail-message-selection/
     
 faqs:
   - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
@@ -92,6 +90,10 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 > When configuring `template_id` in the AI GCP Model Armor Policy, ensure that it aligns with the content safety policies and categories defined in your GCP Model Armor service.
 >
 > Review whether your organization requires custom categories or additional policy definitions, and integrate them into the selected template to match compliance and safety requirements.
+
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-gcp-model-armor" %}
 
 ## Rejection modes
 
@@ -187,7 +189,7 @@ rows:
       `response_buffer_size`
     description: Tune how much of the upstream response is buffered before inspection; smaller values reduce latency.
   - field: Default last message inspection
-    description: Keep the default behavior of checking only the last user prompt message for highest accuracy. To inspect other content, such as tool results, use [`message_selection`](/ai-gateway/guardrail-message-selection/). The `text_source` field is deprecated.
+    description: Keep the default behavior of checking only the last user prompt message for highest accuracy. To inspect other content, such as tool results, see [Message selection](#message-selection). The `text_source` field is deprecated.
 {% endtable %}
 
 {:.warning}
