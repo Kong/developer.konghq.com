@@ -36,7 +36,7 @@ related_resources:
 
 In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `targets`.
 
-### Load balancing algorithms
+## Load balancing algorithms
 
 {{site.ai_gateway}} supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
 
