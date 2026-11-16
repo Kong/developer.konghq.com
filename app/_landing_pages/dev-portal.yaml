@@ -90,18 +90,6 @@ rows:
 
   - header:
       type: h2
-      text: "Enterprise Portal and Vitals"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {% include_cached gateway/enterprise-portal-vitals-removed.md %}
-
-  - header:
-      type: h2
       text: "Get started"
     columns:
       - blocks:
@@ -301,6 +289,18 @@ rows:
                 Review breaking changes from {{site.dev_portal}} v3 beta to general release.
               cta:
                 url: "/dev-portal/breaking-changes/"
+
+  - header:
+      type: h2
+      text: "Enterprise Portal and Vitals"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {% include_cached gateway/enterprise-portal-vitals-removed.md %}
 
   - header:
       text: "Frequently asked questions"
