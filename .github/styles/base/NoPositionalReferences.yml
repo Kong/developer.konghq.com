@@ -13,3 +13,5 @@ tokens:
   - '\bthe\s+(?:above|below)(?:-|\s+)(?:mentioned|listed|described|noted|shown|example|examples|table|list|steps?|section|code|command|config\w*|output|diagram|snippet|yaml|json)\b'
   # "in the next section", "in the previous section"
   - '\b(?:next|previous|preceding|prior)\s+sections?\b'
+  # "as above", "as below"
+  - '\bas\s+(?:above|below)\b'
