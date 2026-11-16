@@ -15,6 +15,7 @@ works_on:
 
 tools:
   - kongctl
+  - konnect-api
 
 breadcrumbs:
   - /ai-management/
@@ -130,7 +131,7 @@ columns:
 rows:
   - column: "`external_id`"
     problem: is required
-    fix: "The person has no ID in the export. Filter to rows that have one, or add it in your HR system."
+    fix: "The person doesn't have an ID in the export. Filter to rows that have one, or add it in your HR system."
   - column: "`external_id`"
     problem: is duplicated within the file
     fix: "The export has more than one row for this person, for example one per job, position, or employment. Filter to the primary one."
@@ -166,7 +167,7 @@ rows:
     fix: "The cell has several IDs separated by a comma or semicolon. Pick one manager in the export."
   - column: "`manager_external_id`"
     problem: only one person may have no manager
-    fix: "People under a vacant manager position have no manager. Assign them an interim manager."
+    fix: "People under a vacant manager position don't have a manager. Assign them an interim manager."
   - column: "`manager_external_id`"
     problem: never reaches a person with no manager
     fix: "The reporting chain is a loop, such as two people who are each other's manager, or it's more than 200 levels deep."
@@ -193,7 +194,7 @@ To automate imports instead of using the dialog each time, use `kongctl` or the 
 1. Review the summary and fix any errors or warnings:
    * The number of users and teams to create, update, deactivate, or delete.
      Everyone with at least one direct report gets a team named after them and their ID.
-     For example, the manager `Marcus Lee` with the team code `E003` will have a team named `MarcusLee-E003`.
+     For example, the manager `Marcus Lee` with the `external_id` `E003` will have a team named `MarcusLee-E003`.
    * Any errors, listed by row and column.
      See [Import errors](#import-errors) for the most common ones.
    * Any warnings.
@@ -232,6 +233,9 @@ Each run writes a JSON report to `--report-output-dir`, listing the users and te
 {% navtab "API" %}
 
 Send the file to the import endpoint with `dry_run` set to `true` first.
+The import targets the default {{site.identity}} directory.
+To find the directory ID, see [Directories](/identity/directories/).
+
 A dry run returns the counts, errors, and warnings without changing anything:
 
 ```bash
