@@ -90,8 +90,8 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 
 {:.info}
 > This guide attributes usage to a principal built from your own OIDC provider.
-> * For a principal built from Kong Identity's own auth server instead, see [Set up Kong Identity attribution](/ai-cost-management/kong-identity-attribution/).
-> * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/).
+<!-- > * For a principal built from Kong Identity's own auth server instead, see [Set up Kong Identity attribution](/ai-cost-management/kong-identity-attribution/). -->
+<!-- > * For attribution without a principal, using only the token's `sub` claim, see [Set up OIDC sub claim attribution](/ai-cost-management/oidc-sub-claim-attribution/). -->
 > * For a full walkthrough that also covers budgets, pricing, and tag attribution, see [Get started with {{site.ai_cost_management}}](/ai-cost-management/getting-started/).
 
 ## Add a trusted IdP
