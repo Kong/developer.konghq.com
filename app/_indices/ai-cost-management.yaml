@@ -6,6 +6,8 @@ sections:
       - path: /ai-cost-management/
   - title: Get started
     items:
+      - path: /ai-cost-management/getting-started/
+      - path: /ai-cost-management/oidc-attribution/
       - path: /ai-cost-management/set-up-a-budget-with-email-alerts/
       - path: /ai-cost-management/set-up-a-budget-with-slack-alerts/
   - title: References

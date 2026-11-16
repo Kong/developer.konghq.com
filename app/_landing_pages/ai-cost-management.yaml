@@ -44,25 +44,26 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Set up a budget with email alerts
+              title: Get started with {{site.ai_cost_management}}
               description: |
-                Configure a model price, create a budget with a spend ceiling, and receive an email notification when your organization approaches the limit.
-              icon: /assets/icons/email.svg
-              cta:
-                url: /ai-cost-management/set-up-a-budget-with-email-alerts/
-                text: Configure a budget
-                align: end
+                Set up {{site.ai_cost_management}} end-to-end: attribute usage to a principal, price a model, track spend with a budget, and capture custom tags.
+              icon: /assets/icons/rocket.svg
+              featured: true
+              ctas:
+                - text: Get started
+                  url: /ai-cost-management/getting-started/
       - blocks:
           - type: card
             config:
-              title: Set up a budget with Slack alerts
+              title: Set up a budget with alerts
               description: |
-                Configure a model price, create a budget with a spend ceiling, and send budget notifications to a Slack channel.
-              icon: /assets/icons/slack.svg
-              cta:
-                url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
-                text: Configure a budget
-                align: end
+                Configure a model price, create a budget with a spend ceiling, and get notified when your organization approaches the limit.
+              icon: /assets/icons/money.svg
+              ctas:
+                - text: Email alerts
+                  url: /ai-cost-management/set-up-a-budget-with-email-alerts/
+                - text: Slack alerts
+                  url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
 
   - header:
       type: h2
