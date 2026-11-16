@@ -122,60 +122,44 @@ The following are the most common import errors and their usual causes:
 
 {% table %}
 columns:
-  - title: Column
-    key: column
-  - title: Problem
-    key: problem
-  - title: Cause and fix
+  - title: Error
+    key: error
+  - title: Solution
     key: fix
 rows:
-  - column: "`external_id`"
-    problem: is required
+  - error: "`external_id`: is required"
     fix: "The person doesn't have an ID in the export. Filter to rows that have one, or add it in your HR system."
-  - column: "`external_id`"
-    problem: is duplicated within the file
+  - error: "`external_id`: is duplicated within the file"
     fix: "The export has more than one row for this person, for example one per job, position, or employment. Filter to the primary one."
-  - column: "`email`"
-    problem: is required
-    fix: "A new hire doesn't have a work email yet. Add the email in your HR system, or import after it's created."
-  - column: "`email`"
-    problem: must be a valid email address
+  - error: "`email`: is required"
+    fix: "A user is missing an email. Add the email in your HR system, or import after it's created."
+  - error: "`email`: must be a valid email address"
     fix: "The value isn't in the form `name@domain`. Fix the address in your HR system."
-  - column: "`email`"
-    problem: is duplicated within the file
+  - error: "`email`: is duplicated within the file"
     fix: "Two people share a mailbox, or one person has two rows. Give each person their own address, and keep one row per person."
-  - column: "`email`"
-    problem: already exists in this directory
+  - error: "`email`: already exists in this directory"
     fix: "A different principal in this directory already has this email address. Give each person a unique email, or update the other principal's identity first."
-  - column: "`display_name`"
-    problem: is required
+  - error: "`display_name`: is required"
     fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`, and at least one of them must have a value."
-  - column: "`display_name`"
-    problem: must be at most 255 characters
+  - error: "`display_name`: must be at most 255 characters"
     fix: "{{site.konnect_short_name}} builds the display name from `given_name` and `family_name`. Together, they can be at most 255 characters."
-  - column: "`cost_center`"
-    problem: must be at most 255 characters
+  - error: "`cost_center`: must be at most 255 characters"
     fix: "The value is longer than 255 characters. Shorten it in your HR system."
-  - column: "`manager_external_id`"
-    problem: does not match a row in the file
+  - error: "`manager_external_id`: does not match a row in the file"
     fix: |
       There's a mismatch due to one of the following reasons:
       * The manager isn't in the file, because of a filter or because they left.
       * The manager ID is of a different type, such as a position ID.
-  - column: "`manager_external_id`"
-    problem: must be a single manager
+  - error: "`manager_external_id`: must be a single manager"
     fix: "The cell has several IDs separated by a comma or semicolon. Pick one manager in the export."
-  - column: "`manager_external_id`"
-    problem: only one person may have no manager
+  - error: "`manager_external_id`: only one person may have no manager"
     fix: "People under a vacant manager position don't have a manager. Assign them an interim manager."
-  - column: "`manager_external_id`"
-    problem: never reaches a person with no manager
+  - error: "`manager_external_id`: never reaches a person with no manager"
     fix: "The reporting chain is a loop, such as two people who are each other's manager, or it's more than 200 levels deep."
-  - column: file
-    problem: 'duplicate column "`<name>`" in the CSV header'
+  - error: |
+      **The file couldn't be checked:** duplicate column `"<column_name>"` in the CSV header
     fix: "Two columns in the header have the same name. The error names the duplicate. Rename or remove one of them."
-  - column: file
-    problem: wrong number of fields
+  - error: "**The file couldn't be checked:** wrong number of fields"
     fix: "A row has more or fewer cells than the header. Common causes are an unquoted comma in a name, a title line above the header, or a totals row at the end. The error names the line number."
 {% endtable %}
 
