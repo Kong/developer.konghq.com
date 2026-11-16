@@ -14,7 +14,7 @@ Create AI Policy example files in one of two ways: convert plugin example files 
 Supporting files (read when the step says so):
 - `references/field-mapping.md`: how each plugin example field maps to a policy example field, and what the preview showed
 - `references/triage.md`: how to decide whether a plugin and each of its examples can be converted
-- `references/wording.md`: Gateway-only wording to rewrite, and prose rules for example text
+- `references/wording.md`: Gateway-only wording to rewrite, and prose rules for example text (prerequisites, `description`, `extended_description`)
 - `references/new-examples.md`: how to find new features and turn each into a use case (new mode only)
 
 ## Gates
@@ -46,7 +46,7 @@ Skip this section in convert mode.
 
 1. Check that the policy is Ready, using the policy checks in `references/triage.md` (scopes entry, not stub, creatable, schema present). Stop if it is not.
 2. Read `references/new-examples.md`. Find the features from the user's source and from the schema fields no existing example uses.
-3. Gate 2 for new mode: present one proposed example per line with its title, the use case in one sentence, the config fields it sets, and the requirements it needs. Show features you propose to skip, and why. Ask for anything the source does not say. Wait for the user.
+3. Gate 2 for new mode: present one proposed example per line with its title, the use case in one sentence, the config fields it sets, and the requirements it needs, and any custom attach config. Show features you propose to skip, and why. Ask for anything the source does not say. Wait for the user.
 4. Then continue at Step 3. In Step 3, write new files instead of copying a plugin example's file name stem, and follow "Names and order" in `references/new-examples.md`.
 
 Every example must be a meaningful use case. Do not write an example whose behavior you cannot state from the source.
@@ -71,7 +71,8 @@ For each example of each Ready plugin, read the file and `references/field-mappi
 
 Present the plan in plain language, one example per line, with a short reason. Ask the user the questions you cannot answer from the files:
 - Which `scopes:` subset, if the example only makes sense on some scopes (the default is all scopes of the policy).
-- Whether a non-default `attach:` config is needed. A new file under `app/_data/entity_examples/ai-gateway/` is a shared change, so ask before creating one.
+- Whether a custom `attach:` config is needed (see "Custom attach configs" in `references/field-mapping.md`). Check the existing files under `app/_data/entity_examples/ai-gateway/<scope>/` first. A new file is a shared change, so show the proposed name, scope and full content, and ask before creating it.
+- Whether to add an `extended_description` to an example that has none. Propose one only when the example needs it (see `references/wording.md`), and show the text.
 - Whether to keep a `min_version` (see `references/field-mapping.md`).
 - Whether to group examples. This is its own approval, see "Grouping approval" below.
 
@@ -85,10 +86,12 @@ Read "Example groups" in `references/field-mapping.md`. Never add `group` or `ex
 Do not add a `condition` unless the plugin example already shows one.
 
 Also check that each example is meaningful on AI Gateway 2.x, not only that it validates. Read the `config`, `requirements`, `title` and `description` against the policy's 2.x page and schema, and flag:
-- Prerequisites that describe Gateway setup (Services, Routes, Consumers, the AI Proxy plugin) instead of the 2.x equivalent, for example "You have created an [AI Model](/ai-gateway/entities/ai-model/)".
+- Prerequisites that describe Gateway setup (Services, Routes, Consumers, the AI Proxy plugin) instead of the 2.x equivalent, for example "An existing [AI Model](/ai-gateway/entities/ai-model/)."
 - Providers, models, URLs or headers that only made sense for the plugin (a model name, an upstream route, a Gateway-only header).
 - Config fields or defaults that behave differently in 2.x (for example a default that makes the title untrue, such as guarding input only when the title promises blocking responses). Set the field explicitly when the title depends on it.
 - Variables whose names or descriptions are wrong or misleading (for example a description that names the wrong credential).
+- A `description` or `extended_description` that leaves out what the title depends on: a fallback, a default, a limit or a side effect. Take the facts from the schema or the policy page, and show the source. If `description` already covers it, no `extended_description` is needed.
+- A `description` with backticks, or `requirements` written as "You have ..." instead of noun phrases.
 Put each finding in the Gate 2 plan as "convert with changes" and show the old and new text.
 
 ## Step 3: Write the files
@@ -101,13 +104,16 @@ Rules (details in `references/field-mapping.md`):
 - Do not set `global`. The page sets it for the selected scope.
 - Use a variable (`${name}`) only for string fields. Use a literal value for numbers and booleans, because the Konnect API snippet renders a variable as a quoted string.
 - Keep the `variables:` block active and keep the `${name}` references in `config`. Follow "Variables" in `references/field-mapping.md` for the exact shape.
-- Apply the wording rules to `title`, `description`, `extended_description` and `requirements`.
+- Apply the wording rules to `title`, `description`, `extended_description` and `requirements`. `description` has no backticks. `extended_description` starts with the `description` sentence. `requirements` are noun phrases.
+- When an approved custom attach config is needed, create `app/_data/entity_examples/ai-gateway/<scope>/<name>.yml` first, then set `attach: { <scope>: <name> }` in the example (file stem, no `.yml`, scope must be one of the example's scopes). Keep `policies: []` in the file. Never edit `basic.yml` or another shared file.
 
 ## Step 4: Validate (Gate 3)
 
 1. Run the validator from `tools/aigw-policy-examples-validator`: `node index.js` (run `npm ci` first if it fails on missing modules). Fix findings in the example file. Do not change the validator or the schemas to make an example pass.
 2. Run `rtk vale` on each new file if `vale` accepts YAML. If it does not, say so.
-3. Give the user this preview checklist (the example page is at `/ai-gateway/policies/<policy>/examples/<slug>/`): the intro text, the Prerequisites section, one tab per scope, an "Attach the policy" section on each non-global tab, and the `condition` and `enabled` values in the snippets. In new mode, also list the examples whose behavior the user should test (see `references/new-examples.md`). Tell the user plainly what is not tested: the validator checks the config against the vendored schema only. It does not send anything to the API, attach the policy, or check that the policy behaves as the example's text says. The same validator runs in CI on pull requests that change policy examples.
+3. Give the user this preview checklist (the example page is at `/ai-gateway/policies/<policy>/examples/<slug>/`): the intro text, the Prerequisites section, one tab per scope, an "Attach the policy" section on each non-global tab, and the `condition` and `enabled` values in the snippets. The intro text should be `extended_description` (or `description` when there is none), with backticks rendered, and the "Attach the policy" section should show the custom entity where `attach` is set. In new mode, also list the examples whose behavior the user should test (see `references/new-examples.md`). Tell the user plainly what is not tested: the validator checks the config against the vendored schema only. It does not send anything to the API, attach the policy, or check that the policy behaves as the example's text says. The same validator runs in CI on pull requests that change policy examples.
+
+4. List every custom attach config you created or reused, with the examples that use it. The validator does not read `attach`, so say that only a Jekyll build confirms the file resolves, and run the build check if the user asks.
 
 Present the final result: files written, files skipped with reasons, validator output, and any open questions for engineering. Then stop.
 
@@ -119,6 +125,10 @@ Present the final result: files written, files skipped with reasons, validator o
 - [ ] Every example has a decision the user has seen; skipped examples have a reason
 - [ ] Each file has `name`, `display_name`, `type` and a valid `tools` list, and no `global`
 - [ ] No variables on numeric or boolean fields
+- [ ] `description` has no backticks; when an `extended_description` exists it repeats that sentence first, and the example states any fallback, default or limit the title depends on
+- [ ] `requirements` are noun phrases (a full sentence only for a condition)
+- [ ] Any `attach` uses file stems and rendered scopes only; each custom config was approved, has `policies: []` and is listed for the user
+- [ ] Triage checked `scopes.json` and `priorities.json` for new policies
 - [ ] The `variables:` block is active and matches the `${name}` references in `config`
 - [ ] Each example was read for 2.x meaning (prerequisites, provider and model, defaults, variable descriptions)
 - [ ] No `group` or `examples_groups` unless the policy example layout supports groups and the user approved them for that policy (see `references/field-mapping.md`)

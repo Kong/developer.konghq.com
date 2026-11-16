@@ -99,10 +99,10 @@ direction LR
   subgraph 1
   A
   end
-  subgraph 3
+  subgraph 2
   C
   end
-  subgraph 2
+  subgraph 3
   D
   E
   end

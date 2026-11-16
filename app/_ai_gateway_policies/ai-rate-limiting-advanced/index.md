@@ -238,7 +238,7 @@ To configure it, specify the function in [`config.request_prompt_count_function`
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
 
-## Known limitations of AI Rate Limiting Advanced
+## Known limitations
 
 The cost is only reflected during the next request.
 
@@ -247,3 +247,6 @@ For example, if a request is made and returns a token cost of `100` for the `Ope
 * If the rate limit is reached, the next request will be blocked
 
 Additionally, [`config.disable_penalty`](./reference/#schema--config-disable-penalty) only works for the `requestPrompt` function.
+
+Because token usage is only known after the model responds, concurrent requests can exceed the configured limit.
+

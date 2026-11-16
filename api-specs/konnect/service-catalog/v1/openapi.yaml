@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@f06a91ee46674fb8a0377a4c8cdebfa6f9b91b08
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f06a91ee46674fb8a0377a4c8cdebfa6f9b91b08'
+  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1540,7 +1540,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         overridable_config:
           description: |
             A list of field names from the `config` object (e.g., `client_id`, `authorization_endpoint`, etc)
@@ -1633,7 +1632,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -1682,7 +1680,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -2228,7 +2225,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2266,7 +2262,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2298,7 +2293,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2390,7 +2384,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -2435,7 +2428,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -2495,7 +2487,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -2592,7 +2583,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string
@@ -2627,7 +2617,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string

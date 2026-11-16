@@ -7,6 +7,7 @@ Examples:
   kongctl inspect mesh dataplanes
 
 Available Commands:
+  identity    Manage Kong Identity resources
   konnect     Manage Konnect resources
   mesh        Inspect what a control plane computed for a resource
 

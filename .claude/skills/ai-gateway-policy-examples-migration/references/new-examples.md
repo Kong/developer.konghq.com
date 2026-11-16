@@ -16,7 +16,8 @@ Do not invent a field, a default or a behavior. If a source does not say what a 
 Each example answers one question a reader has: "How do I do X with this policy?" A field with no scenario is not an example.
 
 - **Title:** the outcome, as an imperative phrase. "Detect guardrail violations without blocking", "Return the score in a response header", "Block content with blocklists". Not "Use `continue_on_detection`".
-- **`description`:** one or two sentences. Say what the example does, what the default would do instead, and when to use it ("Use this to test a guardrail against real traffic before you enforce it").
+- **`description`:** one plain sentence with no backticks, for search results. Say what the example does.
+- **`extended_description`:** optional. Add one when the use case needs more than the `description` sentence, following `wording.md`. Start with the `description` sentence, then say what the default would do instead or when to use it ("Use this to test a guardrail against real traffic before you enforce it"). Backticks are fine here.
 - **`config`:** the feature field, plus every other field the scenario needs to be true. If the title promises blocking responses, set the guarding field explicitly. Do not leave out a field the feature depends on, and do not add fields the scenario does not need, unless it's a required field in the schema.
 - **`requirements`:** list what the scenario needs beyond the entity: an external service, an account, or another policy. A feature that writes to logs needs a logging policy such as [HTTP Log](/ai-gateway/policies/http-log/) in the requirements.
 - **One feature per example.** Two features that matter together (a feature and the field that makes it visible) can share one example. Unrelated features get separate examples.
@@ -37,7 +38,7 @@ Scenarios that work well:
 
 ## Prose
 
-Follow `wording.md` for prose rules. New examples have no plugin wording to rewrite, so the rules that matter are the "AI {Name}" entity naming, requirements as noun phrases ending in a period, and no em dashes.
+Follow `wording.md` for prose rules. New examples have no plugin wording to rewrite, so the rules that matter are the "AI {Name}" entity naming, requirements as noun phrases ending in a period, `description` without backticks, and no em dashes.
 
 ## What you cannot confirm
 

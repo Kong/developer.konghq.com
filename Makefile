@@ -15,6 +15,7 @@ install:
 	mise install
 	git submodule sync --recursive
 	git submodule update --init
+	npm install -g corepack@0.36.0
 	corepack enable
 	yarn install --immutable
 	bundle install

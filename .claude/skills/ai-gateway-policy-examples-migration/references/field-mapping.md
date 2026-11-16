@@ -5,16 +5,16 @@ Behavior marked "rendered" was checked on a preview of the dummy `ai-sanitizer/e
 
 | Plugin example field | Policy example | Notes |
 |---|---|---|
-| `title`, `description`, `weight` | Keep | Rewrite Gateway wording. `weight` orders the examples (higher first). |
-| `extended_description` | Keep | Rendered. Replaces `description` as the intro on the page. |
-| `requirements` | Keep | Rendered as "Prerequisites". Rewrite items that name the AI Proxy plugin or link to `/plugins/...`. |
+| `title`, `description`, `weight` | Keep | Rewrite Gateway wording. `description` must have no backticks (they do not render). `weight` orders the examples (higher first). |
+| `extended_description` | Keep | Optional. Rendered as the intro in place of `description` when present, so its first sentence repeats `description`, with backticks on config values. Propose one only when the example needs it, see `wording.md`. |
+| `requirements` | Keep | Rendered as "Prerequisites". Rewrite items that name the AI Proxy plugin or link to `/plugins/...`. Noun phrases, see `wording.md`. |
 | `variables` | Keep | Rendered as the "Environment variables" list and used by the API and Terraform snippets. Strings only, see below. |
 | `config` | Keep | Must validate against the policy schema. A field missing from the policy schema means skip or ask. |
 | `tools` | `konnect-api`, `terraform`, `kongctl` | Drop `deck`, `admin-api`, `kic`. Other values raise an error. |
 | (none) | `name`, `display_name`, `type` | Required. `type` must equal the policy folder slug. `name` is kebab-case, unique per example. |
 | (none) | `enabled`, `condition` | Optional. Rendered in the snippets. Add `condition` only if the plugin example had one. |
 | (none) | `scopes` | Optional subset of the policy's scopes. Default is all scopes in `scopes.json`. An unsupported scope raises an error. |
-| (none) | `attach` | Optional map of scope to config name under `app/_data/entity_examples/ai-gateway/<scope>/<name>.yml`. Default is `basic`. |
+| (none) | `attach` | Optional map of scope to config name. Default is `basic` for every scope. See "Custom attach configs" below. |
 | `min_version` (`gateway: '3.x'`) | Drop by default | Plugin Gateway versions do not map to AI Gateway versions. If the feature is newer than AI Gateway 2.0, ask the user and use `ai-gateway: '<version>'`. The preview showed no visible output for it. |
 | `group` | Do not carry over | Grouping needs `examples_groups` in the policy's `index.md` and platform support. AI Gateway policy example pages have neither yet. See "Example groups" below. |
 | `global` | Never set | The page sets `global` for the selected scope. Setting it raises an error. |
@@ -66,8 +66,30 @@ Field rules:
 - Number or boolean field: use a literal value (the PR's own example uses `port: 8080`).
 - If the plugin example used a variable for a number, tell the user which field and what literal you chose.
 
+## Custom attach configs
+
+The "Attach the policy" section shows the entity that the policy is added to. By default each scope uses `app/_data/entity_examples/ai-gateway/<scope>/basic.yml`. An example can use a different entity.
+
+How it resolves (`app/_plugins/drops/entity_example/ai_gateway_policy_attachment.rb`):
+- `attach` is a map of scope key to config name, for example `attach: { ai-model: embeddings }`.
+- The config name is the file stem, without `.yml`. The file is `app/_data/entity_examples/ai-gateway/<scope>/<name>.yml`.
+- Scope keys are `ai-model`, `ai-agent`, `ai-mcp-server`, `ai-consumer` and `ai-consumer-group`. There is no attach section for `global`.
+- Every `attach` key must be one of the example's rendered scopes. Otherwise the build fails with "unknown target".
+- A missing file fails the build with the expected path.
+- The renderer appends the policy `name` to the entity's `policies` array. The custom file keeps `policies: []` and never lists the policy.
+
+When to use one: the example only makes sense with an entity that `basic` is not, for example a model with a specific provider or capability, an agent with certain ACLs, an MCP server with other tools, or a consumer with a credential. Do not use one just to rename things.
+
+Rules:
+1. Look at the existing files under `app/_data/entity_examples/ai-gateway/<scope>/` first, and reuse one that fits.
+2. Otherwise copy `basic.yml` for that scope and change only what the example needs. Give it a descriptive kebab-case name, for example `embeddings-model.yml`. Never name it after the policy alone.
+3. Never edit `basic.yml` or a file another example uses. These are shared.
+4. Creating a file is a shared change. Ask at Gate 2 and show the proposed name, scope and full content.
+5. Keep other config values consistent with `basic.yml` (route paths, `logging.payloads: false`) unless the example needs them to differ.
+6. Tell the user at Gate 3 which attach files you created. The validator does not read `attach`, so only a Jekyll build proves the file resolves.
+
 ## Generated sections
 
 - The "Attach the policy" section appears on every tab except Global. It tells the reader to add the policy `name` to the entity's `policies` array and shows the updated entity.
-- Attach bodies come from `app/_data/entity_examples/ai-gateway/<scope>/<config>.yml`. A missing config fails the build with the file path in the message.
+- Attach bodies come from `app/_data/entity_examples/ai-gateway/<scope>/<config>.yml`, chosen by `attach` (see "Custom attach configs"). A missing config fails the build with the file path in the message.
 - Scope tabs use the labels from `app/_data/entity_examples/config.yml` (`ai_gateway_scopes`).

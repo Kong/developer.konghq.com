@@ -169,9 +169,11 @@ Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-
 {% navtabs "Okta SSO" %}
 {% navtab "OIDC" %}
 
-1. From the Applications section of the Okta console, select **Create App Integration** 
-   and choose [OIDC - OpenID Connect](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm)
-   with **Web Application** for the Application type. Provide the following configuration details: 
+1. In the Okta console, click **Applications and Resources**
+1. Click **Create App Integration**.
+1. Select [OIDC - OpenID Connect](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm)
+   with **Web Application** for the Application type.
+1. Provide the following configuration details: 
 {% capture table %} 
 <!-- vale off -->
 {% table %}
@@ -224,9 +226,10 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 {% endnavtab %}
 {% navtab "SAML" %}
 
-1. From the Applications section of the Okta console, select _Create App Integration_ 
-   and choose [SAML 2.0](https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm?cshid=ext_Apps_App_Integration_Wizard-saml). 
-   Provide a name and the following configuration details: 
+1. In the Okta console, click **Applications and Resources**
+1. Click **Create App Integration**.
+1. Select [SAML 2.0](https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm?cshid=ext_Apps_App_Integration_Wizard-saml). 
+1. Provide a name and the following configuration details: 
 {% capture table %} 
 <!-- vale off -->
 {% table %}

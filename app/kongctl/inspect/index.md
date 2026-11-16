@@ -40,6 +40,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl inspect identity](/kongctl/inspect/identity/)
+    description: "Inspect Kong Identity principal resources."
+  - command: |
       [kongctl inspect konnect](/kongctl/inspect/konnect/)
     description: "Inspect {{site.konnect_short_name}} resources."
   - command: |

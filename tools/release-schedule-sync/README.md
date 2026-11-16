@@ -43,7 +43,7 @@ Milestone and scheduled triggers only run from the default branch, so changes to
 
 ## Run locally
 
-Requires Node 24 and a GitHub token with `project` scope. If `GH_TOKEN` isn't set, the script uses your `gh` CLI login. Run `gh auth refresh -s project` to add the scope.
+Requires Node 26 and a GitHub token with `project` scope. If `GH_TOKEN` isn't set, the script uses your `gh` CLI login. Run `gh auth refresh -s project` to add the scope.
 
 ```sh
 cd tools/release-schedule-sync

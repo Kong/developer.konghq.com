@@ -93,118 +93,28 @@ Kong will not provide patches for software covered by this sunset period. If the
 
 Kong supports the following versions of {{site.ai_gateway_name}}:
 
+{% assign today = 'now' | date: '%s' | plus: 0 %}
+{% assign releases = site.data.products.ai-gateway.releases | where_exp: "r", "r.eol" %}
+
 {% navtabs "ai-gateway-version" %}
-{% navtab "2.3" %}
-{{site.ai_gateway_name}} 2.3 was released on 2026-11-04.
+{% for release in releases %}
+{% assign eol_timestamp = release.eol | date: '%s' | plus: 0 %}
+{% if eol_timestamp >= today %}
+{% assign tab_name = release.release %}
+{% if release.stable %}{% assign tab_name = tab_name | append: ' (stable)' %}{% endif %}
+{% navtab {{tab_name}} %}
+{% assign first_version = release.release | append: ".0" %}
+{% assign release_date = site.data.products.ai-gateway.release_dates[first_version] | split: '/' | join: '-' %}
+{{site.ai_gateway_name}} {{release.release}} was released on {{release_date}}.
 
-{{site.ai_gateway_name}} 2.3 supports the following deployment targets until 2026-12-04, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: OS
-    key: os
-  - title: Version
-    key: version
-  - title: ARM support
-    key: arm
-  - title: FIPS 140-3
-    key: fips
-  - title: EOL
-    key: eol
-rows:
-  - os: Ubuntu
-    version: "26.04"
-    arm: true
-    fips: true
-    eol: "2026-12-04"
-  - os: RHEL
-    version: "10.x"
-    arm: true
-    fips: true
-    eol: "2026-12-04"
-  - os: Distroless
-    version: "N/A"
-    arm: true
-    fips: true
-    eol: "2026-12-04"
-{% endtable %}
-<!--vale on-->
-{% endnavtab %}
-{% navtab "2.2 (stable)" %}
-{{site.ai_gateway_name}} 2.2 was released on 2026-09-30.
-
-{{site.ai_gateway_name}} 2.2 supports the following deployment targets until 2027-03-30, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+{{site.ai_gateway_name}} {{release.release}} supports the following deployment targets until {{release.eol | date: '%Y-%m-%d'}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
 
 <!--vale off-->
-{% table %}
-columns:
-  - title: OS
-    key: os
-  - title: Version
-    key: version
-  - title: ARM support
-    key: arm
-  - title: FIPS 140-3
-    key: fips
-  - title: EOL
-    key: eol
-rows:
-  - os: Ubuntu
-    version: "24.04"
-    arm: true
-    fips: true
-    eol: "2027-03-30"
-  - os: RHEL
-    version: "9.x"
-    arm: true
-    fips: true
-    eol: "2027-03-30"
-  - os: Distroless
-    version: "N/A"
-    arm: true
-    fips: true
-    eol: "2027-03-30"
-{% endtable %}
+{% include support/ai-gateway.md release=release %}
 <!--vale on-->
 {% endnavtab %}
-{% navtab "2.1" %}
-{{site.ai_gateway_name}} 2.1 was released on 2026-09-24.
-
-{{site.ai_gateway_name}} 2.1 supports the following deployment targets until 2026-10-24, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: OS
-    key: os
-  - title: Version
-    key: version
-  - title: ARM support
-    key: arm
-  - title: FIPS 140-3
-    key: fips
-  - title: EOL
-    key: eol
-rows:
-  - os: Ubuntu
-    version: "24.04"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-  - os: RHEL
-    version: "9.x"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-  - os: Distroless
-    version: "N/A"
-    arm: true
-    fips: true
-    eol: "2026-10-24"
-{% endtable %}
-<!--vale on-->
-{% endnavtab %}
+{% endif %}
+{% endfor %}
 {% endnavtabs %}
 
 {:.info .no-icon}
@@ -218,22 +128,7 @@ rows:
 The following versions of {{site.ai_gateway_name}} have reached the end of full support:
 
 <!--vale off-->
-{% table %}
-columns:
-  - title: Version
-    key: version
-  - title: Released date
-    key: release_date
-  - title: End of support
-    key: eol
-  - title: End of sunset support
-    key: sunset
-rows:
-  - version: "2.0"
-    release_date: "2026-08-31"
-    eol: "2026-09-30"
-    sunset: "2026-10-31"
-{% endtable %}
+{% include_cached support/old_ai_gateway_support.md %}
 <!--vale on-->
 
 ## Bug fix guidelines

@@ -60,7 +60,7 @@ columns:
     key: use
 rows:
   - policy: "[Pre-Function](/ai-gateway/policies/pre-function/)"
-    runs: "Before the other AI Policies in each phase, and before authentication."
+    runs: "Before the other AI Policies in each phase. A global Pre-Function also runs before authentication."
     use: |
       Change a request or answer it early.
       For example, add a header to the request that {{site.ai_gateway}} sends to the upstream.
@@ -333,7 +333,7 @@ When you enable {{site.identity}} Principal mapping ([`config.principals`](/ai-g
 Otherwise, {{site.ai_gateway}} rejects the request with a `401`, even when the Principal matches.
 When the Principal has no linked AI Consumer, `kong.client.get_consumer` returns `nil`.
 
-A [Pre-Function](/ai-gateway/policies/pre-function/) runs before authentication, so `kong.client.get_consumer` returns `nil` there.
+A global [Pre-Function](/ai-gateway/policies/pre-function/) runs before authentication, so `kong.client.get_consumer` returns `nil` there. A Pre-Function scoped to an AI Model runs after authentication.
 A [Post-Function](/ai-gateway/policies/post-function/) runs after authentication, so use a Post-Function to read the Consumer.
 A request without a valid key fails authentication, and the AI Policy doesn't run.
 

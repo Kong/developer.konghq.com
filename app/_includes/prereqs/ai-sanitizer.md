@@ -9,7 +9,7 @@ docker pull kong/ai-pii-service:TAG
 Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull kong/ai-pii-service:v0.2.2-en
+docker pull kong/ai-pii-service:v0.3.1-en
 ```
 
 {:.info}

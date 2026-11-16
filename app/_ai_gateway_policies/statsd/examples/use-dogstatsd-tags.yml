@@ -1,0 +1,41 @@
+name: statsd-use-dogstatsd-tags
+display_name: StatsD use DogStatsD tags
+type: statsd
+title: 'Send metrics with DogStatsD tags'
+description: 'Send request metrics with DogStatsD-style tags instead of putting the entity in the metric name.'
+extended_description: |
+  Send request metrics with DogStatsD-style tags instead of putting the entity in the metric name.
+  Each metric carries the `route`, `node`, `status`, and `service` tags, for example `kong.request.count:1|c|#route:<route>,status:200`.
+weight: 700
+
+scopes:
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - global
+
+requirements:
+  - "A StatsD server or agent that supports DogStatsD tags, reachable from the data plane"
+
+variables:
+  host:
+    value: $HOST
+    description: The IP address or hostname of the StatsD server or agent to send data to.
+
+config:
+  host: ${host}
+  port: 8125
+  tag_style: dogstatsd
+  metrics:
+    - name: request_count
+      stat_type: counter
+      sample_rate: 1
+    - name: request_size
+      stat_type: counter
+      sample_rate: 1
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

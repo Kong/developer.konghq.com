@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@dfe8c733058be7a51a83f7d1da520cc59ee4022d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dfe8c733058be7a51a83f7d1da520cc59ee4022d'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1228,7 +1228,6 @@ components:
           enum:
             - oas
           readOnly: true
-          x-terraform-transform-const: true
         spec_provider:
           description: |
             Provenance of the specification. `null` (or absent) for a user-uploaded specification.
@@ -1776,7 +1775,6 @@ components:
           type: string
           enum:
             - ai-gateway
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/CatalogMCPGatewayImplementationConfig'
       additionalProperties: false
@@ -2008,15 +2006,17 @@ components:
       description: |
         Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
 
-        Keys must be 1–63 characters long and start with an alphanumeric character.
+        Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+        Values must be 1–127 characters long and must not be empty.
+        Keys and values must not contain spaces or control characters.
       type: object
       example:
         owner: terraform
       additionalProperties:
         type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        pattern: '^[^\s\x00-\x1F\x7F-\x9F]+$'
         minLength: 1
-        maxLength: 63
+        maxLength: 127
       maxProperties: 5
       title: ManagedBy
     CreatedAt:
@@ -2648,7 +2648,6 @@ components:
           example: streamable-http
           enum:
             - streamable-http
-          x-terraform-transform-const: true
         url:
           description: URL template for the streamable-http transport.
           type: string
@@ -2675,7 +2674,6 @@ components:
           example: sse
           enum:
             - sse
-          x-terraform-transform-const: true
         url:
           description: Server-Sent Events endpoint URL template.
           type: string
@@ -2716,7 +2714,6 @@ components:
           example: stdio
           enum:
             - stdio
-          x-terraform-transform-const: true
       example:
         type: stdio
       required:
@@ -2745,7 +2742,6 @@ components:
               example: positional
               enum:
                 - positional
-              x-terraform-transform-const: true
             value_hint:
               description: An identifier for the positional argument.
               type: string
@@ -2779,7 +2775,6 @@ components:
               example: named
               enum:
                 - named
-              x-terraform-transform-const: true
             name:
               description: 'The flag name, including any leading dashes.'
               type: string

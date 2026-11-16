@@ -1,0 +1,32 @@
+title: 'Server-side include injection'
+
+description: 'Detects scripts injected in HTML pages.'
+extended_description: |
+  Detects scripts injected in HTML pages.
+  Uses the following regular expression for matching: `<!--#(include|exec|echo|config|printenv)\s+.*`
+
+weight: 900
+
+name: server-side-include
+display_name: 'Server-side include injection'
+type: injection-protection
+
+config:
+  injection_types:
+    - ssi
+  locations:
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

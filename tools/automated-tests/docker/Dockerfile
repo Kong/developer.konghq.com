@@ -1,12 +1,12 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap git telnet openssl default-jre-headless
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq unzip bubblewrap git telnet openssl gnupg default-jre-headless
 
 # set python env
 RUN python3 -m venv /opt/myenv
 ENV PATH="/opt/myenv/bin:$PATH"
 
 RUN ARCH=$(dpkg --print-architecture) && \
-    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.70.0/deck_v1.70.0_${ARCH}.deb && \
+    curl -L -o deck_v1.deb https://github.com/Kong/deck/releases/download/v1.70.1/deck_v1.70.1_${ARCH}.deb && \
     dpkg -i deck_v1.deb
 RUN apt-get update
 RUN apt-get install ca-certificates curl
@@ -42,8 +42,8 @@ RUN curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
 RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}"
 
-# Install Node.js 22.x (LTS) via NodeSource, then codex CLI
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+# Install Node.js 26.x (LTS) via NodeSource, then codex CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - && \
     apt-get install -y nodejs
 RUN npm install -g @openai/codex
 RUN npm install -g @qwen-code/qwen-code

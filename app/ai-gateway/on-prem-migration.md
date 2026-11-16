@@ -33,6 +33,8 @@ related_resources:
     url: /ai-gateway/install/docker/
   - text: "Configure {{site.ai_gateway_name}} on-prem"
     url: /ai-gateway/configure-on-prem/
+  - text: "Install {{site.ai_gateway_name}} on-prem with{{site.operator_product_name}} (Tech Preview)"
+    url: /operator/get-started/ai-gateway/install/
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
   - text: "{{site.ai_gateway}} entities"

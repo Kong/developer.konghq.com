@@ -7,6 +7,7 @@ Aliases:
   konnect, k, K
 
 Available Commands:
+  identity    Manage Kong Identity resources
   mesh        Inspect what a control plane computed for a resource
 
 

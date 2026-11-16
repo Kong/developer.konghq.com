@@ -75,6 +75,13 @@ rows:
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
                 select the AI view, then navigate to **Gateways** and click **New AI gateway**.
+            - title: On-Prem
+              content: |
+                To install {{site.ai_gateway}} 2.x on-prem, see the following:
+                * [Docker Compose](/ai-gateway/install/docker/)
+                * [Kubernetes with {{site.operator_product_name}}](/operator/get-started/ai-gateway/install/) (Tech Preview)
+
+                If you're migrating from an existing on-prem deployment, follow the [migration guide](/ai-gateway/on-prem-migration/).
   - columns:
       - blocks:
         - type: card

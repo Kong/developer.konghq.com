@@ -13,6 +13,9 @@ min_version:
 works_on:
   - konnect
 
+tools:
+  - kongctl
+
 breadcrumbs:
   - /ai-management/
   - /ai-cost-management/
@@ -101,6 +104,11 @@ You can download a sample file from the upload dialog by clicking **Download sam
 
 ## Upload an org structure
 
+You can build or update an org chart by uploading an org structure file.
+
+{% navtabs "upload-org-structure" %}
+{% navtab "Konnect UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **Cost Management**, then click **Org Chart**.
 1. Click **Upload org structure**.
 1. Drop your CSV file in the dialog, or choose one.
@@ -114,6 +122,35 @@ You can download a sample file from the upload dialog by clicking **Download sam
 1. Click **Import**.
 
 If the org structure changes between the preview and the import, {{site.konnect_short_name}} rejects the file and applies nothing.
+
+{% endnavtab %}
+{% navtab "kongctl" %}
+
+`kongctl import identity org-chart` applies an org structure file against the default {{site.identity}} directory.
+Preview the import without changing anything:
+
+```sh
+kongctl import identity org-chart \
+  --pat "$KONNECT_TOKEN" \
+  --file org-structure.csv \
+  --dry-run \
+  --report-output-dir ./import-reports
+```
+
+If the preview looks correct, apply the org chart:
+
+```sh
+kongctl import identity org-chart \
+  --pat "$KONNECT_TOKEN" \
+  --file org-structure.csv \
+  --execute \
+  --report-output-dir ./import-reports
+```
+
+Each run writes a JSON report to `--report-output-dir`, listing the users and teams it created, updated, or deactivated.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Update an org chart
 

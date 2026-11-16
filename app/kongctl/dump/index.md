@@ -36,16 +36,24 @@ Export all `portal` and `api` resources to kongctl declarative configuration and
 kongctl dump declarative --resources=portal,api --default-namespace=team-alpha
 ```
 
-For custom dashboards created in the {{site.konnect_short_name}} UI, [adopt](/kongctl/adopt/) the dashboard first,
-then dump it with the same namespace:
+When bringing existing resources into declarative management, use
+[`kongctl adopt --declarative-output`](/kongctl/declarative/adoption/) to assign
+ownership and save configuration in one command. For example, adopt a custom
+dashboard created in the {{site.konnect_short_name}} UI:
 
 ```shell
 kongctl adopt analytics dashboard 22cd8a0b-72e7-4212-9099-0764f8e9c5ac \
-  --namespace analytics
-kongctl dump declarative --resources=analytics.dashboards \
-  --default-namespace=analytics > dashboards.yaml
-kongctl plan -f dashboards.yaml --mode apply
+  --namespace analytics --declarative-output dashboard.yaml
 ```
+
+Use a new output path, then review a plan using the saved declaration:
+
+```shell
+kongctl plan -f dashboard.yaml --mode apply
+```
+
+Use `dump declarative` when you need a current-state export independently of
+adoption. Dumping configuration doesn't assign ownership to resources.
 
 ## Subcommands
 

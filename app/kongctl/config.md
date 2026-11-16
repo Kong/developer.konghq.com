@@ -20,6 +20,8 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
+  - text: kongctl telemetry and privacy
+    url: /kongctl/telemetry/
   - text: kongctl authentication reference
     url: /kongctl/authentication/
   - text: kongctl declarative configuration reference
@@ -186,7 +188,7 @@ KONGCTL_DEFAULT_KONNECT_REGION=eu
 {:.info}
 > **Note:** The `KONGCTL_` prefix configures the kongctl CLI. To inject an
 > environment variable into a declarative resource, use the
-> [`!env` YAML tag](/kongctl/declarative/#loading-values-from-environment-variables).
+> [`!env` YAML tag](/kongctl/declarative/environment-values/#loading-values-from-environment-variables).
 
 
 ## Configuration file

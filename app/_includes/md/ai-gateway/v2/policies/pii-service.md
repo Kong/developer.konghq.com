@@ -1,11 +1,11 @@
 Kong publishes the AI PII Anonymizer service as public Docker images. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `ai-pii-service:v0.2.2-en`: English model, version 0.2.2
-* `ai-pii-service:v0.2.2-it`: Italian model, version 0.2.2
-* `ai-pii-service:v0.2.2-fr`: French model, version 0.2.2
+* `ai-pii-service:v0.3.1-en`: English model, version 0.3.1
+* `ai-pii-service:v0.3.1-it`: Italian model, version 0.3.1
+* `ai-pii-service:v0.3.1-fr`: French model, version 0.3.1
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.2.2`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.3.1`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 {% if include.show_endpoints %}
@@ -78,7 +78,7 @@ docker pull kong/ai-pii-service:TAG
 Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull kong/ai-pii-service:v0.2.2-en
+docker pull kong/ai-pii-service:v0.3.1-en
 ```
 
 #### Run the AI PII service as a standalone container
@@ -86,7 +86,7 @@ docker pull kong/ai-pii-service:v0.2.2-en
 To run the image directly, without a `Dockerfile`:
 
 ```bash
-docker run -d kong/ai-pii-service:v0.2.2-en
+docker run -d kong/ai-pii-service:v0.3.1-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -94,7 +94,7 @@ docker run -d kong/ai-pii-service:v0.2.2-en
 Alternatively, to use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM kong/ai-pii-service:v0.2.2-en
+FROM kong/ai-pii-service:v0.3.1-en
 ```
 
 ### Available language tags

@@ -29,9 +29,10 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 #### Create a web application
 
-1. Go to **Applications > Applications > Create App Integration**.
+1. Go to **Applications and Resources > Applications > Create App Integration**.
 1. For the **Sign-in method**, select **OIDC - OpenID Connect**.
 1. For the **Application type**, select **Web Application**.
+1. For the **Client definition**, select "Use Okta-generated client ID".
 1. In the **App integration name** field, enter `{{site.ai_gateway}}`.
 1. For the **Grant types** settings, click the **Client Credentials** checkbox.
 1. For the **Assignments** settings, select **Skip group assignment for now**.

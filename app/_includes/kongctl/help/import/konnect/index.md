@@ -1,13 +1,13 @@
 ```ansi
 Usage:
-  kongctl adopt ai-gateway <ai-gateway-id|ai-gateway-display-name> [flags]
+  kongctl import konnect [flags]
+  kongctl import konnect [command]
 
 Aliases:
-  ai-gateway, ai-gateways, aigw
+  konnect, k, K
 
-Examples:
-  # Adopt an AI Gateway by display name
-  kongctl adopt ai-gateway my-ai-gateway --namespace team-alpha
+Available Commands:
+  identity    Manage Kong Identity resources
 
 
 Flags:
@@ -21,13 +21,12 @@ Flags:
       --config-file string      Path to the configuration file to load.
                                 - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for ai-gateway
+  -h, --help                    help for konnect
       --log-file string         Write execution logs to the specified file instead of STDERR.
                                 - Config path: [ log-file ]
       --log-level string        Configures the logging level. Execution logs are written to STDERR.
                                 - Config path: [ log-level ]
                                 - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --namespace string        Namespace label to apply to the resource (required)
       --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
@@ -39,8 +38,7 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --overwrite-namespace     Overwrite an existing namespace label on the resource
-      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
+      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
@@ -54,5 +52,7 @@ Flags:
                                 - Config path: [ text.layout ]
                                 - Allowed    : [ compact|auto|wide ]
                                 - Default    : [ compact ]
+
+Use "kongctl import konnect [command] --help" for more information about a command.
 
 ```

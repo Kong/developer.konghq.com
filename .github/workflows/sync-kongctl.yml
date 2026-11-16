@@ -30,6 +30,12 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "26"
+          cache: npm
+          cache-dependency-path: tools/kongctl-versions/package-lock.json
+
       - uses: kong/setup-kongctl@659d5c2b0f4db2e25d63797035358a22907421db # v1
 
       - name: Verify kongctl install

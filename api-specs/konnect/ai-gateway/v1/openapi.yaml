@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.3.5
+  version: 2.3.13
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@39cdb9f4e1690fc61f53794015949f34df4c0ce3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/39cdb9f4e1690fc61f53794015949f34df4c0ce3'
+  x-oas-source: kong/platform-api@98a4a0999e118367011626958f865d75f9ad6604
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/98a4a0999e118367011626958f865d75f9ad6604'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3091,12 +3091,14 @@ components:
         host:
           description: Hostname of the proxy URL.
           type: string
+          minLength: 1
         port:
           description: Port of the proxy URL.
           type: integer
         protocol:
           description: Protocol of the proxy URL.
           type: string
+          minLength: 1
       example:
         host: example.com
         port: 443
@@ -3357,6 +3359,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         cert_digest:
           description: SHA256 hex digest of the public certificate. This field is read-only and is automatically computed; it cannot be set by the caller.
@@ -3387,6 +3390,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         cert_digest:
           description: SHA256 hex digest of the public certificate. This field is read-only and is automatically computed; it cannot be set by the caller.
@@ -3417,6 +3421,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         cert_digest:
           description: SHA256 hex digest of the public certificate. This field is read-only and is automatically computed; it cannot be set by the caller.
@@ -3458,6 +3463,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         key:
           description: PEM-encoded private key matching `cert`.
@@ -3466,6 +3472,7 @@ components:
             -----BEGIN PRIVATE KEY-----
             ...
             -----END PRIVATE KEY-----
+          minLength: 1
           writeOnly: true
           x-referenceable: true
         cert_alt:
@@ -3512,6 +3519,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         key:
           description: PEM-encoded private key matching `cert`.
@@ -3520,6 +3528,7 @@ components:
             -----BEGIN PRIVATE KEY-----
             ...
             -----END PRIVATE KEY-----
+          minLength: 1
           writeOnly: true
           x-referenceable: true
         cert_alt:
@@ -3566,6 +3575,7 @@ components:
             -----BEGIN CERTIFICATE-----
             ...
             -----END CERTIFICATE-----
+          minLength: 1
           x-referenceable: true
         key:
           description: PEM-encoded private key matching `cert`.
@@ -3574,6 +3584,7 @@ components:
             -----BEGIN PRIVATE KEY-----
             ...
             -----END PRIVATE KEY-----
+          minLength: 1
           writeOnly: true
           x-referenceable: true
         cert_alt:
@@ -3619,6 +3630,7 @@ components:
       description: 'A reference to the certificate with which to associate the SNI hostname, by certificate name. The certificate must have a valid private key to be used by the SNI.'
       type: string
       example: my-certificate
+      minLength: 1
     AIGatewayCertificateReference:
       description: 'A reference to an AI Certificate on the same AI Gateway, by certificate name. The certificate must have a valid private key to be presented as a client certificate to an upstream.'
       type: string
@@ -3800,6 +3812,7 @@ components:
         cert:
           description: JSON escaped string of the certificate.
           type: string
+          minLength: 1
         title:
           description: A human-readable name for the certificate.
           type: string
@@ -3823,6 +3836,7 @@ components:
         cert:
           description: JSON escaped string of the certificate.
           type: string
+          minLength: 1
         title:
           description: A human-readable name for the certificate.
           type: string
@@ -4162,7 +4176,6 @@ components:
           type: string
           enum:
             - model
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayModelModelConfig'
         capabilities:
@@ -4254,7 +4267,6 @@ components:
           type: string
           enum:
             - api
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayModelAPIConfig'
         capabilities:
@@ -4634,7 +4646,6 @@ components:
           type: string
           enum:
             - consistent-hashing
-          x-terraform-transform-const: true
         hash_on_header:
           description: The header to use for consistent-hashing.
           type: string
@@ -4757,7 +4768,6 @@ components:
           type: string
           enum:
             - least-connections
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - algorithm
@@ -4876,7 +4886,6 @@ components:
           type: string
           enum:
             - lowest-latency
-          x-terraform-transform-const: true
         latency_strategy:
           description: 'What metrics to use for latency. Available values are: `tpot` (time-per-output-token) and `e2e`.'
           type: string
@@ -5003,7 +5012,6 @@ components:
           type: string
           enum:
             - lowest-usage
-          x-terraform-transform-const: true
         tokens_count_strategy:
           description: Methodology to use for token usage calculation.
           type: string
@@ -5133,7 +5141,6 @@ components:
           type: string
           enum:
             - priority
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - algorithm
@@ -5252,7 +5259,6 @@ components:
           type: string
           enum:
             - round-robin
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - algorithm
@@ -5371,7 +5377,6 @@ components:
           type: string
           enum:
             - semantic
-          x-terraform-transform-const: true
         embeddings:
           description: Embeddings model configuration for this model.
           type: object
@@ -5387,6 +5392,7 @@ components:
             name:
               description: The name of the embeddings model.
               type: string
+              minLength: 1
             config:
               $ref: '#/components/schemas/AIGatewayEmbeddingsModelConfig'
           required:
@@ -5436,6 +5442,7 @@ components:
         deployment_id:
           description: The Azure OpenAI deployment ID for the embeddings model.
           type: string
+          minLength: 1
         api_version:
           description: The Azure OpenAI API version to use.
           type: string
@@ -5456,7 +5463,6 @@ components:
           type: string
           enum:
             - bedrock
-          x-terraform-transform-const: true
         region:
           description: |
             The AWS region for the model.
@@ -5497,7 +5503,6 @@ components:
           type: string
           enum:
             - gemini
-          x-terraform-transform-const: true
         gcp_environment:
           $ref: '#/components/schemas/GCPModelConfig'
       additionalProperties: false
@@ -5514,7 +5519,6 @@ components:
           type: string
           enum:
             - huggingface
-          x-terraform-transform-const: true
         use_cache:
           description: Whether to use the Hugging Face inference cache.
           type: boolean
@@ -5550,7 +5554,6 @@ components:
           type: string
           enum:
             - ollama
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -5565,7 +5568,6 @@ components:
           type: string
           enum:
             - openai
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -5587,7 +5589,6 @@ components:
           type: string
           enum:
             - redis
-          x-terraform-transform-const: true
         dimensions:
           description: the desired dimensionality for the vectors
           type: integer
@@ -5790,7 +5791,6 @@ components:
           type: string
           enum:
             - pgvector
-          x-terraform-transform-const: true
         dimensions:
           description: the desired dimensionality for the vectors
           type: integer
@@ -5905,6 +5905,7 @@ components:
           description: The name of the model defined in the upstream provider that will be executed.
           type: string
           example: gpt-5-model
+          minLength: 1
         weight:
           description: The weight this target gets within the upstream load balancer
           type: integer
@@ -5985,6 +5986,7 @@ components:
         ttl:
           description: 'Cache TTL this price applies to, e.g. "5m" or "1h".'
           type: string
+          minLength: 1
           pattern: '^[0-9]+\.?[0-9]*[hm]$'
         cost:
           description: Cost per 1M cache-write prompt tokens for this TTL.
@@ -6021,6 +6023,7 @@ components:
         above:
           description: 'Input-token threshold above which the factors apply, e.g. "128k" or "1m".'
           type: string
+          minLength: 1
           pattern: '^[0-9]+\.?[0-9]*[km]$'
         input_factor:
           description: Multiplier applied to input pricing above the threshold.
@@ -6152,7 +6155,6 @@ components:
           type: string
           enum:
             - anthropic
-          x-terraform-transform-const: true
         version:
           description: The Anthropic API version to use.
           type: string
@@ -6256,7 +6258,6 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         deployment_id:
           description: |
             The Azure deployment ID for the model. Applies when the Azure provider's
@@ -6383,7 +6384,6 @@ components:
           type: string
           enum:
             - baseten
-          x-terraform-transform-const: true
       required:
         - type
       x-min-runtime-version: '2.3'
@@ -6484,7 +6484,6 @@ components:
           type: string
           enum:
             - bedrock
-          x-terraform-transform-const: true
         region:
           description: |
             The AWS region for the model.
@@ -6630,7 +6629,6 @@ components:
           type: string
           enum:
             - cerebras
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetCohereConfig:
@@ -6730,7 +6728,6 @@ components:
           type: string
           enum:
             - cohere
-          x-terraform-transform-const: true
         api_version:
           description: |
             Cohere API version. `v1` uses the legacy `/v1/chat` endpoint; `v2` (default)
@@ -6853,7 +6850,6 @@ components:
           type: string
           enum:
             - dashscope
-          x-terraform-transform-const: true
         international:
           description: Whether to use the international DashScope endpoint.
           type: boolean
@@ -6957,10 +6953,10 @@ components:
           type: string
           enum:
             - databricks
-          x-terraform-transform-const: true
         workspace_instance_id:
           description: The Databricks workspace instance ID.
           type: string
+          minLength: 1
       required:
         - type
         - workspace_instance_id
@@ -7061,7 +7057,6 @@ components:
           type: string
           enum:
             - deepseek
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetGeminiConfig:
@@ -7161,7 +7156,6 @@ components:
           type: string
           enum:
             - gemini
-          x-terraform-transform-const: true
         gcp_environment:
           $ref: '#/components/schemas/GCPModelConfig'
       required:
@@ -7263,7 +7257,6 @@ components:
           type: string
           enum:
             - huggingface
-          x-terraform-transform-const: true
         use_cache:
           description: Whether to use the Hugging Face inference cache.
           type: boolean
@@ -7371,7 +7364,6 @@ components:
           type: string
           enum:
             - kimi
-          x-terraform-transform-const: true
         international:
           description: |
             When `true`, requests are sent to `api.moonshot.ai` (international).
@@ -7473,11 +7465,11 @@ components:
           description: The upstream URL for the model endpoint.
           type: string
           format: uri
+          minLength: 1
         type:
           type: string
           enum:
             - llama2
-          x-terraform-transform-const: true
         format:
           description: The request format to use when communicating with the Llama2 model.
           type: string
@@ -7586,7 +7578,6 @@ components:
           type: string
           enum:
             - mistral
-          x-terraform-transform-const: true
         format:
           description: The request format to use when communicating with the Mistral model.
           type: string
@@ -7693,7 +7684,6 @@ components:
           type: string
           enum:
             - ollama
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetOpenaiConfig:
@@ -7793,7 +7783,6 @@ components:
           type: string
           enum:
             - openai
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetVercelConfig:
@@ -7893,7 +7882,6 @@ components:
           type: string
           enum:
             - vercel
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetVllmConfig:
@@ -7989,11 +7977,11 @@ components:
           description: The upstream URL for the model endpoint.
           type: string
           format: uri
+          minLength: 1
         type:
           type: string
           enum:
             - vllm
-          x-terraform-transform-const: true
       required:
         - type
         - upstream_url
@@ -8094,7 +8082,6 @@ components:
           type: string
           enum:
             - xai
-          x-terraform-transform-const: true
       required:
         - type
     AIGatewayTargetSagemakerConfig:
@@ -8194,7 +8181,6 @@ components:
           type: string
           enum:
             - sagemaker
-          x-terraform-transform-const: true
         aws:
           type: object
           additionalProperties: false
@@ -8237,7 +8223,6 @@ components:
           type: string
           enum:
             - typesafe
-          x-terraform-transform-const: true
         input_cost:
           description: Cost per 1M input tokens for billing and cost tracking.
           type: number
@@ -8262,12 +8247,15 @@ components:
         api_endpoint:
           description: The custom API endpoint for the Gemini model.
           type: string
+          minLength: 1
         location_id:
           description: The Google Cloud location ID for the model endpoint.
           type: string
+          minLength: 1
         project_id:
           description: The Google Cloud project ID for the model endpoint.
           type: string
+          minLength: 1
       required:
         - api_endpoint
         - location_id
@@ -8556,7 +8544,6 @@ components:
           type: string
           enum:
             - konnect
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -8566,6 +8553,7 @@ components:
                 The ID of the Konnect Config Store that contains the secrets.
               type: string
               example: 77426bee-2bca-4005-81af-284868fd3038
+              minLength: 1
           required:
             - config_store_id
       required:
@@ -8597,7 +8585,6 @@ components:
           type: string
           enum:
             - env
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -8642,7 +8629,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -8696,6 +8682,7 @@ components:
               description: The session name used when assuming a role.
               type: string
               default: KongVault
+              minLength: 1
             sts_endpoint_url:
               description: |
                 A custom STS endpoint URL used for IAM role assumption.
@@ -8734,7 +8721,6 @@ components:
           type: string
           enum:
             - gcp
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -8775,6 +8761,7 @@ components:
                 The project ID from your Google API Console.
                 You can find it by visiting your Google API Console and selecting “Manage all projects” in the projects list.
               type: string
+              minLength: 1
           required:
             - project_id
           title: GoogleSecretManagerVaultConfig
@@ -8807,7 +8794,6 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -8853,11 +8839,13 @@ components:
                 The URI from which the vault is reachable.
                 This value can be found in your Azure Key Vault Dashboard under the Vault URI entry.
               type: string
+              minLength: 1
             location:
               description: |
                 Each Azure geography includes one or more regions
                 that meet specific data residency and compliance requirements.
               type: string
+              minLength: 1
             client_id:
               description: |
                 The client ID for your registered application.
@@ -8907,7 +8895,6 @@ components:
           type: string
           enum:
             - conjur
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -8947,6 +8934,7 @@ components:
               description: |
                 The CyberArk Secrets Manager organization account name.
               type: string
+              minLength: 1
             api_key:
               description: |
                 The API key of the workload identity.
@@ -8956,10 +8944,12 @@ components:
               description: |
                 The CyberArk Secrets Manager backend URL to connect with. Accepts http or https protocols.
               type: string
+              minLength: 1
             login:
               description: |
                 The login name of the workload identity.
               type: string
+              minLength: 1
           required:
             - endpoint_url
             - login
@@ -8994,7 +8984,6 @@ components:
           type: string
           enum:
             - hcv
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/HashiCorpVaultConfig'
       required:
@@ -9066,6 +9055,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9073,6 +9063,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9098,7 +9089,6 @@ components:
           type: string
           enum:
             - token
-          x-terraform-transform-const: true
         token:
           description: The token string to be used for authentication.
           type: string
@@ -9146,6 +9136,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9153,6 +9144,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9178,7 +9170,6 @@ components:
           type: string
           enum:
             - cert
-          x-terraform-transform-const: true
         cert:
           description: The client certificate.
           type: string
@@ -9186,6 +9177,7 @@ components:
             -----BEGIN CERTIFICATE-----
             certificate-content
             -----END CERTIFICATE-----
+          minLength: 1
         key:
           description: The key for the client certificate.
           type: string
@@ -9241,6 +9233,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9248,6 +9241,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9273,7 +9267,6 @@ components:
           type: string
           enum:
             - jwt
-          x-terraform-transform-const: true
         role:
           description: |
             The configured role name in HashiCorp Vault for JWT auth.
@@ -9281,12 +9274,15 @@ components:
             and the `token_policies` have permissions to read the secrets.
           type: string
           example: demo
+          minLength: 1
         token_endpoint:
           description: The OAuth2 token endpoint for Hashicorp Vault's OAuth2 auth method.
           type: string
+          minLength: 1
         client_id:
           description: The OAuth2 client ID.
           type: string
+          minLength: 1
         client_secret:
           description: The OAuth2 client secret.
           type: string
@@ -9340,6 +9336,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9347,6 +9344,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9372,7 +9370,6 @@ components:
           type: string
           enum:
             - approle
-          x-terraform-transform-const: true
         path:
           description: |
             Path for enabling the AppRole auth method. Single leading/trailing slashes are trimmed.
@@ -9441,6 +9438,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9448,6 +9446,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9473,7 +9472,6 @@ components:
           type: string
           enum:
             - kubernetes
-          x-terraform-transform-const: true
         role:
           description: |
             Role assigned to the Kubernetes service account.
@@ -9531,6 +9529,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9538,6 +9537,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9563,13 +9563,14 @@ components:
           type: string
           enum:
             - gcp_iam
-          x-terraform-transform-const: true
         role:
           description: The role to use for GCP IAM auth.
           type: string
+          minLength: 1
         service_account:
           description: The GCP service account for GCE auth.
           type: string
+          minLength: 1
         jwt_exp:
           description: The JWT expiration time in seconds for GCP auth (0-900)
           type: integer
@@ -9621,6 +9622,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9628,6 +9630,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9653,10 +9656,10 @@ components:
           type: string
           enum:
             - gcp_gce
-          x-terraform-transform-const: true
         role:
           description: The role to use for GCP GCE auth.
           type: string
+          minLength: 1
         login_path:
           description: The login path for GCP auth in HashiCorp Vault.
           type: string
@@ -9705,6 +9708,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9712,6 +9716,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9737,10 +9742,10 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         role:
           description: The role to use for Azure auth.
           type: string
+          minLength: 1
         login_path:
           description: The login path for Azure auth in HashiCorp Vault
           type: string
@@ -9789,6 +9794,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9796,6 +9802,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9821,13 +9828,14 @@ components:
           type: string
           enum:
             - aws_ec2
-          x-terraform-transform-const: true
         role:
           description: The role to use for AWS EC2 auth.
           type: string
+          minLength: 1
         nonce:
           description: The nonce for AWS EC2 auth.
           type: string
+          minLength: 1
         login_path:
           description: The login path for AWS auth in HashiCorp Vault.
           type: string
@@ -9877,6 +9885,7 @@ components:
         host:
           description: The hostname of your HashiCorp vault.
           type: string
+          minLength: 1
         port:
           description: The port number of your HashiCorp vault.
           type: integer
@@ -9884,6 +9893,7 @@ components:
           description: The mount point.
           type: string
           default: secret
+          minLength: 1
         kv:
           description: The secrets engine version.
           type: string
@@ -9909,13 +9919,14 @@ components:
           type: string
           enum:
             - aws_iam
-          x-terraform-transform-const: true
         role:
           description: The role to use for AWS IAM auth.
           type: string
+          minLength: 1
         region:
           description: The AWS region for auth.
           type: string
+          minLength: 1
         login_path:
           description: The login path for AWS auth in HashiCorp Vault.
           type: string
@@ -10112,7 +10123,6 @@ components:
           type: string
           enum:
             - redis-ce
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/RedisCEDatastoreConfig'
       required:
@@ -10126,6 +10136,7 @@ components:
         host:
           type: string
           example: 127.0.0.1
+          minLength: 1
         port:
           type: integer
           maximum: 65535
@@ -10187,7 +10198,6 @@ components:
           type: string
           enum:
             - redis-ee
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/RedisEEDatastoreConfig'
       required:
@@ -10201,6 +10211,7 @@ components:
         host:
           type: string
           example: 127.0.0.1
+          minLength: 1
           x-referenceable: true
         port:
           description: |
@@ -10281,6 +10292,7 @@ components:
               host:
                 type: string
                 example: 127.0.0.1
+                minLength: 1
               port:
                 type: integer
                 example: 6379
@@ -10299,6 +10311,7 @@ components:
               ip:
                 type: string
                 example: 127.0.0.1
+                minLength: 1
               port:
                 type: integer
                 example: 6379
@@ -10346,7 +10359,6 @@ components:
           type: string
           enum:
             - vectordb
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/VectorDBDatastoreConfig'
       required:
@@ -10360,6 +10372,7 @@ components:
         host:
           type: string
           example: 127.0.0.1
+          minLength: 1
         port:
           type: integer
           default: 5432
@@ -10376,6 +10389,7 @@ components:
         database:
           type: string
           example: kong-pgvector
+          minLength: 1
         timeout:
           description: 'Timeout in milliseconds for connecting, reading, and writing to the database.'
           type: integer
@@ -10436,7 +10450,6 @@ components:
           type: string
           enum:
             - token-vault
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/TokenVaultDatastoreConfig'
       required:
@@ -10451,10 +10464,12 @@ components:
           description: The name of the directory in which tokens are stored.
           type: string
           example: my-directory
+          minLength: 1
         current_version:
           description: The version of the encryption key used to encrypt new tokens.
           type: string
           example: v1
+          minLength: 1
         keys:
           description: The encryption keys used to protect stored tokens. Keep previous versions in the list so existing tokens can still be decrypted.
           type: array
@@ -10474,6 +10489,7 @@ components:
           description: The identifier of this key version.
           type: string
           example: v1
+          minLength: 1
         key:
           description: |
             A [vault reference](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault) to the encryption key. A literal key value is rejected.
@@ -10634,6 +10650,7 @@ components:
             Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/).
           type: string
           example: ai-sanitizer
+          minLength: 1
         enabled:
           description: Whether the policy is enabled.
           type: boolean
@@ -10711,6 +10728,7 @@ components:
             Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/).
           type: string
           example: ai-sanitizer
+          minLength: 1
         enabled:
           description: Whether the policy is enabled.
           type: boolean
@@ -10788,6 +10806,7 @@ components:
             Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/).
           type: string
           example: ai-sanitizer
+          minLength: 1
         enabled:
           description: Whether the policy is enabled.
           type: boolean
@@ -10866,7 +10885,6 @@ components:
           type: string
           enum:
             - installed
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -10877,6 +10895,7 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -10900,7 +10919,6 @@ components:
           type: string
           enum:
             - streaming
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -10911,10 +10929,12 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         handler:
           description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
           type: string
           example: <lua_handler>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -10950,7 +10970,6 @@ components:
           type: string
           enum:
             - installed
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -10961,6 +10980,7 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -10984,7 +11004,6 @@ components:
           type: string
           enum:
             - streaming
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -10995,10 +11014,12 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         handler:
           description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
           type: string
           example: <lua_handler>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -11034,7 +11055,6 @@ components:
           type: string
           enum:
             - installed
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -11045,6 +11065,7 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -11077,7 +11098,6 @@ components:
           type: string
           enum:
             - streaming
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this custom policy.
           type: string
@@ -11088,10 +11108,12 @@ components:
           description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
           type: string
           example: <lua_schema>
+          minLength: 1
         handler:
           description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
           type: string
           example: <lua_handler>
+          minLength: 1
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -11165,6 +11187,7 @@ components:
               type: string
               format: uri
               example: 'https://booking-agent.internal.kongair.com'
+              minLength: 1
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             route:
@@ -11276,6 +11299,7 @@ components:
               type: string
               format: uri
               example: 'https://booking-agent.internal.kongair.com'
+              minLength: 1
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             route:
@@ -11387,6 +11411,7 @@ components:
               type: string
               format: uri
               example: 'https://booking-agent.internal.kongair.com'
+              minLength: 1
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             route:
@@ -11588,6 +11613,7 @@ components:
           description: The display name for this credential instance.
           type: string
           example: Greg's Dev Key
+          minLength: 1
         name:
           description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
           example: gregs-dev-key
@@ -11628,6 +11654,7 @@ components:
           description: The display name for this credential instance.
           type: string
           example: Greg's Dev Key
+          minLength: 1
         name:
           description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
           example: gregs-dev-key
@@ -11673,6 +11700,7 @@ components:
           description: The display name for this credential instance.
           type: string
           example: Greg's Dev Key
+          minLength: 1
         name:
           description: 'A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation.'
           example: gregs-dev-key
@@ -11756,6 +11784,7 @@ components:
           description: The ID or name of the consumer to add to the group.
           type: string
           example: cf4c7e60-11db-49dd-b300-7c7e5f0f7e6b
+          minLength: 1
       additionalProperties: false
       required:
         - consumer
@@ -11798,7 +11827,6 @@ components:
           type: string
           enum:
             - conversion-only
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig'
         tools:
@@ -11847,7 +11875,6 @@ components:
           type: string
           enum:
             - conversion-listener
-          x-terraform-transform-const: true
         config:
           description: Server-side configuration specific to modes where Kong answers as the MCP server.
           type: object
@@ -11881,6 +11908,7 @@ components:
               type: string
               format: uri
               example: 'https://mcp.internal.kongair.com'
+              minLength: 1
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             certificates:
@@ -12000,7 +12028,6 @@ components:
           type: string
           enum:
             - listener
-          x-terraform-transform-const: true
         config:
           description: Server-side configuration specific to modes where Kong answers as the MCP server.
           type: object
@@ -12117,7 +12144,6 @@ components:
           type: string
           enum:
             - passthrough-listener
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamConfig'
         tools:
@@ -12234,7 +12260,6 @@ components:
           type: string
           enum:
             - upstream-server
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerConfig'
         tools:
@@ -12296,6 +12321,7 @@ components:
         name:
           description: Tool identifier used to match remote MCP Server tools for ACL enforcement.
           type: string
+          minLength: 1
       additionalProperties: false
       required:
         - name
@@ -12384,7 +12410,6 @@ components:
           default: consumer
           enum:
             - consumer
-          x-terraform-transform-const: true
         acls:
           description: |
             Server-level access control rules for allowing or denying consumer groups. This is the
@@ -12439,7 +12464,6 @@ components:
           type: string
           enum:
             - oauth_access_token
-          x-terraform-transform-const: true
         access_token_claim_field:
           description: |
             The claim in the OAuth2 access token to use as the subject for ACL evaluation when `acl_attribute_type` is set to `oauth_access_token`.
@@ -12552,6 +12576,7 @@ components:
         provider:
           description: Name of the upstream credential provider registered in the Token Vault directory.
           type: string
+          minLength: 1
         subject_token_type:
           description: |
             The kind of bearer token the caller presents, which the Token Vault exchanges for the
@@ -12695,7 +12720,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
         access_key_id:
           description: |
             AWS Access Key ID to be used for authentication.
@@ -12749,7 +12773,6 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         client_id:
           description: |
             Azure Client ID.
@@ -12781,7 +12804,6 @@ components:
           type: string
           enum:
             - gcp
-          x-terraform-transform-const: true
         service_account_json:
           description: |
             GCP Service Account JSON.
@@ -13140,6 +13162,7 @@ components:
           type: string
           format: uri
           example: 'https://mcp.internal.kongair.com'
+          minLength: 1
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
@@ -13260,6 +13283,7 @@ components:
           type: string
           format: uri
           example: 'https://mcp.internal.kongair.com'
+          minLength: 1
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
@@ -13357,6 +13381,7 @@ components:
           type: string
           format: uri
           example: 'https://mcp.internal.kongair.com'
+          minLength: 1
         upstream:
           $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
@@ -13589,7 +13614,6 @@ components:
           type: string
           enum:
             - jwt
-          x-terraform-transform-const: true
       additionalProperties: false
       required:
         - type
@@ -13618,19 +13642,20 @@ components:
           type: string
           enum:
             - credentials
-          x-terraform-transform-const: true
         token_endpoint:
           description: |
             The token endpoint URL for fetching the OAuth 2.0 access token using client-credentials.
             This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
           type: string
           format: uri
+          minLength: 1
           x-referenceable: true
         client_id:
           description: |
             The client ID for the OAuth 2.0 client-credentials.
             This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
           type: string
+          minLength: 1
           x-referenceable: true
         client_secret:
           description: |
@@ -13708,7 +13733,6 @@ components:
           type: string
           enum:
             - conversion-only
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig'
         tools:
@@ -13767,7 +13791,6 @@ components:
           type: string
           enum:
             - conversion-listener
-          x-terraform-transform-const: true
         config:
           description: Server-side configuration specific to modes where Kong answers as the MCP server.
           type: object
@@ -13801,6 +13824,7 @@ components:
               type: string
               format: uri
               example: 'https://mcp.internal.kongair.com'
+              minLength: 1
             upstream:
               $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             certificates:
@@ -13930,7 +13954,6 @@ components:
           type: string
           enum:
             - listener
-          x-terraform-transform-const: true
         config:
           description: Server-side configuration specific to modes where Kong answers as the MCP server.
           type: object
@@ -14057,7 +14080,6 @@ components:
           type: string
           enum:
             - passthrough-listener
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamConfig'
         tools:
@@ -14120,7 +14142,6 @@ components:
           type: string
           enum:
             - upstream-server
-          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerConfig'
         tools:
@@ -14257,6 +14278,7 @@ components:
           description: The name of the parameter.
           type: string
           example: origin
+          minLength: 1
         in:
           description: The location of the parameter in the request.
           type: string
@@ -14310,7 +14332,6 @@ components:
           type: string
           enum:
             - key-auth
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the Kong Key auth identity provider.
@@ -14399,7 +14420,6 @@ components:
           type: string
           enum:
             - openid-connect
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the OpenID Connect identity provider.
@@ -14627,6 +14647,7 @@ components:
                   header:
                     description: The name of the header.
                     type: string
+                    minLength: 1
                   path:
                     description: The path of the header value.
                     type: array
@@ -14637,6 +14658,7 @@ components:
               description: |
                 Salt used for generating the cache key that is used for caching the token endpoint requests.
               type: string
+              minLength: 1
             principals:
               description: Map a request to a Kong Identity principal after token verification.
               type: object
@@ -14719,7 +14741,6 @@ components:
           type: string
           enum:
             - key-auth
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the key-auth auth strategy.
@@ -14823,7 +14844,6 @@ components:
           type: string
           enum:
             - openid-connect
-          x-terraform-transform-const: true
         token_vault:
           $ref: '#/components/schemas/AIGatewayTokenVaultEnrollmentProtection'
         config:
@@ -15053,6 +15073,7 @@ components:
                   header:
                     description: The name of the header.
                     type: string
+                    minLength: 1
                   path:
                     description: The path of the header value.
                     type: array
@@ -15063,6 +15084,7 @@ components:
               description: |
                 Salt used for generating the cache key that is used for caching the token endpoint requests.
               type: string
+              minLength: 1
             principals:
               description: Map a request to a Kong Identity principal after token verification.
               type: object
@@ -15141,6 +15163,7 @@ components:
       description: Reference to a model provider instance by name.
       type: string
       example: azure-ai-se
+      minLength: 1
     AIGatewayModelProviderAnthropic:
       description: |
         Configuration for an upstream model provider.
@@ -15150,7 +15173,6 @@ components:
           type: string
           enum:
             - anthropic
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15195,7 +15217,6 @@ components:
           type: string
           enum:
             - baseten
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15239,7 +15260,6 @@ components:
           type: string
           enum:
             - cerebras
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15282,7 +15302,6 @@ components:
           type: string
           enum:
             - cohere
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15325,7 +15344,6 @@ components:
           type: string
           enum:
             - dashscope
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15368,7 +15386,6 @@ components:
           type: string
           enum:
             - databricks
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15411,7 +15428,6 @@ components:
           type: string
           enum:
             - deepseek
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15454,7 +15470,6 @@ components:
           type: string
           enum:
             - huggingface
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15497,7 +15512,6 @@ components:
           type: string
           enum:
             - kimi
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15540,7 +15554,6 @@ components:
           type: string
           enum:
             - llama2
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15583,7 +15596,6 @@ components:
           type: string
           enum:
             - mistral
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15626,7 +15638,6 @@ components:
           type: string
           enum:
             - ollama
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15669,7 +15680,6 @@ components:
           type: string
           enum:
             - openai
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15712,7 +15722,6 @@ components:
           type: string
           enum:
             - vercel
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15755,7 +15764,6 @@ components:
           type: string
           enum:
             - vllm
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15798,7 +15806,6 @@ components:
           type: string
           enum:
             - xai
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15843,7 +15850,6 @@ components:
           type: string
           enum:
             - typesafe
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15887,7 +15893,6 @@ components:
           type: string
           enum:
             - basic
-          x-terraform-transform-const: true
         headers:
           type: array
           items:
@@ -15901,6 +15906,7 @@ components:
                   The name of the header used for authentication.
                   This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
                 type: string
+                minLength: 1
                 x-referenceable: true
               value:
                 description: |
@@ -15923,6 +15929,7 @@ components:
                 description: |
                   This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
                 type: string
+                minLength: 1
                 x-referenceable: true
               value:
                 description: |
@@ -15950,7 +15957,6 @@ components:
           type: string
           enum:
             - bedrock
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -15999,7 +16005,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
         access_key_id:
           description: |
             The access key id for authenticating with static IAM User credentials.
@@ -16065,7 +16070,6 @@ components:
           type: string
           enum:
             - aws
-          x-terraform-transform-const: true
         access_key_id:
           description: |
             The access key id for authenticating with static IAM User credentials.
@@ -16123,7 +16127,6 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -16181,6 +16184,7 @@ components:
                   description: The Azure AI Foundry resource name.
                   type: string
                   example: kong-foundry-east
+                  minLength: 1
                 domain:
                   description: The domain for Azure AI Foundry hosted models.
                   type: string
@@ -16203,7 +16207,6 @@ components:
           type: string
           enum:
             - azure
-          x-terraform-transform-const: true
         client_id:
           description: |
             If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID.
@@ -16239,7 +16242,6 @@ components:
           type: string
           enum:
             - gemini
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -16288,7 +16290,6 @@ components:
           type: string
           enum:
             - gcp
-          x-terraform-transform-const: true
         service_account_json:
           description: |
             Full JSON string of the GCP service account to authenticate. If not set (and gcp_use_service_account is true), the service account JSON will be from the environment variable GCP_SERVICE_ACCOUNT.
@@ -16364,7 +16365,6 @@ components:
           type: string
           enum:
             - sagemaker
-          x-terraform-transform-const: true
         display_name:
           description: The display name for this model provider instance.
           type: string
@@ -16506,6 +16506,7 @@ components:
       type: string
       example: my-secret-value
       maxLength: 8192
+      minLength: 1
       writeOnly: true
     CreateAIGatewayConfigStoreSecretRequest:
       type: object
@@ -16746,7 +16747,6 @@ components:
           type: string
           enum:
             - key-auth
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the Kong Key auth identity provider.
@@ -16844,7 +16844,6 @@ components:
           type: string
           enum:
             - openid-connect
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the OpenID Connect identity provider.
@@ -17072,6 +17071,7 @@ components:
                   header:
                     description: The name of the header.
                     type: string
+                    minLength: 1
                   path:
                     description: The path of the header value.
                     type: array
@@ -17082,6 +17082,7 @@ components:
               description: |
                 Salt used for generating the cache key that is used for caching the token endpoint requests.
               type: string
+              minLength: 1
             principals:
               description: Map a request to a Kong Identity principal after token verification.
               type: object
@@ -17196,7 +17197,6 @@ components:
           type: string
           enum:
             - key-auth
-          x-terraform-transform-const: true
         config:
           description: |
             Configuration for the key-auth auth strategy.
@@ -17309,7 +17309,6 @@ components:
           type: string
           enum:
             - openid-connect
-          x-terraform-transform-const: true
         token_vault:
           $ref: '#/components/schemas/AIGatewayTokenVaultEnrollmentProtection'
         config:
@@ -17539,6 +17538,7 @@ components:
                   header:
                     description: The name of the header.
                     type: string
+                    minLength: 1
                   path:
                     description: The path of the header value.
                     type: array
@@ -17549,6 +17549,7 @@ components:
               description: |
                 Salt used for generating the cache key that is used for caching the token endpoint requests.
               type: string
+              minLength: 1
             principals:
               description: Map a request to a Kong Identity principal after token verification.
               type: object
@@ -17690,6 +17691,7 @@ components:
             `x-api-key` or `cookie`. Names are compared case-insensitively.
           type: string
           example: my-tenant-id
+          minLength: 1
           pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$'
         tag_key:
           description: Key of the cost tag the header value is stored under.
@@ -17714,6 +17716,7 @@ components:
             compared case-insensitively.
           type: string
           example: my-co
+          minLength: 1
           pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)+$'
       required:
         - name
@@ -17739,15 +17742,17 @@ components:
       description: |
         Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
 
-        Keys must be 1–63 characters long and start with an alphanumeric character.
+        Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+        Values must be 1–127 characters long and must not be empty.
+        Keys and values must not contain spaces or control characters.
       type: object
       example:
         owner: terraform
       additionalProperties:
         type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        pattern: '^[^\s\x00-\x1F\x7F-\x9F]+$'
         minLength: 1
-        maxLength: 63
+        maxLength: 127
       maxProperties: 5
       title: ManagedBy
     UUID:

@@ -35,6 +35,7 @@ Available Commands:
   event-gateway List or get Konnect Event Gateways
   extension     Get a kongctl CLI extension
   gateway       Manage Konnect Kong Gateway resources
+  identity      Manage Kong Identity resources
   konnect       Manage Konnect resources
   me            Get current user information
   mesh          Manage Kong Mesh control plane resources
