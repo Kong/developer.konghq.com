@@ -409,9 +409,9 @@ config:
 
 ## Load balancing and failover
 
-A single upstream agent is a single point of failure.
-When that replica is slow or its region has an outage, every client of the AI Agent is affected.
-To avoid this, run the agent in more than one place, for example in several regions for latency or data residency, or as a primary with a standby, and define [`config.targets`](#schema-aigateway-agent-config-targets) instead of a single [`config.url`](#schema-aigateway-agent-config-url).
+An AI Agent with a single upstream agent has a single point of failure.
+When the upstream agent is slow or its region has an outage, every client of the AI Agent is affected.
+To avoid this, run the upstream agent in more than one place, for example in several regions for latency or data residency, or as a primary with a standby, and define [`config.targets`](#schema-aigateway-agent-config-targets) instead of a single [`config.url`](#schema-aigateway-agent-config-url).
 {{site.ai_gateway}} then distributes requests across the targets and stops sending traffic to a target that isn't responding.
 
 Set either `config.url` or `config.targets`. An AI Agent can't use both.
@@ -430,7 +430,7 @@ columns:
 rows:
   - goal: "Spread load across regional replicas"
     how: "Add one target for each replica and use `round-robin`. Give each target a [`weight`](#schema-aigateway-agent-config-targets) that reflects its capacity, for example `100` for a large region and `50` for a smaller one."
-  - goal: "Roll out a new agent version gradually"
+  - goal: "Roll out a new version gradually"
     how: "Add the current and the new deployment as targets and give the new one a small weight, such as `90` and `10`. Raise the weight as you gain confidence."
   - goal: "Keep a standby for outages"
     how: "Set `failover: true` on the standby target. It receives traffic only when all regular targets are unavailable."
@@ -460,7 +460,7 @@ rows:
   - algorithm: "`lowest-latency`"
     use: "Replicas in different regions, where the closest or least busy one should serve most traffic."
   - algorithm: "`consistent-hashing`"
-    use: "Agents that keep state per session. Requests with the same value in the [`hash_on_header`](#schema-aigateway-agent-config-balancer-hash-on-header) header always go to the same target."
+    use: "Upstream agents that keep session state in memory. Requests with the same value in the [`hash_on_header`](#schema-aigateway-agent-config-balancer-hash-on-header) header always go to the same target."
 {% endtable %}
 <!-- vale on -->
 

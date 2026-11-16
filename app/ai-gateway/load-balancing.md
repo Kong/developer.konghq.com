@@ -783,3 +783,16 @@ rows:
 <!--vale on-->
 
 {% include md/ai-gateway/v2/circuit-breaker.md %}
+
+## Load balancing for AI Agents and MCP Servers
+
+The algorithms, retry and fallback, and health check settings on this page apply to the AI Model entity.
+AI Agents and AI MCP Servers balance traffic differently.
+You define multiple `config.targets` for replicas of the same upstream agent or MCP server.
+You then choose one of four algorithms: `round-robin`, `least-connections`, `lowest-latency`, or `consistent-hashing`.
+Use targets to spread load across regional replicas or to fail over to a standby when the regular targets are unavailable.
+
+For configuration and examples, see:
+
+- [Load balancing and failover for AI Agents](/ai-gateway/entities/ai-agent/#load-balancing-and-failover)
+- [Load balancing and failover for AI MCP Servers](/ai-gateway/entities/ai-mcp-server/#load-balancing-and-failover)
