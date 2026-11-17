@@ -60,7 +60,7 @@ The matching behavior is as follows:
 
 ## Message selection
 
-{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-semantic-prompt-guard" action="evaluates" %}
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-semantic-prompt-guard" action="evaluates" local=true %}
 
 
 ## Text chunking

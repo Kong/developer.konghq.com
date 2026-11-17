@@ -211,11 +211,7 @@ This Policy sends NeMo a `messages` array with roles instead of one block of tex
 
 ## Text chunking
 
-{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="NeMo guardrail service" window=1500 audit=true streaming=true %}
-
-This Policy sends a list of messages.
-It splits the conversation into groups of whole messages that fit the window.
-A single message larger than the window is split by text.
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="NeMo guardrail service" window=1500 audit=true streaming=true messages=true %}
 NeMo doesn't evaluate any rails for a group without a user message.
 The Policy therefore repeats a user turn at the start of each group.
 That turn counts toward the window.

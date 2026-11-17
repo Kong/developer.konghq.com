@@ -33,7 +33,7 @@ You can use a combination of `allow` and `deny` rules to preserve integrity and 
 
 ## Message selection
 
-{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-prompt-guard" %}
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-prompt-guard" local=true %}
 
 
 ## Text chunking

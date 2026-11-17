@@ -65,7 +65,7 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 
 ## Response selection
 
-{% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" %}
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" local=true %}
 
 For responses, the Policy accepts a narrower set of keys, because a response holds one turn from the model:
 

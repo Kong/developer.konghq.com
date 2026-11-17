@@ -29,7 +29,7 @@ Before using the AI AWS Guardrails Policy, you must define your guardrail polici
 
 ## How it works
 
-The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
+The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many characters of the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 characters from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as the response streams in.
 
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
