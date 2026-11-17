@@ -266,3 +266,43 @@ body:
 
 You can also configure allowed IPs for your Dev Portals. For more information, see [Specify IP addresses that can connect to your Dev Portal](/dev-portal/security-settings/#specify-ip-addresses-that-can-connect-to-your-dev-portal).
 
+## Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}
+
+If you connect to {{site.konnect_short_name}} using [AWS PrivateLink](/gateway/aws-private-link/), the PrivateLink endpoints aren't bound to a specific organization. 
+For example, if you have separate endpoints for your development and production environments, the development endpoint can still reach your production organization.
+
+<!-- TODO: confirm with eng which role or team can manage the VPCE ID allowlist (Org Admin?). -->
+You can restrict which AWS VPC endpoints are allowed to connect to your organization by adding the endpoint IDs (`vpce-` followed by a hexadecimal string) to a VPCE ID allowlist. 
+When the allowlist is enabled, {{site.konnect_short_name}} rejects any request from an endpoint that isn't on the list with an HTTP `403` response.
+
+Unlike the [IP allowlist](#specify-ip-addresses-that-can-connect-to-konnect), which applies to the UI and the APIs, the VPCE ID allowlist applies to all connections to your organization through PrivateLink. 
+This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic.
+
+Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
+
+{:.warning}
+> **Important:**
+> * After you enable the VPCE ID allowlist, you can no longer use the {{site.konnect_short_name}} UI in a browser. The allowlist applies to the {{site.konnect_short_name}} APIs that the UI uses, so you must manage the allowlist through the API.
+> * You must add at least one endpoint ID to the list before you can enable it.
+<!-- TODO: confirm with eng whether the list must include a VPCE ID for the Global geo endpoint, since disabling the allowlist requires an API call through an allowed endpoint. -->
+
+To configure a VPCE ID allowlist for {{site.konnect_short_name}}, send a PUT request to the `/organizations/$ORG_ID/vpce-id-allow-list` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/organizations/$ORG_ID/vpce-id-allow-list
+status_code: 201
+region: global
+method: PUT
+body:
+    enabled: true
+    allowed_vpce_ids:
+    - vpce-0123456789abcdef0
+{% endkonnect_api_request %}
+<!--vale on-->
+
+A PUT request returns a `409` error if an allowlist already exists for your organization. 
+
+<!-- TODO: confirm UI location, if any, for configuring the VPCE ID allowlist. -->
+<!-- TODO: confirm how the VPCE ID allowlist and IP allowlist interact when both are enabled. -->
+

@@ -22,6 +22,8 @@ related_resources:
     url: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
   - text: AWS VPC peering
     url: /dedicated-cloud-gateways/aws-vpc-peering/
+  - text: Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}
+    url: /konnect-platform/network/#specify-aws-vpc-endpoints-that-can-connect-to-konnect
 
 tags:
   - aws
@@ -94,6 +96,12 @@ headers:
    cluster_telemetry_endpoint = us.svc.konghq.com:443/tp/$CLUSTER_PREFIX
    cluster_telemetry_server_name = us.svc.konghq.com
    ```
+
+## Restrict {{site.konnect_short_name}} access to specific endpoints
+
+PrivateLink endpoints aren't bound to a specific {{site.konnect_short_name}} organization. 
+To only allow specific endpoints to connect to your organization, add the ID of each endpoint you created in this section (`vpce-` followed by a hexadecimal string) to a VPCE ID allowlist. 
+For more information about how to configure this, see [Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}](/konnect-platform/network/#specify-aws-vpc-endpoints-that-can-connect-to-konnect).
 
 ## Regional PrivateLink service names
 
