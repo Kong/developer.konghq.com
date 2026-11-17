@@ -69,7 +69,6 @@ faqs:
 
 {{site.ai_cost_management}} records the cost of each AI request that passes through {{site.ai_gateway}} as a usage event.
 If you need to see where AI spend goes, or check what the gateway reported for a request, you can use the **Cost Management** > **Dashboard** views in {{site.konnect_short_name}}.
-The Dashboard has four tabs: **Overview**, **Coding harnesses**, **Explorer**, and **Events debugger**.
 
 The views read stored usage events, so a request can take a short time to appear after it finishes.
 All times in the console are in UTC.
@@ -135,7 +134,6 @@ The Dashboard opens on the **Overview** tab, which summarizes spend for a time r
 The time range defaults to month to date.
 The chart and breakdown update every minute, and **Refresh** reloads every section.
 
-The Overview starts with five cards: **Spend**, **Projection**, **Ceiling**, **Unattributed spend**, and **Unpriced calls**.
 Click **Unattributed spend** or **Unpriced calls** to open the Events debugger filtered to those events.
 Team managers and individual users don't see the **Ceiling** and **Unattributed spend** cards.
 
@@ -337,8 +335,9 @@ rows:
 <!--vale on-->
 
 The Events debugger also filters on the following fields.
-In the API, Time range, Price, and Token usage are available as filters on the [list endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) only.
-Arrival also works in the JSON `filters` of the query endpoint, exports, and export schedules.
+
+In the {{site.ai_cost_management}} API, `time`, `reported_cost`, and `tokens` are available as filters on the [list endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) only.
+`arrival` also works in the JSON `filters` of the query endpoint, exports, and export schedules.
 
 <!--vale off-->
 {% table %}
@@ -377,10 +376,57 @@ The query endpoint, exports, and export schedules take a JSON `filters` object t
 These filters don't accept `oeq`, `ocontains`, or `nexists`.
 They use the following operators instead, where `exists` takes `true` or `false`:
 
-* `provider`, `model`, `subject`, `request_mode`, `client`, `source`, `arrival`, and `tags.<key>` take `eq`, `neq`, `in`, `nin`, `contains`, `ncontains`, and `exists`.
-* `service_id`, `route_id`, `consumer_id`, and `application_id` take `eq`, `neq`, `in`, `nin`, and `exists`.
-* `groups`, `teams`, and `consumer_group_ids` take `has`, `has_any`, `nhas`, `nhas_any`, and `exists`.
-* `and` and `or` combine several operators on one field.
+{% table %}
+columns:
+  - title: Filters
+    key:  filters
+  - title: Operators
+    key: operators
+rows:
+  - filters: |
+      * `provider`
+      * `model`
+      * `subject`
+      * `request_mode`
+      * `client`
+      * `source`
+      * `arrival`
+      * `tags.<key>` 
+    operators: |
+      * `eq`
+      * `neq`
+      * `in`
+      * `nin`
+      * `contains`
+      * `ncontains`
+      * `exists`
+  - filters: |
+      * `service_id`
+      * `route_id`
+      * `consumer_id`
+      * `application_id`
+    operators: |
+      * `eq`
+      * `neq`
+      * `in`
+      * `nin`
+      * `exists`
+  - filters: |
+      * `groups`
+      * `teams`
+      * `consumer_group_ids`
+    operators: |
+      * `has`
+      * `has_any`
+      * `nhas`
+      * `nhas_any`
+      * `exists`
+      
+  - filters: |
+      * `and`
+      * `or`
+    operators: Combine several operators on one field.
+{% endtable %}
 
 For example, the following filters select the usage served by Anthropic for members of the `oidc/team-koko` group:
 
@@ -392,7 +438,6 @@ For example, the following filters select the usage served by Anthropic for memb
   }
 }
 ```
-{:.no-copy-code}
 
 ## Troubleshoot missing or wrong data
 
@@ -431,7 +476,7 @@ rows:
 You can also use the [usage query endpoint](/api/konnect/ai-cost-management/v1/#/operations/query-cost-usage-events) to total usage.
 A query can group by up to two dimensions and span up to 400 buckets.
 
-To list the usage events of October 2026 that arrived late, send a `GET` request to the [`/v1/ai-cost-management/events` endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) with the [`arrival`](#filters-and-dimensions) filter set to `late` and a [time range](#filters-and-dimensions):
+For example, to list the usage events of October 2026 that arrived late, send a `GET` request to the [`/v1/ai-cost-management/events` endpoint](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events) with the [`arrival`](#filters-and-dimensions) filter set to `late` and a [time range](#filters-and-dimensions):
 
 <!--vale off-->
 {% konnect_api_request %}

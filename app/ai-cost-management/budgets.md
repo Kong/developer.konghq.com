@@ -200,10 +200,12 @@ Set the limit as an amount in US dollars, for example `500` or `0.2`.
 The size of a budget window is fixed.
 Consecutive windows have the same length and align to an anchor.
 * The [interval](#schema-aicost-limit-budget-input-window-interval) sets the length of each window, like one month or one day.
+
+   The interval is an ISO 8601 duration from one second to 100 years, like `P1M` or `P1D`.
+
 * The [anchor](#schema-aicost-limit-budget-input-window-anchored-at) sets a time when a window starts, in a specific time zone.
 
-The interval is an ISO 8601 duration from one second to 100 years, like `P1M` or `P1D`.
-The anchor is a date-time with a UTC offset and an IANA time zone in brackets, like `2026-01-01T00:00:00+00:00[UTC]`, in a year from 1970 to 2200.
+   The anchor is a date-time with a UTC offset and an IANA time zone in brackets, like `2026-01-01T00:00:00+00:00[UTC]`, in a year from 1970 to 2200.
 
 Windows start a whole number of intervals before or after the anchor, in the local time of the anchor's time zone.
 Calendar units like months therefore stay aligned to the calendar.

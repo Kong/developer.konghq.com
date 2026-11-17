@@ -61,7 +61,8 @@ Several channels can share a name.
 * **Email**: {{site.ai_cost_management}} sends one message to each recipient address. A channel holds 1 to 10 addresses. Each address can appear only once, ignoring case.
 * **Slack**: {{site.ai_cost_management}} posts the message to the Slack incoming webhook URL, which you create in your own Slack workspace. The channel accepts only Slack incoming webhook URLs.
 
-Email channels don't accept some valid addresses yet: addresses with a quoted local part, IP address literals, and internationalized domain names.
+{:.warning}
+> **Warning**: Email channels don't accept some valid addresses. Addresses with a quoted local part, IP address literals, and internationalized domain names are rejected.
 
 When you read a Slack channel back, the API replaces the secret token at the end of the webhook URL with `…`.
 When you replace a Slack channel, you can omit `slack.webhook_url` to keep the stored URL.
@@ -139,8 +140,9 @@ To check a channel before you attach it to a budget, send it a test message.
 The test message looks like an alert, with test wording and example figures.
 Its title is `Test message from channel "<name>"`, with the name of the channel.
 {{site.ai_cost_management}} sends the test within seconds and records the outcome as a notification event.
-A test needs permission to edit the channel, and a failed test isn't retried.
-A test doesn't appear in the list of notification events, so you can read it only by its ID.
+A test needs permission to edit the channel. Failed tests aren't retried.
+
+Tests don't appear in the list of notification events, so you can read them only by their ID.
 
 {% navtabs "test-channel" %}
 {% navtab "UI" %}

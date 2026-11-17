@@ -173,7 +173,7 @@ A `day` charge period produces fewer rows than `hour`, which reduces the risk of
 
 Tag keys name the tag dimensions that split FOCUS rows.
 A row's `Tags` column holds each configured key and its value for the events the row aggregates.
-Each key is 1 to 128 characters of lowercase ASCII letters, digits, `.`, `_`, or `-`, and a FOCUS export supports at most 64 tag keys.
+Each key is 1 to 128 characters of lowercase ASCII letters, digits, `.`, `_`, or `-`. A FOCUS export supports at most 64 tag keys.
 A key with a different value for each run, such as `agent-session` or `ci-run`, produces about one row per run.
 
 ## Export lifecycle
@@ -240,7 +240,11 @@ When a schedule resumes from `paused`, the periods that ended while it was pause
 After an outage, a schedule catches up on at most the 31 most recent periods that ended while it was `active`.
 
 To change a schedule, send a `PUT` request to the [`/v1/ai-cost-management/export-schedules/{scheduleId}` endpoint](/api/konnect/ai-cost-management/v1/#/operations/upsert-cost-export-schedule) with the full schedule.
-An omitted field takes its default: `filters` and `labels` are cleared, `status` becomes `active`, which resumes a paused schedule, and `schema_version` becomes `1`.
+An omitted field falls back to its default value: 
+* `filters` and `labels` are cleared.
+* `status` becomes `active`, which resumes a paused schedule.
+* `schema_version` becomes `1`.
+
 Repeat `cadence` and `time_zone` unchanged. An omitted `time_zone` reads as `UTC`, so the request fails for a schedule in another time zone.
 Set `status` to `paused` to pause the schedule and to `active` to resume it.
 The change applies to periods that end after it, and existing exports don't change.
@@ -295,7 +299,7 @@ The response holds the new export with `status: pending`.
 To export only some events, add a `filters` object. See [Filters in a JSON body](/ai-cost-management/analytics-and-debugging/#filters-in-a-json-body).
 
 Poll [`GET /v1/ai-cost-management/exports/{exportId}`](/api/konnect/ai-cost-management/v1/#/operations/get-cost-export) until `status` is `succeeded` or `failed`.
-An export waits while another export in the organization runs.
+If there is another export running in the organization, the new export waits in a queue.
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/ai-cost-management/exports/$EXPORT_ID

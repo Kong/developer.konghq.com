@@ -48,7 +48,7 @@ faqs:
       Groups on a usage event come from the request's {{site.identity}} group memberships, gateway consumer groups, and JWT claims.
       * For OIDC attribution, check that the attribution plugin is installed on the gateway, that the token includes `group` or `groups` claims, and that the **Groups from tokens** patterns match the group names.
       * For principal attribution, check that the principal has the expected group memberships in {{site.identity}}.
-      * Check that no source exceeds its [group limit](#groups). A source over its limit adds no groups to the event.
+      * Check that the source doesn't exceed its [group limit](#groups). If a source is over its limit, it stops adding groups to the event.
   - q: Why is a tag missing from a usage event?
     a: |
       A tag could be missing from a usage event when its header doesn't meet the tag rules.
@@ -153,8 +153,11 @@ They come from any of the following sources:
 The attribution plugin keeps the token's groups that match its **Groups from tokens** patterns (`group_patterns`), or every group when there are no patterns.
 It drops a claim whole when more than 64 groups in it match.
 
-Each source has its own limit: 200 {{site.identity}} groups, 64 consumer groups, and 64 OIDC groups.
-When a source exceeds its limit, the event gets no groups from that source and keeps the groups from the others.
+Each source has its own limit:
+* 200 {{site.identity}} groups
+* 64 Consumer groups
+* 64 OIDC groups
+When a source exceeds its limit, events stop getting groups from that source, and keep the groups from other sources.
 
 ### Teams
 
@@ -178,7 +181,7 @@ For example, to set the `project` tag to `atlas`, send the header `ai-cost-proje
 The `ai-cost-` headers follow these rules:
 
 - **Key:** Lowercase letters and digits in words joined by single hyphens, at most 128 characters, such as `cost-center`.
-  A key with `.`, `_`, or a double hyphen produces no tag.
+  A key with `.`, `_`, or a double hyphen doesn't produce a tag.
 - **Value:** Between 1 and 256 characters, no control characters, case-sensitive.
 - Header names arrive in lowercase, so `ai-cost-Project` and `ai-cost-project` are the same header.
 - Each `ai-cost-` header must appear once per request.
@@ -196,12 +199,12 @@ See [Attribution integrations](/ai-cost-management/integrations/) for the suppor
 ### Tag precedence
 
 When two sources give the same tag key, the attribution plugin keeps the value from the source that comes first in the following list:
-1. Tags on every request (`operator_tags`)
-1. Mapped headers (`headers`)
-1. Mapped prefixes (`prefixes`)
-1. `ai-cost-` headers
-1. Other AI gateways' metadata headers, listed in [Integrations](/ai-cost-management/integrations/)
-1. Tools' own headers, such as Claude Code and Codex CLI headers
+1. Tags on every request (`operator_tags`).
+1. Mapped headers (`headers`).
+1. Mapped prefixes (`prefixes`).
+1. `ai-cost-` headers.
+1. Other {{site.ai_gateway}}s' metadata headers, listed in [Integrations](/ai-cost-management/integrations/).
+1. Tools' own headers, such as Claude Code and Codex CLI headers.
 
 ### Standard tag keys
 
@@ -354,7 +357,7 @@ The strategy type determines which subject you get:
 * A `key-auth` strategy attributes the request to its [AI Consumer](/ai-gateway/entities/ai-consumer/).
 * An `openid-connect` strategy with `principals.enabled` attributes the request to a {{site.identity}} principal.
   Pair it with a [trusted IdP](/identity/token-vault/#trusted-idp) and [automatic user provisioning](#automatic-user-provisioning) to create a principal on first login.
-* An `openid-connect` strategy without `principals.enabled` attributes the request to the token's raw `sub` claim, with no principal or consumer involved.
+* An `openid-connect` strategy without `principals.enabled` attributes the request to the token's raw `sub` claim, with no Principal or Consumer involved.
   Keep `credential_claim` at its default, `sub`.
   The usage event doesn't record which claim was used, and a claim such as `email` puts personal data in the subject.
 
@@ -377,8 +380,8 @@ The following prerequisites apply to the attribution plugin:
 * You have the AI Gateways Admin role on the {{site.ai_gateway}}, because the plugin is written to the gateway with your credentials.
 
 {:.warning}
-> While the attribution plugin is installed, a data plane without `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on` rejects the gateway's whole configuration, not only the plugin.
-> Set the flag on every new data plane before it connects.
+> While the attribution plugin is installed, a data plane without `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=on` rejects the gateway's whole configuration.
+> Set the flag on every new data plane before connecting it to the control plane.
 
 #### Set up
 
@@ -427,15 +430,6 @@ body:
 
 ## Attribution plugin schema
 
-The attribution plugin configuration has the following fields:
-* `integrations`: The tools whose own headers the plugin reads, such as `claude-code` and `codex`.
-* `headers`: Request headers mapped to tag keys, one header to one key.
-* `prefixes`: Header prefixes whose headers become tags. With the prefix `my-co`, the header `my-co-region` becomes the tag `region`.
-* `operator_tags`: Tags added to every request through the gateway, as a map of tag key to value. The UI calls these **Tags on every request**.
-* `group_patterns`: Regular expressions that choose which groups the plugin keeps from a token's `group` and `groups` claims. The UI calls these **Groups from tokens**.
-
-`headers` and `prefixes` hold at most 32 entries together.
-Credential headers, such as `authorization`, can't be mapped.
 
 Plugin updates are manual.
 To update a gateway to the latest plugin version, select **Update to** in its actions menu on the **Gateways** tab, or send a `PUT` with the gateway's stored configuration.

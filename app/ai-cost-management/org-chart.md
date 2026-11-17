@@ -197,7 +197,7 @@ Select a team or user to see its details:
 A cost center is where a user's spend is charged.
 You set it per user, either with the optional `cost_center` column in the org structure file or in the [user's details](/ai-access-management/concepts/#users).
 Until a user has one, their details show **Unattributed** as the cost center.
-Cost center doesn't change how {{site.ai_cost_management}} reports spend.
+Cost centers don't change how {{site.ai_cost_management}} reports spend.
 Teams don't have cost centers, only individual users.
 
 The `cost_center` column works as follows:
