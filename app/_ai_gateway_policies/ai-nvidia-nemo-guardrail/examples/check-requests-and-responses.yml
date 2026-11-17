@@ -15,10 +15,10 @@ requirements:
   - An OpenAI API key.
   - "A stored NeMo guardrail configuration named `content_safety_input_output` that defines an input rail and an output rail."
 
-# variables:
-#   openai_api_key:
-#     description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
-#     value: $OPENAI_API_KEY
+variables:
+  openai_api_key:
+    description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+    value: $OPENAI_API_KEY
 
 name: check-requests-and-responses
 display_name: Check requests and responses
