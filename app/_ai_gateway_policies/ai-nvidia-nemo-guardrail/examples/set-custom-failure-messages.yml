@@ -1,0 +1,42 @@
+title: 'Set custom failure messages'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to return custom messages when it blocks a request or a response.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to return custom messages when it blocks a request or a response.
+  The policy returns `request_failure_message` when NeMo blocks a request, and `response_failure_message` when NeMo blocks a response.
+
+weight: 600
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+  - "A stored NeMo guardrail configuration named `content_safety_input_output` that defines an input rail and an output rail."
+
+# variables:
+#   openai_api_key:
+#     description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+#     value: $OPENAI_API_KEY
+
+name: set-custom-failure-messages
+display_name: Set custom failure messages
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: BOTH
+  timeout: 30000
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config_id: content_safety_input_output
+  request_failure_message: Your request was blocked because it violates the content safety policy.
+  response_failure_message: The response was blocked because it violates the content safety policy.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -1,0 +1,56 @@
+title: 'Check requests with an inline guardrail configuration'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to send a complete guardrail configuration to NeMo with every check.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to send a complete guardrail configuration to NeMo with every check.
+  {{site.ai_gateway}} forwards `config.guardrails.config` to NeMo as-is and doesn't validate it, so configuration errors appear only when NeMo rejects the check.
+  The model named in `guardrails.config.models` must be available to the NeMo microservice.
+
+weight: 800
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+
+# variables:
+#   openai_api_key:
+#     description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+#     value: $OPENAI_API_KEY
+
+name: check-requests-with-an-inline-configuration
+display_name: Check requests with an inline guardrail configuration
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: INPUT
+  timeout: 30000
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config:
+      models:
+        - type: content_safety
+          engine: openai
+          model: gpt-5.1
+      rails:
+        input:
+          flows:
+            - content safety check input $model=content_safety
+      prompts:
+        - task: "content_safety_check_input $model=content_safety"
+          models:
+            - openai/gpt-5.1
+          content: |
+            Task: Check if there is unsafe content in the user message.
+          output_parser: nemoguard_parse_prompt_safety
+          max_tokens: 50
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

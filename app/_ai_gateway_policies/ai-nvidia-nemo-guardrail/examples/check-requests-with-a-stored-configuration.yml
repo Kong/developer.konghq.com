@@ -1,0 +1,42 @@
+title: 'Check requests with a stored guardrail configuration'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to check requests against a guardrail configuration stored on the NeMo server.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to check requests against a guardrail configuration stored on the NeMo server.
+  The policy references the stored configuration by ID with `config.guardrails.config_id`.
+  The default `guarding_mode` is `INPUT`, so the policy checks requests only and doesn't check responses.
+  Set `config.auth.prefix` to an empty string when the NeMo model uses `engine: openai`, because NeMo passes the header value to its OpenAI client as the API key.
+
+weight: 900
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+  - "A stored NeMo guardrail configuration named `content_safety`."
+
+# variables:
+#   openai_api_key:
+#     description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+#     value: $OPENAI_API_KEY
+
+name: check-requests-with-a-stored-configuration
+display_name: Check requests with a stored guardrail configuration
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: INPUT
+  timeout: 30000
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config_id: content_safety
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

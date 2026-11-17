@@ -1,0 +1,41 @@
+title: 'Mask violating content instead of blocking it'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to mask violating content instead of blocking the request or response.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to mask violating content instead of blocking the request or response.
+  Enabling `allow_masking` disables streaming, because the policy needs the complete payload to mask it.
+
+weight: 500
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+  - "A stored NeMo guardrail configuration named `content_safety`."
+
+# variables:
+#   openai_api_key:
+#     description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+#     value: $OPENAI_API_KEY
+
+name: mask-violating-content
+display_name: Mask violating content instead of blocking it
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: INPUT
+  timeout: 30000
+  allow_masking: true
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config_id: content_safety
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
