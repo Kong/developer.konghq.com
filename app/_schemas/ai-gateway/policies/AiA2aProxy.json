@@ -22,24 +22,9 @@
     "config": {
       "type": "object",
       "properties": {
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
-        },
         "proxy_config": {
           "type": "object",
           "properties": {
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
             "https_proxy_port": {
               "type": "integer",
               "maximum": 65535,
@@ -70,6 +55,16 @@
               "description": "Comma-separated list of hosts that should not be proxied."
             },
             "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "https_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
             }
@@ -110,11 +105,27 @@
             "aws_iam": {
               "type": "object",
               "properties": {
+                "sts_endpoint_url": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
+                },
+                "aws_access_key_id": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
                 "aws_session_token": {
                   "type": "string",
                   "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SESSION_TOKEN environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 },
                 "bearer_token": {
                   "type": "string",
@@ -133,28 +144,17 @@
                 "role_session_name": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
-                },
-                "sts_endpoint_url": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
-                },
-                "aws_access_key_id": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
-                },
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
                 }
               },
               "description": "Common AWS authentication options."
             }
           },
           "description": "Set the provider and its options for authenticating requests before proxying."
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
         }
       }
     },

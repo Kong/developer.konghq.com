@@ -1,5 +1,30 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "size_unit": {
+          "type": "string",
+          "enum": [
+            "bytes",
+            "kilobytes",
+            "megabytes"
+          ],
+          "description": "Size unit can be set either in `bytes`, `kilobytes`, or `megabytes` (default). This configuration is not available in versions prior to Kong Gateway 1.3 and Kong Gateway (OSS) 2.0.",
+          "default": "megabytes"
+        },
+        "require_content_length": {
+          "type": "boolean",
+          "description": "Set to `true` to ensure a valid `Content-Length` header exists before reading the request body.",
+          "default": false
+        },
+        "allowed_payload_size": {
+          "type": "integer",
+          "description": "Allowed request payload size in megabytes. Default is `128` megabytes (128000000 bytes).",
+          "default": 128
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -18,31 +43,6 @@
         "http",
         "https"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "allowed_payload_size": {
-          "type": "integer",
-          "description": "Allowed request payload size in megabytes. Default is `128` megabytes (128000000 bytes).",
-          "default": 128
-        },
-        "size_unit": {
-          "type": "string",
-          "enum": [
-            "bytes",
-            "kilobytes",
-            "megabytes"
-          ],
-          "description": "Size unit can be set either in `bytes`, `kilobytes`, or `megabytes` (default). This configuration is not available in versions prior to Kong Gateway 1.3 and Kong Gateway (OSS) 2.0.",
-          "default": "megabytes"
-        },
-        "require_content_length": {
-          "type": "boolean",
-          "description": "Set to `true` to ensure a valid `Content-Length` header exists before reading the request body.",
-          "default": false
-        }
-      }
     },
     "consumer": {
       "type": "object",

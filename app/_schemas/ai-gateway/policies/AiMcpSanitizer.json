@@ -22,20 +22,138 @@
     "config": {
       "type": "object",
       "properties": {
+        "scheme": {
+          "type": "string",
+          "description": "The protocol can be http and https",
+          "default": "http"
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Whether to refuse the request when the call to the sanitizer service fails -- the service being unreachable, timing out, or answering with something unusable. Set it to false to let the request continue unsanitized instead. It covers that call and nothing else: a `tools/call` response this policy cannot read or parse, and one carrying interim results, are refused whatever this is set to, and an error the MCP server itself returned is relayed to the caller untouched.",
+          "default": true
+        },
+        "block_if_detected": {
+          "type": "boolean",
+          "description": "Whether to block requests containing PII data",
+          "default": false
+        },
+        "custom_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "regex": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0,
+                "default": 0.5
+              }
+            },
+            "required": [
+              "name",
+              "regex"
+            ]
+          },
+          "minLength": 1,
+          "description": "List of custom patterns to be used for anonymization"
+        },
+        "rejection_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "description": "Controls what a refusal reports. A blocked `tools/call` request and a blocked tool result are both refused with a JSON-RPC error envelope, never with plain text. `none` carries the PII count and the PII types in `error.data`. `stealth` omits `error.data`. `verbose` also names the policy that refused the call. The status is 400 on the 2026-07-28 protocol revision and 200 on the earlier revisions.",
+          "default": "none"
+        },
+        "sanitize_targets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "tool_arguments",
+              "tool_results"
+            ]
+          },
+          "description": "Which parts of an MCP `tools/call` to sanitize: `tool_arguments` are the arguments -- and the input responses a multi round-trip call sends back -- on their way to the tool server, `tool_results` is the result on its way back to the calling agent.",
+          "default": [
+            "tool_arguments"
+          ]
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the sanitizer service.",
+          "default": 10000
+        },
+        "proxy_config": {
+          "type": "object",
+          "properties": {
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            }
+          }
+        },
         "continue_on_detection": {
           "type": "boolean",
           "description": "If true, the guardrail will not block the request or response. Sanitization data and details will still be visible via kong logs.",
           "default": false
         },
-        "host": {
-          "type": "string",
-          "description": "The host of the sanitizer",
-          "default": "localhost"
+        "redact_logged_original_text": {
+          "type": "boolean",
+          "description": "Whether to star out `original_text` in the `sanitized_items` reported to the Kong log policies, keeping only its first and last character, so a log names each PII entity and the placeholder that replaced it without quoting the value itself. Only has an effect when `skip_logging_sanitized_items` is false, which is what reports those items at all.",
+          "default": true
         },
-        "scheme": {
-          "type": "string",
-          "description": "The protocol can be http and https",
-          "default": "http"
+        "port": {
+          "type": "number",
+          "description": "The port of the sanitizer",
+          "default": 8080
         },
         "anonymize": {
           "type": "array",
@@ -69,114 +187,10 @@
             "all_and_credentials"
           ]
         },
-        "block_if_detected": {
-          "type": "boolean",
-          "description": "Whether to block requests containing PII data",
-          "default": false
-        },
-        "skip_logging_sanitized_items": {
-          "type": "boolean",
-          "description": "Whether to log sanitized items in the Kong log policies. Turn it on if you want to hide sensitive data from logs.",
-          "default": false
-        },
-        "keepalive_timeout": {
-          "type": "number",
-          "description": "The keepalive timeout for the established http connnection",
-          "default": 60000
-        },
-        "stop_on_error": {
-          "type": "boolean",
-          "description": "Stop processing if an error occurs.",
-          "default": true
-        },
         "recover_redacted": {
           "type": "boolean",
           "description": "Whether to recover redacted data. This doesn't apply to the redacted output.",
           "default": true
-        },
-        "custom_patterns": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "regex": {
-                "type": "string"
-              },
-              "score": {
-                "type": "number",
-                "maximum": 1,
-                "minimum": 0,
-                "default": 0.5
-              }
-            },
-            "required": [
-              "name",
-              "regex"
-            ]
-          },
-          "minLength": 1,
-          "description": "List of custom patterns to be used for anonymization"
-        },
-        "proxy_config": {
-          "type": "object",
-          "properties": {
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "proxy_scheme": {
-              "type": "string",
-              "enum": [
-                "http"
-              ],
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "default": "http"
-            },
-            "auth_username": {
-              "type": "string",
-              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true
-            },
-            "auth_password": {
-              "type": "string",
-              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-encrypted": true,
-              "x-referenceable": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            }
-          }
-        },
-        "port": {
-          "type": "number",
-          "description": "The port of the sanitizer",
-          "default": 8080
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Connection timeout with the sanitizer service.",
-          "default": 10000
         },
         "redact_type": {
           "type": "string",
@@ -187,41 +201,22 @@
           "description": "What value to be used to redacted to",
           "default": "placeholder"
         },
-        "rejection_mode": {
-          "type": "string",
-          "enum": [
-            "none",
-            "stealth",
-            "verbose"
-          ],
-          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
-          "default": "none"
+        "skip_logging_sanitized_items": {
+          "type": "boolean",
+          "description": "Whether to log sanitized items in the Kong log policies. Turn it on if you want to hide sensitive data from logs.",
+          "default": false
         },
-        "sanitize_targets": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "tool_arguments",
-              "tool_results"
-            ]
-          },
-          "description": "Which parts of an MCP `tools/call` to sanitize: `tool_arguments` are the arguments on their way to the tool server, `tool_results` is the result on its way back to the calling agent.",
-          "default": [
-            "tool_arguments"
-          ]
+        "host": {
+          "type": "string",
+          "description": "The host of the sanitizer",
+          "default": "localhost"
+        },
+        "keepalive_timeout": {
+          "type": "number",
+          "description": "The keepalive timeout for the established http connnection",
+          "default": 60000
         }
       }
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -252,6 +247,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

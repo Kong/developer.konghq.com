@@ -1,20 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "client_max_payload": {
-          "type": "integer",
-          "maximum": 33554432,
-          "minimum": 1
-        },
-        "upstream_max_payload": {
-          "type": "integer",
-          "maximum": 33554432,
-          "minimum": 1
-        }
-      }
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -29,6 +14,21 @@
         "ws",
         "wss"
       ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "client_max_payload": {
+          "type": "integer",
+          "maximum": 33554432,
+          "minimum": 1
+        },
+        "upstream_max_payload": {
+          "type": "integer",
+          "maximum": 33554432,
+          "minimum": 1
+        }
+      }
     },
     "consumer": {
       "type": "object",

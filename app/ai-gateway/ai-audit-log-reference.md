@@ -171,6 +171,10 @@ rows:
     description: The time, in milliseconds, spent processing the request through the guardrail.
   - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through the guardrail.
+  - property: "`ai.proxy.aws-guardrails.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-aws-guardrails/#text-chunking).
+  - property: "`ai.proxy.aws-guardrails.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.aws-guardrails.input_block_reason`"
     description: The reason the request was blocked. Empty if the request was allowed.
   - property: "`ai.proxy.aws-guardrails.output_block_reason`"
@@ -219,6 +223,10 @@ rows:
     description: The time, in milliseconds, spent processing the request through Model Armor.
   - property: "`ai.proxy.gcp-model-armor.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through Model Armor.
+  - property: "`ai.proxy.gcp-model-armor.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-gcp-model-armor/#text-chunking).
+  - property: "`ai.proxy.gcp-model-armor.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.gcp-model-armor.input_block_reason`"
     description: "The check type or types that caused the request to be blocked, comma-separated (for example, `sexually_explicit`, `dangerous`). Empty if the request was allowed."
   - property: "`ai.proxy.gcp-model-armor.output_block_reason`"
@@ -289,6 +297,10 @@ rows:
     description: The time, in milliseconds, spent processing the request through Azure Content Safety.
   - property: "`ai.proxy.azure-content-safety.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through Azure Content Safety.
+  - property: "`ai.proxy.azure-content-safety.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-azure-content-safety/#text-chunking).
+  - property: "`ai.proxy.azure-content-safety.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.azure-content-safety.input_block_reason`"
     description: The reason the request was blocked. Empty if the request was allowed.
   - property: "`ai.proxy.azure-content-safety.output_block_reason`"
@@ -341,6 +353,10 @@ rows:
     description: The time, in milliseconds, that Lakera took to process the request.
   - property: "`ai.proxy.lakera-guard.output_processing_latency`"
     description: The time, in milliseconds, that Lakera took to process the response.
+  - property: "`ai.proxy.lakera-guard.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-lakera-guard/#text-chunking).
+  - property: "`ai.proxy.lakera-guard.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.lakera-guard.input_request_uuid`"
     description: The unique identifier assigned by Lakera for the inspected request.
   - property: "`ai.proxy.lakera-guard.output_request_uuid`"
@@ -396,6 +412,10 @@ rows:
     description: The time (in milliseconds) taken to process the input through the guardrail.
   - property: "`ai.proxy.custom-guardrail.output_processing_latency`"
     description: The time (in milliseconds) taken to process the output through the guardrail.
+  - property: "`ai.proxy.custom-guardrail.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-custom-guardrail/#text-chunking).
+  - property: "`ai.proxy.custom-guardrail.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.custom-guardrail.input_block_reason`"
     description: The reason the input was blocked. Empty if the input was not blocked.
   - property: "`ai.proxy.custom-guardrail.output_block_reason`"
@@ -433,6 +453,10 @@ rows:
     description: The time, in milliseconds, spent processing the request through NeMo Guardrails.
   - property: "`ai.proxy.nvidia-nemo-guardrail.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through NeMo Guardrails.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_chunk_count`"
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-nvidia-nemo-guardrail/#text-chunking).
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_chunk_count`"
+    description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_reason`"
     description: "The name of the rail that blocked the request, for example `self check input`. Empty if the request was allowed."
   - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_reason`"
@@ -740,6 +764,12 @@ rows:
       The scope of the access control check.
 {% endtable %}
 <!-- vale on -->
+
+### AI MCP Sanitizer logs
+
+If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include sanitization details under the `ai.mcp` object.
+
+{% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
 
 ### AI A2A Proxy logs 
 

@@ -28,8 +28,22 @@ For chat requests, this means the Policy only evaluates the `messages[].content`
 
 You can use a combination of `allow` and `deny` rules to preserve integrity and compliance when serving an LLM model using {{site.ai_gateway}}.
 
-* **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message.
+* **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message. The `allow_all_conversation_history` and `match_all_roles` fields that control this are deprecated. To choose which messages the Policy scans, including tool calls and tool results, see [Message selection](#message-selection).
 * **For `llm/v1/completions` type models**: There is only one `prompt` field, thus the whole prompt is scanned on every request.
+
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-prompt-guard" local=true %}
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md local=true subject="prompt" window=10000 %}
+
+This Policy matches regular expressions locally, so the window only limits the text each pass reads.
+A pattern that straddles two parts can go undetected, so set `chunk_overlap` if your patterns can cross a boundary.
+A match on a deny pattern in any part blocks the text.
+When the Policy has allow patterns, a match in any part allows the text, and a text where no part matches is blocked.
 
 ## How it works
 

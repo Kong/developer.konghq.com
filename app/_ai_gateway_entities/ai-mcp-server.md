@@ -38,6 +38,8 @@ related_resources:
     url: /mcp/
   - text: MCP version support
     url: /ai-gateway/mcp-version-support/
+  - text: AI MCP Sanitizer Policy
+    url: /ai-gateway/policies/ai-mcp-sanitizer/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
@@ -66,6 +68,10 @@ faqs:
       Yes. Set [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) on the AI MCP Server with `allow` and `deny` lists, and override per
       tool through [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access). A per-tool ACL replaces the default for that tool, it doesn't
       merge.
+
+  - q: Can I apply ACLs to MCP prompts and resources?
+    a: |
+      Yes. Set `access.default_prompt_acls` and `access.default_resource_acls` on the AI MCP Server, and override per entry through `prompts[].access.acls` and `resources[].access.acls`. Prompt and resource ACLs follow the same evaluation order as tool ACLs. See [Prompts and resources](#prompts-and-resources).
 
   - q: How do OAuth-based ACLs differ from AI Consumer-based ACLs?
     a: |
@@ -162,6 +168,8 @@ rows:
       Caches hints (`ttl_ms` and `cache_scope`) that {{site.ai_gateway}} emits on the `tools/list` and `server/discover` responses it serves. 
       
       `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
+
+      The `listener` mode also supports `cache.prompts_list` and `cache.resources_list` for the `prompts/list`, `resources/list`, and `resources/templates/list` responses. The same `cache_scope: public` restriction is expected to apply when `default_prompt_acls`, `default_resource_acls`, or an entry's own `access.acls` filters those lists per subject.
   - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
     modes: "`upstream-server`"
     description: |
@@ -209,6 +217,8 @@ rows:
       Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
+  - use_case: "Protect sensitive data in tool calls"
+    example: "Use the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy (tech preview) to redact PII in `tools/call` arguments and results. Targeting results [changes how some server types stream](/ai-gateway/policies/ai-mcp-sanitizer/#streaming-and-performance-trade-offs)."
   - use_case: "Traffic control"
     example: "Apply [Request Transformer](/ai-gateway/policies/request-transformer/) or [Response Transformer](/ai-gateway/policies/response-transformer/) Policy to modify MCP payloads, or use [ACLs](#acl-tool-control) for fine-grained tool access."
 {% endtable %}
@@ -440,6 +450,84 @@ Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-
 
 [Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
 
+## Prompts and resources
+
+In addition to tools, an AI MCP Server can govern the MCP prompts and resources that an upstream MCP server exposes. Prompts and resources use the same ACL model as tools.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Primitive
+    key: primitive
+  - title: Governed operations
+    key: ops
+  - title: Entry fields
+    key: fields
+rows:
+  - primitive: "Prompts (`prompts[]`)"
+    ops: "`prompts/get`, and visibility in `prompts/list`"
+    fields: |
+      * `name` (required): 1 to 128 characters matching `^[A-Za-z0-9._-]+$`, unique per server. {{site.ai_gateway}} matches it to the upstream prompt by name.
+      * `title`, `description`: optional display metadata.
+      * `access.acls`: per-prompt `allow` and `deny` lists.
+  - primitive: "Resources (`resources[]`)"
+    ops: "`resources/read`, `resources/subscribe`, and visibility in `resources/list` and `resources/templates/list`"
+    fields: |
+      * `uri` (required): 1 to 2048 characters, unique per server. It matches the upstream resource `uri` or resource template `uriTemplate`. A [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570) template entry governs every concrete URI that it expands to.
+      * `name`: display only. {{site.ai_gateway}} doesn't use it for matching.
+      * `title`, `description`, `mime_type`: optional display metadata.
+      * `access.acls`: per-resource `allow` and `deny` lists.
+{% endtable %}
+<!-- vale on -->
+
+How the entries behave depends on the mode:
+
+* `passthrough-listener`: entries are ACL-only. A prompt entry takes `name` and `access`. A resource entry takes `uri` and `access`.
+* `upstream-server`: entries can also override metadata. Prompt entries override `title` and `description`. Resource entries override `name`, `title`, `description`, and `mime_type`. Fields that you don't set fall back to the values that the upstream MCP server reports.
+* `listener`: governs aggregated prompts and resources through the server-level defaults and the cache hints. 
+* `conversion-only`: no prompts or resources.
+
+The following example governs prompts and resources on a `passthrough-listener`. All AI Consumers get read access to resources by default, but only the `admins` group can read the `file:///secrets/{name}` template and run the `deploy-checklist` prompt:
+
+```yaml
+type: passthrough-listener
+display_name: docs-mcp
+name: docs-mcp
+access:
+  acl_attribute_type: consumer
+  auth_strategies:
+    - my-key-auth
+  acls:
+    allow:
+      - users
+      - admins
+  default_prompt_acls:
+    allow:
+      - users
+      - admins
+  default_resource_acls:
+    allow:
+      - users
+      - admins
+config:
+  url: http://mcp-upstream.internal:8080
+  route:
+    paths:
+      - /docs-mcp
+prompts:
+  - name: deploy-checklist
+    access:
+      acls:
+        allow:
+          - admins
+resources:
+  - uri: "file:///secrets/{name}"
+    access:
+      acls:
+        allow:
+          - admins
+```
+
 ## Sessions
 
 Some MCP clients need to maintain state across multiple tool calls such as authentication tokens, conversation context, or request IDs. {{site.ai_gateway}} can manage session state for you in `listener` and `conversion-listener` modes, storing it either encrypted on the client or in Redis. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). The `passthrough-listener` mode doesn't manage sessions because state lives entirely on the upstream MCP server.
@@ -530,7 +618,10 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 * **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
 * **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
-This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+This applies to the AI MCP Server modes that make requests to an upstream service.
+The `aws` upstream authentication type is supported on `passthrough-listener`, `upstream-server`, `conversion-listener`, and `conversion-only`.
+A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+`config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
 
 ### AWS IAM (SigV4)
 
@@ -542,7 +633,24 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 * Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables
 * Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
 
-Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers it from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+
+Upstream authentication is independent of client-side `access.auth_strategies`.
+For example, clients can authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), while {{site.ai_gateway}} signs requests to the upstream with SigV4.
+
+A single `config.upstream.auth` block applies to all tools of the AI MCP Server.
+Per-tool `upstream.auth` overrides aren't supported.
+
+### Signing service and region
+
+Set `service` explicitly when the upstream is reached through a custom domain name, such as an Amazon API Gateway custom domain, because the host doesn't identify the AWS service. For example, set `service` to `lambda` for a Lambda function URL.
+Set `region` explicitly if the Data Plane environment doesn't provide the region you want to sign for. Otherwise, {{site.ai_gateway}} infers it from the environment.
+
+### Credential sources
+
+{{site.ai_gateway}} uses static credentials (`access_key_id`, `secret_access_key`, and optionally `session_token`) if you set them.
+Otherwise, it uses the Data Plane's default AWS credential provider chain.
+In either case, you can set `assume_role_arn` to assume a role before signing.
 
 {:.info}
 > `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)
@@ -558,6 +666,26 @@ config:
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
 ```
+
+The following `conversion-listener` example calls an IAM-protected Amazon API Gateway custom domain.
+Clients authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and {{site.ai_gateway}} signs the converted upstream requests with SigV4.
+Because a custom domain name doesn't identify the AWS service, the example sets `service` explicitly, along with `region`:
+
+```yaml
+type: conversion-listener
+access:
+  auth_strategies:
+    - oidc-strategy
+config:
+  url: https://api.example.com/prod
+  upstream:
+    auth:
+      type: aws
+      service: execute-api
+      region: us-east-1
+      assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
+```
+
 
 ### Token Vault
 
@@ -681,6 +809,8 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 > - A tool's own `acls` fully overrides the default ACL for that tool.
 > - [`sources`](#schema-aigateway-mcpserver-sources) is used for tool aggregation, not for inheriting ACLs from other AI MCP Servers.
 
+Prompts and resources use the same ACL model as tools. Set [`default_prompt_acls`](#prompts-and-resources) and `default_resource_acls` alongside `default_tool_acls` in `access`, in both the consumer and OAuth variants. For the evaluation order that applies to all three primitives, see [ACL evaluation order across tools, prompts, and resources](#acl-evaluation-order-across-tools-prompts-and-resources).
+
 ### Attribute types
 
 For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
@@ -765,6 +895,16 @@ rows:
     proxy: Yes
     response: 200
 {% endtable %}
+
+### ACL evaluation order across tools, prompts, and resources
+
+For tools, prompts, and resources, {{site.ai_gateway}} evaluates ACLs in the following order:
+
+1. The server-level `access.acls` gates every MCP operation.
+1. The primitive default applies: `default_tool_acls`, `default_prompt_acls`, or `default_resource_acls`.
+1. The entry's own `access.acls` overrides the primitive default.
+
+{{site.ai_gateway}} omits denied prompts and resources from list results, and rejects `prompts/get`, `resources/read`, and `resources/subscribe` calls on them. If you don't set a primitive default, the server-level `access.acls` is the only governing rule for that primitive.
 
 ### ACL tool control request flow
 
@@ -875,7 +1015,7 @@ features:
     description: Handling WebSocket and gRPC upstreams
     supported: false
   - title: "AI Guardrails"
-    description: Applying guardrails to MCP AI requests and responses
+    description: Applying content safety guardrails to MCP AI requests and responses. For PII protection, see the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/).
     supported: false
 {% endfeature_table %}
 <!-- vale on -->
