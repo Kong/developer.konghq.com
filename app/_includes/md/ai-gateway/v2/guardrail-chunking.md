@@ -56,7 +56,7 @@ columns:
     key: use
 rows:
   - field: "[`chunk_min_text_size`](./reference/#schema--config-chunk-min-text-size)"
-    use: Keep short texts unsplit, even when they are larger than `max_chunk_size`.
+    use: Keep short texts in one part, even when they are larger than `max_chunk_size`.
   - field: "[`chunk_overlap`](./reference/#schema--config-chunk-overlap)"
     use: "Share characters between consecutive parts, so a pattern that crosses a boundary gets a second chance. This narrows the gap but doesn't close it, because a span longer than the overlap can still straddle two parts."
   - field: "[`max_parts`](./reference/#schema--config-max-parts)"
