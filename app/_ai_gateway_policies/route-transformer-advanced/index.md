@@ -29,7 +29,7 @@ related_resources:
 {:.warning}
 > **AI Model scope:** The Route Transformer Advanced Policy applies to AI Agents and AI MCP Servers.
 > For an AI Model, {{site.ai_gateway}} sends the request to the provider's original host, port, and path.
-> This applies when you attach the policy to the AI Model, attach it to an AI Consumer that calls the AI Model, or apply it globally.
+> This applies when you attach the policy to an AI Consumer that calls the AI Model, or apply it globally.
 
 The Route Transformer Advanced [AI Policy](/ai-gateway/entities/ai-policy/) changes the host, port, or path that {{site.ai_gateway}} uses when it sends a request to your [AI Agents](/ai-gateway/entities/ai-agent/) and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
 Use it when the upstream location depends on something in the request, such as a header that the client sets, and the client can't build that location itself.
