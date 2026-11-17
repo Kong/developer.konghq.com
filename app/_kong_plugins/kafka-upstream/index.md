@@ -91,6 +91,34 @@ This lets you see the exact broker rejection (for example, `TopicAuthorizationFa
 > **Warning**: Do not enable this in production.
 > The detailed error may expose internal details like topic names and ACL denials.
 
+## Delivery guarantees {% new_in 3.18 %}
+
+By default, the plugin delivers each message at least once. A retried request can create duplicate messages.
+
+Two settings strengthen delivery:
+
+* `producer_idempotence`: the broker stores a retried batch only once, so a retry does not create duplicates.
+* `producer_transactions`: the plugin sends all messages of one request in a single Kafka transaction. The messages for all target topics commit together, or not at all.
+
+Both settings need synchronous delivery. Set `producer_async` to `false` and `producer_request_acks` to `-1`. Transactions also need `producer_idempotence`.
+
+The plugin builds the transactional ID from the prefix, the node ID, and the worker ID. Each worker therefore uses a distinct producer.
+Set `transactional_id_prefix` to match a Kafka `TransactionalId` ACL. A restarted worker reuses its ID and fences its previous producer, so the broker can abort an unfinished transaction.
+
+{:.warning}
+> **Consumers must set `isolation.level=read_committed`.** With the default `read_uncommitted` isolation level, a consumer also reads messages from aborted transactions.
+
+{:.warning}
+> **Do not retry a `502` response blindly.** A `200` response means the broker committed the transaction. A `502` response means the commit outcome is unknown. Use an application-level idempotency key when you retry.
+
+Transactions add coordinator requests to each call, and the plugin serializes transactions per worker. Expect lower throughput than the default asynchronous mode.
+
+### Kafka prerequisites
+
+* Apache Kafka 0.11 or later.
+* Configure `transaction.state.log.replication.factor` and `transaction.state.log.min.isr` for the cluster.
+* Grant `IdempotentWrite` on the cluster and `Write` on the `TransactionalId` resource. See [Kafka authorization](https://kafka.apache.org/documentation/#security_authz).
+
 ## Known issues and limitations
 
 Known limitations:
