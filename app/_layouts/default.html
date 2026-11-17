@@ -28,6 +28,10 @@
       <meta name="robots" content="follow,index" />
     {% endif %}
 
+    {%- for feed in site.data.feeds %}
+    <link rel="alternate" type="application/rss+xml" href="{{ site.links.web }}/feeds/{{ feed[0] }}.xml" title="{{ feed[1].title | escape }}" />
+    {%- endfor %}
+
     {% include search_tags.html %}
 
     <script>
