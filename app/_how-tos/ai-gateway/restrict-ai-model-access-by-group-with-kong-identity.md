@@ -120,7 +120,8 @@ capture:
 
 ## Add an API key to each principal
 
-Clients authenticate to {{site.ai_gateway}} with an API key, and the AI Auth Strategy that you create later maps that key to its principal.
+Clients authenticate to {{site.ai_gateway}} with an API key.
+The AI Auth Strategy that you create later maps that key to its principal.
 
 Create a key for the employee:
 
@@ -204,11 +205,11 @@ body:
 ## Create an access rule for the group
 
 Create an access rule that allows the `employees` group to call `gpt-4o-mini`.
-The {{site.konnect_short_name}} API calls access rules ACLs.
+Access rules are called ACLs in the {{site.konnect_short_name}} API.
 
-The Policy rejects every request that doesn't match the `allow` rule, so create the rule before you add the Policy.
+The rule names the model that the provider serves, `gpt-4o-mini`, not the name that clients send, which you set when you create the AI Model.
 
-The rule names the model that the provider serves, `gpt-4o-mini`, and not the name that clients send, which you set when you create the AI Model.
+The Policy rejects every request unless an `allow` rule matches, so create the rule before you add the Policy.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -239,7 +240,7 @@ capture:
 ## Create an AI Auth Strategy and AI Model Provider
 
 Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with [{{site.identity}} principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping) enabled, so that clients authenticate with their API key and {{site.ai_gateway}} resolves each one to its principal.
-Principal mapping is mutually exclusive with `identity_realms`, so the strategy sets `identity_realms` to an empty list.
+You can't combine principal mapping with `identity_realms`, so set `identity_realms` to an empty list.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -284,7 +285,7 @@ body:
 
 ## Create an AI Model
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) that requires the AI Auth Strategy.
+Create an [AI Model](/ai-gateway/entities/ai-model/) that uses the AI Auth Strategy to authenticate clients.
 Clients call the model as `my-gpt-4o-mini`, and the target forwards the request to OpenAI as `gpt-4o-mini`.
 
 <!--vale off-->
@@ -325,7 +326,7 @@ body:
 ## Add the AI Access Policy Engine Policy
 
 Create the AI Access Policy Engine Policy with `global: true`.
-The Policy supports only global scope, so you don't attach it to the AI Model.
+The Policy supports only global scope, so you attach nothing to the AI Model.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -387,7 +388,8 @@ indent: 3
 {% endvalidation %}
    <!--vale on-->
 
-   The response is the Policy's default rejection response:
+    The Policy returns its default rejection response:
+
 
    ```json
    {"message":"Forbidden"}
