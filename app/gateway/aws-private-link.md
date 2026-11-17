@@ -101,6 +101,7 @@ headers:
 
 PrivateLink endpoints aren't bound to a specific {{site.konnect_short_name}} organization. 
 To only allow specific endpoints to connect to your organization, add the ID of each endpoint you created in this section (`vpce-` followed by a hexadecimal string) to a VPCE ID allowlist. 
+Include the ID of an endpoint for the global geo, so you can still reach the {{site.konnect_short_name}} API to change or disable the allowlist.
 For more information about how to configure this, see [Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}](/konnect-platform/network/#specify-aws-vpc-endpoints-that-can-connect-to-konnect).
 
 ## Regional PrivateLink service names
