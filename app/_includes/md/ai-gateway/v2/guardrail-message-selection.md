@@ -48,7 +48,7 @@ config:
 ```
 {% endunless %}
 
-The following table writes selections inline. An empty value (`{}`) selects every message of that kind.
+The following table describes example selections based on use case. An empty value (`{}`) selects every message of that kind.
 
 {% if include.subject == 'response' %}
 {% table %}

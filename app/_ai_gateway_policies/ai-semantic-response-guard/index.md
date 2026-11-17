@@ -77,7 +77,7 @@ For responses, the Policy accepts a narrower set of keys, because a response hol
 
 ### Streamed responses
 
-A selection that names only `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
+A selection that only names `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
 A selection that names `tool_call`, `reasoning`, or `tool_result` turns buffering on, because that content isn't available in the stream.
 The Policy then guards the whole response once it is complete, so clients receive it only after it is complete.
 Choose `assistant` alone if you need the response to keep streaming.
