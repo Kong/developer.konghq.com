@@ -27,7 +27,7 @@ related_resources:
 ---
 
 {:.warning}
-> **AI Model scope:** The Route Transformer Advanced policy applies to AI Agents and AI MCP Servers.
+> **AI Model scope:** The Route Transformer Advanced Policy applies to AI Agents and AI MCP Servers.
 > For an AI Model, {{site.ai_gateway}} sends the request to the provider's original host, port, and path.
 > This applies when you attach the policy to the AI Model, attach it to an AI Consumer that calls the AI Model, or apply it globally.
 
@@ -43,7 +43,7 @@ Set [`config.escape_path`](/ai-gateway/policies/route-transformer-advanced/refer
 
 ## Templates
 
-The Route Transformer Advanced policy accepts values from the request in `config.host`, `config.port`, and `config.path`.
+The Route Transformer Advanced Policy accepts values from the request in [`config.host`](/ai-gateway/policies/route-transformer-advanced/reference/#schema--config-host), [`config.port`](/ai-gateway/policies/route-transformer-advanced/reference/#schema--config-port), and [`config.path`](/ai-gateway/policies/route-transformer-advanced/reference/#schema--config-path).
 The following table lists the supported sources:
 
 {% table %}
@@ -90,7 +90,7 @@ $(uri_captures["user-id"] or query_params["user"] or "unknown")
 ```
 
 You can combine constant text with templates.
-For example, `/orders/$(headers["Custom-Path"])` adds a fixed prefix to a value from a header.
+For example, `/orders/$(headers["Custom-Path"] or "default")` adds a fixed prefix to a value from a header, and uses `default` when the request doesn't include the header.
 
 To run more logic, wrap a Lua function in an expression:
 
@@ -98,11 +98,15 @@ To run more logic, wrap a Lua function in an expression:
 $((function() ... implementation here ... end)())
 ```
 
-The following template uses the first three characters of a header value as the path:
+The following template uses the first three characters of a header value as the path.
+When the request doesn't include the header, the template returns `default`:
 
 ```
 /$((function()
     local value = headers["Custom-Path"]
+    if not value then
+      return "default"
+    end
     return value:sub(1, 3)
   end)())
 ```
@@ -115,7 +119,7 @@ The following template uses the first three characters of a header value as the 
 
 ## Scopes
 
-The Route Transformer Advanced policy supports global scope and entity scope.
+The Route Transformer Advanced Policy supports global scope and entity scope.
 Apply it globally to change the upstream destination of all AI Agent and AI MCP Server traffic on the data plane.
 Attach it to an AI Agent, an AI MCP Server, or an [AI Consumer](/ai-gateway/entities/ai-consumer/) to change it for that entity only.
 A Policy attached to an AI Consumer applies after the client authenticates.

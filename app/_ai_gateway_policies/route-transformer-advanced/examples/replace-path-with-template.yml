@@ -1,5 +1,5 @@
 description: |
-  Configure the Route Transformer Advanced policy to replace the upstream path with a value that the client provides in the Custom-Path header.
+  Configure the Route Transformer Advanced policy to replace the upstream path with a value that the client provides in the Custom-Path header. When the request doesn't include the header, the path is `/default`.
 
 title: Replace a path with a template
 
@@ -16,7 +16,7 @@ scopes:
   - global
 
 config:
-  path: /$(headers["Custom-Path"])
+  path: /$(headers["Custom-Path"] or "default")
 
 tools:
   - konnect-api
