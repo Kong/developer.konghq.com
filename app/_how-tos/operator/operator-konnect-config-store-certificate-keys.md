@@ -131,7 +131,7 @@ material never enters your cluster and never appears in the certificate object.
 
 For more information, see [Config Store-backed Vaults](/operator/konnect/config-store/).
 
-## Create a `KonnectConfigStore`
+## Create a KonnectConfigStore
 
 Use the `KonnectConfigStore` resource to create the Config Store container in {{site.konnect_short_name}}. It must
 reference the `KonnectGatewayControlPlane` that owns the Config Store:
@@ -157,7 +157,7 @@ name: cert-keys
 {% endvalidation %}
 <!-- vale on -->
 
-## Allow the `KongVault` to reference the Config Store
+## Allow the KongVault to reference the Config Store
 
 `KongVault` is cluster-scoped and `KonnectConfigStore` is namespaced, so the reference always crosses a namespace
 boundary and the namespace that holds the Config Store must allow it with a `KongReferenceGrant`. Because a
@@ -185,7 +185,7 @@ spec:
       kind: KonnectGatewayControlPlane' | kubectl apply -f -
 ```
 
-## Create a `KongVault` backed by the Config Store
+## Create a KongVault backed by the Config Store
 
 Create a `KongVault` with `backend: konnect` and point `spec.configStoreRef` to the `KonnectConfigStore`. {{site.operator_product_name}}
 resolves the reference into the `config_store_id` of the Vault configuration:
@@ -294,7 +294,7 @@ indent: 3
 {% endnavtab %}
 {% endnavtabs %}
 
-## Create a `KongCertificate` that references the key
+## Create a KongCertificate that references the key
 
 Set `spec.key` to a vault reference of the form `{vault://PREFIX/KEY}`, where `PREFIX` is the `spec.prefix` of the
 `KongVault` and `KEY` is the Config Store entry you created. The public certificate isn't sensitive, so it stays
