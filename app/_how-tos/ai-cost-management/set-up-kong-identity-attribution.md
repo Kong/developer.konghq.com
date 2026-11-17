@@ -1,8 +1,8 @@
 ---
-title: Set up {{site.kong_identity}} attribution for {{site.ai_cost_management}}
+title: Set up {{site.identity}} attribution for {{site.ai_cost_management}}
 permalink: /ai-cost-management/kong-identity-attribution/
 content_type: how_to
-description: "Attribute AI usage events to {{site.kong_identity}} principals that are created automatically on first login, so each caller appears by name in cost reports and budgets."
+description: "Attribute AI usage events to {{site.identity}} principals that are created automatically on first login, so each caller appears by name in cost reports and budgets."
 
 products:
   - ai-cost-management
@@ -33,18 +33,18 @@ breadcrumbs:
   - /ai-cost-management/
 
 tldr:
-  q: How do I attribute AI usage to a {{site.kong_identity}} principal?
-  a: Upload your organization's structure, then create an openid-connect AI Auth Strategy with principals.enabled set to true and attach it to the model. The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as principal/{uuid}.
+  q: How do I attribute AI usage to a {{site.identity}} principal?
+  a: Upload your organization's structure, then create an `openid-connect` AI Auth Strategy with `principals.enabled` set to `true` and attach it to the model. The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as `principal/PRINCIPAL_UUID`.
 
 prereqs:
   inline:
     - title: OpenAI
       include_content: md/ai-gateway/v2/prereqs/openai-kongctl
       icon_url: /assets/icons/openai.svg
-    - title: "{{site.kong_identity}} directory"
+    - title: "{{site.identity}} directory"
       include_content: prereqs/kong-identity-directory
       icon_url: /assets/icons/identity.svg
-    - title: "{{site.kong_identity}} auth server and client"
+    - title: "{{site.identity}} auth server and client"
       include_content: prereqs/kong-identity-auth-server-client
       icon_url: /assets/icons/identity.svg
   konnect:
@@ -87,8 +87,10 @@ cleanup:
       icon_url: /assets/icons/money.svg
 ---
 
-{{site.kong_identity}} attribution links each AI request to a {{site.identity}} principal, the strongest form of attribution {{site.ai_cost_management}} supports.
-Every usage event's `subject` resolves to `principal/{uuid}`, which the Dashboard and Explorer show by the principal's display name.
+{{site.identity}} attribution links each AI request to a {{site.identity}} principal.
+
+Every usage event's `subject` resolves to `principal/PRINCIPAL_UUID`.
+The {{site.ai_cost_management}} [dashboard](/ai-cost-management/analytics-and-debugging/#dashboard), [explorer](/ai-cost-management/analytics-and-debugging/#explorer), and [events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) show the event by the principal's display name.
 
 {{site.ai_cost_management}} attributes usage in two independent tracks: the subject and tags, which record context like project or team through a separate mechanism.
 This guide covers subject attribution only. See [Tags and headers](/ai-cost-management/attribution/#tags-and-headers) for the other track.
@@ -101,22 +103,7 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 
 ## Add a trusted IdP
 
-A trusted IdP is the OIDC issuer {{site.konnect_short_name}} verifies tokens against, and the place you turn on automatic user provisioning for that issuer.
-{{site.identity}}'s own auth server is a valid issuer, so add it as a trusted IdP:
-
-1. In the {{site.konnect_short_name}} sidebar, click **Access Management**.
-1. Click **Identity Providers**.
-1. Click **New identity provider** if this is your first IdP, or **Add trusted IdP** if you already have one.
-1. In the **Name** field, enter a label for this IdP, for example `{{site.kong_identity}}`.
-1. In the **Issuer URL** field, enter your issuer URL (run `echo $ISSUER_URL` to print the value you exported earlier).
-1. Enable **Automatic user provisioning**.
-1. Click **Add IdP**.
-
-{:.info}
-> A client credentials token includes only a `sub` claim, so this guide skips claim mapping.
-> For an interactive sign-in flow, your provider's token can include richer claims: under **User provisioning claim mapping**, enable **Set display name**, **Set email**, **Map groups**, or **Set metadata** and map each to its claim.
-> **Trusted by Token Vault** is a separate toggle for [Token Vault](/identity/token-vault/)'s own credential brokering.
-> <!-- TODO: confirm whether this toggle needs to be enabled for AI Cost Management attribution, or is independent of it. -->
+{% include /ai-cost-management/add-trusted-idp.md %}
 
 ## Upload an org structure (Optional)
 
@@ -129,6 +116,7 @@ A trusted IdP is the OIDC issuer {{site.konnect_short_name}} verifies tokens aga
 ## Create an AI Model Provider, AI Auth Strategy, and AI Model
 
 Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) to connect {{site.ai_gateway}} to OpenAI, an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that verifies bearer tokens against your {{site.identity}} issuer and enables principal lookup, and an [AI Model](/ai-gateway/entities/ai-model/) that references both.
+
 When a request arrives, {{site.ai_gateway}} verifies the bearer token and looks up the principal whose identity matches the token's `sub` claim, then records it as the event's subject.
 If no principal matches yet, {{site.identity}} creates one from the token, using the trusted IdP and automatic user provisioning you just set up.
 
@@ -277,7 +265,7 @@ The event should look like this:
 {:.no-copy-code}
 
 Check the following in the response:
-* `subject` shows your principal as `principal/{uuid}`.
+* `subject` shows your principal as `principal/PRINCIPAL_UUID`.
 * `cost.value` is greater than `0`, using the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
 
 If `cost.value` is `0` or `subject` is absent, see [Troubleshoot missing or wrong data](/ai-cost-management/analytics-and-debugging/#troubleshoot-missing-or-wrong-data).
