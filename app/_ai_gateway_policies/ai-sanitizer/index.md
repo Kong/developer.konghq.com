@@ -82,6 +82,14 @@ sequenceDiagram
 
 This Policy replaces `allow_all_conversation_history`. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="PII service" subject="a request" window=10000 messages=true single_call=true %}
+
+A sanitized part can't repeat, so `chunk_overlap` must be `0`.
+The Policy sanitizes every request, so this always applies.
+
 ## AI PII Anonymizer service
 
 {% include /md/ai-gateway/v2/policies/pii-service.md policy_name="AI PII Sanitizer" show_endpoints=true %}

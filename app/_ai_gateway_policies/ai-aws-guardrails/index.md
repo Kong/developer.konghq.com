@@ -29,7 +29,7 @@ Before using the AI AWS Guardrails Policy, you must define your guardrail polici
 
 ## How it works
 
-The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
+The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many characters of the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 characters from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as the response streams in.
 
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
@@ -59,6 +59,19 @@ To mask across several messages, keep using the legacy fields.
 
 {:.info}
 > On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="AWS Bedrock Guardrails service" window=10000 audit=true streaming=true %}
+
+AWS publishes its limit as a quota in text units, and one text unit is 1,000 characters.
+The quota varies by AWS Region, so convert your own quota to characters before you set `max_chunk_size`.
+
+When `allow_masking` is `true`, the Policy joins the masked parts in order. Two rules apply:
+
+* `chunk_overlap` must be `0`, because a masked part can't repeat.
+* `text_source` must be `last_message`, because any other source sends the request body as one encoded JSON string, which can't be cut at a sentence end.
 
 ## Rejection modes
 

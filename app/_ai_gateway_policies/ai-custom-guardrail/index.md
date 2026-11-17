@@ -59,6 +59,18 @@ To mask across several messages, keep using the legacy fields.
 {:.info}
 > On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md window=10000 audit=true streaming=true %}
+
+To mask content, set `response.mask` to a template that renders the masked text of a part, for example `$(resp.maskedContent)`.
+An empty rendering means the part holds nothing to mask, and the part keeps its own text. Masking has three requirements:
+
+* `allow_masking` must be `true`.
+* `text_source` must be `last_message`, because the Policy writes the masked text back into that one message.
+* `chunk_overlap` must be `0`, because a masked part can't repeat.
+
 ## Configuration
 
 To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). The key is the parameter name, and the value can be a string or a Lua expression.

@@ -65,7 +65,7 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 
 ## Response selection
 
-{% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" %}
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" local=true %}
 
 For responses, the Policy accepts a narrower set of keys, because a response holds one turn from the model:
 
@@ -84,6 +84,16 @@ Choose `assistant` alone if you need the response to keep streaming.
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md local=true subject="response" window=1500 streaming=true selection_anchor="response-selection" selection_label="Response selection" %}
+
+The Policy compares one vector per part, so a long response becomes several comparisons.
+It defaults to a smaller window because a long text dilutes the vector.
+A part that matches a deny response blocks the text.
+When the Policy lists allow responses, a part that matches none of them blocks the text, so a Policy with allow responses is stricter once the text is split.
 
 ## Detect without blocking
 

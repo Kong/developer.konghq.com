@@ -46,6 +46,11 @@ The AI Lakera Guard Policy inspects request and response bodies for routes that 
 
 This Policy sends Lakera Guard a `messages` array with roles instead of one block of text. The selection works the same way.
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="Lakera Guard service" window=1500 audit=true streaming=true messages=true %}
+
 ## Inspected content
 
 {% table %}

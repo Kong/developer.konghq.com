@@ -208,6 +208,14 @@ When you use an inline configuration, make sure the model you name in `guardrail
 
 This Policy sends NeMo a `messages` array with roles instead of one block of text, and the selection works the same way. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="NeMo guardrail service" window=1500 audit=true streaming=true messages=true %}
+NeMo doesn't evaluate any rails for a group without a user message.
+The Policy therefore repeats a user turn at the start of each group.
+That turn counts toward the window.
+
 ## Authentication
 
 The NeMo Guardrails microservice needs credentials for the LLM that evaluates your rails. Set the key in [`config.auth.api_key`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-auth-api-key), and {{site.ai_gateway}} forwards it to NeMo on every check.
