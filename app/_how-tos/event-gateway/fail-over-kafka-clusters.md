@@ -25,7 +25,8 @@ tldr:
   a: |
     1. Connect clients to a virtual cluster instead of to the brokers.
     1. Pre-stage a disabled ACL policy that denies writes.
-    1. To fail over, enable the policy, wait for replication to catch up, and point the virtual cluster at the standby backend cluster.
+    1. To fail over, enable the policy and wait for replication to catch up.
+    1. Point the virtual cluster at the standby backend cluster.
     1. Run a health check, then disable the policy to resume writes.
 
 tools:
@@ -57,24 +58,20 @@ related_resources:
     url: /api/konnect/event-gateway/
 ---
 
-## Overview
 
 Failing over between Kafka clusters is hard because Kafka clients are tightly coupled to the cluster they connect to:
 
-* **Every client hardcodes the cluster address.** Producers and consumers are configured with the bootstrap servers of one cluster. To move them, you have to change the configuration of every application and restart it, often across many teams.
-* **Credentials and ACLs are tied to the cluster.** The standby cluster needs the same users, credentials, and ACLs as the primary, and clients may need new credentials to reach it.
-* **Producers keep writing during the switch.** While clients move one by one, some write to the old cluster and some to the new one, and records written to the old cluster after replication stops are lost.
-* **Offsets don't move with the data.** Consumer group offsets are stored per cluster, so consumers that switch clusters can skip or reprocess records. See [Consumer offsets](#consumer-offsets).
+* **Every client hardcodes the cluster address**: Producers and consumers are configured with the bootstrap servers of one cluster. To move them, you have to change the configuration of every application and restart it, often across many teams.
+* **Credentials and ACLs are tied to the cluster**: The standby cluster needs the same users, credentials, and ACLs as the primary, and clients may need new credentials to reach it.
+* **Producers keep writing during the switch**: While clients move one by one, some write to the old cluster and some to the new one. Records written to the old cluster after replication stops are lost.
+* **Offsets don't move with the data**: Consumer group offsets are stored per cluster, so consumers that switch clusters can skip or reprocess records. See [Consumer offsets](#consumer-offsets).
 
-With {{site.event_gateway}}, clients connect to a [virtual cluster](/event-gateway/entities/virtual-cluster/) instead of to the brokers, and the virtual cluster forwards traffic to a [backend cluster](/event-gateway/entities/backend-cluster/). Failover becomes a control plane change: you point the virtual cluster at a different backend cluster, and clients keep the same address and credentials.
+With {{site.event_gateway}}, clients connect to a [virtual cluster](/event-gateway/entities/virtual-cluster/) instead of to the brokers.
+The virtual cluster forwards traffic to a [backend cluster](/event-gateway/entities/backend-cluster/).
+Failover becomes a control plane change: you point the virtual cluster at a different backend cluster, and clients keep the same address and credentials.
 
-In this guide, you'll run a planned failover from a primary cluster to a standby cluster in five steps:
-
-1. Stop writes by enabling a pre-staged ACL policy that denies produce requests.
-1. Wait for replication to the standby cluster to catch up.
-1. Point the virtual cluster at the standby backend cluster.
-1. Check that the standby cluster serves traffic through the virtual cluster.
-1. Resume writes by disabling the ACL policy.
+In this guide, you'll run a planned failover from a primary cluster to a standby cluster.
+The following diagram shows how clients connect to the `payments` virtual cluster, which forwards traffic to `primary-kafka` before the failover and to `secondary-kafka` after it:
 
 {% mermaid %}
 flowchart LR
@@ -90,11 +87,12 @@ flowchart LR
 {% endmermaid %}
 
 {:.info}
-> This guide doesn't set up replication between the clusters. It creates the same topics on both clusters to stand in for a replicated topic. In production, use a replication tool such as MirrorMaker 2 or Confluent Cluster Linking to copy records and consumer offsets to the standby cluster.
+> To stand in for replication and simplify the demo, this guide creates the same topics on both clusters.
+> In production, use a replication tool such as MirrorMaker 2 or Confluent Cluster Linking to copy records and consumer offsets to the standby cluster.
 
 ## Start two Kafka clusters
 
-Create a Docker Compose file that defines two single-broker Kafka clusters, `primary-kafka` and `secondary-kafka`:
+Create a Docker Compose file that defines two single-broker Kafka clusters: a primary cluster named `primary-kafka` and a standby cluster named `secondary-kafka`:
 
 ```bash
 cat <<'EOF' > docker-compose.yaml
@@ -103,7 +101,8 @@ EOF
 ```
 {:data-test-step="block" .collapsible}
 
-Each broker listens on port `9092` inside the Docker network for {{site.event_gateway_short}} connections. For direct local access, the primary cluster is exposed on port `9094` and the secondary cluster on port `9095`.
+Each broker listens on port `9092` inside the Docker network for {{site.event_gateway_short}} connections.
+For direct local access, the Compose file exposes the primary cluster on port `9094` and the secondary cluster on port `9095`.
 
 Start the clusters:
 
@@ -169,7 +168,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Each backend cluster holds the credentials that {{site.event_gateway_short}} uses to connect to that Kafka cluster. When you fail over, the gateway uses the standby cluster's credentials automatically, so clients don't need new credentials.
+Each backend cluster stores the credentials that {{site.event_gateway_short}} uses to connect to that Kafka cluster. When you fail over, the gateway uses the standby cluster's credentials automatically, so clients don't need new credentials.
 
 ## Create a virtual cluster
 
@@ -245,7 +244,7 @@ For demo purposes, this guide uses port mapping, which assigns each Kafka broker
 
 ## Allow access to topics and consumer groups
 
-With `acl_mode: enforce_on_gateway`, clients have no access until an ACL policy grants it. Create an ACL policy that allows all operations on all topics and consumer groups:
+With `acl_mode: enforce_on_gateway`, clients have no access until an [ACL policy](/event-gateway/policies/acl/) grants it. Create an ACL policy that allows all operations on all topics and consumer groups:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -276,7 +275,7 @@ In production, replace this policy with the access rules your clients need.
 
 ## Pre-stage the write gate
 
-Create a second ACL policy that denies writes to the `orders` topic. Create it disabled, so it has no effect until you need it:
+Create a second ACL policy. This policy will act as a write-gate that denies writes to the `orders` topic. Create it as `enabled: false`, so it has no effect until you need it:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -286,7 +285,7 @@ method: POST
 body:
   type: acls
   name: failover_write_gate
-  description: Deny writes to business topics during a failover
+  description: Deny writes to order topics during a failover
   enabled: false
   config:
     rules:
@@ -317,11 +316,11 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-When you enable this policy, it must work alongside `allow_all`. Keep the following in mind when you design a write gate:
+When you enable this policy, it must work together with `allow_all`. Keep the following in mind when you design a write gate:
 
 * **Every enabled ACL policy must allow a request.** A request is allowed only if each enabled ACL policy on the virtual cluster allows it. That's why the gate includes its own `allow` rules for everything it doesn't block. A gate that contains only a `deny` rule blocks all requests, including reads.
 * **Deny rules take precedence over allow rules.** The order of the rules, and the order of the policies in the chain, doesn't change the result. Writes to `orders` are denied even though another rule allows all operations on all topics.
-* **List the topics to block explicitly.** Because `deny` always wins, a gate that denies writes on `*` also blocks every topic you might want to keep writable. This guide keeps a `healthcheck` topic outside the gate, so you can test writes against the standby cluster before you resume business traffic.
+* **List the topics to block explicitly.** Because `deny` rules always take precedence, a gate that denies writes on `*` also blocks every topic you might want to keep writable. This guide keeps a `healthcheck` topic outside the gate, so you can test writes against the standby cluster before you resume business traffic.
 
 ## Configure kafkactl
 
@@ -348,7 +347,8 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-The `vc` context represents your applications. Its broker address is the {{site.event_gateway_short}}, and it stays the same throughout the failover.
+The `vc` context represents your applications.
+Its broker address points to {{site.event_gateway_short}} and stays the same throughout the failover.
 
 ## Create the topics
 
@@ -475,7 +475,11 @@ Failed to produce message: kafka server: The client is not authorized to access 
 
 If the record is produced, the data plane hasn't picked up the change yet. Wait a few seconds and try again.
 
-Reads aren't affected, so consumers keep processing the records that are already on the primary cluster. Producers that retry on authorization errors wait until you resume writes. Depending on its settings, a producer may report the failed records to the application, so make sure your applications handle `TOPIC_AUTHORIZATION_FAILED` during a failover.
+Reads aren't affected, so consumers keep processing the records that are already on the primary cluster. 
+
+Producers that retry on authorization errors wait until you resume writes. 
+Depending on its settings, a producer may report the failed records to the application.
+Make sure your applications handle `TOPIC_AUTHORIZATION_FAILED` during a failover.
 
 ### 2. Wait for replication to catch up
 
@@ -511,7 +515,8 @@ body:
 
 ### 4. Check the standby cluster
 
-Produce a canary record to the `healthcheck` topic through the virtual cluster, which the write gate doesn't block. Then read the topic directly from the secondary cluster to confirm that the virtual cluster now writes there:
+Through the virtual cluster, produce a canary record to the `healthcheck` topic, which the write gate doesn't block.
+Then read the topic directly from the secondary cluster to confirm that the virtual cluster now writes there:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -531,7 +536,8 @@ canary
 ```
 {:.no-copy-code}
 
-If the secondary cluster doesn't return the canary record, the data plane hasn't picked up the new destination yet. The canary went to the primary cluster instead. Wait a few seconds and run the commands again.
+If the secondary cluster doesn't return the canary record, the data plane hasn't picked up the new destination yet. The virtual cluster still wrote the canary record to the primary cluster.
+Wait a few seconds and run the commands again.
 
 ### 5. Resume writes
 
@@ -547,7 +553,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Produce a record to `orders` through the virtual cluster:
+Produce a record to `orders` through the virtual cluster to confirm that writes work again:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -586,9 +592,11 @@ The client configuration in the `vc` context never changed. The record that you 
 
 ## Consumer offsets
 
-{{site.event_gateway_short}} doesn't copy or translate consumer group offsets. A consumer group's committed offsets are stored on the Kafka cluster where the group committed them, and the virtual cluster forwards offset requests to the backend cluster in its `destination` at the time of the request.
+{{site.event_gateway_short}} doesn't copy or translate consumer group offsets. A consumer group's committed offsets are stored on the Kafka cluster where the group committed them.
+The virtual cluster forwards offset requests to the backend cluster in its `destination` at the time of the request.
 
-You can see this with the `payments-app` consumer group, which committed its offset before the failover. Describe the group through the virtual cluster again:
+You can see this with the `payments-app` consumer group, which committed its offset before the failover.
+Describe the group through the virtual cluster again to see that the offset doesn't carry over:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -609,7 +617,7 @@ CLIENT_HOST     CLIENT_ID     GROUP_INSTANCE_ID     TOPIC     ASSIGNED_PARTITION
 ```
 {:.no-copy-code}
 
-The offset is still stored on the primary cluster:
+Next, describe the group directly on the primary cluster to confirm that the offset is still stored there:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -635,17 +643,20 @@ If `payments-app` started consuming now, it would have no starting position on t
 What a consumer does after a failover depends on whether its offsets exist on the new cluster:
 
 * **If the offsets were synced to the standby cluster**, the consumer resumes close to where it stopped. Offset sync runs on an interval, so the consumer may reprocess a few records committed after the last sync. Design consumers to handle duplicates.
-* **If the offsets weren't synced**, the consumer has no committed offset on the new cluster and falls back to its `auto.offset.reset` setting. With `latest`, the default, it skips records that it hadn't consumed yet. With `earliest`, it reprocesses the whole topic.
+ * **If the offsets weren't synced**, the consumer has no committed offset on the new cluster and falls back to its `auto.offset.reset` setting. If the setting is `latest` (the default), the consumer skips records that it hadn't consumed yet. If the setting is `earliest`, the consumer reprocesses the whole topic.
 
 How offsets reach the standby cluster depends on your replication tool:
 
 * **MirrorMaker 2** copies records to new offsets on the target cluster, so the offsets on the two clusters differ. Its checkpoint connector translates committed offsets, and with `sync.group.offsets.enabled=true` it writes the translated offsets to the target cluster. MirrorMaker 2 only writes offsets for consumer groups that have no active members on the target cluster.
 * **Confluent Cluster Linking** keeps the same offsets on mirror topics as on the source topics, and can sync consumer group offsets to the destination cluster.
 
-During a planned failover, check that the offsets of your important consumer groups are synced before you point the virtual cluster at the standby cluster, as described in [step 2](#2-wait-for-replication-to-catch-up).
+During a planned failover, check that the offsets of your important consumer groups are synced before you point the virtual cluster at the standby cluster, as described in the section [Wait for replication to catch up](#2-wait-for-replication-to-catch-up).
 
 ## Unplanned failover
 
-If the primary cluster is unavailable, skip steps 1 and 2: producers are already failing, and there's nothing left to drain. Check the standby cluster, estimate how much data didn't replicate before the outage, and then point the virtual cluster at the standby cluster. Records that didn't replicate are lost, and consumers resume from the last offsets that were synced.
+During an unplanned failover, skip steps 1 and 2 if the primary cluster is unavailable.
+In this case, producers are already failing, and there's nothing left to drain.
+Check the standby cluster, estimate how much data didn't replicate before the outage, and then point the virtual cluster at the standby cluster.
+Records that didn't replicate are lost, and consumers resume from the last offsets that were synced.
 
 If the primary cluster is still reachable but degraded, for example because of performance problems, use the full planned procedure so that no writes are lost during the switch.
