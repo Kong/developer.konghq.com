@@ -37,6 +37,12 @@ tags:
 
 search_aliases:
   - jwe-decrypt
+
+faqs:
+  - q: Can I use the JWE Decrypt policy in {{site.ai_gateway}} 2.x?
+    a: |
+      The JWE Decrypt policy displays in the {{site.konnect_short_name}} UI and API for {{site.ai_gateway}} 2.x, and the control plane accepts a configuration for it. 
+      However, {{site.ai_gateway}} 2.x doesn't have Key Sets, which the policy requires through `config.key_sets`, so the policy can't decrypt tokens. 
 ---
 
 The JWE Decrypt plugin makes it possible to decrypt an inbound token (JWE) in a request.
