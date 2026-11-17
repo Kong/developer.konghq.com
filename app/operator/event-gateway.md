@@ -47,7 +47,7 @@ For a step-by-step walkthrough you can apply directly to a cluster, see the [{{ 
 
 The operator manages three layers:
 
-- A control plane: either a `KonnectEventGateway` in `konnect.konghq.com/v1alpha1`, which creates the control plane in {{ site.konnect_short_name }}, or an [`OnPremEventGateway` in Tech Preview](#on-prem-control-plane) in `eventgateway.konghq.com/v1alpha1`, served by a gw-admin control plane in your cluster
+- A control plane: either a `KonnectEventGateway` in `konnect.konghq.com/v1alpha1`, which creates the control plane in {{ site.konnect_short_name }}, or an [`OnPremEventGateway`](#on-prem-control-plane) in `eventgateway.konghq.com/v1alpha1`, served by a control plane in your cluster
 - {{ site.event_gateway_short }} configuration resources in `configuration.konghq.com/v1alpha1`
 - A `KegDataPlane` workload in `eventgateway.konghq.com/v1alpha1`
 
@@ -68,12 +68,12 @@ rows:
   - resource: "`KonnectEventGateway`"
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Creates the {{ site.event_gateway_short }} control plane in {{ site.konnect_short_name }}
-  - resource: "`OnPremEventGateway` (Tech Preview)"
+  - resource: "`OnPremEventGateway`"
     api_group: "`eventgateway.konghq.com/v1alpha1`"
-    purpose: Defines an on-prem {{ site.event_gateway_short }} control plane, whose configuration {{ site.operator_product_name }} pushes to gw-admin
-  - resource: "`GWAdmin` (Tech Preview)"
+    purpose: Defines an on-prem {{ site.event_gateway_short }} gateway, whose configuration {{ site.operator_product_name }} pushes to the in-cluster control plane
+  - resource: "`GWAdmin`"
     api_group: "`gateway-operator.konghq.com/v1alpha1`"
-    purpose: Deploys gw-admin, the in-cluster control plane that serves `OnPremEventGateway` configuration to data planes
+    purpose: Deploys the in-cluster control plane that serves `OnPremEventGateway` configuration to data planes
   - resource: "`EventGatewayBackendCluster`"
     api_group: "`configuration.konghq.com/v1alpha1`"
     purpose: Describes the upstream Kafka cluster
@@ -112,9 +112,6 @@ Resources reference each other in this order:
 7. `KegDataPlane.spec.controlPlaneRef` points to the `KonnectEventGateway`
 
 With an on-prem control plane, the same resources point to an `OnPremEventGateway` instead, with `spec.parentRef`, and `KegDataPlane.spec.controlPlaneRef` uses `type: onpremNamespacedRef`. See [On-prem control plane](#on-prem-control-plane).
-
-{:.info}
-> Starting with {{ site.operator_product_name }} 2.4, a reference from one {{ site.event_gateway_short }} entity to another names the Kubernetes object, as `{kind, name, namespace}`, with `kind` and `namespace` optional. For example, a listener policy's `forwardToVirtualCluster` `destination.name` is the name of the `EventGatewayVirtualCluster` resource, not its `apiSpec.name`. The same applies to the `schemaRegistry` of schema validation and transcode policies, the static `key` of encrypt policies, and the `tlsTrustBundles` of TLS server policies.
 
 ## Deployment patterns
 
@@ -225,13 +222,11 @@ For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with TLS
 
 ## On-prem control plane
 
-{% include operator/event-gateway-on-prem-tech-preview.md %}
+An `OnPremEventGateway` replaces the {{ site.konnect_short_name }}-hosted control plane with a control plane that runs in your cluster. Three resources work together:
 
-An `OnPremEventGateway` replaces the {{ site.konnect_short_name }}-hosted control plane with gw-admin, a control plane that runs in your cluster. Three resources work together:
-
-- A `GWAdmin` deploys gw-admin: a Deployment, and the Services that {{site.operator_product_name}} and the data planes connect to. {{site.operator_product_name}} creates the certificate authorities that gw-admin, {{site.operator_product_name}}, and the data planes use to authenticate each other, and renews the certificates before they expire.
-- An `OnPremEventGateway` references a `GWAdmin` with `spec.gwAdminRef`. It doesn't create any Pods. {{site.operator_product_name}} collects the {{ site.event_gateway_short }} resources attached to it and pushes their configuration to every gw-admin Pod over mTLS.
-- A `KegDataPlane` references the `OnPremEventGateway` with `spec.controlPlaneRef.type: onpremNamespacedRef`. {{site.operator_product_name}} issues it a client certificate, registers the certificate on gw-admin, and the data plane pulls its configuration from gw-admin.
+- A `GWAdmin` deploys the control plane: a Deployment, and the Services that {{site.operator_product_name}} and the data planes connect to. {{site.operator_product_name}} creates the certificate authorities that the control plane, {{site.operator_product_name}}, and the data planes use to authenticate each other, and renews the certificates before they expire.
+- An `OnPremEventGateway` references the control plane with `spec.gwAdminRef`. It doesn't create any Pods. {{site.operator_product_name}} collects the {{ site.event_gateway_short }} resources attached to it and pushes their configuration to every control plane Pod over mTLS.
+- A `KegDataPlane` references the `OnPremEventGateway` with `spec.controlPlaneRef.type: onpremNamespacedRef`. {{site.operator_product_name}} issues it a client certificate, registers the certificate on the control plane, and the data plane pulls its configuration from the control plane.
 
 Nothing is sent to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-prem control plane, see [Install {{site.operator_product_name}} for {{ site.event_gateway }}](/operator/get-started/event-gateway/install/).
 
@@ -247,7 +242,7 @@ The `GWAdmin` and `OnPremEventGateway` controllers are disabled by default. Enab
 
 ### License
 
-gw-admin requires an {{ site.event_gateway_short }} license with the `event_gateway` entitlement. This is a signed license token, not the JSON license that `KongLicense` uses for {{ site.base_gateway }}. Store it in a Secret labeled `konghq.com/secret=true`, and reference the Secret key from the `GWAdmin`:
+The control plane requires an {{ site.event_gateway_short }} license with the `event_gateway` entitlement. This is a signed license token, not the JSON license that `KongLicense` uses for {{ site.base_gateway }}. Store it in a Secret labeled `konghq.com/secret=true`, and reference the Secret key from the `GWAdmin`:
 
 ```yaml
 apiVersion: gateway-operator.konghq.com/v1alpha1
@@ -262,7 +257,7 @@ spec:
       key: license
 ```
 
-{{site.operator_product_name}} mounts the license in the gw-admin Pods. gw-admin, not {{site.operator_product_name}}, validates it, and doesn't start without a valid license. To renew the license, update the Secret in place: gw-admin reads the mounted file again on its periodic license checks, without a restart. The `KegDataPlane` doesn't need a `KongLicense`.
+{{site.operator_product_name}} mounts the license in the control plane Pods. The control plane, not {{site.operator_product_name}}, validates it, and doesn't start without a valid license. To renew the license, update the Secret in place: the control plane reads the mounted file again on its periodic license checks, without a restart. The `KegDataPlane` doesn't need a `KongLicense`.
 
 ### Reference an OnPremEventGateway
 
@@ -296,7 +291,7 @@ To reference a `GWAdmin` or an `OnPremEventGateway` in another namespace, create
 
 ### How configuration is pushed
 
-{{site.operator_product_name}} pushes the whole configuration of an `OnPremEventGateway` as one unit. If any entity can't be sent, for example a policy that references a resource that doesn't exist, {{site.operator_product_name}} doesn't push the configuration at all, and gw-admin keeps serving the last configuration that it accepted. The `OnPremEventGateway` reports `Programmed=False` with the reason `InvalidEntities` and names the entities, and each entity reports why in its own `Programmed` condition. Fix or delete the entity to resume pushing.
+{{site.operator_product_name}} pushes the whole configuration of an `OnPremEventGateway` as one unit. If any entity can't be sent, for example a policy that references a resource that doesn't exist, {{site.operator_product_name}} doesn't push the configuration at all, and the control plane keeps serving the last configuration that it accepted. The `OnPremEventGateway` reports `Programmed=False` with the reason `InvalidEntities` and names the entities, and each entity reports why in its own `Programmed` condition. Fix or delete the entity to resume pushing.
 
 `status.configRevision` on the `OnPremEventGateway` increases by one every time its configuration changes.
 
@@ -314,29 +309,29 @@ columns:
 rows:
   - resource: "`GWAdmin`"
     condition: "`Ready`"
-    meaning: The certificates and the gw-admin Deployment are configured. It can be `True` before the gw-admin Pod is running, so wait for the `gw-admin` Deployment to be available too.
+    meaning: The certificates and the control plane Deployment are configured. It can be `True` before the control plane Pod is running, so wait for the Deployment to be available too.
   - resource: "`GWAdmin`"
     condition: "`LicenseProvisioned`"
-    meaning: The license Secret and key exist and are mounted in the gw-admin Pods. It doesn't mean the license is valid.
+    meaning: The license Secret and key exist and are mounted in the control plane Pods. It doesn't mean the license is valid.
   - resource: "`OnPremEventGateway`"
     condition: "`GWAdminResolved`"
-    meaning: "The `GWAdmin` can serve the gateway. The reason is `NotFound` if the `GWAdmin` doesn't exist, `RefNotPermitted` if a cross-namespace reference has no `KongReferenceGrant`, and `NotReady` while gw-admin has no running Pod."
+    meaning: "The control plane can serve the gateway. The reason is `NotFound` if the `GWAdmin` doesn't exist, `RefNotPermitted` if a cross-namespace reference has no `KongReferenceGrant`, and `NotReady` while the control plane has no running Pod."
   - resource: "`OnPremEventGateway`"
     condition: "`ConfigurationPushed`"
-    meaning: The current configuration reached every gw-admin Pod.
+    meaning: The current configuration reached every control plane Pod.
   - resource: "`OnPremEventGateway`"
     condition: "`Programmed`"
     meaning: The configuration was applied. Wait on this condition, as you would for a `KonnectEventGateway`.
   - resource: "`KegDataPlane`"
     condition: "`OnPremEventGatewayResolved`"
-    meaning: The `OnPremEventGateway`, and what the data plane needs from its `GWAdmin`, were found.
+    meaning: The `OnPremEventGateway`, and what the data plane needs from its control plane, were found.
   - resource: "`KegDataPlane`"
     condition: "`GWAdminCertificateRegistered`"
-    meaning: The client certificate of the data plane is registered on gw-admin.
+    meaning: The client certificate of the data plane is registered on the control plane.
 {% endtable %}
 <!--vale on-->
 
-{{ site.event_gateway_short }} configuration resources report a `Programmed` condition, as they do with {{site.konnect_short_name}}. With an on-prem control plane, `Programmed=True` means the resource is in the configuration pushed to gw-admin.
+{{ site.event_gateway_short }} configuration resources report a `Programmed` condition, as they do with {{site.konnect_short_name}}. With an on-prem control plane, `Programmed=True` means the resource is in the configuration pushed to the control plane.
 
 ### Troubleshooting
 
@@ -344,12 +339,12 @@ rows:
 
 If the `Programmed` message of a `forwardToVirtualCluster` listener policy reports that an `EventGatewayVirtualCluster` is not found, check `destination.name`. It must be the name of the `EventGatewayVirtualCluster` resource, not its `apiSpec.name`. Until you fix it, no configuration change is pushed for the whole `OnPremEventGateway`.
 
-#### The gw-admin Pod doesn't start
+#### The control plane Pod doesn't start
 
-Check the gw-admin logs:
+Check the control plane logs:
 
 ```bash
 kubectl logs -n kong deployment/gw-admin
 ```
 
-gw-admin doesn't start without a valid {{ site.event_gateway_short }} license. Make sure that the Secret holds the license token with the `event_gateway` entitlement, not a {{ site.ee_product_name }} JSON license.
+The control plane doesn't start without a valid {{ site.event_gateway_short }} license. Make sure that the Secret holds the license token with the `event_gateway` entitlement, not a {{ site.ee_product_name }} JSON license.

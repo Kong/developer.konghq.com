@@ -1,5 +1,3 @@
-{% include operator/event-gateway-on-prem-tech-preview.md %}
-
 To run {{ site.event_gateway }} with an on-prem control plane, you need:
 
 * A Kubernetes cluster, with `kubectl` configured to use it.

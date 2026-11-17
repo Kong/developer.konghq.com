@@ -26,7 +26,7 @@ tldr:
   q: How do I validate Kafka message schemas with {{ site.operator_product_name }}?
   a: |
     Create an `EventGatewaySchemaRegistry` resource pointing at your schema registry, then reference it from an `EventGatewayVirtualClusterConsumePolicy` or `EventGatewayVirtualClusterProducePolicy` with a `schemaValidation` config.
-    For on-prem (Tech Preview), attach the `EventGatewaySchemaRegistry` to an `OnPremEventGateway` with `spec.parentRef`. The policies are the same.
+    For on-prem, attach the `EventGatewaySchemaRegistry` to an `OnPremEventGateway` with `spec.parentRef`. The policies are the same.
 
 prereqs:
   show_works_on: true
@@ -271,7 +271,7 @@ prereqs:
       content: |
           The schema registry and the schema validation policy attach to a {{ site.event_gateway }} control plane and virtual cluster. Create an on-prem control plane, along with the backend cluster that points at Kafka and the virtual cluster:
 
-          1. Store your {{ site.event_gateway_short }} license in a Secret, and create the `GWAdmin` that runs gw-admin, the on-prem control plane:
+          1. Store your {{ site.event_gateway_short }} license in a Secret, and create the on-prem control plane:
 
              ```bash
              kubectl create secret generic gw-admin-license -n kong \
@@ -405,7 +405,7 @@ cleanup:
     - title: Delete the {{ site.event_gateway }} resources
       topology: on-prem
       content: |
-        Delete the `OnPremEventGateway` before the `GWAdmin`, so that {{site.operator_product_name}} can remove its configuration from gw-admin:
+        Delete the `OnPremEventGateway` before the control plane, so that {{site.operator_product_name}} can remove its configuration from it first:
 
         ```bash
         kubectl delete -n kong --ignore-not-found \
@@ -500,11 +500,6 @@ related_resources:
 `EventGatewaySchemaRegistry` connects {{ site.event_gateway }} to a schema registry so consume and produce policies can validate Kafka record schemas before they reach clients or your backend cluster.
 
 The examples in this guide use the `cp-event-1` control plane, `example-virtual-cluster` virtual cluster, and `schema-registry` registry Service created in the prerequisites.
-
-{% on_prem %}
-content: |
-  {% include operator/event-gateway-on-prem-tech-preview.md %}
-{% endon_prem %}
 
 ## Create the EventGatewaySchemaRegistry
 

@@ -37,7 +37,7 @@ tldr:
   q: How do I deploy Kong Event Gateway with {{site.operator_product_name}}?
   a: |
     With {{site.konnect_short_name}}, create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
-    For on-prem (Tech Preview), create an `OnPremEventGateway` served by your `GWAdmin` instead, attach the backend cluster and listener to it with `spec.parentRef`, and set `spec.controlPlaneRef.type: onpremNamespacedRef` on the `KegDataPlane`.
+    For on-prem, create an `OnPremEventGateway` served by your on-prem control plane instead, attach the backend cluster and listener to it with `spec.parentRef`, and set `spec.controlPlaneRef.type: onpremNamespacedRef` on the `KegDataPlane`.
 
 next_steps:
   - text: Learn more about {{ site.event_gateway }}
@@ -61,11 +61,6 @@ related_resources:
 This deployment pattern is the simplest way to validate {{ site.event_gateway }}.
 
 It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker. For production environments, we recommend using {{ site.base_gateway }} with {{ site.operator_product_name }} to set up a TLSRoute and an SNI wildcard.
-
-{% on_prem %}
-content: |
-  {% include operator/event-gateway-on-prem-tech-preview.md %}
-{% endon_prem %}
 
 {% konnect %}
 title: Create the `KonnectEventGateway`
@@ -105,7 +100,7 @@ content: |
 title: Create the `OnPremEventGateway`
 step: true
 content: |
-  The `OnPremEventGateway` resource is the on-prem {{ site.event_gateway_short }} control plane, and gives the rest of the resources in this guide a parent to attach to. It doesn't create any Pods. {{site.operator_product_name}} collects the resources attached to it and pushes their configuration to the gw-admin Pods of the `GWAdmin` you created in the [install guide](/operator/get-started/event-gateway/install/).
+  The `OnPremEventGateway` resource represents your on-prem {{ site.event_gateway_short }} gateway, and gives the rest of the resources in this guide a parent to attach to. It doesn't create any Pods. {{site.operator_product_name}} collects the resources attached to it and pushes their configuration to the control plane you created in the [install guide](/operator/get-started/event-gateway/install/).
 
   1. Create the `OnPremEventGateway` resource:
 
@@ -130,7 +125,7 @@ content: |
        --timeout=5m
      ```
 
-     If the `OnPremEventGateway` doesn't become `Programmed`, check its `GWAdminResolved` condition. It reports `NotFound` when the `GWAdmin` doesn't exist, and `NotReady` while gw-admin has no running Pod.
+     If the `OnPremEventGateway` doesn't become `Programmed`, check its `GWAdminResolved` condition. It reports `NotFound` when the control plane doesn't exist, and `NotReady` while the control plane has no running Pod.
 {% endon_prem %}
 
 ## Create the backend cluster
@@ -394,7 +389,7 @@ content: |
      ' | kubectl apply -f -
      ```
 
-     {{site.operator_product_name}} issues the data plane a client certificate and registers it on gw-admin. The data plane uses it to pull its configuration from gw-admin.
+     {{site.operator_product_name}} issues the data plane a client certificate and registers it on the control plane. The data plane uses it to pull its configuration from the control plane.
 
   1. Wait for the data plane to be ready:
 

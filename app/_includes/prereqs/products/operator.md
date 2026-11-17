@@ -23,7 +23,7 @@ rawLicenseString: '$(cat ./license.json)'
 {%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
 {%- comment -%} Controllers enabled only in the on-prem install command, for example ONPREMAIGATEWAY. {%- endcomment -%}
 {%- assign on_prem_controllers = include.on_prem_controllers | default: page.prereqs.operator.on_prem_controllers -%}
-{%- comment -%} Skip the on-prem KongLicense step, for example for Event Gateway, whose license is provided to gw-admin instead. {%- endcomment -%}
+{%- comment -%} Skip the on-prem KongLicense step, for example for Event Gateway, whose license is provided to the on-prem control plane instead. {%- endcomment -%}
 {%- assign skip_license = include.skip_license | default: page.prereqs.operator.skip_license -%}
 {%- assign chart_version = include.chart_version -%}
 {%- if prereqs.operator.rapid -%}

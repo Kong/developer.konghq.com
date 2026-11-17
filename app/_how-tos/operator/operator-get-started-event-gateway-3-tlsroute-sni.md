@@ -35,7 +35,7 @@ prereqs:
       content: |
         With an on-prem control plane, the {{ site.base_gateway }} data plane behind the `Gateway` needs a {{ site.ee_product_name }} license to accept configuration. Without one, it runs in read-only mode and the `Gateway` never becomes `Programmed`.
 
-        Save your license as `license.json` in your working directory. This is a different license from the {{ site.event_gateway_short }} license that gw-admin uses.
+        Save your license as `license.json` in your working directory. This is a different license from the {{ site.event_gateway_short }} license that the control plane uses.
       icon_url: /assets/icons/gateway.svg
 
 cleanup:
@@ -79,7 +79,7 @@ cleanup:
     - title: Delete the resources created in this guide
       topology: on-prem
       content: |
-        Delete the {{ site.event_gateway }} resources and the `Gateway` resources. Delete the `OnPremEventGateway` resources before the `GWAdmin`, so that {{site.operator_product_name}} can remove their configuration from gw-admin:
+        Delete the {{ site.event_gateway }} resources and the `Gateway` resources. Delete the `OnPremEventGateway` resources before the control plane, so that {{site.operator_product_name}} can remove their configuration from it first:
 
         ```bash
         kubectl delete -n kong --ignore-not-found \
@@ -123,7 +123,7 @@ tldr:
   q: How do I deploy {{ site.event_gateway }} in a production-oriented topology?
   a: |
     Front {{ site.event_gateway_short }} with a `Gateway` and `TLSRoute`, terminate TLS in {{ site.event_gateway_short }}, and route virtual clusters with SNI.
-    For on-prem (Tech Preview), attach the {{ site.event_gateway_short }} resources to an `OnPremEventGateway`, and apply a `KongLicense` for the {{ site.base_gateway }} data plane behind the `Gateway`.
+    For on-prem, attach the {{ site.event_gateway_short }} resources to an `OnPremEventGateway`, and apply a `KongLicense` for the {{ site.base_gateway }} data plane behind the `Gateway`.
 
 next_steps:
   - text: Learn more about {{ site.event_gateway }} resources
@@ -151,11 +151,6 @@ Use this pattern when you want:
 - one public Kafka listener
 - TLS passthrough at the Kubernetes `Gateway`
 - broker metadata advertised as DNS names on a single port
-
-{% on_prem %}
-content: |
-  {% include operator/event-gateway-on-prem-tech-preview.md %}
-{% endon_prem %}
 
 {% konnect %}
 title: Create a GatewayConfiguration and GatewayClass
@@ -304,7 +299,7 @@ content: |
 title: Create a second OnPremEventGateway
 step: true
 content: |
-  This guide uses a separate control plane so that it can run alongside the `portMapping` example. Both `OnPremEventGateway` resources are served by the same `GWAdmin`.
+  This guide uses a separate `OnPremEventGateway` so that it can run alongside the `portMapping` example. Both `OnPremEventGateway` resources are served by the same control plane.
 
   1. Create the `OnPremEventGateway` resource:
 

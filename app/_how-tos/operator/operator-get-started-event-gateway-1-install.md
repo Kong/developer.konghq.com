@@ -42,7 +42,7 @@ tldr:
   q: How do I prepare a cluster for {{ site.event_gateway }} with {{site.operator_product_name}}?
   a: |
     Create the `kong` and `kafka` namespaces, install {{site.operator_product_name}}, then deploy a Kafka cluster for the {{ site.event_gateway_short }} examples.
-    For on-prem (Tech Preview), also enable the `GWAdmin` and `OnPremEventGateway` controllers, store your {{ site.event_gateway_short }} license in a Secret, and create a `GWAdmin`.
+    For on-prem, also enable the `GWAdmin` and `OnPremEventGateway` controllers, store your {{ site.event_gateway_short }} license in a Secret, and create the control plane.
 
 tags:
   - install
@@ -79,11 +79,6 @@ content: |
   - `LoadBalancer` and `portMapping`
   - `Gateway`, `TLSRoute`, and SNI
 
-{% on_prem %}
-content: |
-  {% include operator/event-gateway-on-prem-tech-preview.md %}
-{% endon_prem %}
-
 ## Create the Kubernetes namespaces
 
 Create the namespaces used throughout this example:
@@ -100,10 +95,10 @@ Install {{site.operator_product_name}} with Helm:
 {% include prereqs/products/operator.md raw=true v_maj=2 keg_install=true %}
 
 {% on_prem %}
-title: Create the `GWAdmin`
+title: Create the control plane
 step: true
 content: |
-  With an on-prem control plane, {{ site.event_gateway }} data planes pull their configuration from gw-admin, a control plane that runs in your cluster. The `GWAdmin` resource deploys gw-admin. {{site.operator_product_name}} pushes your {{ site.event_gateway_short }} configuration to gw-admin, and provisions the certificates that gw-admin and the data planes use to authenticate each other.
+  With an on-prem control plane, {{ site.event_gateway }} data planes pull their configuration from a control plane that runs in your cluster, which you deploy with a `GWAdmin` resource. {{site.operator_product_name}} pushes your {{ site.event_gateway_short }} configuration to the control plane, and provisions the certificates that the control plane and the data planes use to authenticate each other.
 
   1. Store your {{ site.event_gateway_short }} license in a Secret. {{site.operator_product_name}} only reads Secrets that carry the `konghq.com/secret=true` label:
 
@@ -114,7 +109,7 @@ content: |
      ```
      {: data-test-step="block" }
 
-  1. Create the `GWAdmin` resource:
+  1. Create the control plane:
 
      ```bash
      echo '
@@ -132,7 +127,7 @@ content: |
      ```
      {: data-test-step="block" }
 
-  1. Wait for the `GWAdmin` and its Pod to be ready:
+  1. Wait for the control plane and its Pod to be ready:
 
      ```bash
      kubectl wait gwadmin/gw-admin -n kong \
@@ -145,7 +140,7 @@ content: |
      ```
      {: data-test-step="block" }
 
-     The `GWAdmin` reports `LicenseProvisioned=True` once the license Secret is mounted. gw-admin validates the license itself, and doesn't start without a valid one. If the Deployment doesn't become available, check the gw-admin logs:
+     The control plane reports `LicenseProvisioned=True` once the license Secret is mounted. It validates the license itself, and doesn't start without a valid one. If the Deployment doesn't become available, check the control plane logs:
 
      ```bash
      kubectl logs -n kong deployment/gw-admin

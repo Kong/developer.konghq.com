@@ -11,7 +11,7 @@ sections:
     items:
       - path: /event-gateway/#install-event-gateway
       - title: "Install {{site.event_gateway}} on Kubernetes with {{site.operator_product_name}}"
-        description: Install {{site.event_gateway}} on Kubernetes with {{site.operator_product_name}}, with a {{site.konnect_short_name}} control plane or an on-prem control plane (Tech Preview).
+        description: Install {{site.event_gateway}} on Kubernetes with {{site.operator_product_name}}, with a {{site.konnect_short_name}} control plane or an on-prem control plane.
         url: /operator/get-started/event-gateway/install/
       - path: /event-gateway/upgrade/
       - path: /event-gateway/breaking-changes/

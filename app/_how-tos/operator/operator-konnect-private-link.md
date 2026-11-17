@@ -34,8 +34,6 @@ prereqs:
         * Enable **Private DNS** on the endpoint, so that the geo's private host, for example `us.svc.konghq.com`, resolves to the endpoint inside the VPC.
         * Attach a security group that allows inbound TCP traffic on port `443` from your cluster nodes.
 
-        To manage Dedicated Cloud Gateways over PrivateLink too, create a second endpoint for the global service (`global.svc.konghq.com`), also with Private DNS enabled. See [Manage Dedicated Cloud Gateways over PrivateLink](#manage-dedicated-cloud-gateways-over-privatelink).
-
         For the AWS steps, see [AWS PrivateLink peering](/gateway/aws-private-link/).
       icon_url: /assets/icons/aws.svg
 
@@ -98,8 +96,6 @@ rows:
 
 Replace `us` with your geo. You always set the regional form in the `KonnectAPIAuthConfiguration`: {{ site.operator_product_name }} derives the global form from it.
 
-{:.warning}
-> **The `/api` path is required.** Nothing checks the path when you apply the resource. Without it, the authentication call fails, and the `APIAuthValid` condition of the `KonnectAPIAuthConfiguration` stays `False` with the HTTP error in its message.
 
 The `serverURL` of a `KonnectAPIAuthConfiguration` can't be changed. To move an existing installation from the public hosts to PrivateLink, create a new `KonnectAPIAuthConfiguration` and point your resources at it.
 
@@ -229,13 +225,6 @@ spec:
    ```
    {:.no-copy-code}
 
-## Manage Dedicated Cloud Gateways over PrivateLink
-
-`KonnectCloudGatewayNetwork`, `KonnectCloudGatewayTransitGateway`, and `KonnectCloudGatewayDataPlaneGroupConfiguration` call the global {{site.konnect_short_name}} API. With a PrivateLink `serverURL`, {{ site.operator_product_name }} sends those calls to the private global host, for example `https://global.svc.konghq.com/api` for `https://us.svc.konghq.com/api`.
-
-To manage Dedicated Cloud Gateways over PrivateLink, create a second VPC endpoint for the global service with Private DNS enabled. Without it, the global host doesn't resolve and those resources aren't programmed. You don't need a second `KonnectAPIAuthConfiguration`: reference the same one from these resources, as described in [Create a Dedicated Cloud Gateway network](/operator/konnect/crd/cloud-gateways/network/) and [Configure a Dedicated Cloud Gateway](/operator/konnect/crd/cloud-gateways/configuration/).
-
-PrivateLink covers how {{ site.operator_product_name }} reaches {{site.konnect_short_name}}. It doesn't change how the Dedicated Cloud Gateway proxy is exposed, which you control with the `api_access` setting of the data plane group.
 
 ## Egress and network policies
 
@@ -286,5 +275,3 @@ For the full list of status conditions, see [Status fields](/operator/konnect/tr
 The following components can't connect over PrivateLink yet:
 
 * **{{ site.kic_product_name }} in {{site.konnect_short_name}}**: There's no private route for its API, so {{ site.operator_product_name }} holds a `KonnectExtension` for it with `InvalidEndpoint`.
-* **{{ site.event_gateway }}**: The {{ site.event_gateway_short }} data plane builds its {{site.konnect_short_name}} host from the region and the domain, and can't use a path. A `KegDataPlane` whose `KonnectEventGateway` uses a private `serverURL` is held with `EndpointMismatch`. Setting `spec.config.konnect.domain` lifts the check, but the data plane then connects over the public internet.
-* **{{ site.ai_gateway_name }}**: The {{ site.ai_gateway }} API doesn't return private endpoints yet, so an `AIGatewayDataPlane` is held with `EndpointMismatch`.
