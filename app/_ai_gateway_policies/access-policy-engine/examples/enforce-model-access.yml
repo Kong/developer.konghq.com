@@ -2,7 +2,7 @@ description: Reject requests from Kong Identity principals that no access rule a
 extended_description: |
   Reject requests from Kong Identity principals that no access rule allows.
   The Policy rejects a request when no allow rule matches the principal's group, the principal itself, or the whole organization.
-  Create the allow rules before you add the Policy, because a principal with no rules is rejected.
+  Create the allow rules before you add the Policy, because a principal without rules is rejected.
 
 title: 'Enforce model access for Kong Identity principals'
 

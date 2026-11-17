@@ -78,7 +78,7 @@ The Policy depends on three things that you set up separately:
 * **Principals and groups:** Callers must authenticate as {{site.identity}} principals through an [AI Auth Strategy with principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
   Groups organize principals, so that one rule can cover many callers.
 * **Access rules:** Each rule allows or denies access to one AI Model or one MCP server, for a group, a principal, or the whole organization.
-    You create access rules (ACLs) with the {{site.konnect_short_name}} API.
+  You create access rules (ACLs) with the {{site.konnect_short_name}} API.
 * **The Policy:** Create the AI Access Policy Engine Policy with `global: true`.
   The Policy supports only global scope. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
@@ -99,7 +99,7 @@ This includes unauthenticated requests and requests from an AI Consumer that isn
 {:.warning}
 > **Create allow rules before you add the Policy**
 >
-> The Policy rejects a request from a principal when no allow rule matches it, and when the principal has no rules at all. If you add the Policy before you create any allow rules, it rejects every request from a principal.
+> The Policy rejects a request from a principal when no allow rule matches it, and when the principal doesn't have any rules. If you add the Policy before you create any allow rules, it rejects every request from a principal.
 
 ## Choose between access control options
 

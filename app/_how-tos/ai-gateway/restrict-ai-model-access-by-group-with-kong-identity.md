@@ -204,10 +204,10 @@ body:
 
 ## Create an access rule for the group
 
-Create an access rule that allows the `employees` group to call `gpt-4o-mini`.
+Create an access rule that allows the `employees` group to call `gpt-5-mini`.
 Access rules are called ACLs in the {{site.konnect_short_name}} API.
 
-The rule names the model that the provider serves, `gpt-4o-mini`, not the name that clients send, which you set when you create the AI Model.
+The rule names the model that the provider serves, `gpt-5-mini`, not the name that clients send, which you set when you create the AI Model.
 
 The Policy rejects every request unless an `allow` rule matches, so create the rule before you add the Policy.
 
@@ -219,7 +219,7 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  display_name: "employees-can-call-gpt-4o-mini"
+  display_name: "employees-can-call-gpt-5-mini"
   anchor:
     type: group
     id: $GROUP_ID
@@ -227,13 +227,31 @@ body:
   effect: allow
   resource:
     type: Model
-    name: gpt-4o-mini
+    name: gpt-5-mini
 extract_body:
   - name: 'id'
     variable: ACL_ID
 capture:
   - variable: ACL_ID
     jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Get the directory name
+
+The AI Auth Strategy references the directory by name.
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories
+status_code: 200
+method: GET
+extract_body:
+  - name: 'data.0.name'
+    variable: DIRECTORY_NAME
+capture:
+  - variable: DIRECTORY_NAME
+    jq: ".data[0].name"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -257,7 +275,7 @@ body:
     identity_realms: []
     principals:
       enabled: true
-      directory: $DECK_DIRECTORY_NAME
+      directory: $DIRECTORY_NAME
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -286,7 +304,7 @@ body:
 ## Create an AI Model
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) that uses the AI Auth Strategy to authenticate clients.
-Clients call the model as `my-gpt-4o-mini`, and the target forwards the request to OpenAI as `gpt-4o-mini`.
+Clients call the model as `my-gpt-5-mini`, and the target forwards the request to OpenAI as `gpt-5-mini`.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -296,8 +314,8 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: my-gpt-4o-mini
-  display_name: my-gpt-4o-mini
+  name: my-gpt-5-mini
+  display_name: my-gpt-5-mini
   type: model
   enabled: true
   formats:
@@ -312,11 +330,11 @@ body:
       model:
         body_param: model
         values:
-          - my-gpt-4o-mini
+          - my-gpt-5-mini
   capabilities:
     - generate
   targets:
-    - name: gpt-4o-mini
+    - name: gpt-5-mini
       provider: generic-openai
       config:
         type: openai
@@ -358,7 +376,7 @@ headers:
   - "apikey: $EMPLOYEE_KEY"
   - 'Content-Type: application/json'
 body:
-  model: my-gpt-4o-mini
+  model: my-gpt-5-mini
   messages:
     - role: user
       content: What is the capital of France?
@@ -379,7 +397,7 @@ headers:
   - "apikey: $CONTRACTOR_KEY"
   - 'Content-Type: application/json'
 body:
-  model: my-gpt-4o-mini
+  model: my-gpt-5-mini
   messages:
     - role: user
       content: What is the capital of France?
@@ -388,8 +406,7 @@ indent: 3
 {% endvalidation %}
    <!--vale on-->
 
-    The Policy returns its default rejection response:
-
+   The Policy returns its default rejection response:
 
    ```json
    {"message":"Forbidden"}

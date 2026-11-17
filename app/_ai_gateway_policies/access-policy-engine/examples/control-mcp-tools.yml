@@ -2,7 +2,7 @@ description: Enforce access rules on MCP tool calls from Kong Identity principal
 extended_description: |
   Enforce access rules on MCP tool calls from Kong Identity principals.
   MCP enforcement is off by default, so MCP requests pass without being checked against access rules.
-  With enforcement on, a principal needs an allow rule for each tool that it calls.
+  When MCP enforcement is enabled, a principal needs an allow rule for each tool that it calls.
 
 title: 'Control which MCP tools principals can call'
 
