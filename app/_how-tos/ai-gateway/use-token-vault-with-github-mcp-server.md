@@ -32,7 +32,7 @@ tldr:
 
 
 tools:
-  - {{site.konnect_product_name}}
+  - konnect-api
 
 prereqs:
   skip_product: true
@@ -63,7 +63,7 @@ prereqs:
            -e TOKEN_VAULT_PRIVATE_KEY
         ```
 
-        This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints the following environment variable exports:
+        This sets up an {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints the following environment variable exports:
 
         ```bash
         export AI_GATEWAY_ID=your-gateway-id
@@ -77,7 +77,7 @@ prereqs:
       icon_url: /assets/icons/ai.svg
     - title: Okta as the user IdP
       content: |
-        You need admin access to an [Okta](https://login.okta.com/) org, with a custom authorization server and a native OIDC application that the agent uses to sign users in.
+        You need admin access to an [Okta](https://login.okta.com/) org, with a custom authorization server and a native OIDC application that the agent uses to sign users in. This guide needs a custom authorization server because Token Vault only accepts JWT access tokens, and the tokens that the Okta org authorization server issues aren't meant to be validated by third parties.
 
         1. Create a native OIDC application with the **Authorization Code** and **Refresh Token** grant types, and the following sign-in redirect URI:
 
@@ -175,6 +175,7 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+<!-- FOT ENG REVIEW: confirm that vault_access_enabled on a trusted IdP is enforced at runtime. A code search found no reader of the flag outside the admin API and repository code, so it may have no effect on whether tokens from this IdP can use the Token Vault. -->
 * `vault_access_enabled` lets users who sign in through Okta use the Token Vault.
 * `jit_provisioning_enabled` creates a user in the directory the first time someone signs in.
 
