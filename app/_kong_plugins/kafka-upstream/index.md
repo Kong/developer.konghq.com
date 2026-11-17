@@ -102,8 +102,9 @@ Two settings strengthen delivery:
 
 Both settings need synchronous delivery. Set `producer_async` to `false` and `producer_request_acks` to `-1`. Transactions also need `producer_idempotence`.
 
-The plugin builds the transactional ID from the prefix, the node ID, and the worker ID. Each worker therefore uses a distinct producer.
-Set `transactional_id_prefix` to match a Kafka `TransactionalId` ACL. A restarted worker reuses its ID and fences its previous producer, so the broker can abort an unfinished transaction.
+The plugin builds the transactional ID as `<prefix>.<node ID>.<worker ID>`. The default prefix is `kong-<cluster_name>-<config hash>`, so each worker and each plugin config uses a distinct producer. A restarted worker reuses its ID and fences its previous producer, so the broker can abort an unfinished transaction.
+
+Set `transactional_id_prefix` to match a Kafka `TransactionalId` ACL. If several transaction-enabled configs share a `cluster_name` and target the same brokers and topic, give each config a distinct `transactional_id_prefix`. Otherwise their producers fence each other.
 
 {:.warning}
 > **Consumers must set `isolation.level=read_committed`.** With the default `read_uncommitted` isolation level, a consumer also reads messages from aborted transactions.
@@ -111,7 +112,7 @@ Set `transactional_id_prefix` to match a Kafka `TransactionalId` ACL. A restarte
 {:.warning}
 > **Do not retry a `502` response blindly.** A `200` response means the broker committed the transaction. A `502` response means the commit outcome is unknown. Use an application-level idempotency key when you retry.
 
-Transactions add coordinator requests to each call, and the plugin serializes transactions per worker. Expect lower throughput than the default asynchronous mode.
+Transactions add a coordinator lookup, one `AddPartitionsToTxn` request for each new partition, and one `EndTxn` request to each call. The plugin serializes transactions per worker. Expect lower throughput than the default asynchronous mode.
 
 ### Kafka prerequisites
 
