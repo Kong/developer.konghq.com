@@ -1,6 +1,7 @@
 ---
 title: "{{site.mesh_product_name}}: Receiving error \"license status is not valid for this control plane. Copy ConfigMap license-quota-status\""
 content_type: support
+published: false
 description: A {{site.mesh_product_name}} Zone Control Plane can lose license validity when the `license-quota-status` ConfigMap is out of sync with the Global CP; deleting the ConfigMap and letting it rebuild resolves the error.
 products:
   - mesh
