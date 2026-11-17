@@ -159,6 +159,7 @@ rows:
       * `cluster_cache_redis.ssl_verify`
       * `redis.ssl_verify`
       * `session_memcached_ssl_verify`
+      * `tls_client_auth_ssl_verify`
   - plugin: "[Proxy Cache Advanced](/plugins/proxy-cache-advanced/)"
     fields: "`redis.ssl_verify`"
   - plugin: "[Rate Limiting](/plugins/rate-limiting/)"
