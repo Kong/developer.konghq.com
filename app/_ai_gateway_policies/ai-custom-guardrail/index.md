@@ -35,6 +35,30 @@ Here's how it works if you apply it to both requests and responses:
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Guardrail service" masking=true %}
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-custom-guardrail" %}
+
+### Masking
+
+When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
+Select one of `user`, `system`, or `tool_result`, each with `message_countback: 1`:
+
+```yaml
+config:
+  allow_masking: true
+  message_selection:
+    user:
+      message_countback: 1
+```
+
+`assistant`, `tool_call`, and `reasoning` can't be masked, because they don't have a single text field to write into.
+{{site.ai_gateway}} rejects a configuration that selects more than one key or more than one message when you save it.
+To mask across several messages, keep using the legacy fields.
+
+{:.info}
+> On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
+
 ## Configuration
 
 To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). The key is the parameter name, and the value can be a string or a Lua expression.

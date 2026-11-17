@@ -76,6 +76,12 @@ sequenceDiagram
 
 > _Figure 1: Diagram showing the request and response flow with the AI PII Sanitizer Policy._
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-sanitizer" subject="request" action="sends to the PII service" %}
+
+This Policy replaces `allow_all_conversation_history`. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
+
 ## AI PII Anonymizer service
 
 {% include /md/ai-gateway/v2/policies/pii-service.md policy_name="AI PII Sanitizer" show_endpoints=true %}

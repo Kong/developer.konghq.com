@@ -41,6 +41,12 @@ Here's how it works if you apply it to both requests and responses:
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Azure AI Content Safety service" %}
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-azure-content-safety" %}
+
+This Policy skips a blank prompt in every configuration, whether or not you set `message_selection`. It also skips the check, instead of failing the request, when {{site.ai_gateway}} can't read the request body.
+
 ## Rejection modes
 
 The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.

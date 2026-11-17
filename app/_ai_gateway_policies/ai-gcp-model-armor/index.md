@@ -91,6 +91,10 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 >
 > Review whether your organization requires custom categories or additional policy definitions, and integrate them into the selected template to match compliance and safety requirements.
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-gcp-model-armor" %}
+
 ## Rejection modes
 
 The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
@@ -184,8 +188,8 @@ rows:
   - field: |
       `response_buffer_size`
     description: Tune how much of the upstream response is buffered before inspection; smaller values reduce latency.
-  - field: Default last message inspection with `text_source`
-    description: Keep the default behavior of checking only the last user prompt message for highest accuracy.
+  - field: Default last message inspection
+    description: Keep the default behavior of checking only the last user prompt message for highest accuracy. To inspect other content, such as tool results, see [Message selection](#message-selection). The `text_source` field is deprecated.
 {% endtable %}
 
 {:.warning}
