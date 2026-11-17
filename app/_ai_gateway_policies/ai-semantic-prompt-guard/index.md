@@ -62,6 +62,16 @@ The matching behavior is as follows:
 
 {% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-semantic-prompt-guard" action="evaluates" %}
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md local=true subject="prompt" window=1500 %}
+
+The Policy compares one vector per part, so a long text becomes several comparisons.
+It defaults to a smaller window because a long text dilutes the vector.
+A part that matches a deny prompt blocks the text.
+When the Policy lists allow prompts, a part that matches none of them blocks the text, so a Policy with allow prompts is stricter once the text is split.
+
 ## Rejection modes
 
 The {{page.name}} Policy responds to a blocked request according to its rejection mode.

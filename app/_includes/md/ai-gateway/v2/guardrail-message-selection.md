@@ -30,6 +30,7 @@ Each key accepts two settings:
 
 An empty value, like `tool_result: {}`, reads every message of that kind.
 Messages are sent oldest first. If a selection matches nothing, the Policy skips the guardrail call and the request continues.
+If the selected content is larger than the service accepts, see [Text chunking](#text-chunking).
 
 {:.warning}
 > Selected content leaves {{site.ai_gateway}} and goes to the guardrail service. Select only what the service needs.

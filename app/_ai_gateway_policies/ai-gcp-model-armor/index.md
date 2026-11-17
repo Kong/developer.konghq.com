@@ -95,6 +95,14 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 
 {% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-gcp-model-armor" %}
 
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="Model Armor service" window=1500 audit=true streaming=true %}
+
+Model Armor publishes its limit in tokens, and a token is about 4 characters.
+Convert your limit to characters before you set `max_chunk_size`.
+
 ## Rejection modes
 
 The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
