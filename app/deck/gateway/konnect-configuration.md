@@ -70,7 +70,7 @@ deck gateway ping \
 
 The default API decK uses is `https://us.api.konghq.com`.
 
-{{site.base_gateway}} supports AU, EU, IN, and US [geographic regions](/konnect-platform/geos/).
+{{site.base_gateway}} supports AU, EU, IN, UK, and US [geographic regions](/konnect-platform/geos/).
 
 To target a specific geo, set `konnect-addr` to one of the following:
 
@@ -78,6 +78,7 @@ To target a specific geo, set `konnect-addr` to one of the following:
 - EU geo: `"https://eu.api.konghq.com"`
 - US geo: `"https://us.api.konghq.com"`
 - IN geo: `"https://in.api.konghq.com"`
+- UK geo: `"https://uk.api.konghq.com"`
 
 ### Control planes
 
