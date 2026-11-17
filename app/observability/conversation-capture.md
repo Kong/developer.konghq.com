@@ -39,9 +39,12 @@ related_resources:
     url: /observability/debugger/
 ---
 
-<!-- TODO (AG-2227 / AI-240): feature is in design and targets 2.4.0. Confirm publish timing before removing `published: false`. -->
-
-<!-- TODO: placement. Moved from app/ai-gateway/ to app/observability/ because the PM says the UI lives under Observability > Sessions. Confirm with the PM whether this is an AI Gateway feature or a general {{site.konnect_short_name}} observability feature, then adjust breadcrumbs, products and the folder. -->
+<!-- TODO confirm before publishing:
+- Payload capture ships in 2.4 (affects `min_version` and `published: false`).
+- Placement: AI Gateway feature or general Konnect observability feature (affects folder, products, breadcrumbs).
+- Agent debugging, prompt review, and audit use cases (not in the PRD).
+- Settings endpoints are public (marked internal and unstable in the spec).
+-->
 
 Conversation capture records the prompts and responses that pass through {{site.ai_gateway}} and exports them to {{site.konnect_short_name}}, so you can read the conversation behind a metric.
 You turn it on from {{site.konnect_short_name}}.
@@ -71,10 +74,6 @@ rows:
   - scenario: "Audit"
     shows: "Each request sent to an LLM provider and its response."
 {% endtable %}
-
-<!-- TODO: the agent debugging, prompt review and audit use cases are the PM's suggestions from a meeting, not from the PRD. Confirm with the PM before publishing. -->
-
-<!-- TODO: add a short end-to-end walkthrough (spot the problem in cost management, find the cause, enable capture, fix it) once the UI is available. The how-to will carry the steps; keep this page conceptual. -->
 
 ## How conversation capture differs from other tracing
 
@@ -126,36 +125,51 @@ The data plane exports this data over mutual TLS (mTLS), reusing the certificate
 
 ## Capture controls
 
-Conversation capture is off by default, so nothing is traced, exported, or captured until you turn it on.
+Conversation capture settings apply to all traffic through {{site.ai_gateway}}.
+All of them are off by default, so nothing is traced, exported, or captured until you turn it on.
 
-<!-- TODO: confirm names, defaults and limits against the Konnect API spec and UI. The ERD examples disagree on field names (`enabled` vs `enable`) and on the default max payload size (1,000,000 bytes in the settings table, 5 MB in the payload capture section). -->
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: What it controls
+    key: controls
+rows:
+  - setting: "`observability.traces`"
+    controls: |
+      Whether traces are recorded.
+      Use `sampling_rate`, a value from `0` to `1`, to trace only a fraction of requests.
+      The sampling rate is kept when you disable tracing.
+  - setting: "`observability.access_logs`"
+    controls: "Whether access logs are recorded."
+  - setting: "`observability.payload_capture`"
+    controls: |
+      Whether request payloads are captured.
+      Use `sampling_rule` to limit capture to matching requests.
+{% endtable %}
 
-You can turn trace export and access log export on independently.
+Trace export and access log export are independent.
 For example, you can export access logs without traces, or the reverse.
+
+<!-- TODO confirm: default `sampling_rate` (spec says 1, ERD says 0.01). -->
 
 ### Payload capture
 
 Payload capture controls whether prompts and responses are included in what's exported.
 It's off by default, because payloads can be large and can contain sensitive data.
 
-In {{site.ai_gateway}} 2.4, payload capture reuses the `log_payloads` setting on the [AI Model](/ai-gateway/entities/ai-model/).
-Turning on `log_payloads` also makes payloads available to any attached logging policy, as it does today.
-A separate capture-only toggle is planned for a later release.
-
-<!-- TODO: open PRD question: does payload capture get its own toggle in 2.4, or reuse log_payloads? Update this section when decided. -->
-
-A maximum payload size limits how much of each request or response is captured.
+Payload capture adds to the payload logging you configure on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
+{{site.ai_gateway}} captures a payload when the entity that serves the request logs payloads, or when payload capture is enabled and the request matches the sampling rule.
 
 ### Sampling payloads
 
 To limit payload capture to the requests you care about, set a sampling rule.
-A sampling rule is a [Common Expression Language (CEL)](/ai-gateway/conditions/) expression that must evaluate to a boolean.
-Requests that match the rule have their payloads captured.
-For other requests, the data plane removes the payload from the access log and the trace.
+A sampling rule is a [Common Expression Language (CEL)](/ai-gateway/conditions/) boolean expression of up to 1,024 characters.
+It uses the same variables as the `allow_when` and `deny_when` access rules.
+Only requests that match the rule have their payloads captured.
+If you enable payload capture without a sampling rule, {{site.ai_gateway}} captures every request.
 
-For example, a rule that matches a single consumer captures conversations only for that consumer.
-
-<!-- TODO: confirm available CEL variables (model, provider, consumer) and the exact default behavior with the feature team. -->
+For example, the rule `consumer.username == 'support-bot'` captures conversations only for the `support-bot` consumer.
 
 ## PII scrubbing
 
@@ -166,9 +180,9 @@ For example, a rule that matches a single consumer captures conversations only f
 
 You can't configure these rules, and custom sanitization rules aren't supported.
 
-<!-- TODO: PM (Greg, meeting notes, repeated 2026-11-16) says PII is scrubbed with "local and dp regex". The ERD only describes static data plane rules (Luhn, auth headers) and no local (client-side?) scrubbing. Confirm with the feature team what "local" means and whether regex rules exist, then rewrite this section. Until then the section documents only the ERD rules. -->
+<!-- TODO confirm: whether PII is also scrubbed with local and data plane regex rules. The ERD lists only the fixed Luhn and auth header rules. -->
 
-<!-- TODO: open PRD question: are LLM API key headers used by common coding agents (for example Claude Code, OpenCode) in the predefined header list? Do not document until confirmed. -->
+<!-- TODO confirm: whether API key headers used by coding agents are in the scrubbed header list. -->
 
 {:.warning}
 > The fixed scrubbing rules can't detect all sensitive data in prompts and responses.
@@ -176,9 +190,35 @@ You can't configure these rules, and custom sanitization rules aren't supported.
 
 ## Enable conversation capture
 
-<!-- TODO: PM says captured conversations will appear in the Konnect UI under Observability > Sessions. That menu item was missing on the .tech environment at the time of the meeting, so confirm the name and location before documenting it. -->
+Turn on conversation capture by updating the {{site.ai_gateway}} settings.
+The following request turns on access logs and payload capture for the `support-bot` consumer:
 
-<!-- TODO: add UI steps and API/kongctl examples once the Konnect UI and the settings API exist. Use docs/ui-steps-standards.md for UI steps. Do not publish endpoint paths or field names until they appear in api-specs/konnect/ai-gateway/v1/openapi.yaml. -->
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/settings
+status_code: 200
+method: PATCH
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  observability:
+    access_logs:
+      enabled: true
+    payload_capture:
+      enabled: true
+      sampling_rule: "consumer.username == 'support-bot'"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+A `PATCH` request replaces each top-level property you send in full, and keeps the properties you omit.
+In this request, `observability` is the top-level property, so any `traces` settings you stored earlier are replaced by their defaults.
+To unset a property, set it to `null`.
+
+By default, a `GET` request to the same endpoint returns only the settings you have set.
+To return every setting with its default value, add `view=effective`.
+
+<!-- TODO confirm: UI location (Observability > Sessions?) and toggle design, then add UI steps. -->
 
 ## Limitations
 
@@ -186,4 +226,4 @@ You can't configure these rules, and custom sanitization rules aren't supported.
 - Capture doesn't cover requests that are short-circuited before they reach the AI Model.
 - Capture works with {{site.konnect_short_name}} data planes only.
 
-<!-- TODO: confirm each limitation. "Short-circuited" comes from the AI Payload Export Control PRD non-goals. "Konnect only" comes from the kong-ee#23705 changelog. Add the memory and performance guidance once load testing (AG-2329) is done. -->
+<!-- TODO confirm: each limitation. Add memory and performance guidance after load testing. -->
