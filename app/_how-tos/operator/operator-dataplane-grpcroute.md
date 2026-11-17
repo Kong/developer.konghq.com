@@ -25,12 +25,30 @@ tldr:
   a: Annotate the backend Service with `konghq.com/protocol=grpcs`, add an `HTTPS` listener to your `Gateway`, then create a `GRPCRoute` resource. {{ site.operator_product_name }} converts the `GRPCRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
-  enterprise: true
   inline:
     - title: gRPCurl installed
       include_content: prereqs/grpcurl
       icon_url: /assets/icons/code.svg
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          grpcroute/grpcbin \
+          secret/example.com \
+          gateway/kong-grpc-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-grpc
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `GRPCRoute` is a Kubernetes Gateway API resource for routing gRPC traffic. This guide shows how to configure {{ site.operator_product_name }} to proxy gRPC traffic secured with TLS to a backend Service.
@@ -81,6 +99,7 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Deploy a gRPC backend
 
@@ -89,6 +108,7 @@ Install the `grpcbin` Service, which implements a simple gRPC test API:
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/grpcbin-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Annotate the Kubernetes Service
 
@@ -97,6 +117,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/grpcbin-service.yaml -n kong
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
 ```
+{: data-test-step="block" }
 
 ## Generate a TLS certificate
 
@@ -107,6 +128,7 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
    ```bash
    kubectl label secret example.com -n kong konghq.com/secret="true"
    ```
+   {: data-test-step="block" }
 
 ## Route gRPC traffic
 
@@ -136,7 +158,8 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
              - group: ""
                kind: Secret
                name: example.com' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
    
 1. Create a `GRPCRoute`:
    
@@ -156,8 +179,9 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
        - backendRefs:
            - name: grpcbin
              port: 9001
-   ' | kubectl apply -f -
-   ```
+    ' | kubectl apply -f -
+    ```
+    {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward gRPC requests for `example.com` on port `443` to the `grpcbin` Service on port `9001`.
 
@@ -170,6 +194,14 @@ This configuration instructs {{ site.base_gateway }} to forward gRPC requests fo
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
+
+1. Wait for the Gateway to be programmed after the listener change:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong-grpc-gateway -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
@@ -177,14 +209,22 @@ This configuration instructs {{ site.base_gateway }} to forward gRPC requests fo
    export PROXY_IP=$(kubectl get gateway kong-grpc-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
    echo $PROXY_IP
    ```
+   {: data-test-step="block" }
 
 1. Call the `grpcbin` test service through the proxy:
 
-   ```bash
+{% validation custom-command %}
+command: |
    grpcurl -insecure -authority example.com \
      -d '{"greeting": "Kong"}' \
      $PROXY_IP:443 hello.HelloService.SayHello
-   ```
+expected:
+  return_code: 0
+  message: |
+    "reply": "hello Kong"
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The results should look like this:
 

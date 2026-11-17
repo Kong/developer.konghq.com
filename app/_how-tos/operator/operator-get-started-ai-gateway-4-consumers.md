@@ -24,14 +24,45 @@ min_version:
 
 works_on:
   - konnect
+  - on-prem
 
 prereqs:
   skip_product: true
 
+cleanup:
+  inline:
+    - title: Delete the {{ site.ai_gateway_name }} resources
+      content: |
+        Deleting the `KonnectAIGateway` also deletes the {{ site.ai_gateway_name }} control plane the {{ site.operator_product_name }} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          aigatewayconsumercredential/team-platform-key-auth \
+          aigatewayconsumer/team-platform \
+          aigatewayconsumergroup/platform-team-group \
+          aigatewaypolicy/content-guardrails \
+          aigatewaydataplane/my-ai-gateway-dp \
+          aigatewaymodel/gpt-4o-mini \
+          aigatewaymodelprovider/openai-provider \
+          aigatewayauthstrategy/key-auth-provider \
+          konnectaigateway/my-ai-gateway-cp
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/ai-gateway.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 tldr:
   q: How do I add AI consumers with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayAuthStrategy` and attach it to your AI Model via `spec.apiSpec.model.access.authStrategies`. 
+    Create an `AIGatewayAuthStrategy` and attach it to your AI Model via `spec.apiSpec.model.access.authStrategies`.
+    Then create an `AIGatewayConsumer` with an `AIGatewayConsumerCredential`. On-premises (Tech Preview), point each `spec.aiGatewayRef` at your `OnPremAIGateway`.
 
 next_steps:
   - text: "{{ site.ai_gateway_name }} resource reference"
@@ -58,37 +89,79 @@ With AI Consumers in place you can:
 - Issue API keys per team and revoke them independently
 - Enforce per-consumer `AIGatewayPolicy` rules such as different allowlists per team
 - Group AI Consumers with `AIGatewayConsumerGroup` to target shared AI Policies, model access controls, and analytics attribution at the group level
-- Attribute usage and cost to a specific AI Consumer in the {{ site.konnect_short_name }} analytics dashboard
+- With {{ site.konnect_short_name }}, attribute usage and cost to a specific AI Consumer in the {{ site.konnect_short_name }} analytics dashboard
 
-## Create an `AIGatewayAuthStrategy`
+{% on_prem %}
+content: |
+  {% include operator/ai-gateway-on-prem-tech-preview.md %}
+
+  An on-premises control plane doesn't send data to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} analytics aren't available for AI Consumers.
+{% endon_prem %}
+
+## Create an AI Auth Strategy
 
 The `AIGatewayAuthStrategy` resource configures the authentication scheme {{ site.ai_gateway_name }} uses to verify downstream clients. This example uses API key authentication.
 
 1. Create a key-auth AI Auth Strategy:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayAuthStrategy
-   metadata:
-     name: key-auth-provider
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
-       type: key-auth
-       key-auth:
-         name: key-auth-provider
-         displayName: API Key Authentication
-         config:
-           hideCredentials: Enabled
-           keyNames:
-             - x-api-key
-   ' | kubectl apply -f -
-   ```
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayAuthStrategy
+     metadata:
+       name: key-auth-provider
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: key-auth
+         key-auth:
+           name: key-auth-provider
+           displayName: API Key Authentication
+           config:
+             hideCredentials: Enabled
+             keyNames:
+               - x-api-key
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayAuthStrategy
+     metadata:
+       name: key-auth-provider
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: key-auth
+         key-auth:
+           name: key-auth-provider
+           displayName: API Key Authentication
+           config:
+             hideCredentials: Enabled
+             keyNames:
+               - x-api-key
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the AI Auth Strategy to be ready:
 
@@ -97,6 +170,7 @@ The `AIGatewayAuthStrategy` resource configures the authentication scheme {{ sit
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 ## Attach the AI Auth Strategy to the AI Model
 
@@ -107,6 +181,7 @@ kubectl patch aigatewaymodel gpt-4o-mini -n kong \
   --type=merge \
   -p '{"spec":{"apiSpec":{"model":{"access":{"authStrategies":[{"name":"key-auth-provider"}]}}}}}'
 ```
+{: data-test-step="block" }
 
 Wait for the AI Model to be reconciled with the updated configuration:
 
@@ -115,31 +190,62 @@ kubectl wait aigatewaymodel/gpt-4o-mini -n kong \
   --for=condition=Programmed=True \
   --timeout=5m
 ```
+{: data-test-step="block" }
 
 ## Create an AI Consumer
 
-The `AIGatewayConsumer` resource registers a downstream client with the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}.
+The `AIGatewayConsumer` resource registers a downstream client with the {{ site.ai_gateway }} control plane.
 
 1. Create an AI Consumer for your platform engineering team:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayConsumer
-   metadata:
-     name: team-platform
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayConsumer
+     metadata:
        name: team-platform
-       displayName: Platform Engineering
-       type: api-key
-   ' | kubectl apply -f -
-   ```
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: team-platform
+         displayName: Platform Engineering
+         type: api-key
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayConsumer
+     metadata:
+       name: team-platform
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: team-platform
+         displayName: Platform Engineering
+         type: api-key
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the AI Consumer to be reconciled:
 
@@ -148,6 +254,7 @@ The `AIGatewayConsumer` resource registers a downstream client with the {{ site.
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 ## Attach an API key credential
 
@@ -161,6 +268,7 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
      -n kong
    kubectl label secret team-platform-key konghq.com/secret=true -n kong
    ```
+   {: data-test-step="block" }
 
 1. Create the credential resource:
 
@@ -187,6 +295,7 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
            key: api-key
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the credential to be reconciled:
 
@@ -195,6 +304,7 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 {:.info}
 > **Credentials are immutable:** `AIGatewayConsumerCredential` only supports create and delete; updates are not propagated. To rotate a key, delete the credential and create a new one.
@@ -204,22 +314,42 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
 
 Send an authenticated request using the API key:
 
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" \
-  http://$AIGW_HOST:8000/v1/chat/completions \
-  -H "x-api-key: my-platform-team-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
-```
+<!--vale off-->
+{% validation request-check %}
+konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'x-api-key: my-platform-team-api-key'
+  - 'Content-Type: application/json'
+body:
+  model: gpt-4o-mini
+  messages:
+    - role: user
+      content: How do I configure a Kong service?
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
 Send an unauthenticated request:
 
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" \
-  http://$AIGW_HOST:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"How do I configure a Kong service?"}]}'
-```
+<!--vale off-->
+{% validation request-check %}
+konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  model: gpt-4o-mini
+  messages:
+    - role: user
+      content: How do I configure a Kong service?
+status_code: 401
+{% endvalidation %}
+<!--vale on-->
 
 You should get a `401 Unauthorized`.
 
@@ -227,32 +357,62 @@ You should get a `401 Unauthorized`.
 
 `AIGatewayConsumerGroup` is a named set of AI Consumers that you can target as a unit. Use AI Consumer Groups to:
 
-- Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group — each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
+- Apply shared AI Policies to a team via `spec.apiSpec.policies` on the AI Consumer Group. Each entry is an object with a `name` field referencing an `AIGatewayPolicy` by its Kubernetes resource name, which is useful for AI Policies scoped with `global: Disabled`
 - Restrict or allow group access to individual AI Models via `spec.apiSpec.model.access.acls` on the `AIGatewayModel`
-- Attribute usage across multiple AI Consumers to a single AI Consumer Group in {{ site.konnect_short_name }} analytics
+- With {{ site.konnect_short_name }}, attribute usage across multiple AI Consumers to a single AI Consumer Group in {{ site.konnect_short_name }} analytics
 
 AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Consumer Group. Use `spec.consumerGroups` on the AI Consumer to reference the AI Consumer Groups it belongs to.
 
 1. Create an AI Consumer Group:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayConsumerGroup
-   metadata:
-     name: platform-team-group
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayConsumerGroup
+     metadata:
        name: platform-team-group
-       displayName: Platform Team
-       policies: []
-   ' | kubectl apply -f -
-   ```
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: platform-team-group
+         displayName: Platform Team
+         policies: []
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayConsumerGroup
+     metadata:
+       name: platform-team-group
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         name: platform-team-group
+         displayName: Platform Team
+         policies: []
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the AI Consumer Group to be reconciled:
 
@@ -261,6 +421,7 @@ AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Con
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 1. Enroll the AI Consumer in the AI Consumer Group by patching the consumer resource:
 
@@ -269,6 +430,7 @@ AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Con
      --type=merge \
      -p '{"spec":{"consumerGroups":[{"name":"platform-team-group"}]}}'
    ```
+   {: data-test-step="block" }
 
 1. Wait for the AI Consumer to reconcile with the updated AI Consumer Group membership:
 
@@ -277,12 +439,14 @@ AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Con
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
 
 1. Confirm both resources are visible:
 
    ```bash
    kubectl get aigatewayconsumer,aigatewayconsumergroup -n kong
    ```
+   {: data-test-step="block" }
 
 ## Inspect AI Consumer status
 
@@ -291,13 +455,24 @@ List all AI Consumers and their reconciliation status:
 ```bash
 kubectl get aigatewayconsumer -n kong
 ```
+{: data-test-step="block" }
 
 You should see an output like the following:
-NAME            ID                                     PROGRAMMED   AGE
-team-platform   <konnect-id>                           True         2m
+
+```
+NAME            ID             PROGRAMMED   ORGID        AGE
+team-platform   <konnect-id>   True         <org-id>     2m
+```
+{:.no-copy-code}
+
+{% on_prem %}
+content: |
+  For on-prem, the `ID` and `ORGID` columns are empty because the AI Consumer is never created in {{ site.konnect_short_name }}.
+{% endon_prem %}
 
 Describe an AI Consumer to see the full status and any reconciliation errors:
 
 ```bash
 kubectl describe aigatewayconsumer/team-platform -n kong
 ```
+{: data-test-step="block" }

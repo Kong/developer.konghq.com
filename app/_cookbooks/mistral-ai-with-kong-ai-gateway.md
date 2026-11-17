@@ -37,9 +37,9 @@ prereqs:
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
 
            ```bash
@@ -53,12 +53,12 @@ prereqs:
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions an {{site.ai_gateway}} named `mistral-ai-with-kong-ai-gateway-recipe`, a local Data Plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`) for the rest of the session vars. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `mistral-ai-with-kong-ai-gateway-recipe`, a local data plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`) for the rest of the session vars. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install [**kongctl**](/kongctl/.
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
         1. Verify it's installed:
 
            ```bash
@@ -94,7 +94,7 @@ prereqs:
 
 overview: |
   Put Mistral behind {{site.ai_gateway_name}} so that application code never holds a Mistral API
-  key. By the end of this recipe you will have one `/mistral` endpoint serving two capabilities,
+  key. By the end of this recipe you'll have one `/mistral` endpoint serving two capabilities,
   chat through `mistral-small-latest` and embeddings through `mistral-embed`, both reachable only
   with a per-application key you can revoke on its own.
 
@@ -121,7 +121,7 @@ The root issue is coupling. Application code holds the provider credential, name
 {% mermaid %}
 sequenceDiagram
     participant C as Client app
-    participant K as {{site.ai_gateway_name}}
+    participant K as Kong AI Gateway
     participant M as Mistral API
 
     C->>K: POST /mistral/chat/completions (apikey, model: mistral-chat)
@@ -271,14 +271,14 @@ ai_gateway_consumers:
 
 - **`key_in_query: false` and `key_in_body: false`**: restrict the credential to the header, keeping keys out of access logs and request bodies.
 - **`credentials`**: nests directly inside the AI Consumer. The `api_key` field is write-only and rejects a plain string, so even a demo value is wrapped in `!secret`.
-- **To add a second application**, add another `ai_gateway_consumers` entry with its own credential. Both reference the same auth strategy, and each can be deleted independently.
+- **To add a second application**, add another `ai_gateway_consumers` entry with its own credential. Both reference the same AI Auth Strategy, and each can be deleted independently.
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
 
 ## Apply the Kong configuration
 
-This section configures the {{site.ai_gateway}} in two parts. First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the apply command below can manage it. The recipe's `mistral-ai-with-kong-ai-gateway-recipe` namespace scopes the gateway so teardown removes only this recipe's configuration.
+This section configures the {{site.ai_gateway}} in two parts. First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply command can manage it. The recipe's `mistral-ai-with-kong-ai-gateway-recipe` namespace scopes the gateway so teardown removes only this recipe's configuration.
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -440,7 +440,7 @@ rm -f kong-recipe.yaml
 The demo script exercises all four behaviors through the OpenAI SDK: a chat call, the same call streamed, an embeddings call, and a call with an invalid key.
 
 {:.info}
-> The script passes the key through `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header, while this auth strategy reads the `apikey` header. The SDK still requires `api_key` to be set to something, so the demo passes the literal string `unused`.
+> The script passes the key through `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header, while this AI Auth Strategy reads the `apikey` header. The SDK still requires `api_key` to be set to something, so the demo passes the literal string `unused`.
 
 A chat request through Kong looks like this:
 
@@ -681,15 +681,15 @@ Done.
 ### What happened
 
 1. **The OpenAI SDK talked to Mistral without knowing it.** The client set `base_url` to Kong and sent an OpenAI-shaped request. `formats: [{type: openai}]` on the AI Model translated it into Mistral's contract and translated the reply back. No Mistral SDK is installed; the only dependency is `openai`.
-2. **The client sent an alias, not a model name.** Every call used `model: mistral-chat`, which `config.route.model` resolved to the `mistral-small-latest` target. `X-Kong-LLM-Model` reports what actually served the request. Re-pointing that target is a one-line change, invisible to callers.
+2. **The client sent an alias, not a model name.** Every call used `model: mistral-chat`, which `config.route.model` resolved to the `mistral-small-latest` target. `X-Kong-LLM-Model` reports what actually served the request. Pointing that target at another model is a one-line change, invisible to callers.
 3. **Streaming worked over the same endpoint.** Adding `stream=True` produced incremental chunks with a first token at 395 ms, with no separate route or model.
 4. **Chat and embeddings shared one credential and one provider.** The embeddings call went to `/mistral/embeddings` and returned 1024-dimension vectors from `mistral-embed`, authenticated by the same AI Consumer key and backed by the same AI Model Provider. Two capabilities, one base path, one credential.
 5. **The invalid key never reached Mistral.** Kong rejected it in 6 ms, against the 881 ms the real call above took once it reached Mistral. No Mistral quota was spent, and no token was billed.
 6. **The Mistral key stayed in {{site.konnect_short_name}}.** The script only ever held the AI Consumer credential. The Mistral key lived on the AI Model Provider as a write-only field and was injected server-side.
 
-### Explore in Konnect
+### Explore in {{site.konnect_short_name}}
 
-Open [Konnect](https://cloud.konghq.com/) and select the `mistral-ai-with-kong-ai-gateway-recipe` {{site.ai_gateway}}. It holds five resources created by this recipe:
+Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and select the `mistral-ai-with-kong-ai-gateway-recipe` {{site.ai_gateway}}. It holds five resources created by this recipe:
 
 - One AI Model Provider, `mistral-ai-with-kong-ai-gateway-provider`, holding the Mistral credential. The key is write-only and is never displayed after creation.
 - Two AI Models, `mistral-ai-with-kong-ai-gateway-chat` and `mistral-ai-with-kong-ai-gateway-embeddings`, each with its own capability, alias rule, and target.
@@ -715,14 +715,14 @@ mistral-ai-with-kong-ai-gateway-chat  ["generate"]  ["/mistral"]
 ## Variations and next steps
 
 - **Add a second tier.** Add a third AI Model on the same provider with its own alias and a `mistral-medium-latest` target, and let callers pick per request. Set `input_cost` and `output_cost` on each target so {{site.konnect_short_name}} reports spend per tier. See [Model cost management](/ai-gateway/model-cost-management/).
-- **Budget each application.** Attach an [ai-rate-limiting-advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) AI Policy to cap tokens per AI Consumer, so one misbehaving application can't drain the account. The AI policy counts tokens rather than requests, which is the correct unit for LLM cost control.
-- **Add guardrails.** Attach [ai-prompt-guard](/ai-gateway/policies/ai-prompt-guard/) to filter prompts by pattern, or [ai-sanitizer](/ai-gateway/policies/ai-sanitizer/) to strip PII before it reaches Mistral.
+- **Budget each application.** Attach an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to cap tokens per AI Consumer, so one misbehaving application can't drain the account. The policy counts tokens rather than requests, which is the correct unit for LLM cost control.
+- **Add guardrails.** Attach the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) Policy to filter prompts by pattern, or the [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy to strip PII before it reaches Mistral.
 - **Fail over to another provider.** An AI Model can hold targets from different AI Model Providers. Add a second provider and target alongside the Mistral one, then set `config.balancer` to distribute or fail over between them. See [Load balancing](/ai-gateway/load-balancing/).
 - **Swap keys for tokens.** Replace the `key-auth` AI Auth Strategy with `openid-connect` to accept tokens your identity provider already issues. An AI Model supports one of each simultaneously.
 
 ## Cleanup
 
-The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local Data Plane and delete the {{site.ai_gateway}} from Konnect:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='mistral-ai-with-kong-ai-gateway-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN

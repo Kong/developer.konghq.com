@@ -8,9 +8,6 @@ extended_description: |
   This value must refer to the Consumer ID or username attribute, and not its `custom_id`.
 weight: 900
 
-requirements: 
-- "A [Consumer](/gateway/entities/consumer/) with a username and password"
-
 config:
   anonymous: "anonymous"
 

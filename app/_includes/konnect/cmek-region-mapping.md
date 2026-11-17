@@ -16,10 +16,6 @@ rows:
     aws: |
         * eu-central-1
         * eu-west-1
-  - geo: "ME (Middle East)"
-    aws: |
-        * me-central-1
-        * me-south-1
   - geo: "US (United States)"
     aws: |
         * us-west-2

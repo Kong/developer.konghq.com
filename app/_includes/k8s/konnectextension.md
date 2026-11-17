@@ -21,3 +21,4 @@ spec:{% if include.use_custom_ca %}
         konnectNamespacedRef:
           name: gateway-control-plane' | kubectl apply -f -
 ```
+{: data-test-step="block" }

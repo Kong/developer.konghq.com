@@ -67,6 +67,7 @@ spec:
       type: own
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a GatewayClass
 
@@ -87,12 +88,14 @@ spec:
        namespace: kong-gw-public
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for {{ site.operator_product_name }} to accept the `GatewayClass`:
 
    ```bash
    kubectl wait --for=condition=Accepted=True gatewayclass/gw-public --timeout=60s
    ```
+   {: data-test-step="block" }
 
 ## Create a Gateway
 
@@ -113,20 +116,23 @@ spec:
        port: 80
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the gateway to be programmed:
 
    ```bash
    kubectl wait --for=condition=Programmed=True gateway/gw-public -n kong-gw-public --timeout=120s
    ```
+   {: data-test-step="block" }
 
 1. This gateway's in-memory {{ site.kic_product_name_short }} is the first `ControlPlane` in the cluster, so it's the one that picks up the `KongLicense` you applied in the previous step. Confirm it reached the `Programmed` condition:
 
    ```bash
-   kubectl wait --for=jsonpath='{.status.controllers[0].conditions[0].status}'=True \
-    konglicense/kong-license --timeout=60s
+   kubectl wait --for=jsonpath='{.status.controllers[0].conditions[?(@.type=="Programmed")].status}'=True \
+     konglicense/kong-license --timeout=60s
    ```
-   
+   {: data-test-step="block" }
+
 
 ## Validate
 

@@ -3,11 +3,11 @@
 module Jekyll
   module Utils
     class JsonSchemaDeref
-      INTERNAL_REF = /\A#\/\$defs\/(?<name>[^\/]+)\z/
+      INTERNAL_REF = %r{\A#/(?:\$defs|components/schemas)/(?<name>[^/]+)\z}
 
       def initialize(schema)
         @schema = schema || {}
-        @defs = @schema.fetch('$defs', {})
+        @defs = @schema.fetch('$defs', @schema.dig('components', 'schemas') || {})
       end
 
       def resolve
@@ -36,7 +36,9 @@ module Jekyll
 
         return deref unless deref.is_a?(Hash)
 
-        merged = deref.merge(siblings)
+        merged = deref.merge(siblings) do |key, defined, sibling|
+          key == 'properties' ? defined.merge(sibling) : sibling
+        end
         merged['description'] = deref['description'] if deref.key?('description')
         merged
       end

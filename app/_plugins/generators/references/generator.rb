@@ -2,7 +2,7 @@
 
 module Jekyll
   module ReferencePages
-    class Generator # rubocop:disable Style/Documentation
+    class Generator
       def self.run(site)
         new(site).run
       end
@@ -23,6 +23,7 @@ module Jekyll
         site.pages.each do |page|
           next if page.data['content_type'] != 'reference'
           next if page.data['auto_generated']
+          next if page.data['skip_versioner']
 
           versioned_pages.concat(Versioner.new(site:, page:).process)
         end
@@ -34,6 +35,7 @@ module Jekyll
         site.documents.each do |doc|
           next if doc.data['content_type'] != 'reference'
           next if doc.data['auto_generated']
+          next if doc.data['skip_versioner']
 
           versioned_pages.concat(Versioner.new(site:, page: doc).process)
         end

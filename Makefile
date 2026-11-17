@@ -15,6 +15,7 @@ install:
 	mise install
 	git submodule sync --recursive
 	git submodule update --init
+	npm install -g corepack@0.36.0
 	corepack enable
 	yarn install --immutable
 	bundle install
@@ -23,12 +24,23 @@ install:
 validate-frontmatters:
 	npm --prefix tools/frontmatter-validator run validate
 
-# Using local dependencies, starts a doc site instance on http://localhost:4000.
+# Using local dependencies, starts a doc site instance. The entry URL is
+# printed at startup and written to tmp/dev-url.
 run: ruby-version-check validate-frontmatters
-	NODE_OPTIONS="--max_old_space_size=8192" yarn netlify dev --offline --skip-wait-port --internal-disable-edge-functions
+	@PORTS=$$(./exe/dev-ports) || exit 1; \
+	eval "$$PORTS"; \
+	echo "Dev server: $$(cat tmp/dev-url)"; \
+	NODE_OPTIONS="--max_old_space_size=8192" yarn netlify dev --offline \
+	  --skip-wait-port --internal-disable-edge-functions \
+	  --port $$NETLIFY_PORT --target-port $$JEKYLL_PORT
 
 run-debug: ruby-version-check
-	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' yarn netlify dev --skip-wait-port --internal-disable-edge-functions
+	@PORTS=$$(./exe/dev-ports) || exit 1; \
+	eval "$$PORTS"; \
+	echo "Dev server: $$(cat tmp/dev-url)"; \
+	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' yarn netlify dev \
+	  --skip-wait-port --internal-disable-edge-functions \
+	  --port $$NETLIFY_PORT --target-port $$JEKYLL_PORT
 
 build: ruby-version-check
 	exe/build
@@ -43,8 +55,12 @@ clean:
 	-rm -rf .jekyll-cache/vite
 
 kill-ports:
-	@JEKYLL_PROCESS=$$(lsof -ti:4000) && kill -9 $$JEKYLL_PROCESS || true
-	@VITE_PROCESS=$$(lsof -ti:3036) && kill -9 $$VITE_PROCESS || true
+	@PORTS=$$(./exe/dev-ports) || exit 1; \
+	eval "$$PORTS"; \
+	NETLIFY_PROCESS=$$(lsof -ti:$$NETLIFY_PORT) && kill -9 $$NETLIFY_PROCESS || true; \
+	JEKYLL_PROCESS=$$(lsof -ti:$$JEKYLL_PORT) && kill -9 $$JEKYLL_PROCESS || true; \
+	VITE_PROCESS=$$(lsof -ti:$$VITE_RUBY_PORT) && kill -9 $$VITE_PROCESS || true; \
+	LIVERELOAD_PROCESS=$$(lsof -ti:$$LIVERELOAD_PORT) && kill -9 $$LIVERELOAD_PROCESS || true
 
 vale:
 	-git diff --name-only --diff-filter=d origin/main HEAD | grep '\.md$$' | xargs vale

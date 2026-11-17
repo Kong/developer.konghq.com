@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl list gateway
+    url: /kongctl/list/gateway/
 ---
 
 Get gateway information.

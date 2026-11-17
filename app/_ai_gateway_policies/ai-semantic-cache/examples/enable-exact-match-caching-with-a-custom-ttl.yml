@@ -1,0 +1,51 @@
+description: |
+  Configure the AI Semantic Cache policy to check for an exact match before it searches by similarity, and to keep cached entries for 10 minutes.
+  Exact-match caching increases the size of the vector database.
+
+title: Enable exact-match caching with a custom TTL
+
+weight: 890
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI account.
+  - "A [Redis](https://redis.io/docs/latest/) instance."
+  - "Port `6379`, or your custom Redis port, is open and reachable from {{site.ai_gateway}}."
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance runs
+
+name: semantic-cache-exact-match-ttl
+display_name: Enable exact-match caching with a custom TTL
+type: ai-semantic-cache
+
+config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${header_value}
+    model:
+      provider: openai
+      name: text-embedding-3-large
+      options:
+        upstream_url: https://api.openai.com/v1/embeddings
+  vectordb:
+    dimensions: 3072
+    distance_metric: cosine
+    strategy: redis
+    threshold: 0.1
+    redis:
+      host: ${redis_host}
+      port: 6379
+  exact_caching: true
+  cache_ttl: 600
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -250,6 +250,180 @@ RSpec.describe 'components/entity_example/format/snippets/konnect-api.md' do
     end
   end
 
+  context 'ai-gateway product, policy type' do
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == target_key }
+      example.formatted_examples.detect { |fe| fe.format == 'konnect-api' }.presenter
+    end
+
+    context 'with a global target' do
+      let(:target_key) { 'global' }
+
+      it 'renders a POST to the policies endpoint with global true' do
+        expect(rendered).to eq(<<~'MD')
+          ```bash
+          curl -X POST https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/policies \
+              --header "accept: application/json" \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $KONNECT_TOKEN" \
+              --data '
+              {
+                "name": "pii-sanitizer",
+                "display_name": "PII Sanitizer",
+                "type": "ai-sanitizer",
+                "enabled": true,
+                "condition": "model.name == \"gpt-4o\"",
+                "config": {
+                  "patterns": [
+                    "email",
+                    "phone"
+                  ],
+                  "fail_on_error": true,
+                  "thresholds": {
+                    "redaction": {
+                      "score": 0.9,
+                      "actions": [
+                        "redact",
+                        "log"
+                      ]
+                    }
+                  },
+                  "providers": {
+                    "openai": {
+                      "model": "gpt-4o"
+                    }
+                  }
+                },
+                "global": true
+              }
+              '
+          ```
+        MD
+      end
+    end
+
+    context 'with an ai-model target' do
+      let(:target_key) { 'ai-model' }
+
+      it 'renders a POST to the policies endpoint with global false' do
+        expect(rendered).to eq(<<~'MD')
+          ```bash
+          curl -X POST https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/policies \
+              --header "accept: application/json" \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $KONNECT_TOKEN" \
+              --data '
+              {
+                "name": "pii-sanitizer",
+                "display_name": "PII Sanitizer",
+                "type": "ai-sanitizer",
+                "enabled": true,
+                "condition": "model.name == \"gpt-4o\"",
+                "config": {
+                  "patterns": [
+                    "email",
+                    "phone"
+                  ],
+                  "fail_on_error": true,
+                  "thresholds": {
+                    "redaction": {
+                      "score": 0.9,
+                      "actions": [
+                        "redact",
+                        "log"
+                      ]
+                    }
+                  },
+                  "providers": {
+                    "openai": {
+                      "model": "gpt-4o"
+                    }
+                  }
+                },
+                "global": false
+              }
+              '
+          ```
+        MD
+      end
+    end
+  end
+
+  context 'ai-gateway product, policy attachment' do
+    before { allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance]) }
+
+    let(:example_file) do
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples/sanitize-pii.yml')
+    end
+
+    let(:config_example) { ai_gateway_policy_config_example(file: example_file) }
+
+    let(:presenter) do
+      example = config_example.examples.detect { |e| e.target.key == 'ai-model' }
+      example.attach_example.formatted_examples.detect { |fe| fe.format == 'konnect-api' }.presenter
+    end
+
+    it 'renders a PUT to the model update endpoint with the composed policies' do
+      expect(rendered).to eq(<<~'MD')
+        ```bash
+        curl -X PUT https://{region}.api.konghq.com/v1/ai-gateways/{AIGatewayId}/models/my-gpt-4o \
+            --header "accept: application/json" \
+            --header "Content-Type: application/json" \
+            --header "Authorization: Bearer $KONNECT_TOKEN" \
+            --data '
+            {
+              "display_name": "my-gpt-4o",
+              "name": "my-gpt-4o",
+              "type": "model",
+              "capabilities": [
+                "generate"
+              ],
+              "formats": [
+                {
+                  "type": "openai"
+                }
+              ],
+              "policies": [
+                "pii-sanitizer"
+              ],
+              "targets": [
+                {
+                  "name": "gpt-4o",
+                  "provider": "my-openai-account",
+                  "config": {
+                    "type": "openai"
+                  }
+                }
+              ],
+              "config": {
+                "route": {
+                  "paths": [
+                    "/v1"
+                  ],
+                  "model": {
+                    "body_param": "model",
+                    "values": [
+                      "my-gpt-4o"
+                    ]
+                  }
+                },
+                "logging": {
+                  "payloads": false
+                }
+              }
+            }
+            '
+        ```
+      MD
+    end
+  end
+
   context 'event-gateway product, no variables' do
     let(:product) { 'event-gateway' }
     let(:example) do

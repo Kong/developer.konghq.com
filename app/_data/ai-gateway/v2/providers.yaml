@@ -7,7 +7,7 @@ providers:
       generate:
         supported: true
         streaming: true
-        upstream_path: 'Uses the `Converse` and `ConverseStream` API'
+        upstream_path: "Uses the `Converse` and `ConverseStream` APIs. When a client sends an Anthropic-format request to an Anthropic Claude model, {{site.ai_gateway}} sends it to `InvokeModel` or `InvokeModelWithResponseStream` instead, because the request is already in Claude's native format."
         model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
         min_version: '2.0'
       completions:
@@ -41,7 +41,7 @@ providers:
         model_example: 'n/a'
         min_version: '2.0'
         note:
-          content: 'Amazon Bedrock does not have a dedicated files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+          content: 'Amazon Bedrock does not have a dedicated files API. Batch input and output files are stored in Amazon S3 and referenced by S3 URI.'
       image:
         supported: true
         streaming: false
@@ -105,6 +105,36 @@ providers:
       provider_specific: []
       statistics_logging:
         - 'Statistics logging is not available for image generation or editing APIs for Amazon Bedrock'
+
+  - name: Amazon Bedrock Mantle
+    url_patterns:
+      - 'https://bedrock-mantle.{region}.api.aws'
+    min_version: '2.3'
+    variant_trigger: 'set `endpoint_type: mantle` in the target `config` of your AI Model'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions` and `/anthropic/v1/messages` (OpenAI and Anthropic formats, without translation)'
+        model_example: '[Use a model ID that Amazon Bedrock serves through the Mantle endpoint](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.3'
+      agentic:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/responses`'
+        model_example: '[Use a model ID that Amazon Bedrock serves through the Mantle endpoint](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.3'
+      files:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/files`'
+        model_example: 'n/a'
+        min_version: '2.3'
+    limitations:
+      provider_specific:
+        - 'Mantle has no Converse or InvokeModel API, so Konnect rejects a target with `endpoint_type: mantle` if its AI Model declares a format with `type: bedrock`. Use the `openai` or `anthropic` format instead.'
+        - 'Mantle supports only chat, Responses, and files requests. Embeddings and other capabilities are not supported. Use the `runtime` endpoint for them.'
+      statistics_logging: []
 
   - name: Anthropic
     url_patterns:
@@ -309,6 +339,98 @@ providers:
       provider_specific: []
       statistics_logging:
         - 'No statistics logging for assistants, batch, or audio APIs'
+
+  - name: Baseten
+    url_patterns:
+      - 'https://inference.baseten.co/v1/{capability_path}'
+      - 'https://model-{model_id}.api.baseten.co/environments/{environment}/sync/v1/chat/completions'
+    min_version: '2.3'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/chat/completions`'
+        model_example: 'deepseek-ai/DeepSeek-V4-Pro-0813'
+        min_version: '2.3'
+        note:
+          content: 'Model APIs use the org-qualified model slug as the target `name`. For a dedicated deployment, set the target `upstream_url` to the deployment endpoint.'
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      general:
+        - "The Baseten provider proxies chat completions only. It doesn't support Baseten's Anthropic-compatible `/v1/messages` endpoint, embeddings, or the `/predict` and async inference APIs."
+        - "Baseten rejects some OpenAI request parameters. `audio`, `modalities`, `prediction`, `web_search_options`, and `n` greater than 1 return a 400 error, `service_tier` returns a 500 error, and the deprecated `function_call` and `functions` return a 501 error."
+        - "Baseten accepts but ignores `logprobs`, `top_logprobs`, `user`, `store`, `metadata`, `verbosity`, `safety_identifier`, and the explicit prompt cache controls. Baseten caches prompts automatically."
+      provider_specific: []
+      statistics_logging: []
 
   - name: Cerebras
     url_patterns:
@@ -688,7 +810,7 @@ providers:
     url_patterns:
       - 'https://aiplatform.googleapis.com/'
     min_version: '2.0'
-    variant_trigger: 'Setting `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target.'
+    variant_trigger: 'set `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target; see [Select Gemini Standard or Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise)'
     capabilities:
       generate:
         supported: true
@@ -715,7 +837,7 @@ providers:
         model_example: 'n/a'
         min_version: '2.0'
         note:
-          content: 'Gemini Enterprise does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+          content: 'Gemini Enterprise does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to Amazon S3.'
       batches:
         supported: true
         streaming: false

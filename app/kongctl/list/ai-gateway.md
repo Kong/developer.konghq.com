@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/list/
   - text: kongctl declarative resource reference
     url: /kongctl/supported-resources/#ai-gateway
+  - text: kongctl adopt ai-gateway
+    url: /kongctl/adopt/ai-gateway/
+  - text: kongctl get ai-gateway
+    url: /kongctl/get/ai-gateway/
 ---
 
 Use the `list` verb with the `ai-gateway` command to list {{site.konnect_short_name}} {{site.ai_gateway}}s.
@@ -62,6 +66,9 @@ rows:
   - command: |
       [kongctl list ai-gateway data-plane-certificates](#kongctl-list-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
+      [kongctl list ai-gateway datastores](#kongctl-list-ai-gateway-datastores)
+    description: "Use the `datastores` command to list or retrieve Datastores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
       [kongctl list ai-gateway mcp-servers](#kongctl-list-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
@@ -148,6 +155,12 @@ Use the `custom-policies` command to list or retrieve Custom Policies for a spec
 Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/data-plane-certificates.md %}
+
+### kongctl list ai-gateway datastores
+
+Use the `datastores` command to list or retrieve Datastores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/datastores.md %}
 
 ### kongctl list ai-gateway mcp-servers
 

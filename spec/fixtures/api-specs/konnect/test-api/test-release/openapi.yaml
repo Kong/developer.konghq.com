@@ -1,0 +1,27 @@
+components:
+  schemas:
+    TestEntity:
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/Basic'
+        - $ref: '#/components/schemas/Group'
+    Basic:
+      type: object
+      properties:
+        type:
+          type: string
+        name:
+          $ref: '#/components/schemas/Name'
+    Group:
+      type: object
+      properties:
+        type:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    Name:
+      type: string
+      description: The entity name.

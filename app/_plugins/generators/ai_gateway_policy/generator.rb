@@ -5,7 +5,7 @@ require_relative '../policies/generator_base'
 
 module Jekyll
   module AIGatewayPolicyPages
-    class Generator # rubocop:disable Style/Documentation
+    class Generator
       include Policies::Generator
       include Policies::GeneratorBase
 
@@ -21,12 +21,12 @@ module Jekyll
         site.config.dig('skip', 'ai_gateway_policy')
       end
 
-      # TODO: for now, until we have overviews and examples
       def generate_pages(policy)
         generate_overview_page(policy) unless policy.overview_content.empty?
 
         reference = generate_reference_page(policy)
         generate_api_reference_page(policy)
+        generate_example_pages(policy) unless policy.examples.empty?
 
         site.data[key][policy.slug] ||= reference
       end

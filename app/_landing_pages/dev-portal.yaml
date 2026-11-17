@@ -291,14 +291,24 @@ rows:
                 url: "/dev-portal/breaking-changes/"
 
   - header:
+      type: h2
+      text: "Enterprise Portal and Vitals"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {% include_cached gateway/enterprise-portal-vitals-removed.md %}
+
+  - header:
       text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
         - type: faqs
           config:
-            - q: How do I view {{site.dev_portal}} documentation for {{site.base_gateway}} 3.4?
-              a: Contact your account manager for {{site.base_gateway}} 3.4 documentation.
             - q: How many {{site.dev_portal}}s can I create?
               a: |
                 There is a soft limit of four {{site.dev_portal}}s per {{site.konnect_short_name}} org.

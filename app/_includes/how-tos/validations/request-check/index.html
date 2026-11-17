@@ -1,11 +1,11 @@
 {% if page.works_on contains 'konnect' %}
-<div class="content" data-deployment-topology="konnect" markdown="1" {% unless config.skip == true %} data-test-step="{{ config.data_validate_konnect | escape }}" {% endunless %}>
+<div class="content" data-deployment-topology="konnect" markdown="1" {% unless config.skip == true %} {{ config.test_attribute }}="{{ config.data_validate_konnect | escape }}" {% endunless %}>
   {% include how-tos/validations/request-check/snippet.md config=config.konnect_snippet_config %}
 </div>
 {% endif %}
 
 {% if page.works_on contains 'on-prem' %}
-<div class="content" data-deployment-topology="on-prem"  markdown="1" {% unless config.skip == true %} data-test-step="{{ config.data_validate_on_prem | escape }}" {% endunless %}>
+<div class="content" data-deployment-topology="on-prem"  markdown="1" {% unless config.skip == true %} {{ config.test_attribute }}="{{ config.data_validate_on_prem | escape }}" {% endunless %}>
   {% include how-tos/validations/request-check/snippet.md config=config.on_prem_snippet_config %}
 </div>
 {% endif %}

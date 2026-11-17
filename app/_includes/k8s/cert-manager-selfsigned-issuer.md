@@ -12,6 +12,7 @@ metadata:
 spec:
   selfSigned: {}' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 {:.info}
 > A self-signed issuer keeps this guide self-contained. In production, use an ACME issuer such as Let's Encrypt, or a CA issuer. For all issuer types, see the [cert-manager configuration documentation](https://cert-manager.io/docs/configuration/).

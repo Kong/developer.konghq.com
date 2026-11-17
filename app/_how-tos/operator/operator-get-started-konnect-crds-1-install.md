@@ -42,6 +42,7 @@ Create the `kong` namespace in your Kubernetes cluster, which is where the Getti
 ```sh
 kubectl create namespace kong
 ```
+{: data-test-step="block" }
 
 ## Install {{site.operator_product_name}}
 

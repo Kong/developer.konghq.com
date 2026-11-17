@@ -4,14 +4,6 @@ title: 'Inspect query string parameters'
 
 weight: 900
 
-requirements: 
-- "Because this is an auth plugin, you need to create a [Consumer](/gateway/entities/consumer/) and attach a credential to it in the `jwt_secrets` config."
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config: 
   uri_param_names:
   - paramName_2.2.x

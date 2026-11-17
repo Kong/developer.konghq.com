@@ -1,4 +1,16 @@
 {
+  "3.16.0.1": [
+    {
+      "message": "`brute_force_protection` is now enforced for principal-based\n(Kong Identity) authentication, matching the existing behavior for local\ncredentials.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`brute_force_protection` now rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added support for authentication via the Kong Identity service with caching, consumer compatibility, and basic analytics.",
@@ -21,6 +33,13 @@
     },
     {
       "message": "Brute Force Protection: when using redis strategy and the connection fails,\nthe plugin will now fall back to using the memory strategy.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.16": [
+    {
+      "message": "`brute_force_protection` now rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
       "type": "bugfix",
       "scope": "Plugin"
     }

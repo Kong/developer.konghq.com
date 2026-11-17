@@ -16,6 +16,7 @@ schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayCACertificate
 works_on:
+  - on-prem
   - konnect
 tools:
   - konnect-api
@@ -29,6 +30,10 @@ related_resources:
     url: /ai-gateway/entities/ai-sni/
   - text: AI Data Plane Certificate
     url: /ai-gateway/entities/ai-data-plane-certificate/
+  - text: AI MCP Server entity
+    url: /ai-gateway/entities/ai-mcp-server/
+  - text: AI Agent entity
+    url: /ai-gateway/entities/ai-agent/
 faqs:
   - q: How is an AI CA Certificate different from a {{site.base_gateway}} CA Certificate?
     a: |
@@ -39,6 +44,12 @@ faqs:
       authority, carries no private key, and is used to verify the certificate a client or an
       upstream server presents. An AI Certificate is an identity the data plane uses itself: it carries a private key and is
       presented to complete a TLS handshake.
+  - q: Can AI MCP Servers and AI Agents use an AI CA Certificate to verify their upstreams?
+    a: |
+      Yes.
+      Reference one or more AI CA Certificates by name in the `config.ca_certificates` field of an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/#upstream-tls) or [AI Agent](/ai-gateway/entities/ai-agent/#upstream-tls).
+      The AI MCP Server or AI Agent then uses them to verify the upstream's certificate, which lets it connect to upstreams signed by a private or internal CA.
+      If you don't set the field, the default trust store is used.
 ---
 
 ## What is an AI CA Certificate

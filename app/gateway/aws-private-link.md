@@ -32,7 +32,7 @@ You can establish a private connection between {{site.konnect_short_name}} and y
 
 You can configure this instead of AWS Transit Gateways to secure your connection.
 
-PrivateLink support is currently available in the following AWS regions:
+PrivateLink support is available in the following AWS regions:
 * `us-east-1`
 * `us-east-2`
 * `us-west-2`
@@ -42,9 +42,12 @@ PrivateLink support is currently available in the following AWS regions:
 * `ap-east-1`
 * `ap-southeast-1`
 * `ap-southeast-2`
+* `ap-southeast-5`
 * `ap-northeast-1`
 * `ap-northeast-2`
 * `ap-northeast-3`
+* `mx-central-1`
+* `sa-east-1`
 
 If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
@@ -408,6 +411,40 @@ rows:
 {% endtable %}
 {% endnavtab %}
 
+{% navtab "ap-southeast-5" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AU
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-093fbd770a7b303e0
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-0efbe357fa2f1c53f
+    dns: eu.svc.konghq.com
+  - geo: GLOBAL
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-0e792181ee30ffd02
+    dns: global.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-0cc2cb9fd62690e9a
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-075c30477dc9126d2
+    dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-06201b9261a0b5ede
+    dns: sg.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.ap-southeast-5.vpce-svc-0e4625f78f9c14e45
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
 {% navtab "ap-northeast-1" %}
 {% table %}
 columns:
@@ -510,6 +547,73 @@ rows:
 {% endtable %}
 {% endnavtab %}
 
+{% navtab "mx-central-1" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AU
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-093db9417c74cce70
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-00c473d893ecf20bd
+    dns: eu.svc.konghq.com
+  - geo: GLOBAL
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-0ed1dc0c386f89d29
+    dns: global.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-05ff0ad353233d8ff
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-0b711555207ca0eea
+    dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-0a5091ecb518b78d0
+    dns: sg.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-0a61ee0a8bc4c96c1
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
+{% navtab "sa-east-1" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AU
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-042e2f79c256452c0
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-087fce9ea1fc814d1
+    dns: eu.svc.konghq.com
+  - geo: GLOBAL
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-0ef539ffe1f389042
+    dns: global.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-0aca0c5b4a2865f97
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-071fa2372a8231bfd
+    dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-06d9ce06df0359015
+    dns: sg.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.sa-east-1.vpce-svc-03a03c6884235efa7
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
 {% endnavtabs %}
 <!--vale on-->
-

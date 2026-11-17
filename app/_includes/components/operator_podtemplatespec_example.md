@@ -15,3 +15,4 @@ spec:
 {{spec | indent: 6}}{% if kubectl_apply %}
 ' | kubectl apply -f -{% endif %}
 ```
+{% if kubectl_apply %}{: data-test-step="block" }{% endif %}

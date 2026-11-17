@@ -5,6 +5,7 @@ import { runtimeEnvironment } from "../runtimes.js";
 const ENV_KEYS = [
   "KONNECT_DOMAIN",
   "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT",
+  "KONNECT_AI_GATEWAY_MIN_VERSION",
   "TESTS_KONNECT_CONTROL_PLANE_URL",
 ];
 
@@ -76,4 +77,19 @@ test("an explicit TESTS_KONNECT_CONTROL_PLANE_URL wins over the derived value", 
       assert.equal(environment.DECK_KONNECT_CONTROL_PLANE_URL, "https://eu.api.konghq.tech");
     }
   );
+});
+
+test("KONNECT_AI_GATEWAY_MIN_VERSION passes through with no prefix change", async () => {
+  await withEnv({ KONNECT_AI_GATEWAY_MIN_VERSION: "2.3" }, async () => {
+    const environment = await runtimeEnvironment(baseRuntimeConfig());
+    assert.equal(environment.KONNECT_AI_GATEWAY_MIN_VERSION, "2.3");
+    assert.equal(environment.DECK_KONNECT_AI_GATEWAY_MIN_VERSION, undefined);
+  });
+});
+
+test("an unset KONNECT_AI_GATEWAY_MIN_VERSION leaves the container environment without the key", async () => {
+  await withEnv({}, async () => {
+    const environment = await runtimeEnvironment(baseRuntimeConfig());
+    assert.equal("KONNECT_AI_GATEWAY_MIN_VERSION" in environment, false);
+  });
 });

@@ -1,4 +1,16 @@
 {
+  "3.16.0.1": [
+    {
+      "message": "Fixed an issue where `pass_all_downstream_headers` forwarded stale `Content-Length`, `Content-Encoding`, and `Transfer-Encoding` headers, breaking schema introspection.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where the GraphQL Rate Limiting Advanced plugin's API threw 500 errors when handling HTTP PUT requests.",
@@ -16,6 +28,18 @@
   "3.14.0.2": [
     {
       "message": "Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.16": [
+    {
+      "message": "Fixed an issue where `pass_all_downstream_headers` forwarded stale `Content-Length`, `Content-Encoding`, and `Transfer-Encoding` headers, breaking schema introspection.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
       "type": "bugfix",
       "scope": "Plugin"
     }

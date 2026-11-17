@@ -41,9 +41,11 @@
         },
         "headers": {
           "additionalProperties": {
-            "type": "string"
+            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "type": "string",
+            "x-referenceable": true
           },
-          "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend.",
+          "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "type": "object"
         },
         "http_response_header_for_traceid": {

@@ -40,63 +40,73 @@ Use the `KongPlugin` CRD to enable proxy caching on a `KongService`. The followi
 
 * Caches `200 OK` responses
 * Applies to `GET` and `HEAD` requests
-* Targets responses with `application/json` content type
+* Targets responses with `text/plain` content type
 * Stores cached data in memory
 * Sets the cache TTL to 300 seconds (5 minutes)
 
-{% entity_example %}
-type: plugin
-cluster_plugin: false
-data:
+<!-- vale off -->
+{% konnect_crd %}
+kind: KongPlugin
+apiVersion: configuration.konghq.com/v1
+metadata:
   name: proxy-cache-all-endpoints
-  plugin: proxy-cache
-  config:
-    response_code:
-    - 200
-    request_method:
-    - GET
-    - HEAD
-    content_type:
-    - text/plain; charset=utf-8
-    cache_ttl: 300
-    strategy: memory
+plugin: proxy-cache
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  - HEAD
+  content_type:
+  - text/plain; charset=utf-8
+  cache_ttl: 300
+  strategy: memory
+{% endkonnect_crd %}
+<!-- vale on -->
 
-  kongservice: service
-  other_plugins: rate-limiting
-{% endentity_example %}
+## Apply the plugin to the `KongService`
+
+Apply the plugin by annotating the `KongService` with its name:
+
+```bash
+kubectl annotate -n kong kongservice service konghq.com/plugins=proxy-cache-all-endpoints --overwrite
+```
+{: data-test-step="block" }
 
 ## Validation
 
-Send six requests to the same endpoint and inspect the cache status. The first request will miss, but subsequent ones will hit because they are served from the cache.
+Send a request to the Route and inspect the `X-Cache-Status` header. The first request finds nothing in the cache, so it is sent to the upstream Service and its response is cached:
 
-{% validation rate-limit-check %}
-iterations: 6
-url: '/echo'
-headers:
-  - 'apikey:example-key'
-on_prem_url: $PROXY_IP
-konnect_url: $PROXY_IP
-grep: "(Status|< HTTP)"
-message: null
-output:
-  explanation: |
-    The first request results in `X-Cache-Status: Miss`. This means that the request is sent to the upstream service. The next four responses return `X-Cache-Status: Hit` which indicates that the request was served from a cache. If you receive an `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
-  expected:
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Miss"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Hit"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Hit"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Hit"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Hit"
-    - value:
-      - "< HTTP/1.1 429 Too Many Requests"
+<!-- vale off -->
+{% validation request-check %}
+url: /echo
+konnect_url: http://$PROXY_IP
+on_prem_url: http://$PROXY_IP
+display_headers: true
+retry: true
+extract_headers:
+  - name: X-Cache-Status
+    variable: CACHE_STATUS
+expected_headers:
+  - 'X-Cache-Status: Miss'
 {% endvalidation %}
+<!-- vale on -->
+
+Send the same request again. This time the response is served from the cache:
+
+<!-- vale off -->
+{% validation request-check %}
+url: /echo
+konnect_url: http://$PROXY_IP
+on_prem_url: http://$PROXY_IP
+display_headers: true
+retry: true
+extract_headers:
+  - name: X-Cache-Status
+    variable: CACHE_STATUS
+expected_headers:
+  - 'X-Cache-Status: Hit'
+{% endvalidation %}
+<!-- vale on -->
+
+Responses stay cached for 300 seconds, as set in the `cache_ttl` field of the plugin configuration.

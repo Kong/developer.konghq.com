@@ -15,6 +15,7 @@ breadcrumbs:
 
 - [aiconfiguration.konghq.com/v1alpha1](#aiconfiguration-konghq-com-v1alpha1)
 - [aigateway.konghq.com/v1alpha1](#aigateway-konghq-com-v1alpha1)
+- [common.konghq.com/v1alpha1](#common-konghq-com-v1alpha1)
 - [configuration.konghq.com/v1](#configuration-konghq-com-v1)
 - [configuration.konghq.com/v1alpha1](#configuration-konghq-com-v1alpha1)
 - [configuration.konghq.com/v1beta1](#configuration-konghq-com-v1beta1)
@@ -40,11 +41,13 @@ Package v1alpha1 contains API Schema definitions for the aiconfiguration.konghq.
 - [AIGatewayConsumerGroup](#aiconfiguration-konghq-com-v1alpha1-aigatewayconsumergroup)
 - [AIGatewayCustomPolicy](#aiconfiguration-konghq-com-v1alpha1-aigatewaycustompolicy)
 - [AIGatewayDataPlaneCertificate](#aiconfiguration-konghq-com-v1alpha1-aigatewaydataplanecertificate)
+- [AIGatewayDatastore](#aiconfiguration-konghq-com-v1alpha1-aigatewaydatastore)
 - [AIGatewayMCPServer](#aiconfiguration-konghq-com-v1alpha1-aigatewaymcpserver)
 - [AIGatewayModel](#aiconfiguration-konghq-com-v1alpha1-aigatewaymodel)
 - [AIGatewayModelProvider](#aiconfiguration-konghq-com-v1alpha1-aigatewaymodelprovider)
 - [AIGatewayPolicy](#aiconfiguration-konghq-com-v1alpha1-aigatewaypolicy)
 - [AIGatewaySNI](#aiconfiguration-konghq-com-v1alpha1-aigatewaysni)
+- [AIGatewayVault](#aiconfiguration-konghq-com-v1alpha1-aigatewayvault)
 
 ### AIGatewayAgent
 
@@ -181,6 +184,21 @@ AIGatewayDataPlaneCertificate is the Schema for the aigatewaydataplanecertificat
 | `spec` _[AIGatewayDataPlaneCertificateSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydataplanecertificatespec)_ |  |
 | `status` _[AIGatewayDataPlaneCertificateStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydataplanecertificatestatus)_ |  |
 
+### AIGatewayDatastore
+
+
+AIGatewayDatastore is the Schema for the aigatewaydatastores API.
+
+<!-- ai_gateway_datastore description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `aiconfiguration.konghq.com/v1alpha1`
+| `kind` _string_ | `AIGatewayDatastore`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[AIGatewayDatastoreSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorespec)_ |  |
+| `status` _[AIGatewayDatastoreStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorestatus)_ |  |
+
 ### AIGatewayMCPServer
 
 
@@ -256,9 +274,806 @@ AIGatewaySNI is the Schema for the aigatewaysnis API.
 | `spec` _[AIGatewaySNISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysnispec)_ |  |
 | `status` _[AIGatewaySNIStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysnistatus)_ |  |
 
+### AIGatewayVault
+
+
+AIGatewayVault is the Schema for the aigatewayvaults API.
+
+<!-- ai_gateway_vault description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `aiconfiguration.konghq.com/v1alpha1`
+| `kind` _string_ | `AIGatewayVault`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[AIGatewayVaultSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultspec)_ |  |
+| `status` _[AIGatewayVaultStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultstatus)_ |  |
+
 ### Types
 
 In this section you will find types that the CRDs rely on.
+#### AIGWKeyAuthGeneratedConfig
+
+
+AIGWKeyAuthGeneratedConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `anonymous` _string_ | An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. |
+| `hideCredentials` _string_ | An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request. |
+| `identityRealms` _[][AIGWKeyAuthGeneratedConfigIdentityRealms](#aiconfiguration-konghq-com-v1alpha1-types-aigwkeyauthgeneratedconfigidentityrealms)_ | A configuration of Konnect Identity Realms that indicate where to source a consumer from. |
+| `keyInBody` _string_ | If enabled, the plugin reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`. |
+| `keyInHeader` _string_ | If enabled (default), the plugin reads the request header and tries to find the key in it. |
+| `keyInQuery` _string_ | If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it. |
+| `keyNames` _[]string_ | Describes an array of parameter names where the plugin will look for a key. The key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen. |
+| `principals` _[AIGWKeyAuthGeneratedConfigPrincipals](#aiconfiguration-konghq-com-v1alpha1-types-aigwkeyauthgeneratedconfigprincipals)_ |  |
+| `realm` _string_ | When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value. |
+| `runOnPreflight` _string_ | A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed. |
+
+_Appears in:_
+
+- [AIGatewayAuthStrategyKeyAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauth)
+
+#### AIGWKeyAuthGeneratedConfigIdentityRealms
+
+
+AIGWKeyAuthGeneratedConfigIdentityRealms A configuration of Konnect Identity
+Realms that indicate where to source a consumer from.
+
+
+
+| Field | Description |
+| --- | --- |
+| `region` _string_ |  |
+| `scope` _string_ |  |
+
+_Appears in:_
+
+- [AIGWKeyAuthGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwkeyauthgeneratedconfig)
+
+#### AIGWKeyAuthGeneratedConfigPrincipals
+
+
+AIGWKeyAuthGeneratedConfigPrincipals is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `directory` _string_ | The Kong Identity directory instance to authenticate against. |
+| `enabled` _string_ | When true, authenticate against Kong Identity instead of local credentials. |
+| `errorOnMiss` _string_ | When true (default), return 401 if no matching principal is found in Kong Identity. When false, allow the request to continue unauthenticated instead. |
+
+_Appears in:_
+
+- [AIGWKeyAuthGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwkeyauthgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfig
+
+
+AIGWOpenIDConnectGeneratedConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `anonymous` _string_ | An optional string (consumer UUID or username) value that functions as an “anonymous” consumer if authentication fails. If empty (default null), requests that fail authentication will return a `4xx` HTTP status code. This value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`. |
+| `audience` _[]string_ | The audience passed to the authorization endpoint. |
+| `audienceClaim` _[]string_ | The claim that contains the audience. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `audienceRequired` _[]string_ | The audiences (`audience_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases. |
+| `authMethods` _[]string_ | Types of credentials/grants to enable. |
+| `authenticatedGroupsClaim` _[]string_ | The claim that contains authenticated groups. This setting can be used together with ACL plugin, but it also enables IdP managed groups with other applications and integrations. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `authorizationCookieDomain` _string_ | The authorization cookie Domain flag. |
+| `authorizationCookieHTTPOnly` _string_ | Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property. |
+| `authorizationCookieName` _string_ | The authorization cookie name. |
+| `authorizationCookiePath` _string_ | The authorization cookie Path flag. |
+| `authorizationCookieSameSite` _string_ | Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks. |
+| `authorizationCookieSecure` _string_ | Cookie is only sent to the server when a request is made with the https: scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks. |
+| `authorizationEndpoint` _string_ | The authorization endpoint. If set it overrides the value in `authorization_endpoint` returned by the discovery endpoint. |
+| `authorizationQueryArgsClient` _[]string_ | Extra query arguments passed from the client to the authorization endpoint. |
+| `authorizationQueryArgsNames` _[]string_ | Extra query argument names passed to the authorization endpoint. |
+| `authorizationQueryArgsValues` _[]string_ | Extra query argument values passed to the authorization endpoint. |
+| `authorizationRollingTimeout` _float64_ | Specifies how long the session used for the authorization code flow can be used in seconds until it needs to be renewed. 0 disables the checks and rolling. |
+| `bearerTokenCookieName` _string_ | The name of the cookie in which the bearer token is passed. |
+| `bearerTokenHeaderName` _string_ | The name of the HTTP header from which the bearer token is retrieved. The default value is `authorization:bearer`, which reads the token from the `Authorization: Bearer <token>` header. Accepts plain header names such as `x-my-token` as well as Kong's special `authorization:bearer` notation. The `access-token` and `x-access-token` headers are also checked as a fallback for backward compatibility regardless of this setting.<br /><br />**Requires a minimum runtime version of `2.1`**. |
+| `bearerTokenParamType` _[]string_ | Where to look for the bearer token: - `header`: search the `Authorization`, `access-token`, and `x-access-token` HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body - `cookie`: search the HTTP request cookies specified with `config.bearer_token_cookie_name`. |
+| `byUsernameIgnoreCase` _string_ | If `consumer_by` is set to `username`, specify whether `username` can match consumers case-insensitively. |
+| `cacheIntrospection` _string_ | Cache the introspection endpoint requests. |
+| `cacheTokenExchange` _string_ | Cache the legacy token exchange endpoint requests. |
+| `cacheTokens` _string_ | Cache the token endpoint requests. |
+| `cacheTokensSalt` _string_ | Salt used for generating the cache key that is used for caching the token endpoint requests. |
+| `cacheTtl` _float64_ | The default cache ttl in seconds that is used in case the cached object does not specify the expiry. |
+| `cacheTtlMax` _float64_ | The maximum cache ttl in seconds (enforced). |
+| `cacheTtlMin` _float64_ | The minimum cache ttl in seconds (enforced). |
+| `cacheTtlNeg` _float64_ | The negative cache ttl in seconds. |
+| `cacheTtlResurrect` _float64_ | The resurrection ttl in seconds. |
+| `cacheUserInfo` _string_ | Cache the user info requests. |
+| `claimsForbidden` _[]string_ | If given, these claims are forbidden in the token payload. |
+| `clientAlg` _[]string_ | The algorithm to use for client_secret_jwt (only HS***) or private_key_jwt authentication. |
+| `clientArg` _string_ | The client to use for this request (the selection is made with a request parameter with the same name). |
+| `clientAuth` _[]string_ | The default OpenID Connect client authentication method is 'client_secret_basic' (using 'Authorization: Basic' header), 'client_secret_post' (credentials in body), 'client_secret_jwt' (signed client assertion in body), 'private_key_jwt' (private key-signed assertion), 'tls_client_auth' (client certificate), 'self_signed_tls_client_auth' (self-signed client certificate), and 'none' (no authentication). |
+| `clientCredentialsParamType` _[]string_ | Where to look for the client credentials: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search from the HTTP request body. |
+| `clientID` _[]string_ | The client id(s) that the plugin uses when it calls authenticated endpoints on the identity provider. |
+| `clientJwk` _[][AIGWOpenIDConnectGeneratedConfigClientJwk](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclientjwk)_ | The JWK used for the private_key_jwt authentication. |
+| `clientSecret` _[][SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The client secret. |
+| `clusterCacheRedis` _[AIGWOpenIDConnectGeneratedConfigClusterCacheRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredis)_ |  |
+| `clusterCacheStrategy` _string_ | The strategy to use for the cluster cache. If set, the plugin will share cache with nodes configured with the same strategy backend. Currentlly only introspection cache is shared. |
+| `consumerBy` _[]string_ | Consumer fields used for mapping: - `id`: try to find the matching Consumer by `id` - `username`: try to find the matching Consumer by `username` - `custom_id`: try to find the matching Consumer by `custom_id`. |
+| `consumerClaims` _[]string_ | The claims used for consumer mapping. Each entry represents a claim path inside the token payload. The paths are evaluated in order, and the first matching claim is used. |
+| `consumerGroupsClaim` _[]string_ | The claim used for consumer groups mapping. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `consumerGroupsOptional` _string_ | Do not terminate the request if consumer groups mapping fails. |
+| `consumerOptional` _string_ | Do not terminate the request if consumer mapping fails. |
+| `credentialClaim` _[]string_ | Claim path used to derive virtual credentials when consumer mapping is not used. |
+| `credentialClaims` _[]string_ | The claims used to derive a virtual credential, for example to be consumed by the rate-limiting plugin, when consumer mapping is not used. Each entry represents a claim path inside the token payload. The paths are evaluated in order, and the first matching claim is used.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `disableSession` _[]string_ | Disable issuing the session cookie with the specified grants. |
+| `discoveryHeadersNames` _[]string_ | Extra header names passed to the discovery endpoint. |
+| `discoveryHeadersValues` _[]string_ | Extra header values passed to the discovery endpoint. |
+| `displayErrors` _string_ | Display errors on failure responses. |
+| `domains` _[]string_ | The allowed values for the `hd` claim. |
+| `downstreamAccessTokenHeader` _string_ | The downstream access token header. |
+| `downstreamAccessTokenJwkHeader` _string_ | The downstream access token JWK header. |
+| `downstreamHeaders` _[][AIGWOpenIDConnectGeneratedConfigDownstreamHeaders](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigdownstreamheaders)_ | The downstream claim to header mappings. |
+| `downstreamHeadersClaims` _[]string_ | The downstream header claims. Only top level claims are supported. |
+| `downstreamHeadersNames` _[]string_ | The downstream header names for the claim values. |
+| `downstreamIDTokenHeader` _string_ | The downstream id token header. |
+| `downstreamIDTokenJwkHeader` _string_ | The downstream id token JWK header. |
+| `downstreamIntrospectionHeader` _string_ | The downstream introspection header. |
+| `downstreamIntrospectionJwtHeader` _string_ | The downstream introspection JWT header. |
+| `downstreamRefreshTokenHeader` _string_ | The downstream refresh token header. |
+| `downstreamSessionIDHeader` _string_ | The downstream session id header. |
+| `downstreamUserInfoHeader` _string_ | The downstream user info header. |
+| `downstreamUserInfoJwtHeader` _string_ | The downstream user info JWT header (in case the user info returns a JWT response). |
+| `dpopProofLifetime` _float64_ | Specifies the lifetime in seconds of the DPoP proof. It determines how long the same proof can be used after creation. The creation time is determined by the nonce creation time if a nonce is used, and the iat claim otherwise. |
+| `dpopUseNonce` _string_ | Specifies whether to challenge the client with a nonce value for DPoP proof. When enabled it will also be used to calculate the DPoP proof lifetime. |
+| `enableHsSignatures` _string_ | Enable shared secret, for example, HS256, signatures (when disabled they will not be accepted). |
+| `endSessionEndpoint` _string_ | The end session endpoint. If set it overrides the value in `end_session_endpoint` returned by the discovery endpoint. |
+| `exposeErrorCode` _string_ | Specifies whether to expose the error code header, as defined in RFC 6750. If an authorization request fails, this header is sent in the response. Set to `false` to disable. |
+| `extraJwksUris` _[]string_ | JWKS URIs whose public keys are trusted (in addition to the keys found with the discovery). |
+| `forbiddenDestroySession` _string_ | Destroy any active session for the forbidden requests. |
+| `forbiddenErrorMessage` _string_ | The error message for the forbidden requests (when not using the redirection). |
+| `forbiddenRedirectURI` _[]string_ | Where to redirect the client on forbidden requests. |
+| `groupsClaim` _[]string_ | The claim that contains the groups. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `groupsRequired` _[]string_ | The groups (`groups_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases. |
+| `hideCredentials` _string_ | Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication. |
+| `httpProxy` _string_ | The HTTP proxy. |
+| `httpProxyAuthorization` _string_ | The HTTP proxy authorization. |
+| `httpVersion` _float64_ | The HTTP version used for the requests by this plugin: - `1.1`: HTTP 1.1 (the default) - `1.0`: HTTP 1.0. |
+| `httpsProxy` _string_ | The HTTPS proxy. |
+| `httpsProxyAuthorization` _string_ | The HTTPS proxy authorization. |
+| `idTokenParamName` _string_ | The name of the parameter used to pass the id token. |
+| `idTokenParamType` _[]string_ | Where to look for the id token: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body. |
+| `ignoreSignature` _[]string_ | Skip the token signature verification on certain grants. This is insecure and logs a warning; use it only for providers that publish no verification key. Grants: - `password`: OAuth password grant - `client_credentials`: OAuth client credentials grant - `authorization_code`: authorization code flow - `refresh_token`: OAuth refresh token grant - `session`: session cookie authentication - `introspection`: OAuth introspection - `userinfo`: OpenID Connect user info endpoint authentication. |
+| `introspectJwtTokens` _string_ | Specifies whether to introspect the JWT access tokens (can be used to check for revocations). |
+| `introspectionAccept` _string_ | The value of `Accept` header for introspection requests: - `application/json`: introspection response as JSON - `application/token-introspection+jwt`: introspection response as JWT (from the current IETF draft document) - `application/jwt`: introspection response as JWT (from the obsolete IETF draft document). |
+| `introspectionCheckActive` _string_ | Check that the introspection response has an `active` claim with a value of `true`. |
+| `introspectionEndpoint` _string_ | The introspection endpoint. If set it overrides the value in `introspection_endpoint` returned by the discovery endpoint. |
+| `introspectionEndpointAuthMethod` _string_ | The introspection endpoint authentication method: : `client_secret_basic`, `client_secret_post`, `client_secret_jwt`, `private_key_jwt`, `tls_client_auth`, `self_signed_tls_client_auth`, or `none`: do not authenticate |
+| `introspectionHeadersClient` _[]string_ | Extra headers passed from the client to the introspection endpoint. |
+| `introspectionHeadersNames` _[]string_ | Extra header names passed to the introspection endpoint. |
+| `introspectionHeadersValues` _[]string_ | Extra header values passed to the introspection endpoint. |
+| `introspectionHint` _string_ | Introspection hint parameter value passed to the introspection endpoint. |
+| `introspectionPostArgsClient` _[]string_ | Extra post arguments passed from the client to the introspection endpoint. |
+| `introspectionPostArgsClientHeaders` _[]string_ | Extra post arguments passed from the client headers to the introspection endpoint. |
+| `introspectionPostArgsNames` _[]string_ | Extra post argument names passed to the introspection endpoint. |
+| `introspectionPostArgsValues` _[]string_ | Extra post argument values passed to the introspection endpoint. |
+| `introspectionTokenParamName` _string_ | Designate token's parameter name for introspection. |
+| `issuer` _string_ | The discovery endpoint (or the issuer identifier). When there is no discovery endpoint, please also configure `config.using_pseudo_issuer=true`. |
+| `issuersAllowed` _[]string_ | The issuers allowed to be present in the tokens (`iss` claim). |
+| `jwksEndpoint` _string_ | Overrides the `jwks_uri` returned by discovery. Use when the IdP exposes a non-standard JWKS endpoint. |
+| `jwtSessionClaim` _string_ | The claim to match against the JWT session cookie. |
+| `jwtSessionCookie` _string_ | The name of the JWT session cookie. |
+| `keepalive` _string_ | Use keepalive with the HTTP client. |
+| `leeway` _float64_ | Defines leeway time (in seconds) for `auth_time`, `exp`, `iat`, and `nbf` claims |
+| `loginAction` _string_ | What to do after successful login: - `upstream`: proxy request to upstream service - `response`: terminate request with a response - `redirect`: redirect to a different location. |
+| `loginMethods` _[]string_ | Enable login functionality with specified grants. |
+| `loginRedirectMode` _string_ | Where to place `login_tokens` when using `redirect` `login_action`: - `query`: place tokens in query string - `fragment`: place tokens in url fragment (not readable by servers). |
+| `loginRedirectURI` _[]string_ | Where to redirect the client when `login_action` is set to `redirect`. |
+| `loginTokens` _[]string_ | What tokens to include in `response` body or `redirect` query string or fragment: - `id_token`: include id token - `access_token`: include access token - `refresh_token`: include refresh token - `tokens`: include the full token endpoint response - `introspection`: include introspection response. |
+| `logoutMethods` _[]string_ | The request methods that can activate the logout: - `POST`: HTTP POST method - `GET`: HTTP GET method - `DELETE`: HTTP DELETE method. |
+| `logoutPostArg` _string_ | The request body argument that activates the logout. |
+| `logoutQueryArg` _string_ | The request query argument that activates the logout. |
+| `logoutRedirectURI` _[]string_ | Where to redirect the client after the logout. |
+| `logoutRevoke` _string_ | Revoke tokens as part of the logout.<br /><br />For more granular token revocation, you can also adjust the `logout_revoke_access_token` and `logout_revoke_refresh_token` parameters. |
+| `logoutRevokeAccessToken` _string_ | Revoke the access token as part of the logout. Requires `logout_revoke` to be set to `true`. |
+| `logoutRevokeRefreshToken` _string_ | Revoke the refresh token as part of the logout. Requires `logout_revoke` to be set to `true`. |
+| `logoutURISuffix` _string_ | The request URI suffix that activates the logout. |
+| `maxAge` _float64_ | The maximum age (in seconds) compared to the `auth_time` claim. |
+| `mtlsIntrospectionEndpoint` _string_ | Alias for the introspection endpoint to be used for mTLS client authentication. If set it overrides the value in `mtls_endpoint_aliases` returned by the discovery endpoint. |
+| `mtlsRevocationEndpoint` _string_ | Alias for the introspection endpoint to be used for mTLS client authentication. If set it overrides the value in `mtls_endpoint_aliases` returned by the discovery endpoint. |
+| `mtlsTokenEndpoint` _string_ | Alias for the token endpoint to be used for mTLS client authentication. If set it overrides the value in `mtls_endpoint_aliases` returned by the discovery endpoint. |
+| `noProxy` _string_ | Do not use proxy with these hosts. |
+| `passwordParamType` _[]string_ | Where to look for the username and password: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body. |
+| `preserveQueryArgs` _string_ | With this parameter, you can preserve request query arguments even when doing authorization code flow. |
+| `principals` _[AIGWOpenIDConnectGeneratedConfigPrincipals](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigprincipals)_ | Configuration for Kong Identity principal hydration after token verification. |
+| `proofOfPossessionAuthMethodsValidation` _string_ | If set to true, only the auth_methods that are compatible with Proof of Possession (PoP) can be configured when PoP is enabled. If set to false, all auth_methods will be configurable and PoP checks will be silently skipped for those auth_methods that are not compatible with PoP. |
+| `proofOfPossessionDpop` _string_ | Enable Demonstrating Proof-of-Possession (DPoP). If set to strict, all request are verified despite the presence of the DPoP key claim (cnf.jkt). If set to optional, only tokens bound with DPoP's key are verified with the proof. |
+| `proofOfPossessionMtls` _string_ | Enable mtls proof of possession. If set to strict, all tokens (from supported auth_methods: bearer, introspection, and session granted with bearer or introspection) are verified, if set to optional, only tokens that contain the certificate hash claim are verified. If the verification fails, the request will be rejected with 401. |
+| `protectedResourceMetadata` _[AIGWOpenIDConnectGeneratedConfigProtectedResourceMetadata](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigprotectedresourcemetadata)_ | When configured, the plugin advertises this API as an OAuth 2.0 protected resource per RFC 9728. It serves a discovery document at the well-known URI and includes resource_metadata in WWW-Authenticate challenge headers.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `pushedAuthorizationRequestEndpoint` _string_ | The pushed authorization endpoint. If set it overrides the value in `pushed_authorization_request_endpoint` returned by the discovery endpoint. |
+| `pushedAuthorizationRequestEndpointAuthMethod` _string_ | The pushed authorization request endpoint authentication method: `client_secret_basic`, `client_secret_post`, `client_secret_jwt`, `private_key_jwt`, `tls_client_auth`, `self_signed_tls_client_auth`, or `none`: do not authenticate |
+| `redirectURI` _[]string_ | The redirect URI passed to the authorization and token endpoints. |
+| `redis` _[AIGWOpenIDConnectGeneratedConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredis)_ |  |
+| `rediscoveryLifetime` _float64_ | Specifies how long (in seconds) the plugin waits between discovery attempts. Discovery is still triggered on an as-needed basis. |
+| `refreshTokenParamName` _string_ | The name of the parameter used to pass the refresh token. |
+| `refreshTokenParamType` _[]string_ | Where to look for the refresh token: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body. |
+| `refreshTokens` _string_ | Specifies whether the plugin should try to refresh (soon to be) expired access tokens if the plugin has a `refresh_token` available. |
+| `requireProofKeyForCodeExchange` _string_ | Forcibly enable or disable the proof key for code exchange. When not set the value is determined through the discovery using the value of `code_challenge_methods_supported`, and enabled automatically (in case the `code_challenge_methods_supported` is missing, the PKCE will not be enabled). |
+| `requirePushedAuthorizationRequests` _string_ | Forcibly enable or disable the pushed authorization requests. When not set the value is determined through the discovery using the value of `require_pushed_authorization_requests` (which defaults to `false`). |
+| `requireSignedRequestObject` _string_ | Forcibly enable or disable the usage of signed request object on authorization or pushed authorization endpoint. When not set the value is determined through the discovery using the value of `require_signed_request_object`, and enabled automatically (in case the `require_signed_request_object` is missing, the feature will not be enabled). |
+| `resolveDistributedClaims` _string_ | Distributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims. If this parameter is set to `true`, the plugin explicitly resolves these distributed claims. |
+| `responseMode` _string_ | Response mode passed to the authorization endpoint: - `query`: for parameters in query string - `form_post`: for parameters in request body - `fragment`: for parameters in uri fragment (rarely useful as the plugin itself cannot read it) - `query.jwt`, `form_post.jwt`, `fragment.jwt`: similar to `query`, `form_post` and `fragment` but the parameters are encoded in a JWT - `jwt`: shortcut that indicates the default encoding for the requested response type. |
+| `responseType` _[]string_ | The response type passed to the authorization endpoint. |
+| `reverify` _string_ | Specifies whether to always verify tokens stored in the session. |
+| `revocationEndpoint` _string_ | The revocation endpoint. If set it overrides the value in `revocation_endpoint` returned by the discovery endpoint. |
+| `revocationEndpointAuthMethod` _string_ | The revocation endpoint authentication method: : `client_secret_basic`, `client_secret_post`, `client_secret_jwt`, `private_key_jwt`, `tls_client_auth`, `self_signed_tls_client_auth`, or `none`: do not authenticate |
+| `revocationTokenParamName` _string_ | Designate token's parameter name for revocation. |
+| `rolesClaim` _[]string_ | The claim that contains the roles. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `rolesRequired` _[]string_ | The roles (`roles_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases. |
+| `runOnPreflight` _string_ | Specifies whether to run this plugin on pre-flight (`OPTIONS`) requests. |
+| `scopes` _[]string_ | The scopes passed to the authorization and token endpoints. |
+| `scopesClaim` _[]string_ | The claim that contains the scopes. If multiple values are set, it means the claim is inside a nested object of the token payload. |
+| `scopesRequired` _[]string_ | The scopes (`scopes_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases. |
+| `searchUserInfo` _string_ | Specify whether to use the user info endpoint to get additional claims for consumer mapping, credential mapping, authenticated groups, and upstream and downstream headers. |
+| `sessionAbsoluteTimeout` _float64_ | Limits how long the session can be renewed in seconds, until re-authentication is required. 0 disables the checks. |
+| `sessionAudience` _string_ | The session audience, which is the intended target application. For example `"my-application"`. |
+| `sessionBind` _[]string_ | Bind the session to data acquired from the HTTP request or connection. |
+| `sessionCookieDomain` _string_ | The session cookie Domain flag. |
+| `sessionCookieHTTPOnly` _string_ | Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property. |
+| `sessionCookieName` _string_ | The session cookie name. |
+| `sessionCookiePath` _string_ | The session cookie Path flag. |
+| `sessionCookieSameSite` _string_ | Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks. |
+| `sessionCookieSecure` _string_ | Cookie is only sent to the server when a request is made with the https: scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks. |
+| `sessionEnforceSameSubject` _string_ | When set to `true`, audiences are forced to share the same subject. |
+| `sessionHashStorageKey` _string_ | When set to `true`, the storage key (session ID) is hashed for extra security. Hashing the storage key means it is impossible to decrypt data from the storage without a cookie. |
+| `sessionHashSubject` _string_ | When set to `true`, the value of subject is hashed before being stored. Only applies when `session_store_metadata` is enabled. |
+| `sessionIdlingTimeout` _float64_ | Specifies how long the session can be inactive until it is considered invalid in seconds. 0 disables the checks and touching. |
+| `sessionMemcachedHost` _string_ | The memcached host. |
+| `sessionMemcachedPort` _int_ | The memcached port. |
+| `sessionMemcachedPrefix` _string_ | The memcached session key prefix. |
+| `sessionMemcachedSocket` _string_ | The memcached unix socket path. |
+| `sessionMemcachedSSL` _string_ | If set to true, uses SSL to connect to memcached |
+| `sessionMemcachedSSLVerify` _string_ | If set to true, verifies the validity of the memcached server SSL certificate |
+| `sessionRemember` _string_ | Enables or disables persistent sessions. |
+| `sessionRememberAbsoluteTimeout` _float64_ | Limits how long the persistent session can be renewed in seconds, until re-authentication is required. 0 disables the checks. |
+| `sessionRememberCookieName` _string_ | Persistent session cookie name. Use with the `remember` configuration parameter. |
+| `sessionRememberRollingTimeout` _float64_ | Specifies how long the persistent session is considered valid in seconds. 0 disables the checks and rolling. |
+| `sessionRequestHeaders` _[]string_ | Set of headers to send to upstream, use id, audience, subject, timeout, idling-timeout, rolling-timeout, absolute-timeout. E.g. `[ "id", "timeout" ]` will set Session-Id and Session-Timeout request headers. |
+| `sessionResponseHeaders` _[]string_ | Set of headers to send to downstream, use id, audience, subject, timeout, idling-timeout, rolling-timeout, absolute-timeout. E.g. `[ "id", "timeout" ]` will set Session-Id and Session-Timeout response headers. |
+| `sessionRollingTimeout` _float64_ | Specifies how long the session can be used in seconds until it needs to be renewed. 0 disables the checks and rolling. |
+| `sessionSecret` _string_ | The session secret. |
+| `sessionStorage` _string_ | The session storage for session data: - `cookie`: stores session data with the session cookie (the session cannot be invalidated or revoked without changing session secret, but is stateless, and doesn't require a database) - `memcache`: stores session data in memcached - `redis`: stores session data in Redis. |
+| `sessionStoreMetadata` _string_ | Configures whether or not session metadata should be stored. This metadata includes information about the active sessions for a specific audience belonging to a specific subject. |
+| `sslVerify` _string_ | Verify identity provider server certificate. If set to `true`, the plugin uses the CA certificate set in the `kong.conf` config parameter `lua_ssl_trusted_certificate`. |
+| `timeout` _float64_ | Network IO timeout in milliseconds. |
+| `tlsClientAuthCertID` _string_ | ID of the Certificate entity representing the client certificate to use for mTLS client authentication for connections between Kong and the Auth Server. |
+| `tlsClientAuthSSLVerify` _string_ | Verify identity provider server certificate during mTLS client authentication. |
+| `tokenCacheKeyIncludeScope` _string_ | Include the scope in the token cache key, so token with different scopes are considered diffrent tokens. |
+| `tokenEndpoint` _string_ | The token endpoint. If set it overrides the value in `token_endpoint` returned by the discovery endpoint. |
+| `tokenEndpointAuthMethod` _string_ | The token endpoint authentication method: `client_secret_basic`, `client_secret_post`, `client_secret_jwt`, `private_key_jwt`, `tls_client_auth`, `self_signed_tls_client_auth`, or `none`: do not authenticate |
+| `tokenExchange` _[AIGWOpenIDConnectGeneratedConfigTokenExchange](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchange)_ | Details on how to accept tokens from other identity providers. |
+| `tokenExchangeEndpoint` _string_ | Endpoint used to perform the legacy token exchange. |
+| `tokenHeadersClient` _[]string_ | Extra headers passed from the client to the token endpoint. |
+| `tokenHeadersGrants` _[]string_ | Enable the sending of the token endpoint response headers only with certain grants: - `password`: with OAuth password grant - `client_credentials`: with OAuth client credentials grant - `authorization_code`: with authorization code flow - `refresh_token` with refresh token grant. |
+| `tokenHeadersNames` _[]string_ | Extra header names passed to the token endpoint. |
+| `tokenHeadersPrefix` _string_ | Add a prefix to the token endpoint response headers before forwarding them to the downstream client. |
+| `tokenHeadersReplay` _[]string_ | The names of token endpoint response headers to forward to the downstream client. |
+| `tokenHeadersValues` _[]string_ | Extra header values passed to the token endpoint. |
+| `tokenPostArgsClient` _[]string_ | Pass extra arguments from the client to the OpenID-Connect plugin. If arguments exist, the client can pass them using: - Query parameters - Request Body - Request Header This parameter can be used with `scope` values, like this: `config.token_post_args_client=scope` In this case, the token would take the `scope` value from the query parameter or from the request body or from the header and send it to the token endpoint. |
+| `tokenPostArgsNames` _[]string_ | Extra post argument names passed to the token endpoint. |
+| `tokenPostArgsValues` _[]string_ | Extra post argument values passed to the token endpoint. |
+| `unauthorizedDestroySession` _string_ | Destroy any active session for the unauthorized requests. |
+| `unauthorizedErrorMessage` _string_ | The error message for the unauthorized requests (when not using the redirection). |
+| `unauthorizedRedirectURI` _[]string_ | Where to redirect the client on unauthorized requests. |
+| `unexpectedRedirectURI` _[]string_ | Where to redirect the client when unexpected errors happen with the requests. |
+| `upstreamAccessTokenHeader` _string_ | The upstream access token header. |
+| `upstreamAccessTokenJwkHeader` _string_ | The upstream access token JWK header. |
+| `upstreamHeaders` _[][AIGWOpenIDConnectGeneratedConfigUpstreamHeaders](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigupstreamheaders)_ | The upstream claim to header mappings. |
+| `upstreamHeadersClaims` _[]string_ | The upstream header claims. Only top level claims are supported. |
+| `upstreamHeadersNames` _[]string_ | The upstream header names for the claim values. |
+| `upstreamIDTokenHeader` _string_ | The upstream id token header. |
+| `upstreamIDTokenJwkHeader` _string_ | The upstream id token JWK header. |
+| `upstreamIntrospectionHeader` _string_ | The upstream introspection header. |
+| `upstreamIntrospectionJwtHeader` _string_ | The upstream introspection JWT header. |
+| `upstreamRefreshTokenHeader` _string_ | The upstream refresh token header. |
+| `upstreamSessionIDHeader` _string_ | The upstream session id header. |
+| `upstreamUserInfoHeader` _string_ | The upstream user info header. |
+| `upstreamUserInfoJwtHeader` _string_ | The upstream user info JWT header (in case the user info returns a JWT response). |
+| `userinfoAccept` _string_ | The value of `Accept` header for user info requests: - `application/json`: user info response as JSON - `application/jwt`: user info response as JWT (from the obsolete IETF draft document). |
+| `userinfoEndpoint` _string_ | The user info endpoint. If set it overrides the value in `userinfo_endpoint` returned by the discovery endpoint. |
+| `userinfoHeadersClient` _[]string_ | Extra headers passed from the client to the user info endpoint. |
+| `userinfoHeadersNames` _[]string_ | Extra header names passed to the user info endpoint. |
+| `userinfoHeadersValues` _[]string_ | Extra header values passed to the user info endpoint. |
+| `userinfoQueryArgsClient` _[]string_ | Extra query arguments passed from the client to the user info endpoint. |
+| `userinfoQueryArgsNames` _[]string_ | Extra query argument names passed to the user info endpoint. |
+| `userinfoQueryArgsValues` _[]string_ | Extra query argument values passed to the user info endpoint. |
+| `usingPseudoIssuer` _string_ | If the plugin uses a pseudo issuer. When set to true, the plugin will not discover the configuration from the issuer URL specified with `config.issuer`. |
+| `verifyClaims` _string_ | Verify tokens for standard claims. |
+| `verifyNonce` _string_ | Verify nonce on authorization code flow. |
+| `verifyParameters` _string_ | Verify plugin configuration against discovery. |
+| `verifySignature` _string_ | Verify the cryptographic signature of tokens. Disabling this skips verification for every token source, including tokens presented directly by clients (bearer); this is insecure for that path. To trust only tokens fetched from the identity provider for specific grants, use `ignore_signature` instead, which never affects bearer tokens. |
+
+_Appears in:_
+
+- [AIGatewayAuthStrategyOpenIDConnect](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnect)
+
+#### AIGWOpenIDConnectGeneratedConfigClientJwk
+
+
+AIGWOpenIDConnectGeneratedConfigClientJwk The JWK used for the
+private_key_jwt authentication.
+
+
+
+| Field | Description |
+| --- | --- |
+| `alg` _string_ |  |
+| `crv` _string_ |  |
+| `d` _string_ |  |
+| `dp` _string_ |  |
+| `dq` _string_ |  |
+| `e` _string_ |  |
+| `issuer` _string_ |  |
+| `k` _string_ |  |
+| `keyOps` _[]string_ |  |
+| `kid` _string_ |  |
+| `kty` _string_ |  |
+| `n` _string_ |  |
+| `oth` _string_ |  |
+| `p` _string_ |  |
+| `q` _string_ |  |
+| `qi` _string_ |  |
+| `r` _string_ |  |
+| `t` _string_ |  |
+| `use` _string_ |  |
+| `x` _string_ |  |
+| `x5c` _[]string_ |  |
+| `x5t` _string_ |  |
+| `x5t#S256` _string_ |  |
+| `x5u` _string_ |  |
+| `y` _string_ |  |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigClusterCacheRedis
+
+
+AIGWOpenIDConnectGeneratedConfigClusterCacheRedis is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cloudAuthentication` _[AIGWOpenIDConnectGeneratedConfigClusterCacheRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacherediscloudauthentication)_ | Cloud auth related configs for connecting to a Cloud Provider's Redis instance. |
+| `clusterMaxRedirections` _int_ | Maximum retry attempts for redirection. |
+| `clusterNodes` _[][AIGWOpenIDConnectGeneratedConfigClusterCacheRedisClusterNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredisclusternodes)_ | Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element. |
+| `connectTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `connectionIsProxied` _string_ | If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address. |
+| `database` _int_ | Database to use for the Redis connection when using the `redis` strategy |
+| `host` _string_ | A string representing a host name, such as example.com. |
+| `keepaliveBacklog` _int_ | Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`. |
+| `keepalivePoolSize` _int_ | The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low. |
+| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+| `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `sentinelMaster` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
+| `sentinelNodes` _[][AIGWOpenIDConnectGeneratedConfigClusterCacheRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
+| `sentinelPassword` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
+| `sentinelRole` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
+| `sentinelUsername` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. |
+| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. |
+| `ssl` _string_ | If set to true, uses SSL to connect to Redis. |
+| `sslVerify` _string_ | If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly. |
+| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigClusterCacheRedisCloudAuthentication
+
+
+AIGWOpenIDConnectGeneratedConfigClusterCacheRedisCloudAuthentication Cloud
+auth related configs for connecting to a Cloud Provider's Redis instance.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authProvider` _string_ | Auth providers to be used to authenticate to a Cloud Provider's Redis instance. |
+| `awsAccessKeyID` _string_ | AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`. |
+| `awsAssumeRoleArn` _string_ | The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. |
+| `awsCacheName` _string_ | The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`. |
+| `awsIsServerless` _string_ | This flag specifies whether the cluster is serverless when auth_provider is set to `aws`. |
+| `awsRegion` _string_ | The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`. |
+| `awsRoleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. |
+| `awsSecretAccessKey` _string_ | AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`. |
+| `azureClientID` _string_ | Azure Client ID to be used for authentication when `auth_provider` is set to `azure`. |
+| `azureClientSecret` _string_ | Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`. |
+| `azureTenantID` _string_ | Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`. |
+| `gcpServiceAccountJSON` _string_ | GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigClusterCacheRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredis)
+
+#### AIGWOpenIDConnectGeneratedConfigClusterCacheRedisClusterNodes
+
+
+AIGWOpenIDConnectGeneratedConfigClusterCacheRedisClusterNodes Cluster
+addresses to use for Redis connections when the `redis` strategy is defined.
+Defining this field implies using a Redis Cluster.
+The minimum length of the array is 1 element.
+
+
+
+| Field | Description |
+| --- | --- |
+| `ip` _string_ | A string representing a host name, such as example.com. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigClusterCacheRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredis)
+
+#### AIGWOpenIDConnectGeneratedConfigClusterCacheRedisSentinelNodes
+
+
+AIGWOpenIDConnectGeneratedConfigClusterCacheRedisSentinelNodes Sentinel node
+addresses to use for Redis connections when the `redis` strategy is defined.
+Defining this field implies using a Redis Sentinel.
+The minimum length of the array is 1 element.
+
+
+
+| Field | Description |
+| --- | --- |
+| `host` _string_ | A string representing a host name, such as example.com. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigClusterCacheRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredis)
+
+#### AIGWOpenIDConnectGeneratedConfigDownstreamHeaders
+
+
+AIGWOpenIDConnectGeneratedConfigDownstreamHeaders The downstream claim to
+header mappings.
+
+
+
+| Field | Description |
+| --- | --- |
+| `header` _string_ | The name of the header. |
+| `path` _[]string_ | The path of the header value. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigPrincipals
+
+
+AIGWOpenIDConnectGeneratedConfigPrincipals Configuration for Kong Identity
+principal hydration after token verification.
+
+
+
+| Field | Description |
+| --- | --- |
+| `directory` _string_ | The Kong Identity directory instance to look up against. |
+| `enabled` _string_ | When true, query Kong Identity to map a Principal after token verification. |
+| `errorOnMiss` _string_ | When true (default), return 401 if fail to match a Principal in Kong Identity after token verification. When false, the request continues without authenticated_principal set. |
+| `jit` _[AIGWOpenIDConnectGeneratedConfigPrincipalsJit](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigprincipalsjit)_ | Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with JIT provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `matchConsumer` _string_ | If a Consumer is attached to the matched Principal in Kong Identity, load it and set it in the request context, overriding consumer_by. |
+| `matchConsumerGroups` _string_ | If Consumer Groups are attached to the matched Principal in Kong Identity, load them, overriding consumer_groups_claim. |
+| `principalBy` _string_ | Custom identity name for a type=custom Kong Identity lookup. When absent and principal_claim is set, an OIDC lookup is performed using principal_claim as the claim name instead of 'sub'. |
+| `principalClaim` _[]string_ | Token claim to use for the Kong Identity lookup. If multiple values are set, it means the claim is inside a nested object of the token payload. When principal_by is also set, performs a custom identity lookup (type=custom). When set alone, performs an OIDC lookup using this claim name instead of the default 'sub'. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigPrincipalsJit
+
+
+AIGWOpenIDConnectGeneratedConfigPrincipalsJit Token claims to share with the
+Kong Identity principal lookup.
+Kong Identity, not this plugin, decides whether the claims are used: a
+trusted IdP with JIT provisioning enabled in Konnect maps them onto a
+principal provisioned just in time.
+By default the lookup only carries the principal claim (e.g.
+'sub') and no additional claims are shared.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `allClaims` _string_ | Send the full set of verified token claims with the Kong Identity principal lookup. |
+| `claims` _[]string_ | Send only the named token claims with the Kong Identity principal lookup. The claims are picked from the same source the principal claim is read from. Set all_claims to send every verified claim instead. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigPrincipals](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigprincipals)
+
+#### AIGWOpenIDConnectGeneratedConfigProtectedResourceMetadata
+
+
+AIGWOpenIDConnectGeneratedConfigProtectedResourceMetadata When configured,
+the plugin advertises this API as an OAuth 2.0 protected resource per RFC
+9728.
+It serves a discovery document at the well-known URI and includes
+resource_metadata in WWW-Authenticate challenge headers.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authorizationServers` _[]string_ | List of authorization server issuer URIs to advertise in the RFC 9728 metadata document. |
+| `metadataEndpoint` _string_ | Override the well-known metadata endpoint path. Defaults to the path component of resource with /.well-known/oauth-protected-resource appended. |
+| `resource` _string_ | The URI of the protected resource. Used as the resource field in the RFC 9728 metadata document and to derive the well-known endpoint path. |
+| `scopesSupported` _[]string_ | Scopes supported by this protected resource. Included in the RFC 9728 metadata document and in the scope attribute of WWW-Authenticate challenge headers on 401 responses. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigRedis
+
+
+AIGWOpenIDConnectGeneratedConfigRedis is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cloudAuthentication` _[AIGWOpenIDConnectGeneratedConfigRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigrediscloudauthentication)_ | Cloud auth related configs for connecting to a Cloud Provider's Redis instance. |
+| `clusterMaxRedirections` _int_ | Maximum retry attempts for redirection. |
+| `clusterNodes` _[][AIGWOpenIDConnectGeneratedConfigRedisClusterNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredisclusternodes)_ | Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element. |
+| `connectTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `connectionIsProxied` _string_ | If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address. |
+| `database` _int_ | Database to use for the Redis connection when using the `redis` strategy |
+| `host` _string_ | A string representing a host name, such as example.com. |
+| `keepaliveBacklog` _int_ | Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`. |
+| `keepalivePoolSize` _int_ | The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low. |
+| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+| `prefix` _string_ | The Redis session key prefix. |
+| `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
+| `sentinelMaster` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
+| `sentinelNodes` _[][AIGWOpenIDConnectGeneratedConfigRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
+| `sentinelPassword` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
+| `sentinelRole` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
+| `sentinelUsername` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. |
+| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. |
+| `socket` _string_ | The Redis unix socket path. |
+| `ssl` _string_ | If set to true, uses SSL to connect to Redis. |
+| `sslVerify` _string_ | If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly. |
+| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigRedisCloudAuthentication
+
+
+AIGWOpenIDConnectGeneratedConfigRedisCloudAuthentication Cloud auth related
+configs for connecting to a Cloud Provider's Redis instance.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authProvider` _string_ | Auth providers to be used to authenticate to a Cloud Provider's Redis instance. |
+| `awsAccessKeyID` _string_ | AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`. |
+| `awsAssumeRoleArn` _string_ | The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. |
+| `awsCacheName` _string_ | The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`. |
+| `awsIsServerless` _string_ | This flag specifies whether the cluster is serverless when auth_provider is set to `aws`. |
+| `awsRegion` _string_ | The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`. |
+| `awsRoleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. |
+| `awsSecretAccessKey` _string_ | AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`. |
+| `azureClientID` _string_ | Azure Client ID to be used for authentication when `auth_provider` is set to `azure`. |
+| `azureClientSecret` _string_ | Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`. |
+| `azureTenantID` _string_ | Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`. |
+| `gcpServiceAccountJSON` _string_ | GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredis)
+
+#### AIGWOpenIDConnectGeneratedConfigRedisClusterNodes
+
+
+AIGWOpenIDConnectGeneratedConfigRedisClusterNodes Cluster addresses to use
+for Redis connections when the `redis` strategy is defined.
+Defining this field implies using a Redis Cluster.
+The minimum length of the array is 1 element.
+
+
+
+| Field | Description |
+| --- | --- |
+| `ip` _string_ | A string representing a host name, such as example.com. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredis)
+
+#### AIGWOpenIDConnectGeneratedConfigRedisSentinelNodes
+
+
+AIGWOpenIDConnectGeneratedConfigRedisSentinelNodes Sentinel node addresses to
+use for Redis connections when the `redis` strategy is defined.
+Defining this field implies using a Redis Sentinel.
+The minimum length of the array is 1 element.
+
+
+
+| Field | Description |
+| --- | --- |
+| `host` _string_ | A string representing a host name, such as example.com. |
+| `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredis)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchange
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchange Details on how to accept tokens
+from other identity providers.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cache` _[AIGWOpenIDConnectGeneratedConfigTokenExchangeCache](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangecache)_ | Cache support for token exchange |
+| `grantType` _string_ | The token exchange grant. `token_exchange` (default) uses the OAuth 2.0 Token Exchange grant (RFC 8693). `jwt_bearer` uses the JWT Bearer authorization-grant flow (RFC 7523); see `token_exchange.provider` for provider-specific defaults in this mode.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `mapIdentitiesFrom` _string_ | Which token's claims to use for consumer, consumer group, and principal mapping. Only takes effect when token exchange is configured. `exchanged_tokens` (default) uses the token(s) returned by the exchange or tokens derived from it, as today. `subject_token` uses the original, pre-exchange bearer token's claims instead.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `provider` _string_ | Identity provider used with `grant_type = jwt_bearer`; not allowed with `grant_type = token_exchange`. `standard` (default) adds no provider-specific parameter. `microsoft` adds the required `requested_token_use=on_behalf_of`, which is fixed and cannot be overridden via `post_args_names/values`.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `request` _[AIGWOpenIDConnectGeneratedConfigTokenExchangeRequest](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangerequest)_ | Parameters used in the token exchange request. |
+| `subjectTokenIssuers` _[][AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuers](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangesubjecttokenissuers)_ | Trusted token issuers from which the upstream may accept tokens to be exchanged. If a JWT bearer matches all the conditions of a subject token issuer item, the token will be exchanged. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchangeCache
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchangeCache Cache support for token
+exchange
+
+
+
+| Field | Description |
+| --- | --- |
+| `enabled` _string_ | Whether to enable caching. |
+| `ttl` _int_ | Cache ttl in seconds used when caching exchanged tokens, use it to override `conf.cache_ttl`. Token expiry will be used if shorter than this value. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigTokenExchange](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchange)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchangeRequest
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchangeRequest Parameters used in the
+token exchange request.
+
+
+
+| Field | Description |
+| --- | --- |
+| `actorToken` _[AIGWOpenIDConnectGeneratedConfigTokenExchangeRequestActorToken](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangerequestactortoken)_ | How to obtain the actor token to include in the token exchange request. Represents the identity of the party acting on behalf of the subject.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `audience` _[]string_ | Audiences used in the token exchange request. Values defined here override those defined in `config.audience`. |
+| `emptyAudience` _string_ | Use empty audiences. Use this field to remove audiences defined in `config.audience`. |
+| `emptyHeaders` _string_ | Use no extra headers on the token exchange request. Use this field to remove extra headers defined in `config.token_headers_names`.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `emptyPostArgs` _string_ | Use no extra POST arguments on the token exchange request. Use this field to remove extra POST arguments defined in `config.token_post_args_names`.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `emptyScopes` _string_ | Use empty scopes. Use this field to remove scopes defined in `config.scopes`. |
+| `headersNames` _[]string_ | Extra header names sent only on the token exchange request. Overrides `config.token_headers_names` for this request.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `headersValues` _[]string_ | Values paired by index with `headers_names`.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `postArgsNames` _[]string_ | Extra POST argument names sent only on the token exchange request. Overrides `config.token_post_args_names` for this request. Use this, not the top-level field, for parameters that must not be attached to the plugin's other token endpoint calls, for example `requested_token_use` for Entra ID's On-Behalf-Of flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `postArgsValues` _[]string_ | Values paired by index with `post_args_names`.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `scopes` _[]string_ | Scopes used in the token exchange request. Values defined here override those defined in `config.scopes`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigTokenExchange](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchange)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchangeRequestActorToken
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchangeRequestActorToken How to obtain
+the actor token to include in the token exchange request.
+Represents the identity of the party acting on behalf of the subject.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `headerName` _string_ | Header name containing the actor token. Required when `source` is `header`. |
+| `source` _string_ | Where to obtain the actor token. `header` reads it from a request header. `config` uses a fixed value. `none` disables actor token support. |
+| `staticToken` _string_ | Static actor token value. Required when `source` is `config`. |
+| `type` _string_ | The RFC 8693 token type identifier of the actor token (the `actor_token_type` request parameter). |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigTokenExchangeRequest](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangerequest)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuers
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuers Trusted
+token issuers from which the upstream may accept tokens to be exchanged.
+If a JWT bearer matches all the conditions of a subject token issuer item,
+the token will be exchanged.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuersConditions](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangesubjecttokenissuersconditions)_ | A token will only be exchanged when it matches all these criteria. To exchange tokens issued by a different issuer, `conditions` must not be defined -- every token from that issuer is exchanged unconditionally, since a foreign-issued token that isn't exchanged can never pass normal verification against the target issuer anyway. In contrast, to exchange tokens issued by the target issuer itself, `conditions` must be defined. |
+| `denyOnMismatch` _string_ | When true, a token issued by `issuer` that fails to match `conditions` is denied instead of being passed through unexchanged. Evaluated independently for this item only, with no effect on other `subject_token_issuers` items. Only allowed when this issuer is the target issuer, since `conditions` is required there and foreign-issuer items always match.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `issuer` _string_ | Tokens of whose iss claim matches this value will be exchanged. |
+| `jwksURI` _string_ | An explicit JWKS endpoint for this issuer. This field should be left empty when this issuer is the same as the target issuer. It is only used when `verify_signature` is `true`. When set, Kong fetches the signing keys from this URI directly instead of using OIDC Discovery.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `verifySignature` _string_ | When true, Kong cryptographically verifies the signature of the incoming subject token before exchanging it. This field should be left empty or set to `false` when this issuer is the same as the target issuer. Defaults to `false` for backward compatibility.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigTokenExchange](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchange)
+
+#### AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuersConditions
+
+
+AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuersConditions A
+token will only be exchanged when it matches all these criteria.
+To exchange tokens issued by a different issuer, `conditions` must not be
+defined -- every token from that issuer is exchanged unconditionally, since a
+foreign-issued token that isn't exchanged can never pass normal verification
+against the target issuer anyway.
+In contrast, to exchange tokens issued by the target issuer itself,
+`conditions` must be defined.
+
+
+
+| Field | Description |
+| --- | --- |
+| `hasAudience` _[]string_ | Audience values that must all be present in the token, matched against `audience_claim`. |
+| `hasScopes` _[]string_ | Scope values that must all be present in the token, matched against `scopes_claim`. |
+| `missingAudience` _[]string_ | Audience values that must all be absent from the token, matched against `audience_claim`. |
+| `missingScopes` _[]string_ | Scope values that must all be absent from the token, matched against `scopes_claim`. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfigTokenExchangeSubjectTokenIssuers](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigtokenexchangesubjecttokenissuers)
+
+#### AIGWOpenIDConnectGeneratedConfigUpstreamHeaders
+
+
+AIGWOpenIDConnectGeneratedConfigUpstreamHeaders The upstream claim to header
+mappings.
+
+
+
+| Field | Description |
+| --- | --- |
+| `header` _string_ | The name of the header. |
+| `path` _[]string_ | The path of the header value. |
+
+_Appears in:_
+
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+
 #### AIGatewayACLRef
 
 
@@ -277,8 +1092,9 @@ _Appears in:_
 
 - [AIGatewayAllowACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayallowacl)
 - [AIGatewayDenyACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydenyacl)
-
-
+- [AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)
+- [AIGatewayMCPServerListenerConsumerAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumeracls)
+- [AIGatewayMCPServerListenerOauthAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauthacls)
 
 #### AIGatewayAgentAPISpec
 
@@ -312,7 +1128,7 @@ AIGatewayAgentAccess Access control configuration for an agent.
 
 | Field | Description |
 | --- | --- |
-| `acls` _[AIGatewayAgentAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessacls)_ | Access control rules. Configure exactly one of `allow` or `deny`. |
+| `acls` _[AIGatewayAgentAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessacls)_ | Access control rules. Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when`. |
 | `authStrategies` _[][AIGatewayAuthStrategyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyref)_ | List of auth strategies for granting access to the agent. At most 1 auth strategy of each auth strategy type can be referenced. |
 | `identityProviders` _[][AIGatewayIdentityProviderReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayidentityproviderreference)_ | List of identity providers for granting access to the agent. At most 1 identity provider of each identity provider type can be referenced.<br /><br />Deprecated: use `auth_strategies` instead. The two are mutually exclusive. |
 
@@ -333,6 +1149,8 @@ Only one of the fields should be set based on the Type.
 | `type` _[AIGatewayAgentAccessAclsType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessaclstype)_ | Type designates the type of configuration. |
 | `allow` _[AIGatewayAllowACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayallowacl)_ | Allow configuration. |
 | `deny` _[AIGatewayDenyACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydenyacl)_ | Deny configuration. |
+| `allowWhen` _[AIGatewayAllowWhenACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayallowwhenacl)_ | AllowWhen configuration. |
+| `denyWhen` _[AIGatewayDenyWhenACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydenywhenacl)_ | DenyWhen configuration. |
 
 _Appears in:_
 
@@ -357,6 +1175,8 @@ Allowed values:
 | --- | --- |
 | `allow` |  |
 | `deny` |  |
+| `allowWhen` |  |
+| `denyWhen` |  |
 
 #### AIGatewayAgentConfig
 
@@ -368,6 +1188,8 @@ The structure varies depending on the agent type.
 
 | Field | Description |
 | --- | --- |
+| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream agent endpoint, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this Agent, which proxies requests to `config.url`.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
+| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream agent endpoint, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this Agent, which proxies requests to `config.url`. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
 | `logging` _[AIGatewayAgentConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `proxy` _[AIGatewayProxyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayproxyconfig)_ | HTTP/HTTPS proxy configuration for outbound requests to the upstream AI provider. |
@@ -446,6 +1268,22 @@ _Appears in:_
 - [AIGatewayAgentAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessacls)
 - [AIGatewayModelAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessacls)
 
+#### AIGatewayAllowWhenACL
+
+
+AIGatewayAllowWhenACL is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `allowWhen` _[]string_ | Allow the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `allow`, `deny`, `allow_when`, or `deny_when` must be specified.<br /><br />**Requires a minimum runtime version of `2.2`**. |
+
+_Appears in:_
+
+- [AIGatewayAgentAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessacls)
+- [AIGatewayModelAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessacls)
+
 #### AIGatewayAuthStrategyAPISpec
 
 
@@ -505,7 +1343,8 @@ AIGatewayAuthStrategyKeyAuth Configuration for an auth strategy.
 
 | Field | Description |
 | --- | --- |
-| `config` _[AIGatewayAuthStrategyKeyAuthConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauthconfig)_ | Configuration for the key-auth auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: https://developer.konghq.com/plugins/key-auth/reference/ for the list of properties |
+| `config` _[AIGWKeyAuthGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwkeyauthgeneratedconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
@@ -514,50 +1353,6 @@ AIGatewayAuthStrategyKeyAuth Configuration for an auth strategy.
 _Appears in:_
 
 - [AIGatewayAuthStrategyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyconfig)
-
-#### AIGatewayAuthStrategyKeyAuthConfig
-
-
-AIGatewayAuthStrategyKeyAuthConfig Configuration for the key-auth auth
-strategy.
-For advanced use cases, additional config properties can be sent in the
-request body.
-See: https://developer.konghq.com/plugins/key-auth/reference/ for the list of
-properties
-
-
-
-| Field | Description |
-| --- | --- |
-| `hideCredentials` _string_ | An optional boolean value telling the plugin to show or hide the credential from the upstream service. If true, the plugin strips the credential from the request. |
-| `keyInBody` _string_ | If enabled, reads the request body. Supported MIME types: application/www-form-urlencoded, application/json, and multipart/form-data. |
-| `keyInHeader` _string_ | If enabled (default), the plugin reads the request header and tries to find the key in it. |
-| `keyInQuery` _string_ | If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it. |
-| `keyNames` _[]string_ | An array of strings containing the names of the keys to look for in the request. |
-| `principals` _[AIGatewayAuthStrategyKeyAuthConfigPrincipals](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauthconfigprincipals)_ | Authenticate against Kong Identity instead of local credentials. Mutually exclusive with identity realms. |
-
-_Appears in:_
-
-- [AIGatewayAuthStrategyKeyAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauth)
-
-#### AIGatewayAuthStrategyKeyAuthConfigPrincipals
-
-
-AIGatewayAuthStrategyKeyAuthConfigPrincipals Authenticate against Kong
-Identity instead of local credentials.
-Mutually exclusive with identity realms.
-
-
-
-| Field | Description |
-| --- | --- |
-| `directory` _string_ | The Kong Identity directory instance to authenticate against. |
-| `enabled` _string_ | When true, authenticate against Kong Identity instead of local credentials. |
-| `errorOnMiss` _string_ | When true (default), reject the request if no matching principal is found in Kong Identity. When false, allow the request to continue unauthenticated instead. |
-
-_Appears in:_
-
-- [AIGatewayAuthStrategyKeyAuthConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauthconfig)
 
 #### AIGatewayAuthStrategyOpenIDConnect
 
@@ -568,105 +1363,17 @@ AIGatewayAuthStrategyOpenIDConnect Configuration for an auth strategy.
 
 | Field | Description |
 | --- | --- |
-| `config` _[AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)_ | Configuration for the OpenID Connect auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: https://developer.konghq.com/plugins/openid-connect/reference/ for the list of properties |
+| `config` _[AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this auth strategy instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVaultEnrollmentProtection](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultenrollmentprotection)_ | Enables enrollment protection for the Token Vault datastore linked to this auth strategy. Users of the linked Token Vault will need to authenticate using this OIDC auth strategy before completing enrollment with upstream providers. Enrollment links always store upstream credentials in the Token Vault belonging to the principal who requested the link. Enrollment protection ensures that other principals cannot use an enrollment link to unknowingly authorize the storage of their upstream credentials in another principal's Token Vault.<br /><br />Note that the auth strategy used to protect upstream resources such as MCP servers need not be the same auth strategy used for enrollment protection. Omit `token_vault` entirely to enforce no such enrollment protection.<br /><br />Requires a `token-vault` Datastore reference in `datastores`; enabling enrollment protection without one is rejected.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
 - [AIGatewayAuthStrategyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyconfig)
-
-#### AIGatewayAuthStrategyOpenIDConnectConfig
-
-
-AIGatewayAuthStrategyOpenIDConnectConfig Configuration for the OpenID Connect
-auth strategy.
-For advanced use cases, additional config properties can be sent in the
-request body.
-See: https://developer.konghq.com/plugins/openid-connect/reference/ for the
-list of properties
-
-
-
-| Field | Description |
-| --- | --- |
-| `audienceRequired` _[]string_ | Audiences required in the access token or introspection response. |
-| `authMethods` _[]string_ | Types of credentials/grants to enable. |
-| `cacheIntrospection` _string_ | Cache introspection endpoint requests. |
-| `cacheTokensSalt` _string_ | Salt used for generating the cache key that is used for caching the token endpoint requests. |
-| `clientAlg` _[]string_ | Algorithm to use for `client_secret_jwt` or `private_key_jwt` authentication. |
-| `clientAuth` _[]string_ | Client authentication methods used with the identity provider. |
-| `clientID` _[]string_ | An array of strings representing the client id for the OpenID Connect provider. When multiple values are provided, the client ID and secrets pairs correspond based on their locations in the array. |
-| `clientSecret` _[][SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | An array of strings representing the client secret for the OpenID Connect provider. When multiple values are provided, the client ID and secrets pairs correspond based on their locations in the array. |
-| `consumerBy` _[]string_ | Consumer fields used when mapping a token claim to a Kong consumer. |
-| `consumerClaims` _[]string_ | An array containing an array of string paths representing the location of the claim in a nested object. For example, to map to user.info.id, set [ "user", "info", "id" ]. |
-| `consumerGroupsClaim` _[]string_ | The claim used for consumer groups mapping. If multiple values are set, it means the claim is inside a nested object of the token payload. |
-| `consumerGroupsOptional` _string_ | Do not terminate the request if consumer groups mapping fails. |
-| `consumerOptional` _string_ | Do not terminate the request if consumer mapping fails. |
-| `credentialClaim` _[]string_ | Claim path used to derive virtual credentials when consumer mapping is not used. |
-| `hideCredentials` _string_ | Remove credentials used for authentication before proxying the request upstream. |
-| `httpProxy` _string_ | HTTP proxy used for identity provider requests. |
-| `httpProxyAuthorization` _string_ | Authorization header value sent to the HTTP proxy. |
-| `httpVersion` _float64_ | HTTP version used for identity provider requests. |
-| `httpsProxy` _string_ | HTTPS proxy used for identity provider requests. |
-| `httpsProxyAuthorization` _string_ | Authorization header value sent to the HTTPS proxy. |
-| `introspectionEndpoint` _string_ | Overrides the introspection endpoint returned by discovery. |
-| `issuer` _string_ | URL that identifies the OpenID Provider |
-| `jwksEndpoint` _string_ | Overrides the JWKS endpoint returned by discovery. |
-| `keepalive` _string_ | Reuse HTTP client connections for identity provider requests. |
-| `leeway` _int_ | Leeway, in seconds, for validating token time claims. |
-| `mtlsIntrospectionEndpoint` _string_ | mTLS alias for the introspection endpoint. |
-| `noProxy` _string_ | Comma-separated hosts that bypass the configured proxies. |
-| `principals` _[AIGatewayAuthStrategyOpenIDConnectConfigPrincipals](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfigprincipals)_ | Map a request to a Kong Identity principal after token verification. |
-| `scopes` _[]string_ | This field is referenceable. |
-| `sslVerify` _string_ |  |
-| `timeout` _int_ | Network I/O timeout, in milliseconds, for identity provider requests. |
-| `upstreamHeaders` _[][AIGatewayAuthStrategyOpenIDConnectConfigUpstreamHeaders](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfigupstreamheaders)_ | Map token claims to upstream headers using path-based access. |
-
-_Appears in:_
-
-- [AIGatewayAuthStrategyOpenIDConnect](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnect)
-
-#### AIGatewayAuthStrategyOpenIDConnectConfigPrincipals
-
-
-AIGatewayAuthStrategyOpenIDConnectConfigPrincipals Map a request to a Kong
-Identity principal after token verification.
-
-
-
-| Field | Description |
-| --- | --- |
-| `directory` _string_ | The Kong Identity directory instance to look up against. |
-| `enabled` _string_ | When true, look up a Kong Identity principal after token verification. |
-| `errorOnMiss` _string_ | When true (default), reject the request if no principal is matched in Kong Identity after token verification. When false, the request continues without an authenticated principal set. |
-| `matchConsumer` _string_ | If a consumer is attached to the matched principal, load it and set it in the request context, overriding consumer_by. |
-| `matchConsumerGroups` _string_ | If consumer groups are attached to the matched principal, load them, overriding consumer_groups_claim. |
-| `principalBy` _string_ | Custom identity name for a custom Kong Identity lookup. When absent and principal_claim is set, a lookup is performed using principal_claim as the claim name instead of the default sub claim. |
-| `principalClaim` _[]string_ | Token claim used for the Kong Identity lookup. If multiple values are set, the claim is inside a nested object of the token payload. Used together with, or instead of, principal_by. |
-
-_Appears in:_
-
-- [AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)
-
-#### AIGatewayAuthStrategyOpenIDConnectConfigUpstreamHeaders
-
-
-AIGatewayAuthStrategyOpenIDConnectConfigUpstreamHeaders Map token claims to
-upstream headers using path-based access.
-
-
-
-| Field | Description |
-| --- | --- |
-| `header` _string_ | The name of the header. |
-| `path` _[]string_ | The path of the header value. |
-
-_Appears in:_
-
-- [AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)
 
 #### AIGatewayAuthStrategyRef
 
@@ -680,7 +1387,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -763,6 +1470,7 @@ a model.
 | `region` _string_ | The AWS region for the model. Setting this option overrides the AWS_REGION environment variable. |
 | `upstreamURL` _string_ | The URL of the embeddings model. |
 | `videoOutputS3URI` _string_ | S3 URI for storing video generation outputs. |
+| `vpcEndpoint` _string_ | Hostname of an AWS PrivateLink VPC endpoint to use instead of the public Bedrock endpoint. Ignored if `upstream_url` is set.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -786,6 +1494,24 @@ AIGatewayCACertificateAPISpec defines the API spec fields for AIGatewayCACertifi
 _Appears in:_
 
 - [AIGatewayCACertificateSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatespec)
+
+#### AIGatewayCACertificateReference
+
+_Underlying type:_ `string`
+
+AIGatewayCACertificateReference A reference to an AI CA Certificate on the
+same AI Gateway, by CA certificate name.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayAgentConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentconfig)
+- [AIGatewayMCPServerConversionListenerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfig)
+- [AIGatewayMCPServerUpstreamServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfig)
+- [AIGatewayMCPServerWithUpstreamConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfig)
+- [AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfig)
 
 #### AIGatewayCACertificateSpec
 
@@ -836,6 +1562,7 @@ _Appears in:_
 
 - [AIGatewayTargetAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetanthropicconfig)
 - [AIGatewayTargetAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetazureconfig)
+- [AIGatewayTargetBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbasetenconfig)
 - [AIGatewayTargetBedrockConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbedrockconfig)
 - [AIGatewayTargetCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcerebrasconfig)
 - [AIGatewayTargetCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcohereconfig)
@@ -887,11 +1614,31 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
 - [AIGatewaySNIAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysniapispec)
+
+#### AIGatewayCertificateReference
+
+_Underlying type:_ `string`
+
+AIGatewayCertificateReference A reference to an AI Certificate on the same AI
+Gateway, by certificate name.
+The certificate must have a valid private key to be presented as a client
+certificate to an upstream.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayAgentConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentconfig)
+- [AIGatewayMCPServerConversionListenerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfig)
+- [AIGatewayMCPServerUpstreamServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfig)
+- [AIGatewayMCPServerWithUpstreamConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfig)
+- [AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfig)
 
 #### AIGatewayCertificateSpec
 
@@ -996,6 +1743,7 @@ AIGatewayConsumerCredentialStatus defines the observed state of AIGatewayConsume
 | `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
 | `gatewayID` _[KonnectEntityRef](#aiconfiguration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
 | `consumerID` _[KonnectEntityRef](#aiconfiguration-konghq-com-v1alpha1-types-konnectentityref)_ | ConsumerID is the Konnect ID of the parent Consumer. |
+| `createInputsHash` _string_ | CreateInputsHash fingerprints the resolved user-supplied request body last successfully created in Konnect, before operator metadata is added. For entities predating this field, it is initialized from current inputs as a baseline, which cannot verify the values already stored in Konnect. Readers of this resource can use the fingerprint to verify guesses of low-entropy Secret values offline. Use high-entropy secret material. |
 | `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
 
 _Appears in:_
@@ -1120,6 +1868,7 @@ _Appears in:_
 
 - [AIGatewayTargetAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetanthropicconfig)
 - [AIGatewayTargetAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetazureconfig)
+- [AIGatewayTargetBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbasetenconfig)
 - [AIGatewayTargetBedrockConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbedrockconfig)
 - [AIGatewayTargetCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcerebrasconfig)
 - [AIGatewayTargetCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcohereconfig)
@@ -1200,7 +1949,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -1285,11 +2034,169 @@ AIGatewayDataPlaneCertificateStatus defines the observed state of AIGatewayDataP
 | --- | --- |
 | `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
 | `gatewayID` _[KonnectEntityRef](#aiconfiguration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `createInputsHash` _string_ | CreateInputsHash fingerprints the resolved user-supplied request body last successfully created in Konnect, before operator metadata is added. For entities predating this field, it is initialized from current inputs as a baseline, which cannot verify the values already stored in Konnect. Readers of this resource can use the fingerprint to verify guesses of low-entropy Secret values offline. Use high-entropy secret material. |
 | `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
 
 _Appears in:_
 
 - [AIGatewayDataPlaneCertificate](#aiconfiguration-konghq-com-v1alpha1-aigatewaydataplanecertificate)
+
+#### AIGatewayDatastoreAPISpec
+
+
+AIGatewayDatastoreAPISpec defines the API spec fields for AIGatewayDatastore.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayDatastoreSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorespec)
+
+#### AIGatewayDatastoreConfig
+
+
+AIGatewayDatastoreConfig represents a union type for AIGatewayDatastoreConfig.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[AIGatewayDatastoreConfigType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfigtype)_ | Type designates the type of configuration. |
+| `redis-ce` _[RedisCEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastore)_ | RedisCE configuration. |
+| `redis-ee` _[RedisEEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastore)_ | RedisEE configuration. |
+| `token-vault` _[TokenVaultDatastore](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastore)_ | TokenVault configuration. |
+| `vectordb` _[VectorDBDatastore](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastore)_ | VectorDB configuration. |
+
+_Appears in:_
+
+- [AIGatewayDatastoreAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreapispec)
+
+#### AIGatewayDatastoreConfigType
+
+_Underlying type:_ `string`
+
+AIGatewayDatastoreConfigType represents the type of AIGatewayDatastoreConfig.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `redis-ce` |  |
+| `redis-ee` |  |
+| `token-vault` |  |
+| `vectordb` |  |
+
+#### AIGatewayDatastoreName
+
+_Underlying type:_ `string`
+
+AIGatewayDatastoreName An immutable user-defined identifier for this
+resource.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayDatastoreRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreref)
+- [RedisCEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastore)
+- [RedisEEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastore)
+- [TokenVaultDatastore](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastore)
+- [VectorDBDatastore](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastore)
+
+#### AIGatewayDatastoreNamespacedRef
+
+
+AIGatewayDatastoreNamespacedRef references an AIGatewayDatastore in the cluster. The referenced
+object's Konnect name is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [AIGatewayAuthStrategyKeyAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauth)
+- [AIGatewayAuthStrategyOpenIDConnect](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnect)
+- [AIGatewayMCPServerConversionListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistener)
+- [AIGatewayMCPServerConversionOnly](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversiononly)
+- [AIGatewayMCPServerListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistener)
+- [AIGatewayMCPServerPassthroughListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlistener)
+- [AIGatewayMCPServerUpstreamServer](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserver)
+- [AIGatewayModelAPI](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelapi)
+- [AIGatewayModelModel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodel)
+- [AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)
+- [AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
+- [AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)
+- [AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)
+- [AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)
+- [AIGatewayModelProviderDashscope](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdashscope)
+- [AIGatewayModelProviderDatabricks](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdatabricks)
+- [AIGatewayModelProviderDeepseek](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdeepseek)
+- [AIGatewayModelProviderGemini](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidergemini)
+- [AIGatewayModelProviderHuggingface](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderhuggingface)
+- [AIGatewayModelProviderKimi](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderkimi)
+- [AIGatewayModelProviderLlama2](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderllama2)
+- [AIGatewayModelProviderMistral](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidermistral)
+- [AIGatewayModelProviderOllama](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderollama)
+- [AIGatewayModelProviderOpenai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideropenai)
+- [AIGatewayModelProviderSagemaker](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidersagemaker)
+- [AIGatewayModelProviderTypesafe](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidertypesafe)
+- [AIGatewayModelProviderVercel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervercel)
+- [AIGatewayModelProviderVllm](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervllm)
+- [AIGatewayModelProviderXai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderxai)
+- [AIGatewayPolicyAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyapispec)
+
+
+
+
+
+#### AIGatewayDatastoreSpec
+
+
+AIGatewayDatastoreSpec defines the desired state of AIGatewayDatastore.
+
+
+
+| Field | Description |
+| --- | --- |
+| `aiGatewayRef` _[AIGatewayRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayref)_ | AIGatewayRef is the reference to the parent AI Gateway (control plane) object. |
+| `apiSpec` _[AIGatewayDatastoreAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [AIGatewayDatastore](#aiconfiguration-konghq-com-v1alpha1-aigatewaydatastore)
+
+#### AIGatewayDatastoreStatus
+
+
+AIGatewayDatastoreStatus defines the observed state of AIGatewayDatastore.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#aiconfiguration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [AIGatewayDatastore](#aiconfiguration-konghq-com-v1alpha1-aigatewaydatastore)
 
 #### AIGatewayDenyACL
 
@@ -1301,6 +2208,22 @@ AIGatewayDenyACL is a type alias.
 | Field | Description |
 | --- | --- |
 | `deny` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of Consumer Groups Names, or Authenticated Groups Names that are denied access. |
+
+_Appears in:_
+
+- [AIGatewayAgentAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentaccessacls)
+- [AIGatewayModelAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessacls)
+
+#### AIGatewayDenyWhenACL
+
+
+AIGatewayDenyWhenACL is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `denyWhen` _[]string_ | Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `allow`, `deny`, `allow_when`, or `deny_when` must be specified.<br /><br />**Requires a minimum runtime version of `2.2`**. |
 
 _Appears in:_
 
@@ -1363,6 +2286,7 @@ _Appears in:_
 - [AIGatewayModelModel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodel)
 - [AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)
 - [AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
 - [AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)
 - [AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)
 - [AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)
@@ -1471,24 +2395,6 @@ _Appears in:_
 - [AIGatewayModelAPIConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelapiconfig)
 - [AIGatewayModelModelConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodelconfig)
 
-#### AIGatewayMCPACLRef
-
-
-AIGatewayMCPACLRef references an AIGatewayConsumerGroup in the cluster. The referenced
-object's Konnect name is used where the Konnect API accepts it.
-
-
-
-| Field | Description |
-| --- | --- |
-| `kind` _string_ | Kind is the kind of the referenced object. |
-| `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
-
-_Appears in:_
-
-- [AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)
-
 #### AIGatewayMCPACLs
 
 
@@ -1499,8 +2405,10 @@ Configure `allow`, `deny`, or both.
 
 | Field | Description |
 | --- | --- |
-| `allow` _[][AIGatewayMCPACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpaclref)_ | List of consumer groups that are permitted access. |
-| `deny` _[][AIGatewayMCPACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpaclref)_ | List of consumer groups that are denied access. |
+| `allow` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are permitted access. |
+| `allowWhen` _[]string_ | Allow the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `deny` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are denied access. |
+| `denyWhen` _[]string_ | Deny the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -1528,8 +2436,8 @@ AIGatewayMCPConversionTool A tool exposed by an MCP Server in
 | `parameters` _[][AIGatewayMCPToolParameter](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolparameter)_ |  |
 | `path` _string_ | The path of the exported API. Always treated as relative to the path component of `config.url` and simply concatenated onto it — a leading `/` has no special "absolute path" meaning. If this tool's `host` or `scheme` overrides the source's URL, `path` is instead relative to the root of that overridden host, since there is no URL path from a different host to append to. By default, Kong will extract the path from API configuration. |
 | `query` _[AIGatewayMCPToolQuery](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolquery)_ | The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required. |
-| `requestBody` _[AIGatewayMCPToolRequestBody](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolrequestbody)_ | The API requestBody specification defined in OpenAPI JSON format. For example, '{"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"color":{"type":"array","items":{"type":"string"}}}}}}}'. See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details. Note that `$ref` is not supported. |
-| `responses` _[AIGatewayMCPToolResponses](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolresponses)_ | The API responses specification defined in OpenAPI JSON format. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, '{"200":{"content":{"application/json":{"schema":{"type":"object","properties":{"result":{"type":"string"}}}}}}}}'. See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details. Only one non-error (status code < 400) response is supported. Note that `$ref` is not supported. |
+| `requestBody` _[AIGatewayMCPToolRequestBody](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolrequestbody)_ | The API requestBody specification defined in OpenAPI JSON format. For example, {"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"color":{"type":"array","items":{"type":"string"}}}}}}}. See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details. Note that `$ref` is not supported. |
+| `responses` _[AIGatewayMCPToolResponses](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcptoolresponses)_ | The API responses specification defined in OpenAPI JSON format. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, {"200":{"content":{"application/json":{"schema":{"type":"object","properties":{"result":{"type":"string"}}}}}}}. See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details. Only one non-error (status code < 400) response is supported. Note that `$ref` is not supported. |
 | `scheme` _string_ | The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it. |
 
 _Appears in:_
@@ -1639,12 +2547,15 @@ AIGatewayMCPServerConversionListener is a type alias.
 | --- | --- |
 | `access` _[AIGatewayMCPServerConversionListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlisteneraccess)_ |  |
 | `config` _[AIGatewayMCPServerConversionListenerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfig)_ | Server-side configuration specific to modes where Kong answers as the MCP server. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
+| `rateLimiting` _[AIGatewayMCPServerRateLimiting](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimiting)_ | Rate limits applied to requests to this MCP Server, matched by MCP method or tool name. Each AI Gateway node counts and enforces the limits independently.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `tools` _[][AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)_ | List of tools exposed by this MCP Server. Each tool's `path`, `method`, and `host` describe the backend HTTP operation on the upstream selected by `config.url` — they do not need to match the public MCP Route configured in `config.route`. |
 
 _Appears in:_
@@ -1700,7 +2611,9 @@ to modes where Kong answers as the MCP server.
 | Field | Description |
 | --- | --- |
 | `allowedVersions` _[]string_ | The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong implements, which is the default. When set, `server/discover` advertises exactly this list and a request declaring anything else is rejected. Listing only per-request revisions refuses handshake clients.<br /><br />**Requires a minimum runtime version of `2.1`**. |
+| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
 | `cache` _[AIGatewayMCPServerConversionListenerConfigCache](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfigcache)_ | Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol revision that defines them receive them.<br /><br />**Requires a minimum runtime version of `2.1`**. |
+| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
 | `logging` _[AIGatewayMCPServerConversionListenerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfiglogging)_ |  |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -1757,12 +2670,14 @@ AIGatewayMCPServerConversionOnly is a type alias.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfig)_ | Routing, logging, and request body size limits for the MCP Server. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `tools` _[][AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)_ | List of tools exposed by this MCP Server. |
 
 _Appears in:_
@@ -1780,6 +2695,7 @@ AIGatewayMCPServerListener is a type alias.
 | --- | --- |
 | `access` _[AIGatewayMCPServerListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneraccess)_ |  |
 | `config` _[AIGatewayMCPServerListenerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconfig)_ | Server-side configuration specific to modes where Kong answers as the MCP server. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
@@ -1787,6 +2703,7 @@ AIGatewayMCPServerListener is a type alias.
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `sources` _[][AIGatewayMCPServerRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverref)_ | The explicit list of source MCP Servers whose tools this listener exposes. Each entry is the immutable `name` of a `conversion-only` (toolset) or `upstream-server` (third-party MCP server) MCP Server in the same AI Gateway. All of the referenced source's tools are exposed. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -1897,7 +2814,7 @@ for granting access to an MCP server.
 
 | Field | Description |
 | --- | --- |
-| `acls` _[AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)_ | Server-level access control rules for allowing or denying consumer groups. This is the top-level gate: a caller's consumer group must pass this check before any MCP protocol operation (`initialize`, `tools/list`, `tools/call`) is allowed, and before any tool-level `default_tool_acls` or per-tool `access.acls` check is evaluated. |
+| `acls` _[AIGatewayMCPServerListenerConsumerAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumeracls)_ | Server-level access control rules for allowing or denying consumer groups. This is the top-level gate: a caller's consumer group must pass this check before any MCP protocol operation (`initialize`, `tools/list`, `tools/call`) is allowed, and before any tool-level `default_tool_acls` or per-tool `access.acls` check is evaluated. |
 | `authStrategies` _[][AIGatewayAuthStrategyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyref)_ | List of auth strategies for granting access to the MCP server. At most 1 auth strategy of each auth strategy type can be referenced. |
 | `defaultToolAcls` _[AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)_ | Default per-tool access control rules for allowing or denying consumer groups access to tools. Evaluated only for callers that already passed the server-level `acls` check above. Applies to every tool exposed by this MCP Server unless a specific tool overrides it via that tool's own `access.acls`. |
 | `identityProviders` _[][AIGatewayIdentityProviderReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayidentityproviderreference)_ | List of identity providers for granting access to the MCP server. At most 1 identity provider of each identity provider type can be referenced.<br /><br />Deprecated: use `auth_strategies` instead. The two are mutually exclusive. |
@@ -1908,6 +2825,48 @@ _Appears in:_
 - [AIGatewayMCPServerConversionListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlisteneraccess)
 - [AIGatewayMCPServerListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneraccess)
 - [AIGatewayMCPServerPassthroughListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlisteneraccess)
+
+#### AIGatewayMCPServerListenerConsumerAcls
+
+
+AIGatewayMCPServerListenerConsumerAcls represents a union type for acls.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[AIGatewayMCPServerListenerConsumerAclsType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumeraclstype)_ | Type designates the type of configuration. |
+| `allow` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are permitted access. |
+| `deny` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are denied access. |
+| `allowWhen` _[]string_ | Allow the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `denyWhen` _[]string_ | Deny the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+
+_Appears in:_
+
+- [AIGatewayMCPServerListenerConsumer](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumer)
+
+#### AIGatewayMCPServerListenerConsumerAclsType
+
+_Underlying type:_ `string`
+
+AIGatewayMCPServerListenerConsumerAclsType represents the type of acls.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayMCPServerListenerConsumerAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumeracls)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `allow` |  |
+| `deny` |  |
+| `allowWhen` |  |
+| `denyWhen` |  |
 
 #### AIGatewayMCPServerListenerOauth
 
@@ -1921,7 +2880,7 @@ for granting access to an MCP server.
 | Field | Description |
 | --- | --- |
 | `accessTokenClaimField` _string_ | The claim in the OAuth2 access token to use as the subject for ACL evaluation when `acl_attribute_type` is set to `oauth_access_token`. Nested claim can be fetched by using a jq filter starts with dot, e.g., “.user.email”: https://jqlang.org/manual/#object-identifier-index |
-| `acls` _[AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)_ | Server-level access control rules for allowing or denying callers, evaluated against the value of the configured `access_token_claim_field`. This is the top-level gate: a caller must pass this check before any MCP protocol operation (`initialize`, `tools/list`, `tools/call`) is allowed, and before any tool-level `default_tool_acls` or per-tool `access.acls` check is evaluated. |
+| `acls` _[AIGatewayMCPServerListenerOauthAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauthacls)_ | Server-level access control rules for allowing or denying callers, evaluated against the value of the configured `access_token_claim_field`. This is the top-level gate: a caller must pass this check before any MCP protocol operation (`initialize`, `tools/list`, `tools/call`) is allowed, and before any tool-level `default_tool_acls` or per-tool `access.acls` check is evaluated. |
 | `authStrategies` _[][AIGatewayAuthStrategyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyref)_ | List of auth strategies for granting access to the MCP server. At most 1 auth strategy of each auth strategy type can be referenced. |
 | `defaultToolAcls` _[AIGatewayMCPACLs](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpacls)_ | Default per-tool access control rules for allowing or denying callers access to tools, evaluated against the value of the configured `access_token_claim_field`. Evaluated only for callers that already passed the server-level `acls` check above. Applies to every tool exposed by this MCP Server unless a specific tool overrides it via that tool's own `access.acls`. |
 | `identityProviders` _[][AIGatewayIdentityProviderReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayidentityproviderreference)_ | List of identity providers for granting access to the MCP server. At most 1 identity provider of each identity provider type can be referenced.<br /><br />Deprecated: use `auth_strategies` instead. The two are mutually exclusive. |
@@ -1932,6 +2891,48 @@ _Appears in:_
 - [AIGatewayMCPServerConversionListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlisteneraccess)
 - [AIGatewayMCPServerListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneraccess)
 - [AIGatewayMCPServerPassthroughListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlisteneraccess)
+
+#### AIGatewayMCPServerListenerOauthAcls
+
+
+AIGatewayMCPServerListenerOauthAcls represents a union type for acls.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[AIGatewayMCPServerListenerOauthAclsType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauthaclstype)_ | Type designates the type of configuration. |
+| `allow` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are permitted access. |
+| `deny` _[][AIGatewayACLRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayaclref)_ | List of consumer groups that are denied access. |
+| `allowWhen` _[]string_ | Allow the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `denyWhen` _[]string_ | Deny the request if it matches any of these CEL boolean expressions evaluated against the request context.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+
+_Appears in:_
+
+- [AIGatewayMCPServerListenerOauth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauth)
+
+#### AIGatewayMCPServerListenerOauthAclsType
+
+_Underlying type:_ `string`
+
+AIGatewayMCPServerListenerOauthAclsType represents the type of acls.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayMCPServerListenerOauthAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauthacls)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `allow` |  |
+| `deny` |  |
+| `allowWhen` |  |
+| `denyWhen` |  |
 
 #### AIGatewayMCPServerPassthroughListener
 
@@ -1944,12 +2945,15 @@ AIGatewayMCPServerPassthroughListener is a type alias.
 | --- | --- |
 | `access` _[AIGatewayMCPServerPassthroughListenerAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlisteneraccess)_ |  |
 | `config` _[AIGatewayMCPServerWithUpstreamConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfig)_ | Routing, logging, and server configuration for the MCP Server. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
+| `rateLimiting` _[AIGatewayMCPServerRateLimiting](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimiting)_ | Rate limits applied to requests to this MCP Server, matched by MCP method or tool name. Each AI Gateway node counts and enforces the limits independently.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `tools` _[][AIGatewayMCPPassthroughTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcppassthroughtool)_ | Per-tool access-control overrides for tools advertised by the remote MCP Server. Each entry is matched to a remote tool by `name`; only its access-control rules are applied. |
 
 _Appears in:_
@@ -2017,6 +3021,43 @@ _Appears in:_
 - [AIGatewayMCPServerListenerConsumer](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumer)
 - [AIGatewayMCPServerListenerOauth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauth)
 
+#### AIGatewayMCPServerRateLimit
+
+
+AIGatewayMCPServerRateLimit A rate limit on an MCP method or tool.
+Exactly one of `method` or `tool` must be set.
+
+
+
+| Field | Description |
+| --- | --- |
+| `limit` _int_ | The number of requests allowed per window. |
+| `method` _string_ | The MCP method this limit applies to. |
+| `tool` _string_ | The name of the tool this limit applies to. |
+| `windowSize` _int_ | The window size in seconds, one of a second, a minute, an hour, or a day. |
+
+_Appears in:_
+
+- [AIGatewayMCPServerRateLimiting](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimiting)
+
+#### AIGatewayMCPServerRateLimiting
+
+
+AIGatewayMCPServerRateLimiting Rate limits applied to requests to this MCP
+Server, matched by MCP method or tool name.
+Each AI Gateway node counts and enforces the limits independently.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `limits` _[][AIGatewayMCPServerRateLimit](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimit)_ | The rate limits to enforce. Each entry targets exactly one of `method` or `tool`. Two entries cannot share the same target and `window_size`. |
+
+_Appears in:_
+
+- [AIGatewayMCPServerConversionListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistener)
+- [AIGatewayMCPServerPassthroughListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlistener)
+
 #### AIGatewayMCPServerRef
 
 
@@ -2029,7 +3070,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -2173,12 +3214,14 @@ AIGatewayMCPServerUpstreamServer is a type alias.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayMCPServerUpstreamServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfig)_ | Routing, logging, and server configuration for the MCP Server. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `tools` _[][AIGatewayMCPUpstreamTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpupstreamtool)_ | List of tools exposed by this MCP Server. |
 
 _Appears in:_
@@ -2195,6 +3238,8 @@ configuration for the MCP Server.
 
 | Field | Description |
 | --- | --- |
+| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
+| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
 | `logging` _[AIGatewayMCPServerUpstreamServerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -2393,6 +3438,8 @@ configuration for the MCP Server.
 
 | Field | Description |
 | --- | --- |
+| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
+| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
 | `logging` _[AIGatewayMCPServerWithUpstreamConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `proxy` _[AIGatewayProxyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayproxyconfig)_ | HTTP/HTTPS proxy configuration for outbound requests to the upstream AI provider. |
@@ -2489,6 +3536,8 @@ and request body size limits for the MCP Server.
 
 | Field | Description |
 | --- | --- |
+| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
+| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
 | `logging` _[AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -2553,20 +3602,7 @@ _Appears in:_
 - [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
 - [AIGatewayMCPUpstreamTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpupstreamtool)
 
-#### AIGatewayMCPToolHeaders
 
-_Underlying type:_ `object`
-
-AIGatewayMCPToolHeaders The headers of the exported API.
-By default, Kong will extract the headers from API configuration.
-If the configured headers are not exactly matched, this field is required.
-
-
-
-
-_Appears in:_
-
-- [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
 
 #### AIGatewayMCPToolParameter
 
@@ -2593,62 +3629,11 @@ _Appears in:_
 
 - [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
 
-#### AIGatewayMCPToolQuery
-
-_Underlying type:_ `object`
-
-AIGatewayMCPToolQuery The query arguments of the exported API.
-If the generated query arguments are not exactly matched, this field is
-required.
 
 
 
 
-_Appears in:_
 
-- [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
-
-#### AIGatewayMCPToolRequestBody
-
-_Underlying type:_ `object`
-
-AIGatewayMCPToolRequestBody The API requestBody specification defined in
-OpenAPI JSON format.
-For example,
-'{"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"color":{"type":"array","items":{"type":"string"}}}}}}}'.
-See
-https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/
-for more details.
-Note that `$ref` is not supported.
-
-
-
-
-_Appears in:_
-
-- [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
-
-#### AIGatewayMCPToolResponses
-
-_Underlying type:_ `object`
-
-AIGatewayMCPToolResponses The API responses specification defined in OpenAPI
-JSON format.
-This specification will be used to validate the upstream response and map it
-back to the structuredOutput.
-For example,
-'{"200":{"content":{"application/json":{"schema":{"type":"object","properties":{"result":{"type":"string"}}}}}}}}'.
-See https://swagger.io/docs/specification/v3_0/describing-responses/ for more
-details.
-Only one non-error (status code < 400) response is supported.
-Note that `$ref` is not supported.
-
-
-
-
-_Appears in:_
-
-- [AIGatewayMCPConversionTool](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpconversiontool)
 
 #### AIGatewayMCPUpstreamTool
 
@@ -2704,8 +3689,9 @@ to/from an AI Gateway model using the files, batches, and skills APIs.
 | Field | Description |
 | --- | --- |
 | `access` _[AIGatewayModelAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccess)_ | Access control configuration for a model. |
-| `capabilities` _[]string_ | List of AI capabilities enabled for this API model. |
+| `capabilities` _[]string_ | The capabilities this model supports. Set to a specific capability to restrict the model to that capability only, or to `*` to allow all capabilities that the targets support at the gateway's min_runtime_version. A capability that needs a newer min_runtime_version is left out of `*`. |
 | `config` _[AIGatewayModelAPIConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelapiconfig)_ | Routing, logging, and load balancing configuration for the model. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | Names of the Datastores this model references. |
 | `displayName` _string_ | The display name for this model instance. |
 | `enabled` _string_ | Whether the model is enabled. |
 | `formats` _[][AIGatewayModelFormat](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelformat)_ | List of request/response formats supported by this model. |
@@ -2809,7 +3795,7 @@ AIGatewayModelAccess Access control configuration for a model.
 
 | Field | Description |
 | --- | --- |
-| `acls` _[AIGatewayModelAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessacls)_ | Access control rules. Configure exactly one of `allow` or `deny`. |
+| `acls` _[AIGatewayModelAccessAcls](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessacls)_ | Access control rules. Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when`. |
 | `authStrategies` _[][AIGatewayAuthStrategyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyref)_ | List of auth strategies for granting access to the model. At most 1 auth strategy of each auth strategy type can be referenced. |
 | `identityProviders` _[][AIGatewayIdentityProviderReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayidentityproviderreference)_ | List of identity providers for granting access to the model. At most 1 identity provider of each identity provider type can be referenced.<br /><br />Deprecated: use `auth_strategies` instead. The two are mutually exclusive. |
 
@@ -2831,6 +3817,8 @@ Only one of the fields should be set based on the Type.
 | `type` _[AIGatewayModelAccessAclsType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccessaclstype)_ | Type designates the type of configuration. |
 | `allow` _[AIGatewayAllowACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayallowacl)_ | Allow configuration. |
 | `deny` _[AIGatewayDenyACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydenyacl)_ | Deny configuration. |
+| `allowWhen` _[AIGatewayAllowWhenACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayallowwhenacl)_ | AllowWhen configuration. |
+| `denyWhen` _[AIGatewayDenyWhenACL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydenywhenacl)_ | DenyWhen configuration. |
 
 _Appears in:_
 
@@ -2855,6 +3843,8 @@ Allowed values:
 | --- | --- |
 | `allow` |  |
 | `deny` |  |
+| `allowWhen` |  |
+| `denyWhen` |  |
 
 
 
@@ -3208,7 +4198,7 @@ AIGatewayModelFormat Request and response format supported by this model.
 
 | Field | Description |
 | --- | --- |
-| `type` _string_ | The format type.<br /><br />**`passthrough` requires a minimum runtime version of `2.2`**.<br /><br />**`typesafe` requires a minimum runtime version of `2.2`**. |
+| `type` _string_ | The request and response format this model supports. Set to a specific format to restrict the model to that format only, or to `*` to allow all formats that the targets support at the gateway's min_runtime_version. A format that needs a newer min_runtime_version is left out of `*`. The `*` format never includes passthrough.<br /><br />**`passthrough` requires a minimum runtime version of `2.2`**.<br /><br />**`typesafe` requires a minimum runtime version of `2.2`**. |
 
 _Appears in:_
 
@@ -3226,8 +4216,9 @@ to/from an AI Gateway model using generative APIs.
 | Field | Description |
 | --- | --- |
 | `access` _[AIGatewayModelAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccess)_ | Access control configuration for a model. |
-| `capabilities` _[]string_ | List of AI capabilities enabled for this model. |
+| `capabilities` _[]string_ | The capabilities this model supports. Set to a specific capability to restrict the model to that capability only, or to `*` to allow all capabilities that the targets support at the gateway's min_runtime_version. A capability that needs a newer min_runtime_version is left out of `*`. |
 | `config` _[AIGatewayModelModelConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodelconfig)_ | Routing, logging, and load balancing configuration for the model. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | Names of the Datastores this model references. |
 | `displayName` _string_ | The display name for this model instance. |
 | `enabled` _string_ | Whether the model is enabled. |
 | `formats` _[][AIGatewayModelFormat](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelformat)_ | List of request/response formats supported by this model. |
@@ -3348,10 +4339,12 @@ AIGatewayModelProviderAnthropic Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropicconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3382,10 +4375,12 @@ AIGatewayModelProviderAzure Config for Azure model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazureconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3466,6 +4461,42 @@ _Appears in:_
 
 - [AIGatewayModelProviderAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazureconfig)
 
+#### AIGatewayModelProviderBaseten
+
+
+AIGatewayModelProviderBaseten Configuration for an upstream model provider.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[AIGatewayModelProviderBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbasetenconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+| `displayName` _string_ | The display name for this model provider instance. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
+
+_Appears in:_
+
+- [AIGatewayModelProviderConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfig)
+
+#### AIGatewayModelProviderBasetenConfig
+
+
+AIGatewayModelProviderBasetenConfig Configuration for the model provider.
+
+
+
+| Field | Description |
+| --- | --- |
+| `auth` _[AIGatewayModelProviderConfigAuthBasic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthbasic)_ | Basic auth config for an upstream model provider. |
+
+_Appears in:_
+
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
+
 #### AIGatewayModelProviderBedrock
 
 
@@ -3476,10 +4507,12 @@ AIGatewayModelProviderBedrock Config for AWS model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderBedrockConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrockconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3548,10 +4581,12 @@ AIGatewayModelProviderCerebras Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebrasconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3582,10 +4617,12 @@ AIGatewayModelProviderCohere Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohereconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3619,6 +4656,7 @@ Only one of the fields should be set based on the Type.
 | `type` _[AIGatewayModelProviderConfigType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigtype)_ | Type designates the type of configuration. |
 | `anthropic` _[AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)_ | Anthropic configuration. |
 | `azure` _[AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)_ | Azure configuration. |
+| `baseten` _[AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)_ | Baseten configuration. |
 | `bedrock` _[AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)_ | Bedrock configuration. |
 | `cerebras` _[AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)_ | Cerebras configuration. |
 | `cohere` _[AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)_ | Cohere configuration. |
@@ -3698,6 +4736,7 @@ _Appears in:_
 
 - [AIGatewayModelProviderAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropicconfig)
 - [AIGatewayModelProviderAzureConfigAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazureconfigauth)
+- [AIGatewayModelProviderBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbasetenconfig)
 - [AIGatewayModelProviderBedrockConfigAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrockconfigauth)
 - [AIGatewayModelProviderCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebrasconfig)
 - [AIGatewayModelProviderCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohereconfig)
@@ -3857,6 +4896,7 @@ Allowed values:
 | --- | --- |
 | `anthropic` |  |
 | `azure` |  |
+| `baseten` |  |
 | `bedrock` |  |
 | `cerebras` |  |
 | `cohere` |  |
@@ -3886,10 +4926,12 @@ AIGatewayModelProviderDashscope Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderDashscopeConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdashscopeconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3921,10 +4963,12 @@ provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderDatabricksConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdatabricksconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3955,10 +4999,12 @@ AIGatewayModelProviderDeepseek Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderDeepseekConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdeepseekconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -3989,10 +5035,12 @@ AIGatewayModelProviderGemini Config for GCP model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderGeminiConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidergeminiconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4062,10 +5110,12 @@ provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderHuggingfaceConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderhuggingfaceconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4096,10 +5146,12 @@ AIGatewayModelProviderKimi Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderKimiConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderkimiconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4130,10 +5182,12 @@ AIGatewayModelProviderLlama2 Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderLlama2Config](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderllama2config)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4164,10 +5218,12 @@ AIGatewayModelProviderMistral Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderMistralConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidermistralconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4198,10 +5254,12 @@ AIGatewayModelProviderOllama Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderOllamaConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderollamaconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4232,10 +5290,12 @@ AIGatewayModelProviderOpenai Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderOpenaiConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideropenaiconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4268,7 +5328,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -4288,6 +5348,8 @@ _Appears in:_
 
 - [AIGatewayModelBalancerSemanticConfigEmbeddings](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelbalancersemanticconfigembeddings)
 
+
+
 #### AIGatewayModelProviderSagemaker
 
 
@@ -4298,10 +5360,12 @@ AIGatewayModelProviderSagemaker Config for Sagemaker model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderSagemakerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidersagemakerconfig)_ |  |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4403,10 +5467,12 @@ AIGatewayModelProviderTypesafe Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderTypesafeConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidertypesafeconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4437,10 +5503,12 @@ AIGatewayModelProviderVercel Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderVercelConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervercelconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4471,10 +5539,12 @@ AIGatewayModelProviderVllm Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderVllmConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervllmconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4505,10 +5575,12 @@ AIGatewayModelProviderXai Configuration for an upstream model provider.
 | Field | Description |
 | --- | --- |
 | `config` _[AIGatewayModelProviderXaiConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderxaiconfig)_ | Configuration for the model provider. |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
+| `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -4955,8 +6027,10 @@ AIGatewayPolicyAPISpec defines the API spec fields for AIGatewayPolicy.
 | --- | --- |
 | `condition` _*string_ | An expression used for conditional control over plugin execution. If the expression evaluates to `true` during the request flow, the plugin is executed; otherwise, it is skipped.<br /><br />**Requires a minimum runtime version of `2.1`**. |
 | `config` _[AIGatewayPolicyConfigDataSource](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyconfigdatasource)_ | Configuration for the policy. This is equivalent to the Kong 3 plugin configuration. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/). |
+| `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | Names of the Datastores this policy references. |
 | `displayName` _string_ | The display name for this policy instance. |
 | `enabled` _string_ | Whether the policy is enabled. |
+| `expressions` _k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON_ | Policy config expressions<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `global` _string_ | Whether the policy is globally applied to all resources. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
@@ -4998,7 +6072,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -5196,6 +6270,7 @@ _Appears in:_
 - [AIGatewayMCPServerServerConfigBaseSession](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverserverconfigbasesession)
 - [AIGatewayMCPServerUpstreamServerServerConfigSession](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverserverconfigsession)
 - [AIGatewayMCPServerWithUpstreamConfigServerSession](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfigserversession)
+- [AIGatewayTokenVaultCache](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcache)
 
 #### AIGatewayRedisCloudConfigurationCloudAuthentication
 
@@ -5437,11 +6512,13 @@ _Appears in:_
 - [AIGatewayConsumerSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumerspec)
 - [AIGatewayCustomPolicySpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycustompolicyspec)
 - [AIGatewayDataPlaneCertificateSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydataplanecertificatespec)
+- [AIGatewayDatastoreSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorespec)
 - [AIGatewayMCPServerSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverspec)
 - [AIGatewayModelProviderSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderspec)
 - [AIGatewayModelSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelspec)
 - [AIGatewayPolicySpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyspec)
 - [AIGatewaySNISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysnispec)
+- [AIGatewayVaultSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultspec)
 
 #### AIGatewayRefGroup
 
@@ -5601,6 +6678,7 @@ _Appears in:_
 
 - [AIGatewayTargetAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetanthropicconfig)
 - [AIGatewayTargetAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetazureconfig)
+- [AIGatewayTargetBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbasetenconfig)
 - [AIGatewayTargetBedrockConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbedrockconfig)
 - [AIGatewayTargetCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcerebrasconfig)
 - [AIGatewayTargetCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcohereconfig)
@@ -5698,6 +6776,43 @@ _Appears in:_
 
 - [AIGatewayTargetConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetconfig)
 
+#### AIGatewayTargetBasetenConfig
+
+
+AIGatewayTargetBasetenConfig Baseten-specific configuration for a model.
+Requests are sent to Baseten Model APIs at
+`https://inference.baseten.co/v1` by default, and the target `name` is the
+Baseten model
+slug (for example, `deepseek-ai/DeepSeek-V4-Pro-0813`).
+To route to a dedicated Baseten
+deployment, set `upstream_url` to the deployment's full OpenAI-compatible
+endpoint (for
+example,
+`https://model-{model_id}.api.baseten.co/environments/{environment}/sync/v1/chat/completions`)
+or use passthrough format.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cacheReadCost` _float64_ | Cost per 1M cache-read (cached) prompt tokens for billing and cost tracking. |
+| `cacheWriteCost` _float64_ | Cost per 1M cache-write prompt tokens for billing and cost tracking. |
+| `cacheWriteCostList` _[][AIGatewayCacheWriteCost](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycachewritecost)_ | Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs. |
+| `contextWindowFactor` _[][AIGatewayContextWindowFactor](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycontextwindowfactor)_ | Above an input-token threshold, scale input and output pricing by the corresponding factor. |
+| `embeddingsDimensions` _int_ | The number of dimensions for embedding outputs. |
+| `inputCost` _float64_ | Cost per 1M input tokens for billing and cost tracking. |
+| `maxTokens` _int_ | The maximum number of tokens to generate in the response. |
+| `outputCost` _float64_ | Cost per 1M output tokens for billing and cost tracking. |
+| `serviceTierFactor` _[][AIGatewayServiceTierFactor](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayservicetierfactor)_ | Multiplier applied to the whole request for a service tier. The default factor is 1.0 when no tier matches. |
+| `temperature` _float64_ | Controls randomness in the model output. Higher values produce more varied responses. |
+| `topK` _int_ | Limits the number of highest-probability tokens considered during generation. |
+| `topP` _float64_ | Nucleus sampling probability mass. Tokens with cumulative probability up to top_p are considered. |
+| `upstreamURL` _string_ | The upstream URL for the model endpoint. |
+
+_Appears in:_
+
+- [AIGatewayTargetConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetconfig)
+
 #### AIGatewayTargetBedrockConfig
 
 
@@ -5714,6 +6829,7 @@ AIGatewayTargetBedrockConfig AWS Bedrock-specific configuration for a model.
 | `contextWindowFactor` _[][AIGatewayContextWindowFactor](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycontextwindowfactor)_ | Above an input-token threshold, scale input and output pricing by the corresponding factor. |
 | `embeddingsDimensions` _int_ | The number of dimensions for embedding outputs. |
 | `embeddingsNormalize` _string_ | Whether to normalize embedding vectors in the response. |
+| `endpointType` _string_ | The AWS Bedrock inference endpoint that requests to this target are sent to. `runtime` sends requests to the Bedrock Runtime endpoint (`bedrock-runtime.{region}.amazonaws.com`). `mantle` sends requests to the Bedrock Mantle endpoint (`bedrock-mantle.{region}.api.aws`), which accepts OpenAI and Anthropic request formats natively.<br /><br />A target with `endpoint_type` set to `mantle` is rejected if its model includes a format with `type` set to `bedrock`, because the Mantle endpoint does not support the Bedrock Converse or InvokeModel APIs.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `inputCost` _float64_ | Cost per 1M input tokens for billing and cost tracking. |
 | `maxTokens` _int_ | The maximum number of tokens to generate in the response. |
 | `outputCost` _float64_ | Cost per 1M output tokens for billing and cost tracking. |
@@ -5725,6 +6841,7 @@ AIGatewayTargetBedrockConfig AWS Bedrock-specific configuration for a model.
 | `topP` _float64_ | Nucleus sampling probability mass. Tokens with cumulative probability up to top_p are considered. |
 | `upstreamURL` _string_ | The upstream URL for the model endpoint. |
 | `videoOutputS3URI` _string_ | S3 URI for storing video generation outputs. |
+| `vpcEndpoint` _string_ | Hostname of an AWS PrivateLink VPC endpoint to use instead of the public Bedrock endpoint. Ignored if `upstream_url` is set.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
 _Appears in:_
 
@@ -5800,6 +6917,7 @@ Only one of the fields should be set based on the Type.
 | `type` _[AIGatewayTargetConfigType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetconfigtype)_ | Type designates the type of configuration. |
 | `anthropic` _[AIGatewayTargetAnthropicConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetanthropicconfig)_ | Anthropic configuration. |
 | `azure` _[AIGatewayTargetAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetazureconfig)_ | Azure configuration. |
+| `baseten` _[AIGatewayTargetBasetenConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbasetenconfig)_ | Baseten configuration. |
 | `bedrock` _[AIGatewayTargetBedrockConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetbedrockconfig)_ | Bedrock configuration. |
 | `cerebras` _[AIGatewayTargetCerebrasConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcerebrasconfig)_ | Cerebras configuration. |
 | `cohere` _[AIGatewayTargetCohereConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetcohereconfig)_ | Cohere configuration. |
@@ -5842,6 +6960,7 @@ Allowed values:
 | --- | --- |
 | `anthropic` |  |
 | `azure` |  |
+| `baseten` |  |
 | `bedrock` |  |
 | `cerebras` |  |
 | `cohere` |  |
@@ -6307,6 +7426,155 @@ _Appears in:_
 
 - [AIGatewayTargetConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetconfig)
 
+#### AIGatewayTokenVault
+
+
+AIGatewayTokenVault Resolves an upstream credential per request via Kong's
+Token Vault instead of sending a static
+credential.
+The directory credentials live in, and the keys that encrypt them, come from
+the
+`token-vault` Datastore this entity references, and are returned read-only in
+`storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the
+credential can be
+resolved.
+Until enrollment completes, an MCP Server serves virtual `authenticate` and
+`check_authentication_status` tools that guide the caller through the
+enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cache` _[AIGatewayTokenVaultCache](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcache)_ | Optional best-effort cache for exchanged credentials, shared across the cluster. Losing it only costs a re-exchange. Credentials are encrypted with the keys held by the Token Vault Datastore before being cached. |
+| `credential` _[AIGatewayTokenVaultCredential](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcredential)_ | Where the caller's subject token is read from, and where the credential the Token Vault returns is placed on the upstream request.<br /><br />Both placements default to `Authorization: Bearer <credential>` in a header, though an `outbound` placement left unset honours whatever the provider advertises instead. Set them for providers that take the credential elsewhere, such as an `x-api-key` header carrying the raw credential. |
+| `provider` _string_ | Name of the upstream credential provider registered in the Token Vault directory. |
+| `subjectTokenType` _string_ | The kind of bearer token the caller presents, which the Token Vault exchanges for the upstream credential. Omit it unless the request shape makes the token type ambiguous: it is otherwise resolved from the request, and failing that from the token's shape (a JWS is an `access_token`, anything else an `api_key`). |
+
+_Appears in:_
+
+- [AIGatewayMCPServerConversionListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistener)
+- [AIGatewayMCPServerConversionOnly](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversiononly)
+- [AIGatewayMCPServerListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistener)
+- [AIGatewayMCPServerPassthroughListener](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverpassthroughlistener)
+- [AIGatewayMCPServerUpstreamServer](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserver)
+- [AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)
+- [AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
+- [AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)
+- [AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)
+- [AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)
+- [AIGatewayModelProviderDashscope](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdashscope)
+- [AIGatewayModelProviderDatabricks](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdatabricks)
+- [AIGatewayModelProviderDeepseek](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderdeepseek)
+- [AIGatewayModelProviderGemini](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidergemini)
+- [AIGatewayModelProviderHuggingface](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderhuggingface)
+- [AIGatewayModelProviderKimi](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderkimi)
+- [AIGatewayModelProviderLlama2](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderllama2)
+- [AIGatewayModelProviderMistral](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidermistral)
+- [AIGatewayModelProviderOllama](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderollama)
+- [AIGatewayModelProviderOpenai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideropenai)
+- [AIGatewayModelProviderSagemaker](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidersagemaker)
+- [AIGatewayModelProviderTypesafe](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidertypesafe)
+- [AIGatewayModelProviderVercel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervercel)
+- [AIGatewayModelProviderVllm](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidervllm)
+- [AIGatewayModelProviderXai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderxai)
+
+#### AIGatewayTokenVaultCache
+
+
+AIGatewayTokenVaultCache Optional best-effort cache for exchanged
+credentials, shared across the cluster.
+Losing it
+only costs a re-exchange.
+Credentials are encrypted with the keys held by the Token Vault
+Datastore before being cached.
+
+
+
+| Field | Description |
+| --- | --- |
+| `redis` _[AIGatewayRedisCloudConfiguration](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfiguration)_ | Config for connecting to a Cloud Provider's Redis instance. |
+
+_Appears in:_
+
+- [AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)
+
+#### AIGatewayTokenVaultCredential
+
+
+AIGatewayTokenVaultCredential Where the caller's subject token is read from,
+and where the credential the Token Vault returns
+is placed on the upstream request.<br /><br />Both placements default to `Authorization: Bearer <credential>` in a header,
+though an
+`outbound` placement left unset honours whatever the provider advertises
+instead.
+Set them for
+providers that take the credential elsewhere, such as an `x-api-key` header
+carrying the raw
+credential.
+
+
+
+| Field | Description |
+| --- | --- |
+| `inbound` _[AIGatewayTokenVaultCredentialPlacement](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcredentialplacement)_ |  |
+| `outbound` _[AIGatewayTokenVaultCredentialPlacement](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcredentialplacement)_ |  |
+
+_Appears in:_
+
+- [AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)
+
+#### AIGatewayTokenVaultCredentialPlacement
+
+
+AIGatewayTokenVaultCredentialPlacement is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `location` _string_ | Whether the credential travels in a header, the request body, or the query string. Defaults to `header`. |
+| `name` _string_ | Name of the header, query parameter, or body field carrying the credential. Defaults to `Authorization` for a header, `access_token` otherwise. |
+| `prefix` _string_ | String prepended verbatim to the credential value. Defaults to `Bearer ` (with its trailing space) for a header, and to no prefix otherwise. Set it to an empty string when the provider expects the raw credential. |
+
+_Appears in:_
+
+- [AIGatewayTokenVaultCredential](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultcredential)
+
+#### AIGatewayTokenVaultEnrollmentProtection
+
+
+AIGatewayTokenVaultEnrollmentProtection Enables enrollment protection for the
+Token Vault datastore linked to this auth strategy.
+Users of the linked Token Vault will need to authenticate using this OIDC
+auth strategy
+before completing enrollment with upstream providers.
+Enrollment links always store upstream
+credentials in the Token Vault belonging to the principal who requested the
+link.
+Enrollment
+protection ensures that other principals cannot use an enrollment link to
+unknowingly
+authorize the storage of their upstream credentials in another principal's
+Token Vault.<br /><br />Note that the auth strategy used to protect upstream resources such as MCP
+servers need not
+be the same auth strategy used for enrollment protection.
+Omit `token_vault` entirely to
+enforce no such enrollment protection.<br /><br />Requires a `token-vault` Datastore reference in `datastores`; enabling
+enrollment protection
+without one is rejected.<br /><br />**Requires a minimum runtime version of `2.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `enableCredentialManager` _string_ | Enables the self-service credential manager UI through which end users authorize upstream providers for Token Vault datastore linked to this auth strategy. This OIDC auth strategy is used to authenticate access to the self-service UI, but need not necessarily be the same auth strategy that is used to authenticate access to upstream Token Vault providers.<br /><br />Requires a `token-vault` Datastore reference in `datastores`; enabling the credential manager without one is rejected. The credential manager cannot be used without enrollment protection. |
+
+_Appears in:_
+
+- [AIGatewayAuthStrategyOpenIDConnect](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnect)
+
 #### AIGatewayUpstreamAuthAWS
 
 
@@ -6386,6 +7654,120 @@ Allowed values:
 | --- | --- |
 | `aws` |  |
 
+#### AIGatewayVaultAPISpec
+
+
+AIGatewayVaultAPISpec defines the API spec fields for AIGatewayVault.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayVaultSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultspec)
+
+#### AIGatewayVaultConfig
+
+
+AIGatewayVaultConfig represents a union type for AIGatewayVaultConfig.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[AIGatewayVaultConfigType](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfigtype)_ | Type designates the type of configuration. |
+| `aws` _[AwsSecretsManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervault)_ | AwsSecretsManager configuration. |
+| `azure` _[AzureKeyVault](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvault)_ | AzureKey configuration. |
+| `conjur` _[ConjurVault](#aiconfiguration-konghq-com-v1alpha1-types-conjurvault)_ | Conjur configuration. |
+| `env` _[EnvironmentVariableVault](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevault)_ | EnvironmentVariable configuration. |
+| `gcp` _[GoogleSecretManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervault)_ | GoogleSecretManager configuration. |
+| `hcv` _[HashiCorpVault](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvault)_ | HashiCorp configuration. |
+| `konnect` _[KonnectConfigStoreVault](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevault)_ | KonnectConfigStore configuration. |
+
+_Appears in:_
+
+- [AIGatewayVaultAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultapispec)
+
+#### AIGatewayVaultConfigType
+
+_Underlying type:_ `string`
+
+AIGatewayVaultConfigType represents the type of AIGatewayVaultConfig.
+
+
+
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `aws` |  |
+| `azure` |  |
+| `conjur` |  |
+| `env` |  |
+| `gcp` |  |
+| `hcv` |  |
+| `konnect` |  |
+
+#### AIGatewayVaultName
+
+_Underlying type:_ `string`
+
+AIGatewayVaultName An immutable user-defined identifier for this resource.
+
+
+
+
+_Appears in:_
+
+- [AwsSecretsManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervault)
+- [AzureKeyVault](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvault)
+- [ConjurVault](#aiconfiguration-konghq-com-v1alpha1-types-conjurvault)
+- [EnvironmentVariableVault](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevault)
+- [GoogleSecretManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervault)
+- [HashiCorpVault](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvault)
+- [KonnectConfigStoreVault](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevault)
+
+
+
+#### AIGatewayVaultSpec
+
+
+AIGatewayVaultSpec defines the desired state of AIGatewayVault.
+
+
+
+| Field | Description |
+| --- | --- |
+| `aiGatewayRef` _[AIGatewayRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayref)_ | AIGatewayRef is the reference to the parent AI Gateway (control plane) object. |
+| `apiSpec` _[AIGatewayVaultAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [AIGatewayVault](#aiconfiguration-konghq-com-v1alpha1-aigatewayvault)
+
+#### AIGatewayVaultStatus
+
+
+AIGatewayVaultStatus defines the observed state of AIGatewayVault.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#aiconfiguration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [AIGatewayVault](#aiconfiguration-konghq-com-v1alpha1-aigatewayvault)
+
 
 
 #### AuthGCPWorkloadIdentityFederationAwsIam
@@ -6425,6 +7807,91 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `awsIam` |  |
+
+#### AwsSecretsManagerVault
+
+
+AwsSecretsManagerVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[AwsSecretsManagerVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### AwsSecretsManagerVaultConfig
+
+
+AwsSecretsManagerVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `assumeRoleArn` _string_ | The ARN of the role to assume when retrieving secrets from AWS Secrets Manager. |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `endpointURL` _string_ | The endpoint URL of the AWS Secrets Manager service. If not specified, the default is https://secretsmanager.{region}.amazonaws.com. You can override this by specifying a complete URL including the http/https scheme. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `region` _string_ | The AWS region where your vault is located. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `roleSessionName` _string_ | The session name used when assuming a role. |
+| `stsEndpointURL` _string_ | A custom STS endpoint URL used for IAM role assumption. Overrides the default https://sts.amazonaws.com or regional variant https://sts.<region>.amazonaws.com. Include the full http/https scheme. Only specify this if using a private VPC endpoint for STS. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [AwsSecretsManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervault)
+
+#### AzureKeyVault
+
+
+AzureKeyVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[AzureKeyVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### AzureKeyVaultConfig
+
+
+AzureKeyVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `clientID` _string_ | The client ID for your registered application. You can find this in the Azure Dashboard under App Registrations. |
+| `credentialsPrefix` _string_ | The prefix for the credentials stored in the Azure Key Vault. |
+| `location` _string_ | Each Azure geography includes one or more regions that meet specific data residency and compliance requirements. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `tenantID` _string_ | The DirectoryId and TenantId are the same: both refer to the GUID representing your Azure Active Directory tenant. Microsoft documentation and products may use either term depending on context. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+| `type` _string_ |  |
+| `vaultURI` _string_ | The URI from which the vault is reachable. This value can be found in your Azure Key Vault Dashboard under the Vault URI entry. |
+
+_Appears in:_
+
+- [AzureKeyVault](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvault)
 
 #### ConfigMapDataSource
 
@@ -6488,6 +7955,47 @@ Allowed values:
 
 
 
+#### ConjurVault
+
+
+ConjurVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[ConjurVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-conjurvaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### ConjurVaultConfig
+
+
+ConjurVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `account` _string_ | The CyberArk Secrets Manager organization account name. |
+| `apiKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The API key of the workload identity. |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `endpointURL` _string_ | The CyberArk Secrets Manager backend URL to connect with. Accepts http or https protocols. |
+| `login` _string_ | The login name of the workload identity. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [ConjurVault](#aiconfiguration-konghq-com-v1alpha1-types-conjurvault)
+
 #### CreateAIGatewayCustomPolicyInstalledRequest
 
 
@@ -6529,6 +8037,133 @@ _Appears in:_
 
 
 
+#### DatastoreRedisCloudAuthentication
+
+
+DatastoreRedisCloudAuthentication Cloud-managed Redis authentication.
+Only the fields relevant to the chosen `auth_provider` need to be set.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authProvider` _[DatastoreRedisCloudAuthenticationAuthProvider](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovider)_ |  |
+| `awsAccessKeyID` _*string_ |  |
+| `awsAssumeRoleArn` _*string_ |  |
+| `awsCacheName` _*string_ |  |
+| `awsIsServerless` _*string_ |  |
+| `awsRegion` _*string_ |  |
+| `awsRoleSessionName` _*string_ |  |
+| `awsSecretAccessKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `azureClientID` _*string_ |  |
+| `azureClientSecret` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `azureTenantID` _*string_ |  |
+| `gcpServiceAccountJSON` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+
+_Appears in:_
+
+- [RedisCEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastoreconfig)
+- [RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)
+
+#### DatastoreRedisCloudAuthenticationAuthProvider
+
+
+DatastoreRedisCloudAuthenticationAuthProvider represents a union type for auth_provider.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[DatastoreRedisCloudAuthenticationAuthProviderType](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovidertype)_ | Type designates the type of configuration. |
+| `variant1` _[DatastoreRedisCloudAuthenticationAuthProviderVariant1](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovidervariant1)_ | Variant1 configuration. |
+| `variant2` _[DatastoreRedisCloudAuthenticationAuthProviderVariant2](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovidervariant2)_ | Variant2 configuration. |
+
+_Appears in:_
+
+- [DatastoreRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthentication)
+
+#### DatastoreRedisCloudAuthenticationAuthProviderType
+
+_Underlying type:_ `string`
+
+DatastoreRedisCloudAuthenticationAuthProviderType represents the type of auth_provider.
+
+
+
+
+_Appears in:_
+
+- [DatastoreRedisCloudAuthenticationAuthProvider](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovider)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `variant1` |  |
+| `variant2` |  |
+
+#### DatastoreRedisCloudAuthenticationAuthProviderVariant1
+
+_Underlying type:_ `string`
+
+DatastoreRedisCloudAuthenticationAuthProviderVariant1 is a type alias.
+
+
+
+
+_Appears in:_
+
+- [DatastoreRedisCloudAuthenticationAuthProvider](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovider)
+
+#### DatastoreRedisCloudAuthenticationAuthProviderVariant2
+
+_Underlying type:_ `string`
+
+DatastoreRedisCloudAuthenticationAuthProviderVariant2 is a type alias.
+
+
+
+
+_Appears in:_
+
+- [DatastoreRedisCloudAuthenticationAuthProvider](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthenticationauthprovider)
+
+#### EnvironmentVariableVault
+
+
+EnvironmentVariableVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[EnvironmentVariableVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### EnvironmentVariableVaultConfig
+
+
+EnvironmentVariableVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `prefix` _string_ | The prefix for the environment variable that the value will be stored in. |
+
+_Appears in:_
+
+- [EnvironmentVariableVault](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevault)
+
 #### GCPModelConfig
 
 
@@ -6546,6 +8181,436 @@ _Appears in:_
 
 - [AIGatewayGeminiEmbeddingsModelConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaygeminiembeddingsmodelconfig)
 - [AIGatewayTargetGeminiConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytargetgeminiconfig)
+
+#### GoogleSecretManagerVault
+
+
+GoogleSecretManagerVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[GoogleSecretManagerVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### GoogleSecretManagerVaultConfig
+
+
+GoogleSecretManagerVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `projectID` _string_ | The project ID from your Google API Console. You can find it by visiting your Google API Console and selecting “Manage all projects” in the projects list. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [GoogleSecretManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervault)
+
+#### HashiCorpVault
+
+
+HashiCorpVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)_ | Configuration for an AI Gateway Vault. |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### HashiCorpVaultAppRoleConfig
+
+
+HashiCorpVaultAppRoleConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `path` _string_ | Path for enabling the AppRole auth method. Single leading/trailing slashes are trimmed. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `responseWrapping` _string_ | Whether the secret ID is a response-wrapping token. When true, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `roleID` _string_ | Specifies the AppRole role ID in HashiCorp Vault. Either `role_id` or `secret_id_file` must be set. |
+| `secretID` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Defines the AppRole’s secret ID in HashiCorp Vault. |
+| `secretIDFile` _string_ | Path to a file containing the AppRole secret ID. Either `role_id` or `secret_id_file` must be set. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultAwsEC2Config
+
+
+HashiCorpVaultAwsEC2Config is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `loginPath` _string_ | The login path for AWS auth in HashiCorp Vault. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `nonce` _string_ | The nonce for AWS EC2 auth. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The role to use for AWS EC2 auth. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultAwsIAMConfig
+
+
+HashiCorpVaultAwsIAMConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `accessKeyID` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The AWS access key ID for IAM auth. If not provided, the default credentials provider chain is used. If set, `secret_access_key` must also be set. |
+| `assumeRoleArn` _string_ | The ARN of the role to assume for AWS IAM authentication. If set, `role_session_name` must also be set. |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `loginPath` _string_ | The login path for AWS auth in HashiCorp Vault. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `region` _string_ | The AWS region for auth. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The role to use for AWS IAM auth. |
+| `roleSessionName` _string_ | The session name to use when assuming a role for AWS IAM authentication. If set, `assume_role_arn` must also be set. |
+| `secretAccessKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The AWS secret access key for IAM auth. If not provided, the default credentials provider chain is used. If set, `access_key_id` must also be set. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `stsEndpointURL` _string_ | The AWS STS endpoint URL used by Kong Gateway when signing the GetCallerIdentity request for AWS IAM authentication. If not provided, defaults to the standard STS endpoint for the specified region. This setting only affects the STS endpoint that Kong Gateway itself contacts - it does not influence which STS endpoint HashiCorp Vault uses on its side. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultAzureConfig
+
+
+HashiCorpVaultAzureConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `loginPath` _string_ | The login path for Azure auth in HashiCorp Vault |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The role to use for Azure auth. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultCertConfig
+
+
+HashiCorpVaultCertConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `cert` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The client certificate. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `key` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The key for the client certificate. |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `roleName` _string_ | The trusted certificate role name. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultConfig
+
+
+HashiCorpVaultConfig represents a union type for HashiCorpVaultConfig.
+Only one of the fields should be set based on the AuthMethod.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authMethod` _[HashiCorpVaultConfigType](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfigtype)_ | AuthMethod designates the type of configuration. |
+| `approle` _[HashiCorpVaultAppRoleConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultapproleconfig)_ | AppRole configuration. |
+| `awsEc2` _[HashiCorpVaultAwsEC2Config](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultawsec2config)_ | AwsEC2 configuration. |
+| `awsIam` _[HashiCorpVaultAwsIAMConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultawsiamconfig)_ | AwsIAM configuration. |
+| `azure` _[HashiCorpVaultAzureConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultazureconfig)_ | Azure configuration. |
+| `cert` _[HashiCorpVaultCertConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultcertconfig)_ | Cert configuration. |
+| `gcpGce` _[HashiCorpVaultGcpGCEConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultgcpgceconfig)_ | GcpGCE configuration. |
+| `gcpIam` _[HashiCorpVaultGcpIAMConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultgcpiamconfig)_ | GcpIAM configuration. |
+| `jwt` _[HashiCorpVaultOauth2Config](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultoauth2config)_ | Oauth2 configuration. |
+| `kubernetes` _[HashiCorpVaultKubernetesConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultkubernetesconfig)_ | Kubernetes configuration. |
+| `token` _[HashiCorpVaultTokenConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaulttokenconfig)_ | Token configuration. |
+
+_Appears in:_
+
+- [HashiCorpVault](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvault)
+
+#### HashiCorpVaultConfigType
+
+_Underlying type:_ `string`
+
+HashiCorpVaultConfigType represents the type of HashiCorpVaultConfig.
+
+
+
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `approle` |  |
+| `awsEc2` |  |
+| `awsIam` |  |
+| `azure` |  |
+| `cert` |  |
+| `gcpGce` |  |
+| `gcpIam` |  |
+| `jwt` |  |
+| `kubernetes` |  |
+| `token` |  |
+
+#### HashiCorpVaultGcpGCEConfig
+
+
+HashiCorpVaultGcpGCEConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `loginPath` _string_ | The login path for GCP auth in HashiCorp Vault. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The role to use for GCP GCE auth. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultGcpIAMConfig
+
+
+HashiCorpVaultGcpIAMConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `jwtExp` _int_ | The JWT expiration time in seconds for GCP auth (0-900) |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The role to use for GCP IAM auth. |
+| `serviceAccount` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The GCP service account for GCE auth. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultKubernetesConfig
+
+
+HashiCorpVaultKubernetesConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiTokenFile` _string_ | Path to the Kubernetes service account token file. |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `path` _string_ | Path for enabling the Kubernetes auth method. Single leading/trailing slashes are trimmed. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | Role assigned to the Kubernetes service account. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultOauth2Config
+
+
+HashiCorpVaultOauth2Config is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `audiences` _string_ | Comma-separated list of OAuth2 audiences. |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `clientID` _string_ | The OAuth2 client ID. |
+| `clientSecret` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The OAuth2 client secret. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `role` _string_ | The configured role name in HashiCorp Vault for JWT auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `tokenEndpoint` _string_ | The OAuth2 token endpoint for Hashicorp Vault's OAuth2 auth method. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### HashiCorpVaultTokenConfig
+
+
+HashiCorpVaultTokenConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `base64Decode` _string_ | Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets. |
+| `host` _string_ | The hostname of your HashiCorp vault. |
+| `kv` _string_ | The secrets engine version. |
+| `mount` _string_ | The mount point. |
+| `namespace` _string_ | Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully. |
+| `negTtl` _int_ | Time-to-live (in seconds) for caching failed secret lookups. A value of 0 disables negative caching. Kong will retry fetching the secret after neg_ttl expires. |
+| `port` _int_ | The port number of your HashiCorp vault. |
+| `protocol` _string_ | The protocol to connect with. |
+| `resurrectTtl` _int_ | Time (in seconds) that secrets remain in use after expiration (config.ttl ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for resurrect_ttl seconds before giving up. The default is ~3 years to support uninterrupted service during outages. |
+| `sslVerify` _string_ | Whether to verify the TLS certificate of the vault when connecting. |
+| `token` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The token string to be used for authentication. |
+| `ttl` _int_ | Time-to-live (in seconds) for a cached secret. A value of 0 disables rotation. For non-zero values, use a minimum of 60 seconds. |
+
+_Appears in:_
+
+- [HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)
+
+#### KonnectConfigStoreVault
+
+
+KonnectConfigStoreVault is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[KonnectConfigStoreVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevaultconfig)_ |  |
+| `description` _string_ | The description of the Vault. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
+
+_Appears in:_
+
+- [AIGatewayVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultconfig)
+
+#### KonnectConfigStoreVaultConfig
+
+
+KonnectConfigStoreVaultConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `configStoreID` _string_ | The ID of the Konnect Config Store that contains the secrets. |
+
+_Appears in:_
+
+- [KonnectConfigStoreVault](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevault)
 
 #### KonnectEntityRef
 
@@ -6569,11 +8634,13 @@ _Appears in:_
 - [AIGatewayConsumerStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumerstatus)
 - [AIGatewayCustomPolicyStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycustompolicystatus)
 - [AIGatewayDataPlaneCertificateStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydataplanecertificatestatus)
+- [AIGatewayDatastoreStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorestatus)
 - [AIGatewayMCPServerStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverstatus)
 - [AIGatewayModelProviderStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderstatus)
 - [AIGatewayModelStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelstatus)
 - [AIGatewayPolicyStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicystatus)
 - [AIGatewaySNIStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysnistatus)
+- [AIGatewayVaultStatus](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultstatus)
 
 
 
@@ -6607,6 +8674,7 @@ _Appears in:_
 - [AIGatewayModelModel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodel)
 - [AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)
 - [AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
 - [AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)
 - [AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)
 - [AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)
@@ -6627,8 +8695,19 @@ _Appears in:_
 - [AIGatewayModelProviderXai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderxai)
 - [AIGatewayPolicyAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyapispec)
 - [AIGatewaySNIAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysniapispec)
+- [AwsSecretsManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervault)
+- [AzureKeyVault](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvault)
+- [ConjurVault](#aiconfiguration-konghq-com-v1alpha1-types-conjurvault)
 - [CreateAIGatewayCustomPolicyInstalledRequest](#aiconfiguration-konghq-com-v1alpha1-types-createaigatewaycustompolicyinstalledrequest)
 - [CreateAIGatewayCustomPolicyStreamingRequest](#aiconfiguration-konghq-com-v1alpha1-types-createaigatewaycustompolicystreamingrequest)
+- [EnvironmentVariableVault](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevault)
+- [GoogleSecretManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervault)
+- [HashiCorpVault](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvault)
+- [KonnectConfigStoreVault](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevault)
+- [RedisCEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastore)
+- [RedisEEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastore)
+- [TokenVaultDatastore](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastore)
+- [VectorDBDatastore](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastore)
 
 #### ManagedByValue
 
@@ -6674,6 +8753,7 @@ _Appears in:_
 - [AIGatewayModelModel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelmodel)
 - [AIGatewayModelProviderAnthropic](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovideranthropic)
 - [AIGatewayModelProviderAzure](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderazure)
+- [AIGatewayModelProviderBaseten](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbaseten)
 - [AIGatewayModelProviderBedrock](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderbedrock)
 - [AIGatewayModelProviderCerebras](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercerebras)
 - [AIGatewayModelProviderCohere](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelprovidercohere)
@@ -6694,8 +8774,19 @@ _Appears in:_
 - [AIGatewayModelProviderXai](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderxai)
 - [AIGatewayPolicyAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyapispec)
 - [AIGatewaySNIAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysniapispec)
+- [AwsSecretsManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervault)
+- [AzureKeyVault](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvault)
+- [ConjurVault](#aiconfiguration-konghq-com-v1alpha1-types-conjurvault)
 - [CreateAIGatewayCustomPolicyInstalledRequest](#aiconfiguration-konghq-com-v1alpha1-types-createaigatewaycustompolicyinstalledrequest)
 - [CreateAIGatewayCustomPolicyStreamingRequest](#aiconfiguration-konghq-com-v1alpha1-types-createaigatewaycustompolicystreamingrequest)
+- [EnvironmentVariableVault](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevault)
+- [GoogleSecretManagerVault](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervault)
+- [HashiCorpVault](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvault)
+- [KonnectConfigStoreVault](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevault)
+- [RedisCEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastore)
+- [RedisEEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastore)
+- [TokenVaultDatastore](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastore)
+- [VectorDBDatastore](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastore)
 
 #### PublicLabelsValue
 
@@ -6709,6 +8800,202 @@ PublicLabelsValue is the value type for PublicLabels.
 _Appears in:_
 
 - [PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)
+
+#### RedisCEDatastore
+
+
+RedisCEDatastore is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[RedisCEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastoreconfig)_ |  |
+| `description` _string_ | The description of the Datastore. |
+| `displayName` _string_ | The display name for this Datastore. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
+
+_Appears in:_
+
+- [AIGatewayDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfig)
+
+#### RedisCEDatastoreConfig
+
+
+RedisCEDatastoreConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cloudAuthentication` _[DatastoreRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthentication)_ | Cloud-managed Redis authentication. Only the fields relevant to the chosen `auth_provider` need to be set. |
+| `database` _int_ | The Redis database index to use. |
+| `host` _string_ |  |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `port` _int_ |  |
+| `serverName` _*string_ | SNI to use when connecting over SSL. |
+| `ssl` _string_ |  |
+| `sslVerify` _string_ |  |
+| `timeout` _int_ | Timeout in milliseconds for connecting, reading, and writing to the Redis server. |
+| `username` _*string_ |  |
+
+_Appears in:_
+
+- [RedisCEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastore)
+
+#### RedisEEDatastore
+
+
+RedisEEDatastore is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)_ |  |
+| `description` _string_ | The description of the Datastore. |
+| `displayName` _string_ | The display name for this Datastore. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
+
+_Appears in:_
+
+- [AIGatewayDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfig)
+
+#### RedisEEDatastoreConfig
+
+
+RedisEEDatastoreConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cloudAuthentication` _[DatastoreRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthentication)_ | Cloud-managed Redis authentication. Only the fields relevant to the chosen `auth_provider` need to be set. |
+| `clusterMaxRedirections` _int_ |  |
+| `clusterNodes` _[][RedisEEDatastoreConfigClusterNodes](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigclusternodes)_ |  |
+| `connectTimeout` _int_ |  |
+| `connectionIsProxied` _string_ |  |
+| `database` _int_ | The Redis database index to use. |
+| `host` _string_ |  |
+| `keepaliveBacklog` _*int_ |  |
+| `keepalivePoolSize` _int_ |  |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `port` _[RedisEEDatastoreConfigPort](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `readTimeout` _int_ |  |
+| `sendTimeout` _int_ |  |
+| `sentinelMaster` _*string_ |  |
+| `sentinelNodes` _[][RedisEEDatastoreConfigSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigsentinelnodes)_ |  |
+| `sentinelPassword` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `sentinelRole` _*string_ |  |
+| `sentinelUsername` _*string_ |  |
+| `serverName` _*string_ | SNI to use when connecting over SSL. |
+| `ssl` _string_ |  |
+| `sslVerify` _string_ |  |
+| `username` _*string_ |  |
+
+_Appears in:_
+
+- [RedisEEDatastore](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastore)
+
+#### RedisEEDatastoreConfigClusterNodes
+
+
+RedisEEDatastoreConfigClusterNodes is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `ip` _string_ |  |
+| `port` _int_ |  |
+
+_Appears in:_
+
+- [RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)
+
+#### RedisEEDatastoreConfigPort
+
+
+RedisEEDatastoreConfigPort represents a union type for port.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[RedisEEDatastoreConfigPortType](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigporttype)_ | Type designates the type of configuration. |
+| `variant1` _[RedisEEDatastoreConfigPortVariant1](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigportvariant1)_ | Variant1 configuration. |
+| `variant2` _[RedisEEDatastoreConfigPortVariant2](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigportvariant2)_ | Variant2 configuration. |
+
+_Appears in:_
+
+- [RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)
+
+#### RedisEEDatastoreConfigPortType
+
+_Underlying type:_ `string`
+
+RedisEEDatastoreConfigPortType represents the type of port.
+
+
+
+
+_Appears in:_
+
+- [RedisEEDatastoreConfigPort](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigport)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `variant1` |  |
+| `variant2` |  |
+
+#### RedisEEDatastoreConfigPortVariant1
+
+_Underlying type:_ `integer`
+
+RedisEEDatastoreConfigPortVariant1 is a type alias.
+
+
+
+
+_Appears in:_
+
+- [RedisEEDatastoreConfigPort](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigport)
+
+#### RedisEEDatastoreConfigPortVariant2
+
+_Underlying type:_ `string`
+
+RedisEEDatastoreConfigPortVariant2 is a type alias.
+
+
+
+
+_Appears in:_
+
+- [RedisEEDatastoreConfigPort](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfigport)
+
+#### RedisEEDatastoreConfigSentinelNodes
+
+
+RedisEEDatastoreConfigSentinelNodes is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `host` _string_ |  |
+| `port` _int_ |  |
+
+_Appears in:_
+
+- [RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)
 
 
 
@@ -6749,7 +9036,7 @@ either inline or sourced from a Kubernetes Secret.
 
 _Appears in:_
 
-- [AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)
+- [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
 - [AIGatewayCACertificateAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateapispec)
 - [AIGatewayCertificateAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateapispec)
 - [AIGatewayConsumerCredentialAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumercredentialapispec)
@@ -6759,6 +9046,17 @@ _Appears in:_
 - [AIGatewayModelProviderConfigAuthBasicHeaders](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthbasicheaders)
 - [AIGatewayModelProviderConfigAuthBasicParams](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthbasicparams)
 - [AIGatewayModelProviderConfigAuthGCP](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthgcp)
+- [ConjurVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-conjurvaultconfig)
+- [DatastoreRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthentication)
+- [HashiCorpVaultAppRoleConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultapproleconfig)
+- [HashiCorpVaultAwsIAMConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultawsiamconfig)
+- [HashiCorpVaultCertConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultcertconfig)
+- [HashiCorpVaultGcpIAMConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultgcpiamconfig)
+- [HashiCorpVaultOauth2Config](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultoauth2config)
+- [HashiCorpVaultTokenConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaulttokenconfig)
+- [RedisCEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediscedatastoreconfig)
+- [RedisEEDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-rediseedatastoreconfig)
+- [VectorDBDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastoreconfig)
 
 #### SensitiveDataSourceType
 
@@ -6780,6 +9078,108 @@ Allowed values:
 | --- | --- |
 | `inline` | SensitiveDataSourceTypeInline indicates that the data is provided inline in the APISpec.<br /> |
 | `secretRef` | SensitiveDataSourceTypeSecretRef indicates that the data is sourced from a Kubernetes Secret.<br /> |
+
+#### TokenVaultDatastore
+
+
+TokenVaultDatastore is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[TokenVaultDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastoreconfig)_ |  |
+| `description` _string_ | The description of the Datastore. |
+| `displayName` _string_ | The display name for this Datastore. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
+
+_Appears in:_
+
+- [AIGatewayDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfig)
+
+#### TokenVaultDatastoreConfig
+
+
+TokenVaultDatastoreConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `currentVersion` _string_ | The version of the encryption key used to encrypt new tokens. |
+| `directory` _string_ | The name of the directory in which tokens are stored. |
+| `keys` _[][TokenVaultDatastoreKey](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastorekey)_ | The encryption keys used to protect stored tokens. Keep previous versions in the list so existing tokens can still be decrypted. |
+
+_Appears in:_
+
+- [TokenVaultDatastore](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastore)
+
+#### TokenVaultDatastoreKey
+
+
+TokenVaultDatastoreKey is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `key` _string_ | A [vault reference](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault) to the encryption key. A literal key value is rejected. |
+| `version` _string_ | The identifier of this key version. |
+
+_Appears in:_
+
+- [TokenVaultDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-tokenvaultdatastoreconfig)
+
+#### VectorDBDatastore
+
+
+VectorDBDatastore Carries the pgvector connection only.
+`strategy`, `dimensions`, `distance_metric`, and `threshold`
+belong to the policy or model referencing this Datastore, not the Datastore
+itself.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[VectorDBDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastoreconfig)_ |  |
+| `description` _string_ | The description of the Datastore. |
+| `displayName` _string_ | The display name for this Datastore. |
+| `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
+
+_Appears in:_
+
+- [AIGatewayDatastoreConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastoreconfig)
+
+#### VectorDBDatastoreConfig
+
+
+VectorDBDatastoreConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `database` _string_ |  |
+| `host` _string_ |  |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `port` _int_ |  |
+| `ssl` _string_ |  |
+| `sslCert` _*string_ |  |
+| `sslCertKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ |  |
+| `sslRequired` _string_ |  |
+| `sslVerify` _string_ |  |
+| `sslVersion` _string_ |  |
+| `timeout` _int_ | Timeout in milliseconds for connecting, reading, and writing to the database. |
+| `user` _string_ |  |
+
+_Appears in:_
+
+- [VectorDBDatastore](#aiconfiguration-konghq-com-v1alpha1-types-vectordbdatastore)
 
 ## aigateway.konghq.com/v1alpha1
 
@@ -6840,7 +9240,7 @@ AIGatewayDataPlaneSpec defines the desired state of AIGatewayDataPlane.
 | `controlPlaneRef` _[ControlPlaneRef](#aigateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this AIGatewayDataPlane connects to. The type field identifies which kind of control plane is being referenced. Currently only konnectNamespacedRef is supported, which references a KonnectAIGateway resource in the same namespace.<br /><br />When unset, the operator performs no Konnect lookup or certificate automation for this AIGatewayDataPlane. The user is expected to configure Konnect (or any other) connectivity manually, e.g. by supplying the required env vars and cert volume through Deployment.PodTemplateSpec.<br /><br />This field is immutable once set: it can be added later, but not removed or changed to a different reference. |
 | `deployment` _[DeploymentOptions](#aigateway-konghq-com-v1alpha1-types-deploymentoptions)_ | Deployment configures the AI Gateway Deployment: image, replicas, resources, extra env vars, volume mounts, etc. |
 | `network` _[NetworkOptions](#aigateway-konghq-com-v1alpha1-types-networkoptions)_ | Network configures how the AI Gateway pod is exposed to clients. |
-| `certificateSecret` _[CertificateSecret](#aigateway-konghq-com-v1alpha1-types-certificatesecret)_ | CertificateSecret configures how the mTLS client certificate Secret used by this AIGatewayDataPlane is provisioned.<br /><br />If left unset entirely, the effective provisioning depends on ControlPlaneRef: when ControlPlaneRef is set, it defaults to Automatic (operator-managed); when ControlPlaneRef is unset, no certificate is provisioned at all (there's no KonnectAIGateway to ever register one against), and mTLS, if the AI Gateway needs it for a manually-wired control plane, must be configured entirely by hand via Deployment.PodTemplateSpec. Setting this field while ControlPlaneRef is unset is rejected rather than ignored: CertificateProvisioned goes False/ControlPlaneRefMissing and the operator stops reconciling the Deployment, the HPA and the ingress Service entirely.<br /><br />When Provisioning is Manual, SecretRef must point to an existing Secret of type kubernetes.io/tls (tls.crt + tls.key) that the operator will use as-is: it will never create, modify, rotate, or delete it. The Secret must live in this AIGatewayDataPlane's own namespace and must carry the operator's secret label selector (default "konghq.com/secret: \"true\"", configurable via --secret-label-selector on the operator), or the operator cannot see it at all. Switching Provisioning from Automatic to Manual deletes the previously operator-provisioned Secret once the Deployment has rolled onto the Manual one; switching back to Automatic later provisions a new one rather than reusing the deleted one. |
+| `certificateSecret` _[CertificateSecret](#aigateway-konghq-com-v1alpha1-types-certificatesecret)_ | CertificateSecret configures how the mTLS client certificate Secret used by this AIGatewayDataPlane is provisioned.<br /><br />If left unset entirely, the effective provisioning depends on ControlPlaneRef: when ControlPlaneRef is set, it defaults to Automatic (operator-managed); when ControlPlaneRef is unset, no certificate is provisioned at all (there's no KonnectAIGateway to ever register one against), and mTLS, if the AI Gateway needs it for a manually-wired control plane, must be configured entirely by hand via Deployment.PodTemplateSpec. Setting this field while ControlPlaneRef is unset is rejected rather than ignored: CertificateProvisioned goes False/ControlPlaneRefMissing and the operator stops reconciling the Deployment, the HPA and the ingress Service entirely.<br /><br />When Provisioning is Manual, SecretRef must point to an existing Secret holding tls.crt and tls.key (typically of type kubernetes.io/tls, but the type isn't enforced) that the operator will use as-is: it will never create, modify, rotate, or delete it. The Secret must live in this AIGatewayDataPlane's own namespace and must carry the operator's secret label selector (default "konghq.com/secret: \"true\"", configurable via --secret-label-selector on the operator), or the operator cannot see it at all. Switching Provisioning from Automatic to Manual deletes the previously operator-provisioned Secret once the Deployment has rolled onto the Manual one; switching back to Automatic later provisions a new one rather than reusing the deleted one.<br /><br />The referenced Secret must hold a matching certificate and key that are currently valid (a NotBefore up to 5 minutes in the future is tolerated for clock skew), and must not be an operator-provisioned Secret (one labeled "gateway.konghq.com/secret-provisioning: automatic"); otherwise CertificateProvisioned goes False with reason InvalidSecret or SecretRefOperatorManaged. Deleting the referenced Secret while it is in use leaves running Pods untouched but prevents new ones from starting until the Secret is recreated or the reference is changed. |
 
 _Appears in:_
 
@@ -7018,25 +9418,7 @@ _Appears in:_
 
 - [AIGatewayDataPlaneSpec](#aigateway-konghq-com-v1alpha1-types-aigatewaydataplanespec)
 
-#### HorizontalScaling
 
-
-HorizontalScaling defines horizontal scaling options for the deployment.
-It holds all the options from the HorizontalPodAutoscalerSpec besides the
-ScaleTargetRef which is being controlled by the Operator.
-
-
-
-| Field | Description |
-| --- | --- |
-| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
-| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less than minReplicas. |
-| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
-| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
-
-_Appears in:_
-
-- [Scaling](#aigateway-konghq-com-v1alpha1-types-scaling)
 
 #### LabelName
 
@@ -7096,14 +9478,65 @@ _Appears in:_
 
 - [AIGatewayDataPlaneSpec](#aigateway-konghq-com-v1alpha1-types-aigatewaydataplanespec)
 
+#### OnPremAIGatewayDataPlaneSync
+
+
+OnPremAIGatewayDataPlaneSync defines the configuration for syncing
+configuration to the data planes referencing this OnPremAIGateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `intervalSeconds` _*int32_ | IntervalSeconds is the interval between two rounds of syncing configuration with data planes, in seconds. If not specified, the default interval as defined by the operator will be used. |
+| `timeoutSeconds` _*int32_ | TimeoutSeconds is the timeout of a single run of syncing configuration with data planes, in seconds. If not specified, no timeout is applied to a sync run. |
+
+_Appears in:_
+
+- [OnPremAIGatewaySpec](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayspec)
+
+#### OnPremAIGatewayFilterForObjectType
+
+
+OnPremAIGatewayFilterForObjectType defines the filters for a certain type of object.
+
+
+
+| Field | Description |
+| --- | --- |
+| `matchLabels` _map[string]string_ | MatchLabels defines the labels that the object must match to get reconciled by the controller for the OnPremAIGateway. For example, if `secrets.matchLabels` is `{"label1":"val1","label2":"val2"}`, only secrets with labels `label1=val1` and `label2=val2` are reconciled. |
+
+_Appears in:_
+
+- [OnPremAIGatewayObjectFilters](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayobjectfilters)
+
+#### OnPremAIGatewayObjectFilters
+
+
+OnPremAIGatewayObjectFilters defines filters to limit watched objects by the controllers.
+
+
+
+| Field | Description |
+| --- | --- |
+| `secrets` _[OnPremAIGatewayFilterForObjectType](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayfilterforobjecttype)_ | Secrets defines the filters for watched secrets. |
+
+_Appears in:_
+
+- [OnPremAIGatewaySpec](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayspec)
+
 #### OnPremAIGatewaySpec
 
 
-OnPremAIGatewaySpec defines the desired state of OnPremAIGateway.<br /><br />It is intentionally empty for now: fields land alongside the reconciler
-logic that consumes them.
+OnPremAIGatewaySpec defines the desired state of OnPremAIGateway.
 
 
 
+| Field | Description |
+| --- | --- |
+| `dataplaneSync` _[OnPremAIGatewayDataPlaneSync](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaydataplanesync)_ | DataPlaneSync defines the configuration for syncing configuration to the data planes referencing this OnPremAIGateway. |
+| `objectFilters` _[OnPremAIGatewayObjectFilters](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayobjectfilters)_ | ObjectFilters defines the filters to limit watched objects by the controllers. |
+| `watchNamespaces` _[OnPremAIGatewayWatchNamespaces](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaywatchnamespaces)_ | WatchNamespaces defines the namespaces the controllers watch for the configuration entities pushed to this gateway's data planes, and for the Secrets they reference.<br /><br />When unset, only the OnPremAIGateway's own namespace is watched. When set to `list`, every listed namespace plus the OnPremAIGateway's own namespace is watched. A WatchNamespaceGrant is required in every listed namespace that is not the OnPremAIGateway's own. When set to `all`, every namespace is watched. This requires the operator to run with an empty `--watch-namespaces`, that is, cluster-wide.<br /><br />Changing this field restarts the control plane instance: its caches are built at start. |
 
 _Appears in:_
 
@@ -7125,6 +9558,45 @@ _Appears in:_
 
 - [OnPremAIGateway](#aigateway-konghq-com-v1alpha1-onpremaigateway)
 
+#### OnPremAIGatewayWatchNamespaces
+
+
+OnPremAIGatewayWatchNamespaces defines the namespaces watched for the
+configuration entities of an OnPremAIGateway.<br /><br />It mirrors the ControlPlane's spec.watchNamespaces.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[OnPremAIGatewayWatchNamespacesType](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaywatchnamespacestype)_ | Type indicates the type of namespace watching to be done. |
+| `list` _[]string_ | List is a list of namespaces to watch for resources. Only used when Type is set to List. |
+
+_Appears in:_
+
+- [OnPremAIGatewaySpec](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayspec)
+
+#### OnPremAIGatewayWatchNamespacesType
+
+_Underlying type:_ `string`
+
+OnPremAIGatewayWatchNamespacesType indicates the type of namespace watching to
+be done.
+
+
+
+
+_Appears in:_
+
+- [OnPremAIGatewayWatchNamespaces](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaywatchnamespaces)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `all` | OnPremAIGatewayWatchNamespacesTypeAll indicates that all namespaces should<br />be watched for resources.<br /> |
+| `list` | OnPremAIGatewayWatchNamespacesTypeList indicates that only the namespaces<br />listed in the List field should be watched for resources.<br />All the namespaces enumerated in the list are watched in addition to the<br />namespace of the OnPremAIGateway.<br /> |
+| `own` | OnPremAIGatewayWatchNamespacesTypeOwn indicates that only the namespace of<br />the OnPremAIGateway should be watched for resources.<br /> |
+
 #### Scaling
 
 
@@ -7134,7 +9606,7 @@ Scaling defines the scaling options for the deployment.
 
 | Field | Description |
 | --- | --- |
-| `horizontal` _[HorizontalScaling](#aigateway-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
 
 _Appears in:_
 
@@ -7210,6 +9682,471 @@ Services configures the Kubernetes Services created for an AI Gateway pod.
 _Appears in:_
 
 - [NetworkOptions](#aigateway-konghq-com-v1alpha1-types-networkoptions)
+
+## common.konghq.com/v1alpha1
+
+Package v1alpha1 contains API Schema definitions for the common v1alpha1 API group.
+### Types
+
+In this section you will find types that the CRDs rely on.
+#### AdoptKonnectOptions
+
+
+AdoptKonnectOptions specifies the options for adopting the entity from Konnect.
+
+
+
+| Field | Description |
+| --- | --- |
+| `id` _string_ | ID is the Konnect ID of the entity. |
+
+_Appears in:_
+
+- [AdoptOptions](#common-konghq-com-v1alpha1-types-adoptoptions)
+
+#### AdoptMode
+
+_Underlying type:_ `string`
+
+AdoptMode is the strategy used when adopting an existing entity.<br /><br />The set of supported modes may be extended in the future. At present the
+only value is "match", which requires exact (semantically equivalent)
+alignment between the CR spec and the remote entity before adoption.
+No mutations are performed against the remote system during adoption.
+If any relevant field differs, adoption fails and the operator will not
+take ownership until the spec is aligned.
+
+
+
+
+_Appears in:_
+
+- [AdoptOptions](#common-konghq-com-v1alpha1-types-adoptoptions)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `match` | AdoptModeMatch enforces read-only adoption: the operator will only adopt<br />the remote entity when the CR spec matches the remote configuration; no<br />write operations are issued to the remote system during adoption.<br /> |
+| `override` | AdoptModeOverride indicates that the operator will override the existing entity<br />with the spec of the Kubernetes object. If the configuration does not match,<br />the operator will update the remote entity in to match the spec of the Kubernetes object.<br /> |
+
+#### AdoptOptions
+
+
+AdoptOptions is the options for CRDs to attach to an existing Kong entity.
+
+
+
+| Field | Description |
+| --- | --- |
+| `from` _[AdoptSource](#common-konghq-com-v1alpha1-types-adoptsource)_ | From is the source of the entity to adopt from. Now 'konnect' is supported. |
+| `mode` _[AdoptMode](#common-konghq-com-v1alpha1-types-adoptmode)_ | Mode selects how the operator adopts an already-existing entity (for example, a Konnect resource) instead of creating a new one.<br /><br />Supported values: - "match": the operator retrieves the remote entity referenced by the   corresponding Adopt* options (for example, adopt.konnect.id) and performs a   field-by-field comparison against this CR's spec (ignoring server-assigned   metadata). If the specification matches the remote state, the operator   adopts the entity: it sets the status identifier and marks the resource as   ready/programmed without issuing any write operation to the remote system.   If the specification does not match the remote state, adoption fails: the   operator does not modify the remote entity and surfaces a failure   condition, allowing the user to align the spec with the existing entity if   adoption is desired.<br /><br />- "override": the operator overrides the remote entity by the CR's spec.   If the entity with the ID and type exists, and it is not managed   by another CR (matching by the metadata.uid of the CR and the "k8s-uid"   label or tag of the Konnect entity), the operator updates the remote entity   by the CR's spec. |
+| `konnect` _[AdoptKonnectOptions](#common-konghq-com-v1alpha1-types-adoptkonnectoptions)_ | Konnect is the options for adopting the entity from Konnect. Required when from == 'konnect'. |
+
+_Appears in:_
+
+- [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+- [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+- [KongConsumerGroupSpec](#configuration-konghq-com-v1beta1-types-kongconsumergroupspec)
+- [KongConsumerSpec](#configuration-konghq-com-v1-types-kongconsumerspec)
+- [KongCredentialACLSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialaclspec)
+- [KongCredentialAPIKeySpec](#configuration-konghq-com-v1alpha1-types-kongcredentialapikeyspec)
+- [KongCredentialBasicAuthSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialbasicauthspec)
+- [KongCredentialHMACSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialhmacspec)
+- [KongCredentialJWTSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialjwtspec)
+- [KongDataPlaneClientCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongdataplaneclientcertificatespec)
+- [KongKeySetSpec](#configuration-konghq-com-v1alpha1-types-kongkeysetspec)
+- [KongKeySpec](#configuration-konghq-com-v1alpha1-types-kongkeyspec)
+- [KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)
+- [KongRouteSpec](#configuration-konghq-com-v1alpha1-types-kongroutespec)
+- [KongSNISpec](#configuration-konghq-com-v1alpha1-types-kongsnispec)
+- [KongServiceSpec](#configuration-konghq-com-v1alpha1-types-kongservicespec)
+- [KongTargetSpec](#configuration-konghq-com-v1alpha1-types-kongtargetspec)
+- [KongUpstreamSpec](#configuration-konghq-com-v1alpha1-types-kongupstreamspec)
+- [KongVaultSpec](#configuration-konghq-com-v1alpha1-types-kongvaultspec)
+- [KonnectCloudGatewayDataPlaneGroupConfigurationSpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaydataplanegroupconfigurationspec)
+- [KonnectCloudGatewayNetworkSpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaynetworkspec)
+- [KonnectCloudGatewayTransitGatewaySpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaytransitgatewayspec)
+
+#### AdoptSource
+
+_Underlying type:_ `string`
+
+AdoptSource is the type to define the source of the entity to adopt from.
+
+
+
+
+_Appears in:_
+
+- [AdoptOptions](#common-konghq-com-v1alpha1-types-adoptoptions)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `konnect` | AdoptSourceKonnect indicates that the entity is adopted from Konnect.<br /> |
+
+#### ControlPlaneRef
+
+
+ControlPlaneRef is the schema for the ControlPlaneRef type.
+It is used to reference a Control Plane entity.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type indicates the type of the control plane being referenced. Allowed values: - konnectNamespacedRef - kic<br /><br />The default is kic, which implies that the Control Plane is KIC. |
+| `konnectNamespacedRef` _[KonnectNamespacedRef](#common-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef is a reference to a Konnect Control Plane entity inside the cluster. It contains the name of the Konnect Control Plane. It can't reference Control Plane Groups, because they are read-only. This field is required when the Type is konnectNamespacedRef. |
+
+_Appears in:_
+
+- [ControlPlaneRef](#configuration-konghq-com-v1alpha1-types-controlplaneref)
+- [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+- [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+- [KongConsumerGroupSpec](#configuration-konghq-com-v1beta1-types-kongconsumergroupspec)
+- [KongConsumerSpec](#configuration-konghq-com-v1-types-kongconsumerspec)
+- [KongDataPlaneClientCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongdataplaneclientcertificatespec)
+- [KongKeySetSpec](#configuration-konghq-com-v1alpha1-types-kongkeysetspec)
+- [KongKeySpec](#configuration-konghq-com-v1alpha1-types-kongkeyspec)
+- [KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)
+- [KongRouteSpec](#configuration-konghq-com-v1alpha1-types-kongroutespec)
+- [KongServiceSpec](#configuration-konghq-com-v1alpha1-types-kongservicespec)
+- [KongUpstreamSpec](#configuration-konghq-com-v1alpha1-types-kongupstreamspec)
+- [KongVaultSpec](#configuration-konghq-com-v1alpha1-types-kongvaultspec)
+- [KonnectCloudGatewayDataPlaneGroupConfigurationSpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaydataplanegroupconfigurationspec)
+- [KonnectExtensionControlPlane](#konnect-konghq-com-v1alpha1-types-konnectextensioncontrolplane)
+- [MCPServerSpec](#konnect-konghq-com-v1alpha1-types-mcpserverspec)
+
+
+
+#### EntitySource
+
+_Underlying type:_ `string`
+
+EntitySource is the type for all the entity types.
+
+
+
+
+_Appears in:_
+
+- [KonnectAIGatewaySpec](#konnect-konghq-com-v1alpha1-types-konnectaigatewayspec)
+- [KonnectEventGatewaySpec](#konnect-konghq-com-v1alpha1-types-konnecteventgatewayspec)
+- [KonnectGatewayControlPlaneSpec](#konnect-konghq-com-v1alpha1-types-konnectgatewaycontrolplanespec)
+- [KonnectGatewayControlPlaneSpec](#konnect-konghq-com-v1alpha2-types-konnectgatewaycontrolplanespec)
+- [KonnectOptions](#gateway-operator-konghq-com-v2beta1-types-konnectoptions)
+- [MCPServerSpec](#konnect-konghq-com-v1alpha1-types-mcpserverspec)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `Origin` | EntitySourceOrigin is the type for Origin entities.<br />Origin entities are the source of truth for the data.<br /> |
+| `Mirror` | EntitySourceMirror is the type for Mirror entities.<br />Mirror entities are local mirrors of the remote konnect resource.<br /> |
+
+#### ExtensionRef
+
+
+ExtensionRef corresponds to another resource in the Kubernetes cluster which
+defines extended behavior for a resource (e.g. ControlPlane).
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referred resource. |
+| `namespace` _*string_ | Namespace is the namespace of the referred resource.<br /><br />For namespace-scoped resources if no Namespace is provided then the namespace of the parent object MUST be used.<br /><br />This field MUST not be set when referring to cluster-scoped resources. |
+| `group` _string_ | Group is the group of the extension resource. |
+| `kind` _string_ | Kind is kind of the extension resource. |
+
+_Appears in:_
+
+- [ControlPlaneOptions](#gateway-operator-konghq-com-v1beta1-types-controlplaneoptions)
+- [ControlPlaneSpec](#gateway-operator-konghq-com-v1beta1-types-controlplanespec)
+- [ControlPlaneSpec](#gateway-operator-konghq-com-v2beta1-types-controlplanespec)
+- [DataPlaneOptions](#gateway-operator-konghq-com-v1beta1-types-dataplaneoptions)
+- [DataPlaneSpec](#gateway-operator-konghq-com-v1beta1-types-dataplanespec)
+- [GatewayConfigDataPlaneOptions](#gateway-operator-konghq-com-v1beta1-types-gatewayconfigdataplaneoptions)
+- [GatewayConfigurationSpec](#gateway-operator-konghq-com-v1beta1-types-gatewayconfigurationspec)
+- [GatewayConfigurationSpec](#gateway-operator-konghq-com-v2beta1-types-gatewayconfigurationspec)
+
+#### GatewayRef
+
+
+GatewayRef is a reference to the gateway (control plane) object that an
+entity belongs to. It identifies the gateway by its API group, kind and name,
+so that the same field can target gateways of different kinds, e.g. a
+Konnect-hosted one or an on-prem one.<br /><br />The set of group and kind pairs an entity accepts is defined by the entity
+which embeds the reference.
+
+
+
+| Field | Description |
+| --- | --- |
+| `group` _string_ | Group is the API group of the referred gateway, e.g. konnect.konghq.com. |
+| `kind` _string_ | Kind is the kind of the referred gateway, e.g. KonnectEventGateway. |
+| `name` _string_ | Name is the name of the referred gateway. |
+| `namespace` _*string_ | Namespace is the namespace of the referred gateway.<br /><br />If no Namespace is provided then the namespace of the referring object is used. |
+
+_Appears in:_
+
+- [EventGatewayBackendClusterSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterspec)
+- [EventGatewayDataPlaneCertificateSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificatespec)
+- [EventGatewayListenerSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerspec)
+- [EventGatewaySchemaRegistrySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryspec)
+- [EventGatewayStaticKeySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyspec)
+- [EventGatewayTLSTrustBundleSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlespec)
+
+#### HardeningState
+
+_Underlying type:_ `string`
+
+HardeningState controls whether the operator applies a hardened
+security context to a DataPlane's proxy container.
+
+
+
+
+_Appears in:_
+
+- [DataPlaneDeploymentOptions](#gateway-operator-konghq-com-v1beta1-types-dataplanedeploymentoptions)
+- [DataPlaneDeploymentOptions](#gateway-operator-konghq-com-v2beta1-types-dataplanedeploymentoptions)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `enabled` | HardeningStateEnabled enables the hardened security context.<br /> |
+| `disabled` | HardeningStateDisabled disables the hardened security context (default).<br /> |
+
+#### HorizontalScaling
+
+
+HorizontalScaling defines horizontal scaling options for the deployment.
+It holds all the options from the HorizontalPodAutoscalerSpec besides the
+ScaleTargetRef which is being controlled by the Operator.
+
+
+
+| Field | Description |
+| --- | --- |
+| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
+| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less than minReplicas. |
+| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
+| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
+
+_Appears in:_
+
+- [GWAdminScaling](#gateway-operator-konghq-com-v1alpha1-types-gwadminscaling)
+- [Scaling](#aigateway-konghq-com-v1alpha1-types-scaling)
+- [Scaling](#eventgateway-konghq-com-v1alpha1-types-scaling)
+- [Scaling](#gateway-operator-konghq-com-v1beta1-types-scaling)
+- [Scaling](#gateway-operator-konghq-com-v2beta1-types-scaling)
+- [Scaling](#mcp-konghq-com-v1alpha1-types-scaling)
+
+#### KonnectExtensionControlPlaneRef
+
+
+KonnectExtensionControlPlaneRef is the schema for the ControlPlaneRef type used by Konnect Extensions.
+It is used to reference a Control Plane entity.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type indicates the type of the control plane being referenced. Allowed values: - konnectNamespacedRef |
+| `konnectNamespacedRef` _[KonnectNamespacedRef](#common-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef is a reference to a Konnect Control Plane entity inside the cluster. It contains the name of the Konnect Control Plane. This field is required when the Type is konnectNamespacedRef. |
+
+_Appears in:_
+
+- [KonnectExtensionControlPlane](#konnect-konghq-com-v1alpha2-types-konnectextensioncontrolplane)
+
+#### KonnectIDType
+
+_Underlying type:_ `string`
+
+KonnectIDType is the schema for the KonnectID type.
+
+
+
+
+_Appears in:_
+
+- [MirrorKonnect](#konnect-konghq-com-v1alpha1-types-mirrorkonnect)
+- [MirrorKonnect](#konnect-konghq-com-v1alpha2-types-mirrorkonnect)
+
+#### KonnectNamespacedRef
+
+
+KonnectNamespacedRef is the schema for the KonnectNamespacedRef type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the Konnect Control Plane. |
+| `namespace` _string_ | Namespace is the namespace where the Konnect Control Plane is in. Currently the following resources are allowed to set this: - cluster scoped resources (KongVault) - KongService - KongCertificate - KongCACertificate - KongConsumerGroup - KongUpstream - KongKeySet - KongDataPlaneClientCertificate |
+
+_Appears in:_
+
+- [ControlPlaneRef](#common-konghq-com-v1alpha1-types-controlplaneref)
+- [KonnectExtensionControlPlaneRef](#common-konghq-com-v1alpha1-types-konnectextensioncontrolplaneref)
+
+#### NameRef
+
+
+NameRef is a reference to another object representing a Kong entity with deterministic type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the entity. |
+
+_Appears in:_
+
+- [KeySetRef](#configuration-konghq-com-v1alpha1-types-keysetref)
+
+#### NamespacedRef
+
+
+NamespacedRef is a reference to a namespaced resource.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referred resource. |
+| `namespace` _*string_ | Namespace is the namespace of the referred resource.<br /><br />For namespace-scoped resources if no Namespace is provided then the namespace of the parent object MUST be used.<br /><br />This field MUST not be set when referring to cluster-scoped resources. |
+
+_Appears in:_
+
+- [AIGatewayRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayref)
+- [DataPlaneMetricsExtensionStatus](#gateway-operator-konghq-com-v1alpha1-types-dataplanemetricsextensionstatus)
+- [ExtensionRef](#common-konghq-com-v1alpha1-types-extensionref)
+- [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+- [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+- [KongSNISpec](#configuration-konghq-com-v1alpha1-types-kongsnispec)
+- [KongServiceAPISpec](#configuration-konghq-com-v1alpha1-types-kongserviceapispec)
+- [KongServiceSpec](#configuration-konghq-com-v1alpha1-types-kongservicespec)
+- [KongTargetSpec](#configuration-konghq-com-v1alpha1-types-kongtargetspec)
+- [KongUpstreamAPISpec](#configuration-konghq-com-v1alpha1-types-kongupstreamapispec)
+- [KongUpstreamSpec](#configuration-konghq-com-v1alpha1-types-kongupstreamspec)
+- [KonnectConfigStoreSyncSpec](#konnect-konghq-com-v1alpha1-types-konnectconfigstoresyncspec)
+- [KonnectExtensionStatus](#konnect-konghq-com-v1alpha1-types-konnectextensionstatus)
+- [KonnectExtensionStatus](#konnect-konghq-com-v1alpha2-types-konnectextensionstatus)
+- [ObjectRef](#common-konghq-com-v1alpha1-types-objectref)
+- [ServiceRef](#configuration-konghq-com-v1alpha1-types-serviceref)
+
+#### ObjectRef
+
+
+ObjectRef is the schema for the ObjectRef type.
+It is used to reference an entity. Currently it is possible to reference
+a remote Konnect entity by its ID or a local in cluster entity by its namespaced name.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[ObjectRefType](#common-konghq-com-v1alpha1-types-objectreftype)_ | Type defines type of the object which is referenced. It can be one of:<br /><br />- konnectID - namespacedRef |
+| `konnectID` _*string_ | KonnectID is the schema for the KonnectID type. This field is required when the Type is konnectID. |
+| `namespacedRef` _[NamespacedRef](#common-konghq-com-v1alpha1-types-namespacedref)_ | NamespacedRef is a reference to a KeySet entity inside the cluster. This field is required when the Type is namespacedRef. |
+
+_Appears in:_
+
+- [AIGatewayConsumerCredentialSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumercredentialspec)
+- [EventGatewayBackendClusterSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterspec)
+- [EventGatewayDataPlaneCertificateSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificatespec)
+- [EventGatewayListenerPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicyspec)
+- [EventGatewayListenerSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerspec)
+- [EventGatewaySchemaRegistrySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryspec)
+- [EventGatewayStaticKeySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyspec)
+- [EventGatewayTLSTrustBundleSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlespec)
+- [EventGatewayVirtualClusterConsumePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyspec)
+- [EventGatewayVirtualClusterPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainspec)
+- [EventGatewayVirtualClusterPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyspec)
+- [EventGatewayVirtualClusterProducePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyspec)
+- [EventGatewayVirtualClusterSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterspec)
+- [KonnectCloudGatewayTransitGatewaySpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaytransitgatewayspec)
+- [KonnectConfigStoreSpec](#konnect-konghq-com-v1alpha1-types-konnectconfigstorespec)
+- [KonnectConfigurationDataPlaneGroup](#konnect-konghq-com-v1alpha1-types-konnectconfigurationdataplanegroup)
+- [PortalAPISpec](#konnect-konghq-com-v1alpha1-types-portalapispec)
+- [PortalCustomDomainSpec](#konnect-konghq-com-v1alpha1-types-portalcustomdomainspec)
+- [PortalCustomizationSpec](#konnect-konghq-com-v1alpha1-types-portalcustomizationspec)
+- [PortalEmailConfigSpec](#konnect-konghq-com-v1alpha1-types-portalemailconfigspec)
+- [PortalIPAllowListSpec](#konnect-konghq-com-v1alpha1-types-portalipallowlistspec)
+- [PortalIdentityProviderRequestSpec](#konnect-konghq-com-v1alpha1-types-portalidentityproviderrequestspec)
+- [PortalPageAPISpec](#konnect-konghq-com-v1alpha1-types-portalpageapispec)
+- [PortalPageSpec](#konnect-konghq-com-v1alpha1-types-portalpagespec)
+- [PortalTeamSpec](#konnect-konghq-com-v1alpha1-types-portalteamspec)
+
+#### ObjectRefType
+
+_Underlying type:_ `string`
+
+ObjectRefType is the enum type for the ObjectRef.
+
+
+
+
+_Appears in:_
+
+- [ObjectRef](#common-konghq-com-v1alpha1-types-objectref)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `konnectID` | ObjectRefTypeKonnectID is the type for the KonnectID KonnectRef.<br />It is used to reference an entity by its ID on the Konnect platform.<br /> |
+| `namespacedRef` | ObjectRefTypeNamespacedRef is the type for the KonnectRef.<br />It is used to reference an entity inside the cluster<br />using a namespaced reference.<br /> |
+
+#### Tags
+
+_Underlying type:_ `string array`
+
+Tags is a type for a list of tags applied to a Kong entity.
+
+
+
+
+_Appears in:_
+
+- [KongCACertificateAPISpec](#configuration-konghq-com-v1alpha1-types-kongcacertificateapispec)
+- [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+- [KongCertificateAPISpec](#configuration-konghq-com-v1alpha1-types-kongcertificateapispec)
+- [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+- [KongClusterPlugin](#configuration-konghq-com-v1-kongclusterplugin)
+- [KongConsumerGroupSpec](#configuration-konghq-com-v1beta1-types-kongconsumergroupspec)
+- [KongConsumerSpec](#configuration-konghq-com-v1-types-kongconsumerspec)
+- [KongCredentialACLAPISpec](#configuration-konghq-com-v1alpha1-types-kongcredentialaclapispec)
+- [KongCredentialACLSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialaclspec)
+- [KongCredentialAPIKeyAPISpec](#configuration-konghq-com-v1alpha1-types-kongcredentialapikeyapispec)
+- [KongCredentialAPIKeySpec](#configuration-konghq-com-v1alpha1-types-kongcredentialapikeyspec)
+- [KongCredentialBasicAuthAPISpec](#configuration-konghq-com-v1alpha1-types-kongcredentialbasicauthapispec)
+- [KongCredentialBasicAuthSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialbasicauthspec)
+- [KongCredentialHMACAPISpec](#configuration-konghq-com-v1alpha1-types-kongcredentialhmacapispec)
+- [KongCredentialHMACSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialhmacspec)
+- [KongCredentialJWTAPISpec](#configuration-konghq-com-v1alpha1-types-kongcredentialjwtapispec)
+- [KongCredentialJWTSpec](#configuration-konghq-com-v1alpha1-types-kongcredentialjwtspec)
+- [KongKeyAPISpec](#configuration-konghq-com-v1alpha1-types-kongkeyapispec)
+- [KongKeySetAPISpec](#configuration-konghq-com-v1alpha1-types-kongkeysetapispec)
+- [KongKeySetSpec](#configuration-konghq-com-v1alpha1-types-kongkeysetspec)
+- [KongKeySpec](#configuration-konghq-com-v1alpha1-types-kongkeyspec)
+- [KongPlugin](#configuration-konghq-com-v1-kongplugin)
+- [KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)
+- [KongRouteAPISpec](#configuration-konghq-com-v1alpha1-types-kongrouteapispec)
+- [KongRouteSpec](#configuration-konghq-com-v1alpha1-types-kongroutespec)
+- [KongSNIAPISpec](#configuration-konghq-com-v1alpha1-types-kongsniapispec)
+- [KongSNISpec](#configuration-konghq-com-v1alpha1-types-kongsnispec)
+- [KongServiceAPISpec](#configuration-konghq-com-v1alpha1-types-kongserviceapispec)
+- [KongServiceSpec](#configuration-konghq-com-v1alpha1-types-kongservicespec)
+- [KongTargetAPISpec](#configuration-konghq-com-v1alpha1-types-kongtargetapispec)
+- [KongTargetSpec](#configuration-konghq-com-v1alpha1-types-kongtargetspec)
+- [KongUpstreamAPISpec](#configuration-konghq-com-v1alpha1-types-kongupstreamapispec)
+- [KongUpstreamSpec](#configuration-konghq-com-v1alpha1-types-kongupstreamspec)
+- [KongVaultSpec](#configuration-konghq-com-v1alpha1-types-kongvaultspec)
 
 ## configuration.konghq.com/v1
 
@@ -7482,9 +10419,12 @@ Package v1alpha1 contains API Schema definitions for the configuration.konghq.co
 - [EventGatewayListener](#configuration-konghq-com-v1alpha1-eventgatewaylistener)
 - [EventGatewayListenerPolicy](#configuration-konghq-com-v1alpha1-eventgatewaylistenerpolicy)
 - [EventGatewaySchemaRegistry](#configuration-konghq-com-v1alpha1-eventgatewayschemaregistry)
+- [EventGatewayStaticKey](#configuration-konghq-com-v1alpha1-eventgatewaystatickey)
+- [EventGatewayTLSTrustBundle](#configuration-konghq-com-v1alpha1-eventgatewaytlstrustbundle)
 - [EventGatewayVirtualCluster](#configuration-konghq-com-v1alpha1-eventgatewayvirtualcluster)
 - [EventGatewayVirtualClusterConsumePolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterconsumepolicy)
 - [EventGatewayVirtualClusterPolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicy)
+- [EventGatewayVirtualClusterPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicychain)
 - [EventGatewayVirtualClusterProducePolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicy)
 - [IngressClassParameters](#configuration-konghq-com-v1alpha1-ingressclassparameters)
 - [KongCACertificate](#configuration-konghq-com-v1alpha1-kongcacertificate)
@@ -7583,6 +10523,36 @@ EventGatewaySchemaRegistry is the Schema for the eventgatewayschemaregistrys API
 | `spec` _[EventGatewaySchemaRegistrySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryspec)_ |  |
 | `status` _[EventGatewaySchemaRegistryStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistrystatus)_ |  |
 
+### EventGatewayStaticKey
+
+
+EventGatewayStaticKey is the Schema for the eventgatewaystatickeys API.
+
+<!-- event_gateway_static_key description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayStaticKey`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayStaticKeySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyspec)_ |  |
+| `status` _[EventGatewayStaticKeyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeystatus)_ |  |
+
+### EventGatewayTLSTrustBundle
+
+
+EventGatewayTLSTrustBundle is the Schema for the eventgatewaytlstrustbundles API.
+
+<!-- event_gateway_tls_trust_bundle description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayTLSTrustBundle`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayTLSTrustBundleSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlespec)_ |  |
+| `status` _[EventGatewayTLSTrustBundleStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlestatus)_ |  |
+
 ### EventGatewayVirtualCluster
 
 
@@ -7627,6 +10597,21 @@ EventGatewayVirtualClusterPolicy is the Schema for the eventgatewayvirtualcluste
 | `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[EventGatewayVirtualClusterPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyspec)_ |  |
 | `status` _[EventGatewayVirtualClusterPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicystatus)_ |  |
+
+### EventGatewayVirtualClusterPolicyChain
+
+
+EventGatewayVirtualClusterPolicyChain is the Schema for the eventgatewayvirtualclusterpolicychains API.
+
+<!-- event_gateway_virtual_cluster_policy_chain description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayVirtualClusterPolicyChain`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayVirtualClusterPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainspec)_ |  |
+| `status` _[EventGatewayVirtualClusterPolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainstatus)_ |  |
 
 ### EventGatewayVirtualClusterProducePolicy
 
@@ -7982,6 +10967,94 @@ _Appears in:_
 - [BackendClusterAuthenticationScheme](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationscheme)
 - [EventGatewayBackendClusterAuthentication](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterauthentication)
 
+#### BackendClusterAuthenticationSaslAwsIam
+
+
+BackendClusterAuthenticationSaslAwsIam AWS IAM-based OAUTHBEARER
+authentication scheme for the backend cluster, for example when connecting to
+Amazon MSK with IAM authentication.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `saslAwsIam` _[BackendClusterAuthenticationSaslAwsIamSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamsaslawsiam)_ |  |
+
+_Appears in:_
+
+- [BackendClusterAuthenticationScheme](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationscheme)
+- [EventGatewayBackendClusterAuthentication](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterauthentication)
+
+#### BackendClusterAuthenticationSaslAwsIamAssumeRole
+
+
+BackendClusterAuthenticationSaslAwsIamAssumeRole Configures whether to
+authenticate using credentials obtained by first assuming a role, using the
+AWS default credentials provider chain<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `arn` _string_ | The [ARN](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns) of the IAM role to assume, formatted as `arn:aws:iam::<account-id>:role/<role-name>`. |
+| `sessionName` _string_ | The session name to attach to the assumed role session. The value becomes part of the assumed role user ARN, queryable as `arn:aws:sts::<account-id>:assumed-role/<role-name>/<session-name>`. |
+
+_Appears in:_
+
+- [BackendClusterAuthenticationSaslAwsIamSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamsaslawsiam)
+
+#### BackendClusterAuthenticationSaslAwsIamDefaultProviderChain
+
+
+BackendClusterAuthenticationSaslAwsIamDefaultProviderChain Configures whether
+to authenticate using credentials obtained from the AWS default credentials
+provider chain<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+
+_Appears in:_
+
+- [BackendClusterAuthenticationSaslAwsIamSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamsaslawsiam)
+
+#### BackendClusterAuthenticationSaslAwsIamSaslAwsIam
+
+
+BackendClusterAuthenticationSaslAwsIamSaslAwsIam represents a union type for sasl_aws_iam.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[BackendClusterAuthenticationSaslAwsIamSaslAwsIamType](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamsaslawsiamtype)_ | Type designates the type of configuration. |
+| `assumeRole` _[BackendClusterAuthenticationSaslAwsIamAssumeRole](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamassumerole)_ | AssumeRole configuration. |
+| `defaultProviderChain` _[BackendClusterAuthenticationSaslAwsIamDefaultProviderChain](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamdefaultproviderchain)_ | DefaultProviderChain configuration. |
+
+_Appears in:_
+
+- [BackendClusterAuthenticationSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiam)
+
+#### BackendClusterAuthenticationSaslAwsIamSaslAwsIamType
+
+_Underlying type:_ `string`
+
+BackendClusterAuthenticationSaslAwsIamSaslAwsIamType represents the type of sasl_aws_iam.
+
+
+
+
+_Appears in:_
+
+- [BackendClusterAuthenticationSaslAwsIamSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiamsaslawsiam)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `assumeRole` |  |
+| `defaultProviderChain` |  |
+
 #### BackendClusterAuthenticationSaslPlain
 
 
@@ -8039,6 +11112,7 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `anonymous` |  |
+| `saslAwsIam` |  |
 | `saslPlain` |  |
 | `saslScram` |  |
 
@@ -8139,6 +11213,9 @@ _Appears in:_
 - [EventGatewayConsumeSchemaValidationPolicyJSONConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyjsonconfig)
 - [EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyschemaregistryconfig)
 - [EventGatewayParsedRecordDecryptFieldsConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptfieldsconfig)
+- [EventGatewayParsedRecordMaskFieldsConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumeconfig)
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavro)
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSON](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjson)
 
 #### ConsumeKeyValidationAction
 
@@ -8278,6 +11355,7 @@ EncryptionKeyStaticReference is a type alias.
 | --- | --- |
 | `id` _*string_ |  |
 | `name` _*string_ |  |
+| `namespacedRef` _[EventGatewayStaticKeyRef](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyref)_ | NamespacedRef references an in-cluster EventGatewayStaticKey object, resolved to its Konnect id. It is mutually exclusive with the other fields. |
 
 _Appears in:_
 
@@ -8626,6 +11704,7 @@ Only one of the fields should be set based on the Type.
 | --- | --- |
 | `type` _[EventGatewayBackendClusterAuthenticationType](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterauthenticationtype)_ | Type designates the type of configuration. |
 | `anonymous` _[BackendClusterAuthenticationAnonymous](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationanonymous)_ | Anonymous configuration. |
+| `saslAwsIam` _[BackendClusterAuthenticationSaslAwsIam](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslawsiam)_ | SaslAwsIam configuration. |
 | `saslPlain` _[BackendClusterAuthenticationSaslPlain](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslplain)_ | SaslPlain configuration. |
 | `saslScram` _[BackendClusterAuthenticationSaslScram](#configuration-konghq-com-v1alpha1-types-backendclusterauthenticationsaslscram)_ | SaslScram configuration. |
 
@@ -8651,6 +11730,7 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `anonymous` |  |
+| `saslAwsIam` |  |
 | `saslPlain` |  |
 | `saslScram` |  |
 
@@ -8665,7 +11745,8 @@ EventGatewayBackendClusterSpec defines the desired state of EventGatewayBackendC
 
 | Field | Description |
 | --- | --- |
-| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
 | `apiSpec` _[EventGatewayBackendClusterAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
 
 _Appears in:_
@@ -8761,53 +11842,92 @@ of the consume schema validation policy when using an inline schema.<br /><br />
 | Field | Description |
 | --- | --- |
 | `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `key` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkey)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `keyValidationAction` _[ConsumeKeyValidationAction](#configuration-konghq-com-v1alpha1-types-consumekeyvalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record key is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
-| `schemaRegistry` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigschemaregistry)_ | A reference to a schema Registry. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `value` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigvalue)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `valueValidationAction` _[ConsumeValueValidationAction](#configuration-konghq-com-v1alpha1-types-consumevaluevalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record value is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
 
 _Appears in:_
 
 - [EventGatewayConsumeSchemaValidationPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyconfig)
 
-#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry
+#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey
 
 
-EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry represents a union type for schema_registry.
-Only one of the fields should be set based on the Type.
+EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey represents a union type for key.
+Only one of the fields should be set based on the SchemaType.
 
 
 
 | Field | Description |
 | --- | --- |
-| `type` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigschemaregistrytype)_ | Type designates the type of configuration. |
-| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
-| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
+| `schemaType` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKeyType](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkeytype)_ | SchemaType designates the type of configuration. |
+| `avro` _[SchemaValidationInlineSchemaConfigAvro](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigavro)_ | Avro configuration. |
+| `json` _[SchemaValidationInlineSchemaConfigJSON](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigjson)_ | JSON configuration. |
 
 _Appears in:_
 
 - [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfig)
 
-#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType
+#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKeyType
 
 _Underlying type:_ `string`
 
-EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType represents the type of schema_registry.
+EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKeyType represents the type of key.
 
 
 
 
 _Appears in:_
 
-- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigschemaregistry)
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkey)
 
 Allowed values:
 
 | Value | Description |
 | --- | --- |
-| `id` |  |
-| `name` |  |
+| `avro` |  |
+| `json` |  |
+
+#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue
+
+
+EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue represents a union type for value.
+Only one of the fields should be set based on the SchemaType.
+
+
+
+| Field | Description |
+| --- | --- |
+| `schemaType` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValueType](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigvaluetype)_ | SchemaType designates the type of configuration. |
+| `avro` _[SchemaValidationInlineSchemaConfigAvro](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigavro)_ | Avro configuration. |
+| `json` _[SchemaValidationInlineSchemaConfigJSON](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigjson)_ | JSON configuration. |
+
+_Appears in:_
+
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfig)
+
+#### EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValueType
+
+_Underlying type:_ `string`
+
+EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValueType represents the type of value.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigvalue)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+| `json` |  |
 
 #### EventGatewayConsumeSchemaValidationPolicyJSONConfig
 
@@ -8980,7 +12100,8 @@ EventGatewayDataPlaneCertificateSpec defines the desired state of EventGatewayDa
 
 | Field | Description |
 | --- | --- |
-| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
 | `apiSpec` _[EventGatewayDataPlaneCertificateAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificateapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
 
 _Appears in:_
@@ -9375,7 +12496,8 @@ EventGatewayListenerSpec defines the desired state of EventGatewayListener.
 
 | Field | Description |
 | --- | --- |
-| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
 | `apiSpec` _[EventGatewayListenerAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
 
 _Appears in:_
@@ -9398,6 +12520,231 @@ EventGatewayListenerStatus defines the observed state of EventGatewayListener.
 _Appears in:_
 
 - [EventGatewayListener](#configuration-konghq-com-v1alpha1-eventgatewaylistener)
+
+#### EventGatewayMaskEmailDomainKeepAll
+
+
+EventGatewayMaskEmailDomainKeepAll Keeps the whole domain unmasked.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskEmailDomainStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaildomainstrategy)
+- [EventGatewayMaskStrategyEmailDomain](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomain)
+
+
+
+#### EventGatewayMaskEmailDomainStrategyType
+
+_Underlying type:_ `string`
+
+EventGatewayMaskEmailDomainStrategyType represents the type of EventGatewayMaskEmailDomainStrategy.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskEmailDomainStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaildomainstrategy)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `keepAll` |  |
+| `keepChars` |  |
+| `replace` |  |
+
+
+
+#### EventGatewayMaskEmailLocalPartStrategyType
+
+_Underlying type:_ `string`
+
+EventGatewayMaskEmailLocalPartStrategyType represents the type of EventGatewayMaskEmailLocalPartStrategy.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskEmailLocalPartStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaillocalpartstrategy)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `keepChars` |  |
+| `replace` |  |
+
+
+
+#### EventGatewayMaskStrategyEmail
+
+
+EventGatewayMaskStrategyEmail Masks an email address by applying a separate
+strategy to the local part and to the domain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `domain` _[EventGatewayMaskStrategyEmailDomain](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomain)_ | The strategy used to redact the domain of an email address. |
+| `localPart` _[EventGatewayMaskStrategyEmailLocalPart](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaillocalpart)_ | The strategy used to redact the local part of an email address. |
+
+_Appears in:_
+
+- [EventGatewayMaskStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategy)
+- [EventGatewayParsedRecordMaskSelectorStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategy)
+
+#### EventGatewayMaskStrategyEmailDomain
+
+
+EventGatewayMaskStrategyEmailDomain represents a union type for domain.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayMaskStrategyEmailDomainType](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomaintype)_ | Type designates the type of configuration. |
+| `keepAll` _[EventGatewayMaskEmailDomainKeepAll](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaildomainkeepall)_ | EmailDomainKeepAll configuration. |
+| `keepChars` _[EventGatewayMaskStrategyKeepChars](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategykeepchars)_ | StrategyKeepChars configuration. |
+| `replace` _[EventGatewayMaskStrategyReplace](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyreplace)_ | StrategyReplace configuration. |
+
+_Appears in:_
+
+- [EventGatewayMaskStrategyEmail](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemail)
+
+#### EventGatewayMaskStrategyEmailDomainType
+
+_Underlying type:_ `string`
+
+EventGatewayMaskStrategyEmailDomainType represents the type of domain.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskStrategyEmailDomain](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomain)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `keepAll` |  |
+| `keepChars` |  |
+| `replace` |  |
+
+#### EventGatewayMaskStrategyEmailLocalPart
+
+
+EventGatewayMaskStrategyEmailLocalPart represents a union type for local_part.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayMaskStrategyEmailLocalPartType](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaillocalparttype)_ | Type designates the type of configuration. |
+| `keepChars` _[EventGatewayMaskStrategyKeepChars](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategykeepchars)_ | KeepChars configuration. |
+| `replace` _[EventGatewayMaskStrategyReplace](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyreplace)_ | Replace configuration. |
+
+_Appears in:_
+
+- [EventGatewayMaskStrategyEmail](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemail)
+
+#### EventGatewayMaskStrategyEmailLocalPartType
+
+_Underlying type:_ `string`
+
+EventGatewayMaskStrategyEmailLocalPartType represents the type of local_part.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskStrategyEmailLocalPart](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaillocalpart)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `keepChars` |  |
+| `replace` |  |
+
+#### EventGatewayMaskStrategyKeepChars
+
+
+EventGatewayMaskStrategyKeepChars Keeps a number of leading and/or trailing
+characters and replaces the middle with a fixed phrase.
+If `first + last` is greater than or equal to the value length, the whole
+value is replaced with the phrase, so it never shows more characters than the
+original value.
+The phrase is fixed, so the masked output does not leak the value length.
+
+
+
+| Field | Description |
+| --- | --- |
+| `first` _int_ | Number of leading characters to keep unmasked. |
+| `last` _int_ | Number of trailing characters to keep unmasked. |
+| `phrase` _string_ | The phrase that replaces the masked middle of the value. |
+
+_Appears in:_
+
+- [EventGatewayMaskEmailDomainStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaildomainstrategy)
+- [EventGatewayMaskEmailLocalPartStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaillocalpartstrategy)
+- [EventGatewayMaskStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategy)
+- [EventGatewayMaskStrategyEmailDomain](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomain)
+- [EventGatewayMaskStrategyEmailLocalPart](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaillocalpart)
+- [EventGatewayParsedRecordMaskSelectorStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategy)
+
+#### EventGatewayMaskStrategyReplace
+
+
+EventGatewayMaskStrategyReplace Replaces the whole value with a fixed phrase.
+The masked length does not reflect the original value length.
+
+
+
+| Field | Description |
+| --- | --- |
+| `phrase` _string_ | The phrase to replace the value with. |
+
+_Appears in:_
+
+- [EventGatewayMaskEmailDomainStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaildomainstrategy)
+- [EventGatewayMaskEmailLocalPartStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskemaillocalpartstrategy)
+- [EventGatewayMaskStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategy)
+- [EventGatewayMaskStrategyEmailDomain](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaildomain)
+- [EventGatewayMaskStrategyEmailLocalPart](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemaillocalpart)
+- [EventGatewayParsedRecordMaskSelectorStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategy)
+
+#### EventGatewayMaskStrategyType
+
+_Underlying type:_ `string`
+
+EventGatewayMaskStrategyType represents the type of EventGatewayMaskStrategy.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayMaskStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategy)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `email` |  |
+| `keepChars` |  |
+| `replace` |  |
 
 #### EventGatewayModifyHeaderAction
 
@@ -9816,6 +13163,7 @@ _Appears in:_
 
 - [EventGatewayParsedRecordDecryptionSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptionselectorpaths)
 - [EventGatewayParsedRecordEncryptionSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptionselectorpaths)
+- [EventGatewayParsedRecordMaskSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorpaths)
 
 #### EventGatewayParsedRecordFieldPathsArrayItem
 
@@ -9847,6 +13195,736 @@ _Appears in:_
 
 - [EventGatewayParsedRecordDecryptionSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptionselectorpaths)
 - [EventGatewayParsedRecordEncryptionSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptionselectorpaths)
+- [EventGatewayParsedRecordMaskSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorpaths)
+
+#### EventGatewayParsedRecordMaskFieldsConsumeConfig
+
+
+EventGatewayParsedRecordMaskFieldsConsumeConfig The configuration of the mask
+parsed record fields consume policy.
+
+
+
+| Field | Description |
+| --- | --- |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `maskFields` _[][EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)_ | Selects which fields to mask and how to mask them. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskFieldsConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumepolicycreate)
+
+#### EventGatewayParsedRecordMaskFieldsConsumePolicyCreate
+
+
+EventGatewayParsedRecordMaskFieldsConsumePolicyCreate Redacts string fields
+of parsed Kafka records using a configurable masking strategy.<br /><br />Only string fields may be selected.
+Selecting a field that does not exist is ignored;
+selecting a field that is not a string is a policy error handled by
+`failure_mode`.<br /><br />Note this policy can only be used as a child of a
+`EventGatewayConsumeSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `condition` _string_ | A string containing the boolean expression that determines whether the policy is applied.<br /><br />When the policy is applied as a child policy of schema_validation, the expression can also reference `record.value` fields. |
+| `config` _[EventGatewayParsedRecordMaskFieldsConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumeconfig)_ | The configuration of the policy. |
+| `description` _string_ | A human-readable description of the policy. |
+| `enabled` _string_ | Whether the policy is enabled. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _string_ | A unique user-defined name of the policy. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyconfig)
+
+#### EventGatewayParsedRecordMaskFieldsProduceConfig
+
+
+EventGatewayParsedRecordMaskFieldsProduceConfig The configuration of the mask
+record fields produce policy.
+
+
+
+| Field | Description |
+| --- | --- |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `maskFields` _[][EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)_ | Selects which fields to mask and how to mask them. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskFieldsProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproducepolicycreate)
+
+#### EventGatewayParsedRecordMaskFieldsProducePolicyCreate
+
+
+EventGatewayParsedRecordMaskFieldsProducePolicyCreate Redacts string fields
+of parsed Kafka records using a configurable masking strategy.<br /><br />Only string fields may be selected.
+Selecting a field that does not exist is ignored;
+selecting a field that is not a string is a policy error handled by
+`failure_mode`.<br /><br />Note this policy can only be used as a child of a
+`EventGatewayProduceSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `condition` _string_ | A string containing the boolean expression that determines whether the policy is applied.<br /><br />When the policy is applied as a child policy of schema_validation, the expression can also reference `record.value` fields. |
+| `config` _[EventGatewayParsedRecordMaskFieldsProduceConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproduceconfig)_ | The configuration of the policy. |
+| `description` _string_ | A human-readable description of the policy. |
+| `enabled` _string_ | Whether the policy is enabled. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _string_ | A unique user-defined name of the policy. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyconfig)
+
+#### EventGatewayParsedRecordMaskSelector
+
+
+EventGatewayParsedRecordMaskSelector Selects fields of a parsed record for
+masking and defines the strategy used to redact them.
+
+
+
+| Field | Description |
+| --- | --- |
+| `paths` _[EventGatewayParsedRecordMaskSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorpaths)_ | Selects which fields of the parsed record to mask. A maximum of 50 path entries are allowed. |
+| `strategy` _[EventGatewayParsedRecordMaskSelectorStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategy)_ | The strategy used to redact a matched field value. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskFieldsConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumeconfig)
+- [EventGatewayParsedRecordMaskFieldsProduceConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproduceconfig)
+
+#### EventGatewayParsedRecordMaskSelectorPaths
+
+
+EventGatewayParsedRecordMaskSelectorPaths represents a union type for paths.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordMaskSelectorPathsType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorpathstype)_ | Type designates the type of configuration. |
+| `array` _[EventGatewayParsedRecordFieldPathsArray](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordfieldpathsarray)_ | Array configuration. |
+| `expression` _[EventGatewayParsedRecordFieldPathsExpression](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordfieldpathsexpression)_ | Expression configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)
+
+#### EventGatewayParsedRecordMaskSelectorPathsType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordMaskSelectorPathsType represents the type of paths.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskSelectorPaths](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorpaths)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `array` |  |
+| `expression` |  |
+
+#### EventGatewayParsedRecordMaskSelectorStrategy
+
+
+EventGatewayParsedRecordMaskSelectorStrategy represents a union type for strategy.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordMaskSelectorStrategyType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategytype)_ | Type designates the type of configuration. |
+| `email` _[EventGatewayMaskStrategyEmail](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyemail)_ | Email configuration. |
+| `keepChars` _[EventGatewayMaskStrategyKeepChars](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategykeepchars)_ | KeepChars configuration. |
+| `replace` _[EventGatewayMaskStrategyReplace](#configuration-konghq-com-v1alpha1-types-eventgatewaymaskstrategyreplace)_ | Replace configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)
+
+#### EventGatewayParsedRecordMaskSelectorStrategyType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordMaskSelectorStrategyType represents the type of strategy.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordMaskSelectorStrategy](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselectorstrategy)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `email` |  |
+| `keepChars` |  |
+| `replace` |  |
+
+
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigAvro
+
+
+EventGatewayParsedRecordTranscodeConsumeConfigAvro The configuration of the
+transcode parsed record policy when converting consumed records to Avro.
+Avro requires a schema to serialize the record value, so `schema_source` must
+be set.
+
+
+
+| Field | Description |
+| --- | --- |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
+| `schemaSource` _[EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfig)
+- [EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreateconfig)
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource
+
+
+EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource represents a union type for schema_source.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSourceType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasourcetype)_ | Type designates the type of configuration. |
+| `inline` _[EventGatewayParsedRecordTranscodeSchemaSourceInline](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourceinline)_ | Inlin configuration. |
+| `reference` _[EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)_ | Referenc configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavro)
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSourceType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSourceType represents the type of schema_source.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasource)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` |  |
+| `reference` |  |
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigJSON
+
+
+EventGatewayParsedRecordTranscodeConsumeConfigJSON The configuration of the
+transcode parsed record policy when converting consumed records to JSON.
+
+
+
+| Field | Description |
+| --- | --- |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
+| `schemaSource` _[EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfig)
+- [EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreateconfig)
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource
+
+
+EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource represents a union type for schema_source.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSourceType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasourcetype)_ | Type designates the type of configuration. |
+| `inline` _[EventGatewayParsedRecordTranscodeSchemaSourceInline](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourceinline)_ | Inlin configuration. |
+| `reference` _[EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)_ | Referenc configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSON](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjson)
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSourceType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSourceType represents the type of schema_source.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasource)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` |  |
+| `reference` |  |
+
+#### EventGatewayParsedRecordTranscodeConsumeConfigType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeConsumeConfigType represents the type of EventGatewayParsedRecordTranscodeConsumeConfig.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+| `json` |  |
+
+#### EventGatewayParsedRecordTranscodeConsumePolicyCreate
+
+
+EventGatewayParsedRecordTranscodeConsumePolicyCreate Converts an already
+schema-validated record value into a different serialization
+format before it is returned to the consumer.<br /><br />Note this policy can only be used as a child of a
+`EventGatewayConsumeSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `condition` _string_ | A string containing the boolean expression that determines whether the policy is applied.<br /><br />When the policy is applied as a child policy of schema_validation, the expression can also reference `record.value` fields. |
+| `config` _[EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreateconfig)_ | The configuration of the policy. |
+| `description` _string_ | A human-readable description of the policy. |
+| `enabled` _string_ | Whether the policy is enabled. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _string_ | A unique user-defined name of the policy. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyconfig)
+
+#### EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig
+
+
+EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig represents a union type for config.
+Only one of the fields should be set based on the OutputFormat.
+
+
+
+| Field | Description |
+| --- | --- |
+| `outputFormat` _[EventGatewayParsedRecordTranscodeConsumePolicyCreateConfigType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreateconfigtype)_ | OutputFormat designates the type of configuration. |
+| `avro` _[EventGatewayParsedRecordTranscodeConsumeConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavro)_ | Avro configuration. |
+| `json` _[EventGatewayParsedRecordTranscodeConsumeConfigJSON](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjson)_ | JSON configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreate)
+
+#### EventGatewayParsedRecordTranscodeConsumePolicyCreateConfigType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeConsumePolicyCreateConfigType represents the type of config.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreateconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+| `json` |  |
+
+
+
+#### EventGatewayParsedRecordTranscodeProduceConfigAvro
+
+
+EventGatewayParsedRecordTranscodeProduceConfigAvro The configuration of the
+transcode parsed record policy when converting produced records to Avro.
+Avro requires a schema to serialize the record value, so `schema_source` must
+be set.
+
+
+
+| Field | Description |
+| --- | --- |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
+| `schemaSource` _[EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProduceConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfig)
+- [EventGatewayParsedRecordTranscodeProducePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreateconfig)
+
+#### EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource
+
+
+EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource represents a union type for schema_source.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSourceType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasourcetype)_ | Type designates the type of configuration. |
+| `inline` _[EventGatewayParsedRecordTranscodeSchemaSourceInline](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourceinline)_ | Inlin configuration. |
+| `reference` _[EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)_ | Referenc configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProduceConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavro)
+
+#### EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSourceType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSourceType represents the type of schema_source.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasource)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` |  |
+| `reference` |  |
+
+#### EventGatewayParsedRecordTranscodeProduceConfigType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeProduceConfigType represents the type of EventGatewayParsedRecordTranscodeProduceConfig.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProduceConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+
+#### EventGatewayParsedRecordTranscodeProducePolicyCreate
+
+
+EventGatewayParsedRecordTranscodeProducePolicyCreate Converts an already
+schema-validated record value into a different serialization
+format before it is produced to the backend cluster.<br /><br />Note this policy can only be used as a child of a
+`EventGatewayProduceSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `condition` _string_ | A string containing the boolean expression that determines whether the policy is applied.<br /><br />When the policy is applied as a child policy of schema_validation, the expression can also reference `record.value` fields. |
+| `config` _[EventGatewayParsedRecordTranscodeProducePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreateconfig)_ | The configuration of the policy. |
+| `description` _string_ | A human-readable description of the policy. |
+| `enabled` _string_ | Whether the policy is enabled. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _string_ | A unique user-defined name of the policy. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyconfig)
+
+#### EventGatewayParsedRecordTranscodeProducePolicyCreateConfig
+
+
+EventGatewayParsedRecordTranscodeProducePolicyCreateConfig represents a union type for config.
+Only one of the fields should be set based on the OutputFormat.
+
+
+
+| Field | Description |
+| --- | --- |
+| `outputFormat` _[EventGatewayParsedRecordTranscodeProducePolicyCreateConfigType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreateconfigtype)_ | OutputFormat designates the type of configuration. |
+| `avro` _[EventGatewayParsedRecordTranscodeProduceConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavro)_ | EventGatewayParsedRecordTranscodeProduceConfigAvro configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreate)
+
+#### EventGatewayParsedRecordTranscodeProducePolicyCreateConfigType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeProducePolicyCreateConfigType represents the type of config.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeProducePolicyCreateConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreateconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+
+
+
+#### EventGatewayParsedRecordTranscodeSchemaRefDestinationConfluentFormat
+
+
+EventGatewayParsedRecordTranscodeSchemaRefDestinationConfluentFormat Prefixes
+the structured data bytes with a reference to the schema.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestination)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)
+
+#### EventGatewayParsedRecordTranscodeSchemaRefDestinationNone
+
+
+EventGatewayParsedRecordTranscodeSchemaRefDestinationNone Do not persist the
+schema anywhere.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestination)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)
+
+#### EventGatewayParsedRecordTranscodeSchemaRefDestinationRecordHeader
+
+
+EventGatewayParsedRecordTranscodeSchemaRefDestinationRecordHeader Puts the
+schema reference in a record header.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | The name is compatible with Confluent's serializer by default but can be changed. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestination)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)
+
+#### EventGatewayParsedRecordTranscodeSchemaRefDestinationType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeSchemaRefDestinationType represents the type of EventGatewayParsedRecordTranscodeSchemaRefDestination.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestination)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `confluentFormat` |  |
+| `none` |  |
+| `recordHeader` |  |
+
+
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceInline
+
+
+EventGatewayParsedRecordTranscodeSchemaSourceInline A schema embedded
+directly in the policy configuration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `inline` _string_ | The raw schema text (e.g. an Avro JSON schema) to use for the transcoded output data. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasource)
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasource)
+- [EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasource)
+- [EventGatewayParsedRecordTranscodeSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasource)
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceReference
+
+
+EventGatewayParsedRecordTranscodeSchemaSourceReference References a schema
+registered in a schema registry, computing the subject and version to use.
+
+
+
+| Field | Description |
+| --- | --- |
+| `schemaRefDestination` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)_ | Defines how to record the schema id for the transcoded output data. See the [Confluent docs](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) for more about the wire format. |
+| `schemaRegistry` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)_ | A reference to a schema Registry. |
+| `subject` _string_ | An expression that computes the schema registry subject of the output data's schema. |
+| `version` _string_ | An expression that computes the schema registry version of the output data's schema. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasource)
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasource)
+- [EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasource)
+- [EventGatewayParsedRecordTranscodeSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasource)
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination
+
+
+EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination represents a union type for schema_ref_destination.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestinationType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestinationtype)_ | Type designates the type of configuration. |
+| `confluentFormat` _[EventGatewayParsedRecordTranscodeSchemaRefDestinationConfluentFormat](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestinationconfluentformat)_ | ConfluentFormat configuration. |
+| `none` _[EventGatewayParsedRecordTranscodeSchemaRefDestinationNone](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestinationnone)_ | None configuration. |
+| `recordHeader` _[EventGatewayParsedRecordTranscodeSchemaRefDestinationRecordHeader](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemarefdestinationrecordheader)_ | RecordHeader configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestinationType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestinationType represents the type of schema_ref_destination.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `confluentFormat` |  |
+| `none` |  |
+| `recordHeader` |  |
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry
+
+
+EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry represents a union type for schema_registry.
+Only one of the fields should be set based on the Type.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistrytype)_ | Type designates the type of configuration. |
+| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
+| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType represents the type of schema_registry.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `id` |  |
+| `name` |  |
+
+#### EventGatewayParsedRecordTranscodeSchemaSourceType
+
+_Underlying type:_ `string`
+
+EventGatewayParsedRecordTranscodeSchemaSourceType represents the type of EventGatewayParsedRecordTranscodeSchemaSource.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasource)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` |  |
+| `reference` |  |
+
+
 
 #### EventGatewayProduceRequestRules
 
@@ -9953,53 +14031,92 @@ of the produce schema validation policy when using an inline schema.<br /><br />
 | Field | Description |
 | --- | --- |
 | `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `key` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkey)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
-| `schemaRegistry` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigschemaregistry)_ | A reference to a schema Registry. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `value` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvalue)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
 
 _Appears in:_
 
 - [EventGatewayProduceSchemaValidationPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyconfig)
 
-#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry
+#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey
 
 
-EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry represents a union type for schema_registry.
-Only one of the fields should be set based on the Type.
+EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey represents a union type for key.
+Only one of the fields should be set based on the SchemaType.
 
 
 
 | Field | Description |
 | --- | --- |
-| `type` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigschemaregistrytype)_ | Type designates the type of configuration. |
-| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
-| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
+| `schemaType` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKeyType](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkeytype)_ | SchemaType designates the type of configuration. |
+| `avro` _[SchemaValidationInlineSchemaConfigAvro](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigavro)_ | Avro configuration. |
+| `json` _[SchemaValidationInlineSchemaConfigJSON](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigjson)_ | JSON configuration. |
 
 _Appears in:_
 
 - [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfig)
 
-#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType
+#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKeyType
 
 _Underlying type:_ `string`
 
-EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistryType represents the type of schema_registry.
+EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKeyType represents the type of key.
 
 
 
 
 _Appears in:_
 
-- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigschemaregistry)
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkey)
 
 Allowed values:
 
 | Value | Description |
 | --- | --- |
-| `id` |  |
-| `name` |  |
+| `avro` |  |
+| `json` |  |
+
+#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue
+
+
+EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue represents a union type for value.
+Only one of the fields should be set based on the SchemaType.
+
+
+
+| Field | Description |
+| --- | --- |
+| `schemaType` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValueType](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvaluetype)_ | SchemaType designates the type of configuration. |
+| `avro` _[SchemaValidationInlineSchemaConfigAvro](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigavro)_ | Avro configuration. |
+| `json` _[SchemaValidationInlineSchemaConfigJSON](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfigjson)_ | JSON configuration. |
+
+_Appears in:_
+
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfig)
+
+#### EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValueType
+
+_Underlying type:_ `string`
+
+EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValueType represents the type of value.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvalue)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+| `json` |  |
 
 #### EventGatewayProduceSchemaValidationPolicyJSONConfig
 
@@ -10311,7 +14428,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace is reserved for future cross-namespace support. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
 
 _Appears in:_
 
@@ -10327,7 +14444,8 @@ EventGatewaySchemaRegistrySpec defines the desired state of EventGatewaySchemaRe
 
 | Field | Description |
 | --- | --- |
-| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
 | `apiSpec` _[EventGatewaySchemaRegistryAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
 
 _Appears in:_
@@ -10371,6 +14489,42 @@ _Appears in:_
 
 - [EventGatewayVirtualClusterConsumePolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyconfig)
 
+#### EventGatewayStaticKeyAPISpec
+
+
+EventGatewayStaticKeyAPISpec defines the API spec fields for EventGatewayStaticKey.
+
+
+
+| Field | Description |
+| --- | --- |
+| `description` _string_ | A human-readable description of the static key. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _string_ | The unique name of the static key. |
+| `value` _[SensitiveDataSource](#configuration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Value is the static key's secret value: a base64-encoded 256-bit key. It is read only when the static key is created in Konnect: changing it afterwards (or the Secret it comes from) doesn't update the key, as Konnect static keys can't be updated. To rotate a key, create a new EventGatewayStaticKey and point the policies at it. Prefer sourcing it from a Secret: an inline value is stored in plain text in the EventGatewayStaticKey and readable by anyone allowed to read it. |
+
+_Appears in:_
+
+- [EventGatewayStaticKeySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyspec)
+
+#### EventGatewayStaticKeyRef
+
+
+EventGatewayStaticKeyRef references an EventGatewayStaticKey in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [EncryptionKeyStaticReference](#configuration-konghq-com-v1alpha1-types-encryptionkeystaticreference)
+
 #### EventGatewayStaticKeySource
 
 
@@ -10382,6 +14536,41 @@ EventGatewayStaticKeySource A key source that uses static symmetric keys.
 _Appears in:_
 
 - [EventGatewayKeySource](#configuration-konghq-com-v1alpha1-types-eventgatewaykeysource)
+
+#### EventGatewayStaticKeySpec
+
+
+EventGatewayStaticKeySpec defines the desired state of EventGatewayStaticKey.
+
+
+
+| Field | Description |
+| --- | --- |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
+| `apiSpec` _[EventGatewayStaticKeyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayStaticKey](#configuration-konghq-com-v1alpha1-eventgatewaystatickey)
+
+#### EventGatewayStaticKeyStatus
+
+
+EventGatewayStaticKeyStatus defines the observed state of EventGatewayStaticKey.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `createInputsHash` _string_ | CreateInputsHash fingerprints the resolved user-supplied request body last successfully created in Konnect, before operator metadata is added. For entities predating this field, it is initialized from current inputs as a baseline, which cannot verify the values already stored in Konnect. Readers of this resource can use the fingerprint to verify guesses of low-entropy Secret values offline. Use high-entropy secret material. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayStaticKey](#configuration-konghq-com-v1alpha1-eventgatewaystatickey)
 
 #### EventGatewayTLSListenerPolicy
 
@@ -10443,6 +14632,76 @@ handshake.<br /><br />**Requires a minimum runtime version of `1.1`**.
 _Appears in:_
 
 - [EventGatewayTLSListenerPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewaytlslistenerpolicyconfig)
+
+#### EventGatewayTLSTrustBundleAPISpec
+
+
+EventGatewayTLSTrustBundleAPISpec defines the API spec fields for EventGatewayTLSTrustBundle.
+
+
+
+| Field | Description |
+| --- | --- |
+| `config` _[TLSTrustBundleConfig](#configuration-konghq-com-v1alpha1-types-tlstrustbundleconfig)_ |  |
+| `description` _string_ | A human-readable description of the TLS trust bundle. |
+| `labels` _[Labels](#configuration-konghq-com-v1alpha1-types-labels)_ | Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `name` _[TLSTrustBundleName](#configuration-konghq-com-v1alpha1-types-tlstrustbundlename)_ | The unique name of the TLS trust bundle. |
+
+_Appears in:_
+
+- [EventGatewayTLSTrustBundleSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlespec)
+
+#### EventGatewayTLSTrustBundleRef
+
+
+EventGatewayTLSTrustBundleRef references an EventGatewayTLSTrustBundle in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [TLSTrustBundleReference](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereference)
+
+#### EventGatewayTLSTrustBundleSpec
+
+
+EventGatewayTLSTrustBundleSpec defines the desired state of EventGatewayTLSTrustBundle.
+
+
+
+| Field | Description |
+| --- | --- |
+| `gatewayRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | GatewayRef is the reference to the parent Gateway object. This field is deprecated, use parentRef instead. Exactly one of gatewayRef and parentRef must be set. |
+| `parentRef` _[GatewayRef](#common-konghq-com-v1alpha1-types-gatewayref)_ | ParentRef is the reference to the gateway (control plane) this object belongs to. Supported kinds: KonnectEventGateway, OnPremEventGateway. Exactly one of gatewayRef and parentRef must be set. |
+| `apiSpec` _[EventGatewayTLSTrustBundleAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayTLSTrustBundle](#configuration-konghq-com-v1alpha1-eventgatewaytlstrustbundle)
+
+#### EventGatewayTLSTrustBundleStatus
+
+
+EventGatewayTLSTrustBundleStatus defines the observed state of EventGatewayTLSTrustBundle.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayTLSTrustBundle](#configuration-konghq-com-v1alpha1-eventgatewaytlstrustbundle)
 
 #### EventGatewayTxnOffsetCommitRequestRules
 
@@ -10506,6 +14765,9 @@ EventGatewayVirtualClusterConsumePolicyAPISpec defines the API spec fields for E
 
 
 
+| Field | Description |
+| --- | --- |
+| `parentPolicyRef` _[EventGatewayVirtualClusterConsumePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyref)_ | ParentPolicyRef references a schemaValidation consume policy in the same namespace and virtual cluster. Required for decryptFields and optional for modifyHeaders and skipRecord. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
 
 _Appears in:_
 
@@ -10524,9 +14786,11 @@ Only one of the fields should be set based on the Type.
 | `type` _[EventGatewayVirtualClusterConsumePolicyConfigType](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyconfigtype)_ | Type designates the type of configuration. |
 | `decrypt` _[EventGatewayDecryptPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewaydecryptpolicy)_ | DecryptPolicy configuration. |
 | `decryptFields` _[EventGatewayParsedRecordDecryptFieldsPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptfieldspolicycreate)_ | ParsedRecordDecryptFieldsPolicyCreate configuration. |
+| `maskFields` _[EventGatewayParsedRecordMaskFieldsConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumepolicycreate)_ | ParsedRecordMaskFieldsConsumePolicyCreate configuration. |
 | `modifyHeaders` _[EventGatewayModifyHeadersPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewaymodifyheaderspolicycreate)_ | ModifyHeadersPolicyCreate configuration. |
 | `schemaValidation` _[EventGatewayConsumeSchemaValidationPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicy)_ | ConsumeSchemaValidationPolicy configuration. |
 | `skipRecord` _[EventGatewaySkipRecordPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayskiprecordpolicycreate)_ | SkipRecordPolicyCreate configuration. |
+| `transcode` _[EventGatewayParsedRecordTranscodeConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreate)_ | ParsedRecordTranscodeConsumePolicyCreate configuration. |
 
 _Appears in:_
 
@@ -10551,9 +14815,29 @@ Allowed values:
 | --- | --- |
 | `decrypt` |  |
 | `decryptFields` |  |
+| `maskFields` |  |
 | `modifyHeaders` |  |
 | `schemaValidation` |  |
 | `skipRecord` |  |
+| `transcode` |  |
+
+#### EventGatewayVirtualClusterConsumePolicyRef
+
+
+EventGatewayVirtualClusterConsumePolicyRef references an EventGatewayVirtualClusterConsumePolicy in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyapispec)
 
 
 
@@ -10603,6 +14887,55 @@ _Appears in:_
 
 - [EventGatewayVirtualClusterPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyspec)
 
+#### EventGatewayVirtualClusterPolicyChainAPISpec
+
+
+EventGatewayVirtualClusterPolicyChainAPISpec defines the API spec fields for EventGatewayVirtualClusterPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `policies` _[][EventGatewayVirtualClusterPolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyref)_ | Policies lists distinct EventGatewayVirtualClusterPolicy references in execution order. Each policy must belong to the referenced EventGatewayVirtualCluster and be in the same namespace as this chain. Namespace defaults to this chain's namespace and may be set explicitly to that same namespace; cross-namespace references are not supported. List every cluster-level policy exactly once. An explicit empty list is valid only when the remote chain has no policies; it does not clear an existing chain. When a policy is created or deleted, update this list to match the complete remote set. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainspec)
+
+#### EventGatewayVirtualClusterPolicyChainSpec
+
+
+EventGatewayVirtualClusterPolicyChainSpec defines the desired state of EventGatewayVirtualClusterPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `eventGatewayVirtualClusterRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | EventGatewayVirtualClusterRef is the reference to the parent EventGatewayVirtualCluster object. |
+| `apiSpec` _[EventGatewayVirtualClusterPolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicychain)
+
+#### EventGatewayVirtualClusterPolicyChainStatus
+
+
+EventGatewayVirtualClusterPolicyChainStatus defines the observed state of EventGatewayVirtualClusterPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `virtualClusterID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | VirtualClusterID is the Konnect ID of the parent VirtualCluster. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicychain)
+
 #### EventGatewayVirtualClusterPolicyConfig
 
 
@@ -10640,6 +14973,24 @@ Allowed values:
 | --- | --- |
 | `acls` |  |
 | `requestRuleValidator` |  |
+
+#### EventGatewayVirtualClusterPolicyRef
+
+
+EventGatewayVirtualClusterPolicyRef references an EventGatewayVirtualClusterPolicy in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterPolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainapispec)
 
 
 
@@ -10684,6 +15035,9 @@ EventGatewayVirtualClusterProducePolicyAPISpec defines the API spec fields for E
 
 
 
+| Field | Description |
+| --- | --- |
+| `parentPolicyRef` _[EventGatewayVirtualClusterProducePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyref)_ | ParentPolicyRef references a schemaValidation produce policy in the same namespace and virtual cluster. Required for encryptFields and optional for modifyHeaders. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
 
 _Appears in:_
 
@@ -10702,8 +15056,10 @@ Only one of the fields should be set based on the Type.
 | `type` _[EventGatewayVirtualClusterProducePolicyConfigType](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyconfigtype)_ | Type designates the type of configuration. |
 | `encrypt` _[EventGatewayEncryptPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewayencryptpolicy)_ | EncryptPolicy configuration. |
 | `encryptFields` _[EventGatewayParsedRecordEncryptFieldsPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptfieldspolicycreate)_ | ParsedRecordEncryptFieldsPolicyCreate configuration. |
+| `maskFields` _[EventGatewayParsedRecordMaskFieldsProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproducepolicycreate)_ | ParsedRecordMaskFieldsProducePolicyCreate configuration. |
 | `modifyHeaders` _[EventGatewayModifyHeadersPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewaymodifyheaderspolicycreate)_ | ModifyHeadersPolicyCreate configuration. |
 | `schemaValidation` _[EventGatewayProduceSchemaValidationPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicy)_ | ProduceSchemaValidationPolicy configuration. |
+| `transcode` _[EventGatewayParsedRecordTranscodeProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreate)_ | ParsedRecordTranscodeProducePolicyCreate configuration. |
 
 _Appears in:_
 
@@ -10728,8 +15084,28 @@ Allowed values:
 | --- | --- |
 | `encrypt` |  |
 | `encryptFields` |  |
+| `maskFields` |  |
 | `modifyHeaders` |  |
 | `schemaValidation` |  |
+| `transcode` |  |
+
+#### EventGatewayVirtualClusterProducePolicyRef
+
+
+EventGatewayVirtualClusterProducePolicyRef references an EventGatewayVirtualClusterProducePolicy in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyapispec)
 
 
 
@@ -12299,7 +16675,10 @@ _Appears in:_
 - [EventGatewayListenerPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicystatus)
 - [EventGatewayListenerStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerstatus)
 - [EventGatewaySchemaRegistryStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistrystatus)
+- [EventGatewayStaticKeyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeystatus)
+- [EventGatewayTLSTrustBundleStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlestatus)
 - [EventGatewayVirtualClusterConsumePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicystatus)
+- [EventGatewayVirtualClusterPolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainstatus)
 - [EventGatewayVirtualClusterPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicystatus)
 - [EventGatewayVirtualClusterProducePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicystatus)
 - [EventGatewayVirtualClusterStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterstatus)
@@ -12330,10 +16709,16 @@ _Appears in:_
 - [EventGatewayModifyHeadersPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewaymodifyheaderspolicycreate)
 - [EventGatewayParsedRecordDecryptFieldsPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptfieldspolicycreate)
 - [EventGatewayParsedRecordEncryptFieldsPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptfieldspolicycreate)
+- [EventGatewayParsedRecordMaskFieldsConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsconsumepolicycreate)
+- [EventGatewayParsedRecordMaskFieldsProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproducepolicycreate)
+- [EventGatewayParsedRecordTranscodeConsumePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumepolicycreate)
+- [EventGatewayParsedRecordTranscodeProducePolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproducepolicycreate)
 - [EventGatewayProduceSchemaValidationPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicy)
 - [EventGatewayRequestRuleValidatorPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewayrequestrulevalidatorpolicy)
 - [EventGatewaySkipRecordPolicyCreate](#configuration-konghq-com-v1alpha1-types-eventgatewayskiprecordpolicycreate)
+- [EventGatewayStaticKeyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyapispec)
 - [EventGatewayTLSListenerPolicy](#configuration-konghq-com-v1alpha1-types-eventgatewaytlslistenerpolicy)
+- [EventGatewayTLSTrustBundleAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleapispec)
 - [EventGatewayVirtualClusterAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterapispec)
 - [ForwardToVirtualClusterPolicy](#configuration-konghq-com-v1alpha1-types-forwardtovirtualclusterpolicy)
 - [SchemaRegistryConfluent](#configuration-konghq-com-v1alpha1-types-schemaregistryconfluent)
@@ -12454,6 +16839,8 @@ failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime v
 _Appears in:_
 
 - [EventGatewayParsedRecordEncryptFieldsConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptfieldsconfig)
+- [EventGatewayParsedRecordMaskFieldsProduceConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskfieldsproduceconfig)
+- [EventGatewayParsedRecordTranscodeProduceConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavro)
 - [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfig)
 - [EventGatewayProduceSchemaValidationPolicyJSONConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfig)
 - [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfig)
@@ -12597,7 +16984,7 @@ Registry](https://github.com/confluentinc/schema-registry)
 | --- | --- |
 | `authentication` _[SchemaRegistryConfluentConfigAuthentication](#configuration-konghq-com-v1alpha1-types-schemaregistryconfluentconfigauthentication)_ | The authentication configuration for the schema registry. |
 | `endpoint` _string_ | The endpoint of the Confluent schema registry. |
-| `schemaType` _string_ | The format of the message. |
+| `schemaType` _string_ | The format of the message.<br /><br />**`any` requires a minimum runtime version of `1.3`**. |
 | `timeoutSeconds` _int_ | Total time in seconds from establishing connection to receive a response from schema registry. |
 
 _Appears in:_
@@ -12652,8 +17039,7 @@ SchemaRegistryReferenceByID is a type alias.
 
 _Appears in:_
 
-- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigschemaregistry)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
 - [EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)
 - [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)
 
@@ -12670,10 +17056,71 @@ SchemaRegistryReferenceByName Reference a schema registry by its unique name.
 
 _Appears in:_
 
-- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigschemaregistry)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
 - [EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)
 - [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)
+
+
+
+#### SchemaValidationInlineSchemaConfigAvro
+
+
+SchemaValidationInlineSchemaConfigAvro The configuration of an inline schema
+when using Avro.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `schema` _string_ | A schema that applies according to `schema_type`. |
+
+_Appears in:_
+
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkey)
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigvalue)
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkey)
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvalue)
+- [SchemaValidationInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfig)
+
+#### SchemaValidationInlineSchemaConfigJSON
+
+
+SchemaValidationInlineSchemaConfigJSON The configuration of an inline schema
+when using JSON.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+| Field | Description |
+| --- | --- |
+| `schema` _string_ | A schema that applies according to `schema_type`. |
+
+_Appears in:_
+
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkey)
+- [EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigvalue)
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkey)
+- [EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvalue)
+- [SchemaValidationInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfig)
+
+#### SchemaValidationInlineSchemaConfigType
+
+_Underlying type:_ `string`
+
+SchemaValidationInlineSchemaConfigType represents the type of SchemaValidationInlineSchemaConfig.
+
+
+
+
+_Appears in:_
+
+- [SchemaValidationInlineSchemaConfig](#configuration-konghq-com-v1alpha1-types-schemavalidationinlineschemaconfig)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `avro` |  |
+| `json` |  |
 
 
 
@@ -12715,8 +17162,10 @@ _Appears in:_
 
 - [BackendClusterTLSClientIdentity](#configuration-konghq-com-v1alpha1-types-backendclustertlsclientidentity)
 - [EventGatewayDataPlaneCertificateAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificateapispec)
+- [EventGatewayStaticKeyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyapispec)
 - [SchemaRegistryAuthenticationBasic](#configuration-konghq-com-v1alpha1-types-schemaregistryauthenticationbasic)
 - [TLSCertificate](#configuration-konghq-com-v1alpha1-types-tlscertificate)
+- [TLSTrustBundleConfig](#configuration-konghq-com-v1alpha1-types-tlstrustbundleconfig)
 
 #### SensitiveDataSourceType
 
@@ -12770,6 +17219,21 @@ _Appears in:_
 
 - [EventGatewayTLSListenerPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewaytlslistenerpolicyconfig)
 
+#### TLSTrustBundleConfig
+
+
+TLSTrustBundleConfig is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `trustedCa` _[SensitiveDataSource](#configuration-konghq-com-v1alpha1-types-sensitivedatasource)_ | PEM-encoded list of trusted CA certificates used to verify client certificates. Can be a literal PEM string or a vault reference. |
+
+_Appears in:_
+
+- [EventGatewayTLSTrustBundleAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleapispec)
+
 #### TLSTrustBundleName
 
 _Underlying type:_ `string`
@@ -12781,6 +17245,7 @@ TLSTrustBundleName The unique name of the TLS trust bundle.
 
 _Appears in:_
 
+- [EventGatewayTLSTrustBundleAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleapispec)
 - [TLSTrustBundleReference](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereference)
 - [TLSTrustBundleReferenceByName](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereferencebyname)
 
@@ -12795,6 +17260,7 @@ TLSTrustBundleReference is a type alias.
 | --- | --- |
 | `id` _*string_ |  |
 | `name` _[TLSTrustBundleName](#configuration-konghq-com-v1alpha1-types-tlstrustbundlename)_ |  |
+| `namespacedRef` _[EventGatewayTLSTrustBundleRef](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleref)_ | NamespacedRef references an in-cluster EventGatewayTLSTrustBundle object, resolved to its Konnect id. It is mutually exclusive with the other fields. |
 
 _Appears in:_
 
@@ -12851,6 +17317,25 @@ TargetRefWithGroupKind is a reference based on the object's group, kind, and nam
 _Appears in:_
 
 - [KongPluginBindingTargets](#configuration-konghq-com-v1alpha1-types-kongpluginbindingtargets)
+
+#### TranscodeOnUnknownField
+
+_Underlying type:_ `string`
+
+TranscodeOnUnknownField Describes how to handle JSON fields that are not
+defined in the target schema.
+* `fail` - the transcoding fails.
+The policy `failure_mode` determines how the failure is handled.
+* `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**.
+
+
+
+
+_Appears in:_
+
+- [EventGatewayParsedRecordTranscodeConsumeConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavro)
+- [EventGatewayParsedRecordTranscodeConsumeConfigJSON](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjson)
+- [EventGatewayParsedRecordTranscodeProduceConfigAvro](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavro)
 
 #### VirtualClusterACLMode
 
@@ -13125,7 +17610,7 @@ consumer group IDs, transaction IDs).
 | --- | --- |
 | `additional` _[VirtualClusterNamespaceAdditionalProperties](#configuration-konghq-com-v1alpha1-types-virtualclusternamespaceadditionalproperties)_ |  |
 | `mode` _string_ | * hide_prefix - the configured prefix is hidden from clients for topics and IDs when reading.<br /><br />Created resources are written with the prefix on the backend cluster. * enforce_prefix - the configured prefix remains visible to clients.<br /><br />Created resources must include the prefix or the request will fail. |
-| `prefix` _string_ | The namespace is differentiated by this chosen prefix. For example, if the prefix is set to "analytics_" the topic named "analytics_user_clicks" is available to the clients of the virtual cluster. Topics without the prefix will be ignored unless added via `additional.topics`. |
+| `prefix` _string_ | The namespace is differentiated by this chosen prefix. The prefix is prepended to Kafka topic names, so it can only contain the characters Kafka allows in them: ASCII letters, digits, `.`, `_` and `-`. It must contain at least one character other than `.` and be at most 100 characters long to leave room for the rest of the topic name (Kafka limits topic names to 249 characters). For example, if the prefix is set to "analytics_" the topic named "analytics_user_clicks" is available to the clients of the virtual cluster. Topics without the prefix will be ignored unless added via `additional.topics`. |
 
 _Appears in:_
 
@@ -13580,6 +18065,7 @@ _Appears in:_
 Package v1alpha1 contains API Schema definitions for the eventgateway.konghq.com v1alpha1 API group.
 
 - [KegDataPlane](#eventgateway-konghq-com-v1alpha1-kegdataplane)
+- [OnPremEventGateway](#eventgateway-konghq-com-v1alpha1-onpremeventgateway)
 
 ### KegDataPlane
 
@@ -13597,6 +18083,25 @@ referenced KonnectEventGateway resource.
 | `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[KegDataPlaneSpec](#eventgateway-konghq-com-v1alpha1-types-kegdataplanespec)_ | Spec defines the desired state of KegDataPlane. |
 | `status` _[KegDataPlaneStatus](#eventgateway-konghq-com-v1alpha1-types-kegdataplanestatus)_ | Status defines the observed state of KegDataPlane. |
+
+### OnPremEventGateway
+
+
+OnPremEventGateway is the Schema for the on-prem Event Gateway control planes API.
+It stands for one Event Gateway whose control plane is gw-admin, running in
+the cluster, instead of Konnect: Kong Operator pushes the configuration of
+the entities that reference it to gw-admin, and the data planes pull it
+from there.
+
+<!-- on_prem_event_gateway description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `eventgateway.konghq.com/v1alpha1`
+| `kind` _string_ | `OnPremEventGateway`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[OnPremEventGatewaySpec](#eventgateway-konghq-com-v1alpha1-types-onpremeventgatewayspec)_ | Spec defines the desired state of OnPremEventGateway. |
+| `status` _[OnPremEventGatewayStatus](#eventgateway-konghq-com-v1alpha1-types-onpremeventgatewaystatus)_ | Status defines the observed state of OnPremEventGateway. |
 
 ### Types
 
@@ -13660,6 +18165,44 @@ Allowed values:
 | `IPAddress` | IPAddressType is a textual representation of a numeric IP address.<br /> |
 | `Hostname` | HostnameAddressType represents a DNS based ingress point.<br /> |
 
+#### CertificateProvisioningMethod
+
+_Underlying type:_ `string`
+
+CertificateProvisioningMethod is the method used to provision a
+KegDataPlane's mTLS client certificate Secret.
+
+
+
+
+_Appears in:_
+
+- [CertificateSecret](#eventgateway-konghq-com-v1alpha1-types-certificatesecret)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `Manual` | ManualCertificateProvisioning indicates the certificate Secret is<br />supplied by the user and must not be managed by the operator.<br /> |
+| `Automatic` | AutomaticCertificateProvisioning indicates the certificate Secret is<br />generated and managed by the operator.<br /> |
+
+#### CertificateSecret
+
+
+CertificateSecret configures how the mTLS client certificate Secret for a
+KegDataPlane is provisioned.
+
+
+
+| Field | Description |
+| --- | --- |
+| `provisioning` _[CertificateProvisioningMethod](#eventgateway-konghq-com-v1alpha1-types-certificateprovisioningmethod)_ | Provisioning is the method used to provision the certificate. It can be either Manual or Automatic. In case manual provisioning is used, the certificate must be provided by the user via SecretRef. In case automatic provisioning is used, the certificate is generated by the operator. |
+| `secretRef` _[SecretRef](#eventgateway-konghq-com-v1alpha1-types-secretref)_ | SecretRef is the reference to the Secret containing the mTLS client certificate. Only used (and required) when Provisioning is Manual. |
+
+_Appears in:_
+
+- [KegDataPlaneSpec](#eventgateway-konghq-com-v1alpha1-types-kegdataplanespec)
+
 #### ControlPlaneRef
 
 
@@ -13670,8 +18213,9 @@ The Type field determines which sub-field is active.
 
 | Field | Description |
 | --- | --- |
-| `type` _[ControlPlaneRefType](#eventgateway-konghq-com-v1alpha1-types-controlplanereftype)_ | Type indicates the type of the control plane being referenced. Currently only konnectNamespacedRef is supported. |
+| `type` _[ControlPlaneRefType](#eventgateway-konghq-com-v1alpha1-types-controlplanereftype)_ | Type indicates the type of the control plane being referenced: a KonnectEventGateway (konnectNamespacedRef) or an OnPremEventGateway (onpremNamespacedRef). It can't be changed, and neither can an onpremNamespacedRef. |
 | `konnectNamespacedRef` _[KonnectNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef references a KonnectEventGateway resource in the same namespace. Must be set when type is konnectNamespacedRef; validated by CEL rules on this struct. |
+| `onpremNamespacedRef` _[OnPremNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-onpremnamespacedref)_ | OnPremNamespacedRef references an OnPremEventGateway resource in the same namespace. The data plane pulls its configuration from the gw-admin pods of the GWAdmin of that gateway, and authenticates with a client certificate trusted by the cp client CA of the GWAdmin. Must be set when type is onpremNamespacedRef; validated by CEL rules on this struct. |
 
 _Appears in:_
 
@@ -13695,6 +18239,7 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `konnectNamespacedRef` | ControlPlaneRefTypeKonnectNamespacedRef references a KonnectEventGateway<br />resource in the same namespace as the DataPlane.<br /> |
+| `onpremNamespacedRef` | ControlPlaneRefTypeOnPremNamespacedRef references an OnPremEventGateway<br />resource in the same namespace as the DataPlane.<br /> |
 
 #### DebugEndpointsState
 
@@ -13735,25 +18280,23 @@ _Appears in:_
 
 - [KegDataPlaneSpec](#eventgateway-konghq-com-v1alpha1-types-kegdataplanespec)
 
-#### HorizontalScaling
+#### GWAdminRef
 
 
-HorizontalScaling defines horizontal scaling options for the deployment.
-It holds all the options from the HorizontalPodAutoscalerSpec besides the
-ScaleTargetRef which is being controlled by the Operator.
+GWAdminRef references a GWAdmin.
 
 
 
 | Field | Description |
 | --- | --- |
-| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
-| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less than minReplicas. |
-| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
-| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
+| `name` _string_ | Name is the name of the GWAdmin. |
+| `namespace` _*string_ | Namespace is the namespace of the GWAdmin. It defaults to the namespace of the referencing object. |
 
 _Appears in:_
 
-- [Scaling](#eventgateway-konghq-com-v1alpha1-types-scaling)
+- [OnPremEventGatewaySpec](#eventgateway-konghq-com-v1alpha1-types-onpremeventgatewayspec)
+
+
 
 #### KegDataPlaneConfiguration
 
@@ -13765,7 +18308,7 @@ All fields map 1-to-1 to keg configuration variables.
 
 | Field | Description |
 | --- | --- |
-| `konnect` _[KonnectConfig](#eventgateway-konghq-com-v1alpha1-types-konnectconfig)_ | Konnect provides optional overrides for the keg to Konnect connection parameters. All other connection values (region, gateway_cluster_id, cert paths) are derived automatically and cannot be overridden here. |
+| `konnect` _[KonnectConfig](#eventgateway-konghq-com-v1alpha1-types-konnectconfig)_ | Konnect provides optional overrides for the keg to Konnect connection parameters. All other connection values (region, gateway_cluster_id, cert paths) are derived automatically and cannot be overridden here. To supply a user-owned mTLS certificate, use spec.certificateSecret. |
 | `configPollIntervalSeconds` _*int32_ | ConfigPollIntervalSeconds overrides how often keg polls Konnect for config changes, in seconds. Corresponds to config_poll_interval / KEG__CONFIG_POLL_INTERVAL. |
 | `enableDebugEndpoints` _[DebugEndpointsState](#eventgateway-konghq-com-v1alpha1-types-debugendpointsstate)_ | EnableDebugEndpoints enables the /debug/pprof/allocs endpoint. Corresponds to enable_debug_endpoints / KEG__ENABLE_DEBUG_ENDPOINTS. |
 | `observability` _[ObservabilityConfig](#eventgateway-konghq-com-v1alpha1-types-observabilityconfig)_ | Observability configures logging, metrics, and tracing. |
@@ -13784,10 +18327,11 @@ KegDataPlaneSpec defines the desired state of KegDataPlane.
 
 | Field | Description |
 | --- | --- |
-| `controlPlaneRef` _[ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this KegDataPlane connects to. The type field identifies which kind of control plane is being referenced. Currently only konnectNamespacedRef is supported, which references a KonnectEventGateway resource in the same namespace. |
+| `controlPlaneRef` _[ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this KegDataPlane connects to. The type field identifies which kind of control plane is being referenced: konnectNamespacedRef references a KonnectEventGateway resource in the same namespace, onpremNamespacedRef an OnPremEventGateway resource in the same namespace. |
 | `deployment` _[DeploymentOptions](#eventgateway-konghq-com-v1alpha1-types-deploymentoptions)_ | Deployment configures the keg Deployment: image, replicas, resources, extra env vars, volume mounts, etc. |
 | `network` _[NetworkOptions](#eventgateway-konghq-com-v1alpha1-types-networkoptions)_ | Network configures how the keg pod is exposed to Kafka clients. |
 | `config` _[KegDataPlaneConfiguration](#eventgateway-konghq-com-v1alpha1-types-kegdataplaneconfiguration)_ | Config provides optional overrides for keg runtime settings. When omitted, the keg built-in defaults are used. https://developer.konghq.com/event-gateway/configuration/#applying-configuration |
+| `certificateSecret` _[CertificateSecret](#eventgateway-konghq-com-v1alpha1-types-certificatesecret)_ | CertificateSecret configures how the mTLS client certificate Secret used by this KegDataPlane to connect to its control plane is provisioned: Konnect with a konnectNamespacedRef, the gw-admin of the OnPremEventGateway with an onpremNamespacedRef. If left unset, it defaults to Automatic (operator-managed).<br /><br />When Provisioning is Manual, SecretRef must point to an existing Secret holding tls.crt and tls.key (typically of type kubernetes.io/tls, but the type isn't enforced) that the operator will use as-is: it will never create, modify, rotate, or delete it. The Secret must live in this KegDataPlane's own namespace and must carry the operator's secret label selector (default "konghq.com/secret: \"true\"", configurable via --secret-label-selector on the operator), or the operator cannot see it at all. Switching Provisioning from Automatic to Manual deletes the previously operator-provisioned Secret once the Deployment has rolled onto the Manual one; switching back to Automatic later provisions a new one rather than reusing the deleted one.<br /><br />The referenced Secret must hold a matching certificate and key that are currently valid (a NotBefore up to 5 minutes in the future is tolerated for clock skew), and must not be an operator-provisioned Secret (one labeled "gateway.konghq.com/secret-provisioning: automatic"); otherwise CertificateProvisioned goes False with reason InvalidSecret or SecretRefOperatorManaged. Deleting the referenced Secret while it is in use leaves running Pods untouched but prevents new ones from starting until the Secret is recreated or the reference is changed.<br /><br />With an onpremNamespacedRef and Manual provisioning, the certificate must be issued by the cp client CA of the GWAdmin of the OnPremEventGateway, so that GWAdmin needs a Manual clientCA: an Automatic one keeps its key in the namespace of Kong Operator. During a rotation of that CA, a certificate from the previous one stays trusted until every data plane runs a certificate from the new one; reissue it from the new CA. |
 
 _Appears in:_
 
@@ -13903,6 +18447,55 @@ _Appears in:_
 
 - [KegDataPlaneConfiguration](#eventgateway-konghq-com-v1alpha1-types-kegdataplaneconfiguration)
 
+#### OnPremEventGatewaySpec
+
+
+OnPremEventGatewaySpec defines the desired state of OnPremEventGateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `gwAdminRef` _[GWAdminRef](#eventgateway-konghq-com-v1alpha1-types-gwadminref)_ | GWAdminRef references the GWAdmin that serves this gateway. Kong Operator pushes the configuration of the gateway to every gw-admin pod of it, and the data planes of the gateway pull it from there. A GWAdmin in another namespace is used only when a KongReferenceGrant in its namespace allows OnPremEventGateways of the namespace of the gateway to reference it. It can't be changed. |
+
+_Appears in:_
+
+- [OnPremEventGateway](#eventgateway-konghq-com-v1alpha1-onpremeventgateway)
+
+#### OnPremEventGatewayStatus
+
+
+OnPremEventGatewayStatus defines the observed state of OnPremEventGateway.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions describe the status of the OnPremEventGateway. |
+| `serverURL` _string_ | ServerURL is the address the data planes of this gateway use to reach gw-admin: the cp endpoint of its GWAdmin. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed. |
+| `configRevision` _int64_ | ConfigRevision is the revision of the configuration of the gateway that Kong Operator pushes to gw-admin. It increases by one every time that configuration changes, and never decreases. |
+| `configHash` _string_ | ConfigHash identifies the configuration that ConfigRevision stands for: it changes only along with a new revision. |
+
+_Appears in:_
+
+- [OnPremEventGateway](#eventgateway-konghq-com-v1alpha1-onpremeventgateway)
+
+#### OnPremNamespacedRef
+
+
+OnPremNamespacedRef is a reference to an OnPremEventGateway resource in the same namespace.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the OnPremEventGateway resource. |
+
+_Appears in:_
+
+- [ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)
+
 #### RuntimeOptions
 
 
@@ -13913,8 +18506,8 @@ RuntimeOptions configures graceful shutdown and health endpoint behaviour for ke
 | Field | Description |
 | --- | --- |
 | `healthListenerAddressPort` _*string_ | HealthListenerAddressPort sets the address:port for the health endpoint. Corresponds to runtime.health_listener_address_port / KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT. |
-| `drainDurationSeconds` _*int32_ | DrainDurationSeconds sets how long keg drains existing connections on shutdown, in seconds. Corresponds to runtime.drain_duration / KEG__RUNTIME__DRAIN_DURATION. |
-| `shutdownTimeoutSeconds` _*int32_ | ShutdownTimeoutSeconds sets the graceful shutdown timeout, in seconds. Corresponds to runtime.shutdown_timeout / KEG__RUNTIME__SHUTDOWN_TIMEOUT. |
+| `drainDurationSeconds` _*int32_ | DrainDurationSeconds sets how long keg drains existing connections on shutdown, in seconds. Corresponds to runtime.drain_duration / KEG__RUNTIME__DRAIN_DURATION. The termination grace period of the keg pods is raised to cover the drain and the shutdown timeout, unless the PodTemplateSpec sets it. A KEG__RUNTIME__DRAIN_DURATION env var of the keg container in the PodTemplateSpec wins over this field, for keg and the grace period. An env var the operator cannot read, from valueFrom or not a duration, is skipped: the grace period then covers this field or keg's default. |
+| `shutdownTimeoutSeconds` _*int32_ | ShutdownTimeoutSeconds sets the graceful shutdown timeout, in seconds. Corresponds to runtime.shutdown_timeout / KEG__RUNTIME__SHUTDOWN_TIMEOUT. The termination grace period of the keg pods is raised to cover the drain and the shutdown timeout, unless the PodTemplateSpec sets it. A KEG__RUNTIME__SHUTDOWN_TIMEOUT env var of the keg container in the PodTemplateSpec wins over this field, for keg and the grace period. An env var the operator cannot read, from valueFrom or not a duration, is skipped: the grace period then covers this field or keg's default. |
 
 _Appears in:_
 
@@ -13929,11 +18522,28 @@ Scaling defines the scaling options for the deployment.
 
 | Field | Description |
 | --- | --- |
-| `horizontal` _[HorizontalScaling](#eventgateway-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
 
 _Appears in:_
 
 - [DeploymentOptions](#eventgateway-konghq-com-v1alpha1-types-deploymentoptions)
+
+#### SecretRef
+
+
+SecretRef references a Secret by name in the referencing resource's own
+namespace. Cross-namespace references are not supported: a Secret can only
+ever be mounted into a Pod's volumes from the Pod's own namespace.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referenced Secret. |
+
+_Appears in:_
+
+- [CertificateSecret](#eventgateway-konghq-com-v1alpha1-types-certificatesecret)
 
 #### ServiceOptions
 
@@ -14019,6 +18629,7 @@ Package v1alpha1 contains API Schema definitions for the gateway-operator.konghq
 - [AIGateway](#gateway-operator-konghq-com-v1alpha1-aigateway)
 - [DBBackedHybridControlPlane](#gateway-operator-konghq-com-v1alpha1-dbbackedhybridcontrolplane)
 - [DataPlaneMetricsExtension](#gateway-operator-konghq-com-v1alpha1-dataplanemetricsextension)
+- [GWAdmin](#gateway-operator-konghq-com-v1alpha1-gwadmin)
 - [KongPluginInstallation](#gateway-operator-konghq-com-v1alpha1-kongplugininstallation)
 - [WatchNamespaceGrant](#gateway-operator-konghq-com-v1alpha1-watchnamespacegrant)
 
@@ -14095,6 +18706,60 @@ enriched with metadata required for in-cluster Kubernetes autoscaling.
 | `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[DataPlaneMetricsExtensionSpec](#gateway-operator-konghq-com-v1alpha1-types-dataplanemetricsextensionspec)_ |  |
 | `status` _[DataPlaneMetricsExtensionStatus](#gateway-operator-konghq-com-v1alpha1-types-dataplanemetricsextensionstatus)_ |  |
+
+### GWAdmin
+
+
+GWAdmin is the Schema for the GWAdmin API. It deploys gw-admin, the
+on-prem control plane of the next-generation Kong data planes, such as the
+Kong Event Gateway, when they run without Konnect. Kong Gateway 3.x data
+planes are not supported. Kong Operator pushes the configuration to gw-admin on its
+API listener, and the data planes pull it from its control plane (cp)
+listener. Both listeners use mutual TLS: Kong Operator provisions and
+rotates every certificate they need, from three certificate authorities:<br /><br />  - the API CA: the API listener and Kong Operator authenticate each other
+    with it. Kong Operator creates it and keeps its key in its own
+    namespace.
+  - the cp server CA: the data planes verify the cp listener with it.
+    Kong Operator creates it and keeps its key in its own namespace, so
+    that nothing else can issue a certificate the data planes trust.
+  - the cp client CA: the cp listener verifies the data plane client
+    certificates with it. Automatic or the user's, Kong Operator copies it,
+    with its key, into its own namespace, where it issues the certificates
+    of the data planes it manages from it.<br /><br />The certificate authorities live and die with the GWAdmin object: deleting
+it, or restoring it under a new UID, creates new ones, and the data plane
+certificates must be issued again. gw-admin doesn't reload certificates:
+every change of the mounted ones rolls its pods.<br /><br />The server certificates of the listeners are mounted into the gw-admin
+pods, so they live in the namespace of the GWAdmin: whoever can read its
+Secrets can impersonate gw-admin with them, until they are renewed.<br /><br />Only data planes Kong Operator manages are supported. Their Deployments
+carry the gateway-operator.konghq.com/gwadmin-namespace and
+gateway-operator.konghq.com/gwadmin-name labels naming the GWAdmin, and
+their Pod template records what its pods mount: the SHA-256 of the ca.crt
+of status.tls.cpServerCABundleSecretName in the
+konghq.com/gw-admin-cp-server-bundle-checksum annotation, and the SHA-256
+fingerprint of the CA that issued their client certificate in the
+konghq.com/gw-admin-cp-client-ca annotation. They count when they run in
+the namespace of the GWAdmin, or in a namespace a KongReferenceGrant in the
+namespace of the GWAdmin grants, from OnPremEventGateway to GWAdmin. A
+rotation waits for them to roll out: the cp server certificate moves to a
+new issuer once every data plane runs a server bundle trusting it, and the
+previous cp client CA is dropped once every data plane runs a client
+certificate from the new one. The
+gateway-operator.konghq.com/rotation-skip-data-planes annotation set to
+"true" stops the rotations from waiting for them, e.g. to stop trusting a
+compromised certificate authority right away.<br /><br />The gw-admin pods only report Ready once Kong Operator has provisioned
+them through the API listener, so the Ready condition of the GWAdmin does
+not wait for the pods to be Ready: it reports whether the certificates, the
+Services and the Deployment are in place.
+
+<!-- gw_admin description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `gateway-operator.konghq.com/v1alpha1`
+| `kind` _string_ | `GWAdmin`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)_ | Spec defines the desired state of GWAdmin. |
+| `status` _[GWAdminStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadminstatus)_ | Status defines the observed state of GWAdmin. |
 
 ### KongPluginInstallation
 
@@ -14358,6 +19023,262 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `internet-accessible` | NetworkInternetAccessible indicates that the endpoint is accessible from<br />the public internet.<br /> |
+
+#### GWAdminAPIStatus
+
+
+GWAdminAPIStatus describes the Service Kong Operator pushes the
+configuration through.
+
+
+
+| Field | Description |
+| --- | --- |
+| `serviceName` _string_ | ServiceName is the name of the Service. |
+| `portName` _string_ | PortName is the name of the Service port. |
+| `port` _int32_ | Port is the Service port. |
+
+_Appears in:_
+
+- [GWAdminStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadminstatus)
+
+#### GWAdminCPStatus
+
+
+GWAdminCPStatus describes the endpoint the data planes pull the
+configuration from.
+
+
+
+| Field | Description |
+| --- | --- |
+| `serverURL` _string_ | ServerURL is the in-cluster URL of the cp listener. |
+
+_Appears in:_
+
+- [GWAdminStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadminstatus)
+
+#### GWAdminCertificateProvisioning
+
+_Underlying type:_ `string`
+
+GWAdminCertificateProvisioning is the method used to provision a certificate.
+
+
+
+
+_Appears in:_
+
+- [GWAdminCertificateSecret](#gateway-operator-konghq-com-v1alpha1-types-gwadmincertificatesecret)
+- [GWAdminServerCertificate](#gateway-operator-konghq-com-v1alpha1-types-gwadminservercertificate)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `Manual` | GWAdminCertificateProvisioningManual indicates the certificate is<br />supplied by the user through a Secret.<br /> |
+| `Automatic` | GWAdminCertificateProvisioningAutomatic indicates the certificate is<br />generated and managed by the operator.<br /> |
+
+#### GWAdminCertificateSecret
+
+
+GWAdminCertificateSecret configures how a certificate is provisioned.
+
+
+
+| Field | Description |
+| --- | --- |
+| `provisioning` _[GWAdminCertificateProvisioning](#gateway-operator-konghq-com-v1alpha1-types-gwadmincertificateprovisioning)_ | Provisioning is the method used to provision the certificate. |
+| `secretRef` _[GWAdminSecretRef](#gateway-operator-konghq-com-v1alpha1-types-gwadminsecretref)_ | SecretRef references the Secret holding the certificate. Only used, and required, when Provisioning is Manual. The Secret must carry the operator's secret label selector (default "konghq.com/secret: \"true\"") or the operator cannot see it; with cert-manager set it through spec.secretTemplate.labels of the Certificate. |
+
+_Appears in:_
+
+- [GWAdminTLS](#gateway-operator-konghq-com-v1alpha1-types-gwadmintls)
+
+#### GWAdminDeploymentOptions
+
+
+GWAdminDeploymentOptions specifies options for the gw-admin Deployment.
+
+
+
+| Field | Description |
+| --- | --- |
+| `replicas` _*int32_ | Replicas describes the number of desired pods. This field and the scaling field are mutually exclusive. |
+| `scaling` _[GWAdminScaling](#gateway-operator-konghq-com-v1alpha1-types-gwadminscaling)_ | Scaling defines the scaling options for the Deployment. |
+| `annotations` _map[string]string_ | Annotations are custom annotations that are propagated to the gw-admin Deployment metadata by the operator. |
+| `labels` _map[string]string_ | Labels are custom labels that are propagated to the gw-admin Deployment metadata by the operator. |
+| `podTemplateSpec` _[PodTemplateSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#podtemplatespec-v1-core)_ | PodTemplateSpec defines PodTemplateSpec for Deployment's pods. It's being applied on top of the generated Deployment using [StrategicMergePatch](https://pkg.go.dev/k8s.io/apimachinery/pkg/util/strategicpatch#StrategicMergePatch). The gw-admin container is named "gw-admin": set its image here to override the default one. |
+
+_Appears in:_
+
+- [GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)
+
+#### GWAdminNetworkOptions
+
+
+GWAdminNetworkOptions defines the network options of gw-admin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cp` _[GWAdminServiceOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadminserviceoptions)_ | CP configures the Service the data planes pull the configuration from. It is always a ClusterIP Service: the data planes run in the cluster. The Service Kong Operator pushes the configuration through is not configurable. |
+
+_Appears in:_
+
+- [GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)
+
+#### GWAdminScaling
+
+
+GWAdminScaling defines the scaling options for the gw-admin Deployment.
+
+
+
+| Field | Description |
+| --- | --- |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the Deployment. |
+
+_Appears in:_
+
+- [GWAdminDeploymentOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadmindeploymentoptions)
+
+#### GWAdminSecretRef
+
+
+GWAdminSecretRef references a Secret in the namespace of the GWAdmin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referenced Secret. |
+
+_Appears in:_
+
+- [GWAdminCertificateSecret](#gateway-operator-konghq-com-v1alpha1-types-gwadmincertificatesecret)
+- [GWAdminServerCertificate](#gateway-operator-konghq-com-v1alpha1-types-gwadminservercertificate)
+
+#### GWAdminServerCertificate
+
+
+GWAdminServerCertificate configures the server certificate of a listener.
+
+
+
+| Field | Description |
+| --- | --- |
+| `provisioning` _[GWAdminCertificateProvisioning](#gateway-operator-konghq-com-v1alpha1-types-gwadmincertificateprovisioning)_ | Provisioning is the method used to provision the certificate.<br /><br />With Automatic provisioning (the default) Kong Operator issues the certificate from the cp server CA, for the in-cluster names of the Service.<br /><br />With Manual provisioning the referenced Secret holds the certificate in tls.crt and its key in tls.key, e.g. the Secret of a cert-manager Certificate. The issuers the data planes verify it with are taken from the chain in tls.crt and from ca.crt, and added to status.tls.cpServerCABundleSecretName: the Secret must carry at least one of them. Kong Operator copies the certificate into a Secret it owns once every data plane rolled out with a bundle trusting one of its issuers, so a renewal from the same issuer is copied right away, and warns when less than a sixth of its validity is left. |
+| `secretRef` _[GWAdminSecretRef](#gateway-operator-konghq-com-v1alpha1-types-gwadminsecretref)_ | SecretRef references the Secret holding the certificate. Only used, and required, when Provisioning is Manual. The Secret must carry the operator's secret label selector (default "konghq.com/secret: \"true\"") or the operator cannot see it. |
+
+_Appears in:_
+
+- [GWAdminTLS](#gateway-operator-konghq-com-v1alpha1-types-gwadmintls)
+
+#### GWAdminServiceOptions
+
+
+GWAdminServiceOptions contains Service configuration for gw-admin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `annotations` _map[string]string_ | Annotations is an unstructured key value map stored with the Service resource. |
+| `labels` _map[string]string_ | Labels are propagated to the Service. |
+| `trafficDistribution` _*string_ | TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints.<br /><br />More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution |
+| `internalTrafficPolicy` _[ServiceInternalTrafficPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#serviceinternaltrafficpolicy-v1-core)_ | InternalTrafficPolicy describes how nodes distribute service traffic they receive on the ClusterIP.<br /><br />More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy |
+| `ports` _[][GWAdminServicePort](#gateway-operator-konghq-com-v1alpha1-types-gwadminserviceport)_ | Ports defines the list of ports that are exposed by the Service. |
+
+_Appears in:_
+
+- [GWAdminNetworkOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadminnetworkoptions)
+
+#### GWAdminServicePort
+
+
+GWAdminServicePort contains information on a Service port.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _*string_ | The name of this port within the Service. It must be a DNS-1123 label. The port named "cp" replaces the default cp port. Required: every port must be named. |
+| `port` _int32_ | The port that will be exposed by this Service. |
+| `targetPort` _*k8s.io/apimachinery/pkg/util/intstr.IntOrString_ | Number or name of the port to access on the pods targeted by the Service. Defaults to the cp listener of gw-admin. |
+
+_Appears in:_
+
+- [GWAdminServiceOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadminserviceoptions)
+
+#### GWAdminSpec
+
+
+GWAdminSpec defines the desired state of GWAdmin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `deployment` _[GWAdminDeploymentOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadmindeploymentoptions)_ | Deployment configures the gw-admin Deployment. |
+| `network` _[GWAdminNetworkOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadminnetworkoptions)_ | Network configures the Services in front of gw-admin. |
+| `tls` _[GWAdminTLS](#gateway-operator-konghq-com-v1alpha1-types-gwadmintls)_ | TLS configures the certificates of gw-admin. By default Kong Operator creates a certificate authority for this GWAdmin and issues and rotates every certificate from it, so nothing has to be configured. |
+
+_Appears in:_
+
+- [GWAdmin](#gateway-operator-konghq-com-v1alpha1-gwadmin)
+
+#### GWAdminStatus
+
+
+GWAdminStatus defines the observed state of GWAdmin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions describe the status of the GWAdmin. |
+| `api` _[GWAdminAPIStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadminapistatus)_ | API describes the Service Kong Operator pushes the configuration through. |
+| `cp` _[GWAdminCPStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadmincpstatus)_ | CP describes the endpoint the data planes pull the configuration from. |
+| `tls` _[GWAdminTLSStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadmintlsstatus)_ | TLS lists the Secrets holding the trust material of gw-admin. |
+
+_Appears in:_
+
+- [GWAdmin](#gateway-operator-konghq-com-v1alpha1-gwadmin)
+
+#### GWAdminTLS
+
+
+GWAdminTLS configures the certificates of gw-admin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `clientCA` _[GWAdminCertificateSecret](#gateway-operator-konghq-com-v1alpha1-types-gwadmincertificatesecret)_ | ClientCA is the certificate authority the cp listener verifies the data plane client certificates with. Only data plane client certificates are issued from it: the server certificate of the cp listener comes from a certificate authority of its own, so that whoever issues data plane certificates can't impersonate gw-admin.<br /><br />With Automatic provisioning (the default) Kong Operator creates a certificate authority for this GWAdmin, valid for a year, and renews it once two thirds of that have elapsed.<br /><br />With Manual provisioning the referenced Secret holds the certificate authority in tls.crt and its key in tls.key, e.g. the Secret of a cert-manager Certificate with isCA set to true. When tls.crt holds a chain, the first certificate is the signer, and it is the one gw-admin trusts, even when it is an intermediate. Kong Operator never modifies that Secret, and warns when less than a sixth of its validity is left.<br /><br />Either way, Kong Operator publishes the certificate authority, with its key, in a Secret of its own namespace once the gw-admin pods trust it, and issues the data plane certificates from that copy, never from the user's Secret, so that they never come from a certificate authority the pods don't trust yet. Its key never lands in the namespace of the GWAdmin. The previous one stays trusted until every data plane rolled out with a certificate from the new one.<br /><br />A rotation waits for the gw-admin Deployment to roll out, which needs the new pods to turn Ready, i.e. to be provisioned by Kong Operator, and for the data plane Deployments to roll out: it stalls, safely, while they don't. |
+| `cp` _[GWAdminServerCertificate](#gateway-operator-konghq-com-v1alpha1-types-gwadminservercertificate)_ | CP configures the server certificate of the listener the data planes connect to. |
+
+_Appears in:_
+
+- [GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)
+
+#### GWAdminTLSStatus
+
+
+GWAdminTLSStatus lists the Secrets holding the trust material of gw-admin
+that its peers need.
+
+
+
+| Field | Description |
+| --- | --- |
+| `cpServerCABundleSecretName` _string_ | CPServerCABundleSecretName is the name of the Secret whose ca.crt holds the certificate authorities the data planes verify the cp listener with. It holds more than one certificate while the cp server certificate moves to a new issuer, which waits for every data plane to roll out with it. |
+| `apiCABundleSecretName` _string_ | APICABundleSecretName is the name of the Secret whose ca.crt holds the certificate authorities of the API listener: Kong Operator verifies the API listener with it, and the API listener verifies the client certificate of Kong Operator with it. It holds more than one certificate while a certificate authority rotation is in progress. |
+
+_Appears in:_
+
+- [GWAdminStatus](#gateway-operator-konghq-com-v1alpha1-types-gwadminstatus)
 
 
 
@@ -15179,25 +20100,7 @@ _Appears in:_
 
 
 
-#### HorizontalScaling
 
-
-HorizontalScaling defines horizontal scaling options for the deployment.
-It holds all the options from the HorizontalPodAutoscalerSpec besides the
-ScaleTargetRef which is being controlled by the Operator.
-
-
-
-| Field | Description |
-| --- | --- |
-| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
-| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas. |
-| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
-| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
-
-_Appears in:_
-
-- [Scaling](#gateway-operator-konghq-com-v1beta1-types-scaling)
 
 #### KonnectCertificateOptions
 
@@ -15450,7 +20353,7 @@ Scaling defines the scaling options for the deployment.
 
 | Field | Description |
 | --- | --- |
-| `horizontal` _[HorizontalScaling](#gateway-operator-konghq-com-v1beta1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
 
 _Appears in:_
 
@@ -16359,25 +21262,7 @@ _Appears in:_
 
 
 
-#### HorizontalScaling
 
-
-HorizontalScaling defines horizontal scaling options for the deployment.
-It holds all the options from the HorizontalPodAutoscalerSpec besides the
-ScaleTargetRef which is being controlled by the Operator.
-
-
-
-| Field | Description |
-| --- | --- |
-| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
-| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas. |
-| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
-| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
-
-_Appears in:_
-
-- [Scaling](#gateway-operator-konghq-com-v2beta1-types-scaling)
 
 #### KonnectOptions
 
@@ -16608,7 +21493,7 @@ Scaling defines the scaling options for the deployment.
 
 | Field | Description |
 | --- | --- |
-| `horizontal` _[HorizontalScaling](#gateway-operator-konghq-com-v2beta1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
 
 _Appears in:_
 
@@ -17214,7 +22099,7 @@ Colors is a type alias.
 
 | Field | Description |
 | --- | --- |
-| `primary` _string_ |  |
+| `primary` _string_ | The primary accent color used in the portal's theme. Must be a valid hex color value. |
 
 _Appears in:_
 
@@ -17458,6 +22343,7 @@ KonnectAIGatewayAPISpec defines the API spec fields for KonnectAIGateway.
 | `description` _string_ | The description of the AI Gateway. |
 | `displayName` _string_ | The display name for this AI Gateway. |
 | `labels` _[PublicLabels](#konnect-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
+| `managedBy` _[ManagedBy](#konnect-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `minRuntimeVersion` _[AIGatewayMinRuntimeVersion](#konnect-konghq-com-v1alpha1-types-aigatewayminruntimeversion)_ | The minimum AI Gateway runtime version supported by this AI Gateway. This is the lowest data plane version that may receive configuration from it, and it controls which features the API accepts.<br /><br />Data planes older than this version still connect for topology visibility.<br /><br />When not specified, the latest generally available runtime version is used.<br /><br />When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades. |
 | `name` _string_ | The name for this AI Gateway. This value is immutable after creation. |
 | `proxyUrls` _[][AIGatewayProxyURL](#konnect-konghq-com-v1alpha1-types-aigatewayproxyurl)_ | Array of proxy URLs associated with reaching the data-planes connected to a control-plane. |
@@ -17536,7 +22422,7 @@ KonnectAPIAuthConfigurationSpec is the specification of the KonnectAPIAuthConfig
 | `type` _[KonnectAPIAuthType](#konnect-konghq-com-v1alpha1-types-konnectapiauthtype)_ |  |
 | `token` _string_ | Token is the Konnect token used to authenticate with the Konnect API. |
 | `secretRef` _[SecretReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#secretreference-v1-core)_ | SecretRef is a reference to a Kubernetes Secret containing the Konnect token. This secret is required to have the konghq.com/credential label set to "konnect". |
-| `serverURL` _string_ | ServerURL is the URL of the Konnect server. It can be either a full URL with an HTTPs scheme or just a hostname. Please refer to https://docs.konghq.com/konnect/network/ for the list of supported hostnames. |
+| `serverURL` _string_ | ServerURL is the URL of the Konnect server. It can be either a full URL with an HTTPs scheme or just a hostname. The host must belong to one of the domains the operator is allowed to call (--konnect-server-url-domains, konghq.com and konghq.tech by default): a value outside the list is reported with an APIAuthValid=False condition and the operator sends no request to it. Please refer to https://docs.konghq.com/konnect/network/ for the list of supported hostnames. |
 
 _Appears in:_
 
@@ -17976,8 +22862,8 @@ KonnectEndpoints defines the Konnect endpoints for the control plane.
 
 | Field | Description |
 | --- | --- |
-| `telemetry` _string_ | TelemetryEndpoint is the endpoint for telemetry. |
-| `controlPlane` _string_ | ControlPlaneEndpoint is the endpoint for the control plane. |
+| `telemetry` _string_ | TelemetryEndpoint is the telemetry endpoint of the Konnect control plane, as returned by Konnect: it may carry a path, e.g. reached over PrivateLink. |
+| `controlPlane` _string_ | ControlPlaneEndpoint is the control plane endpoint, as returned by Konnect: it may carry a path, e.g. reached over PrivateLink. |
 
 _Appears in:_
 
@@ -18395,6 +23281,33 @@ _Appears in:_
 
 - [MCPServer](#konnect-konghq-com-v1alpha1-mcpserver)
 
+#### ManagedBy
+
+_Underlying type:_ `[map[string]ManagedByValue](#map[string]managedbyvalue)`
+
+ManagedBy Stores information about what manages this entity, such as the tool
+or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character.
+
+
+
+
+_Appears in:_
+
+- [KonnectAIGatewayAPISpec](#konnect-konghq-com-v1alpha1-types-konnectaigatewayapispec)
+
+#### ManagedByValue
+
+_Underlying type:_ `string`
+
+ManagedByValue is the value type for ManagedBy.
+
+
+
+
+_Appears in:_
+
+- [ManagedBy](#konnect-konghq-com-v1alpha1-types-managedby)
+
 #### Menu
 
 
@@ -18478,7 +23391,7 @@ authentication.
 
 _Appears in:_
 
-- [OIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderconfig)
+- [PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)
 
 #### OIDCIdentityProviderClientID
 
@@ -18492,7 +23405,7 @@ the identity provider.
 
 _Appears in:_
 
-- [OIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderconfig)
+- [PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)
 
 #### OIDCIdentityProviderClientSecret
 
@@ -18506,27 +23419,7 @@ application by the identity provider.
 
 _Appears in:_
 
-- [OIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderconfig)
-
-#### OIDCIdentityProviderConfig
-
-
-OIDCIdentityProviderConfig The identity provider that contains configuration
-data for the OIDC authentication integration.
-
-
-
-| Field | Description |
-| --- | --- |
-| `claimMappings` _[OIDCIdentityProviderClaimMappings](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclaimmappings)_ | Defines the mappings between OpenID Connect (OIDC) claims and local claims used by your application for authentication. |
-| `clientID` _[OIDCIdentityProviderClientID](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclientid)_ | The client ID assigned to your application by the identity provider. |
-| `clientSecret` _[OIDCIdentityProviderClientSecret](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclientsecret)_ | The Client Secret assigned to your application by the identity provider. |
-| `issuerURL` _[OIDCIdentityProviderIssuer](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderissuer)_ | The issuer URI of the identity provider. This is the URL where the provider's metadata can be obtained. |
-| `scopes` _[]string_ | The scopes requested by your application when authenticating with the identity provider. |
-
-_Appears in:_
-
-- [PortalIdentityProviderRequestConfig](#konnect-konghq-com-v1alpha1-types-portalidentityproviderrequestconfig)
+- [PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)
 
 #### OIDCIdentityProviderIssuer
 
@@ -18540,7 +23433,7 @@ This is the URL where the provider's metadata can be obtained.
 
 _Appears in:_
 
-- [OIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderconfig)
+- [PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)
 
 #### PageContent
 
@@ -18730,11 +23623,11 @@ PortalCustomizationAPISpec defines the API spec fields for PortalCustomization.
 | Field | Description |
 | --- | --- |
 | `css` _*string_ |  |
-| `layout` _string_ |  |
+| `layout` _string_ | This property is deprecated and is not used by the portal. |
 | `menu` _[Menu](#konnect-konghq-com-v1alpha1-types-menu)_ |  |
 | `robots` _*string_ |  |
 | `specRenderer` _[SpecRenderer](#konnect-konghq-com-v1alpha1-types-specrenderer)_ | The spec renderer settings of this portal |
-| `theme` _[Theme](#konnect-konghq-com-v1alpha1-types-theme)_ |  |
+| `theme` _[Theme](#konnect-konghq-com-v1alpha1-types-theme)_ | The theme settings for this portal. |
 
 _Appears in:_
 
@@ -18889,8 +23782,8 @@ Only one of the fields should be set based on the Type.
 | Field | Description |
 | --- | --- |
 | `type` _[PortalIdentityProviderRequestConfigType](#konnect-konghq-com-v1alpha1-types-portalidentityproviderrequestconfigtype)_ | Type designates the type of configuration. |
-| `oIDC` _[OIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderconfig)_ | OIDC configuration. |
-| `portalSAML` _[PortalSAMLIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portalsamlidentityproviderconfig)_ | PortalSAML configuration. |
+| `oIDC` _[PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)_ | OIDC configuration. |
+| `sAML` _[PortalSAMLIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portalsamlidentityproviderconfig)_ | SAML configuration. |
 
 _Appears in:_
 
@@ -18914,7 +23807,7 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `oIDC` |  |
-| `portalSAML` |  |
+| `sAML` |  |
 
 
 
@@ -18969,6 +23862,26 @@ _Appears in:_
 
 - [Menu](#konnect-konghq-com-v1alpha1-types-menu)
 - [PortalFooterMenuSection](#konnect-konghq-com-v1alpha1-types-portalfootermenusection)
+
+#### PortalOIDCIdentityProviderConfig
+
+
+PortalOIDCIdentityProviderConfig The identity provider that contains
+configuration data for the OIDC authentication integration.
+
+
+
+| Field | Description |
+| --- | --- |
+| `claimMappings` _[OIDCIdentityProviderClaimMappings](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclaimmappings)_ | Defines the mappings between OpenID Connect (OIDC) claims and local claims used by your application for authentication. |
+| `clientID` _[OIDCIdentityProviderClientID](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclientid)_ | The client ID assigned to your application by the identity provider. |
+| `clientSecret` _[OIDCIdentityProviderClientSecret](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderclientsecret)_ | The Client Secret assigned to your application by the identity provider. |
+| `issuerURL` _[OIDCIdentityProviderIssuer](#konnect-konghq-com-v1alpha1-types-oidcidentityproviderissuer)_ | The issuer URI of the identity provider. This is the URL where the provider's metadata can be obtained. |
+| `scopes` _[]string_ | The scopes requested by your application when authenticating with the identity provider. |
+
+_Appears in:_
+
+- [PortalIdentityProviderRequestConfig](#konnect-konghq-com-v1alpha1-types-portalidentityproviderrequestconfig)
 
 #### PortalPageAPISpec
 
@@ -19256,6 +24169,7 @@ SpecRenderer The spec renderer settings of this portal
 | `showSchemas` _string_ | Control whether schemas are visible in your API specs. When enabled, schemas appear in the side navigation below the endpoints. |
 | `tryItInsomnia` _string_ | Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported. |
 | `tryItUi` _string_ | Enable in-browser testing for your APIs. All linked gateways must have the CORS plugin configured. |
+| `tryItUiAudience` _string_ | The audience for the Try It UI feature.<br /><br />`all` means that the Try It UI will be available to all users, including unauthenticated users.<br /><br />`authenticated` means that the Try It UI will only be available to authenticated users.<br /><br />`registered` means that the Try It UI will only be available to users who have registered for the API. |
 
 _Appears in:_
 
@@ -19264,7 +24178,7 @@ _Appears in:_
 #### Theme
 
 
-Theme is a type alias.
+Theme The theme settings for this portal.
 
 
 
@@ -19272,7 +24186,7 @@ Theme is a type alias.
 | --- | --- |
 | `colors` _[Colors](#konnect-konghq-com-v1alpha1-types-colors)_ |  |
 | `mode` _string_ |  |
-| `name` _string_ |  |
+| `name` _string_ | The theme name to apply to this portal. Supported names are 'mesa', 'grove', 'pebble', or 'ocean'. If another name is provided or this property is omitted, the portal uses the default 'ocean' theme. |
 
 _Appears in:_
 
@@ -19481,8 +24395,8 @@ KonnectEndpoints defines the Konnect endpoints for the control plane.
 
 | Field | Description |
 | --- | --- |
-| `telemetry` _string_ | TelemetryEndpoint is the endpoint for telemetry. |
-| `controlPlane` _string_ | ControlPlaneEndpoint is the endpoint for the control plane. |
+| `telemetry` _string_ | TelemetryEndpoint is the telemetry endpoint of the Konnect control plane, as returned by Konnect: it may carry a path, e.g. reached over PrivateLink. |
+| `controlPlane` _string_ | ControlPlaneEndpoint is the control plane endpoint, as returned by Konnect: it may carry a path, e.g. reached over PrivateLink. |
 
 _Appears in:_
 
@@ -19984,25 +24898,7 @@ _Appears in:_
 
 - [MCPServerDataPlaneSpec](#mcp-konghq-com-v1alpha1-types-mcpserverdataplanespec)
 
-#### HorizontalScaling
 
-
-HorizontalScaling defines horizontal scaling options for the deployment.
-It holds all the options from the HorizontalPodAutoscalerSpec besides the
-ScaleTargetRef which is being controlled by the Operator.
-
-
-
-| Field | Description |
-| --- | --- |
-| `minReplicas` _*int32_ | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the alpha feature gate HPAScaleToZero is enabled and at least one Object or External metric is configured.  Scaling is active as long as at least one metric value is available. |
-| `maxReplicas` _int32_ | maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas. |
-| `metrics` _[MetricSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#metricspec-v2-autoscaling) array_ | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).  The desired replica count is calculated multiplying the ratio between the target value and the current value by the current number of pods.  Ergo, metrics used must decrease as the pod count is increased, and vice-versa.  See the individual metric source types for more information about how each type of metric must respond. If not set, the default metric will be set to 80% average CPU utilization. |
-| `behavior` _[HorizontalPodAutoscalerBehavior](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#horizontalpodautoscalerbehavior-v2-autoscaling)_ | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). If not set, the default HPAScalingRules for scale up and scale down are used. |
-
-_Appears in:_
-
-- [Scaling](#mcp-konghq-com-v1alpha1-types-scaling)
 
 #### KonnectNamespacedRef
 
@@ -20167,7 +25063,7 @@ Scaling defines the scaling options for the deployment.
 
 | Field | Description |
 | --- | --- |
-| `horizontal` _[HorizontalScaling](#mcp-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
+| `horizontal` _[HorizontalScaling](#common-konghq-com-v1alpha1-types-horizontalscaling)_ | HorizontalScaling defines horizontal scaling options for the deployment. |
 
 _Appears in:_
 

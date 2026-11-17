@@ -20,7 +20,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -31,6 +30,26 @@ tldr:
   q: How do I attach a plugin to an HTTPRoute with {{ site.operator_product_name }}?
   a: |
     Use an `ExtensionRef` or the legacy `konghq.com/plugins` annotation.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongplugin/rate-limit-example \
+          httproute/echo-route \
+          service/echo \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Create a KongPlugin
@@ -50,6 +69,7 @@ config:
   policy: local
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Apply the plugin to the HTTPRoute
 
@@ -84,6 +104,7 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 {% endnavtab %}
 
 {% navtab "Annnotation (legacy)" %}
@@ -119,14 +140,26 @@ This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingre
 
 ## Validate
 
+1.  Wait for the `Gateway` to be programmed:
+
+    ```bash
+    kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+    ```
+    {: data-test-step="block" }
+
 1.  Get the proxy IP address:
+
     ```bash
     export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
+    {: data-test-step="block" }
 
 1.  Send multiple requests to the `/echo` endpoint:
-    ```bash
-    for i in {1..6}; do curl -s http://$PROXY_IP/echo; done
-    ```
 
-   You should receive a `429 Too Many Requests` status code with the last request.
+{% validation rate-limit-check %}
+iterations: 6
+url: '/echo'
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+indent: 4
+{% endvalidation %}

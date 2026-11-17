@@ -25,7 +25,7 @@ decK can back up the configuration of your running {{ site.base_gateway }} using
 
 See the reference for [Entities managed by decK](/deck/reference/entities/) to find out which entity configurations can be backed up.
 
-The exact command that you need to run changes if you're using [Workspaces](/gateway/entities/workspace/) (on-prem only) or not.
+The exact command that you need to run changes if you're using [Workspaces](/gateway/entities/workspace/) or not.
 
 {:.info}
 > The following commands will back up **all** of the configuration in to a single file. See [tags](/deck/gateway/tags/) to learn how to segment configuration.
@@ -51,18 +51,36 @@ deck gateway dump -o kong.yaml
 
 To back up a different Workspace, pass the `-w` flag:
 
+{% navtabs "dump single workspace" %}
+{% navtab "Self-managed" %}
 ```bash
 deck gateway dump -w $WORKSPACE_NAME -o $WORKSPACE_NAME.yaml
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```bash
+deck gateway dump -w $WORKSPACE_NAME -o $WORKSPACE_NAME.yaml --konnect-control-plane-name $YOUR_CP_NAME --konnect-token $KONNECT_TOKEN
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## All workspaces
 
 To back up all Workspaces, pass the `--all-workspaces` flag.
 This creates multiple files in the current directory. Each file is named the same as its Workspace:
 
+{% navtabs "dump all workspaces" %}
+{% navtab "Self-managed" %}
 ```bash
 deck gateway dump --all-workspaces
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```bash
+deck gateway dump --all-workspaces --konnect-control-plane-name $YOUR_CP_NAME --konnect-token $KONNECT_TOKEN
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration sanitization
 

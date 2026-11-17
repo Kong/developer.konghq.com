@@ -122,7 +122,7 @@ Policies without match conditions act as fallback and match all requests.
 
 ### Known issues
 
-* Policy-based rate limiting currently only works with AI Proxy Advanced. AI Proxy support will be added in a later patch.
+* Policy-based rate limiting only works with AI Proxy Advanced. AI Proxy support will be added in a later patch.
 * When defining a policy that matches without fixed `values` (for example, by consumer, consumer group, header, model, or provider), you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the limits apply across all matches instead of each one separately.
 
 
@@ -220,7 +220,7 @@ When using the request prompt provider, it will call the function to get the tok
 
 See the following [example configuration](/plugins/ai-rate-limiting-advanced/examples/request-prompt-count-function/) for more detail.
 
-## Known limitations of AI Rate Limiting Advanced
+## Known limitations
 
 The cost for the AI Proxy or AI Proxy Advanced is only reflected during the next request.
 
@@ -229,3 +229,6 @@ For example, if a request is made and the AI Proxy plugin returns a token cost o
 * If the rate limit is reached, the next request will be blocked
 
 Additionally, [`config.disable_penalty`](./reference/#schema--config-disable-penalty) only works for the `requestPrompt` function.
+
+Because token usage is only known after the model responds, concurrent requests can exceed the configured limit.
+

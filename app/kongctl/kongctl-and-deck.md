@@ -77,7 +77,9 @@ In this example:
 
 ### Configuration fields
 
-#### `_deck`
+<a id="_deck"></a>
+
+#### decK configuration
 
 The `_deck` field configures the decK integration for a control plane:
 
@@ -87,7 +89,9 @@ The `_deck` field configures the decK integration for a control plane:
   * `files`: List of decK state file paths (at least one required)
   * `flags`: Optional list of additional decK CLI flags
 
-#### `_deck.files`
+<a id="_deckfiles"></a>
+
+#### State files
 
 Specifies the decK state files to apply:
 
@@ -100,9 +104,14 @@ _deck:
 
 * Must include at least one state file
 * Paths are relative to the declarative config file
+* When inherited from a template, paths are relative to the file containing
+  the consuming control plane. A `!file` tag instead uses the template
+  definition file's context.
 * Must remain within the `--base-dir` boundary (default: config file directory)
 
-#### `_deck.flags`
+<a id="_deckflags"></a>
+
+#### Additional flags
 
 Additional decK command-line flags to pass:
 

@@ -1,3 +1,6 @@
+# Konnect Reference Platform
+/konnect-reference-platform/how-to/ /konnect-reference-platform/patterns/
+
 # kongctl
 /kongctl/create/   /kongctl/
 /kongctl/create/*  /kongctl/
@@ -120,7 +123,8 @@
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/
-/gateway/plugins/plugin-ordering/  /gateway/plugins/plugin-ordering-priority-preserving/
+/gateway/plugins/plugin-ordering-legacy/  /gateway/plugins/plugin-ordering/
+/gateway/plugins/plugin-ordering-priority-preserving/  /gateway/plugins/plugin-ordering/
 
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/
@@ -143,6 +147,7 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
+/ai-gateway/access-management/ /ai-cost-management/org-chart/
 /mesh/requirements/ /mesh/validated-versions/
 /mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
@@ -343,6 +348,7 @@
 /operator/dataplanes/get-started/kic/create-route/ /operator/get-started/gateway-api/create-route/
 /operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
 /operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
+/operator/konnect/ai-gateway/   /operator/ai-gateway/
 
 # Service Catalog rename
 
@@ -351,10 +357,17 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/konnect-reference-platform/orchestrator/ /konnect-reference-platform/
 /catalog/integrations/gateway-manager/ /catalog/integrations/api-gateway/
 /how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
 /how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
+
+# Self-managed GitLab and Dynatrace Catalog Classic integrations removed
+/how-to/install-and-map-gitlab-resources/ /catalog/integrations/gitlab/
+/catalog/integrations/dynatrace/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-api/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-ui/ /catalog-classic/
 
 # Cloud Gateways
 
@@ -413,6 +426,8 @@
 /ai-gateway/policies/session/              /plugins/session/              301
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
 /ai-gateway/policies/vault-auth/           /plugins/vault-auth/           301
+/ai-gateway/policies/forward-proxy/           /ai-gateway/forward-proxy/  301
+/ai-gateway/policies/forward-proxy/reference/  /ai-gateway/forward-proxy/           301
 
 # AIGW policies overview -> reference for now
 /ai-gateway/policies/:slug/  /ai-gateway/policies/:slug/reference 301
@@ -540,3 +555,6 @@
 /how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
 /how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
 /how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301
+
+# AI Access Management moved out of ai-gateway
+/ai-gateway/access-management/ /ai-access-management/ 301

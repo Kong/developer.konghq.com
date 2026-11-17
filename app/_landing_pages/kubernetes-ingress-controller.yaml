@@ -44,11 +44,11 @@ rows:
             config:
               diagram: |
                 flowchart TB
-                   A(<img src="/assets/icons/git.svg" style="max-height:25px; display:block; margin:0 auto;" /> Cluster Operator)
-                   B(<img src="/assets/icons/kubernetes.svg" style="max-width:25px; display:block; margin:0 auto;" /> API server)
-                   C(<img src="/assets/icons/KogoBlue.svg" style="max-width:25px; display:block; margin:0 auto;" /> Kong Ingress Controller)
+                   A(fa:fa-git Cluster Operator)
+                   B(fa:fa-kubernetes API server)
+                   C(fa:fa-KogoBlue Kong Ingress Controller)
 
-                   D@{ shape: processes, label: "<img src='/assets/icons/KogoBlue.svg' style='max-width:25px; display:block; margin:0 auto;' /> Kong Gateways"}
+                   D@{ shape: processes, label: "fa:fa-KogoBlue Kong Gateways"}
 
                     A -->|kubectl apply| B
                     C <-->|Reads configuration| B

@@ -1,0 +1,47 @@
+display_name: Petstore API
+name: petstore-mcp
+type: conversion-listener
+enabled: true
+policies: []
+access:
+  acl_attribute_type: consumer
+  acls:
+    allow: []
+  default_tool_acls:
+    deny: []
+config:
+  url: http://host.docker.internal:8080/api/v3
+  route:
+    paths:
+      - /petstore
+  logging:
+    payloads: false
+  server:
+    timeout: 60000
+tools:
+  - name: get-pets-by-status
+    description: Find pets by status
+    method: GET
+    path: /petstore/pet/findByStatus
+    parameters:
+      - name: status
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+            - available
+            - pending
+            - sold
+        description: Status value to filter pets by
+  - name: get-pet-by-id
+    description: Get pet by ID
+    method: GET
+    path: /petstore/pet/{petId}
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the pet to retrieve

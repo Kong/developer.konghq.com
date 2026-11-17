@@ -1,0 +1,36 @@
+description: |
+  Configure the AI Prompt Template policy with a template and block any requests that don't include a template.
+
+title: 'Block untemplated requests'
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+
+name: block-untemplated-requests
+display_name: Block untemplated requests
+type: ai-prompt-template
+
+config: 
+  allow_untemplated_requests: false  
+  templates:
+    - name: "developer-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{program}} expert, in {{language}} programming language."
+            },
+            {
+                "role": "user",
+                "content": "Write me a {{program}} program."
+            }
+          ]
+        }
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -1,0 +1,26 @@
+description: |
+  Redirect requests to a fixed URL with a temporary redirect.
+
+title: Redirect requests to a new URL
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to attach the policy to.
+
+variables:
+  location:
+    description: The URL that callers are redirected to.
+    value: $REDIRECT_URL
+
+name: redirect-to-new-url
+display_name: Redirect requests to a new URL
+type: redirect
+
+config:
+  location: ${location}
+  status_code: 302
+
+tools:
+  - konnect-api
+  - kongctl

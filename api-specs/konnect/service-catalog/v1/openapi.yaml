@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Service Catalog
-  version: 1.3.2
+  version: 1.3.4
   description: The platform API for Konnect Service Catalog.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1540,7 +1540,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         overridable_config:
           description: |
             A list of field names from the `config` object (e.g., `client_id`, `authorization_endpoint`, etc)
@@ -1633,7 +1632,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -1682,7 +1680,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -2228,7 +2225,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2266,7 +2262,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2298,7 +2293,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
         config:
           type: object
           additionalProperties: false
@@ -2390,7 +2384,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -2435,7 +2428,6 @@ components:
           type: string
           enum:
             - github_app_installation
-          x-terraform-transform-const: true
         config:
           type: object
           properties:
@@ -2495,7 +2487,6 @@ components:
           type: string
           enum:
             - multi_key_auth
-          x-terraform-transform-const: true
       required:
         - id
         - integration_instance
@@ -2592,7 +2583,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string
@@ -2627,7 +2617,6 @@ components:
           type: string
           enum:
             - oauth
-          x-terraform-transform-const: true
         client_id:
           description: The OAuth client identifier.
           type: string
@@ -4825,6 +4814,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -4840,6 +4830,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -4936,6 +4927,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -5013,6 +5066,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -5064,7 +5119,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -5113,7 +5167,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -5162,7 +5215,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -5211,7 +5263,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -5279,7 +5330,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     CursorPageParameters:
       type: object
       properties:
@@ -5595,14 +5645,6 @@ components:
         description: Expand Service Catalog functionality with Azure to visualize API Management services and their APIs.
         config:
           subscription_id: 00000000-0000-0000-0000-000000000000
-    SampleInstanceCreateDynatracePayload:
-      value:
-        integration_name: dynatrace
-        name: dynatrace
-        display_name: Dynatrace
-        description: Ingest SLOs from your Dynatrace environment for a unified view of service health and reliability.
-        config:
-          base_url: 'https://id.live.dynatrace.com'
     SampleInstanceCreateTraceablePayload:
       value:
         integration_name: traceable
@@ -5626,14 +5668,6 @@ components:
         description: 'Visualize incidents, responsible teams, and on-call engineers through PagerDuty services.'
         config:
           service_region: us
-    SampleInstanceCreateGitlabPayload:
-      value:
-        integration_name: gitlab
-        name: gitlab-self-managed
-        display_name: GitLab (Self Managed)
-        description: 'Expand Service Catalog functionality with GitLab to view your repository''s recent merge requests, contributors, and programming languages.'
-        config:
-          base_url: 'https://gitlab.my-company.com/api/v4'
     SampleInstanceCreateGithubPayload:
       value:
         integration_name: github
@@ -5782,25 +5816,6 @@ components:
           display_name: SwaggerHub (Internal)
         config:
           role_arn: 'arn:aws:iam::084735895545:role/KonnectServiceCatalogRole'
-    SampleCreateDynatraceMultiKeyAuthPayload:
-      value:
-        type: multi_key_auth
-        config:
-          headers:
-            - name: authorization
-              key: dynatrace-api-key
-    SampleCreateDynatraceMultiKeyAuthResponse:
-      value:
-        id: 88c58c29-ff7d-4913-b3d7-8affc279dd56
-        type: multi_key_auth
-        missing_permissions: []
-        tainted: false
-        expires_at: null
-        created_at: '2022-11-04T20:10:06.927Z'
-        integration_instance:
-          id: 70ecc595-4280-4872-8b80-87b2e57dba3f
-          name: dynatrace
-          display_name: Dynatrace
     SampleCreateAzureDevopsMultiKeyAuthPayload:
       value:
         type: multi_key_auth
@@ -5851,19 +5866,6 @@ components:
           id: 3c9e2f1a-4b5d-6e7f-8a9b-0c1d2e3f4a5b
           name: azure-api-management
           display_name: Azure API Management
-    GitLabSelfManagedAuthConfigPayload:
-      value:
-        type: oauth
-        client_id: 767b05381bc6a4bbffb4473e06bec7ecf009d0c16afb7214acda33026b6af089
-        client_secret: gloas-0bf0372129935e5f7cecbaba259336617c8fe9243f3adb0d6562775ebac21086
-        authorization_endpoint: 'http://gitlab.my-company.com/oauth/authorize'
-        token_endpoint: 'http://gitlab.my-company.com/oauth/token'
-    GitLabSelfManagedAuthConfigResponse:
-      value:
-        type: oauth
-        client_id: 767b05381bc6a4bbffb4473e06bec7ecf009d0c16afb7214acda33026b6af089
-        authorization_endpoint: 'http://gitlab.my-company.com/oauth/authorize'
-        token_endpoint: 'http://gitlab.my-company.com/oauth/token'
     ResourceInitializeResponse:
       value:
         id: 1Kff05PZlexINWmG
@@ -6717,16 +6719,12 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateDatadogPayload'
             Github:
               $ref: '#/components/examples/SampleInstanceCreateGithubPayload'
-            Gitlab:
-              $ref: '#/components/examples/SampleInstanceCreateGitlabPayload'
             PagerDuty:
               $ref: '#/components/examples/SampleInstanceCreatePagerDutyPayload'
             Slack:
               $ref: '#/components/examples/SampleInstanceCreateSlackPayload'
             Traceable:
               $ref: '#/components/examples/SampleInstanceCreateTraceablePayload'
-            Dynatrace:
-              $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
             SonarQube:
               $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
             AzureApiManagement:
@@ -6757,8 +6755,6 @@ components:
               $ref: '#/components/examples/SampleCreateTraceableMultiKeyAuthPayload'
             AwsApiGateway:
               $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthPayload'
-            Dynatrace:
-              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthPayload'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthPayload'
             azureDevops:
@@ -6769,9 +6765,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpsertIntegrationInstanceAuthConfig'
-          examples:
-            GitLab Self Managed:
-              $ref: '#/components/examples/GitLabSelfManagedAuthConfigPayload'
     UpdateCatalogResourceRequest:
       required: true
       content:
@@ -6944,8 +6937,6 @@ components:
               $ref: '#/components/examples/SampleCreateSwaggerHubMultiKeyAuthResponse'
             AwsApiGateway:
               $ref: '#/components/examples/SampleCreateAWSRoleDelegationAuthResponse'
-            Dynatrace:
-              $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
             AzureApiManagement:
@@ -6958,9 +6949,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/IntegrationInstanceAuthConfig'
-          examples:
-            GitLab Self Managed:
-              $ref: '#/components/examples/GitLabSelfManagedAuthConfigResponse'
     ListCatalogResourcesResponse:
       description: A paginated list response for a collection of resources.
       content:

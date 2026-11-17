@@ -93,8 +93,7 @@ faqs:
       You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option with the following considerations:
 
       * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
-      * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
-      See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+      * If you change the `extra_jwks_uris` value, the plugin fetches the discovery data for the new value on the next request; you don't need to clear the cache manually. To remove the old cache entries immediately, use the [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) endpoint.
 
       You can also use [token exchange](#token-exchange), which allows exchanging an existing security token for a new one.
 
@@ -138,7 +137,10 @@ The OIDC plugin stores the metadata as a discovery cache object and uses the cac
 
 {{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
-- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default. You can also clear it manually using the relevant [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- The cache TTL (time-to-live) is managed by the {{site.base_gateway}} [`db_cache_ttl`](/gateway/configuration/#db-cache-ttl) configuration setting. The default value is `0`, which means that cached entries never expire. Entries are invalidated when their configuration changes. When you use DB-less mode, the cache also doesn't expire; it is invalidated when the configuration is synced. To clear the discovery cache manually, use the [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+
+   {:.info}
+   > **Note:** The plugin parameter `config.cache_ttl` applies to the plugin's own caches, such as token caching, not to the discovery cache.
 - If a request requires discovery information that isn't in the cache, the plugin attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
 - If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
 

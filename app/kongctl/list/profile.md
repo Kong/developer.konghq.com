@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: kongctl get profile
+    url: /kongctl/get/profile/
 ---
 
 The `profile` command allows you to list kongctl profiles and inspect profile configuration.

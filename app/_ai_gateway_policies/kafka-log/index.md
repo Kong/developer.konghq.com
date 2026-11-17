@@ -3,6 +3,7 @@ description: 'Publish logs to a Kafka topic.'
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway

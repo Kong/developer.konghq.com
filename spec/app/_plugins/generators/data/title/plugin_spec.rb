@@ -55,6 +55,16 @@ RSpec.describe Jekyll::Data::Title::Plugin do
       it { expect(subject.title_sections).to eq(['Rate Limiting', 'Configuration Reference', 'v3.9', 'Plugin']) }
     end
 
+    context 'when reference? and aigw_onprem_plugin_reference?' do
+      let(:page_url) { '/plugins/rate-limiting/ai-gateway/v2/on-prem/reference/' }
+      let(:page_data) do
+        { 'title' => 'Rate Limiting', 'plugin?' => true, 'reference?' => true,
+          'aigw_onprem_plugin_reference?' => true, 'canonical?' => true, 'plugin' => plugin }
+      end
+
+      it { expect(subject.title_sections).to eq(['Rate Limiting', 'AI Gateway 2.x on-prem Configuration Reference', nil, 'Plugin']) }
+    end
+
     context 'when changelog?' do
       let(:page_url) { '/plugins/rate-limiting/changelog/' }
       let(:page_data) { changelog_data }
@@ -96,6 +106,15 @@ RSpec.describe Jekyll::Data::Title::Plugin do
     context 'when reference?' do
       let(:page_data) { reference_data }
       it { expect(subject.llm_title).to eq('Rate Limiting Plugin Configuration Reference') }
+    end
+
+    context 'when reference? and aigw_onprem_plugin_reference?' do
+      let(:page_data) do
+        { 'title' => 'Rate Limiting', 'plugin?' => true, 'reference?' => true,
+          'aigw_onprem_plugin_reference?' => true, 'canonical?' => true, 'plugin' => plugin }
+      end
+
+      it { expect(subject.llm_title).to eq('Rate Limiting Plugin AI Gateway 2.x on-prem Configuration Reference') }
     end
 
     context 'when changelog?' do

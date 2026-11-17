@@ -1,0 +1,26 @@
+description: |
+  Configure the AI Prompt Template policy with a template to use for completions routes.
+
+title: 'Completion route template'
+
+weight: 900
+
+requirements:
+  - An existing [AI Model](/ai-gateway/entities/ai-model/).
+
+name: completions-route-template
+display_name: Completion route template
+type: ai-prompt-template
+
+config:     
+  templates:
+    - name: "developer-prompt"
+      template:  |-
+        {
+            "prompt": "You are a {{language}} programming language expert. Write me a {{program}} program."
+        }
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

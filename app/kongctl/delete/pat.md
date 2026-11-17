@@ -17,6 +17,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl delete commands
     url: /kongctl/delete/
+  - text: kongctl create pat
+    url: /kongctl/create/pat/
+  - text: kongctl get pat
+    url: /kongctl/get/pat/
 ---
 
 Delete a {{site.konnect_short_name}} [personal access token](/konnect-api/#konnect-api-authentication).

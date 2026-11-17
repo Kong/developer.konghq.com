@@ -202,6 +202,8 @@ External vault secrets can be referenced anywhere in Insomnia requests using [te
 1. Select the external vault to use.
 1. Fill in the details required to access the secret.
 
+{% new_in 13.4 %} {{ site.insomnia }} hides external vault values as `••••••` in previews and generated code, and sends the real value when you send a request. To change this, see [Confidential variables](/insomnia/environments/#confidential-variables).
+
 ## Vault secrets cache
 
 Vault secret caching works like the following in Insomnia:

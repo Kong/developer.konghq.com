@@ -21,6 +21,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.16.0.1": [
+    {
+      "message": "Fixed an issue where OpenAPI 3.1.x parameter patterns using ECMA-262 `\\uXXXX` Unicode escapes failed to match correctly, because PCRE does not support that escape syntax.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added opt-in structured validation errors via the new\n`structured_errors` field, which provides structured error details. Use the\n`max_structured_errors` field (must be greater than 0) to cap the number of\nreturned errors in structured format; when unset, all errors are returned.\nWhen `structured_errors` is disabled, the plugin preserves the original\nnon-structured error format.",

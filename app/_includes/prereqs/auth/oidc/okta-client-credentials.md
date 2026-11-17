@@ -4,7 +4,7 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 1. Go to **Security > API > Authorization Servers**.
 1. Click `default`.
-1. Go to the **Scopes** tab.
+1. Click the **Scopes** tab.
 1. Click **Add Scope**.
 1. Name: `api:access`
 1. Display phrase: `Access protected APIs`
@@ -13,7 +13,7 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 #### Add an access policy
 
-1. In the same `default` authorization server, go to the **Access Policies** tab.
+1. In the same `default` authorization server, click the **Access Policies** tab.
 1. Click **Add Policy**.
 1. Name: `API Access`
 1. Assign to: **All clients**
@@ -29,9 +29,10 @@ You need an [Okta](https://login.okta.com/) admin account with a developer organ
 
 #### Create a web application
 
-1. Go to **Applications > Applications > Create App Integration**.
+1. Go to **Applications and Resources > Applications > Create App Integration**.
 1. Sign-in method: **OIDC - OpenID Connect**
 1. Application type: **Web Application**
+1. Client definition: select "Use Okta-generated client ID".
 1. App integration name: `Kong Gateway`
 1. Grant types: check **Client Credentials**.
 1. Assignments: **Skip group assignment for now**

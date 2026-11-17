@@ -1,0 +1,35 @@
+description: |
+  Configure the AI Response Transformer policy to use OpenAI GPT-4 to add an element to the response body before returning it to the client.
+
+title: Add data to a response body
+
+weight: 900
+
+requirements:
+  - You have an OpenAI subscription.
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: An API key to connect to the OpenAI API.
+
+name: add-data-to-response-body
+display_name: Add data to a response body
+type: ai-response-transformer
+
+config:
+  prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in.
+  transformation_extract_pattern: '{((.|\n)*)}'
+  llm:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    model:
+      provider: openai
+      name: gpt-4
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

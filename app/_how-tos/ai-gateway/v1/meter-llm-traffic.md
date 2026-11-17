@@ -71,7 +71,7 @@ major_version:
 
 ---
 
-This getting-started guide shows how to meter LLM traffic—such as token consumption or model-specific usage—from {{site.base_gateway}} and convert that raw LLM activity into billable usage with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
+This getting-started guide shows how to meter LLM traffic, such as token consumption or model-specific usage, from {{site.base_gateway}} and convert that raw LLM activity into billable usage with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 
 
 ## Create a Consumer
@@ -238,7 +238,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
 1. In the **Key** field, enter `kong-air`.
-1. In the **Include usage from** dropdown, select "kong-air".
+1. In the **Include usage from** dropdown, select "kong-air" from the **Gateway Consumers** group.
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.

@@ -1,6 +1,9 @@
 - text: Access control
   slug: access-control
   icon: "/assets/icons/cookbooks/access-control.svg"
+- text: Agents & coding tools
+  slug: agents
+  icon: "/assets/icons/cookbooks/ai.svg"
 - text: Cost optimization
   slug: cost-optimization
   icon: "/assets/icons/cookbooks/cost-optimization.svg"

@@ -26,7 +26,7 @@ There are a number of possible causes for this behavior where a redirect loop is
 2. The `redirect_uri` variable is either missing or incorrectly set to the wrong endpoint.
 3. Redis server used for session storage is inaccessible
 
-For situation #1 above with the `SameSite` cookie attribute, this may need to set this to `Lax` to see it work again in the environment. We recommend customers familiarize themselves with the `SameSite` attribute and then when ready to make the change it can be done by setting `cookie_samesite=Lax` as referenced in the Kong OIDC plugin documentation.
+For situation #1 above with the `SameSite` cookie attribute, this may need to be set to `Lax` to see it work again in the environment. We recommend customers familiarize themselves with the `SameSite` attribute and then when ready to make the change it can be done by setting `cookie_samesite=Lax` as referenced in the Kong OIDC plugin documentation.
 
 For situation #2 above with the `redirect_uri` variable, it must be set according to the needs of the environment. If it's missing or hitting the wrong endpoint, it may not behave as expected and can cause the redirect loop. Admins should ensure the `redirect_uri` is set correctly based upon the environmental requirements.
 

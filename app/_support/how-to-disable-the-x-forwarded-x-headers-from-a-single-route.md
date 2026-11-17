@@ -29,9 +29,9 @@ If you wanted to disable the `x-forwarded-proto` header for example:
 
 2. Add the following line to the access phase of the post function header field:
 
-```lua
-ngx.var.upstream_x_forwarded_proto=nil
-```
+   ```lua
+   ngx.var.upstream_x_forwarded_proto=nil
+   ```
 
 If you wanted to disable the `x-forwarded-host` header for example:
 
@@ -39,6 +39,6 @@ If you wanted to disable the `x-forwarded-host` header for example:
 
 2. Add the following line to the access phase of the post function header field:
 
-```lua
-ngx.var.upstream_x_forwarded_host=nil
-```
+   ```lua
+   ngx.var.upstream_x_forwarded_host=nil
+   ```

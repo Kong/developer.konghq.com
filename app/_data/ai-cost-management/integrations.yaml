@@ -1,0 +1,117 @@
+base_url: "https://cloud.konghq.com/ai-manager/cost-management/attribution/integrations?integration="
+
+categories:
+  - title: Coding agents
+    description: Tools developers run in a terminal or an editor.
+    integrations:
+      - name: Claude Code
+        icon: anthropic.svg
+        id: claude-code
+      - name: Codex CLI
+        icon: openai.svg
+        id: codex
+      - name: OpenCode
+        icon: opencode.svg
+        id: opencode
+      - name: Gemini CLI
+        icon: gemini.svg
+        id: gemini-cli
+      - name: GitHub Copilot in VS Code
+        icon: copilot.svg
+        id: copilot
+      - name: Cline
+        icon: cline.svg
+        id: cline
+      - name: Aider
+        icon: aider.svg
+        id: aider
+
+  - title: CI and source control
+    description: Jobs that run an AI tool on a change, a pull request, or a schedule.
+    integrations:
+      - name: GitHub Actions
+        icon: github-actions.svg
+        id: github-actions
+      - name: GitLab CI
+        icon: gitlab.svg
+        id: gitlab-ci
+      - name: Jenkins
+        icon: jenkins.svg
+        id: jenkins
+      - name: Buildkite
+        icon: buildkite.svg
+        id: buildkite
+      - name: CircleCI
+        icon: circleci.svg
+        id: circleci
+
+  - title: Chat apps
+    description: Bots you build for your team's chat.
+    integrations:
+      - name: Slack
+        icon: slack.svg
+        id: slack
+      - name: Microsoft Teams
+        icon: microsoft-teams.svg
+        id: microsoft-teams
+      - name: Discord
+        icon: discord.svg
+        id: discord
+
+  - title: Issue trackers
+    description: Bots and agents that work on issues and incidents.
+    integrations:
+      - name: Jira
+        icon: jira.svg
+        id: jira
+      - name: Linear
+        icon: linear.svg
+        id: linear
+      - name: PagerDuty
+        icon: pagerduty.svg
+        id: pagerduty
+      - name: GitHub and GitLab issues
+        icon: github.svg
+        id: scm-issues
+
+  - title: Agent frameworks
+    description: Libraries your applications build agents with.
+    integrations:
+      - name: OpenAI Agents SDK
+        icon: openai.svg
+        id: openai-agents
+      - name: LangChain and LangGraph
+        icon: langchain.svg
+        id: langchain
+      - name: CrewAI
+        icon: crewai.svg
+        id: crewai
+      - name: LlamaIndex Workflows
+        icon: llamaindex.svg
+        id: llamaindex
+      - name: n8n
+        icon: n8n.svg
+        id: n8n
+      - name: Vercel AI SDK
+        icon: vercel.svg
+        id: vercel-ai-sdk
+
+  - title: Other AI gateways
+    description: Clients that still send another AI gateway's tag headers.
+    integrations:
+      - name: Helicone
+        icon: helicone.svg
+        id: helicone
+      - name: Portkey
+        icon: portkey.svg
+        id: portkey
+      - name: Cloudflare AI Gateway
+        icon: cloudflare.svg
+        id: cloudflare-ai-gateway
+
+  - title: Your applications
+    description: Your own services that call models through your gateway.
+    integrations:
+      - name: Your own code
+        icon: code.svg
+        id: http-client

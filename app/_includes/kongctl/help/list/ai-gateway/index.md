@@ -23,6 +23,7 @@ Available Commands:
   credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
   custom-policies         List or get Custom Policies for a Konnect AI Gateway [beta]
   data-plane-certificates List or get data plane certificates for a Konnect AI Gateway
+  datastores              List or get Datastores for a Konnect AI Gateway
   mcp-servers             List or get MCP Servers for a Konnect AI Gateway
   model-providers         List or get model providers for a Konnect AI Gateway
   models                  List or get models for a Konnect AI Gateway
@@ -38,8 +39,8 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                - List       : [ kongctl list themes ] (default "auto")
       --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.

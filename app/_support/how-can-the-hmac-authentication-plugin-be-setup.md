@@ -36,13 +36,13 @@ How can the plugin be configured to authenticate the client?
 
 The hmac-auth plugin requires a specific Authentication header format that includes details of the Consumer authentication username, the HMAC algorithm, the headers to use for the HMAC calculation and the actual HMAC signature itself.
 
-Assuming that a GET request is being made to the `/hmac-echo` endpoint, the current date-time is " Mon, 07 Sep 2026 07:58:05 GMT " and the plugin has the below configuration;
+Assuming that a GET request is being made to the `/hmac-echo` endpoint, the current date-time is " Mon, 07 Sep 2026 07:58:05 GMT " and the plugin has the following configuration:
 
 ```
 config.enforce_headers": [ "date", "request-line" ]
 ```
 
-Then the required HMAC can be found by running the below command;
+The required HMAC can be found by running the following command:
 
 ```bash
 printf "date: Mon, 07 Sep 2026 07:58:05 GMT\nGET /hmac-echo HTTP/1.1"  | openssl dgst -sha256 -hmac "secret123" -binary | openssl enc -base64 -A
@@ -54,131 +54,131 @@ which outputs the below hmac value;
 DCiYhzZME5ox2kGkDm9gsRt7oekcxsscGVW6rOhecyo=
 ```
 
-## Worked Example for the `hmac-auth` plugin
+## Worked Example for the hmac-auth plugin
 
 1. Create a Consumer
 
-```bash
-curl --location --request POST https://kong.lan:8444/<ws>/consumers/ \
---header 'Content-Type: application/json' \
---header 'Kong-Admin-Token: my-token' \
---data-raw '{
-    "username": "hmac-consumer"
-}'
-```
+   ```bash
+   curl --location --request POST https://kong.lan:8444/<ws>/consumers/ \
+   --header 'Content-Type: application/json' \
+   --header 'Kong-Admin-Token: my-token' \
+   --data-raw '{
+       "username": "hmac-consumer"
+   }'
+   ```
 
 2. Create `hmac-auth` credentials for the consumer
 
-```bash
-curl --location --request POST https://kong.lan:8444/<ws>/consumers/{{consumer_hmac-consumer}}/hmac-auth \
---header 'Content-Type: application/json;charset=UTF-8' \
---header 'Kong-Admin-Token: my-token' \
---data-raw '{"username":"hmac-username",
-"secret":"secret123"}'
-```
+   ```bash
+   curl --location --request POST https://kong.lan:8444/<ws>/consumers/{{consumer_hmac-consumer}}/hmac-auth \
+   --header 'Content-Type: application/json;charset=UTF-8' \
+   --header 'Kong-Admin-Token: my-token' \
+   --data-raw '{"username":"hmac-username",
+   "secret":"secret123"}'
+   ```
 
 3. Create an "echo" Service
 
-```bash
-curl --location --request POST https://kong.lan:8444/<ws>/services \
---header 'Content-Type: application/json' \
---header 'Kong-Admin-Token: my-token' \
---data-raw '{
-   "host":"httpbin.org",
-   "protocol":"http",
-   "name":"hmac-service",
-   "port":80,
-   "path":"/anything",
-   "retries":0
-}'
-```
+   ```bash
+   curl --location --request POST https://kong.lan:8444/<ws>/services \
+   --header 'Content-Type: application/json' \
+   --header 'Kong-Admin-Token: my-token' \
+   --data-raw '{
+      "host":"httpbin.org",
+      "protocol":"http",
+      "name":"hmac-service",
+      "port":80,
+      "path":"/anything",
+      "retries":0
+   }'
+   ```
 
 4. Create a Route for the Service
 
-```bash
-curl --location --request POST https://kong.lan:8444/<ws>/services/{{service_hmac-service}}/routes \
---header 'Kong-Admin-Token: my-token' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"strip_path": true,
-	"path_handling": "v1",
-	"paths": ["/hmac-echo"],
-	"protocols": ["http"],
-	"name": "hmacEcho-route"
-}'
-```
+   ```bash
+   curl --location --request POST https://kong.lan:8444/<ws>/services/{{service_hmac-service}}/routes \
+   --header 'Kong-Admin-Token: my-token' \
+   --header 'Content-Type: application/json' \
+   --data-raw '{
+   	"strip_path": true,
+   	"path_handling": "v1",
+   	"paths": ["/hmac-echo"],
+   	"protocols": ["http"],
+   	"name": "hmacEcho-route"
+   }'
+   ```
 
 5. Add the `hmac-auth` plugin to the Route
 
-```bash
-curl --location --request POST https://kong.lan:8444/<ws>/routes/{{route_hmacEcho-route}}/plugins/ \
---header 'Content-Type: application/json' \
---header 'Kong-Admin-Token: my-token' \
---data-raw '{
-    "name": "hmac-auth",
-            "config": {
-                "clock_skew": 60,
-                "enforce_headers": [
-                    "date",
-                    "request-line"
-                ],
-                "algorithms": [
-                    "hmac-sha256"
-                ],
-                "hide_credentials": true
-            }
-}'
-```
+   ```bash
+   curl --location --request POST https://kong.lan:8444/<ws>/routes/{{route_hmacEcho-route}}/plugins/ \
+   --header 'Content-Type: application/json' \
+   --header 'Kong-Admin-Token: my-token' \
+   --data-raw '{
+       "name": "hmac-auth",
+               "config": {
+                   "clock_skew": 60,
+                   "enforce_headers": [
+                       "date",
+                       "request-line"
+                   ],
+                   "algorithms": [
+                       "hmac-sha256"
+                   ],
+                   "hide_credentials": true
+               }
+   }'
+   ```
 
 6. Create the required HMAC header values, `Date` and HMAC signature
 
-```bash
-export HMAC_DATE=$(TZ='GMT' date '+%a, %d %b %Y %T %Z')
-export HMAC_SIGNATURE=$(printf "date: $HMAC_DATE\nGET /hmac-echo HTTP/1.1"  | openssl dgst -sha256 -hmac "secret123" -binary | openssl enc -base64 -A)
-```
+   ```bash
+   export HMAC_DATE=$(TZ='GMT' date '+%a, %d %b %Y %T %Z')
+   export HMAC_SIGNATURE=$(printf "date: $HMAC_DATE\nGET /hmac-echo HTTP/1.1"  | openssl dgst -sha256 -hmac "secret123" -binary | openssl enc -base64 -A)
+   ```
 
 7. Call the `hmac-auth` protected endpoint without the `Authorization` header;
 
-```bash
-curl -k --http1.1 'http://kong-proxy:8000/hmac-echo' -H 'Date: '"$HMAC_DATE"''
-{
-  "message":"Unauthorized"
-}
-```
+   ```bash
+   curl -k --http1.1 'http://kong-proxy:8000/hmac-echo' -H 'Date: '"$HMAC_DATE"''
+   {
+     "message":"Unauthorized"
+   }
+   ```
 
 8. Call the `hmac-auth` protected endpoint with the `Authorization` header;
 
-```bash
-curl -k --http1.1 'http://kong-proxy:8000/hmac-echo' \
--H 'Authorization: hmac username="hmac-username",algorithm="hmac-sha256",headers="date request-line",signature="'$HMAC_SIGNATURE'"' \
--H 'Date: '"$HMAC_DATE"''
-{
-  "args": {}, 
-  "data": "", 
-  "files": {}, 
-  "form": {}, 
-  "headers": {
-    "Accept": "*/*", 
-    "Date": "Fri, 21 Jun 2024 14:29:15 GMT", 
-    "Host": "httpbin.org", 
-    "User-Agent": "curl/8.6.0", 
-    "X-Amzn-Trace-Id": "Root=1-66758e3b-5a8713be31c5911204f15a55", 
-    "X-Consumer-Id": "00e88cc4-7ec8-4632-a2dc-a969d3de7901", 
-    "X-Consumer-Username": "hmac-consumer", 
-    "X-Credential-Identifier": "hmac-username", 
-    "X-Forwarded-Host": "api.kong.lan", 
-    "X-Forwarded-Path": "/hmac-echo", 
-    "X-Forwarded-Prefix": "/hmac-echo", 
-    "X-Kong-Request-Id": "298016373263b8217bb8d240d1f72835"
-  }, 
-  "json": null, 
-  "method": "GET", 
-  "origin": "172.20.0.12, 138.201.126.179", 
-  "url": "http://api.kong.lan/anything"
-}
-```
+   ```bash
+   curl -k --http1.1 'http://kong-proxy:8000/hmac-echo' \
+   -H 'Authorization: hmac username="hmac-username",algorithm="hmac-sha256",headers="date request-line",signature="'$HMAC_SIGNATURE'"' \
+   -H 'Date: '"$HMAC_DATE"''
+   {
+     "args": {}, 
+     "data": "", 
+     "files": {}, 
+     "form": {}, 
+     "headers": {
+       "Accept": "*/*", 
+       "Date": "Fri, 21 Jun 2024 14:29:15 GMT", 
+       "Host": "httpbin.org", 
+       "User-Agent": "curl/8.6.0", 
+       "X-Amzn-Trace-Id": "Root=1-66758e3b-5a8713be31c5911204f15a55", 
+       "X-Consumer-Id": "00e88cc4-7ec8-4632-a2dc-a969d3de7901", 
+       "X-Consumer-Username": "hmac-consumer", 
+       "X-Credential-Identifier": "hmac-username", 
+       "X-Forwarded-Host": "api.kong.lan", 
+       "X-Forwarded-Path": "/hmac-echo", 
+       "X-Forwarded-Prefix": "/hmac-echo", 
+       "X-Kong-Request-Id": "298016373263b8217bb8d240d1f72835"
+     }, 
+     "json": null, 
+     "method": "GET", 
+     "origin": "172.20.0.12, 138.201.126.179", 
+     "url": "http://api.kong.lan/anything"
+   }
+   ```
 
-Note the `username` supplied in the `Authorization` header must match the `hmac-auth` **credential's** `username` field (`hmac-username`, from step 2), not the Consumer's own `username` (`hmac-consumer`, from step 1) — supplying the Consumer's username instead returns `401 {"message":"HMAC signature cannot be verified"}`.
+Note the `username` supplied in the `Authorization` header must match the `hmac-auth` **credential's** `username` field (`hmac-username`, from step 2), not the Consumer's own `username` (`hmac-consumer`, from step 1). Supplying the Consumer's username instead returns `401 {"message":"HMAC signature cannot be verified"}`.
 
 The plugin configuration has a skew value of 60 seconds. If you make a call using the token after 60 seconds, then you will see an "401 - Unauthorized" error.
 

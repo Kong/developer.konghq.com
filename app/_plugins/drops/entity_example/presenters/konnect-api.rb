@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../utils/variable_replacer'
-require_relative './base'
+require_relative 'base'
 
 module Jekyll
   module Drops
@@ -146,6 +146,21 @@ module Jekyll
                           end
 
               segments.join
+            end
+          end
+
+          class AIGatewayPolicy < Base
+          end
+
+          class AIGatewayPolicyAttachment < Base
+            def http_method
+              'PUT'
+            end
+
+            private
+
+            def build_url
+              [[base_url, endpoint].join, @example_drop.data['name']].join('/')
             end
           end
         end

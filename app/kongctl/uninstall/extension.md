@@ -18,6 +18,16 @@ breadcrumbs:
 related_resources:
   - text: kongctl uninstall commands
     url: /kongctl/uninstall/
+  - text: kongctl get extension
+    url: /kongctl/get/extension/
+  - text: kongctl install extension
+    url: /kongctl/install/extension/
+  - text: kongctl link extension
+    url: /kongctl/link/extension/
+  - text: kongctl upgrade extension
+    url: /kongctl/upgrade/extension/
+  - text: kongctl list extensions
+    url: /kongctl/list/extensions/
 ---
 
 Uninstall a `kongctl` CLI extension.

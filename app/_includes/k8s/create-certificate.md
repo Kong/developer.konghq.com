@@ -36,7 +36,8 @@ openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
     Older OpenSSL versions, including the version provided with macOS Monterey, require using the alternative version of this command.
 
 1. Create a Secret containing the certificate:
-    ```bash
-    kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ secret_name }} --cert=./server.crt --key=./server.key
-    ```
-    {: data-test-step="block"}
+
+   ```bash
+   kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ secret_name }} --cert=./server.crt --key=./server.key
+   ```
+   {: data-test-step="block"}

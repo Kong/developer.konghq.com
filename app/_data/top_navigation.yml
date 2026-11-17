@@ -8,6 +8,9 @@ platform:
       text: Learn more &rarr;
 
   tools:
+    - text: Konnect MCP
+      url: /konnect-platform/konnect-mcp/
+      icon: /assets/icons/mcp.svg
     - text: decK
       url: /deck/
       icon: /assets/icons/codeblock.svg
@@ -28,32 +31,50 @@ platform:
       icon: /assets/icons/kubernetes.svg
 
   sections:
-    - title: Explore the platform
+    - title: Manage AI
       links:
-        - text: Konnect
-          url: /konnect/
-          product: konnect
-    - title: Build APIs
+        - text: AI Management
+          icon: /assets/icons/ai.svg
+          url: /ai-management/
+          color: green
+        - text: AI Gateway
+          icon: /assets/icons/ai-gateway.svg
+          url: /ai-gateway/
+          color: green
+        - text: Models
+          icon: /assets/icons/brain.svg
+          url: /ai-gateway/entities/ai-model/
+          color: green
+        - text: Providers
+          icon: /assets/icons/cloud.svg
+          url: /ai-gateway/entities/ai-model-provider/
+          color: green
+        - text: MCP Servers
+          icon: /assets/icons/mcp.svg
+          url: /ai-gateway/entities/ai-mcp-server/
+          color: green
+        - text: Agents
+          icon: /assets/icons/a2a-quickstart.svg
+          url: /ai-gateway/entities/ai-agent/
+          color: green
+    - title: Govern AI
+      links:
+        - text: Access Management
+          icon: /assets/icons/key.svg
+          url: /ai-access-management/
+          color: green
+        - text: Cost Management
+          icon: /assets/icons/money.svg
+          url: /ai-cost-management/
+          color: green
+    - title: Build and run APIs
       links:
         - text: Kong Insomnia
           url: /insomnia/
           product: insomnia
-        - text: API Design
-          icon: /assets/icons/design.svg
-          url: /insomnia/design/
-          color: purple
-        - text: API Testing and Debugging
-          icon: /assets/icons/monochrome/code-snippet.svg
-          url: /insomnia/test/
-          color: purple
-    - title: Run APIs
-      links:
         - text: API Gateway
           url: /gateway/
           product: gateway
-        - text: AI Gateway
-          url: /ai-gateway/
-          product: ai-gateway
         - text: Event Gateway
           url: /event-gateway/
           product: event-gateway
@@ -84,6 +105,9 @@ platform:
           icon: /assets/icons/monochrome/security.svg
           url: /gateway/security/
           color: grey
+        - text: AI Cost Management
+          url: /ai-cost-management/
+          product: ai-cost-management
     - title: Discover APIs
       links:
         - text: Developer Portal

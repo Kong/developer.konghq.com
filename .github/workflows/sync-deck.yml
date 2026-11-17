@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - name: Create GitHub App Token
@@ -29,6 +29,13 @@ jobs:
 
       - uses: Kong/setup-deck@v1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "26"
+          cache: npm
+          cache-dependency-path: tools/deck-versions/package-lock.json
+
       - name: Fetch OAS Data
         run: |
           cd tools/deck-versions
@@ -37,7 +44,7 @@ jobs:
           node fetch-versions.js
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
         with:
           title: Sync Deck Releases
           commit-message: Sync Deck Releases

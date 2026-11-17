@@ -9,6 +9,7 @@ breadcrumbs:
   - /ai-gateway/
 
 works_on:
+  - on-prem
   - konnect
 
 products:
@@ -199,7 +200,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-### JWT access token authentication (`bearer`)
+### JWT access token authentication (bearer)
 
 For legacy reasons, stateless JWT access token authentication is named `bearer` in `config.auth_methods`.
 {{site.ai_gateway}} verifies the token's signature against the IdP's published keys and validates standard claims, such as `exp`.
@@ -587,7 +588,7 @@ ai_gateway_auth_strategies:
 ### Authorization code flow
 
 The authorization code flow is a three-legged OAuth/OpenID Connect flow, including session cookie issuance.
-The sequence diagram below describes the participants and their interactions for this usage scenario, including the use of session cookies.
+The following sequence diagram describes the participants and their interactions for this usage scenario, including the use of session cookies.
 
 {% navtabs "auth-code-auth" %}
 {% navtab "Diagram" %}
@@ -1263,6 +1264,14 @@ data:
       - client_credentials
     cache_tokens_salt: multi-client-auth-cache-salt
 {% endentity_example %}
+
+## Limitations
+
+The OpenID Connect AI Auth Strategy passes its `config` object to {{site.base_gateway}}'s [OpenID Connect plugin](/plugins/openid-connect/), but not every plugin capability is supported. The following plugin capabilities aren't supported in the AI Auth Strategy:
+
+* [Protected resource metadata](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata) (`config.protected_resource_metadata`)
+* [Subject token signature verification](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) for [token exchange](#token-exchange) (`config.token_exchange.subject_token_issuers[].verify_signature`)
+* [Actor tokens](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) for token exchange (`config.token_exchange.request.actor_token`)
 
 ## Schema
 

@@ -34,6 +34,7 @@ RSpec.describe Jekyll::Validation do
 
   describe 'html output' do
     include_examples 'a dual-topology content div'
+    include_examples 'a section-aware dual-topology content div'
 
     context 'when config.skip is true' do
       let(:template) do
@@ -70,6 +71,28 @@ RSpec.describe Jekyll::Validation do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
           expect(html).not_to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
         end
+      end
+    end
+
+    context 'when config.skip is true and section is cleanup' do
+      let(:works_on) { %w[konnect on-prem] }
+      let(:template) do
+        <<~LIQUID
+          {% validation request-check %}
+          url: /mock/anything
+          method: GET
+          status_code: 200
+          skip: true
+          section: cleanup
+          {% endvalidation %}
+        LIQUID
+      end
+
+      it 'does not render any test attribute on either content div' do
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-cleanup]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="on-prem"][data-test-cleanup]')
       end
     end
   end

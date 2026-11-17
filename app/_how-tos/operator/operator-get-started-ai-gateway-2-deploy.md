@@ -24,6 +24,7 @@ min_version:
 
 works_on:
   - konnect
+  - on-prem
 
 prereqs:
   show_works_on: true
@@ -38,7 +39,9 @@ prereqs:
  
 tldr:
   q: How do I deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}?
-  a: Create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. {{site.operator_product_name}} provisions the mTLS certificate automatically.
+  a: |
+    With {{site.konnect_short_name}}, create a `KonnectAIGateway`, store your provider API key in a Kubernetes Secret, add an `AIGatewayModelProvider` and `AIGatewayModel`, then deploy an `AIGatewayDataPlane`. {{site.operator_product_name}} provisions the mTLS certificate automatically.
+    For on-prem (Tech Preview), create an `OnPremAIGateway` and an `AIGatewayDataPlane` that references it, then add the same provider and model resources with `spec.aiGatewayRef.kind: OnPremAIGateway`. {{site.operator_product_name}} pushes the configuration to the data plane directly.
 
 next_steps:
   - text: Apply AI policies
@@ -59,37 +62,131 @@ related_resources:
 
 This guide deploys a full {{ site.ai_gateway }} stack on Kubernetes using {{site.operator_product_name}}.
 
-## Create the `KonnectAIGateway`
+{% on_prem %}
+content: |
+  {% include operator/ai-gateway-on-prem-tech-preview.md %}
+{% endon_prem %}
 
-The `KonnectAIGateway` resource creates the {{ site.ai_gateway }} control plane in {{site.konnect_short_name}} and serves as the parent for all other resources in this guide.
+{% konnect %}
+title: Create the `KonnectAIGateway`
+step: true
+content: |
+  The `KonnectAIGateway` resource creates the {{ site.ai_gateway }} control plane in {{site.konnect_short_name}} and serves as the parent for all other resources in this guide.
 
-1. Create the `KonnectAIGateway` resource:
+  1. Create the `KonnectAIGateway` resource:
 
-   ```bash
-   echo '
-   apiVersion: konnect.konghq.com/v1alpha1
-   kind: KonnectAIGateway
-   metadata:
-     name: my-ai-gateway-cp
-     namespace: kong
-   spec:
-     apiSpec:
+     ```bash
+     echo '
+     apiVersion: konnect.konghq.com/v1alpha1
+     kind: KonnectAIGateway
+     metadata:
        name: my-ai-gateway-cp
-       displayName: My AI Gateway
-       description: AI Gateway control plane managed by Kubernetes
-     konnect:
-       authRef:
-         name: konnect-api-auth
-   ' | kubectl apply -f -
-   ```
+       namespace: kong
+     spec:
+       apiSpec:
+         name: my-ai-gateway-cp
+         displayName: My AI Gateway
+         description: AI Gateway control plane managed by Kubernetes
+       konnect:
+         authRef:
+           name: konnect-api-auth
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
 
-1. Wait for the resource to be ready:
+  1. Wait for the resource to be ready:
 
-   ```bash
-   kubectl wait konnectaigateway/my-ai-gateway-cp -n kong \
-     --for=condition=Programmed=True \
-     --timeout=10m
-   ```
+     ```bash
+     kubectl wait konnectaigateway/my-ai-gateway-cp -n kong \
+       --for=condition=Programmed=True \
+       --timeout=10m
+     ```
+     {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+title: Create the `OnPremAIGateway`
+step: true
+content: |
+  The `OnPremAIGateway` resource is the on-premises {{ site.ai_gateway }} control plane, and serves as the parent for all other resources in this guide. It doesn't create a Deployment or any Pods. {{site.operator_product_name}} runs a control plane instance for it inside the operator, which collects the configuration resources that reference the `OnPremAIGateway`.
+
+  1. Create the `OnPremAIGateway` resource:
+
+     ```bash
+     echo '
+     apiVersion: aigateway.konghq.com/v1alpha1
+     kind: OnPremAIGateway
+     metadata:
+       name: my-ai-gateway-cp
+       namespace: kong
+     spec: {}
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+
+     By default, the `OnPremAIGateway` only watches its own namespace for configuration resources and the Secrets they reference. See [On-premises control plane](/operator/konnect/ai-gateway/#on-premises-control-plane) to watch other namespaces or tune how often configuration is pushed.
+
+  1. Wait for the resource to be ready. Unlike `KonnectAIGateway`, an `OnPremAIGateway` reports a `Ready` condition rather than `Programmed`:
+
+     ```bash
+     kubectl wait onpremaigateway/my-ai-gateway-cp -n kong \
+       --for=condition=Ready=True \
+       --timeout=5m
+     ```
+     {: data-test-step="block" }
+{% endon_prem %}
+
+{% on_prem %}
+title: Deploy the `AIGatewayDataPlane`
+step: true
+content: |
+  The `AIGatewayDataPlane` resource deploys the {{ site.ai_gateway }} to your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
+
+  1. Deploy the `AIGatewayDataPlane`. Set `spec.controlPlaneRef.type` to `onpremNamespacedRef` to attach it to the `OnPremAIGateway`:
+
+     ```bash
+     echo '
+     apiVersion: aigateway.konghq.com/v1alpha1
+     kind: AIGatewayDataPlane
+     metadata:
+       name: my-ai-gateway-dp
+       namespace: kong
+     spec:
+       controlPlaneRef:
+         type: onpremNamespacedRef
+         onpremNamespacedRef:
+           name: my-ai-gateway-cp
+       deployment:
+         replicas: 1
+       network:
+         services:
+           ingress:
+             type: LoadBalancer
+             ports:
+               - name: http
+                 port: 8000
+                 targetPort: 8000
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+
+  1. Wait for the data plane to be ready:
+
+     ```bash
+     kubectl wait aigatewaydataplane/my-ai-gateway-dp -n kong \
+       --for=condition=Ready=True \
+       --timeout=10m
+     ```
+     {: data-test-step="block" }
+
+  1. List the Services {{site.operator_product_name}} created for the data plane:
+
+     ```bash
+     kubectl get service -n kong
+     ```
+     {: data-test-step="block" }
+
+{% endon_prem %}
 
 ## Create an AI Model Provider
 
@@ -103,37 +200,82 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
      -n kong
    kubectl label secret openai-credentials konghq.com/secret=true -n kong
    ```
+   {: data-test-step="block" }
+
+   {:.info}
+   > {{site.operator_product_name}} only reads Secrets that carry the `konghq.com/secret=true` label. Without it, the operator can't see the Secret and the AI Model Provider doesn't become `Programmed`.
 
 1. Create the `AIGatewayModelProvider` resource, referencing the Secret:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayModelProvider
-   metadata:
-     name: openai-provider
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
-       type: openai
-       openai:
-         name: openai-provider
-         displayName: OpenAI
-         config:
-           auth:
-             headers:
-               - name: Authorization
-                 value:
-                   type: secretRef
-                   secretRef:
-                     name: openai-credentials
-                     key: token
-   ' | kubectl apply -f -
-   ```
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayModelProvider
+     metadata:
+       name: openai-provider
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: openai
+         openai:
+           name: openai-provider
+           displayName: OpenAI
+           config:
+             auth:
+               headers:
+                 - name: Authorization
+                   value:
+                     type: secretRef
+                     secretRef:
+                       name: openai-credentials
+                       key: token
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayModelProvider
+     metadata:
+       name: openai-provider
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: openai
+         openai:
+           name: openai-provider
+           displayName: OpenAI
+           config:
+             auth:
+               headers:
+                 - name: Authorization
+                   value:
+                     type: secretRef
+                     secretRef:
+                       name: openai-credentials
+                       key: token
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the resource to be ready:
 
@@ -142,6 +284,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Create an AI Model
 
@@ -149,42 +292,90 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
 
 1. Create the `AIGatewayModel` resource:
 
-   ```bash
-   echo '
-   apiVersion: aiconfiguration.konghq.com/v1alpha1
-   kind: AIGatewayModel
-   metadata:
-     name: gpt-4o-mini
-     namespace: kong
-   spec:
-     aiGatewayRef:
-       type: namespacedRef
-       namespacedRef:
-         name: my-ai-gateway-cp
-     apiSpec:
-       type: model
-       model:
-         name: gpt-4o-mini
-         displayName: GPT-4o Mini
-         enabled: Enabled
-         formats:
-           - type: openai
-         capabilities:
-           - generate
-         config:
-           route:
-             paths:
-               - /v1
-         targets:
-           - name: gpt-4o-mini
-             provider:
-               name: openai-provider
-             config:
-               type: openai
-               openai:
-                 upstreamURL: https://api.openai.com/v1/chat/completions
-   ' | kubectl apply -f -
-   ```
+   {% konnect %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayModel
+     metadata:
+       name: gpt-4o-mini
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         type: namespacedRef
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: model
+         model:
+           name: gpt-4o-mini
+           displayName: GPT-4o Mini
+           enabled: Enabled
+           formats:
+             - type: openai
+           capabilities:
+             - generate
+           config:
+             route:
+               paths:
+                 - /v1
+           targets:
+             - name: gpt-4o-mini
+               provider:
+                 name: openai-provider
+               config:
+                 type: openai
+                 openai:
+                   upstreamURL: https://api.openai.com/v1/chat/completions
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
+
+   {% on_prem %}
+   content: |
+     ```bash
+     echo '
+     apiVersion: aiconfiguration.konghq.com/v1alpha1
+     kind: AIGatewayModel
+     metadata:
+       name: gpt-4o-mini
+       namespace: kong
+     spec:
+       aiGatewayRef:
+         group: aigateway.konghq.com
+         kind: OnPremAIGateway
+         namespacedRef:
+           name: my-ai-gateway-cp
+       apiSpec:
+         type: model
+         model:
+           name: gpt-4o-mini
+           displayName: GPT-4o Mini
+           enabled: Enabled
+           formats:
+             - type: openai
+           capabilities:
+             - generate
+           config:
+             route:
+               paths:
+                 - /v1
+           targets:
+             - name: gpt-4o-mini
+               provider:
+                 name: openai-provider
+               config:
+                 type: openai
+                 openai:
+                   upstreamURL: https://api.openai.com/v1/chat/completions
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
 
 1. Wait for the resource to be ready:
 
@@ -193,45 +384,64 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
-## Deploy the `AIGatewayDataPlane`
+{% on_prem %}
+content: |
+  1. Confirm that {{site.operator_product_name}} pushed the configuration to the data plane:
 
-The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
+     ```bash
+     kubectl get onpremaigateway/my-ai-gateway-cp -n kong \
+       -o jsonpath='{.status.conditions[?(@.type=="DataPlanesConfigured")].message}'
+     ```
+     {: data-test-step="block" }
 
-1. Deploy the `AIGatewayDataPlane`:
+     The command prints `Configuration pushed to 1 Admin API endpoints`, one endpoint for each data plane replica.
+{% endon_prem %}
 
-   ```bash
-   echo '
-   apiVersion: aigateway.konghq.com/v1alpha1
-   kind: AIGatewayDataPlane
-   metadata:
-     name: my-ai-gateway-dp
-     namespace: kong
-   spec:
-     controlPlaneRef:
-       type: konnectNamespacedRef
-       konnectNamespacedRef:
-         name: my-ai-gateway-cp
-     deployment:
-       replicas: 1
-     network:
-       services:
-         ingress:
-           type: LoadBalancer
-           ports:
-             - name: http
-               port: 8000
-               targetPort: 8000
-   ' | kubectl apply -f -
-   ```
+{% konnect %}
+title: Deploy the `AIGatewayDataPlane`
+step: true
+content: |
+  The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
 
-1. Wait for the data plane to be ready:
+  1. Deploy the `AIGatewayDataPlane`:
 
-   ```bash
-   kubectl wait aigatewaydataplane/my-ai-gateway-dp -n kong \
-     --for=condition=Ready=True \
-     --timeout=10m
-   ```
+     ```bash
+     echo '
+     apiVersion: aigateway.konghq.com/v1alpha1
+     kind: AIGatewayDataPlane
+     metadata:
+       name: my-ai-gateway-dp
+       namespace: kong
+     spec:
+       controlPlaneRef:
+         type: konnectNamespacedRef
+         konnectNamespacedRef:
+           name: my-ai-gateway-cp
+       deployment:
+         replicas: 1
+       network:
+         services:
+           ingress:
+             type: LoadBalancer
+             ports:
+               - name: http
+                 port: 8000
+                 targetPort: 8000
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+
+  1. Wait for the data plane to be ready:
+
+     ```bash
+     kubectl wait aigatewaydataplane/my-ai-gateway-dp -n kong \
+       --for=condition=Ready=True \
+       --timeout=10m
+     ```
+     {: data-test-step="block" }
+{% endkonnect %}
 
 ## Validate
 
@@ -242,16 +452,25 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $AIGW_HOST
 ```
+{: data-test-step="block" }
 
 Send a request to the AI Model Route you configured:
 
-```bash
-curl -s http://$AIGW_HOST:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-4o-mini",
-    "messages": [{"role": "user", "content": "Hello from Kong AI Gateway!"}]
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+konnect_url: http://$AIGW_HOST:8000
+on_prem_url: http://$AIGW_HOST:8000
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  model: gpt-4o-mini
+  messages:
+    - role: user
+      content: Hello from Kong AI Gateway!
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
 You should receive a response from OpenAI routed through the {{ site.ai_gateway }} data plane.

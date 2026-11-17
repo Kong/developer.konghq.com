@@ -16,6 +16,8 @@ tags:
 related_resources:
   - text: "Credit balance model"
     url: /metering-and-billing/credits/balance-model/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: "Credit grants"
     url: /metering-and-billing/credits/grants/
   - text: "Credit consumption and expiration"
@@ -41,8 +43,13 @@ Credits are customer-specific value that can be used to pay for charges.
 They are useful for prepaid plans, promotional balances, migration credits, enterprise commitments, or any workflow where a customer consumes a balance before paying by invoice.
 
 A credit balance is always tied to a customer and a currency.
-For example, a customer can have a USD credit balance and an EUR credit balance.
+A customer's fiat credits are held in the customer's currency, for example USD.
+A customer can also hold balances in [custom currencies](/metering-and-billing/currencies/), such as tokens, API calls, or compute units you define for your organization.
 Charges consume credits from the matching currency balance.
+
+The purchase that funds a grant always settles in a fiat currency, even when the granted balance is in a custom currency.
+{{site.metering_and_billing}} converts custom-currency charges on a fiat invoice through the currency's cost basis.
+Under `credit_then_invoice`, any credits the customer holds in the invoice's fiat currency can then cover part of that converted amount.
 
 For an end-to-end tutorial on setting up prepaid credits, see [Get started with prepaid credits](/how-to/get-started-with-prepaid-credits/).
 
@@ -53,11 +60,11 @@ The credit system works as follows:
 * **Credit grants** add credits to a customer balance.
 A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
 * **Balances** show how much credit the customer has.
-There is a settled balance from committed ledger movements, and a pending balance that accounts for open charges.
+The balances include: a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending amount, which shows the total of granted credits that haven't taken effect yet.
 * **Charges** consume credits.
-The settlement mode on the rate card controls whether credits are applied before invoicing or whether the full charge must be covered by credits.
+The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
-Credit transaction history shows customer-facing movements: funded, consumed, and expired.
+Credit transaction history shows customer-facing movements: funded, consumed, expired, and voided.
 
 ## Core concepts
 
@@ -75,7 +82,7 @@ columns:
     key: reference
 rows:
   - term: "**Credit**"
-    definition: "A customer-specific monetary value that can be applied to charges to reduce the amount charged on an invoice."
+    definition: "A customer-specific value that settles charges. Depending on the settlement mode, credits settle charges on their own, or are applied first and any remainder is invoiced."
     reference: "[Credit grants](/metering-and-billing/credits/grants/)"
   - term: "**Grant**"
     definition: "The object that adds credits to a customer balance."
@@ -84,10 +91,13 @@ rows:
     definition: "A numeric field on a grant that controls draw-down order. Grants with lower priority values are consumed first."
     reference: "[Credit grants](/metering-and-billing/credits/grants/)"
   - term: "**Settled balance**"
-    definition: "The committed ledger balance at a given point in time. Reflects only finalized movements (funded, consumed, expired). Doesn't include open charges."
+    definition: "The committed ledger balance at a given point in time. Reflects only finalized movements (funded, consumed, expired, voided). Doesn't include open charges."
+    reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
+  - term: "**Live balance**"
+    definition: "A pessimistic balance of available credits. The settled balance minus the impact of open (in-flight) charges that have not yet been finalized."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Pending balance**"
-    definition: "A pessimistic balance of available credits. Includes the settled balance minus any open (in-flight) charges that have not yet been finalized."
+    definition: "The total of granted credits that don't count toward the settled balance yet, such as grants with a future effective time. A sum of pending grants, after any filters, not a spendable balance."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Movement**"
     definition: "A record of a credit change. Movements are immutable: when something changes, a new movement is recorded instead of rewriting the old one. The balance is derived from the sum of all movements."
@@ -166,6 +176,7 @@ To learn more about movements and transaction history, see [Credit transaction h
 ## Settlement modes
 
 Billing charges apply credits.
+You set the settlement mode on the plan, and you can override it for an individual subscription when you create the subscription.
 When a charge is raised against a customer, {{site.metering_and_billing}} uses the settlement mode to determine how to apply credits:
 
 <!--vale off-->
@@ -173,22 +184,29 @@ When a charge is raised against a customer, {{site.metering_and_billing}} uses t
 columns:
   - title: Settlement mode
     key: mode
+  - title: "{{site.konnect_short_name}} UI label"
+    key: label
   - title: Behavior
     key: behavior
 rows:
   - mode: "`credit_then_invoice`"
+    label: "**Invoice overage**"
     behavior: |
       Use available credits first.
       Any charge amount that exceeds the available credit balance is invoiced as a standard charge. This is the prepaid-plus-overage model.
   - mode: "`credit_only`"
-    behavior: "Credits must cover the full charge. If the credit balance is insufficient, the charge is blocked. No invoice overage is generated."
+    label: "**Credits only**"
+    behavior: |
+      Settle the full charge against credits. No invoice overage is generated.
+      If the credit balance is insufficient, the uncovered amount still settles and the customer's credit balance goes negative.
 {% endtable %}
 <!--vale on-->
 
 The customer's credit balance, the charge's settlement mode, and the grant's expiration and priority rules together determine how much credit is consumed.
 
-{:.info}
-> Blocking a charge under `credit_only` only stops the billing line from being generated; it doesn't stop the API request that produced it.
+A negative balance is repaid by the next credits the customer receives.
+A new grant first covers the negative balance, and only the rest of the grant increases the available balance.
+For details, see [Negative balances](/metering-and-billing/credits/consumption-and-expiration/#negative-balances).
 
 For details on draw-down order and expiration behavior, see [credit consumption and expiration](/metering-and-billing/credits/consumption-and-expiration/).
 

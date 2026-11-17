@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/get/
   - text: Manage audit logs with kongctl
     url: /kongctl/audit-logs/
+  - text: kongctl listen audit-logs
+    url: /kongctl/listen/audit-logs/
+  - text: kongctl tail audit-logs
+    url: /kongctl/tail/audit-logs/
 ---
 
 Pull organization audit logs or inspect webhook destinations and configuration.

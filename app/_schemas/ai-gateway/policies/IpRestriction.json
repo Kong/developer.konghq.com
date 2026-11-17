@@ -1,5 +1,34 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16."
+          },
+          "description": "List of IPs or CIDR ranges to allow. One of `config.allow` or `config.deny` must be specified."
+        },
+        "deny": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16."
+          },
+          "description": "List of IPs or CIDR ranges to deny. One of `config.allow` or `config.deny` must be specified."
+        },
+        "status": {
+          "type": "number",
+          "description": "The HTTP status of the requests that will be rejected by the policy."
+        },
+        "message": {
+          "type": "string",
+          "description": "The message to send as a response body to rejected requests."
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -27,35 +56,6 @@
         "tcp",
         "tls"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "description": "The message to send as a response body to rejected requests."
-        },
-        "allow": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16."
-          },
-          "description": "List of IPs or CIDR ranges to allow. One of `config.allow` or `config.deny` must be specified."
-        },
-        "deny": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16."
-          },
-          "description": "List of IPs or CIDR ranges to deny. One of `config.allow` or `config.deny` must be specified."
-        },
-        "status": {
-          "type": "number",
-          "description": "The HTTP status of the requests that will be rejected by the policy."
-        }
-      }
     },
     "service": {
       "type": "object",
