@@ -6,10 +6,9 @@ List edited entries in the same order they appear in the source changelog. Keep 
 
 Formatting rules:
 
-- Give every entry its own `####` heading with the source line number, or a range such as `Lines 38-44` when the entry spans several lines. The range tells the reviewer which lines to select when pasting a suggestion into a PR comment.
-- Quote the original text in a blockquote, joined onto one line. Don't wrap it in italics.
+- Give every entry its own heading with the source line number, or a range such as `Lines 38-44` when the entry spans several lines. The range tells the reviewer which lines to select when pasting a suggestion into a PR comment.
+- Quote the original text in a blockquote, joined onto one line.
 - Never indent the `suggestion` block or anything else, so the reviewer can copy it as is.
-- Don't add horizontal rules between entries. The headings separate them.
 
 ````markdown
 # Changelog review: <changelog name or PR>
@@ -22,6 +21,7 @@ Formatting rules:
 
 > <original text>
 
+**Suggestion**:
 ```suggestion
 - <corrected text>
 ```
@@ -32,15 +32,16 @@ Formatting rules:
 
 > <original text>
 
+**Suggestion**:
 ```suggestion
-<corrected text>
+- <corrected text>
 ```
 
 **Changed**: <what changed and why>
 
 ## Suspected duplicates
 
-#### Lines <number> and <number>
+### Lines <number> and <number>
 
 > <first entry>
 
@@ -50,11 +51,15 @@ Formatting rules:
 
 ## Flagged for security review
 
-#### Line <number>
+### Line <number>
 
 > <entry>
 
 <What looks over-specific, for example the attack class or trigger it names. Don't rewrite the entry.>
+
+## Other potential issues
+
+<Flag any other concerns that you're not certain about.>
 ````
 
 If nothing needed a fix, replace the whole review with a single line saying so.
