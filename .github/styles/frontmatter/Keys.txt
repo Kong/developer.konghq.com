@@ -55,3 +55,4 @@ toc_depth
 event-gateway
 schema_name
 reference_with_schema
+skip_license
