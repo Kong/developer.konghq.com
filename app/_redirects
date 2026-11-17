@@ -413,6 +413,7 @@
 /ai-gateway/policies/header-cert-auth/     /plugins/header-cert-auth/     301
 /ai-gateway/policies/hmac-auth/            /plugins/hmac-auth/            301
 /ai-gateway/policies/jwe-decrypt/          /plugins/jwe-decrypt/          301
+/ai-gateway/policies/jwe-decrypt/reference/  /plugins/jwe-decrypt/  301
 /ai-gateway/policies/jwt/                  /plugins/jwt/                  301
 /ai-gateway/policies/jwt-signer/           /plugins/jwt-signer/           301
 /ai-gateway/policies/key-auth/             /plugins/key-auth/             301
