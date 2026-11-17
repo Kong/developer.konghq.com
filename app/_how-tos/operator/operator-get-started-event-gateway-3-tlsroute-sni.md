@@ -20,7 +20,7 @@ products:
   - operator
   
 min_version:
-  operator: '2.2'
+  operator: '2.4'
 
 works_on:
   - konnect
@@ -30,7 +30,7 @@ prereqs:
   show_works_on: true
   skip_product: true
   inline:
-    - title: "On-prem: {{ site.ee_product_name }} license"
+    - title: "{{ site.ee_product_name }} license"
       topology: on-prem
       content: |
         With an on-prem control plane, the {{ site.base_gateway }} data plane behind the `Gateway` needs a {{ site.ee_product_name }} license to accept configuration. Without one, it runs in read-only mode and the `Gateway` never becomes `Programmed`.
@@ -79,7 +79,7 @@ cleanup:
     - title: Delete the resources created in this guide
       topology: on-prem
       content: |
-        Delete the {{ site.event_gateway }} resources and the `Gateway` resources. Delete the `OnPremEventGateway` resources before the control plane, so that {{site.operator_product_name}} can remove their configuration from it first:
+        Delete the {{ site.event_gateway }} resources and the `Gateway` resources. Delete the `OnPremEventGateway` resources before the control plane, so that {{site.operator_product_name}} can first remove their configuration from the control plane:
 
         ```bash
         kubectl delete -n kong --ignore-not-found \
@@ -145,18 +145,13 @@ related_resources:
 ---
 
 This deployment pattern uses a single TLS listener at the Kubernetes edge and routes Kafka traffic by SNI inside {{ site.event_gateway }}.
-
-Use this pattern when you want:
-
-- one public Kafka listener
-- TLS passthrough at the Kubernetes `Gateway`
-- broker metadata advertised as DNS names on a single port
+For when to use this pattern, see [Deployment patterns](/operator/event-gateway/#deployment-patterns).
 
 {% konnect %}
 title: Create a GatewayConfiguration and GatewayClass
 step: true
 content: |
-  Create a managed `Gateway` class for the TLSRoute example. This `Gateway` is provisioned through {{ site.konnect_short_name }}, so the `GatewayConfiguration` should reference the `KonnectAPIAuthConfiguration` created in the [prerequisites](/operator/get-started/event-gateway/port-mapping/#create-a-konnectapiauthconfiguration-resource).
+  Create a managed `Gateway` class for the TLSRoute example. {{site.operator_product_name}} provisions this `Gateway` through {{ site.konnect_short_name }}, so the `GatewayConfiguration` references the `KonnectAPIAuthConfiguration` that you created in [Deploy {{ site.event_gateway }} with port mapping](/operator/get-started/event-gateway/port-mapping/#create-a-konnectapiauthconfiguration-resource).
 
   1. Create the `GatewayConfiguration` and `GatewayClass` resources:
 
@@ -265,7 +260,7 @@ content: |
 title: Create a second KonnectEventGateway
 step: true
 content: |
-  This guide uses a separate control plane so that it can run alongside the `portMapping` example.
+  This guide uses a separate control plane so that its resources can run alongside the resources from the `portMapping` example.
 
   1. Create the `KonnectEventGateway` resource:
 
@@ -299,7 +294,7 @@ content: |
 title: Create a second OnPremEventGateway
 step: true
 content: |
-  This guide uses a separate `OnPremEventGateway` so that it can run alongside the `portMapping` example. Both `OnPremEventGateway` resources are served by the same control plane.
+  This guide uses a separate `OnPremEventGateway` so that its resources can run alongside the resources from the `portMapping` example. The same control plane serves both `OnPremEventGateway` resources.
 
   1. Create the `OnPremEventGateway` resource:
 
@@ -339,10 +334,10 @@ content: |
        name: default-backend-cluster-tls
        namespace: kong
      spec:
-       gatewayRef:
-         type: namespacedRef
-         namespacedRef:
-           name: cp-event-tls
+       parentRef:
+         group: konnect.konghq.com
+         kind: KonnectEventGateway
+         name: cp-event-tls
        apiSpec:
          name: default_backend_cluster_tls
          bootstrapServers:
@@ -386,10 +381,10 @@ content: |
            - 0.0.0.0
          ports:
            - "9092"
-       gatewayRef:
-         type: namespacedRef
-         namespacedRef:
-           name: cp-event-tls
+       parentRef:
+         group: konnect.konghq.com
+         kind: KonnectEventGateway
+         name: cp-event-tls
      ' | kubectl apply -f -
      ```
    indent: 3
@@ -761,34 +756,32 @@ Create a `Gateway` that listens for TLS traffic on port `19092`. It uses TLS pas
 
 The `TLSRoute` binds the wildcard Kafka hostnames to the internal Kafka Service exposed by the `KegDataPlane`.
 
-Create the `TLSRoute`:
+1. Create the `TLSRoute`:
 
-```bash
-echo '
-apiVersion: gateway.networking.k8s.io/v1
-kind: TLSRoute
-metadata:
-  name: keg-tls
-  namespace: kong
-spec:
-  parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: kong-keg
-      namespace: kong
-      sectionName: kafka-tls
-  hostnames:
-    - "*.vc-tls-1.keg.test.local"
-  rules:
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: keg-tls-dp-kafka
-          port: 9092
-' | kubectl apply -f -
-```
-
-## Validation
+   ```bash
+   echo '
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: TLSRoute
+   metadata:
+     name: keg-tls
+     namespace: kong
+   spec:
+     parentRefs:
+       - group: gateway.networking.k8s.io
+         kind: Gateway
+         name: kong-keg
+         namespace: kong
+         sectionName: kafka-tls
+     hostnames:
+       - "*.vc-tls-1.keg.test.local"
+     rules:
+       - backendRefs:
+           - group: ""
+             kind: Service
+             name: keg-tls-dp-kafka
+             port: 9092
+   ' | kubectl apply -f -
+   ```
 
 1. Wait for the `Gateway` to be programmed, then export its address:
 
@@ -818,7 +811,7 @@ kubectl run kcat-tlsroute --rm -i --restart=Never --image=edenhill/kcat:1.7.1 -n
   -L
 ```
 
-You should see all brokers advertised on port `19092` with DNS names based on the virtual cluster `dnsLabel`, for example:
+The output lists all brokers on port `19092`, with DNS names based on the virtual cluster `dnsLabel`, for example:
 
 ```text
 Metadata for all topics (from broker -1: ssl://bootstrap.vc-tls-1.keg.test.local:19092/bootstrap):
@@ -847,7 +840,7 @@ kubectl run kafkactl-tlsroute --rm -i --restart=Never --image=deviceinsight/kafk
     kafkactl consume orders --from-beginning --exit --print-headers'
 ```
 
-The `sleep` gives the new topic's metadata time to propagate before the consumer reads it. The consumed record carries the headers that both policies added:
+The `sleep` gives the new topic's metadata time to propagate before the consumer reads it. The consumed record has the headers that both policies added:
 
 ```text
 x-kong-consume-policy:tlsroute,x-kong-produce-policy:tlsroute#hello

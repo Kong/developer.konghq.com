@@ -45,9 +45,11 @@ related_resources:
 
 For a step-by-step walkthrough you can apply directly to a cluster, see the [{{ site.event_gateway }} getting started guide](/operator/get-started/event-gateway/install/).
 
-The operator manages three layers:
+{{ site.operator_product_name }} manages three layers:
 
-- A control plane: either a `KonnectEventGateway` in `konnect.konghq.com/v1alpha1`, which creates the control plane in {{ site.konnect_short_name }}, or an [`OnPremEventGateway`](#on-prem-control-plane) in `eventgateway.konghq.com/v1alpha1`, served by a control plane in your cluster
+- A control plane, which is one of the following:
+  - A `KonnectEventGateway` in `konnect.konghq.com/v1alpha1`, which creates the control plane in {{ site.konnect_short_name }}
+  - An [`OnPremEventGateway`](#on-prem-control-plane) in `eventgateway.konghq.com/v1alpha1`, which a control plane in your cluster serves
 - {{ site.event_gateway_short }} configuration resources in `configuration.konghq.com/v1alpha1`
 - A `KegDataPlane` workload in `eventgateway.konghq.com/v1alpha1`
 
@@ -70,7 +72,7 @@ rows:
     purpose: Creates the {{ site.event_gateway_short }} control plane in {{ site.konnect_short_name }}
   - resource: "`OnPremEventGateway`"
     api_group: "`eventgateway.konghq.com/v1alpha1`"
-    purpose: Defines an on-prem {{ site.event_gateway_short }} gateway, whose configuration {{ site.operator_product_name }} pushes to the in-cluster control plane
+    purpose: Defines an on-prem {{ site.event_gateway }}, whose configuration {{ site.operator_product_name }} pushes to the in-cluster control plane
   - resource: "`GWAdmin`"
     api_group: "`gateway-operator.konghq.com/v1alpha1`"
     purpose: Deploys the in-cluster control plane that serves `OnPremEventGateway` configuration to data planes
@@ -115,8 +117,8 @@ With an on-prem control plane, the same resources point to an `OnPremEventGatewa
 
 ## Deployment patterns
 
-There are two ways to expose {{ site.event_gateway }} with the operator:
-* [`LoadBalancer` with `portMapping`](#loadbalancer-with-portmapping). Use this pattern if:
+There are two ways to expose {{ site.event_gateway }} with {{ site.operator_product_name }}:
+* [`LoadBalancer` with `portMapping`](#loadbalancer-with-port-mapping). Use this pattern if:
   * you need a fast local validation loop
   * you can expose one port per broker
   * a stable external IP is acceptable for clients
@@ -127,7 +129,7 @@ There are two ways to expose {{ site.event_gateway }} with the operator:
   * you plan to front multiple virtual clusters behind one entrypoint
 
 
-### `LoadBalancer` with `portMapping`
+### LoadBalancer with port mapping
 
 This pattern suits local validation and simple deployments where exposing one port per broker is acceptable. The `KegDataPlane` exposes a `LoadBalancer` Service with one port for bootstrap traffic and one port per broker.
 
@@ -169,7 +171,7 @@ In a three-broker cluster, the data plane Service exposes:
 
 For a full deployment walkthrough, see [Deploy {{ site.event_gateway }} with port mapping](/operator/get-started/event-gateway/port-mapping/).
 
-### `Gateway` with `TLSRoute` and SNI
+### Gateway with TLSRoute and SNI
 
 This is the production-oriented pattern. A single TLS listener at the Kubernetes edge routes Kafka traffic to the correct virtual cluster by SNI:
 
@@ -226,13 +228,13 @@ An `OnPremEventGateway` replaces the {{ site.konnect_short_name }}-hosted contro
 
 - A `GWAdmin` deploys the control plane: a Deployment, and the Services that {{site.operator_product_name}} and the data planes connect to. {{site.operator_product_name}} creates the certificate authorities that the control plane, {{site.operator_product_name}}, and the data planes use to authenticate each other, and renews the certificates before they expire.
 - An `OnPremEventGateway` references the control plane with `spec.gwAdminRef`. It doesn't create any Pods. {{site.operator_product_name}} collects the {{ site.event_gateway_short }} resources attached to it and pushes their configuration to every control plane Pod over mTLS.
-- A `KegDataPlane` references the `OnPremEventGateway` with `spec.controlPlaneRef.type: onpremNamespacedRef`. {{site.operator_product_name}} issues it a client certificate, registers the certificate on the control plane, and the data plane pulls its configuration from the control plane.
+- A `KegDataPlane` references the `OnPremEventGateway` with `spec.controlPlaneRef.type: onpremNamespacedRef`. {{site.operator_product_name}} issues the data plane a client certificate and registers the certificate on the control plane. The data plane then pulls its configuration from the control plane.
 
-Nothing is sent to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-prem control plane, see [Install {{site.operator_product_name}} for {{ site.event_gateway }}](/operator/get-started/event-gateway/install/).
+The control plane and data planes don't send anything to {{ site.konnect_short_name }}, so {{ site.konnect_short_name }} features such as analytics and the {{ site.konnect_short_name }} UI aren't available. To follow the getting started series with an on-prem control plane, see [Install {{site.operator_product_name}} for {{ site.event_gateway }}](/operator/get-started/event-gateway/install/).
 
 ### Enable the on-prem controllers
 
-The `GWAdmin` and `OnPremEventGateway` controllers are disabled by default. Enable them alongside the `KegDataPlane` controller when installing {{site.operator_product_name}}:
+The `GWAdmin` and `OnPremEventGateway` controllers are disabled by default. Enable them alongside the `KegDataPlane` controller by adding the following flags to your `helm install` or `helm upgrade` command for {{site.operator_product_name}}:
 
 ```bash
 --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true \
@@ -285,17 +287,19 @@ spec:
       name: cp-event-1
 ```
 
-The control plane reference can't be changed after the `KegDataPlane` is created. The name of an on-prem `KegDataPlane` must be a valid DNS label of at most 57 characters.
+You can't change the control plane reference after you create the `KegDataPlane`. The name of an on-prem `KegDataPlane` must be a valid DNS label of at most 57 characters.
 
 To reference a `GWAdmin` or an `OnPremEventGateway` in another namespace, create a `KongReferenceGrant` in the namespace of the referenced resource. See [Cross namespace references](/operator/konnect/cross-namespace-references/).
 
 ### How configuration is pushed
 
-{{site.operator_product_name}} pushes the whole configuration of an `OnPremEventGateway` as one unit. If any entity can't be sent, for example a policy that references a resource that doesn't exist, {{site.operator_product_name}} doesn't push the configuration at all, and the control plane keeps serving the last configuration that it accepted. The `OnPremEventGateway` reports `Programmed=False` with the reason `InvalidEntities` and names the entities, and each entity reports why in its own `Programmed` condition. Fix or delete the entity to resume pushing.
+{{site.operator_product_name}} pushes the whole configuration of an `OnPremEventGateway` as one unit. If {{site.operator_product_name}} can't send an entity, for example a policy that references a resource that doesn't exist, it doesn't push the configuration at all. The control plane keeps serving the last configuration that it accepted. The `OnPremEventGateway` reports `Programmed=False` with the reason `InvalidEntities` and names the entities. Each entity reports the cause in its own `Programmed` condition. Fix or delete the entity to resume pushing.
 
 `status.configRevision` on the `OnPremEventGateway` increases by one every time its configuration changes.
 
 ### Status conditions
+
+The on-prem resources report the following conditions:
 
 <!--vale off-->
 {% table %}
@@ -315,10 +319,10 @@ rows:
     meaning: The license Secret and key exist and are mounted in the control plane Pods. It doesn't mean the license is valid.
   - resource: "`OnPremEventGateway`"
     condition: "`GWAdminResolved`"
-    meaning: "The control plane can serve the gateway. The reason is `NotFound` if the `GWAdmin` doesn't exist, `RefNotPermitted` if a cross-namespace reference has no `KongReferenceGrant`, and `NotReady` while the control plane has no running Pod."
+    meaning: "The control plane can serve the gateway. The reason is `NotFound` if the `GWAdmin` doesn't exist, `RefNotPermitted` if a cross-namespace reference doesn't have a `KongReferenceGrant`, and `NotReady` while the control plane doesn't have a running Pod."
   - resource: "`OnPremEventGateway`"
     condition: "`ConfigurationPushed`"
-    meaning: The current configuration reached every control plane Pod.
+    meaning: "{{site.operator_product_name}} pushed the current configuration to every control plane Pod."
   - resource: "`OnPremEventGateway`"
     condition: "`Programmed`"
     meaning: The configuration was applied. Wait on this condition, as you would for a `KonnectEventGateway`.
@@ -337,7 +341,7 @@ rows:
 
 #### A listener policy isn't programmed
 
-If the `Programmed` message of a `forwardToVirtualCluster` listener policy reports that an `EventGatewayVirtualCluster` is not found, check `destination.name`. It must be the name of the `EventGatewayVirtualCluster` resource, not its `apiSpec.name`. Until you fix it, no configuration change is pushed for the whole `OnPremEventGateway`.
+If the `Programmed` message of a `forwardToVirtualCluster` listener policy reports that an `EventGatewayVirtualCluster` is not found, check `destination.name`. It must be the name of the `EventGatewayVirtualCluster` resource, not its `apiSpec.name`. Until you fix it, {{site.operator_product_name}} doesn't push any configuration change for the `OnPremEventGateway`.
 
 #### The control plane Pod doesn't start
 

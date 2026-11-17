@@ -20,7 +20,7 @@ works_on:
   - on-prem
 
 min_version:
-  operator: '2.3'
+  operator: '2.4'
 
 tldr:
   q: How do I validate Kafka message schemas with {{ site.operator_product_name }}?
@@ -37,7 +37,15 @@ prereqs:
     on_prem_controllers: [GWADMIN, ONPREMEVENTGATEWAY]
     skip_license: true
   inline:
-    - title: "On-prem: Kubernetes cluster and {{ site.event_gateway_short }} license"
+    - title: A running Kubernetes cluster
+      position: before
+      include_content: prereqs/kubernetes/cluster
+      icon_url: /assets/icons/kubernetes.svg
+    - title: Helm
+      position: before
+      include_content: prereqs/helm
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "{{ site.event_gateway_short }} license"
       topology: on-prem
       position: before
       include_content: /md/operator/event-gateway/prereqs/on-prem-cluster
@@ -213,10 +221,10 @@ prereqs:
                name: default-backend-cluster
                namespace: kong
              spec:
-               gatewayRef:
-                 type: namespacedRef
-                 namespacedRef:
-                   name: cp-event-1
+               parentRef:
+                 group: konnect.konghq.com
+                 kind: KonnectEventGateway
+                 name: cp-event-1
                apiSpec:
                  name: default_backend_cluster
                  bootstrapServers:
@@ -266,7 +274,7 @@ prereqs:
              ```
              {: data-test-prereq="block" }
       icon_url: /assets/icons/event.svg
-    - title: "On-prem: {{ site.event_gateway }} control plane, backend cluster, and virtual cluster"
+    - title: "{{ site.event_gateway }} control plane, backend cluster, and virtual cluster"
       topology: on-prem
       content: |
           The schema registry and the schema validation policy attach to a {{ site.event_gateway }} control plane and virtual cluster. Create an on-prem control plane, along with the backend cluster that points at Kafka and the virtual cluster:
@@ -405,7 +413,7 @@ cleanup:
     - title: Delete the {{ site.event_gateway }} resources
       topology: on-prem
       content: |
-        Delete the `OnPremEventGateway` before the control plane, so that {{site.operator_product_name}} can remove its configuration from it first:
+        Delete the `OnPremEventGateway` before the control plane, so that {{site.operator_product_name}} can first remove the `OnPremEventGateway` configuration from the control plane:
 
         ```bash
         kubectl delete -n kong --ignore-not-found \
@@ -429,9 +437,24 @@ cleanup:
       icon_url: /assets/icons/kubernetes.svg
 
 faqs:
+  - q: What happens to Kafka records that fail {{ site.event_gateway }} schema validation?
+    a: |
+      When a record fails schema validation, {{ site.event_gateway }} either skips it or marks it, depending on whether you set `skip` or `mark` in `keyValidationAction` and `valueValidationAction`.
+      A skipped record isn't delivered to the client.
+      A marked record is delivered with a `kong/sverr-key` or `kong/sverr-value` header, and a `kong/policy-failure-<id>` header that describes why validation failed.
+
+      When you set `keyValidationAction: mark`, {{ site.event_gateway }} also marks records whose key isn't in the Confluent wire format.
+      If your producers use plain keys, validate only the value.
+  - q: Can I apply more than one schema validation policy to a {{ site.event_gateway }} virtual cluster?
+    a: |
+      No. A virtual cluster needs a single, consistent schema validation policy, so apply only one `EventGatewayVirtualClusterConsumePolicy` with `type: schemaValidation` at a time.
+  - q: How do I validate records before they reach the backend Kafka cluster?
+    a: |
+      Use the same `type: schemaValidation` config in an `EventGatewayVirtualClusterProducePolicy` instead of an `EventGatewayVirtualClusterConsumePolicy`.
+      {{ site.event_gateway }} then validates records when producers send them, before they reach the backend cluster.
   - q: How do I validate plain JSON records?
     a: |
-      Use `json` instead of `confluentSchemaRegistry` when producers send plain JSON records without a wire-format schema ID. This mode only checks that each record is valid JSON, so it doesn't consult a schema registry, and the policy has no `schemaRegistry` field.
+      Use the `json` mode instead of `confluentSchemaRegistry` in the schema validation policy when producers send plain JSON records without a wire-format schema ID. The `json` mode only checks that each record is valid JSON. It doesn't consult a schema registry, so the policy doesn't have a `schemaRegistry` field.
 
       Apply this policy in place of the `confluentSchemaRegistry` one, not alongside it:
 
@@ -515,10 +538,10 @@ The examples in this guide use the `cp-event-1` control plane, `example-virtual-
        name: example-schema-registry
        namespace: kong
      spec:
-       gatewayRef:
-         type: namespacedRef
-         namespacedRef:
-           name: cp-event-1
+       parentRef:
+         group: konnect.konghq.com
+         kind: KonnectEventGateway
+         name: cp-event-1
        apiSpec:
          type: confluent
          confluent:
@@ -576,52 +599,47 @@ The examples in this guide use the `cp-event-1` control plane, `example-virtual-
 
 ## Enforce schema validation on a virtual cluster
 
-Reference the `EventGatewaySchemaRegistry` from an `EventGatewayVirtualClusterConsumePolicy` using `type: schemaValidation`. {{ site.event_gateway }} supports two validation modes, depending on how records are serialized.
+Reference the `EventGatewaySchemaRegistry` from an `EventGatewayVirtualClusterConsumePolicy` using `type: schemaValidation`.
 
-This example uses `confluentSchemaRegistry`, for producers that serialize records with the Confluent wire format (a schema ID embedded in the record header). {{ site.event_gateway }} resolves the schema by ID from the registry:
+1. Create the `EventGatewayVirtualClusterConsumePolicy`. This example uses `confluentSchemaRegistry`, for producers that serialize records with the Confluent wire format (a schema ID embedded in the record header). {{ site.event_gateway }} resolves the schema by ID from the registry:
 
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: EventGatewayVirtualClusterConsumePolicy
-metadata:
-  name: example-schema-validation-confluent
-  namespace: kong
-spec:
-  eventGatewayVirtualClusterRef:
-    type: namespacedRef
-    namespacedRef:
-      name: example-virtual-cluster
-  apiSpec:
-    type: schemaValidation
-    schemaValidation:
-      name: example_schema_validation_confluent
-      description: Validate Confluent wire-format records against the registry
-      config:
-        type: confluentSchemaRegistry
-        confluentSchemaRegistry:
-          schemaRegistry:
-            kind: EventGatewaySchemaRegistry
-            name: example-schema-registry
-          keyValidationAction: mark
-          valueValidationAction: mark
-' | kubectl apply -f -
-```
-{: data-test-step="block" }
+   ```bash
+   echo '
+   apiVersion: configuration.konghq.com/v1alpha1
+   kind: EventGatewayVirtualClusterConsumePolicy
+   metadata:
+     name: example-schema-validation-confluent
+     namespace: kong
+   spec:
+     eventGatewayVirtualClusterRef:
+       type: namespacedRef
+       namespacedRef:
+         name: example-virtual-cluster
+     apiSpec:
+       type: schemaValidation
+       schemaValidation:
+         name: example_schema_validation_confluent
+         description: Validate Confluent wire-format records against the registry
+         config:
+           type: confluentSchemaRegistry
+           confluentSchemaRegistry:
+             schemaRegistry:
+               kind: EventGatewaySchemaRegistry
+               name: example-schema-registry
+             keyValidationAction: mark
+             valueValidationAction: mark
+   ' | kubectl apply -f -
+   ```
+   {: data-test-step="block" }
 
-If your producers send plain JSON records without a wire-format schema ID, use the `json` mode instead. For more information, see the [FAQs](#how-do-i-validate-plain-json-records).
+1. Wait for the resource to be ready:
 
-{:.info}
-> A virtual cluster should have a single, consistent schema validation policy, so apply only one `EventGatewayVirtualClusterConsumePolicy` with `type: schemaValidation` at a time. The same `type: schemaValidation` config also works on `EventGatewayVirtualClusterProducePolicy` to validate records before they reach the backend cluster.
-
-Wait for the resource to be ready:
-
-```bash
-kubectl wait eventgatewayvirtualclusterconsumepolicy/example-schema-validation-confluent -n kong \
-  --for=condition=Programmed=True \
-  --timeout=10m
-```
-{: data-test-step="block" }
+   ```bash
+   kubectl wait eventgatewayvirtualclusterconsumepolicy/example-schema-validation-confluent -n kong \
+     --for=condition=Programmed=True \
+     --timeout=10m
+   ```
+   {: data-test-step="block" }
 
 ## Validate
 
@@ -639,7 +657,4 @@ name: example-schema-validation-confluent
 {% endvalidation %}
 <!-- vale on -->
 
-A `Programmed=True` condition confirms {{ site.event_gateway }} accepted the policy and is enforcing schema validation on the `example-virtual-cluster` virtual cluster. Records that fail validation are either skipped, so they aren't delivered to the client, or delivered with marker headers, depending on whether you set `skip` or `mark` in `keyValidationAction` and `valueValidationAction`. A marked record carries a `kong/sverr-key` or `kong/sverr-value` header, and a `kong/policy-failure-<id>` header that describes why validation failed.
-
-{:.info}
-> With `keyValidationAction: mark`, records whose key isn't in the Confluent wire format are marked too. If your producers use plain keys, validate only the value.
+A `Programmed=True` condition confirms {{ site.event_gateway }} accepted the policy and is enforcing schema validation on the `example-virtual-cluster` virtual cluster.

@@ -20,7 +20,7 @@ products:
   - operator
   
 min_version:
-  operator: '2.2'
+  operator: '2.4'
 
 works_on:
   - konnect
@@ -38,6 +38,16 @@ tldr:
   a: |
     With {{site.konnect_short_name}}, create a `KonnectEventGateway`, backend cluster, virtual cluster, listener, `KegDataPlane`, listener policy, and consume and produce policies.
     For on-prem, create an `OnPremEventGateway` served by your on-prem control plane instead, attach the backend cluster and listener to it with `spec.parentRef`, and set `spec.controlPlaneRef.type: onpremNamespacedRef` on the `KegDataPlane`.
+
+faqs:
+  - q: What do I do if the `OnPremEventGateway` doesn't become `Programmed`?
+    a: |
+      Check the `GWAdminResolved` condition of the `OnPremEventGateway`.
+      It reports `NotFound` when the `GWAdmin` control plane doesn't exist, and `NotReady` while the control plane doesn't have a running Pod.
+  - q: Why is the `orders` topic named `vc1_orders` in the backend Kafka cluster?
+    a: |
+      The `example-virtual-cluster` virtual cluster uses the `vc1_` namespace prefix with `mode: hide_prefix`.
+      {{ site.event_gateway }} adds the prefix to topic names in the backend Kafka cluster and hides it from clients, so clients see `orders`.
 
 next_steps:
   - text: Learn more about {{ site.event_gateway }}
@@ -63,10 +73,10 @@ This deployment pattern is the simplest way to validate {{ site.event_gateway }}
 It exposes a `LoadBalancer` Service and uses `portMapping` so that Kafka clients connect through one bootstrap port and one port per broker. For production environments, we recommend using {{ site.base_gateway }} with {{ site.operator_product_name }} to set up a TLSRoute and an SNI wildcard.
 
 {% konnect %}
-title: Create the `KonnectEventGateway`
+title: Create the KonnectEventGateway
 step: true
 content: |
-  The `KonnectEventGateway` resource creates the Event Gateway control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
+  The `KonnectEventGateway` resource creates the {{ site.event_gateway_short }} control plane in {{site.konnect_short_name}} and gives the rest of the resources in this guide a parent to attach to.
 
   1. Create the `KonnectEventGateway` resource:
 
@@ -97,10 +107,10 @@ content: |
 {% endkonnect %}
 
 {% on_prem %}
-title: Create the `OnPremEventGateway`
+title: Create the OnPremEventGateway
 step: true
 content: |
-  The `OnPremEventGateway` resource represents your on-prem {{ site.event_gateway_short }} gateway, and gives the rest of the resources in this guide a parent to attach to. It doesn't create any Pods. {{site.operator_product_name}} collects the resources attached to it and pushes their configuration to the control plane you created in the [install guide](/operator/get-started/event-gateway/install/).
+  The `OnPremEventGateway` resource represents your on-prem {{ site.event_gateway }}, and gives the rest of the resources in this guide a parent to attach to. It uses the control plane that you created in the [install guide](/operator/get-started/event-gateway/install/).
 
   1. Create the `OnPremEventGateway` resource:
 
@@ -124,8 +134,6 @@ content: |
        --for=condition=Programmed=True \
        --timeout=5m
      ```
-
-     If the `OnPremEventGateway` doesn't become `Programmed`, check its `GWAdminResolved` condition. It reports `NotFound` when the control plane doesn't exist, and `NotReady` while the control plane has no running Pod.
 {% endon_prem %}
 
 ## Create the backend cluster
@@ -144,10 +152,10 @@ The `EventGatewayBackendCluster` resource tells {{ site.event_gateway }} which u
        name: default-backend-cluster
        namespace: kong
      spec:
-       gatewayRef:
-         type: namespacedRef
-         namespacedRef:
-           name: cp-event-1
+       parentRef:
+         group: konnect.konghq.com
+         kind: KonnectEventGateway
+         name: cp-event-1
        apiSpec:
          name: default_backend_cluster
          bootstrapServers:
@@ -244,10 +252,10 @@ The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clien
            - 0.0.0.0
          ports:
            - "9092-9095"
-       gatewayRef:
-         type: namespacedRef
-         namespacedRef:
-           name: cp-event-1
+       parentRef:
+         group: konnect.konghq.com
+         kind: KonnectEventGateway
+         name: cp-event-1
      ' | kubectl apply -f -
      ```
    indent: 3
@@ -312,7 +320,7 @@ The `EventGatewayVirtualCluster` resource is the Kafka-facing cluster your clien
      --timeout=10m
    ```
 
-## Deploy the `KegDataPlane`
+## Deploy the KegDataPlane
 
 The `KegDataPlane` resource runs {{ site.event_gateway }} inside Kubernetes. In the port-mapping pattern, it exposes a `LoadBalancer` Service with one bootstrap port and one port per broker.
 
@@ -389,8 +397,6 @@ content: |
      ' | kubectl apply -f -
      ```
 
-     {{site.operator_product_name}} issues the data plane a client certificate and registers it on the control plane. The data plane uses it to pull its configuration from the control plane.
-
   1. Wait for the data plane to be ready:
 
      ```bash
@@ -400,7 +406,7 @@ content: |
      ```
 {% endon_prem %}
 
-## Export the `LoadBalancer` address
+## Export the LoadBalancer address
 
 The listener policy needs an explicit `advertisedHost`. Export the `LoadBalancer` IP from the Kafka Service:
 
@@ -553,11 +559,9 @@ kubectl run kafkactl-roundtrip --rm -i --restart=Never \
     kafkactl consume orders --from-beginning --exit --print-headers'
 ```
 
-The `sleep` gives the new topic's metadata time to propagate before the consumer reads it. The consumed record carries the headers that both policies added:
+The `sleep` gives the new topic's metadata time to propagate before the consumer reads it. The consumed record has the headers that both policies added:
 
 ```text
 x-kong-consume-policy:example,x-kong-produce-policy:example#hello
 ```
 {:.no-copy-code}
-
-The virtual cluster hides its `vc1_` prefix from clients: in the backend Kafka cluster, the topic is named `vc1_orders`.

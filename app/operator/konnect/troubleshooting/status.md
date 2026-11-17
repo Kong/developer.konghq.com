@@ -190,7 +190,7 @@ rows:
 
 ### Private endpoint conditions
 
-When a `KonnectAPIAuthConfiguration` uses a private `serverURL`, for example to connect [over AWS PrivateLink](/operator/konnect/how-to/private-link/), {{site.operator_product_name}} doesn't start a component with a configuration that would send its traffic over the public internet. It holds the component and reports one of the following conditions:
+When a `KonnectAPIAuthConfiguration` uses a private `serverURL`, for example to connect [over AWS PrivateLink](/operator/konnect/how-to/private-link/), {{site.operator_product_name}} doesn't start a component with a configuration that would send its traffic over the public internet. Instead, it holds the component, which means it stops applying changes to it, and reports one of the following conditions:
 
 {% table %}
 columns:
@@ -204,7 +204,7 @@ rows:
   - resource: "`KonnectAPIAuthConfiguration`"
     condition: "`APIAuthValid=False`, `Invalid`"
     meaning: |
-      The `serverURL` host isn't under an allowed {{site.konnect_short_name}} domain, so {{site.operator_product_name}} sends no request to it. The message names the allowed domains. They default to `konghq.com` and `konghq.tech`, and are set with the `--konnect-server-url-domains` flag.
+      The `serverURL` host isn't under an allowed {{site.konnect_short_name}} domain, so {{site.operator_product_name}} doesn't send a request to it. The message names the allowed domains. They default to `konghq.com` and `konghq.tech`. You set them with the `--konnect-server-url-domains` flag.
   - resource: "`KonnectExtension`"
     condition: "`Ready=False`, `InvalidEndpoint`"
     meaning: |
@@ -212,7 +212,7 @@ rows:
   - resource: "`KonnectExtension`"
     condition: "`Ready=False`, `EndpointMismatch`"
     meaning: |
-      The `serverURL` has a path, but {{site.konnect_short_name}} returned public endpoints, because the geo doesn't return private endpoints yet. The condition clears on its own once it does.
+      The `serverURL` has a path, but {{site.konnect_short_name}} returned public endpoints because it doesn't return private endpoints for this geo yet. The condition clears on its own once {{site.konnect_short_name}} returns private endpoints for the geo.
   - resource: "`AIGatewayDataPlane`"
     condition: "`KonnectAIGatewayResolved=False`, `EndpointMismatch`"
     meaning: |
@@ -220,7 +220,8 @@ rows:
   - resource: "`KegDataPlane`"
     condition: "`KonnectEventGatewayResolved=False`, `EndpointMismatch`"
     meaning: |
-      The `serverURL` of the `KonnectEventGateway` has a path. {{ site.event_gateway }} data planes can't use a path. Setting `spec.config.konnect.domain` lifts the check, but the data plane then connects over the public internet.
+      The `serverURL` of the `KonnectEventGateway` has a path. {{ site.event_gateway }} data planes can't use a path. Setting `spec.config.konnect.domain` on the `KegDataPlane` skips the check, but the data plane then connects over the public internet.
 {% endtable %}
 
-A held data plane keeps serving, but {{site.operator_product_name}} doesn't apply spec, image, or certificate changes to it, and doesn't deploy a data plane that wasn't deployed yet, until the condition clears.
+A held data plane keeps serving traffic.
+Until the condition clears, {{site.operator_product_name}} doesn't apply spec, image, or certificate changes to it, and doesn't deploy a data plane that isn't deployed yet.

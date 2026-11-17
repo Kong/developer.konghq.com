@@ -20,7 +20,7 @@ products:
   - operator
   
 min_version:
-  operator: '2.2'
+  operator: '2.4'
 
 works_on:
   - konnect
@@ -33,7 +33,15 @@ prereqs:
     on_prem_controllers: [GWADMIN, ONPREMEVENTGATEWAY]
     skip_license: true
   inline:
-    - title: "On-prem: Kubernetes cluster and {{ site.event_gateway_short }} license"
+    - title: A running Kubernetes cluster
+      position: before
+      include_content: prereqs/kubernetes/cluster
+      icon_url: /assets/icons/kubernetes.svg
+    - title: Helm
+      position: before
+      include_content: prereqs/helm
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "{{ site.event_gateway_short }} license"
       topology: on-prem
       include_content: /md/operator/event-gateway/prereqs/on-prem-cluster
       icon_url: /assets/icons/kubernetes.svg
@@ -48,6 +56,20 @@ tags:
   - install
   - helm
   - kafka
+
+faqs:
+  - q: What do I do if the on-prem {{ site.event_gateway }} control plane doesn't start?
+    a: |
+      The on-prem {{ site.event_gateway }} control plane validates its license itself, and doesn't start without a valid license.
+      The `LicenseProvisioned=True` condition on the `GWAdmin` only means that the license Secret is mounted.
+
+      Check the control plane logs:
+
+      ```bash
+      kubectl logs -n kong deployment/gw-admin
+      ```
+
+      Make sure that the Secret holds the {{ site.event_gateway_short }} license token with the `event_gateway` entitlement, not a {{ site.ee_product_name }} JSON license.
 
 related_resources:
   - text: "{{ site.event_gateway }} architecture"
@@ -68,7 +90,7 @@ content: |
 {% endkonnect %}
 {% on_prem %}
 content: |
-  - an on-prem {{ site.event_gateway_short }} control plane, run in your cluster by {{site.operator_product_name}}
+  - an on-prem {{ site.event_gateway_short }} control plane that {{site.operator_product_name}} runs in your cluster
 {% endon_prem %}
 
 - an {{ site.event_gateway_short }} data plane in Kubernetes
@@ -98,9 +120,10 @@ Install {{site.operator_product_name}} with Helm:
 title: Create the control plane
 step: true
 content: |
-  With an on-prem control plane, {{ site.event_gateway }} data planes pull their configuration from a control plane that runs in your cluster, which you deploy with a `GWAdmin` resource. {{site.operator_product_name}} pushes your {{ site.event_gateway_short }} configuration to the control plane, and provisions the certificates that the control plane and the data planes use to authenticate each other.
+  With an on-prem control plane, {{ site.event_gateway }} data planes pull their configuration from a control plane in your cluster.
+  You deploy this control plane with a `GWAdmin` resource. For more information, see [On-prem control plane](/operator/event-gateway/#on-prem-control-plane).
 
-  1. Store your {{ site.event_gateway_short }} license in a Secret. {{site.operator_product_name}} only reads Secrets that carry the `konghq.com/secret=true` label:
+  1. Store your {{ site.event_gateway_short }} license in a Secret. {{site.operator_product_name}} only reads Secrets that have the `konghq.com/secret=true` label:
 
      ```bash
      kubectl create secret generic gw-admin-license -n kong \
@@ -139,12 +162,6 @@ content: |
        --timeout=5m
      ```
      {: data-test-step="block" }
-
-     The control plane reports `LicenseProvisioned=True` once the license Secret is mounted. It validates the license itself, and doesn't start without a valid one. If the Deployment doesn't become available, check the control plane logs:
-
-     ```bash
-     kubectl logs -n kong deployment/gw-admin
-     ```
 {% endon_prem %}
 
 ## Install a Kafka cluster
