@@ -1,0 +1,64 @@
+name: Sync kong-harnesses
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  kong-harnesses-versions:
+    name: Fetch kong-harnesses Versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "26"
+          cache: npm
+          cache-dependency-path: tools/kong-harnesses-versions/package-lock.json
+
+      - uses: Kong/setup-kong-harnesses@7eaf0b48d0bf57c589dc8aad5d105b904868c3f6 # v1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Verify kong-harnesses install
+        run: kong-harnesses version --full
+
+      - name: Fetch versions
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          cd tools/kong-harnesses-versions
+          npm ci
+          node extract-help.js
+          node fetch-versions.js
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          title: Sync kong-harnesses Releases
+          commit-message: Sync kong-harnesses Releases
+          branch: sync-kong-harnesses-releases
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          add-paths: |
+            app/_includes/kong-harnesses/help/**
+            app/kong-harnesses/**
+            app/_data/tools/kong-harnesses.yml
