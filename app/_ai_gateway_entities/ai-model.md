@@ -416,8 +416,8 @@ If your callers are {{site.identity}} principals and you want to manage access r
 To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 
 {:.info}
-> AI Models in a {{site.ai_gateway}} with the same route match conditions must reference the same `openid-connect` AI Auth Strategy.
-> To use different strategies on one base path, add a route rule, such as [`config.route.headers`](#schema-aigateway-model-config-route-headers).
+> AI Models in a {{site.ai_gateway}} that use OIDC and have the same route match conditions must reference the same `openid-connect` AI Auth Strategy.
+> To use different `openid-connect` AI Auth Strategies on one base path, add a route rule, such as [`config.route.headers`](#schema-aigateway-model-config-route-headers).
 >
 > For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
 

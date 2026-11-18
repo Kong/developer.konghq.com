@@ -50,7 +50,7 @@ prereqs:
         * Create a native OIDC app with the authorization code flow and PKCE, and assign both groups of developers to it.
         * Add an access policy for the app with a rule for each group.
           Allow `openid` for subscription developers, and `openid` and `ai-gateway-company` for company developers.
-        * Put this policy before any policy that applies to all clients, so that no other rule grants `ai-gateway-company` to subscription developers.
+        * Don't allow `ai-gateway-company` in any other rule on this authorization server, because {{site.ai_gateway}} accepts any token from this server that has the audience and the scope.
 
         Export the issuer URL of the server:
 
@@ -174,8 +174,8 @@ The company entities use the following settings:
   If `scopes_claim` keeps its default, `scope`, {{site.ai_gateway}} rejects Okta access tokens that have the required scope in `scp`.
 * `upstream_access_token_header: null`: {{site.ai_gateway}} doesn't send the IdP token to Anthropic.
   The company AI Models need only your Anthropic key.
-* `config.route.model.values`: Give each AI Model its own model ID.
-  If a company AI Model and a subscription AI Model use the same model ID, they share one model entry on the data plane, and the entry keeps the settings of only one of them.
+* `config.route.model.values`: Give each AI Model on the base path its own model ID.
+  If two AI Models use the same model ID, they share one model entry on the data plane, and the entry keeps the settings of only one of them.
 
 Keep [`targets[].allow_auth_override`](/ai-gateway/entities/ai-model/#schema-aigateway-target-allow-auth-override) set to `false`, so that a client credential can't replace your key.
 To add more Claude models, create one company AI Model for each, with the Anthropic model ID as the model ID.
@@ -296,17 +296,17 @@ The header rules also let the two sets use different `openid-connect` AI Auth St
 >   If you do, your company pays for part of a subscription request.
 > * Don't use `x-kong-id-token` as a cost tag header, because {{site.ai_gateway}} sends cost tags to analytics.
 > * Don't add a second AI Auth Strategy to an AI Model of either set.
->   With a second strategy, a request can pass with the other credential and skip the IdP token check.
+>   If an AI Model has a second strategy, a request can pass with the credential of the other strategy and skip the IdP token check.
 
 ## Configure {{ site.claude_code }} for subscription developers
 
 A subscription developer signs in to {{ site.claude_code }} with their Claude subscription.
 Don't set `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` or `apiKeyHelper`, because {{ site.claude_code }} then sends that credential in place of the claude.ai token.
 
-To test both groups on one machine, use a separate shell for each group, because the settings of one group break the requests of the other.
-In each shell, set `KONNECT_PROXY_URL` to the proxy URL of your {{site.ai_gateway}}.
+Set `KONNECT_PROXY_URL` to the proxy URL of your {{site.ai_gateway}}.
 On the quickstart host, this is `http://localhost:8000`.
 On other machines, use the HTTPS proxy URL from your {{site.ai_gateway}} admin.
+To test both groups on one machine, use a separate shell for each group, because the settings of one group break the requests of the other.
 
 Get an access token from the Okta app with the authorization code flow and PKCE, and request the `openid` scope.
 The token is the `access_token` in the token response.
@@ -337,6 +337,7 @@ Before the token expires, set a new value in `ANTHROPIC_CUSTOM_HEADERS` and rest
 
 A company developer sends an IdP token with the `ai-gateway-company` scope in `Authorization`.
 Get the token from the Okta app as a subscription developer does, but request the `openid` and `ai-gateway-company` scopes.
+Set `KONNECT_PROXY_URL` as for [subscription developers](#configure-claude-code-for-subscription-developers).
 Set the token in `ANTHROPIC_AUTH_TOKEN`, and set every model slot to a company model ID:
 
 ```sh
