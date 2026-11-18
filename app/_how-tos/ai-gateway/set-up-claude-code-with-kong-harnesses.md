@@ -43,9 +43,11 @@ prereqs:
         ```powershell
         irm https://claude.ai/install.ps1 | iex
         ```
+
+        Open a new terminal and run `claude --version` to check the install.
     - title: A profile from your administrator
       content: |
-        Your {{site.ai_gateway}} administrator gives you a profile as an HTTPS URL or a JSON file. The profile names the gateway, the identity provider you sign in with, and the settings for each agent CLI. It holds no secrets.
+        Your {{site.ai_gateway}} administrator gives you a profile that signs you in through your browser, as an HTTPS URL or a JSON file. The profile names the gateway, the identity provider you sign in with, and the settings for each agent CLI. It holds no secrets.
     - title: A supported computer
       content: |
         kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64. Set it up on the desktop you work on, not in WSL, a container or an SSH session.
@@ -101,7 +103,7 @@ kong-harnesses setup <profile-url> --client claude-code
 Setup does three things in this order:
 
 1. It shows the gateway and the identity provider of the profile, and asks you to type the profile name. Check that both are the ones your administrator named before you type it.
-1. It opens your browser to sign you in. Sign in with your company account. If the profile uses a static key, setup asks for the key instead.
+1. It opens your browser to sign you in. Sign in with your company account.
 1. It configures {{ site.claude_code }} to use the gateway, and then checks the result.
 
 If a step fails, setup stops and names the step and the problem. Fix the problem and run the same command again. Setup keeps a sign-in that still works and settings that are already in place. For a profile URL, it asks you to type the profile name again.
