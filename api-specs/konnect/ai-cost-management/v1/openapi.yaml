@@ -12,8 +12,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
+  x-oas-source: kong/platform-api@51dd48dd822f77f02f11940e5f7db8a9efb42365
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/51dd48dd822f77f02f11940e5f7db8a9efb42365'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -34,6 +34,8 @@ paths:
       summary: List usage events
       description: |-
         Returns a page of the organization's usage events, newest first unless the request sets `sort`. The list includes usage from the gateway and usage reported with `POST /v1/ai-cost-management/events`, each in the `ai.usage.v1` form that producers report. For a caller whose access covers only particular principals or groups, the operation reads only the events of those principals and groups.
+
+        The service may return fewer events than requested when the page reaches its byte budget. Follow the page links to continue.
 
         Listed events differ from what producers send:
 
@@ -164,6 +166,7 @@ paths:
 
                           The `id` is unique within `source` and stays the same when the producer delivers the same invocation again. A client's retry of a model call is a separate invocation with its own `id`. A gateway event's `id` begins with `{request_id}/`.
                         type: string
+                        maxLength: 1024
                         minLength: 1
                       type:
                         description: 'The CloudEvents type of the event. Always `ai.usage.v1`: the event records one billable call to an AI model (an invocation).'
@@ -189,10 +192,8 @@ paths:
                         type: string
                         format: date-time
                         allOf:
-                          - type: string
-                            pattern: '^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$'
-                          - type: string
-                            pattern: '^[^.]*(?:\.\d{1,9}[Z+-][^.]*)?$'
+                          - pattern: '^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$'
+                          - pattern: '^[^.]*(?:\.\d{1,9}[Z+-][^.]*)?$'
                       datacontenttype:
                         description: The media type of `data`. Always `application/json`. The event list doesn't return it.
                         type: string
@@ -202,15 +203,18 @@ paths:
                         description: The URI of the JSON Schema that `ai.usage.v1` events follow. The event list doesn't return it.
                         type: string
                         format: uri
+                        maxLength: 1024
                       traceparent:
                         description: |-
                           The W3C Trace Context `traceparent` of the model call, from the CloudEvents distributed tracing extension.
 
                           Set only from a complete and valid `traceparent` value. A trace ID in another format belongs in `provenance`.
                         type: string
+                        maxLength: 1024
                       tracestate:
                         description: The W3C Trace Context `tracestate` that goes with `traceparent`.
                         type: string
+                        maxLength: 1024
                         minLength: 1
                       data:
                         description: 'The usage the event reports: `quantities`, `reported_cost`, `reported_cache_cost`, `context`, and `optimization`, plus the `provenance`, `tags`, `groups`, and `teams` that attribute it.'
@@ -315,7 +319,7 @@ paths:
                                   - $ref: '#/components/schemas/AICostUsageQuantity'
                           reported_cost:
                             description: |-
-                              The producer's estimate of the invocation's cost at list price, such as `{"value": "0.0054", "currency": "USD"}`. Usage queries, forecasts, and budgets sum it.
+                              The producer's estimate of the invocation's cost, such as `{"value": "0.0054", "currency": "USD"}`. Usage queries, forecasts, and budgets sum it as reported.
 
                               `value` is `0` to `999999999.999999999`, with at most 9 digits before the decimal point and at most 9 after it. It has no sign, no exponent, and no extra leading zeros (`0.5` is valid, `00.5` isn't). Trailing fractional zeros are accepted, and the event list returns the value without them.
 
@@ -362,24 +366,29 @@ paths:
                               provider:
                                 description: The AI provider that served the invocation.
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                               model:
                                 description: 'The model that served the invocation, as the provider reports it, after any alias resolution, route selection, fallback, or enforced downgrade. When the provider doesn''t report it, the producer omits `model` rather than putting the requested model in its place.'
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                               model_id:
                                 description: The producer's stable identifier for the model in its model registry.
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                               request_mode:
                                 $ref: '#/components/schemas/AICostUsageRequestMode'
                               region:
                                 description: 'The region of the provider that served the invocation, not the region of the gateway''s data plane.'
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                               client:
                                 description: 'The tool that made the call, such as `claude_code`, `codex`, or `copilot`, as a normalized identifier. The caller can influence it, so it isn''t verified.'
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                           optimization:
                             description: 'Evidence about cost-saving mechanisms applied to the invocation: a semantic cache and prompt compression. Nothing in it is billable or enters a cost.'
@@ -394,14 +403,17 @@ paths:
                                   status:
                                     description: 'The semantic cache''s status for the invocation, in the producer''s own terms.'
                                     type: string
+                                    maxLength: 1024
                                     minLength: 1
                                   embeddings_provider:
                                     description: The provider of the embedding model that the cache lookup used.
                                     type: string
+                                    maxLength: 1024
                                     minLength: 1
                                   embeddings_model:
                                     description: The embedding model that the cache lookup used.
                                     type: string
+                                    maxLength: 1024
                                     minLength: 1
                                   embeddings_tokens:
                                     description: The number of tokens that the cache lookup embedded.
@@ -415,6 +427,7 @@ paths:
                                   status:
                                     description: 'The prompt compression status for the invocation, in the producer''s own terms.'
                                     type: string
+                                    maxLength: 1024
                                     minLength: 1
                                   input_tokens_before:
                                     description: 'The total input tokens before compression. After compression, the total input is the sum of the uncached, cache-read, and cache-write input quantities.'
@@ -429,11 +442,13 @@ paths:
                             additionalProperties:
                               type: string
                               minLength: 1
+                              maxLength: 1024
                             maxProperties: 64
                             properties:
                               request_id:
                                 description: 'The identifier of the request that made the invocation, for correlating the event with other data.'
                                 type: string
+                                maxLength: 1024
                                 minLength: 1
                               workspace_id:
                                 description: The gateway workspace that handled the request.
@@ -583,7 +598,9 @@ paths:
 
         Subjects come back as subject references, such as `principal/{uuid}`, which the usage filters accept as they are. For `field=tags`, a request without `key` lists the tag keys, and a request with `key` lists the values of that tag.
 
-        For a caller with access to the whole organization, a value stays in the list after the events that carried it leave retention or are deleted. For a caller whose access covers only particular principals or groups, the operation reads only the events of those principals and groups, so a value leaves its list with those events. Such a caller's `groups` and `teams` lists hold only the groups the caller's access names.
+        For a caller with access to the whole organization, a value stays in the list after the events that carried it leave retention or are deleted. For a caller whose access covers only particular principals or groups, the `subject` list holds only the subjects of the events of those principals and groups, so a subject leaves the list with its events. Such a caller's `groups` and `teams` lists hold only the groups the caller's access names. Every other field lists the organization's values, the same as for a caller with access to the whole organization.
+
+        The service may return fewer values than requested when the page reaches its byte budget. Follow the page links to continue.
 
         The list doesn't take a time range or other usage filters, and it doesn't count usage. A cursor belongs to its `field` and `key`. With a cursor from another selection, the request fails with `400`.
       parameters:
@@ -730,7 +747,7 @@ paths:
 
         The operation doesn't change anything; the query goes in the body because it can be large. Each page holds `page.size` groups with their complete `series`. To read the next or previous page, a client sends the response's `meta.page.next` or `meta.page.previous` cursor back as `page.after` or `page.before` in an otherwise identical body.
 
-        The totals come from the same stored events as the usage event list and budget balances, so a query and a budget balance over the same scope and range report the same numbers.
+        The totals come from the same stored events as the usage event list and budget balances, so a query and a budget balance over the same scope and range report the same numbers. A redelivered copy of an event counts in the totals until it is merged into the stored event, so for a short time the totals can exceed the usage event list.
       requestBody:
         required: true
         content:
@@ -783,7 +800,9 @@ paths:
                   description: |-
                     The totals to compute for each group and bucket.
 
-                    At least 1 measure, each named once. Defaults to every measure.
+                    At least 1 measure, each named once. Defaults to every measure except `subjects`.
+
+                    `subjects` counts the distinct non-empty subjects in each group. It needs a request without `granularity`, in `measures` and in `sort`. It isn't additive across groups: a subject whose events fall in two groups counts once in each.
                   type: array
                   items:
                     type: string
@@ -815,6 +834,7 @@ paths:
                       - realtime_audio_ms
                       - reported_total_tokens
                       - total_input_tokens
+                      - subjects
                   minItems: 1
                 filters:
                   description: |-
@@ -1085,6 +1105,10 @@ paths:
                               description: 'The events'' total input, cached or not: the sum of `input_tokens`, `input_cache_read_tokens`, and `input_cache_write_tokens`. A missing quantity counts as zero, and modality detail quantities aren''t added.'
                               allOf:
                                 - $ref: '#/components/schemas/AICostDecimalAmount'
+                            subjects:
+                              description: 'The number of distinct subjects among the events. Unattributed events don''t count. A subject whose events fall in several groups counts once in each, so the groups'' counts can add up to more than the overall count. Only a request without `granularity` can name it.'
+                              allOf:
+                                - $ref: '#/components/schemas/AICostDecimalAmount'
                         series:
                           description: 'With `granularity`, the group''s totals for each bucket, oldest first. Only buckets that contain events appear. Without `granularity`, the list is empty.'
                           type: array
@@ -1209,6 +1233,10 @@ paths:
                                       - $ref: '#/components/schemas/AICostDecimalAmount'
                                   total_input_tokens:
                                     description: 'The events'' total input, cached or not: the sum of `input_tokens`, `input_cache_read_tokens`, and `input_cache_write_tokens`. A missing quantity counts as zero, and modality detail quantities aren''t added.'
+                                    allOf:
+                                      - $ref: '#/components/schemas/AICostDecimalAmount'
+                                  subjects:
+                                    description: 'The number of distinct subjects among the events. Unattributed events don''t count. A subject whose events fall in several groups counts once in each, so the groups'' counts can add up to more than the overall count. Only a request without `granularity` can name it.'
                                     allOf:
                                       - $ref: '#/components/schemas/AICostDecimalAmount'
                             required:
@@ -1488,7 +1516,7 @@ paths:
       operationId: list-cost-budgets
       summary: List budgets
       description: |-
-        Returns a page of the organization's budgets, newest first unless the request sets `sort`. Filters on `name`, `effect`, `priority`, `posture`, and `labels.<key>` narrow the list.
+        Returns a page of the organization's budgets, newest first unless the request sets `sort`. Filters on `name`, `effect`, `priority`, `posture`, `labels.<key>`, and `managed_by.<key>` narrow the list.
 
         For a caller whose access covers only particular principals or groups, the list holds only the budgets whose scope lies within those principals and groups. It also holds each budget with `each` set to `subject` or `subject_id` whose scope covers one of the caller's principals.
       parameters:
@@ -1671,7 +1699,7 @@ paths:
       description: |-
         Replaces a budget's `name`, `labels`, `priority`, and `scope`, with `limit`, `window`, and `posture` on a limit budget or `validity` on an exemption, and returns the result. The request carries the full budget. The budget keeps its identifier, notification rule, and recorded firings.
 
-        - An omitted `labels`, `priority`, or `posture` resets to its default.
+        - An omitted `labels`, `managed_by`, `priority`, or `posture` resets to its default.
         - `effect` can't change. If the request changes it, it fails with `400` naming `effect`.
         - A changed `limit`, `scope`, or `window` applies to the whole current budget window.
         - Removing `scope.each` while the notification rule's message uses `{{entity.field}}` or `{{entity.value}}` fails with `400` naming `scope.each`. Change the message first.
@@ -2175,7 +2203,7 @@ paths:
         Creates a limit budget's notification rule, or replaces its `thresholds`, `channels`, and `message`, and returns the rule. The response status is `201` when the request creates the rule and `200` when it replaces one.
 
         - The service evaluates the rule at once, so a threshold that spend in the current budget window has already reached fires right away. A threshold already recorded for this budget window, derived budget, and limit doesn't fire again. The evaluation runs after the rule is stored, so if it fails, retrying the same request completes it.
-        - Omitting `message` or sending `null` restores the built-in wording.
+        - Omitting `message` or sending `null` restores the built-in wording. An omitted `managed_by` resets to `{}`.
         - Removing a threshold or channel keeps the firings and deliveries already recorded, and pending deliveries are still sent.
         - If a listed channel doesn't exist in the organization, the request fails with `400`, and `invalid_parameters` names `channels[i].id` with the rule `missing_reference`.
         - If `message` has an unknown placeholder or a `{{` without a closing `}}`, the request fails with `400`. It fails the same way when `message` uses `{{entity.field}}` or `{{entity.value}}` on a budget without `each`.
@@ -2304,6 +2332,11 @@ paths:
                   required:
                     - subject
                     - body
+                managed_by:
+                  description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+                  default: {}
+                  allOf:
+                    - $ref: '#/components/schemas/ManagedBy'
               additionalProperties: false
               required:
                 - thresholds
@@ -2549,7 +2582,7 @@ paths:
     get:
       operationId: list-cost-notification-channels
       summary: List notification channels
-      description: 'Returns a page of the organization''s notification channels, sorted by `name` unless the request sets `sort`. Filters on `name`, `type`, and `labels.<key>` narrow the list.'
+      description: 'Returns a page of the organization''s notification channels, sorted by `name` unless the request sets `sort`. Filters on `name`, `type`, `labels.<key>`, and `managed_by.<key>` narrow the list.'
       parameters:
         - name: filter
           in: query
@@ -2727,7 +2760,7 @@ paths:
       description: |-
         Replaces a notification channel's `name`, `labels`, and settings, and returns the result. The channel keeps its identifier and type.
 
-        - The request carries the full channel, so an omitted `labels` clears the channel's labels.
+        - The request carries the full channel, so an omitted `labels` or `managed_by` clears it.
         - A Slack channel keeps its stored webhook URL when the request omits `slack.webhook_url`. This is the only exception to full replacement, because reads never return the full URL.
         - If `type` differs from the stored type, the request fails with `400`, and `invalid_parameters` names `type`.
         - If the organization has no notification channel with this identifier, or the identifier isn't a valid UUID, the request fails with `404`. The request never creates a channel.
@@ -3518,7 +3551,7 @@ paths:
       description: |-
         Replaces an export schedule's `name`, `status`, `dataset`, `focus`, `format`, `compression`, and `filters`, and returns the result. The schedule keeps its identifier.
 
-        - The request carries the full schedule, so an omitted `filters` clears the filters, and an omitted `status` resumes a paused schedule.
+        - The request carries the full schedule, so an omitted `filters` clears the filters, an omitted `status` resumes a paused schedule, and an omitted `managed_by` resets to `{}`.
         - Setting `status` to `paused` pauses the schedule, and setting it to `active` resumes it.
         - The replacement applies to the periods that end after it. Exports that the schedule already created don't change. If runs are late, the replacement first creates the missed exports with the earlier settings, within the schedule's limit of 31 periods.
         - `cadence` and `time_zone` can't change, so the body repeats their stored values. If either differs, the request fails with `400` naming the field. Redefining a schedule's periods takes a delete and a create.
@@ -4106,7 +4139,7 @@ components:
                 - reported_total_tokens
             reported_cost:
               description: |-
-                The producer's estimate of the invocation's cost at list price, such as `{"value": "0.0054", "currency": "USD"}`. Usage queries, forecasts, and budgets sum it.
+                The producer's estimate of the invocation's cost, such as `{"value": "0.0054", "currency": "USD"}`. Usage queries, forecasts, and budgets sum it as reported.
 
                 `value` is `0` to `999999999.999999999`, with at most 9 digits before the decimal point and at most 9 after it. It has no sign, no exponent, and no extra leading zeros (`0.5` is valid, `00.5` isn't). Trailing fractional zeros are accepted, and the event list returns the value without them.
 
@@ -4294,6 +4327,7 @@ components:
 
         The string holds only ASCII digits, with no sign, no decimal point, no exponent, and no extra leading zeros (`0` is valid, `01` isn't). Its value is at most `2^64 - 1` (`18446744073709551615`). The count is a string so that it stays exact in JSON parsers that read numbers as floating point.
       type: string
+      maxLength: 20
       pattern: '^(0|[1-9]\d*)$'
     AICostMoney:
       description: |-
@@ -4358,6 +4392,10 @@ components:
           description: Key-value metadata on the budget. The budget list can filter by label. Balances and notification rules ignore labels.
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         scope:
           description: The usage the budget covers.
           type: object
@@ -4385,7 +4423,7 @@ components:
             - filters
             - each
         priority:
-          description: 'The budget''s priority, from 1, the highest, to 100, the lowest. The budget list can filter and sort by it, but balances and notification rules don''t use it.'
+          description: 'The budget''s priority, from 1 (highest) to 100 (lowest). You can filter and sort the budget list by it.'
           type: integer
           maximum: 100
           minimum: 1
@@ -4434,7 +4472,7 @@ components:
             - interval
             - anchored_at
         posture:
-          description: What the budget declares should happen when spend reaches the limit. Nothing enforces it.
+          description: How the budget responds when spend reaches its limit.
           allOf:
             - $ref: '#/components/schemas/AICostBudgetPosture'
         validity:
@@ -4447,6 +4485,7 @@ components:
         - id
         - name
         - labels
+        - managed_by
         - scope
         - priority
         - created_by
@@ -4677,10 +4716,7 @@ components:
         - op
         - filters
     AICostBudgetPosture:
-      description: |-
-        What a limit budget declares should happen when spend reaches its limit. `advisory` declares that spend can continue past the limit, and `enforce` declares that requests should stop at it.
-
-        Nothing enforces posture: it blocks no request, and balances and notification rules ignore it. The service validates, stores, filters by, and returns it.
+      description: 'How the budget responds when spend reaches its limit. With `advisory`, requests continue past the limit.'
       type: string
       enum:
         - advisory
@@ -4698,6 +4734,10 @@ components:
           description: Key-value metadata on the budget. The budget list can filter by label. Balances and notification rules ignore labels.
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         scope:
           description: The usage the budget covers.
           type: object
@@ -4725,7 +4765,7 @@ components:
             - filters
             - each
         priority:
-          description: 'The budget''s priority, from 1, the highest, to 100, the lowest. The budget list can filter and sort by it, but balances and notification rules don''t use it.'
+          description: 'The budget''s priority, from 1 (highest) to 100 (lowest). You can filter and sort the budget list by it.'
           type: integer
           maximum: 100
           minimum: 1
@@ -4784,6 +4824,7 @@ components:
         - id
         - name
         - labels
+        - managed_by
         - scope
         - priority
         - created_by
@@ -4868,6 +4909,10 @@ components:
           required:
             - subject
             - body
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4877,6 +4922,7 @@ components:
         - thresholds
         - channels
         - message
+        - managed_by
         - created_at
         - updated_at
     AICostNotificationThreshold:
@@ -5062,6 +5108,10 @@ components:
           description: Key-value metadata on the channel. The channel list can filter by label.
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -5096,6 +5146,7 @@ components:
         - id
         - name
         - labels
+        - managed_by
         - created_at
         - updated_at
         - type
@@ -5113,6 +5164,10 @@ components:
           description: Key-value metadata on the channel. The channel list can filter by label.
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -5141,6 +5196,7 @@ components:
         - id
         - name
         - labels
+        - managed_by
         - created_at
         - updated_at
         - type
@@ -5702,6 +5758,10 @@ components:
               description: Key-value metadata on the schedule. The schedule list can filter by label. Each export that the schedule creates copies the labels as they are at that moment.
               allOf:
                 - $ref: '#/components/schemas/Labels'
+            managed_by:
+              description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it.'
+              allOf:
+                - $ref: '#/components/schemas/ManagedBy'
             next_run_at:
               description: |-
                 When the period in progress ends and the schedule creates its export, as an RFC 3339 timestamp in UTC. That export starts 6 hours later, so that events that arrive late can be stored first.
@@ -5727,6 +5787,7 @@ components:
             - compression
             - filters
             - labels
+            - managed_by
             - next_run_at
             - created_at
             - updated_at
@@ -6475,9 +6536,9 @@ components:
           description: The integrations whose headers the plugin reads. Any other tool's headers are ignored.
           type: array
           items:
-            description: A tool whose own request headers the plugin reads and maps onto the standard cost tags.
             allOf:
               - $ref: '#/components/schemas/AICostAttributionPluginIntegration'
+            description: A tool whose own request headers the plugin reads and maps onto the standard cost tags.
           uniqueItems: true
         headers:
           description: 'Request headers mapped to tag keys. Each header name and each tag key appears once, and `headers` and `prefixes` hold at most 32 entries together.'
@@ -6494,7 +6555,7 @@ components:
           default: []
           maxItems: 32
         operator_tags:
-          description: 'Tags the plugin adds to every request, as a map of tag key to value.'
+          description: 'Tags the plugin adds to every request, as a map of tag key to value. A key has at most 128 characters: lowercase letters and digits in words joined by single hyphens.'
           type: object
           default: {}
           additionalProperties:
@@ -6522,9 +6583,9 @@ components:
           description: The integrations whose headers the plugin reads. Any other tool's headers are ignored.
           type: array
           items:
-            description: A tool whose own request headers the plugin reads and maps onto the standard cost tags.
             allOf:
               - $ref: '#/components/schemas/AICostAttributionPluginIntegration'
+            description: A tool whose own request headers the plugin reads and maps onto the standard cost tags.
           uniqueItems: true
         headers:
           description: 'Request headers mapped to tag keys. Each header name and each tag key appears once, and `headers` and `prefixes` hold at most 32 entries together.'
@@ -6541,12 +6602,12 @@ components:
           maxItems: 32
           nullable: true
         operator_tags:
-          description: 'Tags the plugin adds to every request. The patch merges per key, and a key set to `null` is removed.'
+          description: 'Tags the plugin adds to every request. The patch merges per key, and a key set to `null` is removed. A key has at most 128 characters: lowercase letters and digits in words joined by single hyphens.'
           type: object
           additionalProperties:
-            nullable: true
             type: string
             minLength: 1
+            nullable: true
           nullable: true
         group_patterns:
           description: 'PCRE regular expressions that choose which groups the plugin keeps from the caller''s token. A group is kept when any pattern matches its name, case-insensitively and anywhere in the name unless the pattern anchors itself. An empty list keeps every group, and each pattern appears once.'
@@ -6595,6 +6656,7 @@ components:
         - `effect` and `posture`: `eq`, `neq`, and `oeq`.
         - `priority`: `eq`, `gt`, `gte`, `lt`, and `lte`.
         - `labels.<key>`: the value of the label `<key>`, with the operators of `name` plus `exists` and `nexists`. A bare key with no value matches budgets that have the label.
+        - `managed_by.<key>`: the value of the `managed_by` key `<key>`, such as `filter[managed_by.tool]=terraform-provider-konnect`, with the operators of `labels.<key>`. A bare key with no value matches budgets that have the key.
         - `scope.subject`, `scope.group`, and `scope.team`: `eq` and `oeq`, with complete typed references: subjects as `principal/{uuid}`, `consumer/{uuid}`, or `oidc/{sub}`, groups as `principal/{uuid}`, `consumer_group/{uuid}`, or `oidc/{group}`, and teams as `principal/{uuid}`, where `{uuid}` is never the nil UUID. A Kong Identity group goes under `scope.group`, and a Kong Identity team under `scope.team`. A budget matches when a branch of its scope names a listed reference in a `subject`, `group`, or `team` predicate with `eq` or `in`, or when a listed reference is one of its derived values: a subject on a budget whose `each` is `subject` or `subject_id`, a group on a budget whose `each` is `group`, or a team on a budget whose `each` is `team`. A pooled budget whose scope names no subject, group, or team, such as an organization-wide budget, never matches. `oeq` can't list a reference that contains a comma.
 
         Any other filter key fails with `400`. `eq`, `neq`, and `oeq` compare strings case-sensitively, and `contains` and `ocontains` ignore case.
@@ -6798,6 +6860,11 @@ components:
           default: {}
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+          default: {}
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         type:
           description: 'Always `email` for an email channel, which carries its settings in `email`.'
           type: string
@@ -6845,9 +6912,14 @@ components:
           default: {}
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+          default: {}
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         priority:
           description: |-
-            The budget's priority, from 1, the highest, to 100, the lowest. The budget list can filter and sort by it, but balances and notification rules don't use it.
+            The budget's priority, from 1 (highest) to 100 (lowest). You can filter and sort the budget list by it.
 
             Defaults to `100`.
           type: integer
@@ -7051,6 +7123,7 @@ components:
         - `name`: `eq`, `neq`, `oeq`, `contains`, and `ocontains`.
         - `status` and `cadence`: `eq`, `neq`, and `oeq`.
         - `labels.<key>`: the value of the label `<key>`, with the operators of `name` plus `exists` and `nexists`. A bare key with no value matches schedules that have the label.
+        - `managed_by.<key>`: the value of the `managed_by` key `<key>`, such as `filter[managed_by.tool]=terraform-provider-konnect`, with the operators of `labels.<key>`. A bare key with no value matches schedules that have the key.
 
         Any other filter key fails with `400`. `eq`, `neq`, and `oeq` compare strings case-sensitively, and `contains` and `ocontains` ignore case. Enum values are case-sensitive, so any other spelling, such as `ACTIVE`, fails with `400`.
       type: object
@@ -7140,6 +7213,11 @@ components:
               default: {}
               allOf:
                 - $ref: '#/components/schemas/Labels'
+            managed_by:
+              description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+              default: {}
+              allOf:
+                - $ref: '#/components/schemas/ManagedBy'
           required:
             - name
             - cadence
@@ -7281,9 +7359,14 @@ components:
           default: {}
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+          default: {}
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         priority:
           description: |-
-            The budget's priority, from 1, the highest, to 100, the lowest. The budget list can filter and sort by it, but balances and notification rules don't use it.
+            The budget's priority, from 1 (highest) to 100 (lowest). You can filter and sort the budget list by it.
 
             Defaults to `100`.
           type: integer
@@ -7383,10 +7466,7 @@ components:
             - interval
             - anchored_at
         posture:
-          description: |-
-            What the budget declares should happen when spend reaches the limit. Nothing enforces it.
-
-            Defaults to `advisory`.
+          description: 'How the budget responds when spend reaches its limit. With `advisory`, the default, requests continue past the limit.'
           type: string
           default: advisory
           enum:
@@ -7406,6 +7486,7 @@ components:
         - `name`: `eq`, `neq`, `oeq`, `contains`, and `ocontains`.
         - `type`: `eq`, `neq`, and `oeq`.
         - `labels.<key>`: the value of the label `<key>`, with the operators of `name` plus `exists` and `nexists`. A bare key with no value matches channels that have the label.
+        - `managed_by.<key>`: the value of the `managed_by` key `<key>`, such as `filter[managed_by.tool]=terraform-provider-konnect`, with the operators of `labels.<key>`. A bare key with no value matches channels that have the key.
 
         Any other filter key fails with `400`. `eq`, `neq`, and `oeq` compare strings case-sensitively, and `contains` and `ocontains` ignore case.
       type: object
@@ -7475,6 +7556,11 @@ components:
           default: {}
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+          default: {}
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         type:
           description: 'Always `slack` for a Slack channel, which carries its settings in `slack`.'
           type: string
@@ -7520,6 +7606,11 @@ components:
           default: {}
           allOf:
             - $ref: '#/components/schemas/Labels'
+        managed_by:
+          description: 'Identifies the tool that manages this resource, such as `{"tool": "terraform-provider-konnect"}`. The service stores the value and never acts on it. An omitted value on replacement resets to `{}`.'
+          default: {}
+          allOf:
+            - $ref: '#/components/schemas/ManagedBy'
         type:
           description: 'Always `slack` for a Slack channel, which carries its settings in `slack`.'
           type: string
@@ -8585,6 +8676,23 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+        Values must be 1–127 characters long and must not be empty.
+        Keys and values must not contain spaces or control characters.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[^\s\x00-\x1F\x7F-\x9F]+$'
+        minLength: 1
+        maxLength: 127
+      maxProperties: 5
+      title: ManagedBy
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
