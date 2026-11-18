@@ -211,6 +211,8 @@ To list the templates and their defaults, send a `GET` request to `/v2/credentia
 * `template_name`: The provider template to bind, listed in the following table.
 * `name`: The custom name for this provider. Use it to tell apart several providers built from the same template. Must be unique in the directory, and match `^[a-zA-Z0-9_-]+$`.
 
+When you register an OAuth app with the third-party service, set its redirect URI to the {{site.ai_gateway}}'s `/_vault/callback` endpoint, for example `https://gateway.example.com/_vault/callback`. For a local data plane, use `http://localhost:8000/_vault/callback`.
+
 The following provider templates are available:
 
 <!--vale off-->
@@ -345,7 +347,7 @@ During enrollment, Token Vault creates the credential for the first time.
 When you configure a provider (for example, GitHub), Token Vault registers it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for Token Vault. The enrollment process follows these steps:
 
 1. When a request comes in from the agent, Token Vault returns an enrollment URL, valid for 10 minutes, to open the third-party service's OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
-1. When the user approves, the third-party service redirects back to Token Vault's `callback` endpoint and sends an authorization code.
+1. When the user approves, the third-party service redirects back to the {{site.ai_gateway}}'s `/_vault/callback` endpoint and sends an authorization code. The `token-vault-callback-handler` policy serves this endpoint.
 1. Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between Token Vault and the third-party service, not through the agent.
 1. Token Vault writes a new credential row for the access token, encrypted with your directory's vault key and stored for that user and provider. This is the credential that Token Vault releases to the {{site.ai_gateway}} on every future request.
 
