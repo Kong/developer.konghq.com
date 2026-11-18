@@ -175,7 +175,6 @@ Keep the following in mind when you use direct TLS negotiation:
 * PostgreSQL must be version 17 or later. Every proxy in the path, such as PgBouncer, must also support direct TLS negotiation.
 * TLS is always required. {{site.base_gateway}} doesn't fall back to plain text or to the `postgres` negotiation mode, even if `pg_ssl_required` is `off`.
 * In `traditional` mode, you can't use direct TLS negotiation together with [`stream_listen`](/gateway/configuration/#stream-listen). {{site.base_gateway}} doesn't start with this combination.
-* Only nodes that connect to PostgreSQL use this setting: `traditional` mode nodes and Control Planes in hybrid mode. Data Planes don't connect to the database.
 * The other TLS settings, such as `pg_ssl_verify`, `pg_ssl_version`, and `pg_ssl_cert`, work the same way in both negotiation modes.
 
 ## Certificates
