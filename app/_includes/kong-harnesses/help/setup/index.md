@@ -17,8 +17,8 @@ questions of profile create, which needs a terminal.
 Without --client, setup sets up every installed agent CLI that the profile
 lists, as profile activate does. --auto-approve answers yes to the import and
 to the agent CLI list, and prints the import summary to stderr. With a
-<source>, only the sign-in is then left. OpenCode has its own sign-in, so
-setup skips the sign-in when OpenCode is the only agent CLI. With
+<source>, only the sign-in is then left. OpenCode and Hermes have their own
+sign-in, so setup skips the sign-in when they are the only agent CLIs. With
 --no-browser, open the printed URL in a browser on this computer.
 
 You can run setup again safely. It does not import a profile file that is
@@ -48,7 +48,7 @@ Flags:
       --skip-route-check   do not send test requests to the gateway's routes
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

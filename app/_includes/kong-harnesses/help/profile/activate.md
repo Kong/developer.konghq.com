@@ -8,7 +8,7 @@ to keep an installed agent CLI off the gateway. If one agent CLI on the list
 cannot use the profile, activate changes nothing.
 
 With --client, activate sets up only that agent CLI (claude-code, codex,
-opencode, or omp), and does not ask about the list.
+opencode, omp, hermes, or pi), and does not ask about the list.
 
 --auto-approve answers yes in advance, for runs without a terminal.
 --dry-run shows the changes without making them, so it asks nothing. With
@@ -58,7 +58,7 @@ Flags:
       --skip-route-check   do not send test requests to the gateway's routes
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

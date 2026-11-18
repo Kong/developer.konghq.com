@@ -24,13 +24,13 @@ entry for each agent CLI. -o yaml prints the same document as YAML.
 --report prints a JSON report to attach to a support ticket. It adds the
 kong-harnesses version and the platform. For Claude Code it adds the
 settings, the shell variables and the Claude Code version. For Codex,
-OpenCode and omp it adds only the path of the config file and whether that
-file exists. Each value that can hold a secret is replaced with <redacted>,
+OpenCode, omp, Hermes and pi it adds only the path of the config file and
+whether that file exists. Each value that can hold a secret is replaced with <redacted>,
 so you can attach the report as it is.
 
 --inference sends one small model request through Claude Code's route, so
 the profile must set up Claude Code. It uses the selected model, your
-sign-in, the CA bundle and the proxy, and checks for a complete answer from
+sign-in, the system trust store and the proxy, and checks for a complete answer from
 the Anthropic API. This request can cost money. The prompt is "Reply with
 OK." and the answer is at most 16 tokens. It sends no files and no chat
 history. It does not open a browser, retry, or switch to another provider.
@@ -54,7 +54,7 @@ Flags:
       --report            print a JSON report to attach to a support ticket
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

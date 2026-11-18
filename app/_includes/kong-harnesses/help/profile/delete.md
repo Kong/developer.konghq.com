@@ -9,7 +9,8 @@ run logout for the profile and profile cleanup for the agent CLIs, then
 delete the profile.
 
 One profile serves every agent CLI, so the check covers all of them:
-claude-code, codex, opencode, and omp, even when --client names only one.
+claude-code, codex, opencode, omp, hermes, and pi, even when --client names
+only one.
 
 To confirm, you type the profile name. This needs a terminal. --auto-approve
 confirms in advance and prints the confirmation to stderr.
@@ -29,7 +30,7 @@ Flags:
   -h, --help           help for delete
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

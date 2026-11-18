@@ -1,6 +1,6 @@
 ```ansi
 Install a connection profile from a file or HTTPS URL. A profile holds no
-secrets. Profile schema versions 1 to 14 are supported.
+secrets. Profile schema versions 1 to 17 are supported.
 
 Before it installs anything, import shows the gateway and identity provider of
 the profile, and asks you to type the profile name. This needs a terminal.
@@ -21,7 +21,7 @@ Flags:
   -h, --help           help for import
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, or omp
+      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```
