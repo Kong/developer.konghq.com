@@ -96,6 +96,14 @@ rows:
             description: Use Claude Code with HuggingFace provider
             cta:
               url: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Claude subscriptions
+            icon: /assets/icons/anthropic.svg
+            description: Serve developers with their own Claude subscription and developers on company-paid models on one base URL
+            cta:
+              url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
   - header:
       type: h2
       text: "Codex CLI"
