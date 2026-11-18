@@ -351,4 +351,4 @@ body:
 
 1. Ask Claude Code to call `authenticate`, then open the returned URL and approve GitHub's consent screen.
 
-1. After ernrollment, `github-vault-demo` appears connected and displays the available tools.
+1. After enrollment, `github-vault-demo` appears connected and displays the available tools.
