@@ -157,14 +157,14 @@ When it receives a token, it:
 
 1. Checks that the token's signature matches the trusted IdP's published public keys, and confirms the IdP actually issued it. Only asymmetric signing algorithms (RS, PS, and ES families) are accepted.
 1. Checks the token's expiry (`exp`) and not-before (`nbf`) claims.
-1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
+1. Reads the subject already embedded in the token, to determine who it was issued to. By default, the subject is the `sub` claim.
 
 Users don't need to exist in {{site.identity}} beforehand. Token Vault supports just-in-time (JIT) provisioning, also called automatic user provisioning, on its identity providers (IdPs). When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, Token Vault creates one. Per-user credentials are stored for that principal.
 
 To enable JIT provisioning in the {{site.konnect_short_name}} UI, go to **AI** > **Access Management** > **Identity Providers**, then create a new IdP or edit an existing one, and enable **Automatic user provisioning**.
 
 
-To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The request accepts the following body parameters:
+To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The comparison ignores case and trailing slashes, so `https://example.com/` and `https://EXAMPLE.com` count as the same issuer. The request accepts the following body parameters:
 
 <!--vale off-->
 {% table %}
@@ -179,11 +179,11 @@ rows:
   - param: "`issuer_url`"
     required: Yes
     description: |
-      The IdP's issuer URL. Token Vault only trusts subject tokens whose `iss` claim matches this value.
+      The IdP's issuer URL. Must use `https` and can't include a query string or fragment. Token Vault only trusts subject tokens whose `iss` claim matches this value.
   - param: "`jwks_uri`"
     required: No
     description: |
-      Where Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
+      Where Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document when a token is exchanged, and caches the result. When you create the trusted IdP, {{site.identity}} only checks that it can retrieve the IdP's signing keys.
   - param: "`display_name`"
     required: No
     description: |
@@ -196,6 +196,10 @@ rows:
     required: No
     description: |
       Whether {{site.identity}} creates a principal just in time for a token subject that doesn't match an existing principal. Defaults to `true`.
+  - param: "`jit.mapping.identifier`"
+    required: No
+    description: |
+      The token claim that identifies the user. Defaults to `sub`.
 {% endtable %}
 
 `PUT` on `/v2/directories/{directoryId}/trusted-idps/{trustedIdpId}` replaces the whole configuration, so omitted fields reset to their defaults. Use `PATCH` to change individual fields.
