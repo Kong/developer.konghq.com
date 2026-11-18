@@ -150,7 +150,7 @@ Trusted IdPs, providers, and credentials are all scoped to the directory, so no 
 ## Trusted IdP
 
 The trusted IdP is what tells Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (for example, Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
-A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on that trusted IdP. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
+A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on that trusted IdP (for example, your corporate IdP).
 
 Token Vault verifies tokens and never queries the IdP about a user directly.
 When it receives a token, it:
