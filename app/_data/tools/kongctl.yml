@@ -2,9 +2,9 @@ name: kongctl
 
 releases:
   - release: "1.28"
-    version: "1.28.1"
+    version: "1.28.3"
     latest: true
-    released: 2026-11-12
+    released: 2026-11-17
   - release: "1.27"
     version: "1.27.0"
     released: 2026-11-10
