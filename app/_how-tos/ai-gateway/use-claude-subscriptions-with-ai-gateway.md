@@ -46,7 +46,10 @@ prereqs:
         Configure it as follows:
 
         * Set the audience to `api://ai-gateway`.
-        * Add the scope `ai-gateway-company`, and grant it only to developers who use the company models.
+        * Add the scope `ai-gateway-company`.
+        * Create a native OIDC app with the authorization code flow and PKCE, and assign both groups of developers to it.
+        * Add an access policy for the app with a rule for each group.
+          Grant `ai-gateway-company` only in the rule for developers who use the company models.
 
         Export the issuer URL of the server:
 
@@ -263,12 +266,12 @@ The subscription entities use the following settings:
 * `hide_credentials: true`: {{site.ai_gateway}} removes `x-kong-id-token` before it sends the request to Anthropic.
 * `upstream_access_token_header: null`: If `upstream_access_token_header` keeps its default, `authorization:bearer`, {{site.ai_gateway}} replaces the claude.ai token in `Authorization` with the IdP token.
 * No `scopes_required`: Any developer with a valid IdP token from your issuer for the `api://ai-gateway` audience can use the subscription AI Models, because their own subscription pays for the request.
-* `config.route.headers`: The subscription route matches a request only when it has `x-kong-id-token` and a claude.ai token in `Authorization`.
-  A claude.ai token starts with `sk-ant-oat`.
+* `config.route.headers`: The subscription route matches a request only when it has a value in `x-kong-id-token` and an `Authorization` value that starts with `Bearer sk-ant-oat`, the prefix of a claude.ai token.
+  Anthropic checks the claude.ai token.
 * `drop-client-api-key`: The AI Policy removes any `x-api-key` that the client sends.
 
 The company route also matches subscription requests.
-{{site.ai_gateway}} selects the subscription route, because it has more match conditions.
+{{site.ai_gateway}} selects the subscription route, because it matches two request headers and the company route matches none.
 Without the header rules, both routes match the same requests, and {{site.ai_gateway}} sends all of them to one set of AI Models.
 The header rules also let the two sets use different `openid-connect` AI Auth Strategies on the same base path.
 
@@ -278,7 +281,7 @@ The header rules also let the two sets use different `openid-connect` AI Auth St
 * The request doesn't have an IdP token, or the IdP token isn't valid.
   The request fails with `401`.
 * The request has a model ID of the other set.
-  The request fails with `401` or a `5xx` error.
+  The request fails with a `5xx` error, because its route doesn't have an AI Model for that model ID.
   {{ site.claude_code }} retries a `5xx` error for about three minutes before it shows the error.
 
 {:.warning}
@@ -298,17 +301,24 @@ The header rules also let the two sets use different `openid-connect` AI Auth St
 A subscription developer signs in to {{ site.claude_code }} with their Claude subscription.
 Don't set `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` or `apiKeyHelper`, because {{ site.claude_code }} then sends that credential in place of the claude.ai token.
 
-Get an access token from your IdP for the `api://ai-gateway` audience.
+To test both groups on one machine, use a separate shell for each group, because the settings of one group break the requests of the other.
+
+Get an access token from the Okta app with the authorization code flow and PKCE.
+The token is the `access_token` in the token response.
 Then set every model slot of {{ site.claude_code }} to a subscription model ID, and send the IdP token in `x-kong-id-token`:
 
 ```sh
-export ANTHROPIC_BASE_URL='https://YOUR_AI_GATEWAY_HOST'
+unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN
+export ANTHROPIC_BASE_URL="$KONNECT_PROXY_URL"
 export ANTHROPIC_MODEL=claude-opus-5-5-subscription
+export ANTHROPIC_DEFAULT_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_FABLE_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-opus-5-5-subscription
 export CLAUDE_CODE_SUBAGENT_MODEL=claude-opus-5-5-subscription
+export CLAUDE_CODE_BG_CLASSIFIER_MODEL=claude-opus-5-5-subscription
+export CLAUDE_CODE_AUTO_MODE_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_CUSTOM_HEADERS='x-kong-id-token: YOUR_IDP_TOKEN'
 ```
 
@@ -321,25 +331,30 @@ Before the token expires, set a new value in `ANTHROPIC_CUSTOM_HEADERS` and rest
 ## Configure {{ site.claude_code }} for company developers
 
 A company developer sends an IdP token with the `ai-gateway-company` scope in `Authorization`.
+Get the token from the Okta app as a subscription developer does, and request the `ai-gateway-company` scope.
 Set the token in `ANTHROPIC_AUTH_TOKEN`, and set every model slot to a company model ID:
 
 ```sh
-export ANTHROPIC_BASE_URL='https://YOUR_AI_GATEWAY_HOST'
+unset ANTHROPIC_API_KEY ANTHROPIC_CUSTOM_HEADERS
+export ANTHROPIC_BASE_URL="$KONNECT_PROXY_URL"
 export ANTHROPIC_AUTH_TOKEN='YOUR_IDP_TOKEN'
 export ANTHROPIC_MODEL=claude-opus-5-5
+export ANTHROPIC_DEFAULT_MODEL=claude-opus-5-5
 export ANTHROPIC_DEFAULT_FABLE_MODEL=claude-opus-5-5
 export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-5-5
 export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-opus-5-5
 export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-opus-5-5
 export CLAUDE_CODE_SUBAGENT_MODEL=claude-opus-5-5
+export CLAUDE_CODE_BG_CLASSIFIER_MODEL=claude-opus-5-5
+export CLAUDE_CODE_AUTO_MODE_MODEL=claude-opus-5-5
 ```
 
-{{site.ai_gateway}} sends only your Anthropic key to Anthropic, and the IdP token stays at {{site.ai_gateway}}.
+{{site.ai_gateway}} sends only your Anthropic key to Anthropic, and doesn't send the IdP token.
 Before the IdP token expires, set a new value in `ANTHROPIC_AUTH_TOKEN` and restart {{ site.claude_code }}.
 
 ## Validate
 
-Start {{ site.claude_code }} on the subscription AI Model:
+In the shell with the subscription settings, start {{ site.claude_code }} on the subscription AI Model:
 
 <!-- vale off -->
 {% validation claude-code %}
@@ -349,3 +364,14 @@ model: claude-opus-5-5-subscription
 <!-- vale on -->
 
 {{ site.claude_code }} answers, and Anthropic bills the request to the subscription.
+
+In the shell with the company settings, start {{ site.claude_code }} on the company AI Model:
+
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: claude-opus-5-5
+{% endvalidation %}
+<!-- vale on -->
+
+{{ site.claude_code }} answers, and Anthropic bills the request to your Anthropic key.

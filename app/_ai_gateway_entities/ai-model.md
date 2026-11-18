@@ -429,7 +429,8 @@ To control how consumers authenticate before their access is evaluated, configur
 ## Claude Code with developer subscriptions
 
 {{ site.claude_code }} developers who sign in with their own Claude subscription can use the same base URL as developers on company-paid Claude models.
-Each group uses its own set of AI Models, with its own `openid-connect` AI Auth Strategy and route header rules.
+Each group uses its own set of AI Models and its own `openid-connect` AI Auth Strategy.
+Route header rules on the subscription AI Models keep the two sets apart.
 For the steps, see [Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
 
 ## Attach AI Policies
