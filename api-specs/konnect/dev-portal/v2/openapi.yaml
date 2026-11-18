@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@390957c21de38af05017b1bcf982b684da0294bc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/390957c21de38af05017b1bcf982b684da0294bc'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2476,7 +2476,7 @@ components:
         - client_secret
       title: Refresh token response
     ApiKeyCredentialListItem:
-      description: API key credential returned when listing credentials.
+      description: API key credential returned when listing or importing credentials.
       type: object
       properties:
         type:
@@ -3020,6 +3020,104 @@ components:
         - allowed_time_period
         - name
       title: Portal Context
+    ListDocuments:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentItem'
+      additionalProperties: false
+      required:
+        - meta
+        - data
+    ListDocumentsTree:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTree'
+      required:
+        - meta
+        - data
+    DocumentItem:
+      type: object
+      properties:
+        id:
+          description: the id of the document
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+        parent_document_id:
+          description: the id of the parent document
+          type: string
+          format: uuid
+          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
+          nullable: true
+        slug:
+          description: the slug of the document
+          type: string
+          example: getting-started
+        title:
+          description: the title of the document
+          type: string
+          example: Getting Started
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - parent_document_id
+        - slug
+        - title
+      title: Document item
+    DocumentTree:
+      description: a document tree
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+        parent_document_id:
+          type: string
+          format: uuid
+          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
+          nullable: true
+        title:
+          description: the title of the document
+          type: string
+          example: Getting Started
+        slug:
+          description: the slug of the document
+          type: string
+          example: getting-started
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTree'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - title
+        - slug
+        - metadata
+        - children
+      title: DocumentTree
     ProductActionsResponse:
       type: object
       properties:
@@ -3477,109 +3575,6 @@ components:
       example:
         owner: John Appleseed
       additionalProperties: true
-    DocumentItem:
-      type: object
-      properties:
-        id:
-          description: the id of the document
-          type: string
-          format: uuid
-          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-        parent_document_id:
-          description: the id of the parent document
-          type: string
-          format: uuid
-          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
-          nullable: true
-        slug:
-          description: the slug of the document
-          type: string
-          example: getting-started
-        title:
-          description: the title of the document
-          type: string
-          example: Getting Started
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      additionalProperties: false
-      required:
-        - id
-        - parent_document_id
-        - slug
-        - title
-        - metadata
-        - created_at
-        - updated_at
-      title: Document item
-    ListDocuments:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentItem'
-      additionalProperties: false
-      required:
-        - meta
-        - data
-    DocumentTree:
-      description: a document tree
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-        parent_document_id:
-          type: string
-          format: uuid
-          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
-          nullable: true
-        title:
-          description: the title of the document
-          type: string
-          example: Getting Started
-        slug:
-          description: the slug of the document
-          type: string
-          example: getting-started
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        children:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTree'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      required:
-        - id
-        - title
-        - slug
-        - metadata
-        - children
-        - created_at
-        - updated_at
-      title: DocumentTree
-    ListDocumentsTree:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTree'
-      required:
-        - meta
-        - data
     DocumentFormatContentTypeEnum:
       type: string
       default: application/json

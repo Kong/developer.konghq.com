@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@feeedcd27e37859fa16b2c245a170117ccec0778
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/feeedcd27e37859fa16b2c245a170117ccec0778'
+  x-oas-source: kong/platform-api@93a86b50dcae5d23fcf50302ec797689e291cba9
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/93a86b50dcae5d23fcf50302ec797689e291cba9'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -815,6 +815,24 @@ paths:
           $ref: '#/components/responses/BadRequest'
       tags:
         - Developer
+  /api/v3/developer/backchannel-logout:
+    post:
+      operationId: developer-backchannel-logout
+      summary: Backchannel Logout
+      description: |
+        This endpoint allows an external identity provider to notify the portal that a developer's
+        session has ended, using the OpenID Connect Back-Channel Logout protocol. The identity
+        provider calls this endpoint directly (no browser redirect) with a signed logout token,
+        which the portal verifies before revoking the developer's active sessions.
+      requestBody:
+        $ref: '#/components/requestBodies/BackchannelLogoutRequest'
+      responses:
+        '200':
+          description: The logout token was verified and the developer's sessions were revoked.
+        '400':
+          $ref: '#/components/responses/BackchannelLogoutBadRequest'
+      tags:
+        - Authentication
   /api/v3/developer/forgot-password:
     post:
       operationId: forgot-password
@@ -1031,24 +1049,6 @@ paths:
         - {}
       tags:
         - Portal
-  /api/v3/oauth/backchannel-logout:
-    post:
-      operationId: backchannel-logout
-      summary: Backchannel Logout
-      description: |
-        This endpoint allows an external identity provider to notify the portal that a developer's
-        session has ended, using the OpenID Connect Back-Channel Logout protocol. The identity
-        provider calls this endpoint directly (no browser redirect) with a signed logout token,
-        which the portal verifies before revoking the developer's active sessions.
-      requestBody:
-        $ref: '#/components/requestBodies/BackchannelLogoutRequest'
-      responses:
-        '200':
-          description: The logout token was verified and the developer's sessions were revoked.
-        '400':
-          $ref: '#/components/responses/BackchannelLogoutBadRequest'
-      tags:
-        - Authentication
   /api/v3/pages:
     get:
       operationId: list-portal-pages
@@ -3521,6 +3521,7 @@ components:
           description: The name of the application
           type: string
           maxLength: 255
+          minLength: 1
         client_id:
           $ref: '#/components/schemas/ApplicationClientId'
         redirect_uri:
@@ -3531,6 +3532,7 @@ components:
           description: A brief description of the application
           type: string
           maxLength: 255
+          minLength: 1
         auth_strategy_id:
           $ref: '#/components/schemas/AuthStrategyId'
         scopes:
@@ -3586,6 +3588,7 @@ components:
           description: The name of the application
           type: string
           maxLength: 255
+          minLength: 1
         client_id:
           $ref: '#/components/schemas/ApplicationClientId'
         redirect_uri:
@@ -3597,6 +3600,7 @@ components:
           description: A brief description of the application
           type: string
           maxLength: 255
+          minLength: 1
         scopes:
           $ref: '#/components/schemas/Scopes'
         team_id:
@@ -3866,7 +3870,7 @@ components:
         - instance
         - detail
     ApiKeyCredentialListItem:
-      description: API key credential returned when listing credentials.
+      description: API key credential returned when listing or importing credentials.
       type: object
       properties:
         type:
