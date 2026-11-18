@@ -9,6 +9,10 @@ products:
   - ai-gateway
 works_on:
   - konnect
+search_aliases:
+  - k4a
+  - kong 4 all
+  - tourist mode
 tags:
   - ai
   - access-control
