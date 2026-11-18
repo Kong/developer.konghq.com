@@ -28978,7 +28978,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29097,7 +29097,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29221,7 +29221,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29340,7 +29340,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29459,7 +29459,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
