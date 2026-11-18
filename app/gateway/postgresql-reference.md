@@ -42,7 +42,7 @@ faqs:
 
   - q: Does SNI-based routing work when `pg_host` is an IP address?
     a: |
-      {% new_in 3.17 %} No. {{site.base_gateway}} only sends SNI when [`pg_host`](/gateway/configuration/#pg-host) is a hostname. With an IP address, direct TLS negotiation still works without a proxy, but a proxy that routes by SNI can't route the connection.
+      {% new_in 3.17 %} No. {{site.base_gateway}} only sends SNI when `pg_host` is a hostname. With an IP address, direct TLS negotiation still works without a proxy, but a proxy that routes by SNI can't route the connection.
 
 ---
 
