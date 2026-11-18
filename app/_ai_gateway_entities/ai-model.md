@@ -418,7 +418,6 @@ To control how consumers authenticate before their access is evaluated, configur
 {:.info}
 > AI Models in a {{site.ai_gateway}} with the same route match conditions must reference the same `openid-connect` AI Auth Strategy.
 > To use different strategies on one base path, add a route rule, such as [`config.route.headers`](#schema-aigateway-model-config-route-headers).
-> For an example, see [Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
 >
 > For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
 
