@@ -737,9 +737,9 @@ The upstream behind each target depends on the mode:
 
 ### Sessions and multiple targets
 
-<!-- INFERRED, NOT CONFIRMED: how Mcp-Session-Id interacts with the balancer, and whether the first request of a session (initialize) can be hashed. -->
+<!-- INFERRED, NOT CONFIRMED: how Mcp-Session-Id interacts with the balancer, and whether the first request of a session (initialize) can be hashed.
 MCP clients on revisions before `2026-07-28` identify a session with the `Mcp-Session-Id` header.
-Clients on the `2026-07-28` revision don't use sessions and send no `Mcp-Session-Id`, so there's no session to pin and the following guidance doesn't apply to them. See [MCP versions](#mcp-versions).
+Clients on the `2026-07-28` revision don't use sessions and send no `Mcp-Session-Id`, so there's no session to pin and the following guidance doesn't apply to them. See [MCP versions](#mcp-versions). -->
 In `passthrough-listener` and `upstream-server` modes, session state lives on the upstream MCP server, so the replica that created a session must handle every later request in it.
 If your upstream replicas keep session state in memory, use `consistent-hashing` with `hash_on_header: Mcp-Session-Id`.
 If your upstream replicas share session state or are stateless, any algorithm works.

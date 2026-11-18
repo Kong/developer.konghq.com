@@ -416,7 +416,6 @@ To avoid this, run the upstream agent in more than one place, for example in sev
 
 Set either `config.url` or `config.targets`. An AI Agent can't use both.
 AI Agents that use `config.url` continue to work without changes.
-Multiple targets are available in {{site.ai_gateway}} 2.4 and later.
 
 Common reasons to use multiple targets:
 
