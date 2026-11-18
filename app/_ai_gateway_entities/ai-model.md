@@ -444,7 +444,7 @@ data:
   config:
     issuer: https://dev-123456.okta.com/oauth2/default
     audience_required:
-      - api://default
+      - api://ai-gateway
     auth_methods:
       - bearer
     bearer_token_param_type:
@@ -461,7 +461,7 @@ Set `scopes_required` to a scope that your IdP grants only to developers who use
 
 On Okta, use a custom authorization server as the issuer, because the org authorization server can't issue custom scopes. Set `audience_required` in both strategies to the audience of the tokens that this server issues for {{site.ai_gateway}}.
 
-Reference `company-oidc` in [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) of each company AI Model. Use an AI Model Provider with your Anthropic key, and keep [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) set to `false`.
+Reference `company-oidc` in [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) of each company AI Model. Use an AI Model Provider with your Anthropic key, and keep [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) set to `false`. Give each company AI Model the same `capabilities`, `formats` and `config.route.paths` as the AI Model in [Subscription AI Models](#subscription-ai-models), without the `x-kong-id-token` header rule.
 
 ### Subscription AI Models
 
@@ -489,7 +489,7 @@ data:
   config:
     issuer: https://dev-123456.okta.com/oauth2/default
     audience_required:
-      - api://default
+      - api://ai-gateway
     auth_methods:
       - bearer
     bearer_token_param_type:
@@ -500,9 +500,9 @@ data:
     cache_tokens_salt: subscription-oidc-cache-salt
 {% endentity_example %}
 
-`hide_credentials` removes `x-kong-id-token` before {{site.ai_gateway}} sends the request to Anthropic. Set `upstream_access_token_header` to `null`. With the default value, `authorization:bearer`, {{site.ai_gateway}} replaces the claude.ai token in `Authorization` with the IdP token. After you create the strategy, check that `upstream_access_token_header` is `null` in the saved configuration.
+`hide_credentials` removes `x-kong-id-token` before {{site.ai_gateway}} sends the request to Anthropic. Set `upstream_access_token_header` to `null`. In YAML, an empty value is also `null`. With the default value, `authorization:bearer`, {{site.ai_gateway}} replaces the claude.ai token in `Authorization` with the IdP token.
 
-This strategy has no required scope. Any developer with a valid IdP token can use the subscription AI Models, because their own subscription pays for the request.
+This strategy doesn't require a scope. Any developer with a valid IdP token can use the subscription AI Models, because their own subscription pays for the request.
 
 Create one subscription AI Model for each Claude model. The alias in [`config.route.model`](#schema-aigateway-model-config-route-model) has the `-subscription` suffix, and the target name is the Anthropic model ID:
 
@@ -537,7 +537,7 @@ data:
           - claude-opus-5-5-subscription
 {% endentity_example %}
 
-The header rule in `config.route.headers` sends each request that has `x-kong-id-token` to the subscription AI Models. Without it, the company and subscription routes match the same requests on `/`, and only one set gets them. Because the header rule keeps the two routes apart, the two sets can reference different `openid-connect` AI Auth Strategies on the same base path. This is an exception to the note in [Access control](#access-control).
+The header rule in `config.route.headers` sends each request that has `x-kong-id-token` to the subscription AI Models. Without it, the company and subscription routes match the same requests on `/`, and only one set gets them. Because the header rule keeps the two routes apart, the two sets can reference different `openid-connect` AI Auth Strategies on the same base path. The note in [Access control](#access-control) permits this.
 
 {{site.ai_gateway}} then sends a subscription request to Anthropic with the claude.ai token unchanged, without `x-kong-id-token` and without `x-api-key`. A request without an IdP token or with an invalid one fails with `401`, and a model ID of the other set fails. In both cases, {{site.ai_gateway}} sends nothing to Anthropic.
 
@@ -571,7 +571,7 @@ Create a subscription AI Model for each model ID that you set. IdP tokens are sh
 ### Limits
 
 * A subscription AI Model forwards any token in `Authorization`. If a developer sends their IdP token in `Authorization` to a subscription model ID, {{site.ai_gateway}} sends the IdP token to Anthropic in both `Authorization` and `x-api-key`.
-* {{site.ai_gateway}} can't check that the claude.ai account belongs to the developer that the IdP token identifies.
+* {{site.ai_gateway}} can't check that the claude.ai account belongs to the developer who the IdP token identifies.
 * Cost metrics count subscription requests as spend of your company, but Anthropic bills them to the subscription of the developer.
 
 ## Attach AI Policies
