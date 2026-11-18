@@ -29,6 +29,16 @@
           "description": "The number of spans to be sent in a single batch.",
           "type": "integer"
         },
+        "client_certificate": {
+          "description": "Certificate to use as the mTLS client certificate when connecting to a configured HTTPS endpoint. It applies to every signal: traces, logs, access_logs and metrics.",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-foreign": true
+        },
         "connect_timeout": {
           "default": 1000,
           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
@@ -86,6 +96,11 @@
             "enable_consumer_attribute": {
               "default": false,
               "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
+              "type": "boolean"
+            },
+            "enable_credential_attribute": {
+              "default": false,
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size`, `http.server.response.size`, `gen_ai.client.token.usage` and `kong.gen_ai.llm.cost` metrics should fill in the credential attribute when available.",
               "type": "boolean"
             },
             "enable_latency_metrics": {

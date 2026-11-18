@@ -48,7 +48,7 @@
         },
         "disable_penalty": {
           "default": false,
-          "description": "If set to `true`, this doesn't count denied requests (status = `429`). If set to `false`, all requests, including denied ones, are counted. This parameter only affects the `sliding` window_type.",
+          "description": "If set to `true`, the counters incremented by this instance are rolled back if the request ends up with being denied (by itself or by another instance). If set to `false`, the counters incremented by this instance are not rolled back on denial.",
           "type": "boolean"
         },
         "enforce_consumer_groups": {
@@ -101,6 +101,17 @@
         "lock_dictionary_name": {
           "default": "kong_locks",
           "description": "The shared dictionary where concurrency control locks are stored. The default shared dictionary is `kong_locks`. The shared dictionary should be declare in nginx-kong.conf.",
+          "type": "string"
+        },
+        "missing_identifier_behavior": {
+          "default": "ip",
+          "description": "What to do when `identifier` cannot resolve a value for the request. `ip` falls back to the client IP address. `reject` responds with `403 Forbidden` and does not count the request. `skip` lets the request through without counting it. `fixed_key` counts the request under one shared, fixed key.",
+          "enum": [
+            "fixed_key",
+            "ip",
+            "reject",
+            "skip"
+          ],
           "type": "string"
         },
         "namespace": {
@@ -320,7 +331,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "connect_timeout": {
@@ -417,7 +428,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "sentinel_password": {

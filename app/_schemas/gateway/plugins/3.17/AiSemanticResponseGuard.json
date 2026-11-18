@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "continue_on_detection": {
+          "default": false,
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "type": "boolean"
+        },
         "embeddings": {
           "properties": {
             "auth": {
@@ -257,6 +262,16 @@
           ],
           "type": "string"
         },
+        "rejection_mode": {
+          "default": "none",
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "type": "string"
+        },
         "rules": {
           "properties": {
             "allow_responses": {
@@ -266,7 +281,7 @@
                 "minLength": 1,
                 "type": "string"
               },
-              "maxLength": 100,
+              "maxItems": 100,
               "type": "array"
             },
             "deny_responses": {
@@ -276,7 +291,7 @@
                 "minLength": 1,
                 "type": "string"
               },
-              "maxLength": 100,
+              "maxItems": 100,
               "type": "array"
             },
             "max_response_body_size": {
@@ -590,7 +605,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "connect_timeout": {
@@ -680,7 +695,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "sentinel_password": {

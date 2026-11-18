@@ -15,7 +15,7 @@
             "description": "The authorization server identifier.",
             "type": "string"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "cache_introspection": {
@@ -42,7 +42,7 @@
             ],
             "type": "object"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "client_alg": {
@@ -108,7 +108,7 @@
             ],
             "type": "string"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "consumer_claim": {
@@ -116,7 +116,7 @@
           "items": {
             "type": "string"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "consumer_groups_claim": {
@@ -124,7 +124,7 @@
           "items": {
             "type": "string"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "consumer_groups_optional": {
@@ -257,7 +257,7 @@
             "description": "Recommended scopes that are used in authorization requests to request access to this protected resource.",
             "type": "string"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "ssl_verify": {
@@ -358,7 +358,7 @@
                   "items": {
                     "type": "string"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "requested_token_type": {
@@ -375,7 +375,7 @@
                   "items": {
                     "type": "string"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "subject_token_type": {
@@ -409,7 +409,7 @@
                 "items": {
                   "type": "string"
                 },
-                "minLength": 1,
+                "minItems": 1,
                 "type": "array"
               }
             },

@@ -72,7 +72,7 @@
             "minimum": 100,
             "type": "integer"
           },
-          "minLength": 1,
+          "minItems": 1,
           "type": "array"
         },
         "response_headers": {

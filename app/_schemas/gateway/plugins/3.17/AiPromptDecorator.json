@@ -46,7 +46,7 @@
                 ],
                 "type": "object"
               },
-              "maxLength": 15,
+              "maxItems": 15,
               "type": "array"
             },
             "prepend": {
@@ -73,7 +73,7 @@
                 ],
                 "type": "object"
               },
-              "maxLength": 15,
+              "maxItems": 15,
               "type": "array"
             }
           },

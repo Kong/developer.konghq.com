@@ -4,7 +4,7 @@
       "properties": {
         "allow_masking": {
           "default": false,
-          "description": "Allow to masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
+          "description": "Allow masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
           "type": "boolean"
         },
         "aws_access_key_id": {
@@ -35,9 +35,14 @@
           "description": "Override the STS endpoint URL when assuming a different role",
           "type": "string"
         },
+        "continue_on_detection": {
+          "default": false,
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "type": "boolean"
+        },
         "guarding_mode": {
           "default": "INPUT",
-          "description": "The guardrail mode to use for the request",
+          "description": "The guardrail mode to use for the request.",
           "enum": [
             "BOTH",
             "INPUT",
@@ -58,9 +63,19 @@
           "description": "Whether to log prompts and responses that are blocked by the guardrail.",
           "type": "boolean"
         },
+        "rejection_mode": {
+          "default": "none",
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "type": "string"
+        },
         "response_buffer_size": {
           "default": 100,
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
           "type": "number"
         },
         "ssl_verify": {
@@ -70,7 +85,7 @@
         },
         "stop_on_error": {
           "default": true,
-          "description": "Stop processing if an error occurs",
+          "description": "Stop processing if an error occurs.",
           "type": "boolean"
         },
         "text_source": {
@@ -85,7 +100,7 @@
         },
         "timeout": {
           "default": 10000,
-          "description": "Connection timeout with the bedrock service",
+          "description": "Connection timeout with the guardrail service.",
           "type": "number"
         }
       },

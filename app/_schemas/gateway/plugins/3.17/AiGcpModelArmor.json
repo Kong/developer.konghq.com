@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "continue_on_detection": {
+          "default": false,
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "type": "boolean"
+        },
         "enable_multi_language_detection": {
           "default": false,
           "description": "Enables multi-language detection mode. Must be used with 'source_language'.",
@@ -30,7 +35,7 @@
         },
         "guarding_mode": {
           "default": "INPUT",
-          "description": "The guardrail mode to use for the request",
+          "description": "The guardrail mode to use for the request.",
           "enum": [
             "BOTH",
             "INPUT",
@@ -51,6 +56,16 @@
           "description": "GCP Project ID for the GCP Model Armor subscription.",
           "type": "string"
         },
+        "rejection_mode": {
+          "default": "none",
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "type": "string"
+        },
         "request_failure_message": {
           "default": "Request was filtered by GCP Model Armor",
           "description": "The message to return when a failure occurs on the request phase.",
@@ -58,7 +73,7 @@
         },
         "response_buffer_size": {
           "default": 100,
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the model armor service. This only applies to the response content guard.",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
           "type": "number"
         },
         "response_failure_message": {
@@ -86,7 +101,7 @@
         },
         "text_source": {
           "default": "last_message",
-          "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
+          "description": "Select where to pick the 'text' for the guardrail service request.",
           "enum": [
             "concatenate_all_content",
             "concatenate_user_content",
@@ -96,7 +111,7 @@
         },
         "timeout": {
           "default": 10000,
-          "description": "Connection timeout with the GCP Model Armor service",
+          "description": "Connection timeout with the guardrail service.",
           "type": "number"
         }
       },

@@ -74,6 +74,11 @@
           "maximum": 2147483648,
           "minimum": -1,
           "type": "integer"
+        },
+        "scan_multipart_parts": {
+          "default": false,
+          "description": "Inspect the JSON parts of multipart requests. When true, the plugin parses a multipart request body and validates each part that has a JSON content type, including the parts of nested multipart bodies and the parts that have no name. The plugin does not validate the other parts. The plugin rejects a multipart body that it cannot parse safely with a 400 response in every enforcement mode.",
+          "type": "boolean"
         }
       },
       "type": "object"

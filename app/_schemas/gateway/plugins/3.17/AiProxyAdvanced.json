@@ -37,7 +37,7 @@
                           "items": {
                             "type": "string"
                           },
-                          "minLength": 1,
+                          "minItems": 1,
                           "type": "array"
                         }
                       },
@@ -47,7 +47,7 @@
                       ],
                       "type": "object"
                     },
-                    "minLength": 1,
+                    "minItems": 1,
                     "type": "array"
                   }
                 },
@@ -56,7 +56,7 @@
                 ],
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "deny": {
@@ -91,7 +91,7 @@
                           "items": {
                             "type": "string"
                           },
-                          "minLength": 1,
+                          "minItems": 1,
                           "type": "array"
                         }
                       },
@@ -101,7 +101,7 @@
                       ],
                       "type": "object"
                     },
-                    "minLength": 1,
+                    "minItems": 1,
                     "type": "array"
                   }
                 },
@@ -110,7 +110,7 @@
                 ],
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             }
           },
@@ -1266,7 +1266,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "connect_timeout": {
@@ -1356,7 +1356,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "sentinel_password": {
