@@ -58,6 +58,8 @@ rows:
 <!-- vale on -->
 
 A {{site.konnect_short_name}} user with no matching principal has no AI Management role.
+
+If an Org Admin is also a manager in the [org chart](/ai-cost-management/org-chart/), they keep their Org Admin permissions. The Team Manager role doesn't limit them to their team.
 The match works in either order. An org chart import or automatic user provisioning can create the principal before or after the user exists.
 
 ### Invite a user to AI Management
