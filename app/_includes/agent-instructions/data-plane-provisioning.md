@@ -6,9 +6,9 @@ A data plane node carries the traffic. Provision it the same way the guide does,
 
 The MCP server is reachable at a global endpoint, but the resources you create live in one {{site.konnect_short_name}} region. Read the region of the control plane from the tool response before you create anything, and keep every later call in that region.
 
-### Keypair
+### Key pair
 
-Most guides create a data plane keypair locally with `openssl` and then register the public certificate. Keep the private key local. Send only the public certificate to {{site.konnect_short_name}}, or generate the keypair through the MCP tool if the tool offers it. Never put the private key in a request body.
+Most guides create a data plane key pair locally with `openssl` and then register the public certificate. Keep the private key local. Send only the public certificate to {{site.konnect_short_name}}, or generate the key pair through the MCP tool if the tool offers it. Never put the private key in a request body.
 
 ### Pin the certificate
 
