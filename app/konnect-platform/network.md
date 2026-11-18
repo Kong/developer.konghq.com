@@ -276,7 +276,7 @@ When the allowlist is enabled, {{site.konnect_short_name}} rejects any request f
 
 Unlike the [IP allowlist](#specify-ip-addresses-that-can-connect-to-konnect), which applies only to the `.api.` domain and doesn't apply to data planes, the VPCE ID allowlist applies to all connections to your organization through PrivateLink. 
 This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic.
-If you enable both IP and VPCE allowlists, a request is allowed only if it comes from an allowed IP address and from an allowed VPC endpoint. As this can be overly restrictive, it's recommended to only have one type of allowlist.
+If you enable both IP and VPCE allowlists, a request is allowed only if it comes from an allowed IP address and from an allowed VPC endpoint. As this can be overly restrictive, we recommend using only one type of allowlist.
 
 Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
 
@@ -306,6 +306,19 @@ body:
 <!--vale on-->
 
 A PUT request returns a `409` error if an allowlist already exists for your organization. 
+
+To change or disable an existing allowlist, send a PATCH request to the same endpoint. For example, to disable the allowlist:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/organizations/$ORG_ID/vpce-id-allow-list
+status_code: 200
+region: global
+method: PATCH
+body:
+    enabled: false
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 
 {% navtab "UI" %}
@@ -319,7 +332,7 @@ To configure the allowlist in the {{site.konnect_short_name}} UI:
 1. In the **VPC endpoint IDs** field, enter one endpoint ID per line, for example `vpce-0123456789abcdef0`.
 1. Click **Add**.
 
-The allowlist is enabled when you add the endpoint IDs. To turn it off, disable the toggle.
+The allowlist is enabled when you add the endpoint IDs. To change or disable the allowlist, send a PATCH request to the `/organizations/$ORG_ID/vpce-id-allow-list` endpoint. See the API tab for an example.
 {% endnavtab %}
 {% endnavtabs %}
 
