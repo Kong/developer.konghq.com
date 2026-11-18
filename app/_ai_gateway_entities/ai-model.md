@@ -294,15 +294,9 @@ There's no separate target entity or endpoint. Targets are managed only as neste
 
 ### Claude subscription of the developer
 
-A developer can sign in to Claude Code with their own Claude subscription. Claude Code then sends a claude.ai token as `Authorization: Bearer sk-ant-oat...`. On an Anthropic target at `https://api.anthropic.com`, {{site.ai_gateway}} sends this token to Anthropic in place of the AI Model Provider key when [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) is `true`. A target with no provider key also forwards the token. The subscription of the developer then pays for the request.
+A developer can sign in to Claude Code with their own Claude subscription. Claude Code then sends a claude.ai token as `Authorization: Bearer sk-ant-oat...`. On an Anthropic target that sends the request to `https://api.anthropic.com`, {{site.ai_gateway}} forwards this token to Anthropic in place of the AI Model Provider key when [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) is `true`, or when the target has no provider key. It doesn't add `x-api-key`. The subscription of the developer then pays for the request.
 
-{{site.ai_gateway}} keeps the token away from every other upstream:
-
-* It forwards the token only as the single `Authorization` value.
-* It removes the token from all other headers, and from the query or body parameter that holds the provider key. It does the same on every other target, including other providers and other services that serve the Anthropic API.
-* It doesn't forward upstream a key that a key auth strategy accepted as the sign-in of the developer to {{site.ai_gateway}}.
-
-These requests carry the cost tag `auth-source: claude-ai` and the log field [`ai.proxy.meta.auth_source`](/ai-gateway/ai-audit-log-reference/#core-logs), so cost reports can separate them.
+On every other target, {{site.ai_gateway}} removes the token from `Authorization` before it sets the credential of that target. This includes other providers, an Anthropic target with another upstream URL, and an Anthropic target that another plugin routes to another host. On a failover, {{site.ai_gateway}} decides again for each target.
 
 ## Load balancing
 
