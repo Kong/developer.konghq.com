@@ -22,7 +22,9 @@ related_resources:
     url: /konnect-platform/kai/
 ---
 
-Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your URL, then authenticate with a PAT, a System Account Access Token, or, if your client supports it, a browser-based OAuth sign-in.
+Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL, then authenticate with a PAT, a System Account Access Token, or, if your client supports it, a browser-based OAuth sign-in.
+
+The examples on this page use the US endpoint, `https://us.mcp.konghq.com/`. If your {{site.konnect_short_name}} resources are in another region, replace it with your regional server URL. For the full list, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
 ## {{ site.claude_code }} CLI
 
@@ -32,7 +34,7 @@ Configure the MCP client of your choice by adding the {{site.konnect_product_nam
 Using the `claude mcp add` command:
 
 ```bash
-claude mcp add --transport http kong-konnect https://global.mcp.konghq.com
+claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/
 ```
 Claude will open a browser window where you can sign in to {{site.konnect_product_name}} and authorize access.
 
@@ -41,7 +43,7 @@ Claude will open a browser window where you can sign in to {{site.konnect_produc
 Using the `claude mcp add` command:
 
 ```bash
-claude mcp add --transport http kong-konnect https://global.mcp.konghq.com/ \
+claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
   --header "Authorization: Bearer YOUR_KONNECT_PAT"
 ```
 
@@ -57,7 +59,7 @@ You can also configure by editing the configuration file directly:
   "mcpServers": {
     "kong-konnect": {
       "type": "http",
-      "url": "https://global.mcp.konghq.com/",
+      "url": "https://us.mcp.konghq.com/",
       "headers": {
         "Authorization": "Bearer YOUR_KONNECT_PAT"
       }
@@ -80,7 +82,7 @@ claude mcp list
 You should see the following output:
 
 ```sh
-kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
+kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 ```
 
 {:.info}
@@ -100,7 +102,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
       "servers": {
         "kong-konnect": {
           "type": "http",
-          "url": "https://global.mcp.konghq.com/"
+          "url": "https://us.mcp.konghq.com/"
         }
       }
     }
@@ -131,7 +133,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
       "servers": {
         "kong-konnect": {
           "type": "http",
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer ${input:konnect_mcp_pat}"
           }
@@ -165,7 +167,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
     {
       "mcpServers": {
         "kong-konnect": {
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer YOUR_KONNECT_PAT"
           }
@@ -204,7 +206,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
       "servers": {
         "kong-konnect": {
           "type": "http",
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer ${input:konnect_mcp_pat}"
           }
@@ -240,7 +242,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
       "servers": {
         "kong-konnect": {
           "type": "http",
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer YOUR_KONNECT_PAT"
           }
@@ -264,7 +266,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
     {
       "mcpServers": {
         "kong-konnect": {
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer YOUR_KONNECT_PAT"
           }
@@ -291,7 +293,7 @@ For Eclipse, Xcode, and other IDEs with GitHub Copilot support:
     {
       "mcpServers": {
         "kong-konnect": {
-          "url": "https://global.mcp.konghq.com/",
+          "url": "https://us.mcp.konghq.com/",
           "headers": {
             "Authorization": "Bearer YOUR_KONNECT_PAT"
           }

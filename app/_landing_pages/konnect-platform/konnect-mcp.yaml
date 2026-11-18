@@ -132,7 +132,7 @@ rows:
                     For automated workflows, you can also use a [System Account Access Token](https://cloud.konghq.com/global/organization/system-accounts/). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
         
   - header:
-        text: "Access the server"
+        text: "Regional server endpoints"
         type: h2
     columns:
         - blocks:
@@ -141,11 +141,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server is available at a single global endpoint, regardless of which {{site.konnect_product_name}} region your resources are deployed in:
-
-                    `https://global.mcp.konghq.com/`
-
-                    The following regional endpoints are also available:
+                    The MCP server is deployed regionally. Connect to the server in the same region where your {{site.konnect_short_name}} resources are deployed.
 
           - type: table
             config:
@@ -169,6 +165,13 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    **Default endpoint**
+
+                    The regional endpoint defaults to the **US region**.
+
+                    **Global endpoint**
+
+                    A global endpoint, `https://global.mcp.konghq.com/`, is also available.
 
                     **Organization settings**
 
@@ -178,7 +181,7 @@ rows:
       text: "Installation"
       type: h2
       description: |
-        Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your URL and PAT. Select your preferred client below for specific installation instructions.
+        Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT. Select your preferred client below for specific installation instructions.
     column_count: 3
     columns:
       - blocks:
@@ -304,7 +307,7 @@ rows:
                 Verify PAT / SPAT validity, check your organization hasn't disabled MCP access, and ensure the token has required permissions.
             - q: I can't connect to the MCP server. What should I do?
               a: |
-                Check your internet connection, verify the server URL is correct, and ensure your firewall isn't blocking `global.mcp.konghq.com`.
+                Check your internet connection, verify the regional server URL is correct, and ensure your firewall isn't blocking `mcp.konghq.com`.
             - q: Tool execution is failing. How do I troubleshoot?
               a: |
                 Check parameter correctness, verify you have resource access permissions, wait if you're rate limited, and confirm the resource exists.
