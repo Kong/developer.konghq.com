@@ -80,7 +80,7 @@ brew install kong/kong-harnesses/kong-harnesses
 {% endnavtab %}
 {% navtab "Windows and Linux packages" %}
 
-Download the Windows installer (`.msi`) or the Linux package (`.deb` or `.rpm`) for your computer from the [kong-harnesses repository](https://cloudsmith.io/~kong/repos/kong-harnesses/packages/), then install it:
+Download the Windows installer (`.msi`) or the Linux package (`.deb` or `.rpm`) for your computer from the kong-harnesses repository at `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`, then install it:
 
 * Windows: in PowerShell opened as an administrator, run `msiexec /i <file>.msi`
 * Ubuntu: `sudo apt install ./<file>.deb`
