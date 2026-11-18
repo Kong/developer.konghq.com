@@ -1,6 +1,10 @@
 # kong-harnesses versions
 
-Manually syncs the kong-harnesses documentation on developer.konghq.com with the installed binary and its GitHub releases.
+Keeps the kong-harnesses documentation on developer.konghq.com in sync with the installed binary and its GitHub releases.
+
+The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) workflow runs both scripts on a daily schedule and on manual dispatch: it regenerates the help includes, then refreshes the release data from the internal `Kong/kong-harnesses` releases, and opens a pull request. It reads those releases with the Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), passed to the `Kong/setup-kong-harnesses` install step so the step can resolve a release, and set as `GH_TOKEN` for `fetch-versions.js`. The workflow only runs once `Kong/setup-kong-harnesses` is public or mirrored, as `Kong/ksai-public` is: the action is internal, and GitHub does not resolve an internal action from this public repository.
+
+The manual runbook below does the same work by hand, and stays the way to sync from a local binary.
 
 ## How to run the sync
 
