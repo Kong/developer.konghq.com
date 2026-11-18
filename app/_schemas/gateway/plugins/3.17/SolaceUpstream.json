@@ -56,7 +56,7 @@
                 ],
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "dmq_eligible": {

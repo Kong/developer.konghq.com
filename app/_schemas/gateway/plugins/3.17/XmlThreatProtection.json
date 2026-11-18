@@ -122,6 +122,11 @@
           "description": "Maximum size of the prefix. This applies to tags and attributes. This value is required if parsing is namespace-aware.",
           "type": "integer"
         },
+        "scan_multipart_parts": {
+          "default": false,
+          "description": "Inspect the XML parts of multipart requests. When true, the plugin parses a multipart request body and validates each part whose content type matches `checked_content_types`, including the parts of nested multipart bodies and the parts that have no name. The plugin does not reject the other parts. The plugin rejects a multipart body that it cannot parse safely with a 400 response.",
+          "type": "boolean"
+        },
         "text": {
           "default": 1048576,
           "description": "Maximum text inside tags (counted over all adjacent text/CDATA elements combined).",

@@ -27,8 +27,8 @@
                       "minLength": 1,
                       "type": "string"
                     },
-                    "maxLength": 64,
-                    "minLength": 1,
+                    "maxItems": 64,
+                    "minItems": 1,
                     "type": "array"
                   },
                   "input": {
@@ -76,8 +76,8 @@
                       "minLength": 1,
                       "type": "string"
                     },
-                    "maxLength": 64,
-                    "minLength": 1,
+                    "maxItems": 64,
+                    "minItems": 1,
                     "type": "array"
                   },
                   "type": {
@@ -187,6 +187,11 @@
               {
                 "description": "Make an external HTTP request",
                 "properties": {
+                  "continue_on_error": {
+                    "default": false,
+                    "description": "Whether the node completes and continues the flow after a failed call, instead of stopping the flow with an error.",
+                    "type": "boolean"
+                  },
                   "input": {
                     "description": "call node input",
                     "maxLength": 255,
@@ -276,6 +281,12 @@
                         "minLength": 1,
                         "type": "string"
                       },
+                      "error": {
+                        "description": "The reason the call failed. `nil` on a normal response. Keys: `kind` (either `\"transport\"` or `\"decode\"`) and `message` (a human-readable, redacted reason).",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
                       "headers": {
                         "description": "HTTP response headers",
                         "maxLength": 255,
@@ -293,6 +304,35 @@
                         "maxLength": 255,
                         "minLength": 1,
                         "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "retry": {
+                    "description": "Retries for a failed call. Every transport failure retries when `count` is above 0. A transport failure can happen after the upstream already processed the request, so a retry repeats it and can duplicate its side effects. Do not enable retries for a call that is not safe to repeat.",
+                    "properties": {
+                      "count": {
+                        "default": 0,
+                        "description": "The number of extra attempts to make after the first attempt.",
+                        "maximum": 10,
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "interval": {
+                        "default": 0,
+                        "description": "The wait, in seconds, before each extra attempt.",
+                        "maximum": 30,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "status_codes": {
+                        "description": "Response status codes that trigger a retry. Transport failures always retry when `count` is above 0, whatever this lists.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "maxItems": 32,
+                        "minItems": 1,
+                        "type": "array"
                       }
                     },
                     "type": "object"
@@ -923,6 +963,16 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "force_array_paths": {
+                    "default": [],
+                    "description": "Element paths that always serialize as a JSON array, even when the element occurs once. Each path is a '/'-separated list of element names from the document root, for example 'store/product'. When 'xpath' is set, paths start at the matched node, not the document root.",
+                    "items": {
+                      "maxLength": 256,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "input": {
                     "description": "XML document string",
                     "maxLength": 255,
@@ -974,8 +1024,8 @@
               }
             ]
           },
-          "maxLength": 64,
-          "minLength": 1,
+          "maxItems": 64,
+          "minItems": 1,
           "type": "array"
         },
         "resources": {
@@ -1201,7 +1251,7 @@
                         },
                         "type": "object"
                       },
-                      "minLength": 1,
+                      "minItems": 1,
                       "type": "array"
                     },
                     "connect_timeout": {
@@ -1291,7 +1341,7 @@
                         },
                         "type": "object"
                       },
-                      "minLength": 1,
+                      "minItems": 1,
                       "type": "array"
                     },
                     "sentinel_password": {

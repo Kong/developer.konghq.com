@@ -23,6 +23,11 @@
           "default": true,
           "description": "Defines how the plugin behaves in cases where no token was found in the request. When using `strict` mode, the request requires a token to be present and subsequently raise an error if none could be found.",
           "type": "boolean"
+        },
+        "strict_key_check": {
+          "default": false,
+          "description": "Defines how the plugin behaves when the JWK algorithm doesn't match the JWE header algorithm, or when an RSA key used with `RSA-OAEP` or `RSA-OAEP-256` is smaller than 2048 bits. When `false` (default), the plugin logs a warning and continues to decrypt the token. When `true`, the plugin rejects the request with an HTTP 403 response.",
+          "type": "boolean"
         }
       },
       "required": [

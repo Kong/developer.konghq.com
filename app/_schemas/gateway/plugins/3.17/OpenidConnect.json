@@ -637,7 +637,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "connect_timeout": {
@@ -727,7 +727,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "sentinel_password": {
@@ -826,13 +826,20 @@
           "description": "Do not terminate the request if consumer mapping fails.",
           "type": "boolean"
         },
-        "credential_claim": {
+        "credential_claims": {
           "default": [
-            "sub"
+            [
+              "sub"
+            ]
           ],
-          "description": "The claim used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin), in case the consumer mapping is not used. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "description": "The claims used to derive a virtual credential, for example to be consumed by the rate-limiting plugin, when consumer mapping is not used. Each entry represents a claim path inside the token payload. The paths are evaluated in order, and the first matching claim is used.",
           "items": {
-            "type": "string"
+            "description": "A path of strings representing the location of the claim in a nested object. For example, to map to `account.id`, set `[ \"account\", \"id\" ]`.",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
           },
           "type": "array"
         },
@@ -901,7 +908,7 @@
                 "items": {
                   "type": "string"
                 },
-                "minLength": 1,
+                "minItems": 1,
                 "type": "array"
               }
             },
@@ -1408,6 +1415,26 @@
               "description": "When true (default), return 401 if fail to match a Principal in Kong Identity after token verification. When false, the request continues without authenticated_principal set.",
               "type": "boolean"
             },
+            "jit": {
+              "description": "Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with JIT provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.",
+              "properties": {
+                "all_claims": {
+                  "default": false,
+                  "description": "Send the full set of verified token claims with the Kong Identity principal lookup.",
+                  "type": "boolean"
+                },
+                "claims": {
+                  "description": "Send only the named token claims with the Kong Identity principal lookup. The claims are picked from the same source the principal claim is read from. Set all_claims to send every verified claim instead.",
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
             "match_consumer": {
               "default": true,
               "description": "If a Consumer is attached to the matched Principal in Kong Identity, load it and set it in the request context, overriding consumer_by.",
@@ -1429,7 +1456,7 @@
                 "minLength": 1,
                 "type": "string"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             }
           },
@@ -1554,7 +1581,7 @@
                 "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
                 "type": "string"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "metadata_endpoint": {
@@ -1570,7 +1597,7 @@
               "items": {
                 "type": "string"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             }
           },
@@ -1814,7 +1841,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "connect_timeout": {
@@ -1908,7 +1935,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "sentinel_password": {
@@ -2523,6 +2550,11 @@
                     },
                     "type": "object"
                   },
+                  "deny_on_mismatch": {
+                    "default": false,
+                    "description": "When true, a token issued by `issuer` that fails to match `conditions` is denied instead of being passed through unexchanged. Evaluated independently for this item only, with no effect on other `subject_token_issuers` items. Only allowed when this issuer is the target issuer, since `conditions` is required there and foreign-issuer items always match.",
+                    "type": "boolean"
+                  },
                   "issuer": {
                     "description": "Tokens of whose iss claim matches this value will be exchanged.",
                     "type": "string"
@@ -2542,7 +2574,7 @@
                 ],
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             }
           },
@@ -2669,7 +2701,7 @@
                 "items": {
                   "type": "string"
                 },
-                "minLength": 1,
+                "minItems": 1,
                 "type": "array"
               }
             },

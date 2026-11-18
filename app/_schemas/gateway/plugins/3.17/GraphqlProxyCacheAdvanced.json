@@ -7,10 +7,25 @@
           "description": "Unhandled errors while trying to retrieve a cache entry (such as redis down) are resolved with `Bypass`, with the request going upstream.",
           "type": "boolean"
         },
+        "cache_control": {
+          "default": false,
+          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
+          "type": "boolean"
+        },
         "cache_ttl": {
           "default": 300,
           "description": "TTL in seconds of cache entities. Must be a value greater than 0.",
           "type": "integer"
+        },
+        "content_type": {
+          "default": [
+            "application/json"
+          ],
+          "description": "Upstream response content types considered cacheable. The plugin matches each specified value's type, subtype, and parameters exactly.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "memory": {
           "properties": {
@@ -231,7 +246,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "connect_timeout": {
@@ -321,7 +336,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "sentinel_password": {
@@ -366,6 +381,19 @@
             }
           },
           "type": "object"
+        },
+        "response_code": {
+          "default": [
+            200
+          ],
+          "description": "Upstream response status code considered cacheable.",
+          "items": {
+            "maximum": 900,
+            "minimum": 100,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
         },
         "strategy": {
           "default": "memory",

@@ -24,6 +24,78 @@
           "minimum": 0,
           "type": "integer"
         },
+        "queue": {
+          "properties": {
+            "breaker_cooldown": {
+              "default": 60,
+              "description": "Time in seconds the circuit breaker stays open (fast-shedding entries) before it allows a single batch through to probe whether the destination has recovered.",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "number"
+            },
+            "concurrency_limit": {
+              "default": 1,
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "enum": [
+                -1,
+                1
+              ],
+              "type": "integer"
+            },
+            "failure_threshold": {
+              "default": 0,
+              "description": "Number of consecutive failed batches after which the queue opens its circuit breaker and drops entries instead of retrying. 0 disables the circuit breaker.",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "initial_retry_delay": {
+              "default": 0.01,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "type": "number"
+            },
+            "max_batch_size": {
+              "default": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "maximum": 1000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_bytes": {
+              "description": "Maximum number of bytes that can be waiting on a queue, requires string content.",
+              "type": "integer"
+            },
+            "max_coalescing_delay": {
+              "default": 1,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "maximum": 3600,
+              "minimum": 0,
+              "type": "number"
+            },
+            "max_entries": {
+              "default": 10000,
+              "description": "Maximum number of entries that can be waiting on the queue.",
+              "maximum": 1000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_retry_delay": {
+              "default": 60,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "type": "number"
+            },
+            "max_retry_time": {
+              "default": 60,
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
         "ssl_verify": {
           "default": true,
           "description": "When using TLS, this option enables verification of the certificate presented by the server.",

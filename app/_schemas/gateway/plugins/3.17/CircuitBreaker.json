@@ -1,0 +1,233 @@
+{
+  "properties": {
+    "config": {
+      "description": "Do not use dynamic plugin ordering to run this plugin before authentication or rate limiting. Dynamic ordering changes the access phase only. An already-open circuit then rejects the request before those plugins run. An early exit from those plugins is not a failure sample.",
+      "properties": {
+        "half_open_calls": {
+          "default": 5,
+          "description": "Number of probe requests admitted after the open period. Zero skips Half-Open and closes the circuit on the next request.",
+          "maximum": 10000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "half_open_failure_threshold_percent": {
+          "default": 50,
+          "description": "Reopen the circuit when the probe failure percentage is greater than or equal to this value. The percentage uses half_open_calls as the total, so the circuit reopens as soon as the probe failures reach it. Otherwise the circuit closes after all probe requests finish. Ignored when half_open_calls is 0.",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "half_open_timeout_seconds": {
+          "default": 120,
+          "description": "Seconds to wait in Half-Open, counted from the first probe request. If the probe sample does not finish in this time, the next request closes the circuit.",
+          "maximum": 86400,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "identifier": {
+          "default": "service",
+          "description": "Which entity the circuit key uses. A global plugin instance still keys by service, so one backend cannot trip circuits for other backends. A route-level instance has one circuit with either value.",
+          "enum": [
+            "route",
+            "service"
+          ],
+          "type": "string"
+        },
+        "latency_circuit": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "Enable this circuit. At least one circuit must be enabled.",
+              "type": "boolean"
+            },
+            "failure_percentage": {
+              "default": 10,
+              "description": "Open the circuit when the failure percentage of a sampling window reaches this value. Used when open_when is failure_percentage, either, or both. It is checked when the window ends, on the counts of that window. A slow response is a failure in the latency circuit.",
+              "maximum": 100,
+              "minimum": 1,
+              "type": "number"
+            },
+            "max_failures": {
+              "default": 10,
+              "description": "Open the circuit when the failure count in the window reaches this value. Used when open_when is max_failures, either, or both. The count is checked on each failure, except with both, which waits for the end of the window.",
+              "type": "integer"
+            },
+            "max_upstream_ttfb_ms": {
+              "default": 3000,
+              "description": "A response is slow when the upstream time to first byte exceeds this value, in milliseconds. Full response time is not used, because a stream can stay open for a long time on a healthy backend.",
+              "type": "integer"
+            },
+            "min_samples": {
+              "description": "Minimum number of requests in a finished window before failure_percentage is checked. Leave it unset to check every window that has requests. Set it on low-traffic routes, so that a window with a few requests cannot open the circuit. It is a precondition and is not part of the percentage.",
+              "type": "integer"
+            },
+            "open_when": {
+              "default": "max_failures",
+              "description": "Which thresholds can open the circuit. max_failures (default) uses only the failure count, checked on each failure. failure_percentage uses only the percentage, checked when the window ends. either opens when one of them is crossed. both opens only when both are crossed in the same window, and is checked when the window ends.",
+              "enum": [
+                "both",
+                "either",
+                "failure_percentage",
+                "max_failures"
+              ],
+              "type": "string"
+            },
+            "recovery_period_ms": {
+              "default": 30000,
+              "description": "How long the circuit stays open before the next request may probe. Stored as a shared-dictionary TTL, which accepts fractions of a second.",
+              "maximum": 86400000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            "sampling_window_seconds": {
+              "default": 60,
+              "description": "Length of the counting window, in seconds. The counter library cannot honor a millisecond window.",
+              "type": "integer"
+            },
+            "window_type": {
+              "default": "sliding",
+              "description": "Sets the window to `sliding` (default) or `fixed`. A sliding window mixes in part of the previous window, so a burst that crosses the boundary can open the circuit. The count can exceed the failures in the current window. Set `fixed` to count only the current window. failure_percentage always uses whole fixed windows.",
+              "enum": [
+                "fixed",
+                "sliding"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "policy_circuit": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "Enable this circuit. At least one circuit must be enabled.",
+              "type": "boolean"
+            },
+            "failure_percentage": {
+              "default": 10,
+              "description": "Open the circuit when the failure percentage of a sampling window reaches this value. Used when open_when is failure_percentage, either, or both. It is checked when the window ends, on the counts of that window. A slow response is a failure in the latency circuit.",
+              "maximum": 100,
+              "minimum": 1,
+              "type": "number"
+            },
+            "failure_types": {
+              "default": [
+                "backend_connection_failure",
+                "backend_timeout",
+                "gateway_processing_failure",
+                "http_5xx",
+                "policy_execution_error"
+              ],
+              "description": "Which outcomes count as one policy failure. A single client request increments the counter once, even if several types match.",
+              "items": {
+                "enum": [
+                  "backend_connection_failure",
+                  "backend_timeout",
+                  "gateway_processing_failure",
+                  "http_5xx",
+                  "policy_execution_error"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "max_failures": {
+              "default": 20,
+              "description": "Open the circuit when the failure count in the window reaches this value. Used when open_when is max_failures, either, or both. The count is checked on each failure, except with both, which waits for the end of the window.",
+              "type": "integer"
+            },
+            "min_samples": {
+              "description": "Minimum number of requests in a finished window before failure_percentage is checked. Leave it unset to check every window that has requests. Set it on low-traffic routes, so that a window with a few requests cannot open the circuit. It is a precondition and is not part of the percentage.",
+              "type": "integer"
+            },
+            "open_when": {
+              "default": "max_failures",
+              "description": "Which thresholds can open the circuit. max_failures (default) uses only the failure count, checked on each failure. failure_percentage uses only the percentage, checked when the window ends. either opens when one of them is crossed. both opens only when both are crossed in the same window, and is checked when the window ends.",
+              "enum": [
+                "both",
+                "either",
+                "failure_percentage",
+                "max_failures"
+              ],
+              "type": "string"
+            },
+            "recovery_period_ms": {
+              "default": 30000,
+              "description": "How long the circuit stays open before the next request may probe. Stored as a shared-dictionary TTL, which accepts fractions of a second.",
+              "maximum": 86400000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            "sampling_window_seconds": {
+              "default": 60,
+              "description": "Length of the counting window, in seconds. The counter library cannot honor a millisecond window.",
+              "type": "integer"
+            },
+            "window_type": {
+              "default": "sliding",
+              "description": "Sets the window to `sliding` (default) or `fixed`. A sliding window mixes in part of the previous window, so a burst that crosses the boundary can open the circuit. The count can exceed the failures in the current window. Set `fixed` to count only the current window. failure_percentage always uses whole fixed windows.",
+              "enum": [
+                "fixed",
+                "sliding"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "response_body": {
+          "description": "Optional body returned while a circuit is open. It is sent as written, with response_content_type. Leave it unset to return the standard Kong error response for the status code.",
+          "type": "string"
+        },
+        "response_code": {
+          "default": 503,
+          "description": "Status code returned while a circuit is open.",
+          "maximum": 599,
+          "minimum": 400,
+          "type": "integer"
+        },
+        "response_content_type": {
+          "default": "application/json",
+          "description": "Content-Type header sent with response_body. Ignored when response_body is unset.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

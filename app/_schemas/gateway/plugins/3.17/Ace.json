@@ -226,7 +226,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "connect_timeout": {
@@ -316,7 +316,7 @@
                     },
                     "type": "object"
                   },
-                  "minLength": 1,
+                  "minItems": 1,
                   "type": "array"
                 },
                 "sentinel_password": {

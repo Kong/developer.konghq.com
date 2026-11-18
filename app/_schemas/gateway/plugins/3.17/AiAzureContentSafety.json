@@ -63,9 +63,14 @@
           "type": "string",
           "x-referenceable": true
         },
+        "continue_on_detection": {
+          "default": false,
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "type": "boolean"
+        },
         "guarding_mode": {
           "default": "INPUT",
-          "description": "The guard mode to use for the request",
+          "description": "The guardrail mode to use for the request.",
           "enum": [
             "BOTH",
             "INPUT",
@@ -92,9 +97,19 @@
           ],
           "type": "string"
         },
+        "rejection_mode": {
+          "default": "none",
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "type": "string"
+        },
         "response_buffer_size": {
           "default": 100,
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
           "type": "number"
         },
         "reveal_failure_reason": {
@@ -104,12 +119,12 @@
         },
         "ssl_verify": {
           "default": true,
-          "description": "Whether to verify the certificate presented by the Azure Content Safety service when using HTTPS.",
+          "description": "Whether to verify the SSL certificate of the guardrail service endpoint.",
           "type": "boolean"
         },
         "stop_on_error": {
           "default": true,
-          "description": "Stop processing if an error occurs",
+          "description": "Stop processing if an error occurs.",
           "type": "boolean"
         },
         "text_source": {

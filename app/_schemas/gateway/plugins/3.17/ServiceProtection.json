@@ -9,7 +9,7 @@
         },
         "disable_penalty": {
           "default": false,
-          "description": "If set to `true`, this doesn't count denied requests (status = `429`). If set to `false`, all requests, including denied ones, are counted. This parameter only affects the `sliding` window_type.",
+          "description": "If set to `true`, the counters incremented by this instance are rolled back if the request ends up with being denied (by itself or by another instance). If set to `false`, the counters incremented by this instance are not rolled back on denial.",
           "type": "boolean"
         },
         "error_code": {
@@ -252,7 +252,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "connect_timeout": {
@@ -342,7 +342,7 @@
                 },
                 "type": "object"
               },
-              "minLength": 1,
+              "minItems": 1,
               "type": "array"
             },
             "sentinel_password": {

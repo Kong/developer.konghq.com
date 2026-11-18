@@ -14,8 +14,13 @@
             "minLength": 1,
             "type": "string"
           },
-          "maxLength": 10,
+          "maxItems": 10,
           "type": "array"
+        },
+        "continue_on_detection": {
+          "default": false,
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "type": "boolean"
         },
         "deny_patterns": {
           "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat.",
@@ -24,7 +29,7 @@
             "minLength": 1,
             "type": "string"
           },
-          "maxLength": 10,
+          "maxItems": 10,
           "type": "array"
         },
         "genai_category": {
@@ -63,6 +68,16 @@
           "default": 1048576,
           "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
           "type": "integer"
+        },
+        "rejection_mode": {
+          "default": "none",
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "type": "string"
         }
       },
       "type": "object"
