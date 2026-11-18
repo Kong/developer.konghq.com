@@ -98,7 +98,7 @@ This policy runs during the [produce phase](/event-gateway/entities/policy/#phas
 ## Security considerations
 
 A path that doesn't match a field in the record, for example because of a typo or a field renamed in a newer schema version,
-does not trigger an error or warning.
+doesn't trigger an error or warning.
 {{site.event_gateway_short}} sends the contents of that field to the backend cluster unencrypted.
 
 To keep the encrypted fields in sync with the schema, [select them from schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/) {% new_in 1.3 %}.
