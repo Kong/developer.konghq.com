@@ -108,7 +108,8 @@ rows:
     required_for: TLS and mTLS
 
   - requirement: "`pg_ssl_negotiation = direct`"
-    description: "{% new_in 3.17 %} Starts the TLS handshake directly, without the `SSLRequest` message. Requires PostgreSQL 17 or later. See [Direct TLS negotiation](#direct-tls-negotiation)."
+    description: |
+      {% new_in 3.17 %} Starts the TLS handshake directly, without the `SSLRequest` message. Requires PostgreSQL 17 or later. See [Direct TLS negotiation](#direct-tls-negotiation).
     required_for: Optional, SNI-based routing
 
   - requirement: "`pg_ssl_version`"
