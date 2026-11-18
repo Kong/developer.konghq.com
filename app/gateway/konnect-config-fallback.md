@@ -17,7 +17,7 @@ tags:
     - data-plane
     - resilience
 
-description: "Learn how {{site.konnect_short_name}} sends the last configuration that a Data Plane node accepted when a new node rejects the current configuration."
+description: "The last known good configuration is the last configuration that a Data Plane node of the same {{site.base_gateway}} version accepted. {{site.konnect_short_name}} sends it to a new node that rejects the current configuration."
 
 related_resources:
   - text: Control Plane outage management
@@ -32,7 +32,7 @@ related_resources:
 faqs:
   - q: Does the fallback replace the configuration on a Data Plane node that is already running?
     a: |
-      No. A node that runs a configuration rejects any configuration that it cannot apply, and keeps its current one. That current configuration is already the last known good configuration for the node. {{site.konnect_short_name}} only sends the fallback to a node that has no configuration.
+      No. A node that runs a configuration rejects any configuration that it cannot apply, and keeps its current one. That current configuration is already the last known good configuration for the node. {{site.konnect_short_name}} only sends the fallback to a node without a configuration.
   - q: What happens if no accepted configuration exists for my Data Plane version?
     a: |
       {{site.konnect_short_name}} cannot send a fallback. The node stays without configuration until {{site.konnect_short_name}} can deliver a current configuration that the node accepts.
@@ -44,7 +44,7 @@ faqs:
       No. The fallback needs a running Control Plane to send the configuration. If the Control Plane is unreachable, use [Data Plane resilience](/gateway/cp-outage/).
 ---
 
-{{site.konnect_short_name}} stores the last configuration that each {{site.base_gateway}} version of Data Plane node applied. If a new or reconnecting node rejects the current configuration and has no configuration of its own, {{site.konnect_short_name}} sends it the stored configuration. The node then starts to proxy traffic instead of waiting without a configuration.
+{{site.konnect_short_name}} stores the last configuration that each {{site.base_gateway}} version of Data Plane node applied. If a new or reconnecting node rejects the current configuration and does not have a configuration of its own, {{site.konnect_short_name}} sends it the stored configuration. The node then starts to proxy traffic instead of waiting without a configuration.
 
 {{site.konnect_short_name}} turns on this fallback for all Control Planes. You do not need to configure it.
 
@@ -71,7 +71,7 @@ rows:
     applies: Full configuration sync over WebSocket
     excluded: "[Incremental Config Sync](/gateway/incremental-config-sync/)"
   - condition: Node configuration
-    applies: The node has no configuration yet
+    applies: The node does not have a configuration yet
     excluded: The node already runs a configuration
   - condition: Stored configuration
     applies: A node of the same {{site.base_gateway}} version applied a configuration before
@@ -111,7 +111,7 @@ sequenceDiagram
 1. The Data Plane node connects to the {{site.konnect_short_name}} Control Plane.
 1. {{site.konnect_short_name}} sends the current full configuration.
 1. The node validates the configuration and tries to apply it.
-1. If the node rejects the configuration and has no configuration, it reports the error to {{site.konnect_short_name}}.
+1. If the node rejects the configuration and does not have a configuration, it reports the error to {{site.konnect_short_name}}.
 1. {{site.konnect_short_name}} gets the last known good configuration for the node's {{site.base_gateway}} version and sends it.
 1. The node applies the fallback configuration and reports its new configuration hash on the next heartbeat.
 
@@ -124,12 +124,13 @@ A node that uses the fallback runs an older configuration. Changes that you made
 The fallback cannot make a node run a newer configuration than the other nodes. For example:
 
 1. Node A runs configuration X. You change the configuration, and {{site.konnect_short_name}} builds configuration Y. Node A rejects Y and keeps X.
-1. Node B connects with no configuration. It rejects Y.
+1. Node B connects without a configuration. It is the first new node to receive Y, and it rejects Y.
 1. {{site.konnect_short_name}} sends X to node B.
+1. Node C of the same version connects without a configuration. {{site.konnect_short_name}} sends it X directly, and node C never receives Y.
 
-Both nodes now run X. They stay on X until you make another configuration change.
+All three nodes now run X. They stay on X until you make another configuration change.
 
-After a node of one version rejects a configuration, {{site.konnect_short_name}} sends the fallback directly to the next nodes of that version that connect. Those nodes do not receive the rejected configuration first. This stays true until the next configuration change.
+After the first new node of a version rejects a configuration, {{site.konnect_short_name}} sends the fallback directly to the next nodes of that version that connect. This stays true until the next configuration change.
 
 To find out if a node runs on the fallback, get the node from the [Control Plane Config API](/api/konnect/control-planes-config/#/operations/get-nodes-node_id). A node on the fallback reports the resiliency sync state, the time the fallback started, and the errors from the configuration it rejected.
 
