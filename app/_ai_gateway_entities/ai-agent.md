@@ -99,6 +99,7 @@ faqs:
       Set [`config.certificates`](#schema-aigateway-agent-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) for a private CA.
       Both fields apply to `a2a` and `http` AI Agents.
       See [Upstream TLS](#upstream-tls).
+
 ---
 
 ## What is an AI Agent?
@@ -165,6 +166,11 @@ rows:
     description: "Provide A2A clients with a single, stable gateway endpoint (via agent-card URL rewriting) instead of having them discover and connect directly to agent instances."
   - use_case: "AWS-native upstream agents"
     description: "Authenticate to upstream agents that only accept AWS IAM (SigV4) signed requests, such as an agent hosted on Amazon Bedrock AgentCore Runtime or fronted by an IAM-protected Amazon API Gateway, using [`config.upstream.auth`](#schema-aigateway-agent-config-upstream). See [Upstream authentication](#upstream-authentication)."
+  - use_case: "Regional replicas and failover"
+    description: |
+      Run the same agent in more than one region or availability zone and expose it as a single AI Agent.
+      {{site.ai_gateway}} spreads requests across the replicas and sends them only to replicas that respond.
+      See [Load balancing and failover](#load-balancing-and-failover).
 {% endtable %}
 <!-- vale on -->
 
@@ -400,6 +406,98 @@ config:
   ca_certificates:
     - kongair-internal-root-ca
 ```
+
+## Load balancing and failover
+
+An AI Agent with a single upstream agent has a single point of failure.
+When the upstream agent is slow or its region has an outage, every client of the AI Agent is affected.
+To avoid this, run the upstream agent in more than one place, for example in several regions for latency or data residency, or as a primary with a standby, and define [`config.targets`](#schema-aigateway-agent-config-targets) instead of a single [`config.url`](#schema-aigateway-agent-config-url).
+{{site.ai_gateway}} then distributes requests across the targets and stops sending traffic to a target that isn't responding.
+
+Set either `config.url` or `config.targets`. An AI Agent can't use both.
+AI Agents that use `config.url` continue to work without changes.
+
+Common reasons to use multiple targets:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Goal
+    key: goal
+  - title: How to configure it
+    key: how
+rows:
+  - goal: "Spread load across regional replicas"
+    how: "Add one target for each replica and use `round-robin`. Give each target a [`weight`](#schema-aigateway-agent-config-targets) that reflects its capacity, for example `100` for a large region and `50` for a smaller one."
+  - goal: "Roll out a new version gradually"
+    how: "Add the current and the new deployment as targets and give the new one a small weight, such as `90` and `10`. Raise the weight as you gain confidence."
+  - goal: "Keep a standby for outages"
+    how: "Set `failover: true` on the standby target. It receives traffic only when all regular targets are unavailable."
+  - goal: "Send each client to the fastest replica"
+    how: "Use `lowest-latency` so {{site.ai_gateway}} sends requests to the target with the lowest response time."
+  - goal: "Keep a session on the same replica"
+    how: "Use `consistent-hashing` and hash on a header that identifies the session or user, so repeated requests reach the same target."
+{% endtable %}
+<!-- vale on -->
+
+### Choose an algorithm
+
+The balancer algorithm, set in [`config.balancer.algorithm`](#schema-aigateway-agent-config-balancer), determines which target receives each request.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Algorithm
+    key: algorithm
+  - title: Best for
+    key: use
+rows:
+  - algorithm: "`round-robin`"
+    use: "Replicas with similar capacity. Requests rotate across the targets, taking each target's `weight` into account."
+  - algorithm: "`least-connections`"
+    use: "Long-running agent tasks and streaming responses, where some requests keep a connection open much longer than others. New requests go to the target with the fewest open connections."
+  - algorithm: "`lowest-latency`"
+    use: "Replicas in different regions, where the closest or least busy one should serve most traffic."
+  - algorithm: "`consistent-hashing`"
+    use: "Upstream agents that keep session state in memory. Requests with the same value in the [`hash_on_header`](#schema-aigateway-agent-config-balancer-hash-on-header) header always go to the same target."
+{% endtable %}
+<!-- vale on -->
+
+[Session affinity](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) is available only on AI Models, so use `consistent-hashing` to keep requests on one target for an AI Agent.
+
+### Failover targets
+
+A failover target is a backup that you mark with `failover: true`.
+{{site.ai_gateway}} uses failover targets only when every regular target is unavailable.
+Failover targets aren't supported with `consistent-hashing`, because that algorithm must keep a given hash value on a fixed target.
+
+### Example
+
+In the following example, the AI Agent serves traffic from two regional replicas, with a larger share going to the US region, and keeps a standby in a third region:
+
+{% entity_example %}
+type: agent
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: KongAir Flight Booking Agent
+  name: kongair-flight-booking-agent
+  type: a2a
+  config:
+    targets:
+      - address: booking-agent-us.internal.kongair.com:443
+        weight: 100
+      - address: booking-agent-eu.internal.kongair.com:443
+        weight: 50
+      - address: booking-agent-standby.internal.kongair.com:443
+        failover: true
+    balancer:
+      algorithm: round-robin
+    route:
+      paths:
+        - /kongair-flight-booking
+{% endentity_example %}
 
 ## Attach AI Policies
 
