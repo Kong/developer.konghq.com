@@ -400,6 +400,7 @@ components:
                 default: default
                 example: team-payments
                 type: string
+            x-speakeasy-param-force-new: true
         WorkspaceIdOrName:
             description: ID or name of the Workspace to lookup
             example: ""
@@ -5452,7 +5453,7 @@ components:
                                         minimum: 0
                                         type: integer
                                 type: object
-                            minLength: 1
+                            minItems: 1
                             type: array
                         connect_timeout:
                             default: 2000
@@ -5526,7 +5527,7 @@ components:
                                         minimum: 0
                                         type: integer
                                 type: object
-                            minLength: 1
+                            minItems: 1
                             type: array
                         sentinel_password:
                             description: Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.
@@ -5839,7 +5840,7 @@ components:
                                                 minimum: 0
                                                 type: integer
                                         type: object
-                                    minLength: 1
+                                    minItems: 1
                                     type: array
                                 connect_timeout:
                                     default: 2000
@@ -5913,7 +5914,7 @@ components:
                                                 minimum: 0
                                                 type: integer
                                         type: object
-                                    minLength: 1
+                                    minItems: 1
                                     type: array
                                 sentinel_password:
                                     description: Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.
@@ -6057,11 +6058,6 @@ components:
                     description: Whether the plugin is applied.
                     nullable: true
                     type: boolean
-                expressions:
-                    additionalProperties: true
-                    description: CEL expressions driving individual expressible fields in config. Derived automatically from the plugin's schema, never set directly by a plugin author.
-                    nullable: true
-                    type: object
                 id:
                     description: A string representing a UUID (universally unique identifier).
                     minLength: 1
@@ -6258,11 +6254,6 @@ components:
                     description: Whether the plugin is applied.
                     nullable: true
                     type: boolean
-                expressions:
-                    additionalProperties: true
-                    description: CEL expressions driving individual expressible fields in config. Derived automatically from the plugin's schema, never set directly by a plugin author.
-                    nullable: true
-                    type: object
                 id:
                     description: A string representing a UUID (universally unique identifier).
                     minLength: 1
@@ -6683,7 +6674,7 @@ components:
                             - ws
                             - wss
                         type: string
-                    minLength: 1
+                    minItems: 1
                     nullable: true
                     type: array
                 request_buffering:
@@ -6833,7 +6824,7 @@ components:
                             - ws
                             - wss
                         type: string
-                    minLength: 1
+                    minItems: 1
                     nullable: true
                     type: array
                 regex_priority:
@@ -7989,7 +7980,7 @@ info:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
     title: Kong Enterprise Admin API
-    version: 3.16.0
+    version: 3.17.0
 openapi: 3.1.0
 paths:
     /:
@@ -9214,6 +9205,7 @@ paths:
                 - $ref: '#/components/parameters/PaginationOffset'
                 - $ref: '#/components/parameters/PaginationTagsFilter'
                 - $ref: '#/components/parameters/Workspace'
+                - $ref: '#/components/parameters/CustomId'
             responses:
                 "200":
                     content:
