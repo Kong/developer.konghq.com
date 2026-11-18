@@ -49,6 +49,8 @@ examples_groups:
     text: Transformation
   - slug: headers
     text: Manipulate headers
+  - slug: error-handling
+    text: Error handling
 ---
 
 The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs.
@@ -104,6 +106,10 @@ rows:
     description: Read a credential set by the OpenID Connect plugin and map its value directly to a `host:port` backend, bypassing Upstream entities and load balancing. Use this when each backend is a fixed address and you don't need health checks or retries.
   - usecase: "[Verify a call node's TLS connection using a custom CA](/plugins/datakit/examples/verify-call-node-with-custom-ca/)"
     description: "Verify a `call` node's outbound TLS connection against a private CA using the plugin's `ca_certificates` field, instead of relying on the global trusted CA store."
+  - usecase: "[Retry a failed call](/plugins/datakit/examples/retry-failed-call/)"
+    description: "Retry a `call` node on transport failures and on selected response status codes before failing the request."
+  - usecase: "[Call a fallback API when the primary call fails](/plugins/datakit/examples/call-fallback-on-failure/)"
+    description: "Continue the flow past a failed `call` node, then use `jq` and `branch` nodes to call a second API only when the first one fails."
 {% endtable %}
 <!--vale on-->
 
@@ -557,6 +563,7 @@ rows:
       * `headers`: The response headers
       * `status`: The HTTP status code of the response
       * `raw_body`: The raw, non-normalized response body {% new_in 3.14 %}
+      * `error`: The reason the call failed, set only when the call fails at the transport or decode level and `continue_on_error` is `true`. Contains `kind` (`transport` or `decode`) and `message`. {% new_in 3.17 %}
   - nodetype: |
       [jq (`jq`)](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
@@ -742,6 +749,8 @@ Call nodes are used in most datakit workflows. For complete examples, see:
 * [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 * [Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)
 * [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
+* [Retry a failed call](/plugins/datakit/examples/retry-failed-call/)
+* [Call a fallback API when the primary call fails](/plugins/datakit/examples/call-fallback-on-failure/)
 
 #### Automatic JSON body handling
 
@@ -780,12 +789,173 @@ possible, and then Datakit will block until both have finished to run
     bar: CALL_BAR.body
 ```
 
-#### Failure conditions
+#### Error handling {% new_in 3.17 %}
 
-The `call` node fails execution if a network-level error is encountered or if
-the endpoint returns a non-2xx status code. It will also fail if the endpoint
-returns a JSON mime-type in the `Content-Type` header if the response body is
-not valid JSON.
+You can control what happens when a `call` node's call fails by adjusting the error handling.
+
+By default, a failed call stops the whole plan.
+Set `continue_on_error` to `true` to let the flow continue past a failed call and react to the failure in a downstream node instead.
+
+When `continue_on_error` is `true`, the node doesn't check the response status code.
+A `500` response completes the node like any other response, and the node doesn't set `error`.
+To treat a status code as a failure, check `status` in a downstream [`jq` node](#jq-node).
+
+The node sets the `error` output only when the call itself fails, which means one of the following:
+* A transport failure: A DNS, connection, or TLS handshake failure, a connection that closes before the response completes, or a timeout.
+  The `status`, `headers`, `body`, and `raw_body` outputs aren't set.
+* A decode failure: The endpoint returns a JSON mime-type in the `Content-Type` header, but the response body isn't valid JSON.
+  The node only decodes the response body when the `body` output (or the whole node output) is connected to another node.
+  The `body` output isn't set. The `status`, `headers`, and `raw_body` outputs are set.
+
+When the node sets `error`, it contains the following fields:
+* `kind`: Either `transport` or `decode`.
+* `message`: A human-readable reason for the failure. {{site.base_gateway}} redacts credentials in the request URL from the message.
+
+{:.info}
+> **Note**: Datakit can't address individual fields of `error` as a connection, so a call to `CALL.error.kind` isn't valid.
+Connect `CALL.error` to a `jq` node, then read `.kind` or `.message` in the filter.
+
+##### Define a failed call with jq
+
+The following `jq` node treats any call failure or non-2xx response as a failed call, then a branch node acts on the result:
+
+```yaml
+- name: CALL
+  type: call
+  url: https://example.com
+  continue_on_error: true
+
+- name: CALL_FAILED
+  type: jq
+  inputs:
+    status: CALL.status
+    error: CALL.error
+  jq: '.error != null or (.status // 0) < 200 or (.status // 0) > 299'
+
+- name: ON_CALL_FAILURE
+  type: branch
+  input: CALL_FAILED
+  then:
+    - EXIT_FAILURE
+  else:
+    - EXIT_SUCCESS
+
+- name: EXIT_SUCCESS
+  type: exit
+  status: 200
+  inputs:
+    body: CALL.body
+
+- name: EXIT_FAILURE
+  type: exit
+  status: 502
+  inputs:
+    body: CALL.error
+```
+
+Because the rule lives in the `jq` filter, you can classify responses however your API requires. For example, you can treat a `404` as a valid result while treating a `503` as a failure.
+
+##### Call a second API when the first fails
+
+Datakit doesn't have a dedicated failover attribute on the `call` node.
+Instead, you can compose the same behavior from nodes you already have: a `call` node with `continue_on_error` set to `true`, a [`jq` node](#jq-node) that defines a failure, a [`branch` node](#branch-node), and a second `call` node. If you need another fallback, configure another `call` node.
+
+The following snippet calls `FALLBACK` only when `PRIMARY` fails:
+
+```yaml
+- name: PRIMARY
+  type: call
+  url: https://api1.example.com/orders
+  continue_on_error: true
+
+- name: PRIMARY_FAILED
+  type: jq
+  inputs:
+    status: PRIMARY.status
+    error: PRIMARY.error
+  jq: '.error != null or (.status // 0) < 200 or (.status // 0) > 299'
+
+- name: ON_PRIMARY_FAILURE
+  type: branch
+  input: PRIMARY_FAILED
+  then:
+    - FALLBACK
+    - EXIT_FALLBACK
+  else:
+    - EXIT_PRIMARY
+
+- name: FALLBACK
+  type: call
+  url: https://api2.example.com/orders
+
+- name: EXIT_PRIMARY
+  type: exit
+  status: 200
+  inputs:
+    body: PRIMARY.body
+
+- name: EXIT_FALLBACK
+  type: exit
+  status: 200
+  inputs:
+    body: FALLBACK.body
+```
+
+If `FALLBACK` fails too, and its `continue_on_error` is `false`, the node fails and the request follows Datakit's normal error path.
+For a complete configuration, see [Call a fallback API when the primary call fails](/plugins/datakit/examples/call-fallback-on-failure/).
+
+##### Errors that always stop the flow
+
+Some faults happen before the node sends a request, so they aren't an outcome of the upstream. These always fail the node, whatever `continue_on_error` is set to:
+
+* A missing required input, such as no `url` from either the attribute or the input
+* A request body that the node can't encode
+* A CA certificate store that the node can't build
+* An `ssl_verify` setting that {{site.base_gateway}} rejects for an HTTPS endpoint
+
+{:.info}
+> **Note:** Before 3.17, the `call` node failed execution if a network-level error was encountered or if the endpoint returned a non-2xx status code.
+It also failed if the endpoint returned a JSON mime-type in the `Content-Type` header and the response body wasn't valid JSON.
+This is still the default behavior when `continue_on_error` is `false`.
+
+#### Retry failed calls {% new_in 3.17 %}
+
+The `retry` attribute on a `call` node repeats a failed call before the node fails.
+Retry is off by default.
+
+The following configuration retries up to three times, one second apart, when the endpoint returns `429` or any `5xx` status code:
+
+```yaml
+- name: CALL
+  type: call
+  url: https://example.com/foo
+  retry:
+    count: 3
+    interval: 1
+    status_codes:
+      - "429"
+      - "5xx"
+```
+
+Keep the following in mind when configuring retry:
+
+* When `retry.count` is greater than `0`, the node retries every transport failure.
+  You can't exclude a transport failure from retry, and `retry.status_codes` doesn't affect it.
+* `retry.status_codes` only decides whether the node makes another attempt. It doesn't decide whether the final response counts as a failure. If the last attempt still returns a status code from `retry.status_codes`, the node handles that response as described in [Error handling](#error-handling). With `continue_on_error` set to `true`, the node completes with that status code and `error` isn't set.
+* The node never retries a decode failure.
+* The node exposes only the outputs of the final attempt. The request body and headers are the same on every attempt.
+* The `timeout` applies to each attempt, not to the node as a whole. The longest a node can take is `(retry.count + 1) * timeout + retry.count * retry.interval`.
+* The node doesn't start a retry if the NGINX worker is shutting down. In that case, the node fails with an error.
+* While a call waits to retry, it keeps one of Datakit's 32 concurrent [async](#async-execution) slots.
+  A flow with many retrying `call` nodes reduces the concurrency available to the rest of the plan.
+
+{:.warning}
+> **Warning**: Retries can repeat an operation that the upstream already applied. 
+> A transport failure, such as a read timeout or a connection that closes mid-response, can happen after the upstream has already received and processed the request.
+> A retry then repeats the request and can duplicate its side effects. 
+> **Do not** enable retry on a `call` node that isn't safe to repeat, such as a `POST` or `PATCH` request that creates or changes data, unless the upstream deduplicates requests.
+
+For a complete example, see [Retry a failed call](/plugins/datakit/examples/retry-failed-call/).
 
 #### Resolve URL at runtime
 
@@ -802,7 +972,7 @@ For example:
 ```
 
 #### Proxy options
-The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
+The `call` node supports performing requests via a proxy server. This is controlled by proxy options. For an example, see [Perform a request through a proxy server](#examples).
 
 #### Verify TLS against a custom CA {% new_in 3.16 %}
 
@@ -2166,6 +2336,32 @@ response body (originating from Datakit or elsewhere), so there are limits to
 what can be observed in the trace. The `response` node, for instance, can't
 execute fully when tracing is enabled and will appear in the tracing report with
 a result of `NODE_SKIPPED`.
+
+#### Call node attempts {% new_in 3.17 %}
+
+When a [`call` node](#call-node) finishes, its `complete` or `fail` event includes an `attempts` array with one entry per attempt, including the first attempt.
+Each entry has the following fields:
+
+* `outcome`: The HTTP status code of the response, or the error string for a transport failure. {{site.base_gateway}} redacts credentials in URLs.
+* `latency_ms`: The latency of the attempt in milliseconds, as a string.
+
+For example, a call that received a `503` response, then succeeded on the [retry](#retry-failed-calls), has two entries:
+
+```json
+{
+  "name": "API",
+  "action": "complete",
+  "type": "call",
+  "attempts": [
+    { "outcome": 503, "latency_ms": "12.345" },
+    { "outcome": 200, "latency_ms": "8.120" }
+  ]
+}
+```
+{:.no-copy-code}
+
+When `continue_on_error` is `true` and the call fails at the transport or decode level, the `complete` event also lists `error` among the node's output values.
+A `fail` event doesn't include an `error` output.
 
 {:.warning}
 > The contents of the tracing report are unstable and intended for human

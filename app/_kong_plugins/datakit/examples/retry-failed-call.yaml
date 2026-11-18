@@ -1,0 +1,60 @@
+description: |
+  Retry a call node on transport failures and on selected response status codes, then return the response body to the client.
+
+extended_description: |
+  Retry a `call` node on transport failures and on selected response status codes, then return the response body to the client.
+
+  This is useful when an upstream API fails temporarily, for example when it is briefly unavailable or rate limits your requests.
+
+  This example contains the following nodes:
+  1. The node `API` makes a `GET` request to the API at the configured URL.
+     If the request fails at the transport level, or the API responds with a `429` or any `5xx` status code,
+     the node retries up to 3 times, waiting 1 second before each retry.
+  1. The node `EXIT` returns the response body of the final attempt directly to the client.
+
+  If an attempt succeeds, the node stops retrying and the flow continues.
+  If every attempt fails, `continue_on_error` is `false` by default, so the `API` node fails and Datakit returns a `500` response instead of reaching `EXIT`.
+  To continue the flow after a failed call instead, see [Call a fallback API when the primary call fails](/plugins/datakit/examples/call-fallback-on-failure/).
+
+  {:.warning}
+  > **Note:** A retry can repeat an operation that the upstream already applied, for example after a read timeout.
+  This example uses a `GET` request, which is safe to repeat.
+  Do not enable retry on a `call` node that creates or changes data, unless the upstream deduplicates requests.
+
+title: Retry a failed call
+weight: 900
+
+variables:
+  api_url:
+    value: $API_URL
+    description: The URL of the API that the `API` node will call.
+
+config:
+  nodes:
+    - name: API
+      type: call
+      url: ${api_url}
+      method: GET
+      retry:
+        count: 3
+        interval: 1
+        status_codes:
+          - "429"
+          - "5xx"
+    - name: EXIT
+      type: exit
+      inputs:
+        body: API.body
+      status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.17'
+
+group: error-handling
