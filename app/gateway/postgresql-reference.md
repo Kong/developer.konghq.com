@@ -36,6 +36,14 @@ faqs:
     a: |
       The key file must be owned by the database user and set to `0600`, or by root with `0640`. Adjust using `chmod 0600` or `chmod 0640` accordingly.
 
+  - q: Why does {{site.base_gateway}} fail to connect to PostgreSQL with `pg_ssl_negotiation = direct`?
+    a: |
+      Direct TLS negotiation needs PostgreSQL 17 or later. Older servers close the connection when they receive a TLS handshake as the first message. Every proxy or connection pooler between {{site.base_gateway}} and PostgreSQL, such as PgBouncer, must also support direct TLS negotiation. {{site.base_gateway}} doesn't fall back to the `postgres` negotiation mode.
+
+  - q: Does SNI-based routing work when `pg_host` is an IP address?
+    a: |
+      No. {{site.base_gateway}} only sends SNI when `pg_host` is a hostname. With an IP address, direct TLS negotiation still works without a proxy, but a proxy that routes by SNI can't route the connection.
+
 ---
 
 
@@ -99,6 +107,10 @@ rows:
     description: Enables verification of the server certificate.
     required_for: TLS and mTLS
 
+  - requirement: "`pg_ssl_negotiation = direct`"
+    description: Starts the TLS handshake directly, without the `SSLRequest` message. Requires PostgreSQL 17 or later. See [Direct TLS negotiation](#direct-tls-negotiation).
+    required_for: Optional, SNI-based routing
+
   - requirement: "`pg_ssl_version`"
     description: TLS protocol version to use (e.g., `tlsv1_2`).
     required_for: TLS and mTLS
@@ -120,6 +132,52 @@ rows:
     required_for: mTLS
 {% endtable %}
 <!--vale on-->
+
+## Direct TLS negotiation {% new_in 3.17 %}
+
+By default, {{site.base_gateway}} uses the standard PostgreSQL negotiation to start TLS. It opens a plain TCP connection, sends an `SSLRequest` message, and starts the TLS handshake only after the server accepts it.
+
+Proxies that route TLS traffic by [SNI](https://datatracker.ietf.org/doc/html/rfc6066#section-3) can't handle this flow, because the first bytes on the connection aren't a TLS `ClientHello`. For example, this affects the TLS passthrough mode of {{site.mesh_product_name}}, Istio, and Envoy.
+
+PostgreSQL 17 adds [direct TLS negotiation](https://www.postgresql.org/docs/17/libpq-connect.html#LIBPQ-CONNECT-SSLNEGOTIATION). With [`pg_ssl_negotiation`](/gateway/configuration/#pg-ssl-negotiation) set to `direct`, {{site.base_gateway}} starts the TLS handshake as soon as the TCP connection opens:
+
+* The `ClientHello` contains the ALPN protocol `postgresql`, which PostgreSQL requires for direct TLS connections.
+* The `ClientHello` contains `pg_host` as SNI, when `pg_host` is a hostname.
+* The connection needs one less round trip.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    participant Kong as {{site.base_gateway}}
+    participant Proxy as SNI-based proxy
+    participant PG as PostgreSQL 17
+    Kong->>Proxy: TLS ClientHello (SNI = pg_host, ALPN = postgresql)
+    Proxy->>PG: Routes the connection by SNI
+    PG-->>Kong: TLS handshake completes
+    Kong->>PG: StartupMessage and authentication, inside TLS
+{% endmermaid %}
+<!--vale on-->
+
+To enable direct TLS negotiation, set the following parameters in `kong.conf`:
+
+```
+pg_ssl = on
+pg_ssl_negotiation = direct
+```
+
+You can also set them with the `KONG_PG_SSL` and `KONG_PG_SSL_NEGOTIATION` environment variables.
+For a separate read-only database, use [`pg_ro_ssl_negotiation`](/gateway/configuration/#pg-ro-ssl-negotiation). If you don't set it, it uses the value of `pg_ssl_negotiation`.
+
+On the PostgreSQL side, direct TLS negotiation only needs `ssl = on`. You don't need to change `pg_hba.conf`.
+
+Keep the following in mind when you use direct TLS negotiation:
+
+* PostgreSQL must be version 17 or later. Every proxy or connection pooler in the path must also support direct TLS negotiation.
+* TLS is always required. {{site.base_gateway}} doesn't fall back to plain text or to the `postgres` negotiation mode, even if `pg_ssl_required` is `off`.
+* `pg_ssl_negotiation = direct` requires `pg_ssl = on`. Otherwise, {{site.base_gateway}} doesn't start.
+* In `traditional` mode, you can't use direct TLS negotiation together with [`stream_listen`](/gateway/configuration/#stream-listen). {{site.base_gateway}} doesn't start with this combination.
+* Only nodes that connect to PostgreSQL use this setting: `traditional` mode nodes and Control Planes in hybrid mode. Data Planes don't connect to the database.
+* The other TLS settings, such as `pg_ssl_verify`, `pg_ssl_version`, and `pg_ssl_cert`, work the same way in both negotiation modes.
 
 ## Certificates
 
