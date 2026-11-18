@@ -35,8 +35,8 @@ related_resources:
     url: /identity/token-vault/
   - text: "Org chart in {{site.ai_cost_management}}"
     url: /ai-cost-management/org-chart/
-  - text: "{{site.konnect_short_name}} teams and roles"
-    url: /konnect-platform/teams-and-roles/#access-management
+  - text: "AI Management roles and permissions"
+    url: /ai-management/roles-and-permissions/#access-management
 
 faqs:
  
