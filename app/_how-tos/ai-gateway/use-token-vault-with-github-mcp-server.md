@@ -28,7 +28,7 @@ tags:
 tldr:
   q: How do I let an AI agent call the GitHub MCP server on behalf of a user without the agent handling a GitHub credential?
   a: |
-    Add Okta as a trusted IdP in your {{site.identity}} directory, add a GitHub provider to Token Vault, and create a Token Vault data store in {{site.ai_gateway}}. Then create an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) for Okta and an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) for GitHub that uses it. Users sign in to Claude Code with Okta and approve GitHub's consent screen once, and {{site.ai_gateway}} then fetches their GitHub token from the vault on each call, so the agent never handles a GitHub credential.
+    Allow an AI agent such as Claude Code call the GitHub MCP server on a user's behalf, with the user signing in through Okta and Kong storing their GitHub token in Token Vault, so the agent never handles a GitHub credential..
 
 
 tools:
@@ -153,6 +153,18 @@ faqs:
       The `claude mcp login` command doesn't use the authorization server that the AI MCP Server advertises in its protected resource metadata. It sends you to `http://localhost:8000/authorize`, which the data plane doesn't serve.
 
       Sign in from a Claude Code session instead. Run `/mcp` and select the server, and Claude Code redirects you to Okta.
+  - q: Why does Okta return a 400 error when Claude Code redirects me to sign in?
+    a: |
+      Okta returns a 400 error on the authorization request when the authorization server's access policy doesn't apply correctly to the native application that Claude Code uses. Check the following:
+
+      * Assign the access policy only to the native application that you created for this guide, not to all clients. Add a rule to the policy that allows the **Authorization Code** and **Refresh Token** grant types, and the `openid` and `offline_access` scopes, which Claude Code requests.
+      * Make sure the `client_id` in the authorization request matches `$OKTA_CLIENT_ID`. Claude Code saves the client ID from when you first ran `claude mcp add`, so if you registered the server with a different ID, run `claude mcp remove github-vault-demo` and add it again with the correct `--client-id`.
+      * Make sure the application's sign-in redirect URI is exactly `http://localhost:61337/callback`.
+  - q: Why does Claude Code sign me in to Okta without showing a consent screen?
+    a: |
+      Okta only shows a consent screen when the authorization server's access policy requires it. Without that setting, Okta redirects you back to Claude Code without asking you to approve anything, and Claude Code reports that authentication succeeded.
+
+      To show the consent screen, edit the access policy rule that applies to the native application and configure it to require user consent.
 ---
 
 ## Trust Okta as the identity provider
@@ -183,6 +195,11 @@ capture:
 
 Create a GitHub provider in the directory's Token Vault by sending a `POST` request to the [`vault/providers` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider) with the `github` provider template and your GitHub OAuth app's client ID and secret.
 
+The provider:
+
+* Enables Token Vault to run GitHub's OAuth flow on behalf of each user.
+* Defines which permissions to request.
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/directories/$DIRECTORY_ID/vault/providers
@@ -202,6 +219,11 @@ capture:
     jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+* `template_name: github` uses Token Vault's built-in GitHub OAuth settings, so you don't configure GitHub's authorization and token URLs.
+* `client_id` and `client_secret` identify the GitHub OAuth app that you created in the prerequisites.
+* `scopes` are the GitHub permissions that users grant. `repo` lets the agent read and write repositories, and `read:user` lets it read profile information.
+* `credential_type: user` stores one token per user rather than one shared token.
 
 ## Create a Token Vault data store
 
@@ -325,22 +347,8 @@ body:
 
 ## Validate the setup
 
-1. In your Claude Code session, run `/mcp` and select `github-vault-demo` to list the server's tools. Before enrollment, the server returns only the `authenticate` and `check_authentication_status` tools.
+1. In your Claude Code session, run `/mcp` and select `github-vault-demo` to list the server's tools. Before enrollment, the server only returns the `authenticate` tool.
 
 1. Ask Claude Code to call `authenticate`, then open the returned URL and approve GitHub's consent screen.
 
-1. Ask Claude Code to call `check_authentication_status`.
-
-1. Run `/mcp` again to reload the tool list. The GitHub MCP server's tools now appear.
-
-1. [List the credentials](/api/konnect/kong-identity-principals/v2/#/operations/listVaultProviderCredentials) stored for the GitHub provider:
-
-   <!--vale off-->
-   {% konnect_api_request %}
-   url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
-   status_code: 200
-   method: GET
-   {% endkonnect_api_request %}
-   <!--vale on-->
-
-   The response contains one `user` credential with `status: active` for the Okta user's principal.
+1. After ernrollment, `github-vault-demo` appears connected and displays the available tools.
