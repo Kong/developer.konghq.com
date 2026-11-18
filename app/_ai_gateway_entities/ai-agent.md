@@ -169,7 +169,7 @@ rows:
   - use_case: "Regional replicas and failover"
     description: |
       Run the same agent in more than one region or availability zone and expose it as a single AI Agent.
-      {{site.ai_gateway}} spreads requests across the replicas and sends them only to replicas that respond, instead of a separate [Kong Upstream](/gateway/entities/upstream/).
+      {{site.ai_gateway}} spreads requests across the replicas and sends them only to replicas that respond.
       See [Load balancing and failover](#load-balancing-and-failover).
 {% endtable %}
 <!-- vale on -->
@@ -463,6 +463,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+[Session affinity](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) is available only on AI Models, so use `consistent-hashing` to keep requests on one target for an AI Agent.
+
 ### Failover targets
 
 A failover target is a backup that you mark with `failover: true`.
@@ -475,6 +477,9 @@ In the following example, the AI Agent serves traffic from two regional replicas
 
 {% entity_example %}
 type: agent
+formats:
+  - konnect-api
+  - kongctl
 data:
   display_name: KongAir Flight Booking Agent
   name: kongair-flight-booking-agent

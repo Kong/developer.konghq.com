@@ -668,7 +668,6 @@ To avoid this, run the upstream MCP server in more than one place, for example i
 
 Set either `config.url` or `config.targets`. An AI MCP Server can't use both.
 AI MCP Servers that use `config.url` continue to work without changes.
-Multiple targets are available in {{site.ai_gateway}} 2.4 and later.
 Multiple targets apply to replicas of the same backend.
 To expose tools from different MCP servers through one endpoint, use [tool aggregation](#tool-aggregation-with-upstream-server) instead.
 
@@ -742,6 +741,7 @@ MCP clients on revisions before `2026-07-28` identify a session with the `Mcp-Se
 Clients on the `2026-07-28` revision don't use sessions and send no `Mcp-Session-Id`, so there's no session to pin and the following guidance doesn't apply to them. See [MCP versions](#mcp-versions). -->
 In `passthrough-listener` and `upstream-server` modes, session state lives on the upstream MCP server, so the replica that created a session must handle every later request in it.
 If your upstream replicas keep session state in memory, use `consistent-hashing` with `hash_on_header: Mcp-Session-Id`.
+[Session affinity](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) is available only on AI Models, so use consistent hashing to keep a session on one target.
 If your upstream replicas share session state or are stateless, any algorithm works.
 If you use a failover target instead of `consistent-hashing`, requests in an existing session reach a replica that doesn't hold the session, and clients must start a new session.
 
@@ -753,6 +753,9 @@ In the following example, a `passthrough-listener` AI MCP Server serves traffic 
 
 {% entity_example %}
 type: mcp_server
+formats:
+  - konnect-api
+  - kongctl
 data:
   display_name: KongAir Flight Search MCP Server
   name: kongair-flight-search-mcp
