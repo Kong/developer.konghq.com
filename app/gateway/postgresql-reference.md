@@ -38,7 +38,7 @@ faqs:
 
   - q: Why does {{site.base_gateway}} fail to connect to PostgreSQL with `pg_ssl_negotiation = direct`?
     a: |
-      Direct TLS negotiation needs PostgreSQL 17 or later. Older servers close the connection when they receive a TLS handshake as the first message. Every proxy or connection pooler between {{site.base_gateway}} and PostgreSQL, such as PgBouncer, must also support direct TLS negotiation. {{site.base_gateway}} doesn't fall back to the `postgres` negotiation mode.
+      Direct TLS negotiation needs PostgreSQL 17 or later. Older servers close the connection when they receive a TLS handshake as the first message. Every proxy between {{site.base_gateway}} and PostgreSQL, such as PgBouncer, must also support direct TLS negotiation. {{site.base_gateway}} doesn't fall back to the `postgres` negotiation mode.
 
   - q: Does SNI-based routing work when `pg_host` is an IP address?
     a: |
@@ -172,7 +172,7 @@ On the PostgreSQL side, direct TLS negotiation only needs `ssl = on`. You don't 
 
 Keep the following in mind when you use direct TLS negotiation:
 
-* PostgreSQL must be version 17 or later. Every proxy or connection pooler in the path must also support direct TLS negotiation.
+* PostgreSQL must be version 17 or later. Every proxy in the path, such as PgBouncer, must also support direct TLS negotiation.
 * TLS is always required. {{site.base_gateway}} doesn't fall back to plain text or to the `postgres` negotiation mode, even if `pg_ssl_required` is `off`.
 * `pg_ssl_negotiation = direct` requires `pg_ssl = on`. Otherwise, {{site.base_gateway}} doesn't start.
 * In `traditional` mode, you can't use direct TLS negotiation together with [`stream_listen`](/gateway/configuration/#stream-listen). {{site.base_gateway}} doesn't start with this combination.
