@@ -13,7 +13,7 @@ breadcrumbs:
   - /identity/
   - /identity/token-vault/
 
-description: "Learn how {{site.identity}} Token Vault stores, encrypts, enrolls, and manages credentials for third-party services."
+description: "How {{site.identity}} Token Vault stores, encrypts, enrolls, and manages credentials for third-party services."
 
 api_specs:
     - konnect/kong-identity-principals
