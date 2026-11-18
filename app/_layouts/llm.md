@@ -9,6 +9,7 @@
 {% include llm/banners.md %}
 {% include llm/tldr.md %}
 {% include llm/series.md %}
+{% konnect_mcp_agent_instructions %}
 {% include llm/prereqs.md %}
 {{ content }}
 {% if page.works_on contains 'on-prem' %}

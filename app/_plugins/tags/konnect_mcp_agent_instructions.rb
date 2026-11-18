@@ -23,16 +23,16 @@ module Jekyll
     private
 
     def eligible?
-      works_on = @page.fetch('works_on', [])
-      products = @page.fetch('products', [])
+      return false unless @page['content_type'] == 'how_to'
 
-      @page['content_type'] == 'how_to' &&
-        works_on.include?('konnect') &&
-        ELIGIBLE_PRODUCTS.include?(products.first)
+      products = Array(@page['products'])
+      works_on = Array(@page['works_on'])
+
+      works_on.include?('konnect') && ELIGIBLE_PRODUCTS.include?(products.first)
     end
 
     def data_plane_product
-      @page.fetch('products', []).find { |product| DATA_PLANE_PRODUCTS.include?(product) }
+      Array(@page['products']).find { |product| DATA_PLANE_PRODUCTS.include?(product) }
     end
   end
 end
