@@ -413,7 +413,7 @@ To limit which teams or applications can call an AI Model, use the [`access.acls
 
 If your callers are {{site.identity}} principals and you want to manage access rules in {{site.konnect_short_name}} instead of on each AI Model, use the [AI Access Policy Engine Policy](/ai-gateway/policies/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/policies/access-policy-engine/#choose-between-access-control-options).
 
-To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
+To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 
 {:.info}
 > All AI Models in a {{site.ai_gateway}} exposed on the same base path that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy, unless a route rule, such as a header rule, keeps their routes apart. For an example, see [Claude Code with developer subscriptions](#claude-code-with-developer-subscriptions).
@@ -442,7 +442,9 @@ data:
   name: company-oidc
   type: openid-connect
   config:
-    issuer: https://dev-123456.okta.com
+    issuer: https://dev-123456.okta.com/oauth2/default
+    audience_required:
+      - api://default
     auth_methods:
       - bearer
     bearer_token_param_type:
@@ -457,7 +459,9 @@ data:
 
 Set `scopes_required` to a scope that your IdP grants only to developers who use the company models. Okta access tokens carry scopes in the `scp` claim, so set `scopes_claim` to `scp` on Okta. If the token has the scope only in `scp`, the default `scope` claim makes every request to a company AI Model fail with `401`.
 
-Reference `company-oidc` in [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) of each company AI Model. Use an AI Model Provider with your Anthropic key, and keep [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) set to `false`.
+On Okta, use a custom authorization server as the issuer, because the org authorization server can't issue custom scopes. Set `audience_required` in both strategies to the audience of the tokens that this server issues for {{site.ai_gateway}}.
+
+Reference `company-oidc` in [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) of each company AI Model. Use an AI Model Provider with your Anthropic key, and keep [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) set to `false`.
 
 ### Subscription AI Models
 
@@ -483,7 +487,9 @@ data:
   name: subscription-oidc
   type: openid-connect
   config:
-    issuer: https://dev-123456.okta.com
+    issuer: https://dev-123456.okta.com/oauth2/default
+    audience_required:
+      - api://default
     auth_methods:
       - bearer
     bearer_token_param_type:
@@ -541,7 +547,7 @@ The header rule in `config.route.headers` sends each request that has `x-kong-id
 * Put only Anthropic targets without a key and with the default upstream URL, `https://api.anthropic.com`, in a subscription AI Model. Each target of a subscription AI Model gets the claude.ai token.
 * Don't add `http_401` to [`failover_criteria`](#schema-aigateway-model-config-balancer-failover-criteria). A credential that the upstream rejects must fail, and {{site.ai_gateway}} must not retry it on another target.
 * Don't attach an [AI Policy](/ai-gateway/entities/ai-policy/) that calls an LLM with the key of your AI Model Provider to a subscription AI Model. Your company then pays for part of a subscription request.
-* Don't use `x-kong-id-token` as a cost tag header. {{site.ai_gateway}} sends cost tags to analytics, so the IdP token is then stored there.
+* Don't use `x-kong-id-token` as a cost tag header. {{site.ai_gateway}} sends cost tags to analytics, so the IdP token can then be stored there.
 * Don't add a second AI Auth Strategy to these AI Models. With a second strategy, a request can pass with the other credential and skip the IdP token check.
 
 ### Configure Claude Code
@@ -551,7 +557,7 @@ Sign in to Claude Code with the Claude subscription. Don't set `ANTHROPIC_API_KE
 Set every model slot of Claude Code to a subscription model ID. Each alias starts with the Anthropic model ID, so Claude Code recognizes the model and keeps its context window.
 
 ```sh
-export ANTHROPIC_BASE_URL=https://<your-ai-gateway-host>
+export ANTHROPIC_BASE_URL="https://<your-ai-gateway-host>"
 export ANTHROPIC_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-5-5-subscription
 export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-5-5-subscription
@@ -566,7 +572,7 @@ Create a subscription AI Model for each model ID that you set. IdP tokens are sh
 
 * A subscription AI Model forwards any token in `Authorization`. If a developer sends their IdP token in `Authorization` to a subscription model ID, {{site.ai_gateway}} sends the IdP token to Anthropic in both `Authorization` and `x-api-key`.
 * {{site.ai_gateway}} can't check that the claude.ai account belongs to the developer that the IdP token identifies.
-* Cost metrics count subscription requests as spend of your company.
+* Cost metrics count subscription requests as spend of your company, but Anthropic bills them to the subscription of the developer.
 
 ## Attach AI Policies
 
