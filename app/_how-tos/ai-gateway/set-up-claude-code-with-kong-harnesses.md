@@ -77,7 +77,7 @@ brew install kong/kong-harnesses/kong-harnesses
 
 Download the Windows installer (`.msi`) or the Linux package (`.deb` or `.rpm`) for your computer from the [kong-harnesses repository](https://cloudsmith.io/~kong/repos/kong-harnesses/packages/), then install it:
 
-* Windows: `msiexec /i <file>.msi`
+* Windows: in PowerShell opened as an administrator, run `msiexec /i <file>.msi`
 * Ubuntu: `sudo apt install ./<file>.deb`
 * Red Hat Enterprise Linux: `sudo dnf install ./<file>.rpm`
 
@@ -104,7 +104,7 @@ Setup does three things in this order:
 1. It opens your browser to sign you in. Sign in with your company account.
 1. It configures {{ site.claude_code }} to use the gateway, and then checks the result.
 
-If a step fails, setup stops and names the step and the fix. After the fix, run the same command again. Setup skips the steps that are already done.
+If a step fails, setup stops and names the step and the problem. Fix the problem and run the same command again. Setup keeps a sign-in that still works and settings that are already in place. For a profile URL, it asks you to type the profile name again.
 
 {:.info}
 > Without `--client claude-code`, setup also configures the other agent CLIs on your computer that the profile lists, such as Codex. It shows the list and asks before it changes anything.
@@ -117,7 +117,7 @@ Run the checks:
 kong-harnesses doctor --client claude-code
 ```
 
-`doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. It shows a fix for each problem it finds. It changes nothing. Fix each failure and run it again until no check fails.
+`doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. It shows a fix for each problem it finds. It does not change any settings. Fix each failure and run it again until no check fails.
 
 To also send one real model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 
@@ -133,13 +133,13 @@ Start a session as usual:
 claude
 ```
 
-Send a prompt to check that you get a reply. Every model request now goes through {{site.ai_gateway}}. `/model` lists the models that the gateway serves. kong-harnesses renews your access token by itself, so you sign in again only when your sign-in expires or your company revokes it.
+Send a prompt to check that you get a reply. Every model request now goes through {{site.ai_gateway}}. `/model` shows the models that the gateway serves next to the built-in options. kong-harnesses renews your access token by itself. Sign in again when your sign-in expires or your company revokes it.
 
 On macOS, run `kong-harnesses login` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use its sign-in, select **Always Allow**.
 
 ## Features that change behind the gateway
 
-Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic. Your profile decides which of them setup turns off. To see the features that your profile turns off, and why, run this with the profile name that setup showed:
+Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic. Your profile decides which of them setup turns off. To see the {{ site.claude_code }} choices in your profile, run this with the profile name that setup showed:
 
 ```sh
 kong-harnesses profile get <profile-name>
@@ -149,7 +149,7 @@ kong-harnesses profile get <profile-name>
 columns:
   - title: Feature
     key: feature
-  - title: Why it is off
+  - title: Why it changes
     key: why
   - title: What you can do
     key: recover
@@ -168,7 +168,7 @@ rows:
     recover: Nothing to do.
   - feature: "`/cost` prices"
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
-    recover: "If the profile or the gateway states prices, setup asks to install them. The install needs administrator rights, and works only on macOS and Linux."
+    recover: "If the profile or the gateway states prices, setup asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model with no stated price keeps Anthropic's price."
   - feature: Automatic updates
     why: The update check and other background requests go outside the gateway, to Anthropic and GitHub. The same setting turns off release notes, network requests from plugins, cloud sessions and pull request status badges.
     recover: "Run `claude update` when you want a newer release, or ask your administrator to keep automatic updates on in the profile."
@@ -180,6 +180,6 @@ rows:
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
-A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace. The advisor and tool search stay off unless the profile and the gateway route support them. {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
+A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace. Tool search stays off unless the profile and the gateway route support it. The profile also decides whether the advisor is on. {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
 
 When your administrator changes the profile, run the same `kong-harnesses setup` command again to apply the change.
