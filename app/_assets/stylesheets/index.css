@@ -1174,7 +1174,7 @@ dialog.expandable-image-dialog.is-open::backdrop {
   perspective: 600px;
 }
 
-.logo-flip > svg {
+:where(.logo-flip) > svg {
   display: block;
 }
 

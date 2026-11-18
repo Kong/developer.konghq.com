@@ -4,7 +4,7 @@
 import { headerLogos } from "./trophy";
 
 const HOVER_MS = 3000;
-const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
+const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A", "␣"];
 
 function addBackFace(logo) {
   const back = document.createElement("span");
@@ -42,5 +42,7 @@ export function initLogoFlip() {
       }, HOVER_MS);
     });
     logo.addEventListener("mouseleave", reset);
+    logo.addEventListener("focus", () => logo.classList.add("is-flipped"));
+    logo.addEventListener("blur", reset);
   });
 }

@@ -12,7 +12,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 
 ## Intent
 
-- **Delight first, cheap for everyone else.** Regular page views load only the trigger and the header trophy (`arcade.js`, `arcade/trophy.js`). The game is a lazy chunk loaded on the code.
+- **Delight first, cheap for everyone else.** Regular page views load only the trigger, the header trophy and the logo flip (`arcade.js`, `arcade/trophy.js`, `arcade/logo_flip.js`). The game is a lazy chunk loaded on the code.
 - **The page is the level.** Nothing is hand-authored per page; every docs page must produce a playable level, including hub pages without `<main>`.
 - **The story is Kong's.** You are the gateway: each terminal is a real Kong plugin whose effect fits its purpose (Bot Detection slows bots, OpenID Connect de-authenticates agents). The mission text says so in the prompt, the opening toast, and the HUD.
 - **Leave no trace.** Esc twice restores the page exactly: no stray classes, scroll position restored, canvas removed.
