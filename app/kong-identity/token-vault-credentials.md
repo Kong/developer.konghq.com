@@ -155,7 +155,7 @@ A provider built on the `static_secret` template doesn't run an OAuth flow. The 
 The static credential belongs to the directory instead of to an individual principal. A `static_secret` provider only accepts `credential_type` set to `shared`.
 
 A shared provider can hold one default credential and any number of credentials with a `selector`. 
-A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one. See [Store a static secret](#store-a-static-secret).
+A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one. See [Store a credential](#store-a-credential).
 
 ## Limit credentials to specific groups
 
@@ -203,11 +203,17 @@ In the following examples, replace the following values:
 * `$DIRECTORY_ID`: The ID of your directory.
 * `$PROVIDER_ID`: The ID of the provider, returned when you create it.
 * `$CREDENTIAL_ID`: The ID of the credential, returned when you store it.
+* `$CLIENT_ID` and `$CLIENT_SECRET`: The client ID and client secret of the OAuth app you created in the third-party service.
 * `$STATIC_SECRET`: The API key or token you generated in the third-party service.
 * `$NEW_STATIC_SECRET`: The replacement value when you rotate a secret.
 * `$GROUP_ID`: The ID of a group in your directory, for example `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`. You can get it from the [`listGroups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
 
-### Store a static secret
+### Store a credential
+
+To store a credential, create a provider, then store the credential on it. The steps depend on the provider's secret type:
+
+{% navtabs "store credential" %}
+{% navtab "Static secret" %}
 
 Create the provider by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
 
@@ -275,6 +281,37 @@ capture:
     jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{% endnavtab %}
+{% navtab "OAuth credential" %}
+
+Create a provider from an OAuth template, with `credential_type` set to `shared`, by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). For example, to create a GitHub provider shared across the directory:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  template_name: github
+  name: github-shared
+  client_id: $CLIENT_ID
+  client_secret: $CLIENT_SECRET
+  credential_type: shared
+capture:
+  - variable: PROVIDER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The required parameters depend on the template. See [Providers](/identity/token-vault/#providers).
+
+An admin then enrolls the credential once for the whole directory, as described in [Shared credential enrollment](#shared-credential-enrollment). You don't send a `secret`: Token Vault stores the credential after the admin completes the provider's OAuth consent.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Add a selector to a credential
 
@@ -352,7 +389,7 @@ body:
 * Sending a `priority` for a credential that has no selector returns a `400`.
 * A `PATCH` never changes the stored secret. To replace it, use `PUT`.
 
-### Delete a secret
+### Delete a credential
 
 To remove the stored credential, send a `DELETE` request to the [`deleteVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultProviderCredential):
 
