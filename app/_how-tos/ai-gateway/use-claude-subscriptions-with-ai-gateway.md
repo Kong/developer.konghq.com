@@ -50,6 +50,7 @@ prereqs:
         * Create a native OIDC app with the authorization code flow and PKCE, and assign both groups of developers to it.
         * Add an access policy for the app with a rule for each group.
           Allow `openid` for subscription developers, and `openid` and `ai-gateway-company` for company developers.
+        * Give this policy a higher priority than any policy for all clients.
         * Don't allow `ai-gateway-company` in any other rule on this authorization server, because {{site.ai_gateway}} accepts any token from this server that has the audience and the scope.
 
         Export the issuer URL of the server:
@@ -307,6 +308,7 @@ Set `KONNECT_PROXY_URL` to the proxy URL of your {{site.ai_gateway}}.
 On the quickstart host, this is `http://localhost:8000`.
 On other machines, use the HTTPS proxy URL from your {{site.ai_gateway}} admin.
 To test both groups on one machine, use a separate shell for each group, because the settings of one group break the requests of the other.
+Values in the `env` of your {{ site.claude_code }} settings files replace these shell values, so remove any `env` entry that conflicts with them.
 
 Get an access token from the Okta app with the authorization code flow and PKCE, and request the `openid` scope.
 The token is the `access_token` in the token response.
