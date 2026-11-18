@@ -16,6 +16,9 @@ works_on:
 
 automated_tests: false
 
+min_version:
+  ai-gateway: '2.4'
+
 tags:
   - ai
   - anthropic
@@ -47,7 +50,7 @@ prereqs:
         Open a new terminal and run `claude --version` to check the install. If the terminal cannot find `claude`, do the PATH step that the installer prints.
     - title: A profile from your administrator
       content: |
-        Your {{site.ai_gateway}} administrator gives you a profile that signs you in through your browser, as an HTTPS URL or a JSON file. The profile names the gateway, the identity provider you sign in with, and the settings for each agent CLI. It holds no secrets.
+        Your {{site.ai_gateway}} administrator gives you a profile that signs you in through your browser, as an HTTPS URL or a JSON file. The profile names the gateway, the identity provider you sign in with, and the settings for each agent CLI. It contains settings only.
     - title: A supported computer
       content: |
         kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64. Set it up on the desktop you work on, not in WSL, a container or an SSH session.
@@ -121,7 +124,7 @@ kong-harnesses doctor --client claude-code
 
 `doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. It shows a fix for each problem it finds. It does not change any settings. Fix each failure and run it again until no check fails.
 
-To also send one real model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+To also send one model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 
 ```sh
 kong-harnesses doctor --client claude-code --inference
@@ -137,7 +140,7 @@ claude
 
 Send a prompt to check that you get a reply. Every model request now goes through {{site.ai_gateway}}. `/model` shows the models that the gateway serves. kong-harnesses renews your access token by itself. Run `kong-harnesses login` when your sign-in expires or your company revokes it.
 
-On macOS, run `kong-harnesses login` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use its sign-in, select **Always Allow**.
+On macOS, run `kong-harnesses login` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
 
 ## Features that change behind the gateway
 
@@ -161,7 +164,7 @@ rows:
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
     why: It works only with the Anthropic API directly, and its check calls `api.anthropic.com`.
-    recover: Nothing behind the gateway.
+    recover: "Nothing to do: Fast mode cannot work behind the gateway."
   - feature: "`/bug`, `/feedback` and the feedback survey"
     why: They send your conversation or your ratings to Anthropic.
     recover: Ask your administrator to keep them and automatic updates on in the profile.
@@ -170,7 +173,7 @@ rows:
     recover: Nothing to do.
   - feature: "`/cost` prices"
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
-    recover: "If the profile or the gateway states prices, setup asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model with no stated price keeps the price that {{ site.claude_code }} uses by default."
+    recover: "If the profile or the gateway states prices, setup asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
   - feature: Automatic updates
     why: The update check and other background requests go outside the gateway, to Anthropic and GitHub. The same setting turns off release notes, network requests from plugins, cloud sessions and pull request status badges.
     recover: "Run `claude update` when you want a newer release, or ask your administrator to keep automatic updates on in the profile."
