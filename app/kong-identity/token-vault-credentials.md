@@ -31,12 +31,9 @@ related_resources:
 
 A credential is the actual secret (a token or a key) that the {{site.identity}} [Token Vault](/identity/token-vault/) stores for a [provider](/identity/token-vault/#providers). This page covers how Token Vault encrypts, enrolls, releases, and manages credentials.
 
-## Credentials
+## Credential types
 
-The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. 
-The credential is encrypted at rest in Token Vault. See [Credential storage and encryption](#credential-storage-and-encryption).
-
-The credentials can be personal or shared across the organization. You define this with the `credential_type` field on the provider:
+The credentials can be personal or shared across the directory. You define this with the `credential_type` field on the provider:
 
 * `user` sets a personal credential, enrolled by each user.
 * `shared` sets a credential shared across the directory, managed by an admin.
@@ -62,7 +59,12 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### Credential storage and encryption
+A shared credential is either:
+
+* A static value that an admin stores.
+* An OAuth enrollment that an admin completes once for the whole directory.
+
+## Credential storage and encryption
 
 Token Vault encrypts every credential before storing it, using a key that you control. Each directory has its own vault key, so one directory can't read another directory's credentials.
 
@@ -100,7 +102,7 @@ You need to register a vault key because it makes you the owner of the encryptio
 
 A credential's value never comes back through any API. Read endpoints only return metadata (IDs, timestamps, status). Only the {{site.ai_gateway}} receives a credential, to use in outbound calls.
 
-### OAuth-based credential lifecycle
+## Credential lifecycle
 
 A credential moves through the following stages, depending on the action a user performs:
 
@@ -108,9 +110,6 @@ A credential moves through the following stages, depending on the action a user 
 1. **Creation**: At creation, {{site.identity}} stores the credential in Token Vault. For `static_secret` providers, you generate the secret in the third-party service and store it in Token Vault yourself. For OAuth-based providers, the OAuth consent flow creates the credential and stores it automatically.
 1. **Refresh**: For OAuth-based providers, Token Vault refreshes credentials automatically before they expire (see the provider's `refresh_buffer_seconds`), with locking, to prevent concurrent requests from consuming a refresh token. If a refresh fails while the stored token is still valid, Token Vault keeps releasing the stored token.
 1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Admins can list and delete a user's credentials with the [`listVaultCredentials`](/api/konnect/kong-identity-principals/v2/#/operations/listVaultCredentials) and [`deleteVaultCredential`](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultCredential) endpoints. Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
-
-Token Vault never exposes the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbound calls without making the credentials accessible from any read endpoint.
-
 
 ## Credential enrollment
 
@@ -131,14 +130,16 @@ For providers that support dynamic client registration (DCR), such as `atlassian
 
 ### Shared credential enrollment
 
-A shared credential means one credential for the whole directory, managed by an admin instead of per user. A shared authorization code provider is an OAuth provider with `credential_type` you set to `shared`. Authorization code providers default to `user`, so you must set `credential_type: shared` explicitly when you [add the provider](/how-to/get-started-with-token-vault/#add-a-provider).
+A shared credential means one credential for the whole directory, managed by an admin instead of per user. To do so, you add an OAuth provider with `credential_type` set to `shared`. Otherwise, authorization code providers default to `user` when you [add the provider](/how-to/get-started-with-token-vault/#add-a-provider).
 
 Then, enroll the shared credential:
 
 1. An admin enrolls once on behalf of the directory: send a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential) without a `secret`. The request fails if you send one.
 1. Token Vault creates a `pending` credential and returns an `enrollment_url`.
 1. The admin opens that URL and completes the provider's OAuth consent.
-1. The credential becomes `active` and Token Vault releases it to any authorized caller.
+1. The credential becomes `active` and Token Vault releases it to any authorized principal.
+
+To release it only to some principals, include a `selector` and `priority` in the request (see [Limit credentials to specific groups](#limit-credentials-to-specific-groups)).
 
 To re-enroll the shared account at any time, send a `GET` request to the [`getVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/getVaultProviderCredential). Each `GET` by credential ID returns a fresh `enrollment_url`, whether the credential is `pending` or `active`. The list endpoint never returns the `enrollment_url`.
 
@@ -153,18 +154,62 @@ A provider built on the `static_secret` template doesn't run an OAuth flow. The 
 
 The static credential belongs to the directory instead of to an individual principal. A `static_secret` provider only accepts `credential_type` set to `shared`.
 
+A shared provider can hold one default credential and any number of credentials with a `selector`. 
+A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one. See [Store a static secret](#store-a-static-secret).
+
+## Limit credentials to specific groups
+
+Selectors release different shared credentials to different principals, for example one API key or one OAuth enrollment per team. They apply to both kinds of shared credentials: static secrets and shared OAuth credentials. Per-user credentials don't have a selector, because each principal already has their own credential.
+
+### Selector
+
+`selector` is a Common Expression Language (CEL) expression (up to 1,024 characters). The expression can read these principal fields:
+
+* `principal.id`
+* `principal.display_name`
+* `principal.groups`
+* `principal.metadata`
+
+For example, to share credentials with a group whose ID is `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`, you write the following CEL expression:
+
+```
+"7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73" in principal.groups
+```
+
+See [Add a selector to a credential](#add-a-selector-to-a-credential).
+
+{{site.identity}} rejects a malformed expression, or one that references an unknown field, when you create or update the credential.
+
+### Priority
+
+`priority` is required with a selector, and not allowed without one. Each priority must be unique on the provider, otherwise the request returns a `409`. You set `priority` with a whole number of `0` or more.
+
+A credential without `priority` applies to all principals.
+
+When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates the selectors in ascending priority order and releases the first match. For example, these credentials would be checked in the following order:
+
+1. Credential A: selector for team-a, priority 10
+1. Credential B: selector for team-b, priority 20
+1. Credential C: no selector (the default)
+
+If no selector matches, it releases the default credential. If no selector matches and the provider has no default credential, Token Vault returns a `404`. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
+
+## Manage credentials
+
+Make sure the directory has a [vault key](#credential-storage-and-encryption). {{site.identity}} rejects a request to store credentials with a `400` until you register one.
+
+In the following examples, replace the following values:
+
+* `$DIRECTORY_ID`: The ID of your directory.
+* `$PROVIDER_ID`: The ID of the provider, returned when you create it.
+* `$CREDENTIAL_ID`: The ID of the credential, returned when you store it.
+* `$STATIC_SECRET`: The API key or token you generated in the third-party service.
+* `$NEW_STATIC_SECRET`: The replacement value when you rotate a secret.
+* `$GROUP_ID`: The ID of a group in your directory, for example `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`. You can get it from the [`listGroups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
 
 ### Store a static secret
 
-To store a static secret:
-
-1. Make sure the directory has a [vault key](#credential-storage-and-encryption). {{site.identity}} rejects a request to store a static secret with a `400` until you register one.
-2. Create the provider: For `static_secret`, send only:
-  * `template_name`
-  * `name`
-  * Optionally `credential_type` and `base_url`.
-  
-{{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
+Create the provider by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -206,7 +251,7 @@ rows:
   - param: "`credential_type`"
     required: No
     description: |
-      Must be `shared` for `static_secret` providers, and defaults to `shared`. A shared credential is released to any authorized caller instead of being enrolled per principal.
+      Must be `shared` for `static_secret` providers, and defaults to `shared`. A shared credential is released to any authorized principal instead of being enrolled per principal.
   - param: "`base_url`"
     required: No
     description: |
@@ -214,8 +259,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-3. Store the credential on that provider by sending a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential).
-   {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
+Store the credential on that provider by sending a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential). {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -232,12 +276,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-A shared provider can hold one default credential and any number of credentials with a `selector`. 
-A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one.
+### Add a selector to a credential
 
-### Select a shared credential per principal
-
-To release different shared credentials to different callers, for example one API key per team, add a `selector` and a `priority` to the credential:
+To limit a credential to specific groups, send a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential) with a `selector` and a `priority`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -247,19 +288,13 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  secret: $TEAM_SECRET
+  secret: $STATIC_SECRET
   selector: '"$GROUP_ID" in principal.groups'
   priority: 10
 {% endkonnect_api_request %}
 <!--vale on-->
 
-* `selector` is a CEL expression (up to 1,024 characters) evaluated against the calling principal. It can use `principal.id`, `principal.display_name`, `principal.groups` (group IDs, including nested groups), and `principal.metadata`.
-* `priority` is required with a selector, and not allowed without one. Each priority must be unique on the provider, otherwise the request returns a `409`.
-
-When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates the selectors in ascending priority order and releases the first match. 
-If no selector matches, it releases the default credential. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
-
-## Manage credentials
+For a shared OAuth credential, omit the `secret`. Token Vault creates a `pending` credential and returns an `enrollment_url` for an admin to complete the provider's OAuth consent, as described in [Shared credential enrollment](#shared-credential-enrollment).
 
 ### List stored credentials
 
@@ -286,8 +321,36 @@ headers:
   - 'Content-Type: application/json'
 body:
   secret: $NEW_STATIC_SECRET
+  selector: '"$GROUP_ID" in principal.groups'
+  priority: 10
 {% endkonnect_api_request %}
 <!--vale on-->
+
+{:.warning}
+> `PUT` replaces the whole credential, including its `selector` and `priority`. If you omit them, {{site.identity}} clears them and the credential becomes the provider's default, released to every principal that no other selector matches. Always send the current `selector` and `priority` again when you rotate a secret. To change only the selector or priority, use [`PATCH`](#update-a-selector-or-priority) instead.
+
+For a shared OAuth credential, don't send a `secret`: the request fails if you do. `PUT` mints a fresh `enrollment_url` for an admin to re-enroll the credential, and updates the `selector` and `priority` you send.
+
+### Update a selector or priority
+
+To change the `selector` or `priority` of a shared credential without re-sending its secret, send a `PATCH` request to the [`patchVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/patchVaultProviderCredential). The request only changes the fields you send, and doesn't re-enroll a shared OAuth credential:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials/$CREDENTIAL_ID
+status_code: 200
+method: PATCH
+headers:
+  - 'Content-Type: application/json'
+body:
+  priority: 20
+{% endkonnect_api_request %}
+<!--vale on-->
+
+* Omitted fields keep their current value.
+* To remove a selector, send `selector: null`. The credential becomes the provider's default, and {{site.identity}} clears its `priority`.
+* Sending a `priority` for a credential that has no selector returns a `400`.
+* A `PATCH` never changes the stored secret. To replace it, use `PUT`.
 
 ### Delete a secret
 
