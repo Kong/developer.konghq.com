@@ -44,7 +44,7 @@ prereqs:
         irm https://claude.ai/install.ps1 | iex
         ```
 
-        Open a new terminal and run `claude --version` to check the install.
+        Open a new terminal and run `claude --version` to check the install. If the terminal cannot find `claude`, do the PATH step that the installer prints.
     - title: A profile from your administrator
       content: |
         Your {{site.ai_gateway}} administrator gives you a profile that signs you in through your browser, as an HTTPS URL or a JSON file. The profile names the gateway, the identity provider you sign in with, and the settings for each agent CLI. It holds no secrets.
