@@ -160,8 +160,13 @@ Even when incremental config sync is enabled, a full sync will still occur in so
   * The data plane logs the start and completion of each full sync at `info` level.
 
 * **Data handling**:
-  * If a full sync fails, the data plane continues to serve the last known good configuration and retries the sync.
+  * If a full sync fails, the data plane continues to serve its current configuration and retries the sync.
   * Database purging is only performed after a successful full sync.
+
+{:.warning}
+> **Important:** In {{site.konnect_short_name}}, the control plane doesn't send a last known good configuration to data planes using incremental config sync.
+> A data plane that rejects its first configuration has nothing to serve, and shows the **No config** sync status in {{site.konnect_short_name}}.
+> For more information, see [Data plane configuration status](/gateway/data-plane-reference/#data-plane-configuration-status).
 
 ## Handling special cases
 
