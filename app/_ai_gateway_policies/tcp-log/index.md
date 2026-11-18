@@ -47,7 +47,6 @@ If the TCP server is unreachable, clients still get their responses and {{site.a
 ## Connect to a TCP server
 
 Set [`config.host`](/ai-gateway/policies/tcp-log/reference/#schema--config-host) and [`config.port`](/ai-gateway/policies/tcp-log/reference/#schema--config-port) to the address of your TCP server.
-Both are required.
 
 For a configuration that sends logs to a TCP server, see [Send logs to a TCP server](/ai-gateway/policies/tcp-log/examples/enable-tcp-log/).
 
@@ -83,7 +82,7 @@ Each entry also includes data that depends on what the request targeted:
 
 * For an [AI Model](/ai-gateway/entities/ai-model/), the `ai.proxy` object holds token usage and cost.
 * For an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), the entry has an `ai.mcp` object.
-* For an [AI Agent](/ai-gateway/entities/ai-agent/), the entry doesn't have an `ai` object.
+* For an [AI Agent](/ai-gateway/entities/ai-agent/), the entry has an `ai.a2a` object when `config.logging.log_statistics` is enabled.
 * For an [AI Consumer](/ai-gateway/entities/ai-consumer/), the entry has a `consumer` object.
 
 The `service` and `route` objects in a log entry describe objects that {{site.ai_gateway}} creates internally for each entity.
