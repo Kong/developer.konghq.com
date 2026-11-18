@@ -36,9 +36,9 @@ faqs:
       {% include faqs/report-dashboard-sharing.md section='question' feature="report" %}
     a: |
       {% include faqs/report-dashboard-sharing.md section='answer' feature="report" %}
-  - q: Where are Org Admin, Team Manager, and Individual User roles?
+  - q: Where are the Org Admin, Team Manager, and Individual User roles?
     a: |
-      These roles are AI Management roles, and you can't assign them to a team on this page. See [AI Management roles and permissions](/ai-management/roles-and-permissions/) for what each role can do and how users get it.
+      They're AI Management roles, not {{site.konnect_short_name}} roles you assign to a team. See [AI Management roles and permissions](/ai-management/roles-and-permissions/) for what each role can do and how users get it.
   - q: "Can the Organization Owner role be assigned to an SSO-controlled account?"
     a: "Yes, an SSO-controlled account is a {{site.konnect_short_name}} user. As long as the account is an Organization Admin, they can be assigned to the Organization Owner role."
 ---
