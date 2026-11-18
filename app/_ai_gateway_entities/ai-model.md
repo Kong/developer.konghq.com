@@ -292,12 +292,6 @@ For each target, you provide the upstream model name (for example, `gpt-4o`) and
 
 There's no separate target entity or endpoint. Targets are managed only as nested data inside an AI Model, through the same AI Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the AI Model itself.
 
-### Claude subscription of the developer
-
-A developer can sign in to Claude Code with their own Claude subscription. Claude Code then sends a claude.ai token as `Authorization: Bearer sk-ant-oat...`. On an Anthropic target that sends the request to `https://api.anthropic.com`, {{site.ai_gateway}} forwards this token to Anthropic in place of the AI Model Provider key when [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) is `true`, or when the target has no provider key. It doesn't add `x-api-key`. The subscription of the developer then pays for the request.
-
-On every other target, {{site.ai_gateway}} removes the token from `Authorization` before it sets the credential of that target. This includes other providers, an Anthropic target with another upstream URL, and an Anthropic target that another plugin routes to another host. On a failover, {{site.ai_gateway}} decides again for each target.
-
 ## Load balancing
 
 An AI Model routes to a single target by default. You can add more than one target when you want redundancy, fallback between providers, or cost and latency optimization. When you have multiple targets, configure [`config.balancer`](#schema-aigateway-model-config-balancer) to distribute requests according to a load balancing algorithm.
@@ -429,6 +423,146 @@ To control how consumers authenticate before their access is evaluated, configur
 ### CEL-based ACLs
 
 {% include md/ai-gateway/v2/cel-acls.md entity="AI Model" anchor="#schema-aigateway-model-access" %}
+
+## Claude subscriptions of developers
+
+Some developers sign in to Claude Code with their own Claude subscription. Claude Code then sends a claude.ai token in `Authorization`, and the subscription pays for the request. Other developers use the Claude models that your company pays for. Both groups can use the same {{site.ai_gateway}} base URL with two sets of AI Models:
+
+* Company AI Models use the Claude model IDs, for example `claude-opus-5-5`. They authenticate the IdP token in `Authorization` and call Anthropic with the key of your AI Model Provider.
+* Subscription AI Models use the same IDs with a `-subscription` suffix, for example `claude-opus-5-5-subscription`. They authenticate the IdP token in the `x-kong-id-token` header and forward the claude.ai token to Anthropic unchanged.
+
+### Company AI Models
+
+Create an `openid-connect` AI Auth Strategy that reads the IdP token from `Authorization`:
+
+{% entity_example %}
+type: auth-strategy
+data:
+  display_name: Company OIDC
+  name: company-oidc
+  type: openid-connect
+  config:
+    issuer: https://dev-123456.okta.com
+    auth_methods:
+      - bearer
+    bearer_token_param_type:
+      - header
+    scopes_required:
+      - ai-gateway-company
+    scopes_claim:
+      - scp
+    hide_credentials: true
+    cache_tokens_salt: company-oidc-cache-salt
+{% endentity_example %}
+
+Set `scopes_required` to a scope that your IdP grants only to developers who use the company models. Okta puts scopes in the `scp` claim, so set `scopes_claim` to `scp` on Okta. With the default `scope` claim, every request to a company AI Model fails with `401`.
+
+Reference `company-oidc` in [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) of each company AI Model. Use an AI Model Provider with your Anthropic key, and keep [`targets[].allow_auth_override`](#schema-aigateway-target-allow-auth-override) set to `false`.
+
+### Subscription AI Models
+
+Create an Anthropic AI Model Provider with no key:
+
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Anthropic subscriptions
+  name: anthropic-subscriptions
+  type: anthropic
+  config:
+    auth:
+      type: basic
+{% endentity_example %}
+
+Create an `openid-connect` AI Auth Strategy that reads the IdP token from `x-kong-id-token`:
+
+{% entity_example %}
+type: auth-strategy
+data:
+  display_name: Subscription OIDC
+  name: subscription-oidc
+  type: openid-connect
+  config:
+    issuer: https://dev-123456.okta.com
+    auth_methods:
+      - bearer
+    bearer_token_param_type:
+      - header
+    bearer_token_header_name: x-kong-id-token
+    hide_credentials: true
+    upstream_access_token_header: null
+    cache_tokens_salt: subscription-oidc-cache-salt
+{% endentity_example %}
+
+`hide_credentials` removes `x-kong-id-token` before the request goes to Anthropic. Set `upstream_access_token_header` to `null`. With the default value, `authorization:bearer`, {{site.ai_gateway}} replaces the claude.ai token in `Authorization` with the IdP token.
+
+Create one subscription AI Model for each Claude model. The alias in [`config.route.model`](#schema-aigateway-model-config-route-model) has the `-subscription` suffix, and the target name is the Anthropic model ID:
+
+{% entity_example %}
+type: model
+data:
+  display_name: claude-opus-5-5-subscription
+  name: claude-opus-5-5-subscription
+  type: model
+  capabilities:
+    - generate
+  formats:
+    - type: anthropic
+  targets:
+    - name: claude-opus-5-5
+      provider: anthropic-subscriptions
+      config:
+        type: anthropic
+  access:
+    auth_strategies:
+      - subscription-oidc
+  config:
+    route:
+      paths:
+        - /
+      headers:
+        x-kong-id-token:
+          - "~*.+"
+      model:
+        body_param: model
+        values:
+          - claude-opus-5-5-subscription
+{% endentity_example %}
+
+The header rule in `config.route.headers` puts the subscription AI Models on a separate route from the company AI Models. This is why the two sets can reference different `openid-connect` AI Auth Strategies on the same base path.
+
+A subscription request then goes to Anthropic with the claude.ai token unchanged, without `x-kong-id-token` and without `x-api-key`. A request with no IdP token or an invalid one fails with `401`, and a model ID of the other set fails. In both cases, nothing goes to Anthropic.
+
+### Rules for both sets
+
+* Set `config.route.model.values` on every AI Model on this base path, so that each model ID selects exactly one AI Model.
+* Put only Anthropic targets with no key and the default upstream URL, `https://api.anthropic.com`, in a subscription AI Model. Each target of a subscription AI Model gets the claude.ai token.
+* Don't add `http_401` to [`failover_criteria`](#schema-aigateway-model-config-balancer-failover-criteria). A credential that the upstream rejects must fail, not go to another target.
+* Don't attach an AI Policy that calls an LLM with the key of your AI Model Provider to a subscription AI Model. Your company then pays for part of a subscription request.
+* Don't use `x-kong-id-token` as a cost tag header. Cost tags go to analytics, so the IdP token is then stored there.
+* Don't add a second AI Auth Strategy to these AI Models. With a second strategy, a request can pass without the scope check of the `openid-connect` strategy.
+
+### Configure Claude Code
+
+Set every model slot of Claude Code to a subscription model ID. Claude Code finds the Anthropic model ID in the alias, so `claude-opus-5-5-subscription` keeps the context window and features of `claude-opus-5-5`.
+
+```sh
+export ANTHROPIC_BASE_URL=https://<your-ai-gateway-host>
+export ANTHROPIC_MODEL=claude-opus-5-5-subscription
+export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-5-5-subscription
+export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-5-5-subscription
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-5-5-subscription
+export CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-5-5-subscription
+export ANTHROPIC_CUSTOM_HEADERS="x-kong-id-token: <your-idp-token>"
+```
+
+Create a subscription AI Model for each model ID that you set. IdP tokens are short-lived, so refresh the value of `ANTHROPIC_CUSTOM_HEADERS` before the token expires.
+
+### Limits
+
+* A subscription AI Model forwards any token in `Authorization`. If a developer sends their IdP token in `Authorization` to a subscription model ID, the IdP token goes to Anthropic in both `Authorization` and `x-api-key`.
+* {{site.ai_gateway}} can't check that the claude.ai account belongs to the developer that the IdP token identifies.
+* Cost metrics count subscription requests as spend of your company.
 
 ## Attach AI Policies
 
