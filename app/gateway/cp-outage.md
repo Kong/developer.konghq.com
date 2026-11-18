@@ -29,6 +29,8 @@ related_resources:
     url: /gateway/cp-dp-communication/
   - text: "Cloud provider integration support for {{site.ee_product_name}}"
     url: /gateway/cloud-provider-support-matrix/
+  - text: "Last known good configuration in {{site.konnect_short_name}}"
+    url: /gateway/konnect-config-fallback/
 
 faqs:
   - q: Is it recommended to have the Control Plane exporting to the backup store (`KONG_CLUSTER_FALLBACK_CONFIG_EXPORT`)?
@@ -48,6 +50,9 @@ faqs:
 ---
 
 {{site.base_gateway}} can be set up to support configuring new Data Planes in the event of a Control Plane outage. Data Plane resilience works by designating one or more backup nodes and allowing it read/write access to a data store. This backup node will automatically push valid {{site.base_gateway}} configurations to the data store. In the event of a Control Plane outage, when a new node is created, it will pull the latest {{site.base_gateway}} configuration from the data store, configure itself, and start proxying requests. 
+
+{:.info}
+> In {{site.konnect_short_name}}, a new Data Plane node that rejects the current configuration gets the [last known good configuration](/gateway/konnect-config-fallback/) from the Control Plane. That fallback needs a running Control Plane, so it does not replace Data Plane resilience during an outage.
 
 {:.info}
 >This option is only recommended for users who have to adhere to strict high-availability SLAs because it requires a larger maintenance load.

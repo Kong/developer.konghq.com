@@ -296,6 +296,12 @@ The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`]
 
 If the logs show a license issue, or if you are unable to resolve sync issues using the above methods, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
+### Data Plane node runs an older configuration
+
+**Problem:** A new Data Plane node proxies traffic, but recent configuration changes are missing on it.
+
+**Solution:** The node probably rejected the current configuration and got the [last known good configuration](/gateway/konnect-config-fallback/) instead. Get the node from the [Control Plane Config API](/api/konnect/control-planes-config/#/operations/get-nodes-node_id) and read the errors from the rejected configuration. Fix the cause, then apply a configuration change.
+
 ### Missing functionality
 
 **Problem:** If a {{site.konnect_short_name}} feature isn’t working or isn't available on your Data Plane node, the version may be out of date.
