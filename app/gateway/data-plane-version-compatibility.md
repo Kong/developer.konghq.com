@@ -53,6 +53,10 @@ rows:
     description: "Status can't be determined. Check the node connection and {{site.base_gateway}} version."
 {% endtable %}
 
+If a node is **Incompatible**, the control plane may withhold the configuration from it entirely. 
+The node keeps serving the configuration it already has, and shows the **Last known good config** sync status without reporting an error of its own. 
+For more information, see [Data plane configuration status](/gateway/data-plane-reference/#data-plane-configuration-status).
+
 ## Compatibility errors
 
 The following table defines the possible compatibility errors with {{site.konnect_short_name}} data plane nodes:
