@@ -10,6 +10,7 @@ RSpec.describe 'konnect_mcp_agent_instructions tag' do
   let(:page) do
     {
       'path' => 'test/page.md',
+      'content_type' => 'how_to',
       'output_format' => 'html',
       'works_on' => %w[konnect],
       'products' => %w[gateway]
@@ -57,6 +58,15 @@ RSpec.describe 'konnect_mcp_agent_instructions tag' do
     let(:page) { super().merge('works_on' => %w[on-prem]) }
 
     it 'renders nothing and does not fetch a template' do
+      expect(rendered.strip).to be_empty
+      expect(Jekyll::ComponentTemplates).not_to have_received(:fetch)
+    end
+  end
+
+  context 'a Konnect page that is not a how-to' do
+    let(:page) { super().merge('content_type' => 'plugin') }
+
+    it 'renders nothing, because the markdown layout serves every page type' do
       expect(rendered.strip).to be_empty
       expect(Jekyll::ComponentTemplates).not_to have_received(:fetch)
     end

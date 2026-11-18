@@ -26,7 +26,9 @@ module Jekyll
       works_on = @page.fetch('works_on', [])
       products = @page.fetch('products', [])
 
-      works_on.include?('konnect') && ELIGIBLE_PRODUCTS.include?(products.first)
+      @page['content_type'] == 'how_to' &&
+        works_on.include?('konnect') &&
+        ELIGIBLE_PRODUCTS.include?(products.first)
     end
 
     def data_plane_product
