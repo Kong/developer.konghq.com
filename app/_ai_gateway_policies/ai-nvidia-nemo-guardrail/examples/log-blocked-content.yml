@@ -1,0 +1,42 @@
+title: 'Log blocked content'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to log the prompts and responses that NeMo blocks.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to log the prompts and responses that NeMo blocks.
+  The blocked prompt appears under `ai.proxy.nvidia-nemo-guardrail.input_faulty_prompt` and the blocked response under `ai.proxy.nvidia-nemo-guardrail.output_faulty_response` in each log entry.
+  Blocked content can be sensitive or unsafe, so enable `log_blocked_content` only when your logging pipeline is authorized to store it.
+
+weight: 400
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+  - "A stored NeMo guardrail configuration named `content_safety_input_output` that defines an input rail and an output rail."
+
+variables:
+  openai_api_key:
+    description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+    value: $OPENAI_API_KEY
+
+name: log-blocked-content
+display_name: Log blocked content
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: BOTH
+  timeout: 30000
+  log_blocked_content: true
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config_id: content_safety_input_output
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

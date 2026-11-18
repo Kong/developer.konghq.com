@@ -1,0 +1,41 @@
+title: 'Check requests and responses'
+
+description: 'Configure the AI NVIDIA NeMo Guardrail policy to check both requests and responses against NeMo Guardrails.'
+
+extended_description: |
+  Configure the AI NVIDIA NeMo Guardrail policy to check both requests and responses against NeMo Guardrails.
+  Setting `guarding_mode` to `BOTH` runs the input rails on the request and the output rails on the response.
+  Use a guardrail configuration that defines both an input rail and an output rail.
+
+weight: 700
+
+requirements:
+  - "A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach."
+  - An [AI Model](/ai-gateway/entities/ai-model/).
+  - An OpenAI API key.
+  - "A stored NeMo guardrail configuration named `content_safety_input_output` that defines an input rail and an output rail."
+
+variables:
+  openai_api_key:
+    description: 'The OpenAI API key that the NeMo Guardrails microservice uses to evaluate your rails.'
+    value: $OPENAI_API_KEY
+
+name: check-requests-and-responses
+display_name: Check requests and responses
+type: ai-nvidia-nemo-guardrail
+
+config:
+  nemo_endpoint: http://nemo:7331/v1/guardrail/checks
+  model: gpt-5.1
+  guarding_mode: BOTH
+  timeout: 30000
+  auth:
+    api_key: ${openai_api_key}
+    prefix: ""
+  guardrails:
+    config_id: content_safety_input_output
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
