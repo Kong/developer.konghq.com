@@ -176,6 +176,11 @@ rows:
     credential: None
 {% endtable %}
 
+For new deployments, we recommend SASL/OAUTHBEARER.
+With OAuth, the claims in the client's token are available to policies as `context.auth.token.claims`, so you can use them in [policy conditions](/event-gateway/entities/policy/#conditions) and to build dynamic resource lists in [ACL policies](/event-gateway/policies/acl/), for example granting access to topics whose names start with a prefix stored in a claim.
+This keeps access rules in your identity provider instead of in hardcoded credential lists.
+You can use any OIDC-compliant identity provider. If you don't have one, you can use [Kong Identity](/event-gateway/kong-identity-oauth/) as the authorization server.
+
 ### Credential mediation
 
 With virtual clusters, you can control how client credentials are handled between the proxy and backend cluster, 
@@ -223,6 +228,13 @@ The `acl_mode` field controls whether ACL policies are evaluated.
 When set to `enforce_on_gateway` (the default), clients start with no access to any resources on the virtual cluster.
 Operators grant access by adding ACL policies with principal-specific conditions.
 When set to `passthrough`, ACL policies are not evaluated and all authenticated clients have full access to whatever the backend cluster exposes.
+
+Use `passthrough` when the backend cluster already enforces ACLs that you want to keep, for example during a migration.
+In this case, check which principal the backend sees:
+* With `passthrough` or `validate_forward` [credential mediation](#credential-mediation), the backend sees each client's own principal and applies its ACLs per client.
+* With `terminate` credential mediation, the backend sees only the service account configured on the backend cluster. Every client of the virtual cluster gets that service account's permissions.
+
+If you use `terminate` mediation, keep `acl_mode` set to `enforce_on_gateway` and define per-client access with ACL policies.
 
 See [ACL policy](/event-gateway/policies/acl/) for details on defining access rules.
 
