@@ -3,7 +3,11 @@ Kong distributes the AI Prompt Compressor service publicly on Docker Hub, under 
 Run the service and publish port `8080`:
 
 ```bash
-docker run -d --name compress-service -p 8080:8080 kong/ai-compress-service:v0.0.6
+docker run -d --name compress-service \
+  --network kong-ai-quickstart-net \
+  --network-alias host.docker.internal \
+  -p 8080:8080 \
+  kong/ai-compress-service:v0.0.6
 ```
 {:data-test-prereq="block"}
 
