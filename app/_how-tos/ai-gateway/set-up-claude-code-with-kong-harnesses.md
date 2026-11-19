@@ -42,6 +42,11 @@ related_resources:
 
 prereqs:
   inline:
+    - title: Shells on Windows
+      position: before
+      content: |
+        On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
+        Run kong-harnesses and {{ site.claude_code }} in PowerShell.
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
@@ -206,7 +211,8 @@ Check that the install worked:
 kong-harnesses version
 ```
 
-If the shell can't find `kong-harnesses`, open a new terminal, and export the variables from the prerequisites again.
+If the shell can't find `kong-harnesses`, open a new terminal.
+On macOS and Linux, export the variables from the prerequisites again.
 
 ## Create the kong-harnesses profile
 
@@ -231,7 +237,6 @@ kong-harnesses profile create \
 {% navtab "Windows" %}
 
 Run kong-harnesses and {{ site.claude_code }} in PowerShell.
-The other commands in this guide use Bash, so run them in WSL.
 Replace the placeholders with the values of `ISSUER_URL`, `OKTA_CLIENT_ID` and `KONNECT_PROXY_URL` from the prerequisites:
 
 ```powershell
@@ -242,9 +247,8 @@ kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --cli
 {% endnavtabs %}
 
 kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, then saves the profile and installs it on this computer.
-It also sends a test request to the gateway route of each agent CLI that the profile sets up.
-This guide creates only the route that {{ site.claude_code }} uses, so `profile create` can warn that Codex and OpenCode can't use this gateway.
-You can ignore these warnings.
+It also sends a test request without your sign-in to the gateway route of each agent CLI that the profile sets up.
+This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
 
 {:.info}
 > In production, the administrator creates the profile once and gives developers its HTTPS URL or a JSON file.
@@ -275,13 +279,13 @@ kong-harnesses profile activate quickstart --client claude-code
 ```
 
 `profile activate` sends a test request with your sign-in to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
-If a step fails, it names the step and the problem.
-Fix the problem and run the same command again.
+It shows each problem that it finds with a fix.
+Fix the problems and run the same command again.
 
 ## Features that change behind the gateway
 
 Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic.
-The profile sets which of them `profile activate` turns off.
+The profile lists which of these features `profile activate` turns off.
 To see the {{ site.claude_code }} choices in the profile, run:
 
 ```sh
