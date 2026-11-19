@@ -201,9 +201,9 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
-> Codex, omp and pi also work with an `http://` gateway on this computer.
-> OpenCode and Hermes need an `https://` gateway.
-> Their plugins send the sign-in through the proxy of their own environment, so kong-harnesses leaves them out on an `http://` gateway.
+> omp and pi also work with an `http://` gateway on this computer.
+> Codex, OpenCode and Hermes need an `https://` gateway.
+> They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.
 
 {:.warning}
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
@@ -218,6 +218,7 @@ Before you start `claude` in a new shell, set the variables again, or add them t
 Without them, kong-harnesses gives {{ site.claude_code }} no access token.
 
 The following commands add `127.0.0.1` and `localhost` to `NO_PROXY` and keep the hosts that are already in the list.
+Separate the entries in `NO_PROXY` with commas.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
