@@ -32,6 +32,7 @@ Common use cases for conditions include:
 * Skip a global AI Policy for specific paths or hosts without removing it or duplicating it on individual entities.
 * Enforce an AI Policy only for specific HTTP methods.
 * Make one AI Policy's execution depend on a value that a higher-priority AI Policy set.
+* Apply or skip an AI Policy based on a claim in the caller's token, such as their tier, team, or role, when that information already lives in your identity provider.
 
 ## Write a condition
 
@@ -273,6 +274,12 @@ rows:
       When the request is authenticated through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with {{site.identity}} [Principal](/identity/principals/) mapping (`config.principals`), `principal.id` is the Principal's ID and `principal.metadata` is its metadata map.
       In all other cases, both fields are `null`.
 
+  - field: "`access_token.claims`, `access_token.token`"
+    behavior: |
+      When an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) has validated the caller's token, `access_token.claims` holds that token's claims and `access_token.token` holds the raw token.
+      When no token was validated, `access_token.claims` is an empty map and `access_token.token` is `null`.
+
+      `access_token.claims` is a map whose inner keys aren't pre-populated, so check for a claim with `has()` before you read it. See [Token claims](#token-claims).
   - field: "`kong.ctx.shared`"
     behavior: |
       Always a map. Accessing a missing key causes a runtime error.
@@ -281,7 +288,34 @@ rows:
 <!--vale on-->
 
 {:.info}
-> The `consumer.*`, `consumer_group.*`, and `principal.*` fields are populated only after an authentication step has identified the caller.
+> The `consumer.*`, `consumer_group.*`, `principal.*`, and `access_token.*` fields are populated only after an authentication step has identified the caller.
+
+#### Token claims
+
+If you authenticate callers through an identity provider (IdP), their token usually already carries the information a policy decision needs, such as a subject, a tier, a team, or a set of roles.
+Reading those claims with `access_token.claims` lets you act on that information directly, instead of creating an [AI Consumer](/ai-gateway/entities/ai-consumer/) or a [{{site.identity}} Principal](/identity/principals/) for every caller and keeping that in sync with the IdP.
+
+This is useful when you want to:
+
+* Apply a stricter AI Policy to one group of callers, such as contractors, while leaving everyone else on the default.
+* Skip an AI Policy for an internal service account or an administrator role.
+* Size a rate limit per caller or per tier. See [Dynamic configuration with CEL](/ai-gateway/policies/rate-limiting-advanced/#dynamic-configuration-with-cel) on the Rate Limiting Advanced AI Policy.
+
+The following condition runs an AI Policy only for callers whose token has a `tier` claim set to `free`:
+
+```yaml
+condition: 'has(access_token.claims.tier) && access_token.claims.tier == "free"'
+```
+
+Keep the following in mind when you read claims:
+
+* Nested claims stay nested, so a claim such as `realm_access.roles` is read as `access_token.claims.realm_access.roles`. `has()` only checks the last element of a path, so check each level that might be absent, for example `has(access_token.claims.realm_access) && "editor" in access_token.claims.realm_access.roles`.
+* A claim name that contains a hyphen needs the index form, for example `access_token.claims["other-claim"]`.
+* A numeric claim such as `exp` can be an integer or a double.
+* {{site.ai_gateway}} exposes a token's claims because it validated that token. If you turn off signature verification on the AI Auth Strategy, the claims are still exposed, but nothing has checked that the token is genuine.
+
+{:.warning}
+> `access_token.token` is the caller's raw bearer token. Don't write it into a log, a header, or any other field that leaves {{site.ai_gateway}}.
 
 #### Fields to avoid
 
@@ -302,6 +336,7 @@ The following fields return `null` when a value isn't set:
 * `http.queries_list.*`
 * `net.tls.sni`
 * `consumer.*`, `consumer_group.*`, `principal.*`
+* `access_token.token`
 
 Compare these fields directly with `null`:
 
@@ -312,12 +347,13 @@ http.headers.x_tier != null && http.headers.x_tier.startsWith("prem")
 
 A comparison such as `http.headers.x_tier == "premium"` evaluates to `false`, not an error, when the header is absent.
 
-The `kong.ctx.shared` and `principal.metadata` fields are maps whose inner keys aren't pre-populated.
+The `kong.ctx.shared`, `principal.metadata`, and `access_token.claims` fields are maps whose inner keys aren't pre-populated.
 Accessing a missing key in these maps causes a runtime error.
 Before you access a key, use `has()` to check that it exists:
 
 ```sh
 has(kong.ctx.shared.my_flag) && kong.ctx.shared.my_flag == "enabled"
+has(access_token.claims.tier) && access_token.claims.tier == "free"
 ```
 
 {:.warning}

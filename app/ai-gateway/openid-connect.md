@@ -49,6 +49,10 @@ related_resources:
     url: /identity/principals/
   - text: Identify AI Consumers on AI Model traffic with Kong Identity
     url: /ai-gateway/identify-ai-consumers-with-kong-identity/
+  - text: Authorize and rate limit AI traffic by IdP claims
+    url: /ai-gateway/authorize-and-rate-limit-by-idp-claims/
+  - text: AI Policy conditions
+    url: /ai-gateway/conditions/
   - text: OpenID Connect plugin reference
     url: /plugins/openid-connect/
 ---
@@ -81,6 +85,7 @@ See the [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/#server-modes)
 
 Once authenticated, a token can map to an [AI Consumer](/ai-gateway/entities/ai-consumer/), a [Kong Identity principal](/identity/principals/), or both at once.
 See [Identity mapping](/ai-gateway/entities/ai-auth-strategy/#identity-mapping) on the AI Auth Strategy entity for how that mapping works.
+You can also read the validated token's claims directly in a CEL expression, without mapping the caller to anything. See [Use token claims in CEL](#use-token-claims-in-cel).
 
 {% include /ai-gateway/auth-strategy-default-termination.md %}
 
@@ -115,6 +120,20 @@ Use [`access.acls`](/ai-gateway/entities/ai-model/#access-control) on the entity
 This matters even when every caller shares one IdP.
 If several AI Models reference the same OpenID Connect AI Auth Strategy, every caller with a valid token from that IdP passes authentication on all of them.
 `access.acls` is what actually segments access to a specific AI Model, AI Agent, or AI MCP Server.
+
+### Use token claims in CEL
+
+After {{site.ai_gateway}} has validated a caller's token, a CEL expression can read that token's claims through `access_token.claims`.
+This is for teams whose IdP already records what each caller is entitled to, such as their tier, team, or roles. 
+The expression reads those claims directly, so you don't have to create an AI Consumer or a Principal for every caller.
+
+You can use the claims in three places:
+
+* An AI Policy's `condition`, to run or skip that AI Policy per request. See [AI Policy conditions](/ai-gateway/conditions/#token-claims).
+* A [CEL-based ACL](/ai-gateway/entities/ai-model/#cel-based-acls) on an AI Model, AI Agent, or AI MCP Server, to allow or deny the request itself.
+* An AI Policy's `expressions` object, to compute a config field per request, such as a rate limit or its counter key. See [Dynamic configuration with CEL](/ai-gateway/policies/rate-limiting-advanced/#dynamic-configuration-with-cel).
+
+For a complete tutorial, see [Authorize and rate limit AI traffic by IdP claims](/ai-gateway/authorize-and-rate-limit-by-idp-claims/).
 
 ## Discovery cache
 
