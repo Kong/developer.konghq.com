@@ -479,7 +479,7 @@ ai_gateway_policies:
       timeout: 10000
       params:
         api_key: !env MISTRAL_MODERATION_TOKEN
-        model: mistral-moderation-2411
+        model: mistral-moderation-2603
       request:
         url: https://api.mistral.ai/v1/moderations
         headers:
