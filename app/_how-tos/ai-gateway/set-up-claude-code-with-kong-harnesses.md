@@ -201,18 +201,20 @@ The gateway origin is `http://localhost:8000`, the address of the quickstart dat
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
 
-If your computer uses a proxy through `HTTPS_PROXY` or `HTTP_PROXY`, add the gateway host to the proxy exclusion list.
-Over an `http://` origin, the proxy can read your access token, so `profile activate` and `doctor` fail when the proxy would carry the request.
+If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the gateway host to the proxy exclusion list.
+A proxy that carries a request to an `http://` gateway can read your access token.
+In that case, `doctor` fails, and `profile activate` shows the same failed check.
 {{ site.claude_code }} also sends requests for `localhost` through the proxy when the exclusion list doesn't name it.
 The commands keep the hosts that are already in the list.
 Run the rest of this guide in the same shell, because the variables exist only there.
+Before you start `claude` in a new shell, set the variables again, or add them to your shell profile.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
 
 ```sh
-export no_proxy="localhost,127.0.0.1${no_proxy:+,$no_proxy}"
-export NO_PROXY="localhost,127.0.0.1${NO_PROXY:+,$NO_PROXY}"
+list="localhost,127.0.0.1${no_proxy:+,$no_proxy}${NO_PROXY:+,$NO_PROXY}"
+export no_proxy="$list" NO_PROXY="$list"
 ```
 
 {% endnavtab %}
@@ -221,6 +223,8 @@ export NO_PROXY="localhost,127.0.0.1${NO_PROXY:+,$NO_PROXY}"
 ```powershell
 $env:NO_PROXY = 'localhost,127.0.0.1' + $(if ($env:NO_PROXY) { ",$env:NO_PROXY" })
 ```
+
+To keep the setting for new PowerShell windows, add `localhost,127.0.0.1` to the `NO_PROXY` user environment variable.
 
 {% endnavtab %}
 {% endnavtabs %}
