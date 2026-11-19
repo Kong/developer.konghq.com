@@ -1,7 +1,7 @@
 ---
 title: "{{site.ai_gateway}} on-prem UI (Kong AI Manager)"
 
-description: "Use Kong AI Manager, a local file-based UI, to import, create, edit, and export {{site.ai_gateway}} 2.x decK and Kong Operator configuration for on-prem deployments."
+description: "Use Kong AI Manager, a local file-based UI, to import, create, edit, and export {{site.ai_gateway}} 2.x decK and {{site.operator_product_name}} configuration for on-prem deployments."
 
 content_type: reference
 layout: reference
