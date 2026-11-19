@@ -108,22 +108,60 @@ The following creates a new agent. Suggested values are shown in backticks:
 1. Optional: In **Access**, select an **Auth strategy** and enable **Restrict access with an ACL**.
 1. Click **Create**.
 {% when 'mcp_server' %}
-{% case include.presenter.data['type'] %}
-{% when 'passthrough-listener' %}{% assign connection = 'Passthrough' %}
-{% when 'listener' %}{% assign connection = 'Interface' %}
-{% else %}{% assign connection = 'From API' %}
+{% assign mcp_type = include.presenter.data['type'] %}
+{% case mcp_type %}
+{% when 'passthrough-listener', 'upstream-server' %}{% assign configuration = 'An existing MCP server' %}
+{% when 'listener' %}{% assign configuration = 'Other MCP servers on this gateway' %}
+{% else %}{% assign configuration = 'A RESTful API' %}
 {% endcase %}
+{% if mcp_type == 'upstream-server' or mcp_type == 'conversion-only' %}{% assign exposure = 'Source only' %}{% else %}{% assign exposure = 'Callable' %}{% endif %}
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
 
 1. In the {{site.konnect_short_name}} sidebar, click **MCP Servers**.
 1. From the **Gateway** dropdown menu, select your {{site.ai_gateway}}.
 1. From the **New** dropdown menu, select "MCP server".
 1. In the **Display name** field, enter `{{ include.presenter.data['display_name'] }}`.
-1. From the **Connection** options, select **{{ connection }}**.
-{% if connection == 'Interface' %}
-1. In **Configuration**, from the **Sources** dropdown menu, select the sources to expose.
+1. In **Configuration**, select **{{ configuration }}**.
+{% if mcp_type == 'listener' %}
+1. In **Sources**, select the checkbox for each source-only MCP server whose tools this server exposes.
 {% else %}
+1. Click the **{{ exposure }}** tab.
+{% if mcp_type == 'conversion-only' %}
+1. In the **Upstream URL** field, enter `{{ include.presenter.data['config']['url'] | default: 'https://api.example.com' }}`.
+{% elsif include.presenter.data['config']['targets'] %}
+1. In **Upstream**, click the **Multiple targets** tab.
+{% for target in include.presenter.data['config']['targets'] %}
+{% if forloop.index > 2 %}
+1. Click **Add target**.
+{% endif %}
+1. In target row {{ forloop.index }}, in the **Address** field, enter `{{ target['address'] }}`.
+{% if target['weight'] and target['weight'] != 100 %}
+1. In target row {{ forloop.index }}, in the **Weight** field, enter `{{ target['weight'] }}`.
+{% endif %}
+{% if target['failover'] %}
+1. In target row {{ forloop.index }}, enable **Failover only**.
+{% endif %}
+{% endfor %}
+{% assign algorithm = include.presenter.data['config']['balancer']['algorithm'] %}
+{% if algorithm %}
+1. In **Load balancing**, from the **Algorithm** dropdown menu, select "{{ algorithm | replace: '-', ' ' | capitalize }}".
+{% endif %}
+{% else %}
+1. In **Upstream**, click the **Single URL** tab.
+{% if configuration == 'An existing MCP server' %}
 1. In the **Upstream URL** field, enter `{{ include.presenter.data['config']['url'] | default: 'https://mcp.example.com' }}`.
+1. Optional: To connect a third-party MCP server such as GitHub or Slack, click **Browse library** instead.
+1. Optional: In the **Choose an MCP server** dialog, click the MCP server. {{site.konnect_short_name}} fills in the display name and the upstream URL, which you can change afterwards.
+{% else %}
+1. In the **Upstream URL** field, enter `{{ include.presenter.data['config']['url'] | default: 'https://api.example.com' }}`.
+{% endif %}
+{% endif %}
+{% if mcp_type == 'upstream-server' %}
+1. In the **Tools cache TTL (seconds)** field, enter `{{ include.presenter.data['config']['tools_cache_ttl_seconds'] | default: 0 }}`.
+{% if include.presenter.data['config']['server']['preserve_upstream_tool_names'] %}
+1. Select the **Preserve upstream tool names** checkbox.
+{% endif %}
+{% endif %}
 {% endif %}
 1. In **Routing config**, in the **Base path** field, enter `{{ include.presenter.data['config']['route']['paths'][0] | default: '/' }}`.
 1. Optional: In **Tools**, click **Add tool** to define or restrict the tools.

@@ -220,7 +220,7 @@ rows:
 
 ## Server modes
 
-{{site.ai_gateway}} supports five server modes for different integration patterns: exposing REST APIs as discoverable MCP tools, proxying requests to existing MCP servers with added authentication and observability, or aggregating tools from multiple sources into a single endpoint. Select the mode that fits your use case using the [`type`](#schema-aigateway-mcpserver-type) field. Regardless of mode, {{site.ai_gateway}} generates [MCP observability metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) for all traffic through the server.
+{{site.ai_gateway}} supports five server modes for different integration patterns: exposing REST APIs as discoverable MCP tools, proxying requests to existing MCP servers with added authentication and observability, or aggregating tools from multiple sources into a single endpoint. Select the mode that fits your use case using the [`type`](#schema-aigateway-mcpserver-type) field, or, in the {{site.konnect_short_name}} UI, the **Configuration** options and the **Callable** and **Source only** tabs. Regardless of mode, {{site.ai_gateway}} generates [MCP observability metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) for all traffic through the server.
 
 <!-- vale off -->
 {% table %}
@@ -233,6 +233,8 @@ columns:
     key: description
   - title: Mode
     key: mode
+  - title: "{{site.konnect_short_name}} UI option"
+    key: ui
 rows:
   - usecase: |
       You already operate an MCP server and want {{site.ai_gateway}} to act as an authenticated,
@@ -243,6 +245,7 @@ rows:
       Listens for incoming MCP requests and proxies them to an upstream MCP server without
       converting tools.
     mode: "`passthrough-listener`"
+    ui: "**An existing MCP server** > **Callable**"
   - usecase: |
       Make an existing REST API available to MCP clients directly through {{site.ai_gateway}}.
       Common for services that both define and handle their own tools.
@@ -253,6 +256,7 @@ rows:
       Supports session identifiers set by authentication services for cookie-based
       authentication.
     mode: "`conversion-listener`"
+    ui: "**A RESTful API** > **Callable**"
   - usecase: |
       Define reusable tool specifications without serving them yourself. Suitable for teams that
       maintain a shared library of tool definitions for one or more `listener` MCP Servers.
@@ -266,6 +270,7 @@ rows:
       more AI MCP Servers configured with `listener` mode. Set [`config.route`](#schema-aigateway-mcpserver-config-route)
       and use relative tool paths. See [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers) for more information.
     mode: "`conversion-only`"
+    ui: "**A RESTful API** > **Source only**"
   - usecase: |
       A single MCP endpoint that aggregates tools from multiple `conversion-only` or
       `upstream-server` MCP Servers. Typical in multi-service or multi-team environments that
@@ -279,6 +284,7 @@ rows:
       A `conversion-only` source must set `config.route` and use relative tool paths. See
       [Tool paths in conversion-only servers](#tool-paths-in-conversion-only-servers).
     mode: "`listener`"
+    ui: "**Other MCP servers on this gateway**"
   - usecase: |
       Expose an existing upstream MCP server's tools alongside others through a single `listener`
       endpoint. The listener aggregates every AI MCP Server listed in its `sources` field, so
@@ -292,8 +298,12 @@ rows:
       fetch tool lists from the upstream. This mode must be used together with one or more AI MCP
       Servers configured with `listener` mode.
     mode: "`upstream-server`"
+    ui: "**An existing MCP server** > **Source only**"
 {% endtable %}
 <!-- vale on -->
+
+When you select **An existing MCP server** in the {{site.konnect_short_name}} UI, you can click **Browse library** next to the **Upstream URL** field to connect a third-party MCP server, such as GitHub or Slack.
+{{site.konnect_short_name}} fills in the display name and the upstream URL, and you can change both afterwards.
 
 {:.info}
 > `allowed_versions` and `cache` only apply to `listener` and `conversion-listener` modes. `passthrough-listener` keeps the base server configuration and doesn't accept either field; `upstream-server` instead accepts `upstream_protocol_version`. See [MCP versions](#mcp-versions).
@@ -758,6 +768,7 @@ type: mcp_server
 formats:
   - konnect-api
   - kongctl
+  - ui
 data:
   display_name: KongAir Flight Search MCP Server
   name: kongair-flight-search-mcp
