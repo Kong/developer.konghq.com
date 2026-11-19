@@ -94,8 +94,8 @@ Before enabling back-channel logout, keep the following in mind:
 ### Set up back-channel logout
 
 1. In your IdP, find the application you created for the Dev Portal and set its back-channel logout URL to one of the following:
-   * If you're using a custom domain: `https://www.example.com/api/v3/oauth/backchannel-logout`
-   * If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/api/v3/oauth/backchannel-logout`
+   * If you're using a custom domain: `https://www.example.com/api/v3/developer/backchannel-logout`
+   * If you aren't using a custom domain: `https://abc123456789.us.kongportals.com/api/v3/developer/backchannel-logout`
 
    If your IdP has a setting that includes the session ID in the logout request (often called "session required"), turn it on. This lets the Dev Portal only end the session that signed out, instead of every session for that developer.
 

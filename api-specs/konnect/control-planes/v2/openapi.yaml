@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes
-  version: 2.1.4
+  version: 2.1.5
   description: The API for Kong Konnect Control Planes.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@dfe8c733058be7a51a83f7d1da520cc59ee4022d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dfe8c733058be7a51a83f7d1da520cc59ee4022d'
+  x-oas-source: kong/platform-api@68879cb80743cd8f400029c8ef34261211d0f06e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/68879cb80743cd8f400029c8ef34261211d0f06e'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -28,8 +28,8 @@ paths:
       summary: List Control Planes
       description: Returns an array of control plane objects containing information about the Konnect Control Planes.
       parameters:
-        - $ref: '#/components/parameters/PageSize'
-        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ControlPlanePageSize'
+        - $ref: '#/components/parameters/ControlPlanePageNumber'
         - $ref: '#/components/parameters/ControlPlaneFilter'
         - $ref: '#/components/parameters/FilterByLabels'
         - $ref: '#/components/parameters/ControlPlaneSort'
@@ -511,6 +511,27 @@ components:
       schema:
         $ref: '#/components/schemas/ControlPlaneFilterParameters'
       style: deepObject
+    ControlPlanePageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+        minimum: 1
+    ControlPlanePageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+        maximum: 100
+        minimum: 1
     ControlPlaneSort:
       name: sort
       description: |
@@ -519,7 +540,7 @@ components:
       required: false
       in: query
       schema:
-        $ref: '#/components/schemas/SortQuery'
+        $ref: '#/components/schemas/ControlPlaneSortQuery'
     FilterByLabels:
       name: labels
       description: Filter control planes in the response by associated labels.
@@ -553,15 +574,6 @@ components:
       schema:
         type: string
         example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
-    PageNumber:
-      name: 'page[number]'
-      description: Determines which page of the entities to retrieve.
-      required: false
-      in: query
-      allowEmptyValue: true
-      schema:
-        type: integer
-        example: 1
     PageSize:
       name: 'page[size]'
       description: The maximum number of items to include per page. The last page of a collection may include fewer items.
@@ -588,6 +600,14 @@ components:
         maximum: 1000
         minimum: 1
   schemas:
+    ControlPlaneSortQuery:
+      type: string
+      example: created_at desc
+      enum:
+        - created_at
+        - created_at asc
+        - created_at desc
+      title: SortQuery
     GroupMembership:
       type: object
       properties:
@@ -1110,15 +1130,6 @@ components:
       title: BooleanFieldFilter
       x-examples:
         example-1: true
-    SortQuery:
-      description: |
-        The `asc` suffix is optional as the default sort order is ascending.
-        The `desc` suffix is used to specify a descending order.
-        Multiple sort attributes may be provided via a comma separated list.
-        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
-      type: string
-      example: created_at desc
-      title: SortQuery
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object

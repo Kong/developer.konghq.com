@@ -1114,3 +1114,9 @@ unmarshall
 malforming
 Dify
 tokenizer
+libjq
+multibyte
+Bleichenbacher
+libexpat
+desynchronization
+desynchronize

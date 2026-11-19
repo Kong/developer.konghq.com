@@ -18,7 +18,6 @@ tags:
 min_version:
   ai-gateway: '2.0'
 
-tech_preview: true
 toc_depth: 2
 
 description: "Reference for OpenTelemetry metrics emitted by {{site.ai_gateway}} for generative AI, MCP, and A2A traffic."

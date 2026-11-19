@@ -15,6 +15,8 @@ Fix spelling, grammar, run-on sentences, and unclear or awkward phrasing — a r
 
 2. **Backtick every parameter, config key, identifier, and code-shaped literal.** `verify_signature`, `completion_tokens`, a header name, or a literal string the code actually produces (`"userdata: NULL"`) all need backticks if they don't have them. Check every such token in an entry — it's easy to backtick the obvious one and miss a second.
 
+   Also catch identifiers the source wrote as ordinary prose, in a hyphenated or spaced form ("log-phase", "ws-close", "header filter", "init worker"). Replace them with the exact identifier in backticks (`log`, `ws_close`, `header_filter`, `init_worker`) and leave any plain-English noun outside the backticks ("a plugin running in the `log` phase"). If you aren't sure a term is an identifier, flag it for the reviewer instead of guessing.
+
 3. **Plugin name casing depends on position.** The bolded lead-in label uses the schema name: lowercase, hyphenated (`**rate-limiting**:`). Everywhere else in the entry's prose, use the proper display name: title case, spaced (`the Rate Limiting plugin...`). Watch for the slug leaking into prose, or the proper name leaking into the lead-in.
 
 4. **Datakit is the one proper name to double check.** Capital D, rest lowercase, not "DataKit". Only in prose; the lead-in stays `**datakit**:`.
@@ -43,18 +45,10 @@ Ask whether to save the review to a file or print it inline, unless the user alr
 - Save somewhere else only if the user names a specific directory for this run.
 - Reply with just the file path and a one-line summary (entries changed, duplicates flagged) — don't also paste the full review inline.
 
-Either way, include only entries you changed, each as one bullet:
+Read `references/output-template.md` and format the review with it, whether it's saved or printed inline.
 
-````markdown
-- Original entry: _<original text>_
-
-  Fixed entry:
-  ```
-  <corrected text>
-  ```
-  Changed: <what changed and why>
-````
+Either way, include only entries you changed, each under its own heading as the template shows. List them in the same order they appear in the source changelog, keeping the source's section headings (for example, "Kong Enterprise" before "Kong AI Gateway", and "Features" before "Fixes") so a reviewer can match the review against the original file. Don't regroup, sort, or reverse them. Before finalizing, check the order against the source.
 
 Skip untouched entries entirely — don't list them as "no change." If nothing needed a fix, say so in the file instead of listing entries.
 
-Suspected duplicates (rule 6) go in their own `## Suspected duplicates` section after the edits, each as a bullet quoting both entries with your reasoning. Flagged security entries (rule 9) go in their own `## Flagged for security review` section, each as a bullet quoting the entry with what looks over-specific. Omit either section if there's nothing to put in it.
+Suspected duplicates (rule 6) go in their own `## Suspected duplicates` section after the edits, each under its own heading quoting both entries with your reasoning. Flagged security entries (rule 9) go in their own `## Flagged for security review` section, each under its own heading quoting the entry with what looks over-specific. Omit either section if there's nothing to put in it.

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.3.16
+  version: 2.3.23
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6e368f523b283b9f59e9a570ae8f7d871e669946
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6e368f523b283b9f59e9a570ae8f7d871e669946'
+  x-oas-source: kong/platform-api@46731e028b01b93b253970feb5a52c60c2a6c9a8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/46731e028b01b93b253970feb5a52c60c2a6c9a8'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2708,45 +2708,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
       tags:
         - AI Gateway Datastores
-  /ai-cost-management/tag-capture:
-    get:
-      operationId: get-cost-management-tags
-      summary: Get cost management tags
-      description: |
-        Returns the cost management tags configuration of the organization in this region.
-        If no configuration has been set, the defaults are returned.
-      responses:
-        '200':
-          $ref: '#/components/responses/CostManagementTagsResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Cost Management Tags
-    put:
-      operationId: update-cost-management-tags
-      summary: Update cost management tags
-      description: |
-        Replaces the cost management tags configuration of the organization in this region.
-        Header names and prefixes are compared case-insensitively.
-      requestBody:
-        $ref: '#/components/requestBodies/UpdateCostManagementTags'
-      responses:
-        '200':
-          $ref: '#/components/responses/CostManagementTagsResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-      tags:
-        - AI Gateway Cost Management Tags
 components:
   parameters:
     AIGatewayAgentIdOrName:
@@ -3089,6 +3050,23 @@ components:
       properties:
         name:
           $ref: '#/components/schemas/AIGatewayDatastoreName'
+      additionalProperties: false
+      required:
+        - name
+    AIGatewayModelDatastoreRef:
+      description: 'A reference to an existing datastore, and the model feature that uses it.'
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/AIGatewayDatastoreName'
+        purpose:
+          description: |
+            The model feature that uses the datastore. `semantic-balancer` supplies the connection of the
+            model vector store.
+          type: string
+          default: semantic-balancer
+          enum:
+            - semantic-balancer
       additionalProperties: false
       required:
         - name
@@ -4174,12 +4152,13 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          description: Names of the Datastores this model references.
+          description: 'The Datastores this model references, with the feature that uses each one.'
           type: array
           items:
-            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+            $ref: '#/components/schemas/AIGatewayModelDatastoreRef'
           example:
             - name: kong-managed
+              purpose: semantic-balancer
         type:
           type: string
           enum:
@@ -4265,12 +4244,13 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          description: Names of the Datastores this model references.
+          description: 'The Datastores this model references, with the feature that uses each one.'
           type: array
           items:
-            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+            $ref: '#/components/schemas/AIGatewayModelDatastoreRef'
           example:
             - name: kong-managed
+              purpose: semantic-balancer
         type:
           type: string
           enum:
@@ -10604,7 +10584,7 @@ components:
         type:
           description: |-
             The kind of entity holding the reference. A policy holds one in its `datastores` array. A
-            model holds one when its balancer is `semantic`. An MCP server, a model provider, or an
+            model holds one for each Datastore it references. An MCP server, a model provider, or an
             auth strategy holds one when it stores credentials in the Token Vault.
 
             **`auth_strategy` requires a minimum runtime version of `2.3`**.
@@ -11975,7 +11955,6 @@ components:
               x-min-runtime-version: '2.1'
           required:
             - route
-            - url
           title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
@@ -13196,8 +13175,6 @@ components:
           items:
             $ref: '#/components/schemas/AIGatewayCACertificateReference'
       additionalProperties: false
-      required:
-        - url
     AIGatewayMCPServerWithUpstreamConfig:
       description: 'Routing, logging, and server configuration for the MCP Server.'
       type: object
@@ -13321,7 +13298,6 @@ components:
       additionalProperties: false
       required:
         - route
-        - url
     AIGatewayMCPServerRouteWithMatcher:
       description: |
         Route configuration for an MCP Server that terminates its own listener. At least one
@@ -13423,7 +13399,6 @@ components:
       additionalProperties: false
       required:
         - route
-        - url
         - tools_cache_ttl_seconds
     AIGatewayMCPServerServerConfigBase:
       description: Server-side configuration for the MCP Server.
@@ -13891,7 +13866,6 @@ components:
               x-min-runtime-version: '2.1'
           required:
             - route
-            - url
           title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
@@ -21107,114 +21081,6 @@ components:
         - created_at
         - updated_at
       title: AIGatewayAuthStrategyOpenIDConnectConfig
-    UpdateCostManagementTags:
-      type: object
-      properties:
-        headers:
-          description: |
-            Request headers captured as cost tags. Each header is mapped to one tag key.
-            Together with `prefixes`, at most 32 entries are allowed.
-          type: array
-          items:
-            $ref: '#/components/schemas/CostTagHeader'
-          maxItems: 32
-        prefixes:
-          description: |
-            Request header prefixes. A request header matches a prefix when its name is the prefix
-            followed by `-` and a remainder, compared case-insensitively. For example, the prefix
-            `my-co` matches `my-co-region` but not `my-company`. The remainder becomes the tag key,
-            so `my-co-region` is captured as the tag `region`. Headers whose remainder is not a
-            valid tag key (see the `tag_key` pattern, at most 128 characters) produce no tag and
-            are skipped; capture continues for the remaining headers.
-            Headers starting with `ai-cost-` are always captured, in addition to any configured here.
-            Together with `headers`, at most 32 entries are allowed.
-          type: array
-          items:
-            $ref: '#/components/schemas/CostTagPrefix'
-          maxItems: 32
-        labels:
-          $ref: '#/components/schemas/PublicLabels'
-        managed_by:
-          $ref: '#/components/schemas/ManagedBy'
-      required:
-        - headers
-        - prefixes
-    CostManagementTags:
-      type: object
-      properties:
-        headers:
-          description: |
-            Request headers captured as cost tags. Each header is mapped to one tag key.
-            Together with `prefixes`, at most 32 entries are allowed.
-          type: array
-          items:
-            $ref: '#/components/schemas/CostTagHeader'
-          maxItems: 32
-        prefixes:
-          description: |
-            Request header prefixes. A request header matches a prefix when its name is the prefix
-            followed by `-` and a remainder, compared case-insensitively. For example, the prefix
-            `my-co` matches `my-co-region` but not `my-company`. The remainder becomes the tag key,
-            so `my-co-region` is captured as the tag `region`. Headers whose remainder is not a
-            valid tag key (see the `tag_key` pattern, at most 128 characters) produce no tag and
-            are skipped; capture continues for the remaining headers.
-            Headers starting with `ai-cost-` are always captured, in addition to any configured here.
-            Together with `headers`, at most 32 entries are allowed.
-          type: array
-          items:
-            $ref: '#/components/schemas/CostTagPrefix'
-          maxItems: 32
-        labels:
-          $ref: '#/components/schemas/PublicLabels'
-        managed_by:
-          $ref: '#/components/schemas/ManagedBy'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      required:
-        - headers
-        - prefixes
-    CostTagHeader:
-      description: Maps a request header to a cost tag key.
-      type: object
-      properties:
-        name:
-          description: |
-            Name of the request header. Cannot be a credential header, such as `authorization`,
-            `x-api-key` or `cookie`. Names are compared case-insensitively.
-          type: string
-          example: my-tenant-id
-          minLength: 1
-          pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$'
-        tag_key:
-          description: Key of the cost tag the header value is stored under.
-          type: string
-          example: tenant
-          maxLength: 128
-          minLength: 1
-          pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
-      required:
-        - name
-        - tag_key
-      title: CostTagHeader
-    CostTagPrefix:
-      description: A request header prefix whose matching headers are captured as cost tags.
-      type: object
-      properties:
-        name:
-          description: |
-            Header prefix with at least two dash-separated segments. Cannot be a credential
-            header name, nor a prefix of one, such as `x-goog` for `x-goog-api-key`. Credential
-            headers are never captured, even when they match a configured prefix. Prefixes are
-            compared case-insensitively.
-          type: string
-          example: my-co
-          minLength: 1
-          pattern: '^[A-Za-z0-9]+(-[A-Za-z0-9]+)+$'
-      required:
-        - name
-      title: CostTagPrefix
     PublicLabels:
       description: |
         Public labels store information about an entity that can be used for filtering a list of objects.
@@ -21961,33 +21827,6 @@ components:
             config_hash: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
             created_at: '2024-01-01T00:00:00.000Z'
             updated_at: '2024-01-01T00:00:00.000Z'
-    CostManagementTagsRequest:
-      summary: Capture two headers and one prefix
-      value:
-        headers:
-          - name: my-tenant-id
-            tag_key: tenant
-          - name: x-acme-tier
-            tag_key: pricing-tier
-        prefixes:
-          - name: my-co
-    CostManagementTagsResponseExample:
-      summary: Configured cost management tags
-      value:
-        headers:
-          - name: my-tenant-id
-            tag_key: tenant
-          - name: x-acme-tier
-            tag_key: pricing-tier
-        prefixes:
-          - name: my-co
-        created_at: '2026-10-01T10:00:00.000Z'
-        updated_at: '2026-10-15T09:30:00.000Z'
-    CostManagementTagsDefaults:
-      summary: Defaults when nothing has been configured
-      value:
-        headers: []
-        prefixes: []
     UnauthorizedExample:
       value:
         status: 401
@@ -22006,17 +21845,6 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
-  requestBodies:
-    UpdateCostManagementTags:
-      description: The cost management tags configuration that replaces the existing one.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateCostManagementTags'
-          examples:
-            CostManagementTags:
-              $ref: '#/components/examples/CostManagementTagsRequest'
   responses:
     ListAIGatewaysResponse:
       description: A paginated list of AI Gateways.
@@ -22792,17 +22620,6 @@ components:
               - agents
               - models
               - mcp_servers
-    CostManagementTagsResponse:
-      description: The cost management tags configuration.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CostManagementTags'
-          examples:
-            CostManagementTags:
-              $ref: '#/components/examples/CostManagementTagsResponseExample'
-            Defaults:
-              $ref: '#/components/examples/CostManagementTagsDefaults'
     Unauthorized:
       description: Unauthorized
       content:
@@ -22892,7 +22709,5 @@ tags:
     description: MCP Servers that expose tools for AI Gateway integrations.
   - name: AI Gateway Model Providers
     description: Model providers that define the backend AI service connections for the AI Gateway.
-  - name: AI Gateway Cost Management Tags
-    description: Configure which request headers are captured as cost tags on AI usage events. The configuration applies to the organization in the region the request is sent to.
 security:
   - konnectAccessToken: []
