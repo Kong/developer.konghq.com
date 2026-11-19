@@ -20,7 +20,7 @@ tags:
   - cost-management
 
 min_version:
-  ai-gateway: '2.4'
+  ai-gateway: '2.5'
 
 description: "Conversation capture records the prompts and responses that pass through {{site.ai_gateway}}, so you can find out why costs rise, tool calls fail, or agents misbehave."
 
@@ -40,8 +40,10 @@ related_resources:
 ---
 
 <!-- TODO confirm before publishing:
-- Payload capture ships in 2.4 (affects `min_version` and `published: false`).
-- Placement: AI Gateway feature or general Konnect observability feature (affects folder, products, breadcrumbs).
+- Release: confirm 2.5 versus 2.4. Jira AG-2227 is tagged aigw-2.4.0, but the gateway team said payload export won't make 2.4 (affects `min_version` and `published: false`).
+- `sampling_rate` is intentionally not documented: the ERD says it stays hidden from users for now (default 0.01). Add it if the spec exposes it publicly.
+- `max_payload_size` (ERD default 1,000,000 bytes, configurable) isn't documented until the spec confirms the field and its upper bound.
+- Whether payload capture gets its own toggle or a per-exporter `export_ai_payloads` switch (PRD AG-2227) is still open.
 - Agent debugging, prompt review, and audit use cases (not in the PRD).
 - Settings endpoints are public (marked internal and unstable in the spec).
 -->
@@ -136,10 +138,7 @@ columns:
     key: controls
 rows:
   - setting: "`observability.traces`"
-    controls: |
-      Whether traces are recorded.
-      Use `sampling_rate`, a value from `0` to `1`, to trace only a fraction of requests.
-      The sampling rate is kept when you disable tracing.
+    controls: "Whether traces are recorded."
   - setting: "`observability.access_logs`"
     controls: "Whether access logs are recorded."
   - setting: "`observability.payload_capture`"
@@ -151,8 +150,6 @@ rows:
 Trace export and access log export are independent.
 For example, you can export access logs without traces, or the reverse.
 
-<!-- TODO confirm: default `sampling_rate` (spec says 1, ERD says 0.01). -->
-
 ### Payload capture
 
 Payload capture controls whether prompts and responses are included in what's exported.
@@ -160,6 +157,9 @@ It's off by default, because payloads can be large and can contain sensitive dat
 
 Payload capture adds to the payload logging you configure on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
 {{site.ai_gateway}} captures a payload when the entity that serves the request logs payloads, or when payload capture is enabled and the request matches the sampling rule.
+
+Unlike payload capture in Debugger sessions, conversation capture doesn't require a Data Processing Addendum or an organization-level entitlement.
+Because payloads can contain sensitive data, review your own data handling requirements before you turn it on.
 
 ### Sampling payloads
 
@@ -180,7 +180,7 @@ For example, the rule `consumer.username == 'support-bot'` captures conversation
 
 You can't configure these rules, and custom sanitization rules aren't supported.
 
-<!-- TODO confirm: whether PII is also scrubbed with local and data plane regex rules. The ERD lists only the fixed Luhn and auth header rules. -->
+<!-- TODO confirm: the PM brief mentions "local and data plane regex" scrubbing, but the ERD lists only the fixed Luhn and auth header rules and puts custom rules out of scope. Don't mention regex until the PM confirms. -->
 
 <!-- TODO confirm: whether API key headers used by coding agents are in the scrubbed header list. -->
 
