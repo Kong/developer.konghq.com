@@ -1,18 +1,14 @@
 ## Data plane provisioning
 
-A data plane node carries the traffic. Provision it the same way the guide does, but take every value from the MCP tool responses instead of the page text.
+The MCP provisions the control plane side only. Starting a data plane is a
+local Docker action the MCP cannot perform. **Do not run the quickstart script
+to do this** — it creates another control plane rather than attaching a data
+plane to the existing one.
 
-### Region
-
-The MCP server is reachable at a global endpoint, but the resources you create live in one {{site.konnect_short_name}} region. Read the region of the control plane from the tool response before you create anything, and keep every later call in that region.
-
-### Key pair
-
-Most guides create a data plane key pair locally with `openssl` and then register the public certificate. Keep the private key local. Send only the public certificate to {{site.konnect_short_name}}, or generate the key pair through the MCP tool if the tool offers it. Never put the private key in a request body.
-
-### Pin the certificate
-
-The data plane authenticates to the control plane with a pinned certificate. The certificate the node presents must be the one registered for the control plane. Use the certificate paths the tool response reports, not the placeholder paths on the page.
+- **Determine the region** from the Konnect API/MCP host being used (a `us.` host means `us`). **Not** `inferred_region` from `get_users_me` — that reflects the user's geography, not the gateway's.
+- **Generate a keypair** locally:
+  `openssl req -new -x509 -nodes -newkey rsa:2048 -days 3650 -subj "/CN=<gateway-name>-dp/C=US" -keyout key.crt -out tls.crt`
+- **Pin the certificate and start the data plane** using the steps below. These are product-specific — do not substitute commands from another product's guide.
 
 {% if agent_instructions_product == 'gateway' %}{% include agent-instructions/data-plane-setup/gateway.md %}
 {% elsif agent_instructions_product == 'ai-gateway' %}{% include agent-instructions/data-plane-setup/ai-gateway.md %}

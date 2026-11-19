@@ -1,9 +1,11 @@
-### Event Gateway data plane
+### {{site.event_gateway}} data plane
 
-Create or reuse an {{site.event_gateway}} and register a data plane certificate for it. Read the event gateway ID and the certificate ID from the tool response.
+- Search the MCP for "event gateway data plane certificate" and call its **create**
+  tool, passing the JSON-escaped contents of `tls.crt`.
+- Start the data plane, joining the same Docker network as the backing Kafka
+  cluster so the backend bootstrap hostnames resolve:
+  `docker run --name <gateway-name>-dp -d --network <kafka-network> -p <listener-ports> -e KONG_KONNECT_REGION=<region> -e KONG_KONNECT_DOMAIN=konghq.com -e KONG_KONNECT_GATEWAY_CLUSTER_ID=<gateway-id> -e KONG_KONNECT_CLIENT_CERT="$(cat tls.crt)" -e KONG_KONNECT_CLIENT_KEY="$(cat key.crt)" kong/kong-event-gateway:latest`
 
-Start the node with the `kong/kong-event-gateway` image. Set `KONG_KONNECT_GATEWAY_CLUSTER_ID` to the event gateway ID, and pass the region, domain, and client certificate values the tool response reports.
+  `<listener-ports>` must match the ports this guide's listeners declare.
+- Search the MCP for "event gateway nodes" and confirm the new node appears.
 
-### Confirm the node connected
-
-List the event gateway nodes for the gateway and confirm the new node appears with a connected status. Only then continue with the guide.

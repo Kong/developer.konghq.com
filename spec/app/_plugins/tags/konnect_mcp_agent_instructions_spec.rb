@@ -141,7 +141,7 @@ RSpec.describe 'konnect_mcp_agent_instructions tag' do
     let(:page) { super().merge('products' => %w[identity]) }
 
     it 'renders the shared introduction and omits the data plane provisioning section' do
-      expect(wrapper).to have_text('Instructions for AI agents')
+      expect(wrapper).to have_text('Instructions for Agents')
       expect(wrapper).to have_no_text('Data plane provisioning')
     end
   end
