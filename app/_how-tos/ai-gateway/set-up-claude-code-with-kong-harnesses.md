@@ -195,7 +195,7 @@ A kong-harnesses profile names the gateway, the identity provider that developer
 It holds no secrets.
 Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
 The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
-The guide uses `127.0.0.1`, because `localhost` depends on the system resolver.
+Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the system resolver.
 
 {:.info}
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
@@ -203,15 +203,17 @@ The guide uses `127.0.0.1`, because `localhost` depends on the system resolver.
 > The issuer and its endpoints always need `https://`.
 
 {:.warning}
-> Any program on this computer can listen on the gateway port.
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
+> Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the gateway host to `NO_PROXY` before you continue.
+If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
 A proxy that carries a request to an `http://` gateway can read your access token.
-So when a proxy applies to the gateway host, `profile activate` and `setup` configure no client and stop with an error that names `NO_PROXY`, and `doctor` fails.
-The commands keep the hosts that are already in the list.
+When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client, and they stop with an error that names `NO_PROXY`.
+`doctor` also fails.
 Run the kong-harnesses and `claude` commands of this guide in the same shell, because the variables exist only there.
 {{ site.claude_code }} reads the proxy variables each time it starts, so set them again before you start `claude` in a new shell, or add them to your shell profile.
+
+The following commands add `127.0.0.1` and `localhost` to `NO_PROXY` and keep the hosts that are already in the list.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
