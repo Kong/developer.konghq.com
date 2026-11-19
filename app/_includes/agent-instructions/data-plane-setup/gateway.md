@@ -1,4 +1,4 @@
-### {{site.base_gateway}} data plane
+#### {{site.base_gateway}} data plane
 
 - Search the MCP for "data plane certificate" scoped to {{site.base_gateway}} and call its
   **create** tool with the JSON-escaped contents of `tls.crt`.

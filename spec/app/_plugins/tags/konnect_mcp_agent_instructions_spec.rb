@@ -39,11 +39,11 @@ RSpec.describe 'konnect_mcp_agent_instructions tag' do
 
   context 'a Konnect gateway page' do
     it 'renders the hidden wrapper with the crawler exclusion class' do
-      expect(html).to have_css('.agent-instructions[hidden]', visible: :all)
+      expect(html).to have_css('.agent-instructions.hidden', visible: :all)
     end
 
-    it 'gives the wrapper exactly the crawler exclusion class' do
-      expect(wrapper[:class]).to eq('agent-instructions')
+    it 'gives the wrapper exactly the crawler exclusion class and hidden' do
+      expect(wrapper[:class]).to eq('agent-instructions hidden')
     end
 
     it 'gives every heading the no_toc class' do

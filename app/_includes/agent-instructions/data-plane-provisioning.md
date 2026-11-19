@@ -1,4 +1,4 @@
-## Data plane provisioning
+### Data plane provisioning - when the {{site.konnect_product_name}} MCP is connected
 
 The MCP provisions the control plane side only. Starting a data plane is a
 local Docker action the MCP cannot perform. **Do not run the quickstart script

@@ -1,4 +1,4 @@
-### {{site.ai_gateway}} data plane
+#### {{site.ai_gateway}} data plane
 
 - Search the MCP for "ai gateway data plane certificate" and call its **create**
   tool with the JSON-escaped contents of `tls.crt`.

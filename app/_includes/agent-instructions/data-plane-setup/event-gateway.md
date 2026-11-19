@@ -1,4 +1,4 @@
-### {{site.event_gateway}} data plane
+#### {{site.event_gateway}} data plane
 
 - Search the MCP for "event gateway data plane certificate" and call its **create**
   tool, passing the JSON-escaped contents of `tls.crt`.
