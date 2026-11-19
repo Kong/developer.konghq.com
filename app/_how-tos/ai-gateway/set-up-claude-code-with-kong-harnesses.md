@@ -53,9 +53,9 @@ prereqs:
     - title: A trusted certificate for the gateway
       position: before
       content: |
-        kong-harnesses connects only to a gateway that has an HTTPS certificate that your computer trusts, because the connection carries your sign-in.
+        kong-harnesses sends your access token only to an HTTPS gateway whose certificate your computer trusts.
         The quickstart data plane serves HTTPS on port 8443.
-        Give it a certificate for `localhost` from [mkcert](https://github.com/FiloSottile/mkcert), a tool that creates a local certificate authority (CA) and adds it to the system trust store.
+        Create a certificate for `localhost` with [mkcert](https://github.com/FiloSottile/mkcert), a tool that adds a local certificate authority (CA) to the system trust store.
 
         1. Install mkcert with the steps in the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
            On Windows, install it and run the next two steps in PowerShell, because kong-harnesses trusts the Windows trust store, not the trust store in WSL.
@@ -65,15 +65,16 @@ prereqs:
            mkcert -install
            ```
 
-           mkcert asks for your password or for administrator approval.
+           mkcert asks for your password, or on Windows asks you to confirm the new CA.
         1. Create a certificate and key for `localhost`:
 
            ```sh
            mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 ::1
            ```
 
-        1. In the folder with the two files, export them as base64 text for the quickstart.
-           On Windows, run this step in WSL, where the folder `C:\Users\YOUR_USER` is `/mnt/c/Users/YOUR_USER`.
+        1. In the directory with the two files, export them as base64 text for the quickstart.
+           On Windows, run `wsl` in PowerShell in that directory, and run this step in the WSL shell that opens.
+           Run the quickstart in the same shell.
 
            ```sh
            export KONG_SSL_CERT="$(base64 < localhost.pem | tr -d '\n')"
@@ -139,10 +140,28 @@ cleanup:
     - title: Clean up the local certificate
       content: |
         Delete `localhost.pem` and `localhost-key.pem`.
-        If you installed the mkcert CA only for this guide, remove it from the system trust store:
+        The quickstart keeps copies of the certificate and key.
+        Delete them, in WSL on Windows:
 
         ```sh
+        rm -rf ~/.kong/kong-ai-quickstart/environment ~/.kong/kong-ai-quickstart/kong-ai-quickstart.env
+        ```
+
+        If you installed the mkcert CA only for this guide, remove it from the system trust store and delete its files.
+        On macOS and Linux:
+
+        ```sh
+        ca_root="$(mkcert -CAROOT)"
         mkcert -uninstall
+        rm -r "$ca_root"
+        ```
+
+        On Windows, in PowerShell:
+
+        ```powershell
+        $caRoot = mkcert -CAROOT
+        mkcert -uninstall
+        Remove-Item -Recurse $caRoot
         ```
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -262,7 +281,7 @@ On macOS and Linux, export the variables from the prerequisites again.
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
 It holds no secrets.
 Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-The gateway origin is the HTTPS port of the quickstart data plane, `https://localhost:8443`:
+The gateway origin is `https://localhost:8443`, the HTTPS address of the quickstart data plane:
 
 {% navtabs "profile-create" %}
 {% navtab "macOS and Linux" %}
