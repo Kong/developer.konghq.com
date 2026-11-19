@@ -41,51 +41,12 @@ related_resources:
     url: /kong-harnesses/setup/
 
 prereqs:
-  konnect:
-    - name: KONG_SSL_CERT
-    - name: KONG_SSL_CERT_KEY
   inline:
     - title: Shells on Windows
       position: before
       content: |
         On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
-    - title: A trusted certificate for the gateway
-      position: before
-      content: |
-        kong-harnesses sends your access token only to an HTTPS gateway whose certificate your computer trusts.
-        The quickstart data plane serves HTTPS on port 8443.
-        Create a certificate for `localhost` with [mkcert](https://github.com/FiloSottile/mkcert), a tool that adds a local certificate authority (CA) to the system trust store.
-
-        1. Install mkcert with the steps in the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
-           On Windows, install mkcert and run the next two steps in PowerShell.
-           kong-harnesses on Windows checks the certificate against the Windows trust store, not the one in WSL.
-        1. Add the mkcert CA to the system trust store:
-
-           ```sh
-           mkcert -install
-           ```
-
-           On macOS and Linux, mkcert can ask for your password.
-           On Windows, it asks you to confirm the new CA.
-        1. Create a directory, and create a certificate and key for `localhost` in it:
-
-           ```sh
-           mkdir kong-quickstart-cert
-           cd kong-quickstart-cert
-           mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 '::1'
-           ```
-
-        1. In the `kong-quickstart-cert` directory, export the two files as base64 text for the quickstart.
-           Run the quickstart in the same shell, because the variables exist only in that shell.
-           On Windows, run `wsl` in PowerShell in that directory, and run this step and the quickstart in the WSL shell that opens.
-
-           ```sh
-           export KONG_SSL_CERT="$(base64 < localhost.pem | tr -d '\n')"
-           export KONG_SSL_CERT_KEY="$(base64 < localhost-key.pem | tr -d '\n')"
-           ```
-
-        The quickstart passes these variables to the data plane, which then serves your certificate at `https://localhost:8443`.
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
@@ -111,6 +72,11 @@ prereqs:
         Run `claude --version` to check the install.
         If the terminal can't find `claude`, do the `PATH` step that the installer prints.
         On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
+    - title: kong-harnesses version
+      content: |
+        This guide needs kong-harnesses from the first release after 0.17.0.
+        Earlier releases accept only an `https://` gateway origin, and the quickstart serves `http://localhost:8000`.
+        Run `kong-harnesses version` to check your version.
     - title: A supported computer
       content: |
         kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64.
@@ -141,39 +107,6 @@ cleanup:
         In the Okta Admin Console, go to **Applications > Applications**, and deactivate the `kong-harnesses` app.
         On the **Inactive** tab, delete the app.
         If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
-    - title: Clean up the local certificate
-      content: |
-        In the parent directory of `kong-quickstart-cert`, delete the directory with the certificate and key.
-        On macOS and Linux:
-
-        ```sh
-        rm -rf kong-quickstart-cert
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        Remove-Item -Recurse -Force kong-quickstart-cert
-        ```
-
-        The {{site.ai_gateway}} cleanup deletes the copies of the certificate and key that the quickstart keeps.
-
-        If mkcert created its CA for this guide and you don't use it for other projects, remove it from the system trust store and delete its files.
-        mkcert can ask for your password, or on Windows, ask you to confirm the removal.
-        On macOS and Linux:
-
-        ```sh
-        ca_root="$(mkcert -CAROOT)"
-        mkcert -uninstall && rm -f "$ca_root/rootCA.pem" "$ca_root/rootCA-key.pem"
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        $caRoot = mkcert -CAROOT
-        mkcert -uninstall
-        if ($LASTEXITCODE -eq 0) { Remove-Item -Force "$caRoot\rootCA.pem", "$caRoot\rootCA-key.pem" }
-        ```
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 ---
@@ -260,7 +193,34 @@ The strategy accepts any valid access token from your Okta authorization server 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
 It holds no secrets.
 Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-The gateway origin is `https://localhost:8443`, the HTTPS address of the quickstart data plane:
+The gateway origin is `http://localhost:8000`, the address of the quickstart data plane.
+
+{:.info}
+> kong-harnesses accepts a plain `http://` gateway origin only for a gateway on the same computer, such as `localhost` or `127.0.0.1`.
+> For a gateway on another computer, use an `https://` origin with a certificate that the operating system trusts.
+
+If your computer sends web requests through a proxy with `HTTPS_PROXY` or `HTTP_PROXY`, add the gateway host to `NO_PROXY` in the shell where you run kong-harnesses and {{ site.claude_code }}.
+With an `http://` gateway, the proxy would see your access token, so `kong-harnesses doctor` fails when a proxy would carry the request.
+{{ site.claude_code }} also sends requests for `localhost` through the proxy when `NO_PROXY` doesn't name it.
+
+{% navtabs "no-proxy" %}
+{% navtab "macOS and Linux" %}
+
+```sh
+export NO_PROXY=localhost,127.0.0.1
+```
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+```powershell
+$env:NO_PROXY = 'localhost,127.0.0.1'
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+Create the profile:
 
 {% navtabs "profile-create" %}
 {% navtab "macOS and Linux" %}
@@ -271,7 +231,7 @@ kong-harnesses profile create \
   --issuer "$ISSUER_URL" \
   --client-id "$OKTA_CLIENT_ID" \
   --audience api://default \
-  --gateway-origin https://localhost:8443 \
+  --gateway-origin http://localhost:8000 \
   --model claude-sonnet-5-5
 ```
 
@@ -282,7 +242,7 @@ Run kong-harnesses and {{ site.claude_code }} in PowerShell.
 Replace the placeholders with the values of `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
 
 ```powershell
-kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin https://localhost:8443 --model claude-sonnet-5-5
+kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin http://localhost:8000 --model claude-sonnet-5-5
 ```
 
 {% endnavtab %}
