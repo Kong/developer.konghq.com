@@ -58,7 +58,7 @@ This page shows you how to configure the same capabilities with AI plugins on [S
 > If you want to move from a 3.x on-prem deployment to an on-prem {{site.ai_gateway}} 2.x deployment, see [Migrate to {{site.ai_gateway}} 2.x on-prem](/ai-gateway/on-prem-migration/). This guide allows you to specify your configuration in the {{site.ai_gateway}} 2.x entity and policy format and it applies that configuration as supported {{site.base_gateway}} 3.x primitives.
 
 {:.info}
-> To build and edit {{site.ai_gateway}} 2.x entity configuration in a local UI instead of writing YAML by hand, see [Kong AI Manager](/ai-gateway/ai-manager/).
+> To build and edit {{site.ai_gateway}} 2.x entity configuration in a local UI instead of writing YAML manually, see [Kong AI Manager](/ai-gateway/ai-manager/).
 
 There are two ways to bridge that gap:
 
