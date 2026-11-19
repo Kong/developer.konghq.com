@@ -39,7 +39,7 @@ related_resources:
 ---
 
 Kong AI Manager is a local, file-based UI for building and editing {{site.ai_gateway}} 2.x configuration for on-prem deployments.
-On-prem {{site.ai_gateway}} Enterprise users manage AI Models, AI MCP Servers, and AI Agents by writing decK or {{site.operator_product_name}} YAML by hand.
+On-prem {{site.ai_gateway}} Enterprise users manage AI Models, AI MCP Servers, and AI Agents by writing decK or {{site.operator_product_name}} YAML manually.
 Kong AI Manager lets you build and edit that configuration in forms instead, and it writes the result back to files in the same format.
 
 Kong AI Manager runs on your machine, in your browser.
@@ -103,7 +103,7 @@ rows:
 {% endtable %}
 
 If the folder contains a file that Kong AI Manager can edit, it opens that folder as a project.
-Otherwise, it shows the **Open project** page, where you can pick a recent project, browse folders, or create a new project.
+Otherwise, it shows the **Open project** page.
 
 ## Project formats
 
@@ -120,7 +120,7 @@ columns:
 rows:
   - format: "decK configuration"
     use: "On-prem {{site.ai_gateway}} that runs on self-managed {{site.base_gateway}} without {{site.operator_product_name}}."
-    apply: "[`deck ai sync`](/deck/ai/sync/) or [`deck file ai2kong`](/deck/file/ai2kong/)"
+    apply: "[`deck ai sync`](/deck/ai/sync/)"
   - format: "{{site.operator_product_name}} manifests (Tech Preview)"
     use: "{{site.ai_gateway}} on Kubernetes with {{site.operator_product_name}}."
     apply: "`kubectl apply`"
@@ -137,7 +137,9 @@ To import your own configuration:
 
 1. In the sidebar, click **Overview**.
 1. In the **Files** panel, click **Import**.
-1. Click **Import files** to select `.yaml`, `.yml`, or `.json` files, or click **Import folder** to import every YAML and JSON file in a folder. Folder import keeps each file's path.
+1. Choose how to import:
+   * Click **Import files** to select `.yaml`, `.yml`, or `.json` files.
+   * Click **Import folder** to import every YAML and JSON file in a folder. Folder import keeps each file's path.
 1. If the project is empty, choose the project format, for example **decK configuration**, and click **Continue**.
 
 To explore the UI before importing your own files, click **Import** in the **Files** panel, then click **Load example**. This adds a demo configuration for a fictional airline.
@@ -153,8 +155,6 @@ Use the following pages to manage the main {{site.ai_gateway}} resources:
 * **Models**: [AI Models](/ai-gateway/entities/ai-model/), including their target providers, routes, access control, and policies.
 * **MCP servers**: [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
 * **Agents**: [AI Agents](/ai-gateway/entities/ai-agent/).
-
-The sidebar also has pages for providers, datastores, CA certificates, certificates, vaults, policies, auth strategies, and consumers.
 
 ### Create an AI Model
 
@@ -188,8 +188,7 @@ The sidebar also has pages for providers, datastores, CA certificates, certifica
 1. In the sidebar, click the resource type, for example **Models**.
 1. Click the resource name in the list.
 1. Change the fields.
-<!-- TODO: confirm the exact label of the save button on an edit form -->
-1. Save the change.
+1. Click **Save**.
 
 How a save works depends on the project type:
 
@@ -203,12 +202,15 @@ The export uses the same format as the project, so decK input produces decK outp
 To export configuration:
 
 1. In the sidebar, click **Overview**.
-1. To export one file, click the file in the **Files** panel, click **Actions**, and click **Export**.
+1. To export one file:
+   1. In the **Files** panel, click the file.
+   1. Click **Actions**.
+   1. Click **Export**.
 1. To export the whole project, in the **Files** panel, click **Export all**.
 
 Before the download, the export shows the exact file content and a sample command to apply it:
 
-* For decK projects, Kong AI Manager shows `deck ai sync` or `deck file ai2kong`. **Export all** produces a single file, because `deck ai sync` reads each file on its own and can't resolve references between files.
+* For decK projects, Kong AI Manager shows `deck ai sync` or `deck file ai2kong`. **Export all** produces a single file.
 * For {{site.operator_product_name}} projects, Kong AI Manager shows `kubectl apply`. **Export all** downloads a zip archive that keeps every file at its path.
 
 For decK projects, Kong AI Manager validates each entity against the {{site.ai_gateway}} API request schema and shows mismatches as warnings. Warnings never block an export.
