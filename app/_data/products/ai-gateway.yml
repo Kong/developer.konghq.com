@@ -24,7 +24,7 @@ releases:
         arm: true
         fips: true
   - release: "2.2"
-    version: "2.2.1"
+    version: "2.2.2"
     name: "v1"
     stable: true
     eol: 2027-03-30
@@ -56,6 +56,7 @@ releases:
   - release: "1.0"
 
 release_dates:
+  '2.2.2': 2026/11/19
   '2.3.2': 2026/11/19
   '2.3.1': 2026/11/10
   '2.2.1': 2026/11/10
