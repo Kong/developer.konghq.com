@@ -47,23 +47,9 @@ prereqs:
     - name: KONG_TRACING_SAMPLING_RATE
       value: 1.0
   inline:
-  - title: OpenTelemetry Collector
-    content: |
-      In this tutorial, we'll collect data in OpenTelemetry Collector. Use the following command to launch a Collector instance with default configuration that listens on port 4318 and writes its output to a text file:
-
-      ```sh
-      docker run \
-        -p 127.0.0.1:4318:4318 \
-        otel/opentelemetry-collector:0.141.0 \
-        2>&1 | tee collector-output.txt
-      ```
-
-      In a new terminal, export the OTEL Collector host. In this example, use the following host:
-      ```sh
-      export DECK_OTEL_HOST=host.docker.internal
-      ```
-    icon: assets/icons/opentelemetry.svg
-      
+    - title: OpenTelemetry Collector
+      include_content: prereqs/otel-collector
+      icon_url: /assets/icons/opentelemetry.svg
 
 tldr:
     q: How do I send {{site.base_gateway}} data to OpenTelemetry Collector?
@@ -128,7 +114,13 @@ headers:
     - 'Content-Type: application/json'
 {% endvalidation %}
 
-You should see data in your OpenTelemetry Collector terminal. You can also search for `kong-dev` in the `collector-output.txt` output file. You should see the following data:
+Search the Collector logs for `kong-dev`:
+
+```sh
+docker logs otel-collector 2>&1 | grep kong-dev
+```
+
+You should see the following data:
 
 ```sh
 Resource attributes:
