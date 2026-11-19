@@ -201,17 +201,21 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
+> Codex, omp and pi also work with an `http://` gateway on this computer.
+> OpenCode and Hermes need an `https://` gateway.
+> Their plugins send the sign-in through the proxy of their own environment, so kong-harnesses leaves them out on an `http://` gateway.
 
 {:.warning}
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
+If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
 A proxy that carries a request to an `http://` gateway can read your access token.
 When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client, and they stop with an error that names `NO_PROXY`.
 `doctor` also fails.
 Run the kong-harnesses and `claude` commands of this guide in the same shell, because the variables exist only there.
-{{ site.claude_code }} reads the proxy variables each time it starts, so set them again before you start `claude` in a new shell, or add them to your shell profile.
+Before you start `claude` in a new shell, set the variables again, or add them to your shell profile.
+Without them, kong-harnesses gives {{ site.claude_code }} no access token.
 
 The following commands add `127.0.0.1` and `localhost` to `NO_PROXY` and keep the hosts that are already in the list.
 
