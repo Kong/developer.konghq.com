@@ -51,7 +51,17 @@ It doesn't connect to a cluster, to {{site.konnect_short_name}}, or to the inter
 ## Prerequisites
 
 * Node.js 22.19.0 or later.
-* A decK configuration file for {{site.ai_gateway}} 2.x, or {{site.operator_product_name}} manifests. You can also start from scratch or load an example.
+
+{:.info}
+> **Configuration file (optional)**
+> <br>
+> You don't need an existing configuration to use Kong AI Manager. You can create a new project from scratch, or load the built-in example to explore the UI.
+> <br><br>
+> To edit an existing configuration, have one of the following ready as a `.yaml`, `.yml`, or `.json` file:
+> * A decK configuration file for {{site.ai_gateway}} 2.x. See [Interacting with {{site.ai_gateway}} entities](/deck/ai/) and [Configure {{site.ai_gateway_name}} on-prem](/ai-gateway/configure-on-prem/).
+> * {{site.operator_product_name}} manifests (Tech Preview). See [{{site.ai_gateway_name}} with {{site.operator_product_name}}](/operator/ai-gateway/) and [Install {{site.ai_gateway_name}} on-prem with {{site.operator_product_name}}](/operator/get-started/ai-gateway/install/).
+>
+> A project holds one format. See [Project formats](#project-formats) for how the format affects import and export.
 
 ## Run Kong AI Manager
 
