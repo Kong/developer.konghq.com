@@ -886,7 +886,7 @@ Datakit doesn't have a dedicated failover attribute on the `call` node.
 Instead, you can compose the same behavior from nodes you already have: 
 * A `call` node with `continue_on_error` set to `true`
 * A [`jq` node](#jq-node) that defines a failure
-* A [`branch` node](#branch-node) to route to to a fallback
+* A [`branch` node](#branch-node) to route to a fallback
 * A second `call` node acting as the fallback
 
 If you need another fallback, configure another `call` node.
