@@ -4,7 +4,7 @@
 import { headerLogos } from "./trophy";
 
 const HOVER_MS = 3000;
-const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A", "␣"];
+const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A", "SPACE"];
 
 function addBackFace(logo) {
   const back = document.createElement("span");
@@ -15,6 +15,7 @@ function addBackFace(logo) {
   CODE.forEach((key) => {
     const item = document.createElement("span");
     item.textContent = key;
+    if (key === "SPACE") item.className = "logo-flip-space";
     code.append(item);
   });
   const prompt = document.createElement("span");
