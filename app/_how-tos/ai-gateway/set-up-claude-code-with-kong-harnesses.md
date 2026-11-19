@@ -51,7 +51,8 @@ prereqs:
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
       content: |
-        Install {{ site.claude_code }} 2.1.278 or later. On macOS and Linux:
+        Install {{ site.claude_code }} 2.1.278 or later.
+        On macOS and Linux:
 
         ```sh
         curl -fsSL https://claude.ai/install.sh | bash
@@ -63,34 +64,46 @@ prereqs:
         irm https://claude.ai/install.ps1 | iex
         ```
 
-        Open a new terminal and run `claude --version` to check the install. If the terminal cannot find `claude`, do the PATH step that the installer prints.
+        Run `claude --version` to check the install.
+        If the terminal can't find `claude`, do the `PATH` step that the installer prints.
+        If you open a new terminal for it, export the variables from the other prerequisites again.
     - title: A supported computer
       content: |
-        kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64. Set it up on the desktop you work on, not in WSL, a container or an SSH session.
+        kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64.
+        Set it up on the desktop you work on, not in WSL, a container or an SSH session.
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
   a: |
-    Protect an AI Model with an `openid-connect` AI Auth Strategy, and create a kong-harnesses profile with your gateway, your identity provider and the model. Run `kong-harnesses login` and `kong-harnesses profile activate <profile> --client claude-code`, check the result with `kong-harnesses doctor --client claude-code`, and start `claude`.
+    Protect an AI Model with an `openid-connect` AI Auth Strategy, and create a kong-harnesses profile with your gateway, your identity provider and the model. Run `kong-harnesses login --profile <profile>` and `kong-harnesses profile activate <profile> --client claude-code`, check the result with `kong-harnesses doctor --profile <profile> --client claude-code`, and start `claude`.
 
 cleanup:
   inline:
     - title: Clean up kong-harnesses
       content: |
-        Remove the {{ site.claude_code }} settings that kong-harnesses added, sign out, and delete the profile:
+        Remove the settings that kong-harnesses added, sign out, and delete the profile:
 
         ```sh
-        kong-harnesses profile cleanup --client claude-code
+        kong-harnesses profile cleanup
         kong-harnesses logout --profile quickstart
         kong-harnesses profile delete quickstart
         ```
+
+        `profile delete` asks you to type `quickstart` to confirm.
+    - title: Clean up Okta
+      content: |
+        In the Okta Admin Console, go to **Applications > Applications**, deactivate the `kong-harnesses` app, and delete it.
+        If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 ---
 
-kong-harnesses signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one. It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. No long-lived key goes into the {{ site.claude_code }} settings.
+[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one.
+It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
+No long-lived key goes into the {{ site.claude_code }} settings.
 
-In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does. Then you set up {{ site.claude_code }} as a developer does.
+In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
+Then you set up {{ site.claude_code }} as a developer does.
 
 ## Create the AI Model
 
@@ -184,17 +197,22 @@ Download the Windows installer (`.msi`) or the Linux package (`.deb` or `.rpm`) 
 {% endnavtab %}
 {% endnavtabs %}
 
-Open a new terminal and check that the install worked:
+Check that the install worked:
 
 ```sh
 kong-harnesses version
 ```
 
+If the shell can't find `kong-harnesses`, open a new terminal, and export the variables from the prerequisites again.
+
 ## Create the kong-harnesses profile
 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
 It contains settings only.
-Create a profile named `quickstart`:
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/):
+
+{% navtabs "profile-create" %}
+{% navtab "macOS and Linux" %}
 
 ```sh
 kong-harnesses profile create \
@@ -206,7 +224,23 @@ kong-harnesses profile create \
   --model claude-sonnet-5-5
 ```
 
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Run kong-harnesses and {{ site.claude_code }} in PowerShell.
+Replace the placeholders with the values of `ISSUER_URL`, `OKTA_CLIENT_ID` and `KONNECT_PROXY_URL` from the prerequisites:
+
+```powershell
+kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin 'YOUR_PROXY_URL' --model claude-sonnet-5-5
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
 kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, then saves the profile and installs it on this computer.
+It also sends a test request to the gateway route of each agent CLI that the profile sets up.
+This guide creates only the route that {{ site.claude_code }} uses, so `profile create` warns about the Codex and OpenCode routes.
+You can ignore these warnings.
 
 {:.info}
 > In production, the administrator creates the profile once and gives developers its HTTPS URL or a JSON file.
@@ -217,6 +251,7 @@ kong-harnesses reads the endpoints of your Okta authorization server from its di
 > ```
 >
 > `setup` installs the profile, signs the developer in, and configures {{ site.claude_code }} in one run.
+> When the administrator changes the profile, developers run the same `setup` command again.
 
 ## Sign in and configure {{ site.claude_code }}
 
@@ -241,7 +276,9 @@ Fix the problem and run the same command again.
 
 ## Features that change behind the gateway
 
-Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic. The profile decides which of them `profile activate` turns off. To see the {{ site.claude_code }} choices in the profile, run:
+Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic.
+The profile decides which of them `profile activate` turns off.
+To see the {{ site.claude_code }} choices in the profile, run:
 
 ```sh
 kong-harnesses profile get quickstart
@@ -282,24 +319,28 @@ rows:
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
-A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace. The profile and the gateway route decide whether the advisor and tool search are on. {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
-
-When the administrator changes the profile, a developer runs the same `kong-harnesses setup` command again to apply the change.
+A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
+The profile and the gateway route decide whether the advisor and tool search are on.
+{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
 
 ## Validate
 
 Run the checks:
 
 ```sh
-kong-harnesses doctor --client claude-code
+kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
-`doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. It shows a fix for each problem it finds. It does not change any settings. Fix each failure and run it again until no check fails.
+`doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings.
+It shows a fix for each problem it finds.
+It doesn't change any settings.
+Fix each failure and run it again until no check fails.
 
-To also send one model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+To also send one model request, add `--inference`.
+The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 
 ```sh
-kong-harnesses doctor --client claude-code --inference
+kong-harnesses doctor --profile quickstart --client claude-code --inference
 ```
 
 Start a session as usual:
@@ -308,6 +349,10 @@ Start a session as usual:
 claude
 ```
 
-Send a prompt to check that you get a reply. Every model request now goes through {{site.ai_gateway}}. kong-harnesses renews your access token by itself. Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
+Send a prompt to check that you get a reply.
+Every model request now goes through {{site.ai_gateway}}.
+kong-harnesses renews your access token by itself.
+Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
 
-On macOS, run `kong-harnesses login` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
+On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
+Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
