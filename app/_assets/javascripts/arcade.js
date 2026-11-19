@@ -1,7 +1,8 @@
 // Hidden arcade game. Typing the code loads the game chunk on demand, so
-// regular page views only pay for this listener and the header trophy.
+// regular page views only pay for this listener, the header trophy and the logo flip.
 // Design notes and handoff: docs/arcade.md.
 import { initTrophy } from "./arcade/trophy";
+import { initLogoFlip } from "./arcade/logo_flip";
 import { track } from "./arcade/analytics";
 
 const CODES = [
@@ -17,6 +18,7 @@ let keys = [];
 let active = false;
 
 initTrophy();
+initLogoFlip();
 
 function matches(code) {
   const typed = keys.slice(-code.length);
