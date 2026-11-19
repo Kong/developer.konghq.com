@@ -107,9 +107,12 @@ Key behavior:
 * `region` is required. If you omit it, the gateway reads the `AWS_REGION` or `AWS_DEFAULT_REGION` environment variable.
 * The gateway uses the default AWS credential chain when `access_key` and `secret_key` are absent. This mode works with IAM roles for Amazon MSK deployments.
 * `registry_name` defaults to `default-registry`.
-* Producer plugins select the schema with `value_schema.schema_name` and an optional `schema_version`.
-* Consumer plugins read the schema version ID from the message header. They do not need a schema name.
+{% if include.workflow == 'producer' %}
+* The plugin selects the schema with `value_schema.schema_name` and an optional `schema_version`.
 * The `payload_encoding` option for Avro schemas works the same way as for Confluent Schema Registry.
+{% else %}
+* The plugin reads the schema version ID from the message header. It does not need a schema name.
+{% endif %}
 
 {:.info}
 > **Note**: A plugin configuration can set `confluent` or `glue`, but not both.
