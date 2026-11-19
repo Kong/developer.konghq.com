@@ -1,5 +1,5 @@
 ---
-title: LLM tracing with Arize Phoenix
+title: LLM Tracing with Arize Phoenix
 description: Export {{site.ai_gateway_name}} chat completions to Arize Phoenix over OTLP and fill Sessions, user, Input/Output, and Messages with AI Policies.
 url: "/cookbooks/llm-tracing-arize-phoenix/"
 content_type: cookbook
@@ -8,31 +8,15 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
   ai-gateway: '2.0'
 categories:
   - observability
   - llm
 featured: false
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - ai-model
-  - ai-model-provider
-  - key-auth
-  - request-transformer-advanced
-  - opentelemetry
-  - post-function
-requires_embeddings: false
-providers:
-  - openai
-
-hint: "Requires an OpenAI API key and an Arize Phoenix instance the data plane can reach over HTTP."
 prereqs:
   skip_product: true
   skip_tool: true
@@ -48,7 +32,7 @@ prereqs:
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The two `-e` flags pass tracing settings into the data plane container. The [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy doesn't export traces unless you start the data plane with `KONG_TRACING_INSTRUMENTATIONS` enabled, and the default sampling rate (`0.01`) drops 99% of spans before the policy sees them:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The two `-e` flags start the data plane with tracing turned on. Kong records spans for the OpenTelemetry Policy only when `KONG_TRACING_INSTRUMENTATIONS` is set (default `off`). `KONG_TRACING_SAMPLING_RATE=1.0` samples every request (default `0.01`):
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='llm-tracing-arize-phoenix-recipe'
@@ -58,7 +42,7 @@ prereqs:
                -e KONG_TRACING_SAMPLING_RATE=1.0
            ```
 
-           The script provisions an {{site.ai_gateway}} named `llm-tracing-arize-phoenix-recipe`, a local data plane connected to it with tracing enabled, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `llm-tracing-arize-phoenix-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
@@ -71,47 +55,31 @@ prereqs:
            ```
     - title: OpenAI
       content: |
-        This tutorial uses OpenAI:
+        This tutorial routes chat requests to OpenAI.
 
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the API key as an environment variable:
+        1. Export the API key:
 
            ```sh
            export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
     - title: Arize Phoenix
       content: |
-        [Arize Phoenix](https://arize.com/docs/phoenix) receives OpenTelemetry traces over OTLP/HTTP. Phoenix maps Kong's `gen_ai.*` attributes to an LLM span at ingest (model name, token counts). Sessions, the user column, spans-table Input/Output, and the Messages view need extra OpenInference keys that this recipe writes from AI Policies.
+        [Arize Phoenix](https://arize.com/docs/phoenix) receives the traces over OTLP/HTTP. The data plane sends them, so the data plane container must reach Phoenix.
 
-        The Kong data plane must reach Phoenix on the network. The control plane never sends traces.
-
-        {% navtabs "Phoenix" %}
-        {% navtab "Local Phoenix" %}
-        1. Install and start Phoenix. A local `phoenix serve` listens on port `6006`.
-        1. Export the OTLP/HTTP traces URL the data plane container can reach, and the Phoenix project name:
+        1. Run Phoenix locally. Phoenix serves its UI and the OTLP/HTTP endpoint on port `6006`. `PHOENIX_ENABLE_AUTH=False` turns off authentication, because the `latest` image otherwise rejects unauthenticated traces with `401 Invalid token`:
 
            ```bash
+           docker run -d --name phoenix -p 6006:6006 -e PHOENIX_ENABLE_AUTH=False arizephoenix/phoenix:latest
+           ```
+
+        1. Export the traces URL that the data plane container can reach, and the Phoenix project for the traces:
+
+           ```sh
            export PHOENIX_OTLP_ENDPOINT='http://host.docker.internal:6006/v1/traces'
            export PHOENIX_PROJECT_NAME='kong-ai-gateway'
            ```
-
-           `host.docker.internal` is the host machine from inside the local data plane container. Point at the Phoenix service name instead if Phoenix runs on the same Docker network.
-        {% endnavtab %}
-        {% navtab "Hosted Phoenix" %}
-        1. Copy the OTLP/HTTP traces URL for your Phoenix deployment. Kong's OpenTelemetry Policy needs the full `/v1/traces` path, not the UI origin alone.
-        1. If the instance requires authentication, copy an API key from Phoenix **Settings**.
-        1. Export the endpoint, project name, and (when auth is on) the Authorization header:
-
-           ```bash
-           export PHOENIX_OTLP_ENDPOINT='https://YOUR_PHOENIX_HOST/v1/traces'
-           export PHOENIX_PROJECT_NAME='kong-ai-gateway'
-           export PHOENIX_AUTH_HEADER='Bearer YOUR_PHOENIX_API_KEY'
-           ```
-
-           A local `phoenix serve` doesn't need `PHOENIX_AUTH_HEADER`. Kong doesn't read `PHOENIX_API_KEY` from the environment unless you add it into the policy config.
-        {% endnavtab %}
-        {% endnavtabs %}
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
@@ -122,414 +90,46 @@ prereqs:
         source .venv/bin/activate
         pip install 'openai>=1.0.0'
         ```
-
 overview: |
-  LLM applications that call providers through {{site.ai_gateway_name}} already sit on a hop that sees every chat completion. An AI Model writes OpenTelemetry GenAI attributes (`gen_ai.*`) on every request it proxies. The [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy posts those spans to [Arize Phoenix](https://arize.com/docs/phoenix). Phoenix turns `gen_ai.*` into an LLM span at ingest.
+  Trace each chat completion that passes through {{site.ai_gateway_name}} in Arize Phoenix, with Sessions, users, inputs, outputs, and messages filled in, and no tracing code in the application. You'll set up:
 
-  That export path proves a call happened. Phoenix Sessions, the user column, the spans-table Input/Output cells, and the LLM Messages view read OpenInference keys Kong leaves empty unless you set them on the span. This recipe adds a Key Auth AI Auth Strategy plus [Request Transformer Advanced](/ai-gateway/policies/request-transformer-advanced/) and [Post-Function](/ai-gateway/policies/post-function/) Policies so those screens fill without OpenInference instrumentation in the application.
+  * An `/llm-tracing-arize-phoenix` endpoint that accepts only requests with a valid AI Consumer API key
+  * OTLP export of Kong's spans to a Phoenix project
+  * OpenInference attributes on each span, so that Phoenix shows the AI Consumer as the user and groups requests into Sessions
 
-  By the end, you'll have one AI Model (`/llm-tracing-arize-phoenix`) behind an AI Consumer API key. Each request produces a Kong root span (`CHAIN`) and an LLM child span in the Phoenix project named by `x-project-name`.
+  This cookbook traces the gateway hop. Agent steps, tool calls, and retrieval inside the application still need OpenInference instrumentation in the application.
 ---
 
-## The problem
+## What this cookbook solves
 
-Phoenix is built around OpenInference. Most Phoenix tutorials attach an SDK instrumentation library in the application (LangChain, the OpenAI Python SDK, and similar). That works when you own the client. It doesn't help when the only shared hop is the gateway, or when you want gateway-enforced identity on the trace.
-
-- **Every chat completion crosses one shared hop, but capture is usually duplicated per service.** Duplicating capture in every microservice means another SDK, another exporter, and traces that disagree about who called the model.
-- **`gen_ai.*` isn't the Phoenix UI contract.** OpenTelemetry GenAI attributes map to model name and token counts in Phoenix. Sessions, user, Input/Output in the spans table, and Messages look for OpenInference keys (`session.id`, `user.id`, `input.value`, `llm.input_messages.*`). Those keys stay empty unless something on the request path writes them.
-- **Client headers aren't identity.** A caller can send `x-user-id: admin`. Phoenix `user.id` should come from an authenticated identity, not from a header the client chooses.
-- **App-side OpenInference is still the right tool for agents and RAG.** Tool calls, retrievers, and evaluations live in application code. This recipe covers the gateway hop. It doesn't replace that instrumentation.
-
-## The solution
-
-Place {{site.ai_gateway_name}} between the client and the LLM. A Key Auth AI Auth Strategy authenticates each request and identifies the caller. An AI Model normalizes correlation headers and a matched AI Model Provider proxies the request, then AI Policies export the trace and stamp OpenInference attributes from Lua.
+Most teams trace LLM calls with an instrumentation library in each application, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: Key Auth AI Auth Strategy
-    responsibility: "Requires an AI Consumer API key. Phoenix `user.id` is the AI Consumer's identity, never the key."
-  - component: Request Transformer Advanced Policy
-    responsibility: Drops client `x-user-id`. If `x-correlation-id` is missing, copies `x-request-id` or `x-session-id` onto it.
-  - component: AI Model and AI Model Provider
-    responsibility: Match the request to `/llm-tracing-arize-phoenix`, inject the OpenAI credential, and record `gen_ai.*` on the proxied request.
-  - component: OpenTelemetry Policy
-    responsibility: Posts OTLP/HTTP to Phoenix from the data plane. `x-project-name` selects the Phoenix project.
-  - component: Post-Function Policy
-    responsibility: Writes `CHAIN`, `session.id`, `user.id`, `input.value` / `output.value`, and `llm.*_messages` on the LLM span.
-  - component: Arize Phoenix
-    responsibility: Maps `gen_ai.*` to an LLM span at ingest and renders OpenInference keys in the UI.
+  - problem: "Each service that calls an LLM needs its own instrumentation library and exporter, and services that skip it leave gaps in the traces."
+    solution: "The OpenTelemetry Policy exports a trace for each request that passes through the AI Model, with no code in the client."
+  - problem: "OpenTelemetry GenAI attributes (`gen_ai.*`) give Phoenix the model name and token counts, but Phoenix Sessions, users, inputs, outputs, and messages read OpenInference attributes."
+    solution: "The Post-Function Policy writes the OpenInference attributes `session.id`, `user.id`, and `input.value` on Kong's root span. Kong's LLM span already carries the messages as `gen_ai.*` attributes."
+  - problem: "When a trace takes the user from a request header, any client can claim to be any user."
+    solution: "The Key Auth AI Auth Strategy identifies the AI Consumer, the Request Transformer Advanced Policy removes the client's `x-user-id` header, and Phoenix shows the AI Consumer as the user."
+  - problem: "Requests from one conversation show up as unrelated traces."
+    solution: "The Post-Function Policy copies the `x-correlation-id` header to `session.id`, so Phoenix groups the requests of one conversation into one Session."
 {% endtable %}
 
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant C as Client
-    participant K as Kong AI Gateway
-    participant L as LLM provider
-    participant P as Arize Phoenix
+## Try it out
 
-    C->>K: POST /llm-tracing-arize-phoenix (apikey, chat JSON)
-    activate K
-    K->>K: key-auth Auth Strategy (Consumer identity, else 401)
-    K->>K: Request Transformer Advanced (drop x-user-id, set x-correlation-id)
-    K->>K: AI Model and AI Model Provider (inject provider auth, gen_ai.*)
-    K->>L: Chat completion
-    activate L
-    L-->>K: OpenAI-format response
-    deactivate L
-    K->>K: Post-Function (OpenInference attributes, span status)
-    K->>P: OTLP/HTTP /v1/traces
-    K-->>C: Chat response
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+Apply the configuration, run a demo script that sends an invalid key, a spoofed user header, and three chat turns, then open the traces in Phoenix.
 
-Every resource attaches directly to the {{site.ai_gateway}} the quickstart provisions. There is no separate Service or Route to configure, and the control plane never sends traces; only the data plane exports OTLP.
+### Apply the Kong configuration
 
-## How it works
+The configuration creates an AI Model Provider with your OpenAI credentials, a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, three AI Policies (Request Transformer Advanced, OpenTelemetry, and Post-Function), and an AI Model that uses them. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-A request flowing through Kong passes through authentication, header normalization, the AI Model's proxy step, and trace export, in that order.
-
-1. The Key Auth AI Auth Strategy reads the `apikey` header and looks it up against the AI Consumer's credential. A missing or unknown key gets `401` before any upstream call, so `kong.client.get_consumer()` returns the AI Consumer for every request that reaches the policies below.
-2. The Request Transformer Advanced Policy drops any client-supplied `x-user-id` header and, if the request has no `x-correlation-id`, copies `x-request-id` or `x-session-id` onto it. The policy runs before the Post-Function Policy reads the header, so the correlation id is stable.
-3. The AI Model matches the request to `/llm-tracing-arize-phoenix` and its target, backed by the AI Model Provider, proxies the request to OpenAI and creates the LLM child span (`gen_ai.operation.name`, or a span name that starts with `chat `).
-4. The Post-Function Policy runs after those steps. Its `access` phase enables request buffering and writes input attributes onto the spans; its `header_filter` phase sets span status from the HTTP status and writes output plus LLM message attributes once the upstream response is available.
-5. The OpenTelemetry Policy exports whatever spans exist when the request finishes to Phoenix's OTLP/HTTP endpoint.
-
-{:.info}
-> **AI Policy ordering is unverified.** {{site.ai_gateway}} 2.0's AI Policy schema (`kongctl explain ai_gateway_policies --extended`) has no field equivalent to 1.0's `ordering.after.access`, so this recipe cannot declare that Post-Function must run after Request Transformer Advanced and the AI Model's own proxy step. Post-Function's underlying Kong plugin has the lowest built-in priority of any stock plugin, which should still put it last in practice, but this has not been confirmed against a live {{site.ai_gateway}}.
-
-### Key Auth: AI Consumer identity as the Phoenix user
-
-The Key Auth AI Auth Strategy authenticates the caller before any policy or proxy logic runs. Phoenix `user.id` is the AI Consumer's identity. The credential itself must not appear on a span.
-
-#### Configuration details
-
-```yaml
-ai_gateway_auth_strategies:
-  - ref: llm-tracing-arize-phoenix-auth
-    type: key-auth
-    display_name: "llm-tracing-arize-phoenix key auth"
-    config:
-      key_names:
-        - apikey
-        - x-api-key
-      key_in_header: true
-      key_in_query: false
-      hide_credentials: true
-
-ai_gateway_consumers:
-  - ref: llm-tracing-arize-phoenix-consumer
-    name: phoenix-client
-    display_name: "Phoenix demo consumer"
-    type: api-key
-    credentials:
-      - ref: llm-tracing-arize-phoenix-credential
-        name: llm-tracing-arize-phoenix-credential
-        display_name: "llm-tracing-arize-phoenix demo API key"
-        type: api-key
-        api_key: !secret {source: !env CONSUMER_API_KEY}
-```
-{:.no-copy-code}
-
-- **`key_names`**. Headers the AI Auth Strategy reads. Clients send `apikey: <key>`. The OpenAI SDK puts the SDK key in `Authorization: Bearer`, which doesn't match a stored credential unless you copy it onto `apikey` with a [Pre-Function](/ai-gateway/policies/pre-function/) Policy.
-- **`key_in_header` / `key_in_query`**. Restrict credentials to headers only. Query-string keys end up in access logs and browser history, so this recipe keeps `key_in_query: false` explicit.
-- **`hide_credentials: true`**. Strips the key before the request reaches the LLM provider. Keep the key off the span as well.
-- **AI Consumer `name`**. Post-Function reads `kong.client.get_consumer().username` and writes it to Phoenix `user.id`. This recipe sets the AI Consumer's `name` to `phoenix-client` so you can recognize the identity in the Phoenix UI.
-- **`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret` reference. Kong rejects a plain string here, even for a demo value like this recipe's. You export `CONSUMER_API_KEY` once in [Apply the Kong configuration](#apply-the-kong-configuration).
-
-### Request Transformer Advanced: Session id without spoofed users
-
-The [Request Transformer Advanced](/ai-gateway/policies/request-transformer-advanced/) Policy drops a client-supplied user header and gives Post-Function a stable correlation id to read.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-  - ref: llm-tracing-arize-phoenix-header-normalize
-    type: request-transformer-advanced
-    display_name: "llm-tracing-arize-phoenix header normalize"
-    config:
-      remove:
-        headers:
-          - x-user-id
-      add:
-        headers:
-          - 'x-correlation-id:$(headers["x-request-id"] or headers["x-session-id"] or "")'
-```
-{:.no-copy-code}
-
-- **`remove.headers: x-user-id`**. Stops the client from choosing Phoenix `user.id`. The AI Consumer identity is what Post-Function uses instead.
-- **`add.headers: x-correlation-id`**. If the client omits `x-correlation-id`, the policy copies `x-request-id` or `x-session-id` onto it. An empty expression leaves the header unset, and Post-Function falls back to `kong.request.get_id()`.
-
-### AI Model and AI Model Provider: GenAI spans
-
-The AI Model matches the request to this recipe's path and target, and its AI Model Provider injects the OpenAI credential and translates the request and response body. Kong records `gen_ai.*` attributes on this hop, which Phoenix maps to model name and token counts.
-
-#### Configuration details
-
-```yaml
-ai_gateway_model_providers:
-  - ref: llm-tracing-arize-phoenix-provider
-    type: openai
-    display_name: "llm-tracing-arize-phoenix"
-    config:
-      auth:
-        type: basic
-        headers:
-          - name: Authorization
-            value: !secret {source: !env OPENAI_TOKEN}
-
-ai_gateway_models:
-  - ref: llm-tracing-arize-phoenix-model
-    type: model
-    display_name: "llm-tracing-arize-phoenix"
-    formats:
-      - type: openai
-    capabilities:
-      - generate
-    access:
-      auth_strategies:
-        - llm-tracing-arize-phoenix-auth
-    policies:
-      - llm-tracing-arize-phoenix-header-normalize
-      - llm-tracing-arize-phoenix-otel
-      - llm-tracing-arize-phoenix-oi-span-attrs
-    config:
-      max_request_body_size: 10485760
-      response_streaming: deny
-      logging:
-        payloads: true
-      route:
-        paths:
-          - /llm-tracing-arize-phoenix
-    targets:
-      - name: !env CHAT_MODEL
-        provider: llm-tracing-arize-phoenix-provider
-        config:
-          type: openai
-```
-{:.no-copy-code}
-
-- **`formats: [{type: openai}]`**. Accepts an OpenAI-format chat-completion body. See the [AI Model entity reference](/ai-gateway/entities/ai-model/) for the full list of supported formats and providers.
-- **`policies`**. References the three policies documented in this section, in the order this recipe expects them to run. See the policy-ordering note above.
-- **`max_request_body_size`**. Set for the recipe's expected payload size. Raise it if you send large conversation contexts or file uploads through this Model.
-- **`response_streaming: deny`**. Post-Function reads the complete response body in its `header_filter` phase to write `output.value` and `llm.output_messages.*`. A streamed response isn't available as a single buffered body, so this recipe requires full responses.
-- **`logging.payloads`**. Kong logs request and response payloads on this Model. Phoenix Messages still comes from Post-Function, not from this flag.
-
-Kong emits `gen_ai.*` span attributes on every AI Model request, following the [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/):
-
-{% table %}
-columns:
-  - title: Attribute
-    key: attribute
-  - title: Description
-    key: description
-rows:
-  - attribute: "`gen_ai.provider.name`"
-    description: Provider identifier (for example `openai`)
-  - attribute: "`gen_ai.request.model`"
-    description: Model name from the request
-  - attribute: "`gen_ai.operation.name`"
-    description: Operation type (`chat`, `embeddings`)
-  - attribute: "`gen_ai.usage.input_tokens`"
-    description: Input token count
-  - attribute: "`gen_ai.usage.output_tokens`"
-    description: Output token count
-{% endtable %}
-
-### OpenTelemetry: export to Phoenix
-
-The [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy runs on the data plane. Point `traces_endpoint` at Phoenix's OTLP/HTTP traces URL.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-  - ref: llm-tracing-arize-phoenix-otel
-    type: opentelemetry
-    display_name: "llm-tracing-arize-phoenix OpenTelemetry export"
-    config:
-      traces_endpoint: !env PHOENIX_OTLP_ENDPOINT
-      headers:
-        x-project-name: !env PHOENIX_PROJECT_NAME
-      resource_attributes:
-        service.name: kong-gateway
-      sampling_rate: 1
-      propagation:
-        default_format: w3c
-        extract:
-          - w3c
-        inject:
-          - w3c
-```
-{:.no-copy-code}
-
-- **`traces_endpoint`**. Full OTLP/HTTP path, including `/v1/traces`. Phoenix's `x-project-name` header works on HTTP only, not gRPC.
-- **`headers.x-project-name`**. Phoenix project. Traces land here even when `service.name` is set.
-- **`sampling_rate: 1`**. Sample everything while you validate the recipe. Lower this in production. This policy setting only takes effect once the data plane records exportable spans at all, which requires the `KONG_TRACING_INSTRUMENTATIONS` and `KONG_TRACING_SAMPLING_RATE` data plane settings from the {{site.konnect_product_name}} prerequisite.
-- **`propagation`**. W3C extract and inject keep an application `traceparent` when the request crosses Kong. App OpenInference spans can then parent the gateway hop.
-- **Authentication.** If Phoenix requires an API key, add `Authorization: Bearer <key>` to `headers`. Reference it from an environment variable with `!env` (Policy config doesn't accept `!secret`). Do not commit the key.
-
-### Post-Function: OpenInference attributes Phoenix renders
-
-The [Post-Function](/ai-gateway/policies/post-function/) Policy runs Lua after Kong authenticates, normalizes, and proxies the request. It uses `kong.tracing.get_spans()` to stamp OpenInference keys.
-
-Access phase:
-
-- `kong.service.request.enable_buffering()` so the header filter phase can read the upstream body
-- Root span: `openinference.span.kind=CHAIN`, `session.id`, `user.id`, `input.value` (JSON)
-- LLM span: `input.value` plus `llm.input_messages.{i}.message.role` / `.content` from `messages[]` (string `content` only)
-
-Header filter phase:
-
-- Span status **OK** (1) when HTTP status is below 400, **ERROR** (2) otherwise, only if status is still unset
-- Root and LLM: `output.value`
-- LLM: `llm.output_messages.*` from `choices[].message`
-
-{:.info}
-> Phoenix Messages doesn't parse `input.value`. The blob is what the table and the Raw toggle display.
-
-#### Configuration details
-
-The Lua is long. Expand the block to copy the full policy.
-
-```yaml
-ai_gateway_policies:
-  - ref: llm-tracing-arize-phoenix-oi-span-attrs
-    type: post-function
-    display_name: "llm-tracing-arize-phoenix OpenInference span attributes"
-    config:
-      access:
-        - |
-          kong.service.request.enable_buffering()
-          local cjson = require("cjson.safe")
-          local function nonempty(v)
-            return type(v) == "string" and v ~= ""
-          end
-          local function is_llm(span)
-            local attrs = span.attributes
-            return (attrs and attrs["gen_ai.operation.name"])
-              or (type(span.name) == "string" and span.name:find("^chat ", 1, false))
-          end
-          local corr = kong.request.get_header("x-correlation-id")
-          if not nonempty(corr) then
-            corr = kong.request.get_id()
-          end
-          local consumer = kong.client.get_consumer()
-          local user = consumer and consumer.username
-          local input = kong.request.get_raw_body()
-          if type(input) ~= "string" or input == "" then
-            input = nil
-          elseif #input > 65536 then
-            input = input:sub(1, 65536)
-          end
-          local parsed = input and cjson.decode(input)
-          local function set_json(span, prefix, value)
-            span:set_attribute(prefix .. ".value", value)
-            span:set_attribute(prefix .. ".mime_type", "application/json")
-          end
-          local spans = kong.tracing.get_spans()
-          local n = spans and spans[0] or 0
-          for i = 1, n do
-            local span = spans[i]
-            if span and i == 1 then
-              span:set_attribute("openinference.span.kind", "CHAIN")
-              if nonempty(corr) then
-                span:set_attribute("session.id", corr)
-              end
-              if nonempty(user) then
-                span:set_attribute("user.id", user)
-              end
-              if input then
-                set_json(span, "input", input)
-              end
-            elseif span and is_llm(span) and input then
-              set_json(span, "input", input)
-              -- string content only; content[] parts need a walk
-              if type(parsed) == "table" and type(parsed.messages) == "table" then
-                for j, msg in ipairs(parsed.messages) do
-                  if type(msg) == "table" then
-                    local idx = j - 1
-                    if nonempty(msg.role) then
-                      span:set_attribute("llm.input_messages." .. idx .. ".message.role", msg.role)
-                    end
-                    if nonempty(msg.content) then
-                      span:set_attribute("llm.input_messages." .. idx .. ".message.content", msg.content)
-                    end
-                  end
-                end
-              end
-            end
-          end
-      header_filter:
-        - |
-          local cjson = require("cjson.safe")
-          local function nonempty(v)
-            return type(v) == "string" and v ~= ""
-          end
-          local function is_llm(span)
-            local attrs = span.attributes
-            return (attrs and attrs["gen_ai.operation.name"])
-              or (type(span.name) == "string" and span.name:find("^chat ", 1, false))
-          end
-          local http_status = kong.response.get_status() or 0
-          local otel_status = http_status >= 400 and 2 or 1
-          local spans = kong.tracing.get_spans()
-          local n = spans and spans[0] or 0
-          for i = 1, n do
-            local span = spans[i]
-            if span and (span.status or 0) == 0 then
-              span:set_status(otel_status)
-            end
-          end
-          local ok, body = pcall(kong.service.response.get_raw_body)
-          if not ok or type(body) ~= "string" or body == "" then
-            return
-          end
-          if #body > 65536 then
-            body = body:sub(1, 65536)
-          end
-          local parsed = cjson.decode(body)
-          for i = 1, n do
-            local span = spans[i]
-            if span and (i == 1 or is_llm(span)) then
-              span:set_attribute("output.value", body)
-              span:set_attribute("output.mime_type", "application/json")
-            end
-            if span and is_llm(span) and type(parsed) == "table" and type(parsed.choices) == "table" then
-              for j, choice in ipairs(parsed.choices) do
-                local msg = type(choice) == "table" and choice.message
-                if type(msg) == "table" then
-                  local idx = j - 1
-                  if nonempty(msg.role) then
-                    span:set_attribute("llm.output_messages." .. idx .. ".message.role", msg.role)
-                  end
-                  if nonempty(msg.content) then
-                    span:set_attribute("llm.output_messages." .. idx .. ".message.content", msg.content)
-                  end
-                end
-              end
-            end
-          end
-```
-{:.collapsible}
-
-Post-Function executes arbitrary Lua. If your organization disables serverless plugins, set [`untrusted_lua`](/gateway/configuration/#untrusted-lua) accordingly. Do not run Lua that nobody has reviewed on a shared {{site.ai_gateway}}.
-
-{:.info}
-> In production, store the OpenAI token and any Phoenix API key in [AI Vaults](/ai-gateway/entities/ai-vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Payload attributes on spans may contain prompts. Review retention before you capture payloads in production.
-
-## Apply the Kong configuration
-
-The following configuration creates an AI Model Provider holding your OpenAI credentials, a Key Auth AI Auth Strategy and an AI Consumer with a demo API key, three AI Policies (Request Transformer Advanced, OpenTelemetry, Post-Function), and an AI Model that routes to the AI Model Provider with all three policies attached. A kongctl namespace scopes every resource, so you can tear down the recipe cleanly without affecting other configurations on the same {{site.ai_gateway}}.
-
-First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply command can manage it.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -537,26 +137,21 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
-
-Export the demo AI Consumer's API key. The AI Consumer credential's `api_key` field is write-only and must come from an env var, even for this fixed demo value:
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
 ```bash
 export CONSUMER_API_KEY='demo-api-key'
 ```
 
-Export the chat model:
+Export the chat model. The OpenAI and Phoenix values come from the prerequisites:
 
 ```bash
-export CHAT_MODEL='gpt-4o-mini'  # or gpt-4o, o3
+export CHAT_MODEL='gpt-4o-mini'
 ```
-
-You already exported `OPENAI_TOKEN` in the OpenAI prerequisite and `KONNECT_CONTROL_PLANE_NAME` in the {{site.konnect_product_name}} prerequisite, so you don't need to export them again. If you exported `PHOENIX_AUTH_HEADER`, add it under the OpenTelemetry Policy's `headers.Authorization` in the following apply command before you run it.
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -649,7 +244,7 @@ ai_gateway_policies:
       end
       local corr = kong.request.get_header("x-correlation-id")
       if not nonempty(corr) then
-        corr = kong.request.get_id()
+        corr = ngx.var.request_id
       end
       local consumer = kong.client.get_consumer()
       local user = consumer and consumer.username
@@ -726,6 +321,9 @@ ai_gateway_policies:
         body = body:sub(1, 65536)
       end
       local parsed = cjson.decode(body)
+      if type(parsed) ~= "table" then
+        return
+      end
       for i = 1, n do
         local span = spans[i]
         if span and (i == 1 or is_llm(span)) then
@@ -779,13 +377,16 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
   targets:
   - name: !env 'CHAT_MODEL'
     provider: llm-tracing-arize-phoenix-provider
     config:
       type: openai
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -793,41 +394,33 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-## Try it out
+### Run the demo
 
-`demo.py` sends a chat completion with an invalid key (expecting `401`), a request with a spoofed `x-user-id` header (expecting Kong to drop it), and three chat turns split across two Phoenix Sessions using `x-correlation-id`. Tracing doesn't change any HTTP response, so the script can't confirm what Phoenix rendered. Open Phoenix after the run to see the traces.
+The script sends one request with an invalid API key, one request with a spoofed `x-user-id` header, and three chat turns. The spoofed request and the first two turns share one `x-correlation-id`. The third turn has none. Tracing doesn't change the HTTP responses, so the script prints only what the client sees. Phoenix shows the rest.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token to the `apikey` header server-side.
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""LLM tracing with Arize Phoenix demo. See README for context.
+"""LLM tracing with Arize Phoenix demo for Kong AI Gateway.
 
-Sends chat completions through Kong AI Gateway's `/llm-tracing-arize-phoenix`
-Model and prints what each request proves about the tracing setup:
+Shows four things:
+  1. A request with an invalid apikey gets 401 from Kong before any provider call.
+  2. A client-supplied x-user-id header is dropped by Kong, so Phoenix shows the
+     AI Consumer (phoenix-client) as user.id instead.
+  3. Two turns that share one x-correlation-id land in the same Phoenix Session.
+  4. A turn without x-correlation-id lands in its own Session, keyed by the request ID.
 
-  - An invalid `apikey` is rejected with 401 before any provider call (key-auth).
-  - Two turns share one `x-correlation-id` so they land in the same Phoenix
-    Session; a third omits the header so Kong falls back to the request id
-    (Request Transformer Advanced + the Post-Function Session read).
-  - A client-supplied `x-user-id` is dropped; the Consumer identity
-    (`phoenix-client`) is what Phoenix shows as `user.id`.
-  - Token usage and the resolved model come back as Kong response headers
-    (`x-kong-llm-model`, `x-kong-llm-tokens-*`), the same numbers the
-    `gen_ai.*` span attributes carry into Phoenix.
+Expected output: a [BLOCKED] 401 line, one [LLM] line for the x-user-id check, and one
+[LLM] line for each of the three turns, with the model and token counts. The script
+can't see what Phoenix renders: open the Phoenix project after the run.
 
-This script cannot confirm what Phoenix rendered. Post-Function writes
-OpenInference attributes onto Kong's spans; whether Sessions, the user
-column, Input/Output, and Messages populated correctly is only visible in
-the Phoenix UI. Run `python demo.py`, then open the project named by
-`PHOENIX_PROJECT_NAME` in Phoenix and confirm what the printed Session
-ID and turns look like there.
-
-Requires: `pip install -r requirements.txt`. Expects `PROXY_URL` (default
-`http://localhost:8000`) and `CHAT_MODEL` (default `gpt-4o-mini`) as needed.
+Run: python demo.py (set PROXY_URL if the data plane is not at http://localhost:8000,
+CONSUMER_API_KEY if you changed the demo key, and PHOENIX_PROJECT_NAME if you changed
+the project name).
 """
 
 import os
@@ -843,8 +436,7 @@ from openai import APIStatusError, OpenAI
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gpt-4o-mini")
-# Matches the Consumer credential's CONSUMER_API_KEY value from the Apply section.
-PHOENIX_API_KEY = os.getenv("PHOENIX_API_KEY", "demo-api-key")
+CONSUMER_API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
 PHOENIX_PROJECT_NAME = os.getenv("PHOENIX_PROJECT_NAME", "kong-ai-gateway")
 SESSION_ID = os.getenv("SESSION_ID", f"phoenix-demo-{uuid.uuid4().hex[:12]}")
 
@@ -870,7 +462,7 @@ MAGENTA = lambda s: _c("35", s)
 # it's passed through default_headers. x-correlation-id is set per call
 # below so each turn can vary it.
 
-def make_client(correlation_id=None, api_key=PHOENIX_API_KEY):
+def make_client(correlation_id=None, api_key=CONSUMER_API_KEY):
     headers = {"apikey": api_key}
     if correlation_id is not None:
         headers["x-correlation-id"] = correlation_id
@@ -889,10 +481,11 @@ def check_auth_boundary():
     """Send a request with an invalid key, expecting Kong to return 401.
 
     Confirms key-auth is enforced before any upstream call, so an
-    unauthenticated caller never reaches OpenAI or produces a trace.
+    unauthenticated caller never reaches OpenAI.
     """
-    bad_client = make_client(api_key="not-a-real-key")
-    print(f"  Attempting apikey={RED('not-a-real-key')!r}")
+    bad_key = "not-a-real-key"
+    print(f"  Trying apikey={bad_key!r}")
+    bad_client = make_client(api_key=bad_key)
     try:
         bad_client.chat.completions.create(
             model=CHAT_MODEL,
@@ -913,8 +506,8 @@ def send_spoofed_user_header():
     """Send a request with a client-chosen x-user-id header.
 
     Request Transformer Advanced removes x-user-id before the request
-    reaches the AI Model or Post-Function, so this value never becomes
-    Phoenix's user.id. The Consumer identity (phoenix-client) does.
+    reaches the Post-Function Policy, so this value never becomes
+    Phoenix's user.id. The AI Consumer (phoenix-client) does.
     """
     client = make_client(correlation_id=SESSION_ID)
     completion = client.chat.completions.with_raw_response.create(
@@ -925,7 +518,7 @@ def send_spoofed_user_header():
     parsed = completion.parse()
     print(f"  Sent header {DIM('x-user-id: admin')} (client-supplied, dropped by Kong)")
     print(f"  {CYAN(BOLD('[LLM]'))} \"{parsed.choices[0].message.content}\"")
-    print(f"  {DIM('Phoenix user.id will read the Consumer identity instead: ')}{BLUE(BOLD('phoenix-client'))}")
+    print(f"  {DIM('Phoenix user.id shows the AI Consumer instead: ')}{BLUE(BOLD('phoenix-client'))}")
 
 
 # ---------------------------------------------------------------------------
@@ -959,8 +552,8 @@ def run_session_grouping_demo():
     """Two turns share SESSION_ID; a third omits x-correlation-id entirely.
 
     The first two land in the same Phoenix Session. The third has no
-    x-correlation-id, so Post-Function falls back to
-    kong.request.get_id() and appears as its own Session.
+    x-correlation-id, so the Post-Function Policy falls back to the request
+    ID and the turn appears as its own Session.
     """
     session_client = make_client(correlation_id=SESSION_ID)
     chat_turn(session_client, "What is Kong AI Gateway?", "Turn 1 (session: " + SESSION_ID + ")")
@@ -1016,27 +609,27 @@ Chat Model:   gpt-4o-mini
 Session ID:   phoenix-demo-a1b2c3d4e5f6
 
 Checking key-auth boundary...
-  Attempting apikey='not-a-real-key'
-  [BLOCKED] 401 Unauthorized
+  Trying apikey='not-a-real-key'
+  [BLOCKED] 401 Error code: 401 - Unauthorized
 
 Checking that a client-supplied x-user-id is dropped...
   Sent header x-user-id: admin (client-supplied, dropped by Kong)
-  [LLM] "I don't have information identifying who you are..."
-  Phoenix user.id will read the Consumer identity instead: phoenix-client
+  [LLM] "I don't have information identifying who you are."
+  Phoenix user.id shows the AI Consumer instead: phoenix-client
 
 Running session-grouping turns...
 
 Turn 1 (session: phoenix-demo-a1b2c3d4e5f6)
   [LLM] "Kong AI Gateway is a layer that manages, secures, and observes traffic to LLM providers."
-         Model: gpt-4o-mini  Tokens: 14 in / 19 out  (0.812s)
+         Model: openai/gpt-4o-mini  Tokens: 14 in / 19 out  (0.812s)
 
 Turn 2 (session: phoenix-demo-a1b2c3d4e5f6)
   [LLM] "A managed proxy for LLM traffic."
-         Model: gpt-4o-mini  Tokens: 38 in / 8 out  (0.431s)
+         Model: openai/gpt-4o-mini  Tokens: 38 in / 8 out  (0.431s)
 
 Turn 3 (no x-correlation-id -> falls back to request id)
   [LLM] "Arize Phoenix is an open-source LLM observability and evaluation platform."
-         Model: gpt-4o-mini  Tokens: 13 in / 15 out  (0.734s)
+         Model: openai/gpt-4o-mini  Tokens: 13 in / 15 out  (0.734s)
 
 ============================================================
 Done. Open Phoenix -> project kong-ai-gateway -> Sessions -> phoenix-demo-a1b2c3d4e5f6
@@ -1045,72 +638,217 @@ and the LLM span's Messages view shows role/content bubbles for each turn.
 ```
 {:.no-copy-code}
 
-### What happened
+### Open the traces in Phoenix
 
-1. The first call sent `apikey: not-a-real-key`. The Key Auth AI Auth Strategy rejected it with `401` before the request reached the AI Model or OpenAI, so Kong never created a span for it.
-2. The second call sent `x-user-id: admin` alongside a valid key. Request Transformer Advanced dropped that header before Post-Function ran, so the root span's `user.id` reads the AI Consumer identity `phoenix-client`, not the client-supplied value.
-3. The next two calls reused `SESSION_ID` as `x-correlation-id`. Post-Function reads that header into `session.id` on the root span, so both turns group into one Phoenix Session.
-4. The final call omitted `x-correlation-id`. Post-Function fell back to `kong.request.get_id()`, so this turn lands in its own Session.
-5. Every call's response headers carried `x-kong-llm-model` and the OpenAI SDK's `usage` object carried token counts. Those same numbers are what `gen_ai.usage.*` attributes carry into the Phoenix LLM span.
+Open Phoenix at `http://localhost:6006`, then open the project named in `PHOENIX_PROJECT_NAME`. Each successful request is one trace with a Kong root span and an LLM span. Open **Sessions** and find the Session ID that the demo printed. It groups the spoofed request and the first two turns. The third turn is in its own Session, keyed by the request ID. This cookbook hasn't confirmed the OpenInference attributes against a live {{site.ai_gateway}}, so check each column in the following table.
 
-A request/response pair looks like this over the wire:
+### Check the results
 
-```json
-{
-  "model": "gpt-4o-mini",
-  "messages": [{"role": "user", "content": "What is Kong AI Gateway?"}]
-}
-```
-{:.no-copy-code}
+The demo output and Phoenix confirm the following:
 
-```json
-{
-  "id": "chatcmpl-...",
-  "choices": [
-    {
-      "message": {
-        "role": "assistant",
-        "content": "Kong AI Gateway is a layer that manages, secures, and observes traffic to LLM providers."
-      }
-    }
-  ],
-  "usage": {"prompt_tokens": 14, "completion_tokens": 19, "total_tokens": 33}
-}
-```
-{:.no-copy-code}
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Authentication before any provider call"
+    evidence: "The invalid key gets `401`. Kong rejected it before the AI Model sent anything to OpenAI."
+  - behavior: "The user comes from the AI Consumer"
+    evidence: "The user column in Phoenix shows `phoenix-client` for the request that sent `x-user-id: admin`."
+  - behavior: "Session grouping"
+    evidence: "The Session with the printed ID holds three traces. The third turn has its own Session."
+  - behavior: "Inputs, outputs, and messages"
+    evidence: "The Input column shows the request JSON. Kong's LLM span carries the role and content of each message in its `gen_ai.*` attributes. The Output column stays empty when the provider compresses its response, as OpenAI does."
+  - behavior: "Model and token counts"
+    evidence: "The LLM span shows the same model and token counts that the demo prints from the response."
+{% endtable %}
 
-Post-Function writes the request body verbatim onto `input.value` and the response body onto `output.value`, and walks `messages[]` / `choices[].message` into the `llm.input_messages.*` / `llm.output_messages.*` keys Phoenix Messages reads.
+To review the created entities, and per-consumer usage, open the `llm-tracing-arize-phoenix-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-### Verify in Phoenix
+## How it works
 
-Open the project named in `PHOENIX_PROJECT_NAME` (default `kong-ai-gateway`).
+Kong authenticates the request, normalizes its headers, and sends it to OpenAI. The Post-Function Policy adds OpenInference attributes to the spans, and the OpenTelemetry Policy exports them to Phoenix.
 
-You should see:
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant C as Client
+    participant K as Kong AI Gateway
+    participant L as OpenAI
+    participant P as Arize Phoenix
 
-- A Kong root span with kind **CHAIN**, user `phoenix-client`, two Sessions (one grouping turns 1 and 2, one holding turn 3 alone), and JSON Input/Output on the spans table
-- An LLM child span for the AI Model hop, with model and token counts from `gen_ai.*`
-- Messages on the LLM span (role and content bubbles), not only a Raw JSON blob
-- Span status **OK** for HTTP 200, and **ERROR** on the auth-rejected call if it ever produced a span
+    C->>K: POST /llm-tracing-arize-phoenix (apikey, x-correlation-id)
+    activate K
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>K: Request Transformer Advanced Policy removes x-user-id
+    K->>K: Post-Function Policy writes input attributes
+    K->>L: Chat completion with the AI Model Provider's credentials
+    activate L
+    L-->>K: Response
+    deactivate L
+    K->>K: Post-Function Policy writes output attributes
+    K-->>C: Response
+    K->>P: OpenTelemetry Policy exports spans over OTLP/HTTP
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
 
-If the root row shows `--` for Input/Output, the listed span is missing `input.value` / `output.value`. Confirm Post-Function is attached after the header-normalize policy and that request buffering is enabled.
+The AI Model lists the three AI Policies in `policies`. The [Post-Function](/ai-gateway/policies/post-function/) Policy runs after the other AI Policies in each phase and after authentication, so it reads the headers that the Request Transformer Advanced Policy already changed.
 
-If Messages is empty, confirm you opened the LLM span, not the CHAIN root. CHAIN ignores `llm.input_messages.*`.
+### Key Auth AI Auth Strategy and AI Consumer
 
-### Explore in {{site.konnect_short_name}}
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the key from a request header and matches it against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, analytics, and in this cookbook, Phoenix's user column use.
 
-Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `llm-tracing-arize-phoenix-recipe`. The recipe created an AI Model Provider holding your OpenAI credentials, an AI Model (`llm-tracing-arize-phoenix-model`) with the Request Transformer Advanced, OpenTelemetry, and Post-Function Policies attached, a Key Auth AI Auth Strategy, and an AI Consumer (`phoenix-client`) with a demo API key credential, all scoped to this recipe by the kongctl namespace applied above.
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
 
-For platform-wide traffic analysis across every {{site.ai_gateway}}, open the **Observability** L1 menu in {{site.konnect_short_name}}.
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey, x-api-key]`"
+    purpose: "Kong reads the key from the `apikey` or `x-api-key` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`key_in_header: true`, `key_in_query: false`"
+    purpose: "Kong accepts keys only in headers. Keys in a query string end up in access logs."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request, so OpenAI never sees the AI Consumer key."
+  - setting: "`name: phoenix-client` (AI Consumer)"
+    purpose: "The Post-Function Policy reads `kong.client.get_consumer().username` and writes it to `user.id`. The AI Consumer schema has `name` but no `username`. This cookbook hasn't confirmed that `username` returns the AI Consumer's `name` on a live {{site.ai_gateway}}."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### Request Transformer Advanced Policy
+
+The [Request Transformer Advanced](/ai-gateway/policies/request-transformer-advanced/) Policy changes the request headers before the Post-Function Policy reads them. It runs `remove` before `add`.
+
+The following settings configure the Request Transformer Advanced Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`remove.headers: [x-user-id]`"
+    purpose: "Removes a client-supplied user header, so that only the AI Consumer identity reaches the trace."
+  - setting: "`add.headers: x-correlation-id`"
+    purpose: "Sets `x-correlation-id` from `x-request-id` or `x-session-id` when the client sends one of them. The template is a Lua expression, so `or` picks the first header that is set. This cookbook hasn't confirmed that `add` keeps a client's own `x-correlation-id`. If the value is empty, the Post-Function Policy uses the request ID instead."
+{% endtable %}
+
+### AI Model Provider and AI Model
+
+The AI Model Provider holds the OpenAI credentials. The AI Model matches requests on `/llm-tracing-arize-phoenix`, runs the three AI Policies, and sends the request to OpenAI. When tracing is on, Kong adds `gen_ai.*` attributes to the spans, for example the model and the token counts. See the [Gen AI OpenTelemetry spans attributes reference](/ai-gateway/llm-open-telemetry/) for the full list.
+
+The following settings configure the AI Model Provider and the AI Model:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The OpenAI credentials. Kong adds them to each upstream request."
+  - setting: "`formats: [{type: openai}]`"
+    purpose: "The AI Model accepts OpenAI-format chat completion requests."
+  - setting: "`policies`"
+    purpose: "Attaches the Request Transformer Advanced, OpenTelemetry, and Post-Function Policies to this AI Model only."
+  - setting: "`config.route.model`"
+    purpose: "The AI Model answers to the `CHAT_MODEL` value in the body's `model` field (`body_param: model`), which the demo sends. Without a selector, an AI Model accepts only its own name as `model`."
+  - setting: "`targets[].name`"
+    purpose: "The upstream model, from `CHAT_MODEL`. Change it and re-apply to swap models without changing clients."
+  - setting: "`config.response_streaming: deny`"
+    purpose: "Clients can't set `stream=true`. The Post-Function Policy reads the complete response body to write `output.value` and the output messages."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default, for long conversation contexts."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. The default is `false`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes `/llm-tracing-arize-phoenix` from the path before it forwards the request."
+{% endtable %}
+
+### OpenTelemetry Policy
+
+The [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy sends the spans from the data plane to Phoenix. The data plane settings from the {{site.konnect_product_name}} prerequisite decide whether Kong records spans at all.
+
+The following settings configure the OpenTelemetry Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`traces_endpoint`"
+    purpose: "The Phoenix OTLP/HTTP URL, from `PHOENIX_OTLP_ENDPOINT`, including the `/v1/traces` path."
+  - setting: "`headers.x-project-name`"
+    purpose: "The Phoenix project, from `PHOENIX_PROJECT_NAME`. Phoenix creates the project on the first span. The header works only on the OTLP/HTTP endpoint, not on gRPC."
+  - setting: "`resource_attributes.service.name`"
+    purpose: "The service name on each span: `kong-gateway`."
+  - setting: "`sampling_rate: 1`"
+    purpose: "Samples every request. This value overrides the data plane's sampling rate. Lower it for production traffic."
+  - setting: "`propagation`"
+    purpose: "Reads and writes W3C `traceparent` headers. When an application sends `traceparent`, Kong's spans join the application's trace."
+{% endtable %}
+
+### Post-Function Policy
+
+The Post-Function Policy runs Lua in two phases. It reads the spans with `kong.tracing.get_spans()`. The first span is Kong's root span, and a span with a `gen_ai.operation.name` attribute or a name that starts with `chat ` is the LLM span.
+
+The following settings configure the Post-Function Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`access`"
+    purpose: "Turns on response buffering, then writes `openinference.span.kind: CHAIN`, `session.id`, `user.id`, and `input.value` on the root span. The LLM span doesn't exist yet in the `access` phase, so the code can't write on it. `session.id` comes from `x-correlation-id`, or from the request ID (`ngx.var.request_id`) when the header is empty. Message parsing reads only string `content`."
+  - setting: "`header_filter`"
+    purpose: "Sets the span status to OK, or to ERROR for a status of `400` or higher. If the response body is JSON, it writes `output.value` on the root span and the LLM span, and `llm.output_messages.*` on the LLM span, each cut at 64 KB. If the provider compresses the response (OpenAI sends gzip), it skips them: a binary attribute value makes Phoenix reject the whole span batch with `422`."
+{% endtable %}
+
+The Lua uses only functions that the default `strict` Lua sandbox allows. See [Lua sandboxing in {{site.ai_gateway}}](/ai-gateway/sandboxing/) for the sandbox modes and the allowed functions.
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the OpenAI credentials in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault. Spans carry full prompts and responses, so review who can read the Phoenix project.
 
 ## Variations and next steps
 
-**Swap the OTLP backend.** The same policies export to any OTLP/HTTP collector. Phoenix-specific behavior is the `x-project-name` header and OpenInference keys this recipe writes. Langfuse, Jaeger, and Grafana Tempo store the spans but don't render Phoenix Sessions or Messages.
+You can change or extend this configuration in the following ways:
 
-**Switch to OpenID Connect for production identity.** When the platform integrates a real IdP, swap the Key Auth AI Auth Strategy for `openid-connect` and let JWT claims map users to AI Consumers. The rest of the recipe (policies, AI Model, correlation headers) stays put. See the [Claude Code SSO recipe](/cookbooks/claude-code-sso/) for an end-to-end example with Okta.
-
-**Combine app OpenInference with the gateway span.** Leave W3C extract and inject on. The application opens the parent span and sends `traceparent`. Kong's LLM hop nests under that trace in Phoenix. Agent graphs and RAG still need SDK instrumentation in the app.
-
-**Add per-consumer rate limits.** With Key Auth mapping requests to AI Consumers, attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to apply token quotas per AI Consumer. See the [LLM cost optimization recipe](/cookbooks/llm-cost-optimization/) for a worked example.
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Swap models"
+    how: "Change `CHAT_MODEL` and re-apply. Clients and traces keep the same shape."
+  - variation: "Send traces to a hosted Phoenix"
+    how: "Set `PHOENIX_OTLP_ENDPOINT` to the `/v1/traces` URL of your Phoenix deployment. If it requires an API key, add an `Authorization` header with the value `Bearer <your-phoenix-api-key>` to the OpenTelemetry Policy's `headers`. Policy configuration doesn't accept `!secret`, so reference the value with `!env`. See the [Phoenix API keys documentation](https://arize.com/docs/phoenix/settings/api-keys)."
+  - variation: "Join application traces"
+    how: "Send `traceparent` from an application that uses OpenInference instrumentation. Kong's spans then nest under the application's trace, next to its agent and retrieval spans."
+  - variation: "Add per-consumer token limits"
+    how: "Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to give each AI Consumer its own token budget. See the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+  - variation: "Authenticate users with an identity provider"
+    how: "Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) and map JWT claims to AI Consumers. The AI Policies and the AI Model don't change. See the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/) for an example with Okta."
+{% endtable %}
 
 ## Cleanup
 
@@ -1118,4 +856,10 @@ The recipe's kongctl namespace scoped all resources, so this teardown removes on
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='llm-tracing-arize-phoenix-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
+```
+
+Remove the Phoenix container:
+
+```bash
+docker rm -f phoenix
 ```

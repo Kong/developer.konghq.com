@@ -8,31 +8,15 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
   ai-gateway: '2.0'
 categories:
   - llm
   - cost-optimization
 featured: true
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - key-auth
-  - ai-prompt-decorator
-  - datakit
-  - ai-model
-  - ai-model-provider
-requires_embeddings: false
-providers:
-  - openai
-  - bedrock
-
-hint: "{{site.konnect_short_name}} account, kongctl, an OpenAI API key, and AWS Bedrock credentials."
 prereqs:
   skip_product: true
   skip_tool: true
@@ -66,27 +50,29 @@ prereqs:
            ```bash
            kongctl version
            ```
-    - title: AI Credentials
+    - title: OpenAI
       content: |
-        This recipe routes every request across two providers, so you need credentials for both. OpenAI serves the fast tier and the prompt-complexity classifier; AWS Bedrock serves the smart tier.
+        OpenAI serves the prompt classifier and the fast tier.
 
-        1. **OpenAI**:
-           1. [Create an OpenAI account](https://auth.openai.com/create-account).
-           1. [Get an API key](https://platform.openai.com/api-keys).
-           1. Export the API key as an environment variable:
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
+        1. [Get an API key](https://platform.openai.com/api-keys).
+        1. Export the API key:
 
-              ```sh
-              export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
-              ```
-        1. **AWS Bedrock**:
-           1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for a Claude model.
-           1. Export your AWS credentials:
+           ```sh
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           ```
+    - title: AWS Bedrock
+      content: |
+        AWS Bedrock serves the smart tier with a Claude model.
 
-              ```sh
-              export AWS_ACCESS_KEY_ID='your-access-key'
-              export AWS_SECRET_ACCESS_KEY='your-secret-key'
-              export AWS_REGION='us-east-1'
-              ```
+        1. Get an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for Claude Sonnet 4.5.
+        1. Export your AWS credentials and region:
+
+           ```sh
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
+           ```
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
@@ -97,419 +83,46 @@ prereqs:
         source .venv/bin/activate
         pip install 'openai>=1.0.0'
         ```
-
 overview: |
-  Route chat requests across OpenAI and AWS Bedrock based on how complex each prompt actually
-  is, without the client choosing a tier or a provider. By the end of this recipe, you'll
-  have a single `/chat` endpoint that classifies every incoming prompt with a small, cheap
-  model, then dispatches the request to a fast OpenAI model for simple prompts or to Claude on
-  AWS Bedrock for prompts that need deeper reasoning.
+  Route each chat request to a fast OpenAI model or to Claude on AWS Bedrock, based on how complex the prompt is, without the client choosing a model or a provider. You'll set up:
+
+  * One `/chat` endpoint that accepts only requests with a valid AI Consumer API key
+  * A small classifier model that labels each prompt `fast` or `smart`
+  * A workflow in {{site.ai_gateway}} that sends the prompt to the matching tier and returns its answer
 ---
 
-## The problem
+## What this cookbook solves
 
-Teams running production LLM traffic on a single model face a tradeoff they can't route
-around at the application layer:
-
-- **A single capable model overpays for easy requests.** A frontier model priced for deep
-  reasoning charges the same per-token rate for "hello" as it does for a multi-step analysis
-  task. Industry cost breakdowns of production LLM traffic commonly show the majority of
-  requests are simple completions that a much cheaper model could have handled equally well.
-- **A single cheap model falls short on hard requests.** A small, fast model that keeps
-  costs down on simple traffic produces worse answers, or fails outright, on requests that
-  need multi-step reasoning, code generation, or long-context analysis.
-- **Hardcoded, keyword-based routing breaks down fast.** Rules like "if the prompt contains
-  the word 'code', use the bigger model" don't generalize. Real user prompts don't follow
-  templates, and the rule set that tries to keep up becomes an unmaintainable pile of
-  string-matching heuristics that still classify most prompts incorrectly.
-- **Client-chosen tiers push a platform decision onto every caller.** If application code
-  decides which model tier to call, every team integrating with the platform needs to
-  implement and maintain that same judgment call, and nothing stops a caller from always
-  requesting the expensive tier out of caution.
-
-The root issue is that model selection needs to be a per-request decision made close to the
-request, using the actual content of the prompt, not a static assignment baked into
-application code or a client-side guess.
-
-## The solution
-
-{{site.ai_gateway_name}} inserts a classification step ahead of the actual chat request. A
-small, inexpensive model reads each incoming prompt and returns a tier recommendation, and
-{{site.base_gateway}} uses that recommendation to dispatch the request to the right upstream
-model, either a fast OpenAI model for simple prompts or Claude on AWS Bedrock for prompts
-that need deeper reasoning. The client always calls the same `/chat` endpoint with a standard
-chat completion body. It never chooses a provider, never chooses a model, and never sees the
-classification step happen.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant C as Client
-    participant Chat as chat AI Model
-    participant Sel as selector AI Model<br/>(OpenAI o3-mini)
-    participant Fast as fast-tier AI Model<br/>(OpenAI)
-    participant Smart as smart-tier AI Model<br/>(Bedrock Claude)
-
-    C->>Chat: POST /chat (apikey, prompt)
-    activate Chat
-    Chat->>Chat: key-auth Auth Strategy: validate apikey (else 401)
-    Chat->>Sel: Datakit Policy calls /model-selection with the prompt
-    activate Sel
-    Sel-->>Chat: Tier recommendation ("fast" or "smart")
-    deactivate Sel
-    alt Fast tier
-        Chat->>Fast: Datakit calls /model-based-routing-fast
-        activate Fast
-        Fast-->>Chat: Completion
-        deactivate Fast
-    else Smart tier
-        Chat->>Smart: Datakit calls /model-based-routing-smart
-        activate Smart
-        Smart-->>Chat: Completion
-        deactivate Smart
-    end
-    Chat-->>C: Completion (+ X-Kong-LLM-Model)
-    deactivate Chat
-{% endmermaid %}
-<!-- vale on -->
+Most teams send all LLM traffic to one model, or let each client choose a model tier, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: Client application
-    responsibility: "Sends a standard chat completion request to `/chat` with an `apikey` header. No routing logic required."
-  - component: Key Auth AI Auth Strategy
-    responsibility: Validates the `apikey` header against a registered AI Consumer credential before any classification or upstream call happens.
-  - component: Datakit Policy (orchestrator)
-    responsibility: Extracts the prompt, calls the selector AI Model, reads back the tier recommendation, and calls whichever tier AI Model matches.
-  - component: selector AI Model
-    responsibility: Classifies prompt complexity using a small OpenAI model and an AI Prompt Decorator Policy that constrains the answer to a single word.
-  - component: fast-tier AI Model
-    responsibility: Serves simple prompts using a fast, inexpensive OpenAI model.
-  - component: smart-tier AI Model
-    responsibility: Serves complex prompts using Claude on AWS Bedrock.
-  - component: AI Model Providers
-    responsibility: Hold the OpenAI and AWS Bedrock credentials and inject them into every upstream call.
+  - problem: "A capable model charges the same per-token price for a greeting as for a multi-step analysis, so simple requests cost more than they need to."
+    solution: "A selector AI Model classifies each prompt with a small OpenAI model. The Datakit Policy sends prompts labeled `fast` to a cheaper OpenAI model."
+  - problem: "A small, cheap model gives weak answers to prompts that need reasoning, code generation, or long-form analysis."
+    solution: "Prompts labeled `smart` go to a smart-tier AI Model that uses Claude on AWS Bedrock."
+  - problem: "Keyword rules such as \"if the prompt mentions code, use the bigger model\" don't generalize, and the rule set grows without getting more accurate."
+    solution: "The AI Prompt Decorator Policy gives the classifier its rules as a system message. You change the rules in the configuration, not in application code."
+  - problem: "When clients choose the tier, each team repeats the same decision, and nothing stops a caller from always choosing the expensive tier."
+    solution: "Clients call one `/chat` endpoint. {{site.ai_gateway}} chooses the tier, and the client never names a provider or a model."
+  - problem: "Each service holds copies of the OpenAI and AWS credentials."
+    solution: "Two AI Model Providers keep the credentials in Kong. Clients hold an AI Consumer key, and the Key Auth AI Auth Strategy rejects unknown keys with `401` before any classification."
 {% endtable %}
 
-## How it works
+## Try it out
 
-A request to `/chat` passes through four stages: authentication, classification, dispatch,
-and response relay.
+Apply the configuration, then run a demo script that sends a simple prompt, a complex prompt, and one request with an invalid API key to `/chat`.
 
-1. A client sends a chat completion request to `/chat` with an `apikey` header. The request
-   body's `model` field carries a placeholder value; Kong ignores it.
-2. The Key Auth AI Auth Strategy validates the `apikey` header against a registered AI Consumer
-   credential. An invalid or missing key gets a `401` before any classification or upstream
-   call happens.
-3. The Datakit Policy attached to the `/chat` AI Model extracts the prompt and calls the
-   selector AI Model at `/model-selection`, forwarding the same `apikey` header.
-4. The selector AI Model's AI Prompt Decorator Policy prepends classification instructions to
-   the prompt, then its AI Proxy target sends the decorated prompt to a small OpenAI model,
-   which returns exactly one word: `fast` or `smart`.
-5. Back in the Datakit workflow, a parsed tier decision determines which internal AI Model to
-   call next: the fast tier (OpenAI) or the smart tier (AWS Bedrock, Claude).
-6. Datakit calls the chosen tier's AI Model directly, then returns that Model's response to
-   the client as the final answer to `/chat`, including the `X-Kong-LLM-Model` header showing
-   which upstream model actually served the request.
+### Apply the Kong configuration
 
-### Key Auth: API key authentication and AI Consumer mapping
+The configuration creates two AI Model Providers (OpenAI and AWS Bedrock), a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, an AI Prompt Decorator Policy, a Datakit Policy, and four AI Models: the public `/chat` AI Model and the selector, fast-tier, and smart-tier AI Models that it calls. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-Authentication in {{site.ai_gateway_name}} 2.0 is an AI Auth Strategy, not an AI Policy. Every AI
-Model in this recipe (the public `/chat` endpoint and the three internal Models) shares the
-same Key Auth AI Auth Strategy and the same AI Consumer credential, so a single API key
-authenticates both the client's request and every internal call the Datakit workflow makes on
-its behalf.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_auth_strategies:
-  - ref: model-based-routing-auth
-    type: key-auth
-    display_name: "model-based-routing key auth"
-    config:
-      key_names:
-        - apikey
-      hide_credentials: true
-
-ai_gateway_consumers:
-  - ref: model-based-routing-consumer
-    name: model-based-routing-consumer
-    display_name: "model-based-routing demo consumer"
-    type: api-key
-    credentials:
-      - ref: model-based-routing-credential
-        name: model-based-routing-credential
-        display_name: "model-based-routing demo API key"
-        type: api-key
-        api_key: !secret {source: !env CONSUMER_API_KEY}
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`key_names: [apikey]`**. The header Kong checks for the API key. The Datakit Policy reads
-this same header from the client's request and forwards it on every internal call, so one
-credential authenticates the whole request chain.
-
-**`hide_credentials: true`**. Strips the API key before any request leaves Kong, so neither
-provider ever sees the AI Consumer's key.
-
-**`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret`
-reference. Kong rejects a plain string here, even for a demo value like this recipe's.
-
-### AI Prompt Decorator: classify prompt complexity
-
-The [AI Prompt Decorator](/ai-gateway/policies/ai-prompt-decorator/) Policy prepends a hidden
-system message to the selector AI Model, instructing the classifier model to analyze the
-prompt and return only `fast` or `smart`. The client never sees this instruction. It only
-sees its own prompt and, eventually, an answer.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_policies:
-  - ref: model-based-routing-decorator
-    type: ai-prompt-decorator
-    display_name: "model-based-routing classifier prompt"
-    config:
-      llm_format: openai
-      prompts:
-        prepend:
-          - role: system
-            content: >
-              You are a model router. Analyze the user's prompt and recommend
-              the most appropriate model tier.
-
-              Return ONLY ONE of these values:
-              - "fast" for simple tasks (greetings, basic questions, straightforward requests)
-              - "smart" for complex tasks (reasoning, analysis, coding, creative writing)
-
-              Respond with just the single word "fast" or "smart", nothing else.
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`prompts.prepend`**. The AI Prompt Decorator Policy inserts the system message before the
-user's prompt in the message array that Kong sends to the classifier model. The system message
-constrains the classifier's output to a single word, which the Datakit workflow parses directly.
-
-Adjust the classification rules in the system message to fit your workload. For example,
-treat translation as `fast` or multi-step planning as `smart`, depending on which upstream tier
-handles your traffic best.
-
-### AI Model and AI Model Provider: the selector, fast tier, and smart tier
-
-Three of this recipe's four AI Models exist to serve the dynamic-routing mechanism rather
-than to be called directly: the selector classifies prompts using a small OpenAI model, the
-fast tier serves simple prompts using a larger OpenAI model, and the smart tier serves complex
-prompts using Claude on AWS Bedrock. Each AI Model references an AI Model Provider that holds
-that provider's credentials.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_model_providers:
-  - ref: model-based-routing-openai-provider
-    type: openai
-    display_name: "model-based-routing (OpenAI)"
-    config:
-      auth:
-        type: basic
-        headers:
-          - name: Authorization
-            value: !secret {source: !env OPENAI_TOKEN}
-
-  - ref: model-based-routing-bedrock-provider
-    type: bedrock
-    display_name: "model-based-routing (AWS Bedrock)"
-    config:
-      auth:
-        type: aws
-        access_key_id: !env AWS_ACCESS_KEY_ID
-        secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
-
-ai_gateway_models:
-  - ref: model-based-routing-selector
-    type: model
-    display_name: "model-based-routing (selector)"
-    formats:
-      - type: openai
-    capabilities:
-      - generate
-    access:
-      auth_strategies:
-        - model-based-routing-auth
-    policies:
-      - model-based-routing-decorator
-    config:
-      max_request_body_size: 5242880
-      response_streaming: deny
-      route:
-        paths:
-          - /model-selection
-    targets:
-      - name: !env OPENAI_SELECTOR_SLM
-        provider: model-based-routing-openai-provider
-        config:
-          type: openai
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`config.auth`** (on the AI Model Provider). Kong holds provider credentials here and injects
-them into every upstream request routed through that AI Model Provider. AWS Bedrock authenticates with
-`access_key_id`/`secret_access_key`, and the region lives on the target, not the AI Model Provider,
-because one AWS account's credentials can serve targets in different regions.
-
-**`response_streaming: deny`** on every AI Model in this recipe. The Datakit Policy needs a
-complete response body from the selector call to parse the tier decision, and needs a
-complete response body from whichever tier it calls to relay back to the client. Streaming
-responses from any of the four Models in this recipe wouldn't reach the orchestrator step
-that depends on them, so this recipe doesn't support token-by-token streaming on `/chat`.
-
-**`targets[].name`**. The upstream model identifier. The selector uses a small, cheap model
-since the classifier only needs to return one word, not generate a full answer.
-
-The fast tier and smart tier AI Models (`model-based-routing-fast`,
-`model-based-routing-smart`) follow the same shape, targeting a larger OpenAI model and a
-Claude model on Bedrock respectively. Clients don't call either Model directly. Both exist so
-the Datakit Policy on `/chat` can call them internally and relay their response.
-
-### Datakit: dynamic tier orchestration
-
-The [Datakit](/ai-gateway/policies/datakit/) Policy attached to the public `/chat` AI Model runs the whole
-dynamic-routing workflow as a sequence of declarative nodes: extract the prompt, call the
-selector, parse the tier, call the matching tier's AI Model, and return that response to the
-client.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_policies:
-  - ref: model-based-routing-orchestrator
-    type: datakit
-    display_name: "model-based-routing tier orchestration"
-    config:
-      nodes:
-        - name: EXTRACT_PROMPT
-          type: jq
-          input: request.body
-          output: prompt_data
-          jq: '{messages: .messages}'
-
-        - name: EXTRACT_AUTH
-          type: jq
-          input: request.headers
-          output: auth_header
-          jq: '{apikey: (.apikey // .Apikey // .APIKey)}'
-
-        - name: CALL_MODEL_SELECTOR
-          type: call
-          url: http://localhost:8000/model-selection
-          method: POST
-          inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
-
-        - name: EXTRACT_TIER
-          type: jq
-          input: CALL_MODEL_SELECTOR.body
-          output: tier
-          jq: '.choices[0].message.content | gsub("^\\s+|\\s+$"; "")'
-
-        - name: IS_SMART
-          type: jq
-          input: EXTRACT_TIER.tier
-          output: value
-          jq: '. == "smart"'
-
-        - name: ROUTE_DECISION
-          type: branch
-          input: IS_SMART.value
-          then:
-            - CALL_SMART
-            - RESPOND_SMART
-          else:
-            - CALL_FAST
-            - RESPOND_FAST
-
-        - name: CALL_SMART
-          type: call
-          url: http://localhost:8000/model-based-routing-smart
-          method: POST
-          inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
-
-        - name: RESPOND_SMART
-          type: exit
-          inputs:
-            body: CALL_SMART.body
-            headers: CALL_SMART.headers
-
-        - name: CALL_FAST
-          type: call
-          url: http://localhost:8000/model-based-routing-fast
-          method: POST
-          inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
-
-        - name: RESPOND_FAST
-          type: exit
-          inputs:
-            body: CALL_FAST.body
-            headers: CALL_FAST.headers
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`EXTRACT_PROMPT` / `EXTRACT_AUTH`**. Pull the message array and the `apikey` header out of
-the client's original request, so both can be forwarded to every internal call this workflow
-makes.
-
-**`CALL_MODEL_SELECTOR`**. Calls the selector AI Model's `/model-selection` path the same way
-an external client would, reusing the client's own API key.
-
-**`EXTRACT_TIER` / `IS_SMART`**. Parse the classifier's single-word answer into a tier string,
-then into a boolean the `branch` node can act on.
-
-**`ROUTE_DECISION`**. A `branch` node that calls the smart tier's AI Model when the classifier
-says `smart`, or the fast tier's AI Model otherwise.
-
-**`RESPOND_SMART` / `RESPOND_FAST`**. An `exit` node returns a response built from an earlier
-node directly to the client, bypassing this AI Model's own target. Each branch reaches its
-matching `exit` node with the body and headers from whichever tier's AI Model actually served
-the request, including `X-Kong-LLM-Model`.
-
-This exact node graph (the `branch` and `exit` node fields in the selector configuration) has not yet been
-verified against a live {{site.ai_gateway}}. Confirm it with a real deployment before relying on it in
-production, and see the [Datakit Policy reference](/ai-gateway/policies/datakit/) for the full field
-set on each node type.
-
-{:.info}
-> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
-
-## Apply the Kong configuration
-
-The following configuration creates two AI Model Providers (OpenAI and AWS Bedrock), a
-Key Auth AI Auth Strategy with a demo AI Consumer, an AI Prompt Decorator Policy for
-classification, a Datakit Policy for orchestration, and four AI Models: the public `/chat`
-endpoint plus the selector, fast-tier, and smart-tier Models it calls internally. A kongctl
-namespace scopes every resource, so you can tear the configuration down cleanly without
-affecting other configurations on the same {{site.ai_gateway}}.
-
-First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply command can
-manage it.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -517,23 +130,23 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
-
-Export the demo AI Consumer's API key and the model selections for each tier. The AI Consumer
-credential's `api_key` field is write-only and must come from an env var, even for this fixed
-demo value:
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
 ```bash
 export CONSUMER_API_KEY='demo-api-key'
-export OPENAI_SELECTOR_SLM='o3-mini'                                  # classifier model
-export OPENAI_FAST_MODEL='gpt-4o-mini'                                # fast tier
-export BEDROCK_SMART_MODEL='anthropic.claude-3-5-sonnet-20241022-v2:0'  # smart tier
+```
+
+Export the three upstream models. `OPENAI_SELECTOR_SLM` is the classifier, `OPENAI_FAST_MODEL` serves the fast tier, and `BEDROCK_SMART_MODEL` serves the smart tier. Provider credentials come from the prerequisites:
+
+```bash
+export OPENAI_SELECTOR_SLM='gpt-4o-mini'
+export OPENAI_FAST_MODEL='gpt-4o-mini'
+export BEDROCK_SMART_MODEL='global.anthropic.claude-sonnet-4-5-20250929-v1:0'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -572,7 +185,7 @@ ai_gateway_auth_strategies:
     config:
       key_names:
         - apikey
-      hide_credentials: true
+      hide_credentials: false
 
 ai_gateway_consumers:
   - ref: model-based-routing-consumer
@@ -615,41 +228,47 @@ ai_gateway_policies:
     type: datakit
     config:
       nodes:
-        - name: EXTRACT_PROMPT
+        - name: CLASSIFIER_BODY
           type: jq
           input: request.body
-          output: prompt_data
-          jq: '{messages: .messages}'
+          jq: '{model: "classifier", messages: .messages}'
+
+        - name: FAST_BODY
+          type: jq
+          input: request.body
+          jq: '{model: "fast", messages: .messages}'
+
+        - name: SMART_BODY
+          type: jq
+          input: request.body
+          jq: '{model: "smart", messages: .messages}'
 
         - name: EXTRACT_AUTH
           type: jq
           input: request.headers
-          output: auth_header
           jq: '{apikey: (.apikey // .Apikey // .APIKey)}'
 
         - name: CALL_MODEL_SELECTOR
           type: call
-          url: http://localhost:8000/model-selection
+          url: http://localhost:8000/model-selection/chat/completions
           method: POST
           inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
+            body: CLASSIFIER_BODY
+            headers: EXTRACT_AUTH
 
         - name: EXTRACT_TIER
           type: jq
           input: CALL_MODEL_SELECTOR.body
-          output: tier
           jq: '.choices[0].message.content | gsub("^\\s+|\\s+$"; "")'
 
         - name: IS_SMART
           type: jq
-          input: EXTRACT_TIER.tier
-          output: value
+          input: EXTRACT_TIER
           jq: '. == "smart"'
 
         - name: ROUTE_DECISION
           type: branch
-          input: IS_SMART.value
+          input: IS_SMART
           then:
             - CALL_SMART
             - RESPOND_SMART
@@ -659,11 +278,11 @@ ai_gateway_policies:
 
         - name: CALL_SMART
           type: call
-          url: http://localhost:8000/model-based-routing-smart
+          url: http://localhost:8000/model-based-routing-smart/chat/completions
           method: POST
           inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
+            body: SMART_BODY
+            headers: EXTRACT_AUTH
 
         - name: RESPOND_SMART
           type: exit
@@ -673,11 +292,11 @@ ai_gateway_policies:
 
         - name: CALL_FAST
           type: call
-          url: http://localhost:8000/model-based-routing-fast
+          url: http://localhost:8000/model-based-routing-fast/chat/completions
           method: POST
           inputs:
-            body: EXTRACT_PROMPT.prompt_data
-            headers: EXTRACT_AUTH.auth_header
+            body: FAST_BODY
+            headers: EXTRACT_AUTH
 
         - name: RESPOND_FAST
           type: exit
@@ -715,6 +334,10 @@ ai_gateway_models:
           - POST
           - OPTIONS
         strip_path: true
+        model:
+          body_param: model
+          values:
+            - classifier
     targets:
       - name: !env OPENAI_SELECTOR_SLM
         provider: model-based-routing-openai-provider
@@ -748,6 +371,10 @@ ai_gateway_models:
           - POST
           - OPTIONS
         strip_path: true
+        model:
+          body_param: model
+          values:
+            - fast
     targets:
       - name: !env OPENAI_FAST_MODEL
         provider: model-based-routing-openai-provider
@@ -781,6 +408,10 @@ ai_gateway_models:
           - POST
           - OPTIONS
         strip_path: true
+        model:
+          body_param: model
+          values:
+            - smart
     targets:
       - name: !env BEDROCK_SMART_MODEL
         provider: model-based-routing-bedrock-provider
@@ -817,13 +448,16 @@ ai_gateway_models:
           - POST
           - OPTIONS
         strip_path: true
+        model:
+          body_param: model
+          values:
+            - auto
     targets:
       - name: !env OPENAI_FAST_MODEL
         provider: model-based-routing-openai-provider
         config:
           type: openai
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -831,35 +465,33 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-## Try it out
+### Run the demo
 
-The demo script sends a simple prompt and a complex prompt to `/chat`, printing the
-`X-Kong-LLM-Model` header on each response so you can confirm which upstream model actually
-answered. A final call presents an invalid API key and shows Kong rejecting it with `401`
-before any classification or upstream call.
+The script sends a simple prompt and a complex prompt to `/chat`, then sends one request with an invalid API key. In the output, look for the upstream model on each `[ROUTED TO]` line and the `401` for the invalid key.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token to the `apikey` header server-side.
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""Model-based routing demo. See README for context.
+"""Model-based routing demo for Kong AI Gateway.
 
-Sends a simple prompt and a complex prompt to Kong's /chat endpoint. Kong classifies each
-prompt's complexity internally (via an OpenAI o3-mini call) and dynamically routes the
-request to either the OpenAI fast tier or the AWS Bedrock (Claude) smart tier. The demo
-prints the X-Kong-LLM-Model header on each response so you can confirm which upstream model
-actually served the request. A final call with an invalid API key shows Kong rejecting the
-request with 401 before any classification or upstream call happens.
+Shows three things:
+  1. A simple prompt sent to /chat is classified as "fast" and served by the
+     OpenAI fast tier. The X-Kong-LLM-Model response header names the upstream model.
+  2. A complex prompt sent to the same endpoint is classified as "smart" and
+     served by the Claude model on AWS Bedrock.
+  3. A request with an invalid key gets 401 from Kong before any classification
+     or upstream call.
 
-Run with:
+Expected output: one [ROUTED TO] line with an OpenAI model for the simple prompt,
+one [ROUTED TO] line with a Bedrock model for the complex prompt, then a
+[BLOCKED] 401 line for the invalid key.
 
-    python demo.py
-
-Requires the Kong configuration from the README to be applied and PROXY_URL (defaults to
-http://localhost:8000) reachable.
+Run: python demo.py (set PROXY_URL if the data plane is not at http://localhost:8000,
+and CONSUMER_API_KEY if you changed the demo key).
 """
 
 import os
@@ -869,7 +501,7 @@ import time
 from openai import APIStatusError, OpenAI
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
-API_KEY = "demo-api-key"
+API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
 
 SIMPLE_PROMPT = "Hi there! What's 2 + 2?"
 COMPLEX_PROMPT = (
@@ -902,11 +534,10 @@ def call(client: OpenAI, label: str, prompt: str) -> None:
     print(f"\n{BOLD('[REQUEST]')} {label}: {prompt!r}")
     start_ms = round(time.time() * 1000)
     try:
-        # The body's "model" field is a placeholder. Kong's internal classifier
-        # overwrites it with "fast" or "smart" before the request reaches the
-        # upstream provider, so the value sent here never reaches OpenAI or Bedrock.
+        # The SDK requires a model field. The Datakit workflow forwards only the
+        # messages to the classifier and the tiers, so this value never reaches a provider.
         raw = client.chat.completions.with_raw_response.create(
-            model="fast",
+            model="auto",
             messages=[{"role": "user", "content": prompt}],
         )
     except APIStatusError as e:
@@ -932,15 +563,17 @@ def section(title: str) -> None:
 
 
 def main() -> None:
-    section("1. Simple prompt. Kong's classifier should recommend the fast tier")
+    section("1. Simple prompt. Expected tier: fast (OpenAI)")
     client = make_client(API_KEY)
     call(client, "simple", SIMPLE_PROMPT)
 
-    section("2. Complex prompt. Kong's classifier should recommend the smart tier")
+    section("2. Complex prompt. Expected tier: smart (AWS Bedrock)")
     call(client, "complex", COMPLEX_PROMPT)
 
     section("3. Invalid API key. Kong rejects before any classification or upstream call")
-    bad_client = make_client("not-a-real-key")
+    bad_key = "not-a-real-key"
+    print(f"\nTrying apikey={bad_key!r}")
+    bad_client = make_client(bad_key)
     call(bad_client, "simple", SIMPLE_PROMPT)
 
     section("Done.")
@@ -965,7 +598,7 @@ Example output:
 
 ```text
 ======================================================================
-1. Simple prompt. Kong's classifier should recommend the fast tier
+1. Simple prompt. Expected tier: fast (OpenAI)
 ======================================================================
 
 [REQUEST] simple: "Hi there! What's 2 + 2?"
@@ -974,20 +607,22 @@ Example output:
 [LATENCY] upstream=612ms  proxy=780ms  total=1401ms
 
 ======================================================================
-2. Complex prompt. Kong's classifier should recommend the smart tier
+2. Complex prompt. Expected tier: smart (AWS Bedrock)
 ======================================================================
 
-[REQUEST] complex: "Perform in depth analysis of the ancient Roman world during the time of Pliny the Elder in two paragraphs."
+[REQUEST] complex: 'Perform in depth analysis of the ancient Roman world during the time of Pliny the Elder in two paragraphs.'
 [RESPONSE] Pliny the Elder lived during the early Roman Empire, a period marked by...
-[ROUTED TO] upstream model=bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+[ROUTED TO] upstream model=bedrock/global.anthropic.claude-sonnet-4-5-20250929-v1:0
 [LATENCY] upstream=2114ms  proxy=845ms  total=2984ms
 
 ======================================================================
 3. Invalid API key. Kong rejects before any classification or upstream call
 ======================================================================
 
+Trying apikey='not-a-real-key'
+
 [REQUEST] simple: "Hi there! What's 2 + 2?"
-[BLOCKED] 401 Error code: 401 - {'message': 'Unauthorized'}  (28ms)
+[BLOCKED] 401 Error code: 401 - Unauthorized  (28ms)
 
 ======================================================================
 Done.
@@ -995,74 +630,224 @@ Done.
 ```
 {:.no-copy-code}
 
-Example request body sent to `/chat` (identical for the simple and complex calls, only the
-prompt text changes):
+### Check the results
 
-```json
-{
-  "model": "fast",
-  "messages": [
-    { "role": "user", "content": "Hi there! What's 2 + 2?" }
-  ]
-}
-```
-{:.no-copy-code}
+The output confirms the following:
 
-### What happened
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Routing by prompt complexity"
+    evidence: "The `[ROUTED TO]` lines show an OpenAI model for the simple prompt and a Bedrock model for the complex prompt, from the `X-Kong-LLM-Model` header. Both requests used the same path and the same `model` value."
+  - behavior: "The client doesn't choose the model"
+    evidence: "The demo sends `model: auto` on every request, the alias of the `/chat` AI Model. The Datakit Policy sends each internal call the alias of the AI Model it calls, and the tier AI Model's target sets the upstream model."
+  - behavior: "Classification adds latency"
+    evidence: "The proxy latency includes the classifier call, so it's higher than for a direct call to one AI Model."
+  - behavior: "Authentication before classification"
+    evidence: "The invalid key gets `401` in about 30 ms. Kong rejected it before the classifier or any provider was called."
+{% endtable %}
 
-1. **Both prompts hit the same endpoint.** Neither call told Kong which tier or provider to
-   use. The `model` field in the request body is a placeholder the classification step
-   overwrites internally.
-2. **Kong classified each prompt before proxying it.** Kong classified the simple greeting as
-   `fast` and routed it to the OpenAI fast-tier Model. Kong classified the Roman history
-   analysis as `smart` and routed it to the Bedrock smart-tier Model. The `X-Kong-LLM-Model` header on each
-   response shows the actual upstream model that answered.
-3. **The proxy latency includes the classification round trip.** Because the orchestrator
-   AI Policy calls the selector AI Model internally before calling the chosen tier, `proxy`
-   latency in this recipe includes both the classification call and the orchestration
-   overhead, not just Kong's own request handling.
-4. **Kong enforced auth before doing any of that work.** The third request used a key no
-   AI Consumer holds. The Key Auth AI Auth Strategy rejected it in about 30 ms, well before the
-   classification step or any provider call would have started, so the request consumed no
-   provider quota.
+To review the created entities, and per-consumer usage, open the `model-based-routing-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-### Explore in {{site.konnect_short_name}}
+## How it works
 
-Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named
-`model-based-routing-recipe`. The recipe created two AI Model Providers (OpenAI and AWS
-Bedrock), four AI Models (`model-based-routing-chat`, `model-based-routing-selector`,
-`model-based-routing-fast`, `model-based-routing-smart`), a Key Auth AI Auth Strategy, an AI
-Prompt Decorator Policy, a Datakit Policy, and an AI Consumer with a demo API key credential, all
-scoped to this recipe by the kongctl namespace applied above.
+Kong authenticates the request on the `/chat` AI Model. The Datakit Policy on that AI Model calls the selector AI Model, reads the tier from its answer, calls the matching tier's AI Model, and returns that response to the client.
 
-For platform-wide traffic analysis across every {{site.ai_gateway}}, head to the **Observability** L1
-menu in {{site.konnect_short_name}}.
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant C as Client
+    participant K as Kong AI Gateway (/chat)
+    participant S as Selector AI Model
+    participant T as Tier AI Model
+    participant L as OpenAI or AWS Bedrock
+
+    C->>K: POST /chat (apikey, messages)
+    activate K
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>S: Datakit call to /model-selection
+    activate S
+    S-->>K: fast or smart
+    deactivate S
+    K->>T: Datakit call to /model-based-routing-fast or /model-based-routing-smart
+    activate T
+    T->>L: Request with the AI Model Provider's credentials
+    activate L
+    L-->>T: Completion
+    deactivate L
+    T-->>K: OpenAI-format response with X-Kong-LLM-Model
+    deactivate T
+    K-->>C: Datakit exit returns the tier's response
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
+
+Kong selects the AI Model for a request before any AI Policy runs, so a policy can't move a request to another AI Model. The Datakit Policy works around this: it calls the other AI Models over HTTP and returns their response with an `exit` node. This cookbook hasn't confirmed this workflow against a live {{site.ai_gateway}}.
+
+### Key Auth AI Auth Strategy and AI Consumer
+
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. All four AI Models reference this AI Auth Strategy in `access.auth_strategies`, so the Datakit Policy forwards the client's key on each internal call.
+
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: false`"
+    purpose: "Kong keeps the `apikey` header on the request, because the Datakit Policy reads it and forwards it on the internal calls. With `true`, Kong removes the key before the Datakit Policy runs, and the internal calls fail with `401`. The upstream providers also receive the `apikey` header, but each AI Model Provider replaces the `Authorization` header with its own credentials."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### AI Prompt Decorator Policy and selector AI Model
+
+The selector AI Model (`/model-selection`) is the classifier. The [AI Prompt Decorator](/ai-gateway/policies/ai-prompt-decorator/) Policy on it adds a system message before the user's prompt. The message tells the classifier model to answer with one word, `fast` or `smart`.
+
+The following settings configure the AI Prompt Decorator Policy and the selector AI Model:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`prompts.prepend`"
+    purpose: "The system message with the classification rules. Kong adds it before the user's messages. Edit it to change what counts as simple or complex."
+  - setting: "`llm_format: openai`"
+    purpose: "The policy reads and writes OpenAI-format messages, which match the selector AI Model's `formats`."
+  - setting: "`policies: [model-based-routing-decorator]`"
+    purpose: "Attaches the policy to the selector AI Model only. The tier AI Models receive the prompt without the classification message."
+  - setting: "`targets[].name`"
+    purpose: "The classifier model, from `OPENAI_SELECTOR_SLM`. A small model is enough, because it returns only one word."
+{% endtable %}
+
+### Datakit Policy
+
+The [Datakit](/ai-gateway/policies/datakit/) Policy is attached to the `/chat` AI Model and runs the routing workflow as a graph of nodes. Its `call` nodes send requests to the data plane's own proxy listener at `http://localhost:8000`, at each AI Model's path plus `/chat/completions`, so each internal call goes through the same authentication as a client request.
+
+The following nodes make up the workflow:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`CLASSIFIER_BODY`, `FAST_BODY`, `SMART_BODY`"
+    purpose: "`jq` nodes that build each internal request body: the client's `messages` array and the alias of the AI Model to call (`classifier`, `fast`, or `smart`). A node's result is read by the node's name, for example `FAST_BODY`."
+  - setting: "`EXTRACT_AUTH`"
+    purpose: "A `jq` node that copies the `apikey` header from the request headers, so the internal calls authenticate as the same AI Consumer."
+  - setting: "`CALL_MODEL_SELECTOR`"
+    purpose: "A `call` node that sends `CLASSIFIER_BODY` and the key to `/model-selection/chat/completions`."
+  - setting: "`EXTRACT_TIER`, `IS_SMART`"
+    purpose: "`jq` nodes that read the classifier's answer and turn it into a boolean. Any answer other than `smart` selects the fast tier."
+  - setting: "`ROUTE_DECISION`"
+    purpose: "A `branch` node. It runs `CALL_SMART` and `RESPOND_SMART` when the input is `true`, and `CALL_FAST` and `RESPOND_FAST` otherwise."
+  - setting: "`CALL_SMART`, `CALL_FAST`"
+    purpose: "`call` nodes that send `SMART_BODY` or `FAST_BODY` and the key to `/model-based-routing-smart/chat/completions` or `/model-based-routing-fast/chat/completions`."
+  - setting: "`RESPOND_SMART`, `RESPOND_FAST`"
+    purpose: "`exit` nodes that return the tier's body and headers to the client, including `X-Kong-LLM-Model`. {{site.ai_gateway}} then doesn't call the `/chat` AI Model's own target."
+{% endtable %}
+
+### AI Model Providers and AI Models
+
+The two AI Model Providers hold the OpenAI and AWS credentials. The selector and fast-tier AI Models use the OpenAI AI Model Provider, and the smart-tier AI Model uses the AWS Bedrock AI Model Provider. Clients call only `/chat`. The other three AI Models exist for the Datakit Policy, but a client with a valid key can also call them directly, because the internal calls use the client's own key.
+
+The following settings configure the AI Model Providers and the AI Models:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Providers)"
+    purpose: "The provider credentials. OpenAI uses an `Authorization` header. AWS Bedrock uses `access_key_id` and `secret_access_key`. Kong adds them to each upstream request."
+  - setting: "`targets[].config.region` (smart tier)"
+    purpose: "The AWS region for Bedrock, from `AWS_REGION`. The region belongs to the target, not to the AI Model Provider."
+  - setting: "`targets[].name` (fast and smart tiers)"
+    purpose: "The upstream models, from `OPENAI_FAST_MODEL` and `BEDROCK_SMART_MODEL`. Change them and re-apply to swap models without changing clients."
+  - setting: "`config.route.model`"
+    purpose: "The alias each AI Model answers to in the body's `model` field: `classifier`, `fast`, `smart`, and `auto` for `/chat`. Without a selector, an AI Model accepts only its own name as `model`."
+  - setting: "`targets` (`/chat` AI Model)"
+    purpose: "An AI Model needs at least one target. The `exit` nodes return before Kong uses it."
+  - setting: "`config.response_streaming: deny`"
+    purpose: "Clients can't set `stream=true` on any of the four AI Models. The Datakit Policy needs complete response bodies to read the tier and to return the answer."
+  - setting: "`config.max_request_body_size`"
+    purpose: "Accepts request bodies up to 10 MB on the `/chat` and tier AI Models, and 5 MB on the selector AI Model."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`, and so the Datakit Policy can call the other AI Models over HTTP."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes the route path before it forwards the request upstream."
+  - setting: "`config.logging.payloads: false`"
+    purpose: "Kong doesn't log request and response payloads."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the provider credentials in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
+
+### Response headers
+
+The `exit` node returns the tier AI Model's response headers. The demo reads the following headers:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: "The upstream model that served the request, with the provider name as a prefix, for example `openai/gpt-4o-mini`."
+  - header: "`X-Kong-Upstream-Latency`"
+    description: "Time in milliseconds that Kong waited for the provider to respond."
+  - header: "`X-Kong-Proxy-Latency`"
+    description: "Time in milliseconds that Kong spent processing the request, excluding the upstream call."
+{% endtable %}
 
 ## Variations and next steps
 
-**Add a third tier.** Extend the classifier's system message to return a third value (for
-example, `"batch"` for non-interactive workloads) and add a matching internal AI Model and
-`branch` path in the orchestrator AI Policy.
+You can change or extend this configuration in the following ways:
 
-**Tune the classification rules.** The AI Prompt Decorator's system message defines what
-counts as simple versus complex. Adjust it to match your own traffic patterns, for example
-treating short code snippets as `fast` and long-form creative writing as `smart`.
-
-**Add per-consumer rate limits.** With the Key Auth AI Auth Strategy mapping requests to AI Consumers,
-attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy
-to the `/chat` AI Model to apply token quotas per AI Consumer. See the
-[LLM cost optimization recipe](/cookbooks/llm-cost-optimization/) for a worked example of
-cost-based tiered rate limiting.
-
-**Add tracing across the classification hop.** Attach the
-[OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy to see the classification call and the chosen
-tier's call as separate spans in your observability backend. See the
-[Voice AI observability recipe](/cookbooks/voice-ai-observability/) for a worked example.
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Swap models"
+    how: "Change `OPENAI_SELECTOR_SLM`, `OPENAI_FAST_MODEL`, or `BEDROCK_SMART_MODEL` and re-apply. Clients keep calling `/chat`."
+  - variation: "Tune the classification rules"
+    how: "Edit the system message in the AI Prompt Decorator Policy, for example to treat translation as `fast` or multi-step planning as `smart`, and re-apply."
+  - variation: "Add a third tier"
+    how: "Add a third answer to the classification rules, an AI Model for the new tier, and a matching `jq`, `branch`, `call`, and `exit` path in the Datakit Policy."
+  - variation: "Route by semantic similarity"
+    how: "Instead of a classifier call, set `config.balancer.algorithm: semantic` on one AI Model with several targets. See the [AI Model reference](/ai-gateway/entities/ai-model/) and the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+  - variation: "Add per-consumer token limits"
+    how: "Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to the `/chat` AI Model to give each AI Consumer its own token budget."
+  - variation: "Trace the classification call"
+    how: "Add a global [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy to see the classifier call and the tier call as separate spans. See the [Voice AI pipeline observability cookbook](/cookbooks/voice-ai-observability/) for an example."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's kongctl namespace scoped all resources, so this teardown removes only this
-recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='model-based-routing-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
