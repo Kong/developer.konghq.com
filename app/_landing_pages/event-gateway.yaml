@@ -485,9 +485,12 @@ rows:
               a: |
                 The {{site.event_gateway}} data planes are self-managed and deployed by you, the user. 
                 The {{site.event_gateway}} control plane is part of the {{site.konnect_product_name}} platform.
+                On Kubernetes, you can also run the control plane on-prem with [{{site.operator_product_name}}](/operator/get-started/event-gateway/install/).
             
             - q: Does {{site.event_gateway}} run on-prem?
-              a: No, {{site.event_gateway}} is only available through the {{site.konnect_product_name}} platform.
+              a: |
+                Yes, on Kubernetes. You can run {{site.event_gateway}} with an on-prem control plane using [{{site.operator_product_name}}](/operator/get-started/event-gateway/install/).
+                {{site.event_gateway}} is also available through the {{site.konnect_product_name}} platform.
             
             - q: Can I proxy multiple Kafka clusters?
               a: |
