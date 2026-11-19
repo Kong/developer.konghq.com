@@ -5,7 +5,7 @@ curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N 
   -e "{{ pair[0] }}={{ pair[1] }}"{% unless forloop.last %} \{% endunless %}{% endfor %}
 ```
 
-This sets up an {{site.base_gateway}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
+This sets up an {{site.event_gateway}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
 
 ```bash
 export EVENT_GATEWAY_ID=your-gateway-id
