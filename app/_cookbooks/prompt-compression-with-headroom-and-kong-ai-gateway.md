@@ -8,96 +8,75 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.15'
   ai-gateway: '2.2'
 categories:
   - cost-optimization
 featured: true
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - ai-prompt-compressor
-  - ai-model-provider
-  - ai-model
-requires_embeddings: false
-providers:
-  - openai
-
-hint: "Requires an OpenAI API key, a Headroom 0.37.0 or later instance that your data plane can reach, and Python 3.11+."
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions an {{site.ai_gateway}} for this recipe and a local data plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Open the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and select **Generate token** to create a personal access token.
-        1. Export your token:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the {{site.ai_gateway}} name for this recipe and run the quickstart script:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='prompt-compression-with-headroom-and-kong-ai-gateway-recipe'
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           The script creates an {{site.ai_gateway}} named `prompt-compression-with-headroom-and-kong-ai-gateway-recipe` in {{site.konnect_short_name}}, and starts a local data plane in Docker that listens on port `8000`. At the end, the script prints `export` lines like the following, with your own `AI_GATEWAY_ID`:
-
-           ```text
-           export KONNECT_TOKEN=$KONNECT_TOKEN
-           export KONNECT_CONTROL_PLANE_NAME=prompt-compression-with-headroom-and-kong-ai-gateway-recipe
-           export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
-           export KONNECT_PROXY_URL='http://localhost:8000'
-           export AI_GATEWAY_ID="YOUR_AI_GATEWAY_ID"
-           ```
-           {:.no-copy-code}
-
-        1. Run the `export` lines that the script printed. Later steps use `AI_GATEWAY_ID`, `KONNECT_PROXY_URL`, and `KONNECT_CONTROL_PLANE_URL`.
+           This provisions an {{site.ai_gateway}} named `prompt-compression-with-headroom-and-kong-ai-gateway-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install [kongctl](/kongctl/).
-        1. Print the installed version to make sure it's installed:
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Verify it's installed:
 
            ```bash
            kongctl version
            ```
-    - title: OpenAI
-      icon_url: /assets/icons/openai.svg
+    - title: AI Credentials
       content: |
-        This tutorial uses OpenAI as the LLM provider:
+        Export the credentials of the provider that both endpoints call. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
 
+        {% navtabs "Providers" %}
+        {% navtab "OpenAI" %}
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the API key as an environment variable. Make sure the value includes the `Bearer` prefix:
+        1. Export the API key:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
+        {% endnavtab %}
+        {% endnavtabs %}
     - title: Headroom
       content: |
-        This tutorial uses [Headroom](https://github.com/headroomlabs-ai/headroom) 0.37.0 or later as the compression service. You can run Headroom as a local installation or use Headroom Enterprise. In both cases, the data plane must be able to connect to Headroom. For more information, see the [Headroom installation guide](https://docs.headroomlabs.ai/docs/installation) and the [Headroom compressor service](/ai-gateway/policies/ai-prompt-compressor/#headroom-compressor-service) section of the AI Prompt Compressor Policy reference.
+        The [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/) Policy sends each conversation to [Headroom](https://github.com/headroomlabs-ai/headroom) 0.37.0 or later, which compresses it. You can use a [local Headroom installation](https://docs.headroomlabs.ai/docs/installation) or [Headroom Enterprise](https://www.headroomlabs.ai/). In both cases, the data plane must be able to connect to Headroom. For more information, see [Headroom compressor service](/ai-gateway/policies/ai-prompt-compressor/#headroom-compressor-service).
 
-        By default, Headroom answers `/v1/compress` requests only from loopback callers and returns `404` to all other callers. `HEADROOM_COMPRESS_ALLOW_REMOTE=1` lets the data plane call Headroom. `HEADROOM_PROXY_TOKEN` sets the token that callers must send.
+        By default, Headroom answers `/v1/compress` requests only from loopback callers and returns `404` to all other callers. `HEADROOM_COMPRESS_ALLOW_REMOTE=1` lets the data plane container call Headroom, and `HEADROOM_PROXY_TOKEN` sets the token that callers must send.
 
-        1. Export your Headroom proxy token. Kong sends this token to Headroom on every call. If you start Headroom in the next steps, you can use any value:
+        1. Export your Headroom proxy token. Kong sends this token to Headroom on each call. If you start Headroom in the following steps, you can use any value:
 
            ```sh
            export HEADROOM_PROXY_TOKEN='YOUR_HEADROOM_PROXY_TOKEN'
            ```
 
-        1. If you don't have a Headroom instance, open a second terminal on the machine that runs the quickstart. Export the same `HEADROOM_PROXY_TOKEN` in that terminal. Then install Headroom in a virtual environment. Headroom requires Python 3.10 or later:
+        1. If you don't have a Headroom instance, open a second terminal on the machine that runs the quickstart, and export the same `HEADROOM_PROXY_TOKEN` there. Then install Headroom in a virtual environment. Headroom requires Python 3.10 or later:
 
            ```bash
            python3 -m venv .venv-headroom
@@ -105,13 +84,13 @@ prereqs:
            pip install 'headroom-ai[proxy]'
            ```
 
-        1. In the second terminal, start Headroom on port `8787`. Headroom runs in this terminal and prints a log line for each request. Keep the terminal open:
+        1. In the second terminal, start Headroom on port `8787`. Headroom prints a log line for each request. Keep the terminal open:
 
            ```bash
            HEADROOM_COMPRESS_ALLOW_REMOTE=1 headroom proxy --port 8787
            ```
 
-        1. In your first terminal, make sure that Headroom is running:
+        1. In your first terminal, check that Headroom is running:
 
            ```bash
            curl http://localhost:8787/livez
@@ -124,239 +103,63 @@ prereqs:
            ```
            {:.no-copy-code}
 
-        1. Export the URL that the data plane uses to connect to the Headroom `/v1/compress` endpoint. Include the `/v1/compress` path. The quickstart data plane runs in Docker. On Docker Desktop, the data plane connects to a Headroom instance on the same machine at `host.docker.internal`:
+        1. Export the URL of the Headroom `/v1/compress` endpoint, as the data plane container reaches it. On Docker Desktop, the container reaches a Headroom instance on the same machine at `host.docker.internal`:
 
            ```sh
            export HEADROOM_COMPRESSOR_URL='http://host.docker.internal:8787/v1/compress'
            ```
 
-           If Headroom runs on a remote host, use the address of that host with the same path, for example `https://headroom.example.com/v1/compress`.
+           If Headroom runs on another host, use the address of that host with the same path, for example `https://headroom.example.com/v1/compress`.
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
-        The demo script requires Python 3.11 or later. Create a virtual environment and install the OpenAI SDK:
+        The demo script requires Python 3.11 or later. Set up an isolated environment:
 
         ```bash
         python3 -m venv .venv
         source .venv/bin/activate
         pip install 'openai>=1.51.0'
         ```
-
 overview: |
-  Agent requests often include large tool results, such as JSON records, logs, and search
-  output. The agent sends these tool results again on every later turn of the conversation.
-  This recipe sets up two endpoints on {{site.ai_gateway_name}} that call the same OpenAI
-  model:
+  Compress the tool results in agent requests with Headroom before {{site.ai_gateway_name}} forwards them to OpenAI, and measure the savings against an uncompressed endpoint. You'll set up:
 
-  - `/compressed` sends the messages of each request to
-    [Headroom](https://github.com/headroomlabs-ai/headroom) through the [AI Prompt
-    Compressor](/ai-gateway/policies/ai-prompt-compressor/) Policy. Then it forwards the
-    compressed messages to OpenAI.
-  - `/uncompressed` forwards each request to OpenAI unchanged.
-
-  Send the same request to both endpoints and compare the number of input tokens that OpenAI
-  counts for each endpoint.
+  * A `/compressed` endpoint where the AI Prompt Compressor Policy sends each conversation to Headroom
+  * An `/uncompressed` endpoint that forwards the same requests unchanged, for comparison
+  * AI Consumer authentication on both endpoints, with the OpenAI API key kept in {{site.ai_gateway}}
 ---
 
-## The problem
+## What this cookbook solves
 
-An agent runs a tool when the model returns a tool call, a request for data. A tool is a function in the agent's own code, such as a log query or a database lookup. The agent adds each tool result, the output of the tool, to the conversation that it sends to the model. Tool results are often large structured data, and they cause the following problems:
-
-- **Tool results make prompts large.** A tool call that returns 200 log records adds about 10,000 tokens to the request.
-- **The agent sends tool results again on every turn.** Chat completion APIs don't store the conversation, so each request contains the full history, including earlier tool results. The provider charges for those tokens on every request.
-- **JSON repeats its field names.** Every record repeats every key. So field names and punctuation make up a large part of the payload.
-- **Compression in each agent adds work.** Every agent, in every language and framework, needs its own compression library and configuration.
-- **Compression can cancel the prompt cache discount.** OpenAI charges less for the start of a prompt when it's identical to the start of a recent request. For more information, see [OpenAI prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching). If compression rewrites earlier messages differently on each turn, the start of the prompt changes. Then the discount no longer applies.
-- **Compression can remove data.** The compressed content can be missing records or use a different format. The response doesn't show what the model received.
-
-Compression must run in one component that handles every request, and keep earlier turns the same from one request to the next. You also need a way to compare a compressed request with an uncompressed request.
-
-## The solution
-
-{{site.ai_gateway_name}} runs compression on the data plane with the AI Prompt Compressor Policy. When the compression `provider` is `headroom`, the Policy sends the messages of each request to Headroom. Then the Policy forwards the messages that Headroom returns to the LLM provider. Headroom controls how much it compresses each message.
-
-This recipe creates two [AI Models](/ai-gateway/entities/ai-model/) that call the same OpenAI model:
-
-- `compressed`, on the `/compressed` path, with the Policy attached
-- `uncompressed`, on the `/uncompressed` path, without the Policy
-
-The Policy applies only to the AI Model that lists it. Kong sends requests to `/uncompressed` to OpenAI without a call to Headroom.
-
-Headroom keeps a session for each conversation. When the next turn of a conversation has the same session ID, Headroom reuses the compressed version of the earlier turns. Headroom compresses only the new messages, so the start of the prompt stays the same from turn to turn.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant A as Agent
-    participant K as {{site.ai_gateway_name}}
-    participant H as Headroom
-    participant O as OpenAI
-
-    A->>K: POST /compressed/chat/completions (model compressed)
-    activate K
-    K->>H: AI Prompt Compressor - POST /v1/compress (messages, session ID, proxy token)
-    H-->>K: compressed messages (else 500 while stop_on_error is true)
-    K->>O: POST /v1/chat/completions (compressed messages, OpenAI key)
-    O-->>K: completion and token usage
-    K-->>A: OpenAI-format response
-    deactivate K
-
-    A->>K: POST /uncompressed/chat/completions (model uncompressed)
-    activate K
-    K->>O: POST /v1/chat/completions (original messages, OpenAI key)
-    O-->>K: completion and token usage
-    K-->>A: OpenAI-format response
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+Agents send each tool result back to the model on every later turn of a conversation, and the provider bills those tokens each time, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: "AI Model `compressed`"
-    responsibility: Serves `/compressed/chat/completions` and runs the AI Prompt Compressor Policy before calling OpenAI.
-  - component: "AI Model `uncompressed`"
-    responsibility: Serves `/uncompressed/chat/completions` without the Policy.
-  - component: AI Prompt Compressor Policy
-    responsibility: Sends the request's messages to Headroom and replaces them with the compressed messages.
-  - component: Headroom
-    responsibility: Compresses tool results and keeps a session for each conversation.
-  - component: AI Model Provider
-    responsibility: Stores the OpenAI API key and adds it to every request to OpenAI.
+  - problem: "Tool results are large structured data, such as JSON records, logs, and search output. A tool call that returns 200 log records adds about 10,000 tokens, and each record repeats each field name."
+    solution: "The AI Prompt Compressor Policy sends each conversation to Headroom, which rewrote 200 JSON log records as a table with one header line. OpenAI counted about half the input tokens."
+  - problem: "Chat completion APIs don't store the conversation, so each request carries the full history, including earlier tool results, and the provider bills them on each turn."
+    solution: "Kong compresses each request, including the earlier tool results in later turns. In the demo, the second turn also uses about half the input tokens."
+  - problem: "OpenAI bills less for the start of a prompt that matches a recent request ([prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)). Compression that rewrites earlier messages differently on each turn changes the start of the prompt and loses this discount."
+    solution: "Headroom keeps a session for each conversation and returns the earlier turns unchanged, so the start of the prompt stays the same. In the demo, OpenAI served 4,992 of 5,248 input tokens of the second turn from its cache."
+  - problem: "Compression in each agent means a compression library and configuration in each language and framework."
+    solution: "The policy runs on the data plane for each AI Model that lists it. Agents keep sending standard OpenAI-format requests."
+  - problem: "Compressed content can be missing records or use a different format, and the response doesn't show what the model received."
+    solution: "The `uncompressed` AI Model serves the same requests without the policy, so you can compare the input tokens and the answers of the two endpoints."
 {% endtable %}
 
-## How it works
+## Try it out
 
-1. The agent sends a chat request to `/compressed/chat/completions` or `/uncompressed/chat/completions`. The `model` field in the request body is the name of the AI Model on that path: `compressed` or `uncompressed`.
-2. Kong selects the AI Model by path and by the `model` value. If the `model` value doesn't match, Kong returns `500` with `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local'`.
-3. On `compressed`, the AI Prompt Compressor Policy sends the conversation, the proxy token, and the session ID from the `x-session-id` header to Headroom. Then the Policy replaces the messages in the request with the messages that Headroom returns.
-4. The AI Model Provider adds the OpenAI API key, and Kong sends the request to OpenAI. On `uncompressed`, Kong sends the request to OpenAI unchanged.
-5. OpenAI returns `usage.prompt_tokens`, the number of input tokens that OpenAI billed for the request. Compare the values from the two endpoints to see the effect of compression.
-6. On the next turn with the same `x-session-id`, Headroom reuses the compressed earlier turns and compresses only the new messages.
+Apply the configuration, then run a demo script that sends an agent conversation with a large tool result to both endpoints, compares the input tokens that OpenAI counts, and sends one request with an invalid API key.
 
-### AI Prompt Compressor: Headroom connection
+### Apply the Kong configuration
 
-The [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/) Policy sends the messages of a request to a compression service and forwards the messages that the service returns. When `provider` is `headroom`, the compression service is Headroom. By default, the Policy fails closed: if the Headroom call fails, Kong returns `500` and doesn't send the request to OpenAI.
+The configuration creates an AI Model Provider with your OpenAI API key, a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, an AI Prompt Compressor Policy that points to your Headroom instance, and two AI Models that call the same OpenAI model: `compressed` with the policy, and `uncompressed` without it.
 
-#### Configuration details
-
-The following configuration shows the AI Prompt Compressor Policy settings that this recipe uses. You don't run anything in this section. [Apply the Kong configuration](#apply-the-kong-configuration) creates every resource in one step.
-
-```yaml
-ai_gateway_policies:
-- name: headroom-compressor
-  type: ai-prompt-compressor
-  global: false
-  config:
-    provider: headroom
-    compressor_url: http://host.docker.internal:8787/v1/compress
-    timeout: 45000
-    stop_on_error: true
-    headroom:
-      proxy_token: YOUR_HEADROOM_PROXY_TOKEN
-```
-{:.no-copy-code}
-
-- **`provider`**: selects Headroom as the compression service.
-- **`compressor_url`**: the URL that the data plane uses to connect to the Headroom `/v1/compress` endpoint. Kong sends requests to this exact URL, so include the `/v1/compress` path. If the path is missing, Kong doesn't call the Headroom compression endpoint, and requests to `/compressed` fail with `500`. Set the URL to a single Headroom instance. By default, Headroom keeps sessions in memory in a single process, so Kong must send all turns of a conversation to the same instance. To use several Headroom instances behind a load balancer instead, all instances must share a Redis session store, which requires Headroom v0.42.0 or later with the `redis` extra. For more information, see the [AI Prompt Compressor limitations](/ai-gateway/policies/ai-prompt-compressor/#limitations).
-- **`headroom.proxy_token`**: your Headroom proxy token. The token is required when `compressor_url` isn't a loopback address. If the token is missing, `kongctl apply` fails with `headroom.proxy_token is required when compressor_url is not a loopback address (localhost, 127.0.0.0/8, ::1)`. In production, store the token in a [Vault](/gateway/secrets-management/) and reference the Vault secret instead of a plain value.
-- **`timeout: 45000`**: the time in milliseconds that the Policy waits for Headroom. The Policy reference says to keep this value higher than the Headroom turn-lock and compression timeouts. The Headroom example in the Policy reference uses `45000`, and the default is `10000`.
-- **`stop_on_error: true`**: if the Headroom call fails, Kong returns `500` with `{"error":{"message":"failed to compress prompts: Failure when calling the Headroom compression service"}}`. When `stop_on_error` is `false`, Kong logs the failure and forwards the original messages instead.
-- **`global: false`**: the Policy applies only to the AI Models that list it in `policies`.
-
-By default, the Policy reads the session ID from the following request headers: `x-claude-code-session-id`, `x-claude-code-agent-id`, `thread-id`, `session-id`, and `x-session-id`. If a request has no session ID, clients that start with the same prompt share one session state. `compression_ranges` and `message_type` configure the LLMLingua provider. These settings don't change what Kong sends to Headroom.
-
-### Headroom: compression behavior
-
-Headroom applies a compression method to each message based on the message content. With Headroom 0.41.0, the requests in this recipe produce the following results:
-
-- A JSON array of records with the same fields becomes a table with one header line and one line per record. Headroom keeps all records and values. In the demo, OpenAI counts 10,272 input tokens for the original request and 5,145 for the compressed request. For the text before and after compression, see [What happened](#what-happened).
-- Headroom doesn't change the latest user message or short inputs.
-- Headroom doesn't compress the outputs of tools named for file reads and web requests, such as `read_file`, `Read`, `Grep`, `web_fetch`, and `web_search`.
-- Headroom can reduce a JSON array of nested objects to a subset of its records, and it adds no marker to the text. For example, in a request with 30 nested order records, the model received 15 records. When the tool was listed in the Headroom `HEADROOM_PROTECT_TOOL_RESULTS` setting, the model received all 30 records, and the request was 23% smaller. For more information, see the [Headroom proxy reference](https://docs.headroomlabs.ai/docs/proxy).
-
-### AI Models: two endpoints
-
-Each AI Model has its own path and calls the same OpenAI model. `compressed` lists the Policy in `policies` and `uncompressed` doesn't, so compression is the only difference between the two endpoints. The `model` field of a request must match the name of the AI Model on that path.
-
-#### Configuration details
-
-The following example shows the `compressed` AI Model. The `uncompressed` AI Model is the same except for its name, its path, and `policies: []`. You apply both AI Models in [Apply the Kong configuration](#apply-the-kong-configuration).
-
-```yaml
-ai_gateway_models:
-- name: compressed
-  type: model
-  formats:
-  - type: openai
-  capabilities:
-  - generate
-  policies:
-  - headroom-compressor
-  config:
-    max_request_body_size: 10485760
-    response_streaming: allow
-    route:
-      paths:
-      - /compressed
-  targets:
-  - name: gpt-4.1-mini
-    provider: headroom-provider
-    config:
-      type: openai
-```
-{:.no-copy-code}
-
-- **`name: compressed`**: the name of the AI Model. Clients send this value in the `model` field.
-- **`route.paths: [/compressed]`**: the base path. The `generate` capability adds `/chat/completions`, so the endpoint is `/compressed/chat/completions`.
-- **`policies: [headroom-compressor]`**: attaches the AI Prompt Compressor Policy by name.
-- **`targets[].name`**: the OpenAI model that both AI Models call. You set this value with `CHAT_MODEL` when you apply the configuration.
-- **`max_request_body_size: 10485760`**: allows request bodies up to 10 MB, for conversations that contain large tool results. The default is 8 MB.
-- **`response_streaming: allow`**: permits streamed responses. Compression applies to the request, so OpenAI bills a streamed request through `/compressed` for the compressed input.
-
-{:.info}
-> The two AI Models don't require an API key. Anyone who can connect to port `8000` on the machine that runs the data plane can call the AI Models. To require a key, see [Variations and next steps](#variations-and-next-steps).
-
-### AI Model Provider: OpenAI credential
-
-The [AI Model Provider](/ai-gateway/entities/ai-model-provider/) holds the OpenAI API key and adds the key to every request that Kong sends to OpenAI. Clients don't need the key.
-
-#### Configuration details
-
-The following example shows the AI Model Provider configuration:
-
-```yaml
-ai_gateway_model_providers:
-- name: headroom-provider
-  type: openai
-  config:
-    auth:
-      type: basic
-      headers:
-      - name: Authorization
-        value: Bearer YOUR_OPENAI_API_KEY
-```
-{:.no-copy-code}
-
-- **`config.auth`**: the header that Kong adds to every request to OpenAI. The key is write-only: {{site.konnect_short_name}} stores the key and never returns it.
-
-{:.info}
-> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) instead of environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
-
-## Apply the Kong configuration
-
-The configuration in this section creates four resources on the {{site.ai_gateway}} that the quickstart script created:
-
-- An AI Model Provider, `headroom-provider`, that holds your OpenAI API key
-- An AI Prompt Compressor Policy, `headroom-compressor`, that points to your Headroom instance
-- An AI Model, `compressed`, on `/compressed`, with the Policy attached
-- An AI Model, `uncompressed`, on `/uncompressed`, without the Policy
-
-First, adopt the {{site.ai_gateway}} into kongctl. The quickstart script created the {{site.ai_gateway}}, so kongctl doesn't manage it yet:
+Adopt the quickstart {{site.ai_gateway}} into a [kongctl namespace](/kongctl/). Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}. If the {{site.ai_gateway}} already has the label, kongctl prints an error and makes no changes, and you can continue:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -364,29 +167,24 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-The `kongctl adopt` command adds a label to the {{site.ai_gateway}}: `KONGCTL-namespace: prompt-compression-with-headroom-and-kong-ai-gateway-recipe`. This label marks the {{site.ai_gateway}} as managed by kongctl. The command doesn't change any other setting. The command also doesn't log kongctl in or connect kongctl to the data plane. Every kongctl command in this guide authenticates with your personal access token through the `--pat` flag. For more information, see [kongctl adopt](/kongctl/adopt/).
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
-kongctl confirms the adoption. The output shows your {{site.ai_gateway}} ID:
-
-```text
-Adopted AI Gateway "prompt-compression-with-headroom-and-kong-ai-gateway-recipe" (YOUR_AI_GATEWAY_ID) into namespace "prompt-compression-with-headroom-and-kong-ai-gateway-recipe"
+```bash
+export CONSUMER_API_KEY='demo-api-key'
 ```
-{:.no-copy-code}
 
-If you run the command a second time, kongctl prints an error and makes no changes. The error says that the {{site.ai_gateway}} already has the namespace label. Continue with the next step.
+Select your provider. The tab exports `CHAT_MODEL`, the OpenAI model that both AI Models call, then applies the configuration. The provider credentials, the Headroom URL, and the Headroom proxy token come from the prerequisites.
 
 {% navtabs "Providers" %}
-{% tab OpenAI %}
+{% navtab "OpenAI" %}
 
-Set the OpenAI model that both endpoints call. This recipe uses `gpt-4.1-mini`:
+Export the model env var:
 
 ```bash
 export CHAT_MODEL='gpt-4.1-mini'
 ```
 
-The configuration also uses the `AI_GATEWAY_ID`, `DECK_OPENAI_TOKEN`, `HEADROOM_COMPRESSOR_URL`, and `HEADROOM_PROXY_TOKEN` variables that you exported in the prerequisites.
-
-The following command writes the configuration to `kong-recipe.yaml`, applies the configuration, and deletes the file. When you run `kongctl apply`, kongctl reads each `!env` value from the matching environment variable. Then kongctl creates the resources in {{site.konnect_short_name}}. The `!secret` tag marks the OpenAI API key as write-only, so {{site.konnect_short_name}} never returns it.
+Apply the Kong configuration:
 
 ```bash
 cat <<'EOF' > kong-recipe.yaml
@@ -404,7 +202,29 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: headroom-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: headroom-auth
+  display_name: headroom key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: headroom-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: headroom-consumer
+  display_name: headroom demo consumer
+  type: api-key
+  credentials:
+  - ref: headroom-credential
+    name: headroom-credential
+    display_name: headroom demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_policies:
 - ref: headroom-compressor
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -430,6 +250,9 @@ ai_gateway_models:
   - type: openai
   capabilities:
   - generate
+  access:
+    auth_strategies:
+    - headroom-auth
   policies:
   - headroom-compressor
   config:
@@ -459,6 +282,9 @@ ai_gateway_models:
   - type: openai
   capabilities:
   - generate
+  access:
+    auth_strategies:
+    - headroom-auth
   policies: []
   config:
     max_request_body_size: 10485760
@@ -486,113 +312,12 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-kongctl prints the planned changes and then creates the four resources. The output ends with the following lines:
-
-```text
-Executing changes:
-[1/4] [namespace: default] Creating ai_gateway_model_provider: headroom-provider... ✓
-[2/4] [namespace: default] Creating ai_gateway_policy: headroom-compressor... ✓
-[3/4] [namespace: default] Creating ai_gateway_model: compressed... ✓
-[4/4] [namespace: default] Creating ai_gateway_model: uncompressed... ✓
-
-Complete.
-Executed 4 changes.
-```
-{:.no-copy-code}
-
-The data plane receives the new configuration from {{site.konnect_short_name}} within a few seconds.
-
-{% endtab %}
+{% endnavtab %}
 {% endnavtabs %}
-
-## Try it out
-
-Send one request to each endpoint to make sure that both endpoints work. Then run the demo script. The demo script sends an agent conversation with a large tool result to both endpoints and compares the input tokens.
-
-### Send a request to each endpoint
-
-Send a short request to `/uncompressed`. The `model` field is the name of the AI Model on that path:
-
-```bash
-curl -s -X POST "$KONNECT_PROXY_URL/uncompressed/chat/completions" \
-  -H "Content-Type: application/json" \
-  --json '{"model":"uncompressed","messages":[{"role":"user","content":"Reply with exactly: pong"}]}'
-```
-
-The response is an OpenAI chat completion. The following example shows the main fields of the response:
-
-```json
-{
-  "model": "gpt-4.1-mini-2025-04-14",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "pong"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 12,
-    "completion_tokens": 1,
-    "total_tokens": 13
-  }
-}
-```
-{:.no-copy-code}
-
-The `model` field in the response shows `gpt-4.1-mini-2025-04-14` instead of `gpt-4.1-mini`. This difference is expected. OpenAI serves `gpt-4.1-mini` from a dated snapshot and returns the name of the snapshot. The OpenAI [model page](https://developers.openai.com/api/docs/models/gpt-4.1-mini) lists `gpt-4.1-mini-2025-04-14` as the default snapshot. To see the model that Kong sent the request to, add `-i` to the `curl` command. The `X-Kong-LLM-Model` response header shows `openai/gpt-4.1-mini`.
-
-Send the same request to `/compressed`. Kong sends this request to Headroom before it sends the request to OpenAI. The `x-session-id` header assigns a Headroom session to the conversation:
-
-```bash
-curl -s -X POST "$KONNECT_PROXY_URL/compressed/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "x-session-id: readme-example" \
-  --json '{"model":"compressed","messages":[{"role":"user","content":"Reply with exactly: pong"}]}'
-```
-
-```json
-{
-  "model": "gpt-4.1-mini-2025-04-14",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "pong"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 12,
-    "completion_tokens": 1,
-    "total_tokens": 13
-  }
-}
-```
-{:.no-copy-code}
-
-Both responses report 12 input tokens in `prompt_tokens`, because a one-line message has nothing to compress. In the terminal where Headroom runs, a log line with `path=/v1/compress` appears for the request to `/compressed`. No log line appears for the request to `/uncompressed`.
-
-If the `model` value doesn't match the AI Model on the path, Kong returns `500`. For example, Kong returns the following error when you send `"model":"gpt-4.1-mini"` to `/compressed`:
-
-```json
-{
-  "message":"failed the initial dns/balancer resolve for 'ai-gateway.upstream.local' with: dns server error: 2 server failure",
-  "request_id":"3b7338565458882c60517341c9a8504f"
-}
-```
-{:.no-copy-code}
 
 ### Run the demo
 
-The demo script sends one agent conversation to both endpoints and compares the number of input tokens that OpenAI counts for each request. Input tokens are the tokens of everything that the model reads for a request, which is the whole conversation. OpenAI bills for every input token and reports the count as `usage.prompt_tokens` in each response. Output tokens are the tokens of the model's answer, reported as `usage.completion_tokens`. Headroom compresses only the input.
-
-The demo conversation is the conversation that an agent sends to the model after the agent runs a tool. The agent adds the tool result to the conversation. Then the agent sends the whole conversation with every later request. In this demo, the tool is `get_logs`, and its result is 200 sample log records that the script generates. The conversation contains the following four messages:
+The script plays an agent that has run a tool named `get_logs`. The script generates the tool result itself: 200 log records as JSON, three of them errors. The conversation contains the following four messages:
 
 {% table %}
 columns:
@@ -617,43 +342,22 @@ rows:
     content: "Which log entries are errors? List each id, service, and message."
 {% endtable %}
 
-In step 1, the script sends the four messages to `/uncompressed`. Then the script sends the same four messages to `/compressed`:
+In each step, the script sends the same messages to `/uncompressed` and then to `/compressed`, and prints the input tokens that OpenAI counted for each request (`usage.prompt_tokens`). Input tokens are everything the model reads for a request, which is the whole conversation:
 
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant D as demo.py
-    participant K as {{site.ai_gateway_name}}
-    participant H as Headroom
-    participant O as OpenAI
+1. Step 1 sends the four messages.
+1. Step 2 asks a follow-up question in the same conversation. Like an agent, the script sends the whole conversation again, including the original 200 log records, with the same `x-session-id` header as step 1.
+1. Step 3 starts a new conversation with one short question and no tool result.
+1. Step 4 sends the short question to `/compressed` with an invalid API key.
 
-    D->>K: POST /uncompressed with messages 1 to 4
-    K->>O: messages 1 to 4, unchanged
-    O-->>K: answer (10,272 input tokens)
-    K-->>D: answer
+In the output, compare the `input tokens` of the two endpoints and the `Answer from /compressed` with the `Expected` line.
 
-    D->>K: POST /compressed with the same messages 1 to 4
-    K->>H: messages 1 to 4
-    Note over H: Rewrites the 200 log records in message 3 as a table.<br/>Leaves messages 1, 2, and 4 unchanged.
-    H-->>K: messages 1 to 4, with the table in message 3
-    K->>O: messages 1 to 4, with the table in message 3
-    O-->>K: answer (5,145 input tokens)
-    K-->>D: answer
-{% endmermaid %}
-<!-- vale on -->
+{:.info}
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
-Both requests contain the same conversation. On `/compressed`, OpenAI receives the log records as a table, so OpenAI counts about half as many input tokens. The copy of the conversation in the script doesn't change.
+Create the demo script:
 
-Steps 2 and 3 cover two more cases:
-
-- Step 2 asks a follow-up question in the same conversation. Like an agent, the script sends the whole conversation again, including the original 200 log records, the answer from step 1, and the new question. The request has the same `x-session-id` header as step 1. So Headroom reuses the table from step 1 and doesn't compress the records again.
-- Step 3 starts a new conversation with one short question and no tool result. Headroom has nothing to compress, so OpenAI counts the same number of input tokens on both endpoints.
-
-The script doesn't need your OpenAI API key, because Kong adds the key from the AI Model Provider. The OpenAI SDK requires an `api_key` value, so the script passes a placeholder.
-
-Save the script as `demo.py`:
-
-```python
+```bash
+cat <<'EOF' > demo.py
 """Compare input tokens with and without Headroom compression on Kong AI Gateway.
 
 The script plays the part of an agent that has used a tool named get_logs.
@@ -666,7 +370,7 @@ request, the whole conversation; OpenAI reports them as usage.prompt_tokens.
   /uncompressed  forwards the conversation to OpenAI unchanged.
   /compressed    sends the conversation to Headroom first, then forwards Headroom's version.
 
-It runs three steps:
+It runs four steps:
 
   Step 1  The conversation right after the tool ran: the user's request, the
           assistant's tool call, the tool result (200 log records in JSON), and a
@@ -677,10 +381,11 @@ It runs three steps:
           Expected: the savings carry over to the next turn, and the answer is correct.
   Step 3  A new conversation with one short question and no tool result.
           Expected: the same input tokens on both endpoints.
+  Step 4  The short question with an invalid API key.
+          Expected: [BLOCKED] 401 from Kong.
 
-Run:
-    export PROXY_URL="$KONNECT_PROXY_URL"
-    python demo.py
+Run: python demo.py (set PROXY_URL if the data plane is not at http://localhost:8000,
+and CONSUMER_API_KEY if you changed the demo key).
 """
 
 import json
@@ -689,20 +394,30 @@ import random
 import sys
 import uuid
 
-from openai import OpenAI
+from openai import APIStatusError, OpenAI
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
+API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
 USE_COLOR = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
 
+def color(code, text):
+    return f"\033[{code}m{text}\033[0m" if USE_COLOR else text
+
+
 def bold(text):
-    return f"\033[1m{text}\033[0m" if USE_COLOR else text
+    return color("1", text)
 
 
-def ask(endpoint, messages, session_id):
+def ask(endpoint, messages, session_id, api_key=API_KEY):
     """Send the messages to /uncompressed or /compressed. Returns the response and Kong's latency."""
-    # Kong adds the OpenAI API key from the AI Model Provider, so this api_key is never used.
-    client = OpenAI(base_url=f"{PROXY_URL}/{endpoint}", api_key="unused")
+    # Kong reads the AI Consumer key from the apikey header and adds the OpenAI API key from
+    # the AI Model Provider. The SDK requires an api_key value, but Kong never uses it.
+    client = OpenAI(
+        base_url=f"{PROXY_URL}/{endpoint}",
+        api_key="unused",
+        default_headers={"apikey": api_key},
+    )
     raw = client.chat.completions.with_raw_response.create(
         model=endpoint,  # the AI Model's name, which matches its path
         messages=messages,
@@ -728,9 +443,9 @@ def run_step(title, messages, session_id):
     before = results["uncompressed"].usage.prompt_tokens
     after = results["compressed"].usage.prompt_tokens
     summary = f"Saved on /compressed: {before - after:,} input tokens ({(before - after) / before:.0%} fewer)"
-    print(f"  {bold(summary)}")
+    print(f"  {color('32;1', summary)}")
     answer = " ".join(results["compressed"].choices[0].message.content.split())
-    print(f"  Answer from /compressed: {answer}")
+    print(f"  Answer from /compressed: {color('2', answer)}")
     return answer
 
 
@@ -781,23 +496,27 @@ print(f"  Expected: latency_ms {logs[150]['latency_ms']}, service {logs[150]['se
 # Step 3: a new conversation with one short message.
 question = [{"role": "user", "content": "In one sentence, what does a tool call return to an agent?"}]
 run_step("Step 3: new conversation with one short question", question, f"demo-{uuid.uuid4().hex[:8]}")
+
+# Step 4: the short question with an API key that no AI Consumer has.
+bad_key = "not-a-real-key"
+print(f"\n{bold('Step 4: request to /compressed with an invalid API key')}")
+print(f"  Trying apikey={bad_key!r}")
+try:
+    ask("compressed", question, f"demo-{uuid.uuid4().hex[:8]}", api_key=bad_key)
+    print(f"  {color('31;1', '[ALLOWED]')} Kong accepted the invalid key")
+except APIStatusError as e:
+    print(f"  {color('31;1', f'[BLOCKED] {e.status_code}')}")
+EOF
 ```
 {:.collapsible}
 
-In the Python virtual environment from the prerequisites, set `PROXY_URL` to the data plane URL and run the script:
+Run it:
 
 ```bash
-export PROXY_URL="$KONNECT_PROXY_URL"
 python demo.py
 ```
 
-For each step, the script prints one line per endpoint with the following columns:
-
-- `input tokens`: the number of input tokens that OpenAI counted for the request, from `usage.prompt_tokens`.
-- `cached`: the number of input tokens that OpenAI served from its [prompt cache](https://developers.openai.com/api/docs/guides/prompt-caching).
-- `Kong time`: the time in milliseconds that Kong spent on the request before Kong sent the request to OpenAI. The script reads this value from the `X-Kong-Proxy-Latency` response header. On `/compressed`, this time includes the call to Headroom.
-
-Then the script prints the number of input tokens that `/compressed` saved and the answer from `/compressed`. For steps 1 and 2, the script also prints the correct answer for comparison. The following example shows the output:
+Example output:
 
 ```text
 Step 1: conversation with a tool result of 200 log records (25,540 characters of JSON)
@@ -822,87 +541,264 @@ Step 3: new conversation with one short question
   /compressed              21        0       17 ms
   Saved on /compressed: 0 input tokens (0% fewer)
   Answer from /compressed: A tool call returns the tool's output or response data to the agent for further processing or decision-making.
+
+Step 4: request to /compressed with an invalid API key
+  Trying apikey='not-a-real-key'
+  [BLOCKED] 401
 ```
 {:.no-copy-code}
 
-### What happened
+The `cached` column is the part of the input tokens that OpenAI served from its prompt cache. The `Kong time` column is the time that Kong spent on the request before it called OpenAI, from the `X-Kong-Proxy-Latency` header. If you run the script again, step 1 can also show cached input tokens, because OpenAI keeps cached prompts for up to an hour.
 
-1. In step 1, OpenAI counted 5,145 input tokens for the `/compressed` request and 10,272 for the `/uncompressed` request. The answer from `/compressed` still listed the three error records. Neither request used the prompt cache, so OpenAI billed 50% less for the input of the `/compressed` request. Headroom changed only message 3, the tool result. The script sent the tool result as JSON, 25,540 characters:
+### Check the results
 
-   ```json
-   [{"id": 0, "ts": "2026-10-18T09:00:00Z", "service": "search", "level": "INFO", "latency_ms": 56, "msg": "request completed"}, {"id": 1, "ts": "2026-10-18T09:01:07Z", "service": "payments", "level": "INFO", "latency_ms": 184, "msg": "request completed"}, ...
-   ```
-   {:.no-copy-code}
+The output confirms the following:
 
-   OpenAI received the following text instead, 12,021 characters:
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Compression of a tool result"
+    evidence: "In step 1, OpenAI counted 5,145 input tokens on `/compressed` and 10,272 on `/uncompressed`. Neither request used the prompt cache, so OpenAI billed 50% less input on `/compressed`. The answer still lists the three error records."
+  - behavior: "Savings on later turns"
+    evidence: "In step 2, `/compressed` has 5,248 input tokens and `/uncompressed` has 10,375, although the script sent the original 200 records again. The answer for entry 150 matches the `Expected` line."
+  - behavior: "A stable prompt start with the same session ID"
+    evidence: "In step 2, OpenAI served 4,992 of the 5,248 input tokens on `/compressed` from its prompt cache. OpenAI doesn't guarantee a cache hit on either endpoint. In this run, `/uncompressed` got none."
+  - behavior: "Short requests pass through"
+    evidence: "In step 3, both endpoints have 21 input tokens. The request has nothing that Headroom compresses."
+  - behavior: "Time spent on compression"
+    evidence: "The first `/compressed` request shows 112 ms of Kong time and `/uncompressed` shows 8 ms. The difference includes the Headroom call. The later `/compressed` requests show 17 to 24 ms."
+  - behavior: "Only the compressed endpoint calls Headroom"
+    evidence: "In the Headroom terminal, a log line with `path=/v1/compress` appears for each `/compressed` request and for none of the `/uncompressed` requests."
+  - behavior: "Authentication before any provider call"
+    evidence: "In step 4, Kong returns `401` for the invalid key, and the request never reaches OpenAI."
+{% endtable %}
 
-   ```text
-   "[200]{id:int,latency_ms:int,level:string,msg:string,service:string,ts:string}\n0,56,INFO,request completed,search,2026-10-18T09:00:00Z\n1,184,INFO,request completed,payments,2026-10-18T09:01:07Z\n...
-   ```
-   {:.no-copy-code}
+To review the created entities, and per-consumer usage, open the `prompt-compression-with-headroom-and-kong-ai-gateway-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-   Headroom converted the array into a table: a header line with the field names and types, then one line per record, separated by `\n`. Each field name appears once instead of 200 times. All 200 records are present, including the three errors:
+## How it works
 
-   ```text
-   37,189,ERROR,card processor returned 502,payments,2026-10-18T09:37:19Z
-   118,67,ERROR,upstream timeout after 30000ms,checkout,2026-10-18T09:58:46Z
-   164,160,ERROR,connection reset by peer,auth,2026-10-18T09:44:08Z
-   ```
-   {:.no-copy-code}
+Kong selects the AI Model by path and by the `model` field. On `compressed`, the AI Prompt Compressor Policy sends the conversation to Headroom and replaces the messages with the ones that Headroom returns. Then Kong sends the request to OpenAI with the AI Model Provider's key. On `uncompressed`, Kong sends the original messages.
 
-1. In step 2, OpenAI counted 5,248 input tokens for the `/compressed` request and 10,375 for the `/uncompressed` request. The answer for entry 150 was correct. The request had the same session ID as step 1, so Headroom reused the table from step 1. As a result, messages 1 to 4 were identical to the messages in the step 1 request to `/compressed`. OpenAI served 4,992 of the 5,248 input tokens from its prompt cache. OpenAI doesn't guarantee a cache hit on either endpoint. In this run, the `/uncompressed` request got no cache hit.
-1. In step 3, OpenAI counted 21 input tokens on both endpoints. Headroom doesn't change the latest user message, and the request had nothing else to compress.
-1. Kong spent 112 ms on the first `/compressed` request and 8 ms on the `/uncompressed` request. The difference includes the Headroom call. On the other `/compressed` requests, Kong spent 17 to 24 ms.
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant A as Agent
+    participant K as Kong AI Gateway
+    participant H as Headroom
+    participant O as OpenAI
 
-If you run the script again, step 1 can also show cached input tokens. The second run sends the same conversation as the first run, and OpenAI keeps cached prompts for up to an hour.
+    A->>K: POST /compressed/chat/completions (apikey, x-session-id, model compressed)
+    activate K
+    K->>H: AI Prompt Compressor Policy sends POST /v1/compress (messages, session ID, proxy token)
+    activate H
+    H-->>K: Compressed messages (else 500 while stop_on_error is true)
+    deactivate H
+    K->>K: Key Auth AI Auth Strategy accepts the apikey (else 401)
+    K->>O: Compressed messages with the OpenAI key
+    activate O
+    O-->>K: Completion and token usage
+    deactivate O
+    K-->>A: OpenAI-format response
+    deactivate K
 
-### Explore in {{site.konnect_short_name}}
+    A->>K: POST /uncompressed/chat/completions (apikey, model uncompressed)
+    activate K
+    K->>K: Key Auth AI Auth Strategy accepts the apikey (else 401)
+    K->>O: Original messages with the OpenAI key
+    activate O
+    O-->>K: Completion and token usage
+    deactivate O
+    K-->>A: OpenAI-format response
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
 
-Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `prompt-compression-with-headroom-and-kong-ai-gateway-recipe`. The {{site.ai_gateway}} contains the AI Model Provider `headroom-provider`, the AI Prompt Compressor Policy `headroom-compressor`, and the AI Models `compressed` and `uncompressed`.
+In a test on runtime 2.2.0, Kong also sent requests with an invalid or missing key to Headroom, then returned `401` without calling OpenAI.
 
-To list the AI Models with their paths and Policies, send the following request to the {{site.konnect_short_name}} API:
+### Key Auth AI Auth Strategy and AI Consumer
 
-```bash
-curl -s "$KONNECT_CONTROL_PLANE_URL/v1/ai-gateways/$AI_GATEWAY_ID/models" \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  | jq -r '.data[] | "\(.name)  path=\(.config.route.paths[0])  policies=\(.policies)"'
-```
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. Both AI Models reference this AI Auth Strategy in `access.auth_strategies`, so one key works for both endpoints.
+
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request. OpenAI never sees the AI Consumer key."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### AI Prompt Compressor Policy
+
+The [AI Prompt Compressor](/ai-gateway/policies/ai-prompt-compressor/) Policy sends the messages of each request to Headroom and forwards the messages that Headroom returns. Headroom decides what to compress. The policy also sends a session ID, so Headroom can recognize the turns that it already compressed for a conversation and return them unchanged.
+
+The following settings configure the AI Prompt Compressor Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`provider: headroom`"
+    purpose: "Sends the whole conversation to Headroom. `compression_ranges` and `message_type` apply only to the LLMLingua provider. With `headroom`, they don't change what Kong sends."
+  - setting: "`compressor_url`"
+    purpose: "The Headroom endpoint, from `HEADROOM_COMPRESSOR_URL`. Kong sends requests to this exact URL, so include the `/v1/compress` path. Without the path, {{site.konnect_short_name}} accepts the configuration, but requests to `/compressed` fail with `500`. By default, Headroom keeps sessions in memory in one process, so point the URL at one instance."
+  - setting: "`headroom.proxy_token`"
+    purpose: "The Headroom proxy token, from `HEADROOM_PROXY_TOKEN`. It's required when `compressor_url` isn't a loopback address, which includes the quickstart setup. Without it, `kongctl apply` fails with `headroom.proxy_token is required when compressor_url is not a loopback address (localhost, 127.0.0.0/8, ::1)`. The field isn't write-only: the {{site.konnect_short_name}} API returns its value in plain text."
+  - setting: "`headroom.session_id_headers` (default)"
+    purpose: "The headers that identify a conversation. The default list includes `x-session-id`, which the demo sets to one value for each conversation. Without a session header, the policy builds the session ID from the model, the system message, and the first user message. Each session ID is also scoped to the AI Consumer."
+  - setting: "`timeout: 45000`"
+    purpose: "The time in milliseconds that the policy waits for Headroom. Keep it higher than the Headroom per-session turn lock (10 seconds) plus the Headroom compression timeout (30 seconds by default). The default, `10000`, is lower than that sum."
+  - setting: "`stop_on_error: true`"
+    purpose: "When the Headroom call fails, Kong returns `500` with `{\"error\":{\"message\":\"failed to compress prompts: Failure when calling the Headroom compression service\"}}` and doesn't call OpenAI."
+  - setting: "`global: false`"
+    purpose: "The policy applies only to the AI Models that list it in `policies`."
+{% endtable %}
+
+### Headroom compression behavior
+
+Headroom picks a compression method for each message from its content. With Headroom 0.41.0, OpenAI received the following text for message 3 in step 1, 12,021 characters instead of the 25,540 characters of JSON:
 
 ```text
-uncompressed  path=/uncompressed  policies=[]
-compressed  path=/compressed  policies=["headroom-compressor"]
+"[200]{id:int,latency_ms:int,level:string,msg:string,service:string,ts:string}\n0,56,INFO,request completed,search,2026-10-18T09:00:00Z\n1,184,INFO,request completed,payments,2026-10-18T09:01:07Z\n...
 ```
 {:.no-copy-code}
 
-{{site.ai_gateway_name}} records token consumption and request latency for every AI Model. For traffic analysis across every {{site.ai_gateway}}, go to the [Observability](/observability/) menu in {{site.konnect_short_name}}.
+The script sent the tool result as a JSON string, so Headroom returned the table as a JSON string too: it starts with `"` and separates lines with `\n`. The header line lists each field and its type once, in alphabetical order, and each record follows on its own line. All 200 records are present, including the three errors:
+
+```text
+37,189,ERROR,card processor returned 502,payments,2026-10-18T09:37:19Z
+118,67,ERROR,upstream timeout after 30000ms,checkout,2026-10-18T09:58:46Z
+164,160,ERROR,connection reset by peer,auth,2026-10-18T09:44:08Z
+```
+{:.no-copy-code}
+
+In tests with Headroom 0.41.0, Headroom also showed the following behavior:
+
+* It didn't change the latest user message or short inputs.
+* It didn't compress the outputs of tools with names such as `read_file`, `Read`, `Grep`, `web_fetch`, and `web_search`.
+* It reduced a JSON array of nested objects to a subset of its records, with no marker in the text. In a request with 30 nested order records, the model received 15. With the tool listed in `HEADROOM_PROTECT_TOOL_RESULTS`, the model received all 30, and the request was 23% smaller.
+* With the same session ID, it returned the earlier turns of a conversation with the same bytes as on the previous turn. This keeps the start of the prompt the same for the OpenAI prompt cache.
+* `gpt-4o-mini` misread the log table, with the integer columns `id` and `latency_ms` next to each other, in three of three runs. `gpt-4o` and `gpt-4.1-mini` read it correctly. Check the answers of your model, not only the token counts.
+
+### AI Model Provider and AI Models
+
+The AI Model Provider holds the OpenAI API key and adds it to each request to OpenAI. The two AI Models, `compressed` and `uncompressed`, have their own paths and one target each, which calls the same OpenAI model through the AI Model Provider. Only `compressed` lists the AI Prompt Compressor Policy, so compression is the only difference between the endpoints.
+
+The following settings configure the AI Model Provider and the AI Models:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The OpenAI API key, from `OPENAI_TOKEN`. Kong adds it to each request to OpenAI. The field is write-only, so {{site.konnect_short_name}} never returns it."
+  - setting: "`name`"
+    purpose: "`compressed` or `uncompressed`. The AI Models don't set `config.route.model`, so the request's `model` field must be the AI Model name, not the OpenAI model. Another value, including `gpt-4.1-mini`, returns `500` with `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local'`."
+  - setting: "`policies`"
+    purpose: "`[headroom-compressor]` on `compressed` attaches the AI Prompt Compressor Policy by name. `[]` on `uncompressed` sends requests to OpenAI without a call to Headroom."
+  - setting: "`access.auth_strategies`"
+    purpose: "Both AI Models require a key from the Key Auth AI Auth Strategy."
+  - setting: "`formats: [{type: openai}]` and `capabilities: [generate]`"
+    purpose: "The AI Models accept OpenAI-format chat completion requests."
+  - setting: "`config.route.paths`"
+    purpose: "`/compressed` or `/uncompressed`. The `generate` capability adds `/chat/completions`, so the endpoints are `/compressed/chat/completions` and `/uncompressed/chat/completions`."
+  - setting: "`targets[].name`"
+    purpose: "The OpenAI model that both AI Models call, from `CHAT_MODEL`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes `/compressed` or `/uncompressed` from the path before it forwards the request."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default, for conversations with large tool results."
+  - setting: "`config.response_streaming: allow`"
+    purpose: "Clients can request streamed responses. Compression applies to the request, so OpenAI bills a streamed request through `/compressed` for the compressed input."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key, the OpenAI API key, and the Headroom proxy token in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
+
+### Response headers
+
+Kong adds the following response headers:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: "The upstream model that served the request, with the provider name as a prefix, for example `openai/gpt-4.1-mini`."
+  - header: "`X-Kong-Proxy-Latency`"
+    description: "Time in milliseconds that Kong spent processing the request, excluding the OpenAI call. On `/compressed`, it includes the Headroom call."
+{% endtable %}
 
 ## Variations and next steps
 
-**Require an API key.** Add a key-auth [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) and an [AI Consumer](/ai-gateway/entities/ai-consumer/). Then list the strategy in the `access.auth_strategies` field of each AI Model. The [Mistral AI cookbook](/cookbooks/mistral-ai-with-kong-ai-gateway/) shows the configuration. If the AI Auth Strategy rejects a request to `/compressed`, Kong still sends the request to Headroom. Kong doesn't send the rejected request to OpenAI.
+You can change or extend this configuration in the following ways:
 
-**Keep specific tool results exact.** Set `HEADROOM_PROTECT_TOOL_RESULTS` on Headroom to a comma-separated list of tool names, such as `list_orders`. Headroom doesn't apply lossy compression to the results of those tools.
-
-**Apply the Policy to every AI Model.** Set `global: true` on the Policy. If `stop_on_error` is `true`, a Headroom outage then fails every request through the {{site.ai_gateway}}. To forward the original messages when Kong can't connect to Headroom, set `stop_on_error: false`.
-
-**Track cost per AI Model.** Set `input_cost` and `output_cost` on each target. For more information, see [Model cost management](/ai-gateway/model-cost-management/).
-
-**Run Headroom in Kubernetes.** For instructions, see [Compress agent traffic with Headroom using {{site.operator_product_name}}](/operator/konnect/how-to/ai-gateway-headroom/).
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Keep specific tool results exact"
+    how: "Set `HEADROOM_PROTECT_TOOL_RESULTS` on Headroom to a comma-separated list of tool names, for example `list_orders`. Headroom then never removes data from the output of those tools. See the [Headroom proxy reference](https://docs.headroomlabs.ai/docs/proxy)."
+  - variation: "Forward requests when Headroom fails"
+    how: "Set `stop_on_error: false` on the AI Prompt Compressor Policy. Kong then logs the failure and forwards the original messages, and OpenAI bills the uncompressed input."
+  - variation: "Apply the policy to every AI Model"
+    how: "Set `global: true` on the AI Prompt Compressor Policy. With `stop_on_error: true`, a Headroom outage then fails every request through the {{site.ai_gateway}}."
+  - variation: "Choose the session headers"
+    how: "Set `headroom.session_id_headers` to the headers that your agents send for each conversation. Use headers whose values stay the same across turns. See [Headroom prompt flow](/ai-gateway/policies/ai-prompt-compressor/#headroom-prompt-flow)."
+  - variation: "Run several Headroom instances"
+    how: "Set `HEADROOM_COMPRESS_SESSION_STORE` to a Redis URL on each instance, so the instances share sessions behind a load balancer. This needs Headroom 0.42.0 or later with the `redis` extra. See the [AI Prompt Compressor limitations](/ai-gateway/policies/ai-prompt-compressor/#limitations)."
+  - variation: "Track cost per AI Model"
+    how: "Set `input_cost` and `output_cost` on each target. See [Model cost management](/ai-gateway/model-cost-management/)."
+  - variation: "Compress prose prompts with LLMLingua"
+    how: "Set `provider: kong` and point `compressor_url` at Kong's LLMLingua compressor service. See the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+  - variation: "Run Headroom in Kubernetes"
+    how: "Deploy Headroom next to the data plane with {{site.operator_product_name}}. See [Compress agent traffic with Headroom using {{site.operator_product_name}}](/operator/konnect/how-to/ai-gateway-headroom/)."
+  - variation: "Authenticate users with an identity provider"
+    how: "Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) and map JWT claims to AI Consumers. The AI Models, AI Model Provider, and AI Prompt Compressor Policy don't change. See the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/) for an example with Okta."
+{% endtable %}
 
 ## Cleanup
 
-When you're done, tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}. When you delete the {{site.ai_gateway}}, {{site.konnect_short_name}} also deletes the AI Model Provider, the Policy, and both AI Models:
+The quickstart created an {{site.ai_gateway}} for this recipe only, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='prompt-compression-with-headroom-and-kong-ai-gateway-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
 
-The script stops and removes the data plane container. Then the script deletes the {{site.ai_gateway}}:
+If you started Headroom for this recipe, stop it with `Ctrl+C` in its terminal and close that terminal. Then, in your first terminal, leave the virtual environment and remove the files and environment variables that the recipe created:
 
-```text
-Destroying local Kong AI Gateway Deployment...
-⏲︎ Stopping and removing containers and networks: ✔
-⏲︎ Deleting Konnect Control Plane 'prompt-compression-with-headroom-and-kong-ai-gateway-recipe': ✔
+```bash
+deactivate
+rm -rf .venv .venv-headroom demo.py
+unset CONSUMER_API_KEY CHAT_MODEL HEADROOM_PROXY_TOKEN HEADROOM_COMPRESSOR_URL
 ```
-{:.no-copy-code}
 
-Stop Headroom with `Ctrl+C` in the terminal where it runs, if you started it for this recipe. Delete the OpenAI API key in the [OpenAI dashboard](https://platform.openai.com/api-keys) if you created it only for this recipe.
+If you created the OpenAI API key only for this recipe, delete it in the [OpenAI dashboard](https://platform.openai.com/api-keys).
