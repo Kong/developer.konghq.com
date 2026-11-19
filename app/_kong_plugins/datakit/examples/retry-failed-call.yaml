@@ -17,9 +17,10 @@ extended_description: |
   To continue the flow after a failed call instead, see [Call a fallback API when the primary call fails](/plugins/datakit/examples/call-fallback-on-failure/).
 
   {:.warning}
-  > **Note:** A retry can repeat an operation that the upstream already applied, for example after a read timeout.
+  > **Warning:** A retry can repeat an operation that the upstream already applied, for example after a read timeout.
   This example uses a `GET` request, which is safe to repeat.
-  Do not enable retry on a `call` node that creates or changes data, unless the upstream deduplicates requests.
+  <br><br>
+  **Do not** enable retry on a `call` node that creates or changes data, unless the upstream deduplicates requests.
 
 title: Retry a failed call
 weight: 900
