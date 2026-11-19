@@ -41,12 +41,46 @@ related_resources:
     url: /kong-harnesses/setup/
 
 prereqs:
+  konnect:
+    - name: KONG_SSL_CERT
+    - name: KONG_SSL_CERT_KEY
   inline:
     - title: Shells on Windows
       position: before
       content: |
         On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
+    - title: A trusted certificate for the gateway
+      position: before
+      content: |
+        kong-harnesses connects only to a gateway that has an HTTPS certificate that your computer trusts, because the connection carries your sign-in.
+        The quickstart data plane serves HTTPS on port 8443.
+        Give it a certificate for `localhost` from [mkcert](https://github.com/FiloSottile/mkcert), a tool that creates a local certificate authority (CA) and adds it to the system trust store.
+
+        1. Install mkcert with the steps in the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
+           On Windows, install it and run the next two steps in PowerShell, because kong-harnesses trusts the Windows trust store, not the trust store in WSL.
+        1. Add the mkcert CA to the system trust store:
+
+           ```sh
+           mkcert -install
+           ```
+
+           mkcert asks for your password or for administrator approval.
+        1. Create a certificate and key for `localhost`:
+
+           ```sh
+           mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 ::1
+           ```
+
+        1. In the folder with the two files, export them as base64 text for the quickstart.
+           On Windows, run this step in WSL, where the folder `C:\Users\YOUR_USER` is `/mnt/c/Users/YOUR_USER`.
+
+           ```sh
+           export KONG_SSL_CERT="$(base64 < localhost.pem | tr -d '\n')"
+           export KONG_SSL_CERT_KEY="$(base64 < localhost-key.pem | tr -d '\n')"
+           ```
+
+        The quickstart passes these variables to the data plane, which then serves your certificate at `https://localhost:8443`.
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
@@ -102,6 +136,14 @@ cleanup:
         In the Okta Admin Console, go to **Applications > Applications**, and deactivate the `kong-harnesses` app.
         On the **Inactive** tab, delete the app.
         If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
+    - title: Clean up the local certificate
+      content: |
+        Delete `localhost.pem` and `localhost-key.pem`.
+        If you installed the mkcert CA only for this guide, remove it from the system trust store:
+
+        ```sh
+        mkcert -uninstall
+        ```
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 ---
@@ -219,7 +261,8 @@ On macOS and Linux, export the variables from the prerequisites again.
 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
 It holds no secrets.
-Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/):
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+The gateway origin is the HTTPS port of the quickstart data plane, `https://localhost:8443`:
 
 {% navtabs "profile-create" %}
 {% navtab "macOS and Linux" %}
@@ -230,7 +273,7 @@ kong-harnesses profile create \
   --issuer "$ISSUER_URL" \
   --client-id "$OKTA_CLIENT_ID" \
   --audience api://default \
-  --gateway-origin "$KONNECT_PROXY_URL" \
+  --gateway-origin https://localhost:8443 \
   --model claude-sonnet-5-5
 ```
 
@@ -238,10 +281,10 @@ kong-harnesses profile create \
 {% navtab "Windows" %}
 
 Run kong-harnesses and {{ site.claude_code }} in PowerShell.
-Replace the placeholders with the values of `ISSUER_URL`, `OKTA_CLIENT_ID` and `KONNECT_PROXY_URL` from the prerequisites:
+Replace the placeholders with the values of `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
 
 ```powershell
-kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin 'YOUR_PROXY_URL' --model claude-sonnet-5-5
+kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin https://localhost:8443 --model claude-sonnet-5-5
 ```
 
 {% endnavtab %}
