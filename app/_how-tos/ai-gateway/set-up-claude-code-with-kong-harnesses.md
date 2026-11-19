@@ -75,7 +75,8 @@ prereqs:
     - title: kong-harnesses version
       content: |
         This guide needs kong-harnesses from the first release after 0.17.0.
-        Earlier releases accept only an `https://` gateway origin, and the quickstart serves `http://localhost:8000`.
+        Earlier releases accept only an `https://` gateway origin.
+        The quickstart serves `http://localhost:8000`.
         Run `kong-harnesses version` to check your version.
     - title: A supported computer
       content: |
@@ -196,25 +197,29 @@ Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong
 The gateway origin is `http://localhost:8000`, the address of the quickstart data plane.
 
 {:.info}
-> kong-harnesses accepts a plain `http://` gateway origin only for a gateway on the same computer, such as `localhost` or `127.0.0.1`.
-> For a gateway on another computer, use an `https://` origin with a certificate that the operating system trusts.
+> kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
+> For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
+> The issuer and its endpoints always need `https://`.
 
-If your computer sends web requests through a proxy with `HTTPS_PROXY` or `HTTP_PROXY`, add the gateway host to `NO_PROXY` in the shell where you run kong-harnesses and {{ site.claude_code }}.
-With an `http://` gateway, the proxy would see your access token, so `kong-harnesses doctor` fails when a proxy would carry the request.
-{{ site.claude_code }} also sends requests for `localhost` through the proxy when `NO_PROXY` doesn't name it.
+If your computer uses a proxy through `HTTPS_PROXY` or `HTTP_PROXY`, add the gateway host to the proxy exclusion list.
+Over an `http://` origin, the proxy can read your access token, so `profile activate` and `doctor` fail when the proxy would carry the request.
+{{ site.claude_code }} also sends requests for `localhost` through the proxy when the exclusion list doesn't name it.
+The commands keep the hosts that are already in the list.
+Run the rest of this guide in the same shell, because the variables exist only there.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
 
 ```sh
-export NO_PROXY=localhost,127.0.0.1
+export no_proxy="localhost,127.0.0.1${no_proxy:+,$no_proxy}"
+export NO_PROXY="localhost,127.0.0.1${NO_PROXY:+,$NO_PROXY}"
 ```
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
 ```powershell
-$env:NO_PROXY = 'localhost,127.0.0.1'
+$env:NO_PROXY = 'localhost,127.0.0.1' + $(if ($env:NO_PROXY) { ",$env:NO_PROXY" })
 ```
 
 {% endnavtab %}
