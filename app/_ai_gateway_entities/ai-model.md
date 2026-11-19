@@ -244,7 +244,24 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-When a native format is set, only the corresponding provider is supported with its specific APIs.
+The `bedrock`, `gemini`, `cohere`, `huggingface`, and `typesafe` formats work only with their own provider and its specific APIs.
+The `anthropic` format also works with other providers for `generate` requests.
+See [Format and provider compatibility](#format-and-provider-compatibility).
+
+### Format and provider compatibility
+
+An AI Model's format determines which providers and capabilities it supports.
+The `openai` format works with every provider that supports the capability, and a provider-specific format works with its own provider.
+The `anthropic` format is the exception: for the `generate` capability, {{site.ai_gateway}} converts Anthropic Messages requests and responses for any provider, so clients like {{ site.claude_code }} can use models from other providers.
+For example, an AI Model with `formats: [{type: anthropic}]` can route to an OpenAI target.
+
+The following table lists the providers that each format and capability supports:
+
+{% include md/ai-gateway/v2/format-support.md %}
+
+For Amazon Bedrock, the `endpoint_type` setting in the target `config` selects the Runtime or Mantle endpoint.
+Runtime is the default.
+For the differences, see [Choose a Bedrock endpoint](/ai-gateway/ai-providers/bedrock/#choose-a-bedrock-endpoint).
 
 ### Expose all formats
 
