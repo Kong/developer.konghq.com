@@ -65,14 +65,17 @@ prereqs:
            mkcert -install
            ```
 
-           mkcert asks for your password, or on Windows asks you to confirm the new CA.
-        1. Create a certificate and key for `localhost`:
+           mkcert asks for your password.
+           On Windows, it asks you to confirm the new CA.
+        1. Create a directory, and create a certificate and key for `localhost` in it:
 
            ```sh
+           mkdir kong-quickstart-cert
+           cd kong-quickstart-cert
            mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 ::1
            ```
 
-        1. In the directory with the two files, export them as base64 text for the quickstart.
+        1. In the `kong-quickstart-cert` directory, export the two files as base64 text for the quickstart.
            On Windows, run `wsl` in PowerShell in that directory, and run this step in the WSL shell that opens.
            Run the quickstart in the same shell.
 
@@ -139,9 +142,10 @@ cleanup:
         If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
     - title: Clean up the local certificate
       content: |
-        Delete `localhost.pem` and `localhost-key.pem`.
+        Delete the `kong-quickstart-cert` directory with the certificate and key.
         The quickstart keeps copies of the certificate and key.
-        Delete them, in WSL on Windows:
+        Delete them.
+        On Windows, run this command in WSL:
 
         ```sh
         rm -rf ~/.kong/kong-ai-quickstart/environment ~/.kong/kong-ai-quickstart/kong-ai-quickstart.env
@@ -152,8 +156,7 @@ cleanup:
 
         ```sh
         ca_root="$(mkcert -CAROOT)"
-        mkcert -uninstall
-        rm -r "$ca_root"
+        mkcert -uninstall && rm -f "$ca_root/rootCA.pem" "$ca_root/rootCA-key.pem"
         ```
 
         On Windows, in PowerShell:
@@ -161,7 +164,7 @@ cleanup:
         ```powershell
         $caRoot = mkcert -CAROOT
         mkcert -uninstall
-        Remove-Item -Recurse $caRoot
+        if ($LASTEXITCODE -eq 0) { Remove-Item -Force "$caRoot\rootCA.pem", "$caRoot\rootCA-key.pem" }
         ```
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
