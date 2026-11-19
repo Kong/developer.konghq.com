@@ -1,7 +1,7 @@
 <!--vale off-->
-As of {{site.base_gateway}} 3.5, the product component known as Kong Enterprise Portal is no longer included in the {{site.ee_product_name}} (previously known as Kong Enterprise) software package. Existing customers who have purchased Kong Enterprise Portal can continue to use it and be supported via a dedicated mechanism.
+As of {{site.base_gateway}} 3.5, the product component known as Kong Enterprise Portal is no longer included by default in the {{site.ee_product_name}} (previously known as Kong Enterprise) software package. Existing customers who have purchased Kong Enterprise Portal can continue to use it and be supported via a dedicated mechanism.
 
-In addition, the product component known as Vitals is no longer included in {{site.ee_product_name}}.
+In addition, the product component known as Vitals is no longer included by default in {{site.ee_product_name}}.
 Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism.
 {{site.konnect_product_name}} users can take advantage of our [API Analytics](/observability/) offering, which provides a superset of Vitals functionality.
 
