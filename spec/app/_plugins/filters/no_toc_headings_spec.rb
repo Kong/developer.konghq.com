@@ -28,6 +28,31 @@ RSpec.describe NoTocHeadingsFilter do
           .to eq('<h3 class="foo no_toc" id="x">Title</h3>')
       end
 
+      it 'appends to a single-quoted class attribute' do
+        expect(filter.no_toc_headings(%q(<h3 class='foo' id="x">Title</h3>)))
+          .to eq('<h3 class="foo no_toc" id="x">Title</h3>')
+      end
+
+      it 'appends to an unquoted class attribute' do
+        expect(filter.no_toc_headings('<h3 class=foo id="x">Title</h3>'))
+          .to eq('<h3 class="foo no_toc" id="x">Title</h3>')
+      end
+
+      it 'sets the class on an empty class attribute' do
+        expect(filter.no_toc_headings('<h3 class="">Title</h3>'))
+          .to eq('<h3 class="no_toc">Title</h3>')
+      end
+
+      it 'does not treat another attribute ending in class as the class' do
+        expect(filter.no_toc_headings('<h3 data-class="foo">Title</h3>'))
+          .to eq('<h3 class="no_toc" data-class="foo">Title</h3>')
+      end
+
+      it 'keeps a class attribute that already contains no_toc among others' do
+        expect(filter.no_toc_headings('<h3 class="foo no_toc bar">Title</h3>'))
+          .to eq('<h3 class="foo no_toc bar">Title</h3>')
+      end
+
       it 'does not add the class twice' do
         expect(filter.no_toc_headings('<h3 class="no_toc" id="x">Title</h3>'))
           .to eq('<h3 class="no_toc" id="x">Title</h3>')
