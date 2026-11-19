@@ -1204,22 +1204,6 @@ dialog.expandable-image-dialog.is-open::backdrop {
   font-size: 18px;
 }
 
-.logo-flip-space {
-  align-self: center;
-  margin-left: 4px;
-  font-size: 10px;
-  letter-spacing: 0.05em;
-}
-
-.logo-flip-prompt {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-align: center;
-  color: rgb(var(--color-text-links));
-}
-
 .logo-flip.is-flipped > svg {
   transform: rotateY(-180deg);
 }

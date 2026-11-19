@@ -1,6 +1,6 @@
 # Docs arcade (hidden easter egg)
 
-A hidden pixel platformer on developer.konghq.com. Typing `0451` (or the Konami code, ending in Space, within 10 seconds) on any docs page turns that page into a level: a rogue AI corrupts the docs, and the player (the Kong logo mark, a gorilla) runs across the page enabling Kong plugins at terminals to govern it, then escapes through an exit door.
+A hidden pixel platformer on developer.konghq.com. Typing `0451` (or the Konami code within 10 seconds) on any docs page turns that page into a level: a rogue AI corrupts the docs, and the player (the Kong logo mark, a gorilla) runs across the page enabling Kong plugins at terminals to govern it, then escapes through an exit door.
 
 This file is the handoff for iterating on the game. It records the owner's intent and decisions; the code is the source of truth for current values, so constants are named here, not copied.
 
@@ -16,7 +16,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 - **The page is the level.** Nothing is hand-authored per page; every docs page must produce a playable level, including hub pages without `<main>`.
 - **The story is Kong's.** You are the gateway: each terminal is a real Kong plugin whose effect fits its purpose (Bot Detection slows bots, OpenID Connect de-authenticates agents). The mission text says so in the prompt, the opening toast, and the HUD.
 - **Leave no trace.** Esc twice restores the page exactly: no stray classes, scroll position restored, canvas removed.
-- **Discoverable, not obvious.** The only clue is the header logo: hover it for 3 seconds and it flips to show the Konami code with "input this" under it (`logo_flip.js`).
+- **Discoverable, not obvious.** The only clue is the header logo: hover it for 3 seconds and it flips to show the Konami code (`logo_flip.js`).
 
 ## Working with the owner
 
@@ -31,7 +31,7 @@ These were chosen by the owner, often after trying the alternative. Change them 
 
 ### Flow
 
-- `0451` or the Konami code (↑ ↑ ↓ ↓ ← → ← → B A Space, within 10 s) anywhere except form fields → Matrix rain (any key skips) → WarGames-style "SHALL WE PLAY A GAME? [Y/N]" with the mission → play.
+- `0451` or the Konami code (↑ ↑ ↓ ↓ ← → ← → B A, within 10 s) anywhere except form fields → Matrix rain (any key skips) → WarGames-style "SHALL WE PLAY A GAME? [Y/N]" with the mission → play.
 - Controls: arrows/WASD move, Space jump with one double jump, ↓ drops through a ledge (hold to keep falling), hold E at a terminal to enable its plugin, mouse wheel looks around, P pauses, M mutes, Esc twice exits. A keybar at the bottom lists them.
 - Pause (P, mid-run only) freezes everything: corruption, agents, effect timers, toasts and the run clock. The status box moves to the centre under a PAUSED title and the keybar reads "PRESS P TO UNPAUSE". M and Esc twice still work while paused.
 - Win: enable every terminal → corruption clears, agents vanish, a flashing EXIT door opens a little further down the page → reach it. Touching the door records the run, then a small Italian flag rises up a pole beside it (`FLAG_SECONDS`, then `FLAG_HOLD`) before the win screen.
