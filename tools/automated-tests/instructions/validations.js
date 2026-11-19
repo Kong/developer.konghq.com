@@ -452,8 +452,8 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
 
 async function requestCheck(validationName, config, runtimeConfig, container) {
   if (config.sleep !== undefined) {
-    console.log(`Sleeping for ${config.sleep} ms before making the request...`);
-    await sleep(config.sleep);
+    console.log(`Sleeping for ${config.sleep * 1000} ms before making the request...`);
+    await sleep(config.sleep * 1000);
   }
   const statusCode = config.status_code ?? 200;
   let responseText = "";
