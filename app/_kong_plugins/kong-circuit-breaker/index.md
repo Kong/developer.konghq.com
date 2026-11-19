@@ -128,6 +128,7 @@ When the count crosses a threshold, {{site.base_gateway}} rejects new requests b
 After a recovery period, the plugin lets a few test requests through.                                      
 If they succeed, the circuit closes and traffic flows normally again.
 
+<!--vale off-->
 {% mermaid %}
 stateDiagram-v2
     direction LR
@@ -137,6 +138,7 @@ stateDiagram-v2
     HalfOpen --> Closed: Probe sample passes
     HalfOpen --> Open: Probe sample fails
 {% endmermaid %}
+<!--vale on-->
 
 The Circuit Breaker plugin runs after [authentication](/plugins/?category=authentication) and [rate limiting](/plugins/?terms=rate%2520limiting) plugins, so only the requests that those plugins allow count toward a circuit.
 
