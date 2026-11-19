@@ -84,6 +84,7 @@ You should see the following output:
 ```sh
 kong-konnect: https://us.mcp.konghq.com/ (HTTP) - ✓ Connected
 ```
+{:.no-copy-code}
 
 {:.info}
 > It's also possible to install the MCP server into {{ site.claude_code }} via a Plugin. Instructions can be found in the [Kong Skills Hub](/skills/).
