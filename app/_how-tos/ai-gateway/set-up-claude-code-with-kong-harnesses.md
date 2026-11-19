@@ -194,26 +194,30 @@ The strategy accepts any valid access token from your Okta authorization server 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
 It holds no secrets.
 Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-The gateway origin is `http://localhost:8000`, the address of the quickstart data plane.
+The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+The guide uses `127.0.0.1`, because `localhost` depends on the system resolver.
 
 {:.info}
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
 
-If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the gateway host to the proxy exclusion list.
+{:.warning}
+> Any program on this computer can listen on the gateway port.
+> On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
+
+If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or their lowercase forms, add the gateway host to `NO_PROXY` before you continue.
 A proxy that carries a request to an `http://` gateway can read your access token.
-In that case, `doctor` fails, and `profile activate` shows the same failed check.
-{{ site.claude_code }} also sends requests for `localhost` through the proxy when the exclusion list doesn't name it.
+So when a proxy applies to the gateway host, `profile activate` and `setup` configure no client and stop with an error that names `NO_PROXY`, and `doctor` fails.
 The commands keep the hosts that are already in the list.
-Run the rest of this guide in the same shell, because the variables exist only there.
-Before you start `claude` in a new shell, set the variables again, or add them to your shell profile.
+Run the kong-harnesses and `claude` commands of this guide in the same shell, because the variables exist only there.
+{{ site.claude_code }} reads the proxy variables each time it starts, so set them again before you start `claude` in a new shell, or add them to your shell profile.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
 
 ```sh
-list="localhost,127.0.0.1${no_proxy:+,$no_proxy}${NO_PROXY:+,$NO_PROXY}"
+list="127.0.0.1,localhost${no_proxy:+,$no_proxy}${NO_PROXY:+,$NO_PROXY}"
 export no_proxy="$list" NO_PROXY="$list"
 ```
 
@@ -221,10 +225,10 @@ export no_proxy="$list" NO_PROXY="$list"
 {% navtab "Windows" %}
 
 ```powershell
-$env:NO_PROXY = 'localhost,127.0.0.1' + $(if ($env:NO_PROXY) { ",$env:NO_PROXY" })
+$env:NO_PROXY = '127.0.0.1,localhost' + $(if ($env:NO_PROXY) { ",$env:NO_PROXY" })
 ```
 
-To keep the setting for new PowerShell windows, add `localhost,127.0.0.1` to the `NO_PROXY` user environment variable.
+To keep the setting for new PowerShell windows, add `127.0.0.1,localhost` to the `NO_PROXY` user environment variable.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -240,7 +244,7 @@ kong-harnesses profile create \
   --issuer "$ISSUER_URL" \
   --client-id "$OKTA_CLIENT_ID" \
   --audience api://default \
-  --gateway-origin http://localhost:8000 \
+  --gateway-origin http://127.0.0.1:8000 \
   --model claude-sonnet-5-5
 ```
 
@@ -251,7 +255,7 @@ Run kong-harnesses and {{ site.claude_code }} in PowerShell.
 Replace the placeholders with the values of `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
 
 ```powershell
-kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin http://localhost:8000 --model claude-sonnet-5-5
+kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin http://127.0.0.1:8000 --model claude-sonnet-5-5
 ```
 
 {% endnavtab %}
