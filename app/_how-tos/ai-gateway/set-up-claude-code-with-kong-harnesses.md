@@ -255,38 +255,6 @@ When `upstream_access_token_header` is `null`, {{site.ai_gateway}} doesn't send 
 Anthropic gets only your key.
 The strategy accepts any valid access token from your Okta authorization server for the `api://default` audience, also a token that Okta issued to another app.
 
-## Install kong-harnesses
-
-{% navtabs "install" %}
-{% navtab "macOS and Linux" %}
-
-Install kong-harnesses with [Homebrew](https://brew.sh):
-
-```sh
-brew install kong/kong-harnesses/kong-harnesses
-```
-
-{% endnavtab %}
-{% navtab "Windows and Linux packages" %}
-
-Download the Windows installer (`.msi`) or the Linux package (`.deb` or `.rpm`) for your computer from the kong-harnesses repository at `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`, then install it:
-
-* Windows: in PowerShell opened as an administrator, run `msiexec /i <file>.msi`
-* Ubuntu: `sudo apt install ./<file>.deb`
-* Red Hat Enterprise Linux: `sudo dnf install ./<file>.rpm`
-
-{% endnavtab %}
-{% endnavtabs %}
-
-Check that the install worked:
-
-```sh
-kong-harnesses version
-```
-
-If the shell can't find `kong-harnesses`, open a new terminal.
-On macOS and Linux, export the variables from the prerequisites again.
-
 ## Create the kong-harnesses profile
 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
