@@ -58,7 +58,8 @@ prereqs:
         Create a certificate for `localhost` with [mkcert](https://github.com/FiloSottile/mkcert), a tool that adds a local certificate authority (CA) to the system trust store.
 
         1. Install mkcert with the steps in the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
-           On Windows, install it and run the next two steps in PowerShell, because kong-harnesses checks the certificate against the Windows trust store, not the one in WSL.
+           On Windows, install mkcert and run the next two steps in PowerShell.
+           kong-harnesses on Windows checks the certificate against the Windows trust store, not the one in WSL.
         1. Add the mkcert CA to the system trust store:
 
            ```sh
@@ -72,12 +73,12 @@ prereqs:
            ```sh
            mkdir kong-quickstart-cert
            cd kong-quickstart-cert
-           mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 ::1
+           mkcert -cert-file localhost.pem -key-file localhost-key.pem localhost 127.0.0.1 '::1'
            ```
 
         1. In the `kong-quickstart-cert` directory, export the two files as base64 text for the quickstart.
-           On Windows, run `wsl` in PowerShell in that directory, and run this step in the WSL shell that opens.
-           Run the quickstart in the same shell.
+           Run the quickstart in the same shell, because the variables exist only in that shell.
+           On Windows, run `wsl` in PowerShell in that directory, and run this step and the quickstart in the WSL shell that opens.
 
            ```sh
            export KONG_SSL_CERT="$(base64 < localhost.pem | tr -d '\n')"
@@ -155,15 +156,10 @@ cleanup:
         Remove-Item -Recurse -Force kong-quickstart-cert
         ```
 
-        The quickstart keeps copies of the certificate and key.
-        Delete them with this command.
-        On Windows, run it in WSL:
+        The {{site.ai_gateway}} cleanup deletes the copies of the certificate and key that the quickstart keeps.
 
-        ```sh
-        rm -rf ~/.kong/kong-ai-quickstart/environment ~/.kong/kong-ai-quickstart/kong-ai-quickstart.env
-        ```
-
-        If you installed the mkcert CA only for this guide, remove it from the system trust store and delete its files.
+        If mkcert created its CA for this guide and you don't use it for other projects, remove it from the system trust store and delete its files.
+        mkcert can ask for your password, or on Windows, ask you to confirm the removal.
         On macOS and Linux:
 
         ```sh
