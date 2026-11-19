@@ -71,7 +71,7 @@ prereqs:
 
         Run `claude --version` to check the install.
         If the terminal can't find `claude`, do the `PATH` step that the installer prints.
-        If you open a new terminal for it, export the variables from the other prerequisites again.
+        On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
     - title: A supported computer
       content: |
         kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64.
@@ -181,6 +181,7 @@ ai_gateway_models:
 
 When `upstream_access_token_header` is `null`, {{site.ai_gateway}} doesn't send the Okta access token to Anthropic.
 Anthropic gets only your key.
+The strategy accepts any valid access token from your Okta authorization server for the `api://default` audience, also a token that Okta issued to another app.
 
 ## Install kong-harnesses
 
@@ -217,7 +218,7 @@ On macOS and Linux, export the variables from the prerequisites again.
 ## Create the kong-harnesses profile
 
 A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
-It contains settings only.
+It holds no secrets.
 Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/):
 
 {% navtabs "profile-create" %}
@@ -281,6 +282,7 @@ kong-harnesses profile activate quickstart --client claude-code
 `profile activate` sends a test request with your sign-in to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
 It shows each problem that it finds with a fix.
 Fix the problems and run the same command again.
+If `profile activate` asks to install the gateway prices for `/cost`, you can say no, because the install needs administrator rights.
 
 ## Features that change behind the gateway
 

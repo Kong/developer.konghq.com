@@ -1,4 +1,4 @@
-You need an [Okta](https://login.okta.com/) admin account with a developer organization.
+You need an [Okta developer organization](https://developer.okta.com/signup/) and an admin account in it.
 {{site.kong_harnesses}} signs developers in to an Okta app with the authorization code flow and PKCE.
 The sign-in fails if Okta doesn't issue a refresh token, because {{site.kong_harnesses}} uses it to renew the access token.
 
@@ -31,10 +31,10 @@ This guide uses the Okta `default` authorization server, which issues access tok
 
 If no rule matches, or the lifetime of the first matching rule is outside this range, add a policy for the app:
 
-1. On the **Access Policies** tab, click **Add New Access Policy**.
+1. On the **Access Policies** tab, click **Add New Access Policy**, or **Add Policy** if the list is empty.
 1. In the **Name** field, enter `kong-harnesses`.
 1. In the **Description** field, enter `Sign-in policy for kong-harnesses`.
-1. In the **Assign to** settings, select **The following clients**, and enter `kong-harnesses`.
+1. In the **Assign to** settings, select **The following clients**, enter `kong-harnesses`, and select the app from the list.
 1. Click **Create Policy**.
 1. Click **Add Rule**.
 1. In the **Rule Name** field, enter `kong-harnesses sign-in`.
