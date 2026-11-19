@@ -1,4 +1,4 @@
-Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision a demo {{site.base_gateway}} control plane and data plane, and configure your environment:
+Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision a demo {{site.event_gateway}} control plane and data plane, and configure your environment:
 
 ```bash
 curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway{% if config.env != empty %} \{% endif %}{% for pair in config.env %}
