@@ -88,6 +88,10 @@ rows:
       * `vectordb.redis.ssl_verify`
   - plugin: "[AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/)"
     fields: "`redis.ssl_verify`"
+  - plugin: "[AI Request Transformer](/plugins/ai-request-transformer/)"
+    fields: "`https_verify`"
+  - plugin: "[AI Response Transformer](/plugins/ai-response-transformer/)"
+    fields: "`https_verify`"
   - plugin: "[AI Semantic Cache](/plugins/ai-semantic-cache/)"
     fields: |
       * `vectordb.pgvector.ssl_verify`
@@ -109,11 +113,14 @@ rows:
   - plugin: "[Confluent](/plugins/confluent/)"
     fields: |
       * `security.ssl_verify`
+      * `schema_registry.confluent.ssl_verify`
       * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[Confluent Consume](/plugins/confluent-consume/)"
     fields: |
       * `security.ssl_verify`
+      * `schema_registry.confluent.ssl_verify`
       * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+      * `topics.schema_registry.confluent.ssl_verify`
       * `topics.schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[Datakit](/plugins/datakit/)"
     fields: |
@@ -137,15 +144,19 @@ rows:
   - plugin: "[Kafka Consume](/plugins/kafka-consume/)"
     fields: |
       * `security.ssl_verify`
+      * `schema_registry.confluent.ssl_verify`
       * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+      * `topics.schema_registry.confluent.ssl_verify`
       * `topics.schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[Kafka Log](/plugins/kafka-log/)"
     fields: |
       * `security.ssl_verify`
+      * `schema_registry.confluent.ssl_verify`
       * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[Kafka Upstream](/plugins/kafka-upstream/)"
     fields: |
       * `security.ssl_verify`
+      * `schema_registry.confluent.ssl_verify`
       * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[LDAP Auth](/plugins/ldap-auth/)"
     fields: "`verify_ldap_host`"
@@ -160,6 +171,8 @@ rows:
       * `redis.ssl_verify`
       * `session_memcached_ssl_verify`
       * `tls_client_auth_ssl_verify`
+  - plugin: "[OPA](/plugins/opa/)"
+    fields: "`ssl_verify`"
   - plugin: "[Proxy Cache Advanced](/plugins/proxy-cache-advanced/)"
     fields: "`redis.ssl_verify`"
   - plugin: "[Rate Limiting](/plugins/rate-limiting/)"
