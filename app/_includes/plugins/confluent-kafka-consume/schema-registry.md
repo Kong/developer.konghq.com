@@ -1,4 +1,4 @@
-The {{include.name}} plugin supports integration with Confluent Schema Registry for AVRO and JSON schemas. 
+The {{include.name}} plugin supports integration with Confluent Schema Registry{% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %} or AWS Glue Schema Registry{% endif %} for AVRO and JSON schemas. 
 
 Schema registries provide a centralized repository for managing and validating schemas for data formats like AVRO and JSON.
 Integrating with a schema registry allows the plugin to validate and serialize/deserialize messages in a standardized format.
@@ -10,9 +10,12 @@ Using a schema registry with {{site.base_gateway}} provides several benefits:
 * **Interoperability**: Enables seamless communication between different services using standardized data formats.
 * **Reduced overhead**: Minimizes the need for custom validation logic in your applications.
 
-To learn more about Kong's supported schema registry, see:
+To learn more about the supported schema registries, see:
 
 * [Confluent Schema Registry Documentation](https://docs.confluent.io/platform/current/schema-registry/index.html)
+{% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %}
+* [AWS Glue Schema Registry Documentation](https://docs.aws.amazon.com/glue/latest/dg/schema-registry.html)
+{% endif %}
 * [AVRO Specification](https://avro.apache.org/docs/++version++/specification/)
 
 ### How schema registry validation works
@@ -66,7 +69,7 @@ autonumber
     activate Kong
     Kafka->>Kong: Send message
     deactivate Kafka
-    Kong->>Kong: Extract schema ID
+    Kong->>Kong: Extract the schema identifier
     activate Registry
     Kong->>Registry: Fetch schema from registry
     Registry-->>Kong: Return schema
@@ -83,12 +86,36 @@ autonumber
 
 ### Configure schema registry
 
-To configure Schema Registry with the {{include.name}} plugin, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter in your plugin configuration. 
+To configure Schema Registry with the {{include.name}} plugin, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter in your plugin configuration. {% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %}Configure exactly one registry: `confluent` or `glue`.{% endif %}
 
 For sample configuration values, see:
 * [Schema registry configuration example](./examples/schema-registry/)
+{% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %}
+* [Glue schema registry configuration example](./examples/schema-registry-glue/) {% new_in 3.17 %}
+{% endif %}
 {% if include.slug == 'confluent-consume' %}
 * [Schema registry with OAuth2 configuration example](./examples/schema-registry-oauth2/) {% new_in 3.12 %}
+{% endif %}
+
+{% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %}
+### AWS Glue Schema Registry {% new_in 3.17 %}
+
+To use AWS Glue Schema Registry instead of Confluent Schema Registry, set `schema_registry.glue` in the plugin configuration. The gateway signs every Glue API request with AWS Signature Version 4.
+
+Key behavior:
+
+* `region` is required. If you omit it, the gateway reads the `AWS_REGION` or `AWS_DEFAULT_REGION` environment variable.
+* The gateway uses the default AWS credential chain when `access_key` and `secret_key` are absent. This mode works with IAM roles for Amazon MSK deployments.
+* `registry_name` defaults to `default-registry`.
+{% if include.workflow == 'producer' %}
+* The plugin selects the schema with `value_schema.schema_name` and an optional `schema_version`.
+* The `payload_encoding` option for Avro schemas works the same way as for Confluent Schema Registry.
+{% else %}
+* The plugin reads the schema version ID from the message header. It does not need a schema name.
+{% endif %}
+
+{:.info}
+> **Note**: A plugin configuration can set `confluent` or `glue`, but not both.
 {% endif %}
 
 {% if include.workflow == 'producer' %}
@@ -128,6 +155,8 @@ Otherwise, the field must be nullable, or the plugin rejects the request as miss
 
 Because an Avro-tagged value like `{"string": "hello"}` already matches a single branch by name, `simple_json` accepts it as-is. 
 This lets you migrate clients from `avro_json` to `simple_json` one at a time, instead of all at once.
+
+For AWS Glue Schema Registry, set the same field under `schema_registry.glue.value_schema` or `schema_registry.glue.key_schema`.
 
 For a sample configuration, see [Simple JSON encoding for Avro schemas](./examples/schema-registry-simple-json/).
 {% endif %}
