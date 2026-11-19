@@ -24,13 +24,15 @@ This guide uses the Okta `default` authorization server, which issues access tok
 
 1. Go to **Security > API > Authorization Servers**, and click `default`.
 1. On the **Scopes** tab, check that `openid`, `profile`, `email` and `offline_access` are listed.
-   {{site.kong_harnesses}} requests these scopes, and Okta issues a refresh token only for `offline_access`.
+   {{site.kong_harnesses}} requests these scopes, and Okta issues a refresh token only when the request includes `offline_access` and the app has the **Refresh Token** grant type.
 1. On the **Access Policies** tab, check that a policy for all clients, or for the `kong-harnesses` app, has a rule that allows the **Authorization Code** grant type and these scopes.
+   The access token lifetime of that rule must be between 6 minutes and 1 hour, because {{site.kong_harnesses}} refuses other lifetimes by default.
 
-If no rule allows them, add a policy for the app:
+If no rule allows them, or the lifetime is outside this range, add a policy for the app:
 
 1. On the **Access Policies** tab, click **Add New Access Policy**.
 1. In the **Name** field, enter `kong-harnesses`.
+1. In the **Description** field, enter `Sign-in policy for kong-harnesses`.
 1. In the **Assign to** settings, select **The following clients**, and enter `kong-harnesses`.
 1. Click **Create Policy**.
 1. Click **Add Rule**.
@@ -39,8 +41,8 @@ If no rule allows them, add a policy for the app:
 1. For **User is**, select **Any user assigned the app**.
 1. For **Scopes requested**, select **Any scopes**.
 1. Keep the access token lifetime at 1 hour.
-   {{site.kong_harnesses}} refuses access tokens that are valid for more than 1 hour, unless the profile allows a longer lifetime.
 1. Click **Create Rule**.
+1. On the **Access Policies** tab, drag the `kong-harnesses` policy above any policy for all clients.
 
 #### Export the issuer URL and client ID
 

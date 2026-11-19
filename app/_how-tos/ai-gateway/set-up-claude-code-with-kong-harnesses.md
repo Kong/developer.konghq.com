@@ -75,16 +75,18 @@ prereqs:
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
   a: |
-    Protect an AI Model with an `openid-connect` AI Auth Strategy, and create a kong-harnesses profile with your gateway, your identity provider and the model. Run `kong-harnesses login --profile <profile>` and `kong-harnesses profile activate <profile> --client claude-code`, check the result with `kong-harnesses doctor --profile <profile> --client claude-code`, and start `claude`.
+    Protect an AI Model with an `openid-connect` AI Auth Strategy, and create a kong-harnesses profile with your gateway, your identity provider and the model.
+    Run `kong-harnesses login --profile <profile>` and `kong-harnesses profile activate <profile> --client claude-code`.
+    Check the result with `kong-harnesses doctor --profile <profile> --client claude-code`, and start `claude`.
 
 cleanup:
   inline:
     - title: Clean up kong-harnesses
       content: |
-        Remove the settings that kong-harnesses added, sign out, and delete the profile:
+        Remove the {{ site.claude_code }} settings that kong-harnesses added, sign out, and delete the profile:
 
         ```sh
-        kong-harnesses profile cleanup
+        kong-harnesses profile cleanup --client claude-code
         kong-harnesses logout --profile quickstart
         kong-harnesses profile delete quickstart
         ```
@@ -92,7 +94,8 @@ cleanup:
         `profile delete` asks you to type `quickstart` to confirm.
     - title: Clean up Okta
       content: |
-        In the Okta Admin Console, go to **Applications > Applications**, deactivate the `kong-harnesses` app, and delete it.
+        In the Okta Admin Console, go to **Applications > Applications**, and deactivate the `kong-harnesses` app.
+        On the **Inactive** tab, delete the app.
         If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
@@ -100,16 +103,16 @@ cleanup:
 
 [kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one.
 It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
-No long-lived key goes into the {{ site.claude_code }} settings.
+kong-harnesses doesn't write a long-lived key to the {{ site.claude_code }} settings.
 
 In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
 Then you set up {{ site.claude_code }} as a developer does.
 
 ## Create the AI Model
 
-The AI Model uses the following entities:
+Create the following entities:
 
-* An `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that checks the Okta access token in `Authorization`.
+* An `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that checks the Okta access token in the `Authorization` header.
 * An [AI Model Provider](/ai-gateway/entities/ai-model-provider/) with your Anthropic key.
 * An [AI Model](/ai-gateway/entities/ai-model/) for `claude-sonnet-5-5`.
 
@@ -171,7 +174,7 @@ ai_gateway_models:
             - claude-sonnet-5-5
 {% endentity_examples %}
 
-With `upstream_access_token_header: null`, {{site.ai_gateway}} doesn't send the Okta access token to Anthropic.
+When `upstream_access_token_header` is `null`, {{site.ai_gateway}} doesn't send the Okta access token to Anthropic.
 Anthropic gets only your key.
 
 ## Install kong-harnesses
@@ -228,6 +231,7 @@ kong-harnesses profile create \
 {% navtab "Windows" %}
 
 Run kong-harnesses and {{ site.claude_code }} in PowerShell.
+The other commands in this guide use Bash, so run them in WSL.
 Replace the placeholders with the values of `ISSUER_URL`, `OKTA_CLIENT_ID` and `KONNECT_PROXY_URL` from the prerequisites:
 
 ```powershell
@@ -239,7 +243,7 @@ kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --cli
 
 kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, then saves the profile and installs it on this computer.
 It also sends a test request to the gateway route of each agent CLI that the profile sets up.
-This guide creates only the route that {{ site.claude_code }} uses, so `profile create` warns about the Codex and OpenCode routes.
+This guide creates only the route that {{ site.claude_code }} uses, so `profile create` can warn that Codex and OpenCode can't use this gateway.
 You can ignore these warnings.
 
 {:.info}
@@ -277,7 +281,7 @@ Fix the problem and run the same command again.
 ## Features that change behind the gateway
 
 Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic.
-The profile decides which of them `profile activate` turns off.
+The profile sets which of them `profile activate` turns off.
 To see the {{ site.claude_code }} choices in the profile, run:
 
 ```sh
@@ -325,7 +329,7 @@ The profile and the gateway route decide whether the advisor and tool search are
 
 ## Validate
 
-Run the checks:
+Run `kong-harnesses doctor` to check the setup:
 
 ```sh
 kong-harnesses doctor --profile quickstart --client claude-code
@@ -350,7 +354,7 @@ claude
 ```
 
 Send a prompt to check that you get a reply.
-Every model request now goes through {{site.ai_gateway}}.
+{{ site.claude_code }} now sends every model request to {{site.ai_gateway}}.
 kong-harnesses renews your access token by itself.
 Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
 

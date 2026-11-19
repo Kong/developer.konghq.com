@@ -109,7 +109,7 @@ rows:
           config:
             title: Claude Code with kong-harnesses
             icon: /assets/icons/third-party/claude.svg
-            description: Use Claude Code with kong-harnesses and your company's gateway
+            description: Use Claude Code with kong-harnesses and an Okta sign-in
             cta:
               url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - header:
