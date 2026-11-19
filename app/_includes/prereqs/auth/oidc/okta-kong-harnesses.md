@@ -20,9 +20,11 @@ Complete the following steps in the Okta Admin Console.
 
 #### Check the authorization server
 
-This guide uses the Okta `default` authorization server, which issues access tokens for the audience `api://default`.
+This guide uses the Okta `default` authorization server with the audience `api://default`.
 
 1. Go to **Security > API > Authorization Servers**, and click `default`.
+1. On the **Settings** tab, check that the **Audience** is `api://default`.
+   If it's different, use that value in place of `api://default` in this guide.
 1. On the **Scopes** tab, check that `openid`, `profile`, `email` and `offline_access` are listed.
    {{site.kong_harnesses}} requests these scopes, and Okta issues a refresh token only when the request includes `offline_access` and the app has the **Refresh Token** grant type.
 1. On the **Access Policies** tab, find the first rule that matches the `kong-harnesses` app, your user, the **Authorization Code** grant type and these scopes.
