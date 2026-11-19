@@ -58,14 +58,14 @@ prereqs:
         Create a certificate for `localhost` with [mkcert](https://github.com/FiloSottile/mkcert), a tool that adds a local certificate authority (CA) to the system trust store.
 
         1. Install mkcert with the steps in the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
-           On Windows, install it and run the next two steps in PowerShell, because kong-harnesses trusts the Windows trust store, not the trust store in WSL.
+           On Windows, install it and run the next two steps in PowerShell, because kong-harnesses checks the certificate against the Windows trust store, not the one in WSL.
         1. Add the mkcert CA to the system trust store:
 
            ```sh
            mkcert -install
            ```
 
-           mkcert asks for your password.
+           On macOS and Linux, mkcert can ask for your password.
            On Windows, it asks you to confirm the new CA.
         1. Create a directory, and create a certificate and key for `localhost` in it:
 
@@ -142,10 +142,22 @@ cleanup:
         If you added the `kong-harnesses` access policy, delete it on the **Access Policies** tab of the `default` authorization server.
     - title: Clean up the local certificate
       content: |
-        Delete the `kong-quickstart-cert` directory with the certificate and key.
+        In the parent directory of `kong-quickstart-cert`, delete the directory with the certificate and key.
+        On macOS and Linux:
+
+        ```sh
+        rm -rf kong-quickstart-cert
+        ```
+
+        On Windows, in PowerShell:
+
+        ```powershell
+        Remove-Item -Recurse -Force kong-quickstart-cert
+        ```
+
         The quickstart keeps copies of the certificate and key.
-        Delete them.
-        On Windows, run this command in WSL:
+        Delete them with this command.
+        On Windows, run it in WSL:
 
         ```sh
         rm -rf ~/.kong/kong-ai-quickstart/environment ~/.kong/kong-ai-quickstart/kong-ai-quickstart.env
