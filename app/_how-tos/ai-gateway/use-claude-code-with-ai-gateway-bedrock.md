@@ -12,6 +12,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
   - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
     url: /ai-gateway/identify-ai-consumers-with-kong-identity/
+  - text: Set up {{ site.claude_code }} with kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an AWS Bedrock model
 
@@ -61,6 +63,16 @@ tags:
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} against an AWS Bedrock model?
   a: Create an AI Provider entity to store your AWS credentials, create an AI Policy that strips fields Claude CLI sends that Bedrock rejects, create an AI Model entity with an Anthropic-compatible format that routes to Bedrock through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+
+faqs:
+  - q: |
+      {% include faqs/claude-code-kong-harnesses-setup.md section='question' %}
+    a: |
+      {% include faqs/claude-code-kong-harnesses-setup.md section='answer' model="my-claude-bedrock" provider="bedrock" %}
+  - q: |
+      {% include faqs/claude-code-repository-settings.md section='question' %}
+    a: |
+      {% include faqs/claude-code-repository-settings.md section='answer' %}
 
 ---
 
