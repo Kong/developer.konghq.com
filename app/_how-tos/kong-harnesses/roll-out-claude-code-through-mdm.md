@@ -239,7 +239,7 @@ Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
 A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check), such as the servers that `managedMcpServers` provides and built-in servers such as Claude in Chrome.
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
-When a session starts, kong-harnesses names each server in the user, local or project settings that {{ site.claude_code }} doesn't load, but not the servers of a plugin.
+When a session starts, kong-harnesses names each server in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load, but not the servers of a plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -249,6 +249,7 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 Run `fleet build` once for each platform of your managed computers.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
+The install command that each build prints names its `root` folder with a placeholder, which [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the path where the kong-harnesses package installs the binary on the managed computers.
 The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
 Each build needs its own output folder, and the folder must be new or empty.
@@ -276,6 +277,7 @@ The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
 To give it the same settings, add `--wsl inherit`.
 If your `--policy` sets `wslInheritsWindowsSettings` to `true`, `fleet build` refuses a Windows build without `--wsl inherit`, so add the option or set the key to `false` in the policy.
+For a new MDM build of computers that already have an MDM build, which you pass with `--record`, `fleet build` first takes the settings of the earlier build out of the policy, and checks only the value that is left.
 This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 If interop is off, the credential helper tells the developer to turn it on.
 This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
@@ -394,7 +396,7 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names each MCP server in the user, local or project settings that {{ site.claude_code }} doesn't load.
+  When a session starts, one hook names each MCP server in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
@@ -447,19 +449,24 @@ After the checks in [Validate](#validate) pass on each test computer, install th
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
-`fleet build` prints the command that packages or copies the files for the platform, with the full path of the `root` folder.
-For example, on macOS, it prints a `pkgbuild` command like this one, which puts the files in one package.
-Replace each placeholder with the value for your deployment, and `/PATH/TO` with the folder where you ran `fleet build`:
+`fleet build` prints the command that packages or copies the files for the platform.
+The command can run on another computer than `fleet build`, so it names the copy of `root` with the `ROOT_FOLDER` placeholder.
+Copy the `root` folder from the output folder to the computer that runs the command, and replace `ROOT_FOLDER` there with the path of that copy.
+On macOS, that is the Mac that builds the package, and the command is a `pkgbuild` command like this one, which puts the files in one package.
+Replace each placeholder with the value for your deployment, and keep the quotes:
 
 ```sh
-pkgbuild --root '/PATH/TO/fleet-macos/root' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root 'ROOT_FOLDER' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
+
+Then install `kong-harnesses-fleet.pkg` on each computer.
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
 By default, `pkgbuild` sets root as the owner of each file in the package, so the package installs the files as root.
+On Linux and Windows, copy `root` to each computer, and run the copy command there as an administrator.
 On Linux, `fleet build` prints a copy command that creates the files as root, and sets each folder that the build writes to mode 755 and each file to mode 644.
 The command doesn't change `/etc`.
-On Windows, the copy command that `fleet build` prints gives each file the access rules of the folder that holds it.
+On Windows, the PowerShell copy command that `fleet build` prints gives each file the access rules of the folder that holds it.
 If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on the computer with its own rules, the files get those rules, so make sure that each folder on the path follows the rule in the install step.
 
 ## Validate
@@ -541,9 +548,9 @@ If a server is missing, look for the settings in [Choose the MCP servers](#choos
 
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
+`doctor` doesn't run in WSL, so there the label and the test prompt are the only checks.
 Start `claude` in the distribution, and run `/status` before you send a prompt.
 Make sure that the `Setting sources` line shows `Enterprise managed settings` with a label that can carry the build, as on Windows.
-`doctor` doesn't run in WSL, so there the label and the test prompt are the only checks.
 If it doesn't, make sure that you built with `--wsl inherit`, and deploy the build again.
 Then send a short prompt, such as `Say hello`.
 The credential helper runs kong-harnesses on Windows through interop, so the session uses the developer's Windows sign-in.
