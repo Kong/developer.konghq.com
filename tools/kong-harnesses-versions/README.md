@@ -2,7 +2,9 @@
 
 Keeps the kong-harnesses documentation on developer.konghq.com in sync with the installed binary and its GitHub releases.
 
-The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) workflow runs both scripts on a daily schedule and on manual dispatch: it regenerates the help includes, then refreshes the release data from the internal `Kong/kong-harnesses` releases, and opens a pull request. It reads those releases with the Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), passed to the `Kong/setup-kong-harnesses` install step so the step can resolve a release, and set as `GH_TOKEN` for `fetch-versions.js`. The workflow only runs once `Kong/setup-kong-harnesses` is public or mirrored, as `Kong/ksai-public` is: the action is internal, and GitHub does not resolve an internal action from this public repository.
+The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) workflow runs both scripts on a daily schedule and on manual dispatch: it regenerates the help includes, then refreshes the release data from the internal `Kong/kong-harnesses` releases, and opens a pull request. GitHub runs a schedule only from the default branch, so the same workflow file is also on `main`. Its `base` job sends the sync to `release/kong-harnesses` while that branch exists, else to the default branch. A manual run can name the branch in `dev_site_base_branch`.
+
+The `kong-harnesses-versions` job downloads the newest release for Linux, and checks the archive against `SHA256SUMS.txt` and against the build provenance in `kong-harnesses_<tag>.sigstore.json`, as `scripts/install-release.sh` in `Kong/kong-harnesses` does. The repository is internal, so GitHub's private Sigstore instance signs that provenance, and `gh attestation verify` checks it. The job reads the releases with a Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`) that can only read `Kong/kong-harnesses`, and also sets it as `GH_TOKEN` for `fetch-versions.js`. It opens the pull request with a second token that can only write to this repository.
 
 The manual runbook below does the same work by hand, and stays the way to sync from a local binary.
 
