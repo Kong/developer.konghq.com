@@ -18,6 +18,14 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: kongctl create organization
+    url: /kongctl/create/organization/
+  - text: kongctl delete organization
+    url: /kongctl/delete/organization/
+  - text: kongctl get organization
+    url: /kongctl/get/organization/
+  - text: kongctl list organization
+    url: /kongctl/list/organization/
 ---
 
 Adopt organization settings.

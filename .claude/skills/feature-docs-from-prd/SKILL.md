@@ -31,11 +31,16 @@ adding a `skills` capability to the AI Gateway `AIGatewayModelAPI`, from
 `Kong/platform-api#3398` and its PRD). Expect to extend it as more PRDs come
 through with shapes this version hasn't seen yet.
 
-## Scope: AI Gateway 2.0 on Konnect only — Policies, not plugins
+## Scope: AI Gateway 2.0 on Konnect first — Policies, not plugins
 
 This skill documents **AI Gateway 2.0 on Konnect**. That product surface uses
 **Policies** (`app/_ai_gateway_policies/<slug>/index.md`), not self-hosted
 Gateway **plugins** (`app/_kong_plugins/<slug>/`).
+Self-hosted AI Gateway 2.x on-prem is possible, but should be documented sparingly.
+This can run the 2.x config via `deck ai sync`/`deck file
+ai2kong` conversion (see `app/ai-gateway/configure-on-prem.md`). That
+conversion path doesn't change where a new Policy gets documented: still
+`app/_ai_gateway_policies/`, never `app/_kong_plugins/`.
 
 Even when the underlying implementation PR is a `kong-ee` plugin (new Lua
 schema, `kong/plugins/<name>/`, a `changelog/unreleased/kong-aigw/*.yml`
@@ -88,6 +93,17 @@ describes *intent*; the spec diff is what's *actually being built*. If they
 disagree or the spec is narrower than the PRD's ambition, document the
 spec's actual surface and flag the gap rather than documenting the PRD's
 aspiration as if it were shipped.
+
+**Don't restate the schema.** When documenting, do not duplicate what is
+already in the schema. Decide what needs to be documented that isn't already
+in the schema. The docs site renders the schema, so prose that restates it
+is redundant and goes stale. Before writing a sentence about a field, check
+whether the rendered schema already conveys it (name, type, default,
+required, enum values, one-line description); if so, don't write it.
+Document only what the schema doesn't say: when and why to use a setting,
+how fields interact, constraints that span fields, runtime behavior,
+gotchas, and examples. If a field's schema description is wrong or unclear,
+flag it to the writer instead of covering for it in prose.
 
 ## Step 4: Flag dev/internal-gated specs before drafting public docs
 

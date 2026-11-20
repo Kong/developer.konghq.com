@@ -117,14 +117,14 @@ sequenceDiagram
 
 ## AI PII Anonymizer service
 
-Kong provides several AI PII Anonymizer service Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
+Kong distributes these images publicly on Docker Hub, under the `kong/ai-pii-service` repository. No authentication is required to pull them. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `service:v0.1.4-en`: English model, version 0.1.4
-* `service:v0.1.4-it`: Italian model, version 0.1.4
-* `service:v0.1.4-fr`: French model, version 0.1.4
+* `ai-pii-service:v0.3.1-en`: English model, version 0.3.1
+* `ai-pii-service:v0.3.1-it`: Italian model, version 0.3.1
+* `ai-pii-service:v0.3.1-fr`: French model, version 0.3.1
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.4`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.3.1`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 ### Access the Docker images
@@ -140,7 +140,7 @@ docker pull kong/ai-pii-service:TAG
 Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull kong/ai-pii-service:v0.2.2-en
+docker pull kong/ai-pii-service:v0.3.1-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -148,12 +148,12 @@ docker pull kong/ai-pii-service:v0.2.2-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM kong/ai-pii-service:v0.2.2-en
+FROM kong/ai-pii-service:v0.3.1-en
 ```
 
 ### Available language tags
 
-The following language-specific images are currently available:
+The following language-specific images are available:
 
 * `-en` (English)
 * `-es` (Spanish)
@@ -211,7 +211,7 @@ You can anonymize data in requests using the following redact modes:
 ### Custom patterns
 
 You can define an array of custom patterns on a per-request basis.
-Currently, only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
+Only regex patterns are supported, and all fields are required: `name`, `regex`, and `score`.
 
 The `name` must be unique for each pattern.
 

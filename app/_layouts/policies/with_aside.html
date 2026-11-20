@@ -10,6 +10,11 @@ tier_inline: true
 
 {{ content }}
 
+{% if page.products contains 'ai-gateway' and page.works_on contains 'on-prem' %}
+{% capture on_prem_config %}{% include ai-gateway/on-prem-config.md %}{% endcapture %}
+{{ on_prem_config | markdownify }}
+{% endif %}
+
 {% include layouts/plugins/sections.html %}
 
 {% contentfor info_box %}

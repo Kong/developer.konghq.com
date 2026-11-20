@@ -25,9 +25,24 @@ tldr:
   q: How do I route UDP traffic with {{ site.operator_product_name }}?
   a: Add a `UDP` listener to your `Gateway`, then create a `UDPRoute` resource. {{ site.operator_product_name }} converts the `UDPRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
-prereqs:
-  enterprise: true
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
 
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          udproute/tftp \
+          gateway/kong-udp-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-udp
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `UDPRoute` is a Kubernetes Gateway API resource for routing UDP traffic by port. This guide shows how to configure {{ site.operator_product_name }} to proxy UDP traffic to a backend Service.
@@ -78,6 +93,7 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Deploy a UDP backend
 
@@ -86,6 +102,7 @@ Install the `tftp` Service, a small TFTP test server that listens over UDP:
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Route UDP traffic
 
@@ -112,7 +129,8 @@ kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
          allowedRoutes:
            namespaces:
              from: All' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
 
 1. Create a `UDPRoute`:
 
@@ -132,6 +150,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
              port: 9999
    " | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward UDP traffic it receives on port `9999` to the `tftp` Service on port `9999`.
 
@@ -144,19 +163,33 @@ This configuration instructs {{ site.base_gateway }} to forward UDP traffic it r
      --for=condition=Programmed=True \
      --timeout=5m
    ```
+   {: data-test-step="block" }
+
+1. Wait for the Gateway to be programmed after the listener change:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong-udp-gateway -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
    ```
+   {: data-test-step="block" }
 
 1. Send a TFTP request through the proxy:
 
-   ```bash
-   curl -s tftp://$PROXY_IP:9999/hello
-   ```
+{% validation custom-command %}
+command: |
+  curl -s tftp://$PROXY_IP:9999/hello
+expected:
+  return_code: 0
+  message: 'Hostname:'
+render_output: false
+indent: 4
+{% endvalidation %}
 
    The results should look like this:
 

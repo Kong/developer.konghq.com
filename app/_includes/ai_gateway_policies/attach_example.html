@@ -1,0 +1,52 @@
+{%- assign attach_id = page.example.id | append: '-attach' -%}
+{%- assign attach_format_select_id = 'select-format-' | append: attach_id -%}
+{%- assign attach_target_count = 0 -%}
+{%- for example in page.example.examples -%}
+{%- if example.data.global == false -%}{%- assign attach_target_count = attach_target_count | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+{%- if attach_target_count > 0 -%}
+<div class="flex flex-col gap-4 heading-section entity-example" id="{{ attach_id }}" data-follow-target="true">
+  <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+    {% capture _attach_text %}Attach the policy{% endcapture %}
+    {% assign _attach_id = _attach_text | slugify %}
+    {% include anchor_heading.html tag="h3" id=_attach_id text=_attach_text %}
+    <div class="flex w-full sm:w-fit sm:justify-end">
+      <div class="flex gap-2 text-xs">
+        {% if page.example.formats.size > 1 %}
+        <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
+          <label for="{{ attach_format_select_id }}" class="sr-only">Select a format</label>
+          <select id="{{ attach_format_select_id }}" class="select-format bg-secondary">
+            {% for format in page.example.formats %}
+            <option value="{{ format }}">{{ site.data.entity_examples.config.formats[format].label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    {% for example in page.example.examples %}{% if example.data.global == false %}
+    <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="{{ _attach_id }}" data-target="{{ example.target.key }}">
+      {% for formatted_example in example.attach_example.formatted_examples %}
+      {% assign format = formatted_example.format %}
+      <div tabindex="0" class="entity-example-format-panel {% if page.example.formats.size > 1 %} hidden {% endif %} content" aria-labelledby="{% if page.example.formats.size > 1 %}{{ attach_format_select_id }}{% else %}{{ _attach_id }}{% endif %}" data-format="{{ format }}">
+        {% capture attach_note %}{% include /ai_gateway_policies/target_note.md example=example targets=include.targets %}{% endcapture %}
+        {% assign attach_note = attach_note | strip %}
+        {% if attach_note != empty %}
+        <div class="entity-example-target-note">{{ attach_note | markdownify }}</div>
+        {% endif %}
+        {% capture attach_snippet %}{% include /ai_gateway_policies/target_example.md example=example format=format %}{% endcapture %}
+        {% assign attach_snippet = attach_snippet | strip %}
+        {% if attach_snippet != empty %}
+        <div class="entity-example-target-example">{{ attach_snippet | markdownify }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}{% endfor %}
+  </div>
+
+</div>
+{%- endif -%}

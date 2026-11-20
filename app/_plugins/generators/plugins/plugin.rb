@@ -9,7 +9,7 @@ module Jekyll
       include Jekyll::SiteAccessor
 
       def_delegators :@release_info, :releases, :latest_available_release,
-                     :latest_release_in_range, :unreleased?
+                     :latest_release_in_range, :unreleased?, :deduplicated_releases
 
       attr_reader :folder, :slug
 

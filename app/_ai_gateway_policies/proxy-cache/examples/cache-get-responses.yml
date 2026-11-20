@@ -1,0 +1,31 @@
+name: cache-get-responses
+display_name: Cache GET responses
+type: proxy-cache
+description: 'Cache responses to GET requests with a 200 response code for 300 seconds before renewing the cache.'
+
+title: 'Cache responses to successful GET requests'
+
+weight: 900
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - ai-consumer-group
+  - global
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - text/plain
+  - application/json
+  cache_ttl: 300
+  strategy: memory
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

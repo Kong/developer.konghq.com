@@ -1,6 +1,6 @@
 ---
 title: Custom LLM Routing
-description: Route chat requests to a small or large model by applying a Pre-function Policy that estimates input token size and rewrites the request model alias.
+description: Route each chat request to a small or a large model with a Datakit Policy that estimates the size of the prompt.
 url: "/cookbooks/custom-llm-routing/"
 content_type: cookbook
 layout: cookbook
@@ -8,73 +8,63 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
   ai-gateway: '2.0'
 categories:
-  - llm
+  - llm-routing
   - cost-optimization
 featured: false
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - key-auth
-  - datakit
-  - ai-model
-  - ai-model-provider
-requires_embeddings: false
-providers:
-  - openai
-
-hint: "Requires an OpenAI API key and Python 3.11+."
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped {{site.ai_gateway}} and local Data Plane via the [quickstart script](https://get.konghq.com/ai).
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped AI Gateway name and run the quickstart script:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='custom-llm-routing-recipe'
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions an AI Gateway named `custom-llm-routing-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `custom-llm-routing-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
         1. Verify it's installed:
 
            ```bash
            kongctl version
            ```
-    - title: OpenAI
+    - title: AI Credentials
       content: |
-        This tutorial uses OpenAI:
+        Export the credentials of the provider that the AI Models call. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
 
+        {% navtabs "Providers" %}
+        {% navtab "OpenAI" %}
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the API key as an environment variable:
+        1. Export the API key:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
+        {% endnavtab %}
+        {% endnavtabs %}
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
@@ -85,224 +75,44 @@ prereqs:
         source .venv/bin/activate
         pip install 'openai>=1.0.0'
         ```
-
 overview: |
-  Route each chat request to a small or large OpenAI model from a custom rule that runs
-  on the gateway before proxying. This recipe uses a [datakit](/ai-gateway/policies/datakit/)
-  AI Policy on a public Model to estimate input size, call an internal small or large
-  [AI Model](/ai-gateway/entities/ai-model/), and return that response. Model dispatch is final
-  before Policies run, so pre-function cannot steer between Model aliases. By the end, you have a single endpoint where clients do not choose the
-  model. Kong does.
+  Route each chat request to a small or a large OpenAI model based on the size of its prompt, so that short prompts don't pay large-model prices and clients never choose a model. You'll set up:
+
+  * One `/custom-llm-routing` endpoint that accepts only requests with a valid AI Consumer API key
+  * A workflow in {{site.ai_gateway}} that estimates the prompt's token count and sends the prompt to the small or the large model
+  * Response headers that show the estimate and the chosen tier
 ---
 
-## The problem
+## What this cookbook solves
 
-Platform teams often want the gateway to choose a model tier from a **rule on the request itself**, then keep one OpenAI-format endpoint for every client. Built-in {{site.ai_gateway}} routing already covers many of those decisions:
-
-- **Client-selected aliases.** Apps send `model: fast` or `model: smart`, and the gateway
-  maps the alias to an upstream model. See [Basic LLM Routing](/cookbooks/basic-llm-routing/).
-- **Meaning-based routing.** Semantic balancers and classifier LLMs pick a tier from prompt
-  intent (for example, greeting vs multi-step reasoning). See
-  [Model-Based Routing](/cookbooks/model-based-routing/).
-- **Usage-based load balancing.** Algorithms such as `lowest-usage` with
-  `tokens_count_strategy: prompt-tokens` spread traffic from measured usage across targets.
-  See [Load balancing](/ai-gateway/load-balancing/).
-
-Built-in options cover many cases. When the policy is a rule on this request's body, such as input length or a keyword, you add a small custom step and still use model aliases. For example, this applies when routing is needed based on **expected input length** (short prompts to small models, long contexts to large models) or **specific words or phrases** in the prompt (product code, locale marker, workflow keyword). These rules require a deterministic policy for the current request body. If such a policy is required, the gateway can calculate the tier through a simple custom step and pass the result to alias routing already in use.
-
-## The solution
-
-{{site.ai_gateway_name}} resolves which AI Model serves a request **before** attached Policies run, so rewriting `model` in a pre-function cannot switch aliases. This recipe puts a **datakit** Policy on a public `/custom-llm-routing` Model: jq estimates tokens as `ceil(utf8-bytes / 4)`, a branch calls an internal small or large Model, and exit returns that response with `X-LLM-Tier` / `X-Prompt-Est-Tokens`. The shared AI Model Provider injects OpenAI credentials. Clients keep sending OpenAI-format chat requests.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant C as Client
-    participant K as Kong AI Gateway
-    participant O as OpenAI
-
-    C->>K: POST /custom-llm-routing (apikey, any model)
-    activate K
-    K->>K: key-auth Auth Strategy  - validate apikey (else 401)
-    K->>K: pre-function Policy  - estimate tokens, set model small or large
-    K->>K: AI Model  - match route.model.values alias, select target
-    K->>K: AI Model Provider  - inject OpenAI auth
-    K->>O: chat completions
-    activate O
-    O-->>K: completion
-    deactivate O
-    K-->>C: OpenAI response + X-LLM-Tier + X-Prompt-Est-Tokens + X-Kong-LLM-Model
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+Most teams send every prompt to one model, or let each client choose a model, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: Client application
-    responsibility: "Sends OpenAI-format chat requests with an `apikey` header. The `model` field is ignored after rewrite."
-  - component: key-auth Auth Strategy
-    responsibility: Validates the API key and attaches the Consumer.
-  - component: pre-function Policy
-    responsibility: Estimates input tokens, rewrites `model` to `small` or `large`, sets `X-LLM-Tier` and `X-Prompt-Est-Tokens`.
-  - component: AI Models (small / large)
-    responsibility: "Share `/custom-llm-routing`; each matches one alias via `config.route.model.values` and selects its target."
-  - component: AI Model Provider
-    responsibility: Holds the OpenAI credential and injects it upstream.
-  - component: OpenAI
-    responsibility: Serves the completion from the selected model.
+  - problem: "A large model charges the same per-token price for a one-line question as for a long document, so short prompts cost more than they need to."
+    solution: "The Datakit Policy estimates the token count of each prompt and sends prompts under 80 estimated tokens to the small AI Model."
+  - problem: "Long inputs, for example documents or long conversations, need a more capable model than short questions do."
+    solution: "Prompts of 80 estimated tokens or more go to the large AI Model."
+  - problem: "When clients choose the model, each team repeats the same size rule, and nothing stops a caller from always choosing the large model."
+    solution: "Clients send `model: auto` to one endpoint. {{site.ai_gateway}} chooses the model, and the `X-LLM-Tier` and `X-Prompt-Est-Tokens` response headers show the decision."
+  - problem: "Each service holds a copy of the OpenAI API key."
+    solution: "The AI Model Provider keeps the key in Kong. Clients hold an AI Consumer key, and the Key Auth AI Auth Strategy rejects unknown keys with `401` before any upstream call."
 {% endtable %}
 
-## How it works
+## Try it out
 
-A request flowing through Kong is processed in three stages: authentication, custom rule,
-and alias routing.
+Apply the configuration, then run a demo script that sends a short prompt, a long prompt, and one request with an invalid API key to `/custom-llm-routing`.
 
-1. A client sends a chat completion request to `/custom-llm-routing` with an `apikey` header.
-   The `model` value in the body does not matter for this recipe.
-2. The key-auth AI Auth Strategy validates the key. Missing or unknown keys return `401` before any
-   LLM call.
-3. The pre-function AI Policy runs in `access`. It sums the UTF-8 byte
-   length of `messages[].content`, estimates tokens as `ceil(bytes / 4)`, compares that value
-   to a threshold of `80`, and sets `model` to `small` or `large`.
-4. The matching AI Model selects the target for that alias, and the AI Model Provider
-   injects the OpenAI credential and forwards the request.
-5. Kong returns the OpenAI-format response with `X-LLM-Tier`, `X-Prompt-Est-Tokens`, and
-   `X-Kong-LLM-Model`.
+### Apply the Kong configuration
 
-### Key Auth: API key authentication and Consumer mapping
+The configuration creates an AI Model Provider with your OpenAI API key, a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, a [Datakit](/ai-gateway/policies/datakit/) Policy, and three AI Models: the public `/custom-llm-routing` AI Model and the small and large AI Models that it calls.
 
-In {{site.ai_gateway_name}} 2.0, authentication is an AI Auth Strategy rather than a Policy. The recipe registers one Consumer with a demo API key. Successful matches attach that Consumer for analytics and later policies such as token rate limits.
-
-#### Configuration details
-
-```yaml
-ai_gateway_auth_strategies:
-- type: key-auth
-  config:
-    key_names:
-      - apikey
-    hide_credentials: true
-```
-{:.no-copy-code}
-
-**`key_names: [apikey]`**. Header that carries the Consumer API key. The OpenAI SDK's
-`api_key` field becomes `Authorization: Bearer ...`, which Key Auth does not treat as an
-API key match. The demo sends `apikey` through `default_headers`.
-
-**`hide_credentials: true`**. Strips the Consumer key before the upstream call so OpenAI
-doesn't receive it.
-
-### Pre-function: custom routing rules
-
-The [pre-function](/ai-gateway/policies/pre-function/) AI Policy runs sandboxed Lua in the `access` phase. Both AI Models attach this Policy so the body rewrite happens before alias matching. This recipe's rule is estimated input size. The same pattern works for other request-derived rules: a header value, a JSON field, or a path capture.
-
-{:.warning}
-> **Policy-before-auth ordering is not required here.** Unlike recipes that rewrite `Authorization` into `apikey` for Key Auth, this Policy only rewrites the JSON `model` field after authentication. Confirm Policy attachment order with `kongctl explain` if you extend the Lua to touch auth headers.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-- type: pre-function
-  config:
-    access:
-      - |
-        local cjson = require("cjson.safe")
-        local data = cjson.decode(kong.request.get_raw_body() or "{}") or {}
-        local chars = 0
-        local function add(s)
-          if type(s) == "string" then
-            chars = chars + #s
-          elseif type(s) == "table" then
-            for _, v in ipairs(s) do
-              add(type(v) == "table" and (v.text or v) or v)
-            end
-          end
-        end
-        for _, msg in ipairs(data.messages or {}) do
-          add(msg.content)
-        end
-        local tokens = math.max(1, math.ceil(chars / 4))
-        local threshold = 80
-        local tier = tokens >= threshold and "large" or "small"
-        data.model = tier
-        kong.service.request.set_raw_body(cjson.encode(data))
-        kong.response.set_header("X-Prompt-Est-Tokens", tostring(tokens))
-        kong.response.set_header("X-LLM-Tier", tier)
-```
-{:.no-copy-code}
-
-**`ceil(bytes / 4)`**. A cheap estimate of input tokens for demo and policy thresholds. It
-is not a provider tokenizer. Replace the estimate with a tokenizer call in production if you
-need exact counts.
-
-**`threshold = 80`**. Cutoff in estimated tokens. Prompts at or above this value use
-`large`. Change the number in the Pre-function body and re-apply to retune. Keep the demo's
-`DECK_TOKEN_THRESHOLD` export aligned with this value so assertions stay honest.
-
-**Response headers.** `X-Prompt-Est-Tokens` and `X-LLM-Tier` make the decision visible without
-querying Gateway internals.
-
-**Alternative rules.** Swap the size heuristic for any sandboxed logic that sets
-`data.model` to an alias string: route VIP Consumers to `large`, honor an
-`X-Model-Tier` header, or branch on a JSON field such as `metadata.priority`.
-
-### AI Models: alias routing
-
-Two [AI Models](/ai-gateway/entities/ai-model/) share path `/custom-llm-routing`. After the pre-function rewrites the body, Kong matches `model` to each Model's `config.route.model.values` (`small` or `large`) and sends the request to the configured OpenAI target. Clients can keep sending a placeholder `model` value. Kong overwrites it.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_models:
-- name: custom-llm-routing-small
-  config:
-    route:
-      paths:
-        - /custom-llm-routing
-      model:
-        body_param: model
-        values:
-          - small
-  targets:
-    - name: ${DECK_CHAT_MODEL_1}
-      provider: custom-llm-routing-provider
-- name: custom-llm-routing-large
-  config:
-    route:
-      paths:
-        - /custom-llm-routing
-      model:
-        body_param: model
-        values:
-          - large
-  targets:
-    - name: ${DECK_CHAT_MODEL_2}
-      provider: custom-llm-routing-provider
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`config.route.model.values`**. Client-facing (or Pre-function-written) alias for the Model.
-
-**Shared path.** Both Models listen on `/custom-llm-routing`. Alias matching selects which Model handles the request.
-
-**Provider credentials.** Kong holds the OpenAI credential on the AI Model Provider and injects it upstream. Clients only hold the Consumer API key.
-
-{:.info}
-> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
-
-## Apply the Kong configuration
-
-The following configuration creates an AI Model Provider holding your OpenAI credentials, a key-auth AI Auth Strategy and a Consumer with a demo API key, a pre-function Policy for token-size routing, and two AI Models (`small` and `large`) that share `/custom-llm-routing`. Every resource is scoped using a kongctl namespace so it can be cleanly torn down without affecting other configurations on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
-
-First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply commands can manage it.
+Adopt the quickstart {{site.ai_gateway}} into a [kongctl namespace](/kongctl/). Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -310,27 +120,27 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
-
-Export the demo Consumer's API key. The Consumer credential's `api_key` field is write-only and must come from an env var, even for this fixed demo value:
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
 ```bash
-export DECK_CONSUMER_API_KEY='demo-api-key'
+export CONSUMER_API_KEY='demo-api-key'
 ```
 
-Export the model env vars. `DECK_CHAT_MODEL_1` is the small tier. `DECK_CHAT_MODEL_2` is the
-large tier. Align `DECK_TOKEN_THRESHOLD` with the Pre-function threshold (`80`):
+Select your provider. The tab exports `CHAT_MODEL_1`, the model of the small AI Model, and `CHAT_MODEL_2`, the model of the large AI Model, then applies the configuration. Provider credentials come from the prerequisites.
+
+{% navtabs "Providers" %}
+{% navtab "OpenAI" %}
+
+Export the model env vars:
 
 ```bash
-export DECK_CHAT_MODEL_1='gpt-4o-mini'  # small alias
-export DECK_CHAT_MODEL_2='gpt-4o'        # large alias
-export DECK_TOKEN_THRESHOLD='80'
+export CHAT_MODEL_1='gpt-4o-mini'
+export CHAT_MODEL_2='gpt-4o'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -346,7 +156,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: custom-llm-routing-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -356,7 +166,7 @@ ai_gateway_auth_strategies:
   config:
     key_names:
     - apikey
-    hide_credentials: true
+    hide_credentials: false
 ai_gateway_consumers:
 - ref: custom-llm-routing-consumer
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -368,7 +178,7 @@ ai_gateway_consumers:
     name: custom-llm-routing-credential
     display_name: custom-llm-routing demo API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_CONSUMER_API_KEY'}
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_policies:
 - ref: custom-llm-routing-orchestrator
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -381,42 +191,44 @@ ai_gateway_policies:
       type: jq
       input: request.body
       jq: '{messages: .messages}'
+    - name: BODY_SMALL
+      type: jq
+      input: EXTRACT_PROMPT
+      jq: '. + {model: "custom-llm-routing-small"}'
+    - name: BODY_LARGE
+      type: jq
+      input: EXTRACT_PROMPT
+      jq: '. + {model: "custom-llm-routing-large"}'
     - name: EXTRACT_AUTH
       type: jq
       input: request.headers
-      jq: '{apikey: (.apikey // .Apikey // .APIKEY)}'
+      jq: '{apikey: (.apikey // .Apikey // .APIKey)}'
     - name: ESTIMATE_TIER
       type: jq
       input: request.body
-      jq: "(
-  [ (.messages // [])[]
-    | .content
-    | if type == \"string\"\
-        \ then length
-      elif type == \"array\" then
-        ([.[] | if type\
-        \ == \"object\" then ((.text // \"\") | length) elif type == \"string\" then\
-        \ length else 0 end] | add // 0)
-      else 0 end
-  ] | add // 0
-) as $chars
-\
+      jq: |
+        (
+          [ (.messages // [])[]
+            | .content
+            | if type == "string" then length
+              elif type == "array" then
+                ([.[] | if type == "object" then ((.text // "") | length) elif type == "string" then length else 0 end] | add // 0)
+              else 0 end
+          ] | add // 0
+        ) as $chars
         | ([ ($chars / 4 | ceil), 1 ] | max) as $tokens
-| {
-    tokens: $tokens,
-\
-        \    tier: (if $tokens >= 80 then \"large\" else \"small\" end)
-  }
-"
+        | {
+            tokens: $tokens,
+            tier: (if $tokens >= 80 then "large" else "small" end)
+          }
     - name: BUILD_DIAG_HEADERS
       type: jq
       input: ESTIMATE_TIER
-      jq: "{
-  \"X-LLM-Tier\": .tier,
-  \"X-Prompt-Est-Tokens\": (.tokens | tostring)
-\
+      jq: |
+        {
+          "X-LLM-Tier": .tier,
+          "X-Prompt-Est-Tokens": (.tokens | tostring)
         }
-"
     - name: IS_LARGE
       type: jq
       input: ESTIMATE_TIER
@@ -432,17 +244,17 @@ ai_gateway_policies:
       - RESPOND_SMALL
     - name: CALL_SMALL
       type: call
-      url: http://localhost:8000/custom-llm-routing-small
+      url: http://localhost:8000/custom-llm-routing-small/chat/completions
       method: POST
       inputs:
-        body: EXTRACT_PROMPT
+        body: BODY_SMALL
         headers: EXTRACT_AUTH
     - name: CALL_LARGE
       type: call
-      url: http://localhost:8000/custom-llm-routing-large
+      url: http://localhost:8000/custom-llm-routing-large/chat/completions
       method: POST
       inputs:
-        body: EXTRACT_PROMPT
+        body: BODY_LARGE
         headers: EXTRACT_AUTH
     - name: RESPOND_SMALL
       type: exit
@@ -483,7 +295,7 @@ ai_gateway_models:
       - OPTIONS
       strip_path: true
   targets:
-  - name: !env 'DECK_CHAT_MODEL_1'
+  - name: !env 'CHAT_MODEL_1'
     provider: custom-llm-routing-provider
     config:
       type: openai
@@ -515,7 +327,7 @@ ai_gateway_models:
       - OPTIONS
       strip_path: true
   targets:
-  - name: !env 'DECK_CHAT_MODEL_2'
+  - name: !env 'CHAT_MODEL_2'
     provider: custom-llm-routing-provider
     config:
       type: openai
@@ -548,14 +360,16 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - auto
   targets:
-  - name: !env 'DECK_CHAT_MODEL_1'
+  - name: !env 'CHAT_MODEL_1'
     provider: custom-llm-routing-provider
     config:
       type: openai
-
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -563,45 +377,44 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-## Try it out
+{% endnavtab %}
+{% endnavtabs %}
 
-The demo sends a short prompt (`hi`) and a long prompt (`x` repeated 400 times). Both use
-`model: ignored-by-router`. Kong should set `X-LLM-Tier` to `small` then `large`, and
-`X-Kong-LLM-Model` should follow the alias mapping.
+### Run the demo
+
+The script sends `hi` and a prompt of 400 characters, both with `model: auto`, then one request with an invalid API key. In the output, look for the `tier` and `upstream model` on each `[ROUTED TO]` line, and for the `[BLOCKED] 401` line.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""Custom LLM routing demo.
+"""Custom LLM routing demo for Kong AI Gateway.
 
-Sends a short and a long prompt through Kong. The pre-function Policy estimates
-input size, rewrites the request model to small or large, and AI Models route
-to the matching OpenAI target. The client model field is ignored.
+Shows three things:
+  1. A short prompt goes to the small model. The Datakit Policy estimates the
+     prompt size and returns it in the X-Prompt-Est-Tokens and X-LLM-Tier headers.
+  2. A long prompt goes to the large model. Both requests send model="auto",
+     the alias of the public AI Model, so the client never chooses the model.
+  3. A request with an invalid key gets 401 from Kong before any upstream call.
 
-Expected output:
-  - Short prompt -> X-LLM-Tier=small and X-Kong-LLM-Model ending in the small model
-  - Long prompt  -> X-LLM-Tier=large and X-Kong-LLM-Model ending in the large model
+Expected output: a [ROUTED TO] line with tier=small for the short prompt and
+tier=large for the long prompt, then a [BLOCKED] 401 line for the invalid key.
 
-Run:
-  export PROXY_URL=http://localhost:8000
-  python demo.py
+Run: python demo.py (set PROXY_URL if the data plane is not at http://localhost:8000,
+and CONSUMER_API_KEY if you changed the demo key).
 """
-
-from __future__ import annotations
 
 import os
 import sys
-import time
 
 from openai import APIStatusError, OpenAI
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
-API_KEY = "demo-api-key"
-THRESHOLD = int(os.getenv("DECK_TOKEN_THRESHOLD", "80"))
+API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
+THRESHOLD = 80
 
 _USE_COLOR = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
@@ -630,66 +443,68 @@ def RED(s: str) -> str:
     return _c("31", s)
 
 
-def YELLOW(s: str) -> str:
-    return _c("33", s)
-
-
-def make_client() -> OpenAI:
+def make_client(api_key: str) -> OpenAI:
+    """Construct an OpenAI client that sends the given API key in the apikey header."""
     return OpenAI(
         base_url=f"{PROXY_URL}/custom-llm-routing",
         api_key="unused",
-        default_headers={"apikey": API_KEY},
+        default_headers={"apikey": api_key},
     )
 
 
 def est_tokens(content: str) -> int:
-    # Matches the Pre-function heuristic: ceil(utf8-bytes / 4).
-    return max(1, (len(content.encode("utf-8")) + 3) // 4)
+    """Estimate tokens the way the Datakit Policy does: ceil(characters / 4), at least 1."""
+    return max(1, (len(content) + 3) // 4)
+
+
+def send(client: OpenAI, content: str):
+    return client.chat.completions.with_raw_response.create(
+        model="auto",
+        messages=[{"role": "user", "content": content}],
+    )
 
 
 def call(client: OpenAI, label: str, content: str) -> None:
+    """Send one chat request and print the tier and model that answered."""
     tokens = est_tokens(content)
     expected = "large" if tokens >= THRESHOLD else "small"
     print(f"\n{BOLD('[REQUEST]')} {label}")
-    print(
-        f"  {DIM(f'est_tokens={tokens} threshold={THRESHOLD} expected_tier={expected}')}"
-    )
-    print(f"  {DIM(f'client model field=ignored-by-router prompt_preview={content[:48]!r}')}")
+    print(f"  {DIM(f'est_tokens={tokens} threshold={THRESHOLD} expected_tier={expected}')}")
+    print(f"  {DIM(f'model=auto prompt_preview={content[:48]!r}')}")
 
-    start_ms = round(time.time() * 1000)
     try:
-        raw = client.chat.completions.with_raw_response.create(
-            model="ignored-by-router",
-            messages=[{"role": "user", "content": content}],
-        )
+        raw = send(client, content)
     except APIStatusError as e:
-        elapsed_ms = round(time.time() * 1000) - start_ms
-        print(
-            f"{RED(BOLD('[ERROR]'))} {RED(BOLD(str(e.status_code)))} "
-            f"{e.message}  ({elapsed_ms}ms)"
-        )
+        print(f"{RED(BOLD('[ERROR]'))} {RED(BOLD(str(e.status_code)))} {e.message}")
         raise SystemExit(1) from e
 
-    elapsed_ms = round(time.time() * 1000) - start_ms
     completion = raw.parse()
     tier = raw.headers.get("x-llm-tier", ".")
     est = raw.headers.get("x-prompt-est-tokens", ".")
-    upstream_model = raw.headers.get("x-kong-llm-model", ".")
     answer = (completion.choices[0].message.content or "")[:120]
 
     print(f"[RESPONSE] {DIM(answer)}")
     print(
         f"{GREEN(BOLD('[ROUTED TO]'))} tier={GREEN(BOLD(tier))} "
-        f"est_tokens={YELLOW(BOLD(est))} "
-        f"upstream={CYAN(BOLD(upstream_model))}"
+        f"est_tokens={est} upstream model={CYAN(BOLD(completion.model))}"
     )
-    print(f"[LATENCY] {DIM(f'total={elapsed_ms}ms')}")
 
     if tier != expected:
-        print(
-            f"{RED(BOLD('[MISMATCH]'))} expected tier={expected!r}, got={tier!r}"
-        )
+        print(f"{RED(BOLD('[MISMATCH]'))} expected tier={expected!r}, got={tier!r}")
         raise SystemExit(1)
+
+
+def call_invalid_key() -> None:
+    """Send one request with a key that no AI Consumer has."""
+    bad_key = "not-a-real-key"
+    print(f"\nTrying apikey={bad_key!r}")
+    try:
+        send(make_client(bad_key), "hi")
+    except APIStatusError as e:
+        print(f"{RED(BOLD('[BLOCKED]'))} {RED(BOLD(str(e.status_code)))}")
+        return
+    print(f"{RED(BOLD('[ALLOWED]'))} Kong accepted the invalid key")
+    raise SystemExit(1)
 
 
 def section(title: str) -> None:
@@ -698,13 +513,16 @@ def section(title: str) -> None:
 
 
 def main() -> None:
-    section("1. Short prompt routes to small")
-    client = make_client()
+    client = make_client(API_KEY)
+
+    section("1. Short prompt routes to the small model")
     call(client, "short", "hi")
 
-    section("2. Long prompt routes to large")
-    long_prompt = "x" * 400
-    call(client, "long", long_prompt)
+    section("2. Long prompt routes to the large model")
+    call(client, "long", "x" * 400)
+
+    section("3. Invalid API key. Kong rejects before any upstream call")
+    call_invalid_key()
 
     section("Done.")
 
@@ -728,74 +546,239 @@ Example output:
 
 ```text
 ======================================================================
-1. Short prompt routes to small
+1. Short prompt routes to the small model
 ======================================================================
 
 [REQUEST] short
   est_tokens=1 threshold=80 expected_tier=small
-  client model field=ignored-by-router prompt_preview='hi'
-[RESPONSE] Hello! How can I help you today?
-[ROUTED TO] tier=small est_tokens=1 upstream=openai/gpt-4o-mini
-[LATENCY] total=812ms
+  model=auto prompt_preview='hi'
+[RESPONSE] Hello! How can I assist you today?
+[ROUTED TO] tier=small est_tokens=1 upstream model=gpt-4o-mini-2024-07-18
 
 ======================================================================
-2. Long prompt routes to large
+2. Long prompt routes to the large model
 ======================================================================
 
 [REQUEST] long
   est_tokens=100 threshold=80 expected_tier=large
-  client model field=ignored-by-router prompt_preview='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-[RESPONSE] It looks like your message is a long string of x characters...
-[ROUTED TO] tier=large est_tokens=100 upstream=openai/gpt-4o
-[LATENCY] total=1404ms
+  model=auto prompt_preview='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+[RESPONSE] It looks like your message contains a long string of "x" characters. Could you please provide more details or let me kno
+[ROUTED TO] tier=large est_tokens=100 upstream model=gpt-4o-2024-08-06
+
+======================================================================
+3. Invalid API key. Kong rejects before any upstream call
+======================================================================
+
+Trying apikey='not-a-real-key'
+[BLOCKED] 401
 
 ======================================================================
 Done.
 ======================================================================
 ```
-{:.no-copy-code}
+{: .no-copy-code .collapsible }
 
-### What happened
+### Check the results
 
-1. **Short prompt used the small alias.** `hi` estimates to 1 token, below the threshold of
-   80. Pre-function set `model` to `small`. `X-Kong-LLM-Model` shows `openai/gpt-4o-mini`.
-2. **Long prompt used the large alias.** Four hundred `x` characters estimate to 100 tokens.
-   Pre-function set `model` to `large`. `X-Kong-LLM-Model` shows `openai/gpt-4o`.
-3. **The client `model` field was ignored.** Both calls sent `ignored-by-router`. Kong
-   overwrote it before AI Model alias matching.
-4. **Provider credentials stayed on Kong.** The SDK only held the Consumer API key.
-   `DECK_OPENAI_TOKEN` was injected by the AI Model Provider.
+The output confirms the following:
 
-### Explore in Konnect
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Routing by prompt size"
+    evidence: "`hi` is estimated at 1 token and gets `tier=small`. The 400-character prompt is estimated at 100 tokens and gets `tier=large`. The `upstream model` is the model that OpenAI reports in the response body, so each prompt reached a different model."
+  - behavior: "The client doesn't choose the model"
+    evidence: "Both requests send `model: auto`, the alias of the public AI Model. The Datakit Policy sends each internal call the name of the AI Model that it calls, and that AI Model's target sets the upstream model."
+  - behavior: "Authentication before routing"
+    evidence: "The invalid key gets `401`. Kong rejected the request before the Datakit Policy ran, so the request reached neither internal AI Model nor OpenAI."
+{% endtable %}
 
-Open [Konnect](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `custom-llm-routing-recipe`. The recipe created an AI Model Provider holding your OpenAI credentials, two AI Models (`custom-llm-routing-small` and `custom-llm-routing-large`), a key-auth AI Auth Strategy, a pre-function Policy, and a Consumer with a demo API key credential, all scoped to this recipe by the kongctl namespace applied above.
+To review the created entities, and per-consumer usage, open the `custom-llm-routing-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-For platform-wide traffic analysis across every {{site.ai_gateway}}, head to the **Observability** L1 menu in Konnect.
+## How it works
+
+Kong authenticates the request on the public AI Model. The Datakit Policy on that AI Model estimates the prompt's token count, calls the small or the large AI Model on the same data plane, and returns that response to the client.
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant C as Client
+    participant K as Kong AI Gateway (/custom-llm-routing)
+    participant T as Small or large AI Model
+    participant O as OpenAI
+
+    C->>K: POST /custom-llm-routing (apikey, model auto)
+    activate K
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>K: Datakit Policy estimates tokens and picks small or large
+    K->>T: Datakit call to /custom-llm-routing-small or /custom-llm-routing-large
+    activate T
+    T->>T: Key Auth AI Auth Strategy validates the forwarded apikey (else 401)
+    T->>O: Request with the AI Model Provider's credentials
+    activate O
+    O-->>T: Completion
+    deactivate O
+    T-->>K: OpenAI-format response
+    deactivate T
+    K-->>C: Datakit exit returns the response with X-LLM-Tier and X-Prompt-Est-Tokens
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
+
+Kong selects the AI Model for a request before any AI Policy runs, so a policy that rewrites the `model` field can't move a request to another AI Model. The Datakit Policy works around this: it calls the other AI Models over HTTP and returns their response with an `exit` node.
+
+### Key Auth AI Auth Strategy and AI Consumer
+
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. All three AI Models reference this AI Auth Strategy in `access.auth_strategies`, so the Datakit Policy forwards the client's key on each internal call.
+
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: false`"
+    purpose: "Kong keeps the `apikey` header on the request, because the Datakit Policy reads it and forwards it on the internal calls. With `true`, Kong removes the key before the Datakit Policy runs, and the internal calls fail with `401`. OpenAI also receives the `apikey` header, but the AI Model Provider replaces the `Authorization` header with its own credentials."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### Datakit Policy
+
+The Datakit Policy is attached to the public AI Model and runs the routing workflow as a graph of nodes. Its `call` nodes send requests to the data plane's own proxy listener at `http://localhost:8000`, at each internal AI Model's path plus `/chat/completions`, so each internal call goes through the same authentication as a client request.
+
+The following nodes make up the workflow:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`EXTRACT_PROMPT`, `BODY_SMALL`, `BODY_LARGE`"
+    purpose: "`jq` nodes that build each internal request body: the client's `messages` array and the name of the AI Model to call. The internal AI Models have no `config.route.model`, so each one accepts only its own name in `model`. The other fields of the client request, for example `temperature` or `max_tokens`, aren't forwarded."
+  - setting: "`EXTRACT_AUTH`"
+    purpose: "A `jq` node that copies the `apikey` header from the request headers, so the internal calls authenticate as the same AI Consumer."
+  - setting: "`ESTIMATE_TIER`"
+    purpose: "A `jq` node that counts the characters in each message's `content`: the string, or the `text` of each part when `content` is an array. It estimates tokens as `ceil(characters / 4)`, with a minimum of 1, and picks `large` at 80 estimated tokens or more. jq's [`length`](https://jqlang.org/manual/#length) counts Unicode code points, not bytes. The estimate isn't a tokenizer count. For exact counts, use a tokenizer such as OpenAI's [tiktoken](https://github.com/openai/tiktoken)."
+  - setting: "`BUILD_DIAG_HEADERS`"
+    purpose: "A `jq` node that turns the estimate into the `X-LLM-Tier` and `X-Prompt-Est-Tokens` response headers."
+  - setting: "`IS_LARGE`, `ROUTE_DECISION`"
+    purpose: "`IS_LARGE` turns the tier into a boolean. The `branch` node runs `CALL_LARGE` and `RESPOND_LARGE` when it's `true`, and `CALL_SMALL` and `RESPOND_SMALL` otherwise."
+  - setting: "`CALL_SMALL`, `CALL_LARGE`"
+    purpose: "`call` nodes that send `BODY_SMALL` or `BODY_LARGE` and the key to `/custom-llm-routing-small/chat/completions` or `/custom-llm-routing-large/chat/completions`. Without the `/chat/completions` operation path, no route matches the call."
+  - setting: "`RESPOND_SMALL`, `RESPOND_LARGE`"
+    purpose: "`exit` nodes that return the internal AI Model's response body, with the headers from `BUILD_DIAG_HEADERS`, to the client. They don't pass on the internal AI Model's response headers. {{site.ai_gateway}} then doesn't call the public AI Model's own target."
+{% endtable %}
+
+### AI Model Provider and AI Models
+
+The AI Model Provider holds the OpenAI API key and adds it to each request to OpenAI. Clients call the public AI Model, `custom-llm-routing-chat`, on `/custom-llm-routing`. The small and large AI Models exist for the Datakit Policy, but a client with a valid key can also call them directly, because the internal calls use the client's own key.
+
+The following settings configure the AI Model Provider and the AI Models:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The OpenAI API key, from `OPENAI_TOKEN`. Kong adds it to each request to OpenAI. The field is write-only, so {{site.konnect_short_name}} never returns it."
+  - setting: "`targets[].name` (small and large AI Models)"
+    purpose: "The upstream models, from `CHAT_MODEL_1` and `CHAT_MODEL_2`. Change them and re-apply to swap models without changing clients."
+  - setting: "`config.route.model` (public AI Model)"
+    purpose: "Kong reads the `model` field of the request body (`body_param: model`) and matches it against `auto`. Another value matches no AI Model and returns `500` with `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local'`."
+  - setting: "`policies` (public AI Model)"
+    purpose: "Attaches the Datakit Policy to the public AI Model only. The internal calls don't run the workflow again."
+  - setting: "`targets` (public AI Model)"
+    purpose: "An AI Model needs at least one target. The `exit` nodes return before Kong uses it."
+  - setting: "`config.route.paths`"
+    purpose: "`/custom-llm-routing` for the public AI Model, and `/custom-llm-routing-small` and `/custom-llm-routing-large` for the internal ones. The `generate` capability adds `/chat/completions` to each path."
+  - setting: "`config.response_streaming: deny`"
+    purpose: "Clients can't set `stream=true` on any of the three AI Models. The Datakit Policy needs the complete response body to return it."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`, and so the Datakit Policy can call the internal AI Models over HTTP."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes the route path before it forwards the request upstream."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. The default is `false`."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the OpenAI API key in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
+
+### Response headers
+
+The Datakit Policy adds the following headers to each routed response:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-LLM-Tier`"
+    description: "The tier that the Datakit Policy picked: `small` or `large`."
+  - header: "`X-Prompt-Est-Tokens`"
+    description: "The estimated token count of the prompt, as `ceil(characters / 4)`."
+{% endtable %}
 
 ## Variations and next steps
 
-**Change the custom rule.** Keep the pre-function + alias shape and replace the size
-heuristic. Route from a request header, a JSON field, or Consumer metadata. The AI Model
-targets stay the same as long as you write `small` or `large` into `model`.
+You can change or extend this configuration in the following ways:
 
-**Retune the threshold.** Edit `local threshold = 80` in the Pre-function body, re-apply, and
-set `DECK_TOKEN_THRESHOLD` to the same value before running the demo.
-
-**Use a provider tokenizer.** Replace `ceil(bytes / 4)` with a provider tokenizer when exact
-billing alignment matters. Keep the rewrite-to-alias step.
-
-**Combine with meaning-based routing.** Use [Model-Based Routing](/cookbooks/model-based-routing/)
-when the decision is prompt complexity, then add a Pre-function size gate for context-window
-or cost ceilings on top.
-
-**Add per-Consumer token budgets.** Attach the
-[ai-rate-limiting-advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy after Key Auth so each app
-gets its own token quota. See [LLM Cost Optimization](/cookbooks/llm-cost-optimization/).
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Swap models"
+    how: "Change `CHAT_MODEL_1` or `CHAT_MODEL_2` and re-apply the configuration from [Apply the Kong configuration](#apply-the-kong-configuration). Clients keep sending `model: auto`."
+  - variation: "Change the threshold"
+    how: "Change `80` in the `ESTIMATE_TIER` node and re-apply the configuration. Set `THRESHOLD` in `demo.py` to the same value, because the demo checks the tier against it."
+  - variation: "Route on another request value"
+    how: "Change the `ESTIMATE_TIER` node to pick the tier from another value, for example a keyword in the prompt, or a header that you add as an input from `request.headers`. The `branch`, `call`, and `exit` nodes don't change."
+  - variation: "Forward other request parameters"
+    how: "Build `BODY_SMALL` and `BODY_LARGE` from `request.body` with `.model` set to the AI Model name, instead of only from `messages`, so that fields such as `temperature` and `max_tokens` reach OpenAI."
+  - variation: "Route by prompt complexity"
+    how: "Replace the size estimate with a classifier call to a small model. See the [model-based routing cookbook](/cookbooks/model-based-routing/) for the same `call`, `branch`, and `exit` pattern with a classifier."
+  - variation: "Add per-consumer token limits"
+    how: "Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to the small and large AI Models, which make the upstream calls. This cookbook hasn't confirmed separate budgets for each AI Consumer. See the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local Data Plane and delete the {{site.ai_gateway}} from Konnect:
+The quickstart created an {{site.ai_gateway}} for this recipe only, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='custom-llm-routing-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
+
+Leave the virtual environment and remove the files and environment variables that the recipe created:
+
+```bash
+deactivate
+rm -rf .venv demo.py
+unset CONSUMER_API_KEY CHAT_MODEL_1 CHAT_MODEL_2
+```
+
+If you created the OpenAI API key only for this recipe, delete it in the [OpenAI dashboard](https://platform.openai.com/api-keys).

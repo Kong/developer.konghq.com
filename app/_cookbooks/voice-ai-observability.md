@@ -8,158 +8,141 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0'
 categories:
   - observability
   - llm
 featured: true
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - ai-proxy-advanced
-  - opentelemetry
-  - key-auth
-requires_embeddings: false
-providers:
-  - openai
-  - anthropic
-  - bedrock
-  - azure
-  - mistral
-
-hint: "Requires an OpenAI API key (for STT/TTS), LLM provider credentials, a Langfuse account, and Python 3.11+."
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped control plane name and run the quickstart script. The two `-e` flags pass non-default tracing settings into the Data Plane container; the [OpenTelemetry](/plugins/opentelemetry/) Plugin will not export traces unless the Data Plane is started with `KONG_TRACING_INSTRUMENTATIONS` enabled, and the default sampling rate (`0.01`) drops 99% of spans before the Plugin sees them:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The two `-e` flags start the data plane with tracing turned on. Kong records spans for the OpenTelemetry Policy only when `KONG_TRACING_INSTRUMENTATIONS` is set (default `off`). `KONG_TRACING_SAMPLING_RATE=1.0` samples every request (default `0.01`):
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='voice-ai-observability-recipe'
-           curl -Ls https://get.konghq.com/quickstart | \
+           curl -Ls https://get.konghq.com/ai | \
              bash -s -- -k $KONNECT_TOKEN \
                -e KONG_TRACING_INSTRUMENTATIONS=all \
-               -e KONG_TRACING_SAMPLING_RATE=1.0 \
-               --deck-output
+               -e KONG_TRACING_SAMPLING_RATE=1.0
            ```
 
-           This provisions a Konnect Control Plane named `voice-ai-observability-recipe`, a local Data Plane connected to it with tracing enabled, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK
+           This provisions an {{site.ai_gateway}} named `voice-ai-observability-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+    - title: kongctl
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
+        This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-        1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
-        1. Verify both are installed:
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Verify it's installed:
 
            ```bash
            kongctl version
-           deck version
            ```
     - title: AI Credentials
       content: |
-        Every provider tab uses OpenAI for the STT and TTS hops (Whisper and TTS-1), so an OpenAI key is required regardless of which LLM provider you pick. Configure the LLM provider you plan to use as well.
+        The STT and TTS hops always use OpenAI (`whisper-1` and `tts-1`), so you need an OpenAI key for every provider tab.
 
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the OpenAI key (used by all providers for STT and TTS):
+        1. Export the API key:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
 
-        Then configure your LLM provider:
+        Pick the provider for the LLM hop and export its credentials. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
 
         {% navtabs "Providers" %}
         {% navtab "OpenAI" %}
-        Already covered above. The same `DECK_OPENAI_TOKEN` is used for STT, TTS, and the LLM hop.
+        The LLM hop reuses `OPENAI_TOKEN`. You don't need other credentials.
         {% endnavtab %}
         {% navtab "Anthropic" %}
         1. [Create an Anthropic account](https://console.anthropic.com/).
         1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create decK variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
+        1. Export the API key and the [Messages API version](https://docs.claude.com/en/api/versioning) that Kong sends upstream on each request:
 
            ```sh
-           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-           export DECK_ANTHROPIC_VERSION='2023-06-01'
+           export ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
-        1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-        1. Create decK variables with your AWS credentials:
+        1. Get an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
+        1. Export your AWS credentials and region:
 
            ```sh
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
-        {% navtab "Azure" %}
+        {% navtab "Azure OpenAI" %}
+        Azure binds each deployment to one model, and the deployment ID selects the upstream model ([Azure OpenAI REST API reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference)).
+
         1. [Create an Azure OpenAI resource](https://portal.azure.com/#create/Microsoft.CognitiveServicesOpenAI).
-        1. Deploy a model and note your instance name, deployment ID, and API version.
-        1. Create decK variables:
+        1. Deploy a chat model in the resource, for example `gpt-4o`.
+        1. Export your credentials. Use the current API version from the Azure OpenAI REST API reference:
 
            ```sh
-           export DECK_AZURE_API_KEY='your-azure-api-key'
-           export DECK_AZURE_INSTANCE='your-instance-name'
-           export DECK_AZURE_DEPLOYMENT_ID='your-deployment-id'
-           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_DEPLOYMENT_ID='your-deployment-id'
+           export AZURE_API_VERSION='YOUR-API-VERSION'
+           ```
+        {% endnavtab %}
+        {% navtab "Google Gemini" %}
+        1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
+        1. [Create a service account key](https://cloud.google.com/iam/docs/keys-create-delete) for a service account that can call Vertex AI.
+        1. Export the key and your project details:
+
+           ```sh
+           export GEMINI_SERVICE_ACCOUNT_JSON="$(cat path/to/service-account-key.json)"
+           export GCP_API_ENDPOINT='your-api-endpoint'
+           export GCP_PROJECT_ID='your-project-id'
+           export GCP_LOCATION_ID='us-central1'
            ```
         {% endnavtab %}
         {% navtab "Mistral" %}
         1. [Create a Mistral account](https://console.mistral.ai/).
         1. [Get an API key](https://console.mistral.ai/api-keys/).
-        1. Create a decK variable with the API key:
+        1. Export the API key:
 
            ```sh
-           export DECK_MISTRAL_TOKEN='Bearer your-mistral-key'
+           export MISTRAL_TOKEN='Bearer your-mistral-key'
            ```
         {% endnavtab %}
         {% endnavtabs %}
     - title: Langfuse
       content: |
-        [Langfuse](https://langfuse.com) is an open-source observability platform that receives OpenTelemetry traces and groups them into conversation-level sessions. This recipe exports Kong's `gen_ai.*` spans to Langfuse for per-hop and conversation-level analysis.
+        [Langfuse](https://langfuse.com) receives the traces over OTLP/HTTP and groups the turns of a conversation into a Session. Langfuse authenticates OTLP requests with HTTP Basic Auth: the username is the project's public key (`pk-lf-...`) and the password is its secret key (`sk-lf-...`).
 
-        Langfuse authenticates OTLP ingestion with HTTP Basic Auth, where the username is your project's **Public Key** (`pk-lf-...`) and the password is its **Secret Key** (`sk-lf-...`).
-
-        1. Sign up for Langfuse Cloud (free tier) on the region you want to use, or [self-host Langfuse v3.22.0 or later](https://langfuse.com/self-hosting) using Docker Compose. OTLP ingestion is only available on self-hosted Langfuse v3.22.0+. Each region is a fully separate deployment with its own UI, account, projects, and API keys. Keys issued in one region will not authenticate against another, so pick one and stick with it:
-
-           - **US**: [us.cloud.langfuse.com](https://us.cloud.langfuse.com)
-           - **EU**: [cloud.langfuse.com](https://cloud.langfuse.com)
-           - **HIPAA**: [hipaa.cloud.langfuse.com](https://hipaa.cloud.langfuse.com)
-        1. Create a project and copy the **Public Key** and **Secret Key** from the project settings.
-        1. Export both keys and the OTLP endpoint for the **same region** you signed up under, then derive the Basic Auth header from them:
+        1. Sign up for [Langfuse Cloud](https://cloud.langfuse.com), or [self-host Langfuse](https://langfuse.com/self-hosting) v3.22.0 or later. Keys work only in the data region where you created them.
+        1. Create a project and copy its public key and secret key from the project settings.
+        1. Export the keys, the OTLP traces endpoint of your data region, and the Basic Auth header. The following example uses the EU region. Get the endpoint for the other regions from the [Langfuse OpenTelemetry documentation](https://langfuse.com/integrations/native/opentelemetry). For a self-hosted Langfuse on the same machine, use `http://host.docker.internal:3000/api/public/otel/v1/traces`, so that the data plane container can reach it:
 
            ```bash
-           export DECK_LANGFUSE_PUBLIC_KEY='pk-lf-YOUR-PUBLIC-KEY'
-           export DECK_LANGFUSE_SECRET_KEY='sk-lf-YOUR-SECRET-KEY'
-           # Pick the endpoint that matches the region you signed up under:
-           #   US:    https://us.cloud.langfuse.com/api/public/otel/v1/traces
-           #   EU:    https://cloud.langfuse.com/api/public/otel/v1/traces
-           #   HIPAA: https://hipaa.cloud.langfuse.com/api/public/otel/v1/traces
-           export DECK_LANGFUSE_OTLP_ENDPOINT='https://us.cloud.langfuse.com/api/public/otel/v1/traces'
-           export DECK_LANGFUSE_AUTH_HEADER="Basic $(printf '%s:%s' "$DECK_LANGFUSE_PUBLIC_KEY" "$DECK_LANGFUSE_SECRET_KEY" | base64 | tr -d '\n')"
+           export LANGFUSE_PUBLIC_KEY='pk-lf-YOUR-PUBLIC-KEY'
+           export LANGFUSE_SECRET_KEY='sk-lf-YOUR-SECRET-KEY'
+           export LANGFUSE_OTLP_ENDPOINT='https://cloud.langfuse.com/api/public/otel/v1/traces'
+           export LANGFUSE_AUTH_HEADER="Basic $(printf '%s:%s' "$LANGFUSE_PUBLIC_KEY" "$LANGFUSE_SECRET_KEY" | base64 | tr -d '\n')"
            ```
 
-           The `tr -d '\n'` strips the newline that GNU `base64` inserts after 76 characters, which would otherwise corrupt the `Authorization` header. If your endpoint and key region don't match, Langfuse will return `401 Unauthorized` on every trace export.
-
-           For self-hosted Langfuse, set the endpoint to `http://host.docker.internal:3000/api/public/otel/v1/traces` so the Kong container can reach Langfuse on the host.
+           GNU `base64` wraps long output across lines. The `tr -d '\n'` keeps the header on one line.
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
@@ -170,1154 +153,1288 @@ prereqs:
         source .venv/bin/activate
         pip install 'openai>=1.0.0' 'opentelemetry-api>=1.27.0' 'opentelemetry-sdk>=1.27.0' 'opentelemetry-exporter-otlp-proto-http>=1.27.0' 'opentelemetry-instrumentation-httpx>=0.48b0'
         ```
-
-        The demo uses the OpenTelemetry SDK plus the httpx auto-instrumentation to emit a `voice-turn` parent span per turn and to inject W3C `traceparent` into every outbound call so Kong's per-hop spans nest correctly under it in Langfuse.
-
 overview: |
-  A production voice AI system is a pipeline: speech-to-text (STT), LLM reasoning, and text-to-speech (TTS) execute in sequence for every conversational turn. Each hop carries its own latency budget, error modes, and cost profile. This recipe sets up {{site.ai_gateway_name}} to govern all three hops through separate Routes, each with its own [AI Proxy Advanced](/plugins/ai-proxy-advanced/) instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans to [Langfuse](https://langfuse.com) for per-hop latency, token usage, and cost visibility, with conversation-level trace grouping for full-turn analysis.
+  Route each hop of a cascading voice pipeline (speech-to-text, LLM, text-to-speech) through {{site.ai_gateway_name}}, and see each conversation in Langfuse as a set of turns with a span for each hop. You'll set up:
 
-  By the end, you will have three Kong endpoints (`/stt`, `/llm`, `/tts`) proxying a complete voice pipeline behind a single API key, with every hop producing OpenTelemetry traces that appear as a single conversation trace in Langfuse.
+  * Three AI Models, one for each hop, behind one AI Consumer API key
+  * Provider credentials that stay in {{site.ai_gateway}} instead of in the voice agent
+  * OTLP export of each hop's spans into the voice agent's trace, grouped into one Langfuse Session for each conversation
 ---
 
-## The problem
+## What this cookbook solves
 
-Voice AI systems present observability challenges that text-based LLM applications do not face. The core difficulty is that a single conversational turn requires multiple API calls in sequence, each with distinct providers, latency characteristics, and failure modes.
-
-- **Three independent failure surfaces per turn.** A cascading voice pipeline makes at least three API calls for every user interaction: STT (audio to text), LLM (text to response), and TTS (response to audio). Each hop can fail independently. The STT Service may return a low-confidence transcription. The LLM may time out. The TTS Service may rate-limit. When a user reports that "the call sounded broken," you need to identify which hop failed, but each provider has its own dashboard and log format with no shared correlation identifier.
-
-- **The observable unit is a conversation, not a request.** Users do not experience individual API calls. They experience a phone call or voice interaction spanning dozens of turns. Turn 3 completed in 400ms, but turn 7 had a 3-second TTS timeout. Traditional API monitoring shows average latency across all requests. It does not show latency progression within a conversation. Debugging user-reported issues requires conversation-scoped traces that group all hops from all turns under a single identifier.
-
-- **Latency budgets compound across hops.** Natural-sounding voice interaction requires end-to-end turn latency under approximately 800ms. STT taking 350ms eats into the LLM's budget. A 200ms LLM response leaves only 250ms for TTS. Monitoring each hop in isolation does not reveal the cascading impact. You need a waterfall view showing how latency distributes across the pipeline so you can identify which hop is consuming the budget.
-
-- **Credential management scales with the pipeline.** A text-only LLM application manages one provider's credentials. A voice pipeline manages three: STT provider keys, LLM provider keys, and TTS provider keys. Each has its own rotation policy, billing dashboard, and rate limits. Switching STT providers (Deepgram to Whisper, or Whisper to a self-hosted model) means re-tooling authentication, monitoring, and cost tracking for that hop across every Service that calls it.
-
-- **Cost attribution is per-model, but budgets are per-conversation.** LLM providers charge per token. STT providers charge per audio-second. TTS providers charge per character. Building a cost-per-minute or cost-per-conversation view requires normalizing these different units and correlating charges across hops that run on separate billing systems.
-
-The alternative to the cascading pipeline is realtime speech-to-speech APIs (OpenAI Realtime), which uses a single WebSocket connection to a multimodal model that ingests and emits audio natively. Latency drops sharply, but per-hop observability disappears by design: there are no separate STT, LLM, or TTS stages to instrument. Regulated industries (finance, healthcare, legal) remain on cascading architectures because the text intermediary between STT and TTS provides an audit trail and a checkpoint for compliance checks before responses are spoken.
-
-## The solution
-
-This recipe places {{site.ai_gateway_name}} between the voice agent and all three providers. Each pipeline hop gets its own Kong Service, Route, and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans from every hop to Langfuse, where they appear as a single conversation trace.
+Most voice agents call the speech-to-text (STT), LLM, and text-to-speech (TTS) providers directly, each with its own SDK and dashboard, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Role
-    key: role
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: "`voice-ai-stt` Service"
-    role: Routes audio to OpenAI Whisper for transcription (`audio/v1/audio/transcriptions`)
-  - component: "`voice-ai-llm` Service"
-    role: Routes text to any supported LLM provider (`llm/v1/chat`), provider varies per tab
-  - component: "`voice-ai-tts` Service"
-    role: Routes text to OpenAI TTS for speech synthesis (`audio/v1/audio/speech`)
-  - component: AI Proxy Advanced (3 instances)
-    role: Injects credentials, handles format translation, emits per-hop telemetry
-  - component: Key Auth Plugin (global)
-    role: Authenticates the voice agent with a shared `apikey` header on every Route
-  - component: OpenTelemetry Plugin (global)
-    role: Exports `gen_ai.*` spans with provider, model, token usage, and latency to Langfuse
-  - component: Langfuse
-    role: Groups spans by W3C trace ID into conversation-level traces for full-turn visibility
+  - problem: "A slow or broken turn can come from any of three hops, and each provider logs the call in its own place with no shared ID."
+    solution: "Each hop is an AI Model. The global OpenTelemetry Policy exports a span for each hop into the voice agent's trace for the turn."
+  - problem: "Users experience a conversation, but request monitoring shows single calls with no link between the turns."
+    solution: "The voice agent tags each turn with one `langfuse.session.id`, and Langfuse groups the turns into one Session."
+  - problem: "Latency adds up across the hops, and monitoring each hop alone doesn't show which hop uses the turn's latency budget."
+    solution: "Langfuse shows each turn as a tree of spans, with the duration of the STT, LLM, and TTS hops."
+  - problem: "The voice agent holds credentials for every provider in the pipeline."
+    solution: "Two AI Model Providers keep the credentials in Kong. The agent holds one AI Consumer key, and the Key Auth AI Auth Strategy rejects unknown keys with `401` before any provider call."
+  - problem: "Switching the LLM provider means changing the agent's client code."
+    solution: "The LLM AI Model accepts OpenAI-format requests from any provider tab. Kong translates each request to the provider's native format and the response back."
 {% endtable %}
 
-All three calls share a single W3C trace ID, which Langfuse uses to group the per-hop spans into one conversation-level trace.
+## Try it out
 
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant V as Voice Agent
-    participant K as {{site.ai_gateway_name}}
-    participant P as Provider (Whisper / LLM / TTS)
-    participant Lf as Langfuse
+Apply the configuration, run a demo script that sends an invalid key and then three voice turns through the pipeline, and open the conversation in Langfuse.
 
-    V->>K: POST /stt (apikey, audio)
-    activate K
-    K->>K: key-auth + ai-proxy-advanced (inject OpenAI creds)
-    K->>P: Whisper transcription
-    activate P
-    P-->>K: Transcription
-    deactivate P
-    K->>Lf: gen_ai.* span (STT)
-    K-->>V: Transcription
-    deactivate K
+### Apply the Kong configuration
 
-    V->>K: POST /llm (apikey, text)
-    activate K
-    K->>K: key-auth + ai-proxy-advanced (translate format, inject creds)
-    K->>P: LLM completion
-    activate P
-    P-->>K: Response
-    deactivate P
-    K->>Lf: gen_ai.* span (LLM)
-    K-->>V: Text response
-    deactivate K
+The configuration creates two AI Model Providers (OpenAI for STT and TTS, and your provider for the LLM hop), a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, three AI Models (STT, LLM, and TTS), and a global OpenTelemetry Policy that exports traces to Langfuse. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-    V->>K: POST /tts (apikey, text)
-    activate K
-    K->>K: key-auth + ai-proxy-advanced (inject OpenAI creds)
-    K->>P: TTS synthesis
-    activate P
-    P-->>K: Audio
-    deactivate P
-    K->>Lf: gen_ai.* span (TTS)
-    K-->>V: Audio
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
-
-Kong decouples the voice agent from individual providers. Swap the LLM from OpenAI to Anthropic by changing a tab and re-applying. Replace Whisper with a self-hosted STT model by updating one Service target. The observability contract (same `gen_ai.*` spans, same Prometheus labels, same Langfuse trace structure) stays identical regardless of which providers sit behind the gateway.
-
-## How it works
-
-### Tracing terminology
-
-OpenTelemetry's vocabulary shows up in several places below; here is what each term means in this recipe.
-
-- **Span**. One unit of work with a start, an end, and attributes. Examples here include the `voice-turn` parent span the demo opens, the `kong.access.plugin.ai-proxy-advanced` Plugin-phase span Kong emits, and the `gen_ai.*` generation span Kong populates from the provider response.
-- **Trace**. A tree of spans sharing one `trace_id` that represents a single logical operation. In this recipe, that means one voice turn (STT → LLM → TTS).
-- **Root span**. The top of the tree; everything else is a descendant. The demo's `voice-turn` span is the root, and Kong's per-hop spans nest below the demo's httpx client spans.
-- **`traceparent` header**. The W3C-standard HTTP header that carries the active `trace_id` and parent `span_id` across services. The demo's httpx instrumentation injects it on every outbound call; Kong's OpenTelemetry Plugin extracts it on every inbound request.
-- **Propagation**. The act of moving trace context from one process to another via headers like `traceparent`. Without it, each Service emits its own disconnected trace.
-- **Exporter**. The component that ships finished spans to a backend over OTLP. The demo SDK and Kong's Plugin each run their own exporter, both pointed at Langfuse.
-- **Session (Langfuse-specific)**. A grouping of multiple traces under one logical conversation, keyed by the `langfuse.session.id` attribute on the root span of each trace.
-
-### Per-turn flow
-
-When the demo processes a conversational turn, it makes three sequential requests through Kong:
-
-1. **Authenticate at the gateway.** Every request includes the `apikey` header. The Key Auth Plugin matches the value against the registered Consumer (`voice-agent`) before any AI Proxy Advanced logic runs. Unknown keys are rejected with `401 Unauthorized`.
-
-2. **STT hop.** The agent sends an audio file to `/voice-ai-observability/stt`. The AI Proxy Advanced Plugin on this Route injects OpenAI credentials, forwards the audio to Whisper's transcription endpoint, and logs the result. The OpenTelemetry Plugin emits a `gen_ai.*` span with the provider name (`openai`), model (`whisper-1`), and operation metadata.
-
-3. **LLM hop.** The agent sends the transcribed text to `/voice-ai-observability/llm`. The AI Proxy Advanced Plugin on this Route injects the configured LLM provider's credentials, translates the request format if needed (for example, OpenAI format to Anthropic's messages API), and forwards to the provider. The span includes `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens` for cost attribution.
-
-4. **TTS hop.** The agent sends the LLM response text to `/voice-ai-observability/tts`. The AI Proxy Advanced Plugin injects OpenAI credentials and forwards to the TTS endpoint. The response is raw audio bytes returned to the agent.
-
-5. **Trace and Session grouping.** Before any HTTP call, the voice agent (the demo) opens a `voice-turn` parent span via the OpenTelemetry SDK and tags it with `langfuse.session.id`. The httpx auto-instrumentation in the demo wraps the OpenAI SDK's underlying httpx client, so every STT/LLM/TTS call becomes a child span of `voice-turn` and a real W3C `traceparent` is injected into the outbound request. Kong's OpenTelemetry Plugin extracts that `traceparent` and roots its per-hop server, Plugin, balancer, dns, and `gen_ai.*` spans as descendants of the demo's httpx client span. Both exporters ship spans to Langfuse independently; Langfuse reassembles by `trace_id`. The `langfuse.session.id` attribute on the root span tells Langfuse to roll multiple per-turn traces up under one Session for cross-turn analysis.
-
-### Key Auth: Voice agent identification
-
-The [Key Auth](/plugins/key-auth/) Plugin authenticates the calling voice agent before any per-hop logic runs. It is configured at the global level so all three Routes (`/stt`, `/llm`, `/tts`) require the same `apikey` header. The recipe defines a single `voice-agent` Consumer with a static credential. In production, replace this with one Consumer per tenant or per voice client, rotated through [Kong Vaults](/gateway/secrets-management/).
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: key-auth
-    config:
-      key_names:
-        - apikey
-      hide_credentials: true
-
-consumers:
-  - username: voice-agent
-    keyauth_credentials:
-      - key: voice-demo-key
-```
-{:.no-copy-code}
-
-- **`key_names: [apikey]`**. The header (or query parameter) the Plugin reads to identify the Consumer. Clients send `apikey: voice-demo-key`. See the [Key Auth reference](/plugins/key-auth/) for the full list of recognized parameter sources.
-- **`hide_credentials: true`**. Strips the credential from the request before it reaches the upstream provider. Without this, the `apikey` header would be forwarded to OpenAI, Anthropic, etc., leaking the gateway-side credential into provider logs.
-- **`consumers[].keyauth_credentials[].key`**. The credential the Consumer presents. For non-trivial deployments, generate per-Consumer keys with `kongctl create consumer-credential` or rotate via [Kong Vaults](/gateway/secrets-management/).
-
-For richer identity flows (JWT-based SSO, scoped audiences, IdP integration), swap Key Auth for the [OpenID Connect](/plugins/openid-connect/) Plugin. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) shows the pattern.
-
-### AI Proxy Advanced: Speech-to-text transcription
-
-The STT Service uses the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin with `genai_category: audio/transcription` to route audio files to OpenAI's Whisper model. This is the entry point of the cascading pipeline: raw audio goes in, transcribed text comes out. By routing STT through Kong instead of calling Whisper directly, you get credential injection, payload logging, and `gen_ai.*` telemetry on the transcription hop without instrumenting your application code.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: ai-proxy-advanced
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-        - route_type: audio/v1/audio/transcriptions
-          auth:
-            header_name: Authorization
-            header_value: "Bearer <openai-key>"
-          logging:
-            log_payloads: true
-          model:
-            provider: openai
-            name: whisper-1
-```
-{:.no-copy-code}
-
-- **`genai_category: audio/transcription`**. Classifies this Plugin instance as an audio transcription operation. Kong uses this category for Prometheus metric labels (`genai_category=audio/transcription`) and OpenTelemetry span attributes, separating STT metrics from LLM and TTS traffic.
-- **`max_request_body_size: 26214400`**. Raises the request body limit to 25 MB. Audio files can be several megabytes, and the default limit rejects most audio uploads. Set this to at least three times the expected raw audio file size, per the [AI Proxy Advanced documentation](/plugins/ai-proxy-advanced/).
-- **`response_streaming: deny`**. Whisper returns the full transcript in one response. Streaming would add complexity for no benefit, so the Plugin is configured to refuse streaming requests on this Route.
-- **`route_type: audio/v1/audio/transcriptions`**. Selects the Whisper transcription endpoint. The Plugin supports several other audio operations on the same target type. See the [AI Proxy Advanced route types](/plugins/ai-proxy-advanced/) for the current list.
-- **`logging.log_payloads`**. Includes request and response bodies in log output. For STT, this captures the transcription text. Disable in production if audio payloads contain sensitive content.
-- **No `log_statistics`**. Kong's AI Proxy Advanced Plugin rejects `log_statistics` on `audio/*` route types because token-counting concepts don't map onto audio operations. Statistics-style metrics (count, latency, request volume) for audio hops still come from Kong's Prometheus exporter labelled with `genai_category=audio/transcription` and `audio/speech`; this option is reserved for `llm/*` route types only.
-
-### AI Proxy Advanced: LLM chat completion
-
-The LLM Service handles the reasoning hop of the pipeline. This is the only Service that varies by provider: the auth block, model name, and provider-specific options change depending on which tab you select. The `route_type: llm/v1/chat` target accepts OpenAI-format chat completion requests, and Kong translates them to the upstream provider's native format when needed.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: ai-proxy-advanced
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-        - route_type: llm/v1/chat
-          auth:
-            header_name: Authorization
-            header_value: "Bearer <provider-key>"
-          logging:
-            log_statistics: true
-            log_payloads: true
-          model:
-            provider: openai
-            name: gpt-4o
-```
-{:.no-copy-code}
-
-- **`max_request_body_size: 8388608`**. Allows up to 8 MB of request body. Long conversation histories, large system prompts, and tool-call payloads can exceed the default limit.
-- **`response_streaming: allow`**. Lets clients request server-sent events for token-by-token chat responses. The recipe demo does not stream, but production voice agents often do to start TTS earlier in the turn.
-- **`route_type: llm/v1/chat`**. Selects the chat completions translation path. The Plugin accepts OpenAI-format request bodies and translates them to the upstream provider's native format. Responses are normalized back to OpenAI format. To pass requests through in a provider's native format, set `llm_format` (for example `anthropic`, `bedrock`) on the Plugin config; see the [AI Proxy Advanced documentation](/plugins/ai-proxy-advanced/) for the full route-type and llm_format support matrix.
-- **`auth`**. The auth block varies by provider. OpenAI and Mistral use `Authorization: Bearer <key>`, Anthropic uses `x-api-key`, Azure uses `api-key`, and Bedrock uses AWS access key pairs. Kong injects these into every upstream request. Clients send a placeholder credential.
-- **`model.provider`** and **`model.name`**. Identify the upstream LLM. The model name resolves from the `DECK_CHAT_MODEL` environment variable at apply time, so you can switch models without editing the deck file.
-- **`logging.log_statistics` and `logging.log_payloads`**. Statistics capture prompt and completion token counts; payload logging captures the full prompt and reply text. The `gen_ai.input.messages` and `gen_ai.output.messages` span attributes in the OpenTelemetry trace also contain this data when payload logging is enabled.
-
-### AI Proxy Advanced: Text-to-speech synthesis
-
-The TTS Service converts the LLM response to audio, completing the cascading pipeline. Like the STT Service, it is fixed to OpenAI (TTS-1 model) across all provider tabs. Routing TTS through Kong gives you the same telemetry contract as the other hops: credential injection, usage logging, and `gen_ai.*` span emission.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: ai-proxy-advanced
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-        - route_type: audio/v1/audio/speech
-          auth:
-            header_name: Authorization
-            header_value: "Bearer <openai-key>"
-          logging:
-            log_payloads: true
-          model:
-            provider: openai
-            name: tts-1
-```
-{:.no-copy-code}
-
-- **`genai_category: audio/speech`**. Classifies this as a text-to-speech operation. Prometheus metrics and OTel spans are labeled accordingly, so you can filter TTS latency and cost separately from STT and LLM traffic.
-- **`max_request_body_size: 1048576`**. TTS input is plain text, so 1 MB is generous. Set this lower if your voice agent never sends prompts above a few KB.
-- **`response_streaming: allow`**. Lets clients request streamed audio chunks instead of waiting for the entire synthesis to finish. Production voice agents use this to begin playback as soon as the first chunk arrives.
-- **`route_type: audio/v1/audio/speech`**. Selects the TTS endpoint. The response is raw audio bytes (MP3 by default). The client can request other formats via the `response_format` field in the request body. See the [AI Proxy Advanced reference](/plugins/ai-proxy-advanced/) for supported audio formats and voices.
-- **`model.name: tts-1`**. OpenAI's standard TTS model. Available voices and higher-quality model variants are listed in the [OpenAI TTS documentation](https://platform.openai.com/docs/guides/text-to-speech).
-
-### OpenTelemetry: Trace export to Langfuse
-
-The [OpenTelemetry](/plugins/opentelemetry/) Plugin runs as a global Plugin (not scoped to a single Service), so it captures traces from all three pipeline hops. It exports spans to Langfuse's OTLP endpoint, where they are grouped by W3C trace ID into conversation-level traces.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: opentelemetry
-    config:
-      traces_endpoint: "https://us.cloud.langfuse.com/api/public/otel/v1/traces"
-      headers:
-        Authorization: "Basic <base64-encoded-credentials>"
-        x-langfuse-ingestion-version: "4"
-      sampling_rate: 1
-      propagation:
-        default_format: w3c
-```
-{:.no-copy-code}
-
-- **`traces_endpoint`**. The OTLP/HTTP endpoint where Kong sends trace data. For Langfuse Cloud, use `https://us.cloud.langfuse.com/api/public/otel/v1/traces` (US) or `https://cloud.langfuse.com/api/public/otel/v1/traces` (EU). For self-hosted Langfuse, use `http://host.docker.internal:3000/api/public/otel/v1/traces`.
-- **`headers.Authorization`**. Basic auth header constructed from your Langfuse public key and secret key: `Basic <base64(pk:sk)>`. This authenticates trace export to your Langfuse project.
-- **`headers.x-langfuse-ingestion-version: "4"`**. Enables Langfuse's real-time Fast Preview display for incoming traces.
-- **`sampling_rate: 1`**. Samples 100% of requests. Reduce this in high-traffic production environments to control trace volume and cost.
-- **`propagation.default_format: w3c`**. Uses W3C Trace Context for trace ID propagation. When a client sends a `traceparent` header, the Plugin preserves that trace ID on the emitted span. This is how multiple requests (STT, LLM, TTS) get grouped under a single trace.
-
-Kong emits `gen_ai.*` span attributes on every AI Proxy Advanced request (v3.13+). These attributes follow the [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/) and include:
-
-{% table %}
-columns:
-  - title: Attribute
-    key: attribute
-  - title: Description
-    key: description
-rows:
-  - attribute: "`gen_ai.provider.name`"
-    description: "Provider identifier (for example, `openai`, `anthropic`)"
-  - attribute: "`gen_ai.request.model`"
-    description: Model name from the request
-  - attribute: "`gen_ai.response.model`"
-    description: Model name from the provider response
-  - attribute: "`gen_ai.operation.name`"
-    description: "Operation type (`chat`, `embeddings`)"
-  - attribute: "`gen_ai.usage.input_tokens`"
-    description: Input token count
-  - attribute: "`gen_ai.usage.output_tokens`"
-    description: Output token count
-  - attribute: "`gen_ai.input.messages`"
-    description: Full input messages (when payload logging enabled)
-  - attribute: "`gen_ai.output.messages`"
-    description: Full output messages (when payload logging enabled)
-{% endtable %}
-
-### Production considerations
-
-{:.info}
-> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
-
-The `gen_ai.input.messages` and `gen_ai.output.messages` span attributes capture full prompt and response payloads. Review your data retention and access control policies before enabling payload logging in production, as these attributes may contain PII, sensitive business context, or credentials passed in prompts.
-
-## Apply the Kong configuration
-
-This section configures the Control Plane in two parts. First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it. The recipe's `select_tags` and the `voice-ai-observability-recipe` namespace scope every resource so teardown removes only this recipe's configuration.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
-kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
+kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
-The configuration creates three Kong Services and Routes (`/stt`, `/llm`, `/tts`), each with an [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin handling credential injection and telemetry, plus a global [Key Auth](/plugins/key-auth/) Plugin for voice agent identification, a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exporting traces to Langfuse, and a `voice-agent` Consumer with the `voice-demo-key` API key.
+```bash
+export CONSUMER_API_KEY='voice-demo-key'
+```
 
-Select your LLM provider below, export the per-tab environment variables, and apply. The STT and TTS hops use OpenAI regardless of which LLM provider you choose, so `DECK_OPENAI_TOKEN`, `DECK_LANGFUSE_OTLP_ENDPOINT`, and `DECK_LANGFUSE_AUTH_HEADER` are exported once during the prerequisites and reused across tabs.
+Select your provider. Each tab exports `CHAT_MODEL`, the upstream model for the LLM hop, then applies the configuration. Provider credentials and the Langfuse values come from the prerequisites.
 
 {% navtabs "Providers" %}
-{% tab OpenAI %}
+{% navtab "OpenAI" %}
 
-Export the per-tab environment variable:
+Export the model env var:
 
 ```bash
-export DECK_CHAT_MODEL='gpt-4o'  # or gpt-4o-mini, o3
+export CHAT_MODEL='gpt-4o'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL" }}
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
   config:
     key_names:
     - apikey
     hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
   config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
       default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
 EOF
-{% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab Anthropic %}
+{% endnavtab %}
+{% navtab "Anthropic" %}
 
-Export the per-tab environment variable:
+Export the model env var:
 
 ```bash
-export DECK_CHAT_MODEL='claude-sonnet-4-5-20250929'  # or claude-haiku-4-5-20251001
+export CHAT_MODEL='claude-sonnet-4-5-20250929'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: x-api-key
-          header_value: ${{ env "DECK_ANTHROPIC_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: anthropic
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: anthropic
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: x-api-key
+        value: !secret {source: !env 'ANTHROPIC_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
   config:
     key_names:
     - apikey
     hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
   config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
       default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      version: !env 'ANTHROPIC_VERSION'
+      type: anthropic
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
 EOF
-{% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab AWS Bedrock %}
+{% endnavtab %}
+{% navtab "AWS Bedrock" %}
 
-Export the per-tab environment variable:
+Export the model env var:
 
 ```bash
-export DECK_CHAT_MODEL='amazon.nova-pro-v1:0'  # or global.anthropic.claude-sonnet-4-5-20250929-v1:0
+export CHAT_MODEL='amazon.nova-pro-v1:0'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: bedrock
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            bedrock:
-              aws_region: ${{ env "DECK_AWS_REGION" }}
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: bedrock
+  config:
+    auth:
+      type: aws
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
   config:
     key_names:
     - apikey
     hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
   config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
       default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
 EOF
-{% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab Azure %}
+{% endnavtab %}
+{% navtab "Azure OpenAI" %}
 
-Export the per-tab environment variable:
+Kong records this model name in the `X-Kong-LLM-Model` header, but the deployment ID from the AI Credentials prerequisite selects the upstream model. Set the name to the model in your deployment:
 
 ```bash
-export DECK_CHAT_MODEL='gpt-4o'  # matches your Azure deployment name
+export CHAT_MODEL='gpt-4o'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: api-key
-          header_value: ${{ env "DECK_AZURE_API_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: azure
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
-            azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID" }}
-            azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: azure
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: api-key
+        value: !secret {source: !env 'AZURE_API_KEY'}
+    service: azure-openai
+    instance: !env 'AZURE_INSTANCE'
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
   config:
     key_names:
     - apikey
     hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
   config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
       default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID'
+      type: azure
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
 EOF
-{% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab Mistral %}
+{% endnavtab %}
+{% navtab "Google Gemini" %}
 
-Export the per-tab environment variable:
+Export the model env var:
 
 ```bash
-export DECK_CHAT_MODEL='mistral-large-latest'  # or mistral-small-latest
+export CHAT_MODEL='gemini-2.0-flash'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - voice-ai-observability-recipe
-services:
-- name: voice-ai-stt
-  url: http://localhost
-  routes:
-  - name: voice-ai-stt
-    paths:
-    - /voice-ai-observability/stt
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-stt-proxy
-    config:
-      genai_category: audio/transcription
-      max_request_body_size: 26214400
-      response_streaming: deny
-      targets:
-      - route_type: audio/v1/audio/transcriptions
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: whisper-1
-- name: voice-ai-llm
-  url: http://localhost
-  routes:
-  - name: voice-ai-llm
-    paths:
-    - /voice-ai-observability/llm
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-llm-proxy
-    config:
-      max_request_body_size: 8388608
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_MISTRAL_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: mistral
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            mistral_format: openai
-            upstream_url: https://api.mistral.ai/v1/chat/completions
-- name: voice-ai-tts
-  url: http://localhost
-  routes:
-  - name: voice-ai-tts
-    paths:
-    - /voice-ai-observability/tts
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: voice-ai-tts-proxy
-    config:
-      genai_category: audio/speech
-      max_request_body_size: 1048576
-      response_streaming: allow
-      targets:
-      - route_type: audio/v1/audio/speech
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_payloads: true
-        model:
-          provider: openai
-          name: tts-1
-plugins:
-- name: key-auth
-  instance_name: voice-ai-observability-auth
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      use_gcp_service_account: true
+      service_account_json: !secret {source: !env 'GEMINI_SERVICE_ACCOUNT_JSON'}
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
   config:
     key_names:
     - apikey
     hide_credentials: true
-- name: opentelemetry
-  instance_name: voice-ai-observability-otel
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
   config:
-    traces_endpoint: ${{ env "DECK_LANGFUSE_OTLP_ENDPOINT" }}
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
     headers:
-      Authorization: ${{ env "DECK_LANGFUSE_AUTH_HEADER" }}
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
       x-langfuse-ingestion-version: '4'
     sampling_rate: 1
     propagation:
       default_format: w3c
-consumers:
-- username: voice-agent
-  keyauth_credentials:
-  - key: voice-demo-key
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      gcp_environment:
+        api_endpoint: !env 'GCP_API_ENDPOINT'
+        project_id: !env 'GCP_PROJECT_ID'
+        location_id: !env 'GCP_LOCATION_ID'
+      type: gemini
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
 EOF
-{% endraw -%}
 
-echo "
-_defaults:
-  kongctl:
-    namespace: voice-ai-observability-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
+{% endnavtab %}
+{% navtab "Mistral" %}
+
+Export the model env var:
+
+```bash
+export CHAT_MODEL='mistral-large-latest'
+```
+
+Apply the Kong configuration:
+
+```bash
+cat <<'EOF' > kong-recipe.yaml
+_defaults:
+  kongctl:
+    namespace: voice-ai-observability-recipe
+ai_gateway_model_providers:
+- ref: voice-ai-observability-openai-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-openai-provider
+  display_name: 'voice-ai-observability (OpenAI: STT/TTS)'
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+- ref: voice-ai-observability-llm-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm-provider
+  display_name: voice-ai-observability (LLM)
+  type: mistral
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'MISTRAL_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: voice-ai-observability-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-auth
+  display_name: voice-ai-observability key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: voice-ai-observability-consumer
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-consumer
+  display_name: voice-ai-observability voice agent
+  type: api-key
+  credentials:
+  - ref: voice-ai-observability-credential
+    name: voice-ai-observability-credential
+    display_name: voice-ai-observability demo API key
+    type: api-key
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
+ai_gateway_policies:
+- ref: voice-ai-observability-otel
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-otel
+  display_name: voice-ai-observability tracing
+  type: opentelemetry
+  global: true
+  config:
+    traces_endpoint: !env 'LANGFUSE_OTLP_ENDPOINT'
+    headers:
+      Authorization: !env 'LANGFUSE_AUTH_HEADER'
+      x-langfuse-ingestion-version: '4'
+    sampling_rate: 1
+    propagation:
+      default_format: w3c
+      extract:
+      - w3c
+      inject:
+      - w3c
+ai_gateway_models:
+- ref: voice-ai-observability-stt
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-stt
+  display_name: voice-ai-observability (STT)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/transcription
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 26214400
+    response_streaming: deny
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/stt
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - whisper-1
+  targets:
+  - name: whisper-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+- ref: voice-ai-observability-llm
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-llm
+  display_name: voice-ai-observability (LLM)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 8388608
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/llm
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: voice-ai-observability-llm-provider
+    config:
+      format: openai
+      type: mistral
+- ref: voice-ai-observability-tts
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: voice-ai-observability-tts
+  display_name: voice-ai-observability (TTS)
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - audio/speech
+  access:
+    auth_strategies:
+    - voice-ai-observability-auth
+  config:
+    max_request_body_size: 1048576
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /voice-ai-observability/tts
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - tts-1
+  targets:
+  - name: tts-1
+    provider: voice-ai-observability-openai-provider
+    config:
+      type: openai
+EOF
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" .collapsible }
+
+{% endnavtab %}
 {% endnavtabs %}
 
-## Try it out
+### Run the demo
 
-The demo script runs a short three-turn voice conversation through the recipe. It opens with a setup phase that synthesizes the question audio for each turn directly via OpenAI's TTS API, bypassing Kong. These calls stand in for a microphone source a real voice agent would have, and are intentionally not traced. Before any traced turn runs, the demo also sends one request with an invalid `apikey` to confirm Kong returns `401`. It then runs three traced turns. Each turn opens a `voice-turn` parent span via the OpenTelemetry SDK and executes the three production hops through Kong: STT → LLM → TTS. The httpx instrumentation injects W3C `traceparent` into every outbound request so Kong's per-hop spans nest as descendants of the demo's parent span. All three turns share a single Langfuse `langfuse.session.id`, so they roll up into one Session for cross-turn analysis.
+The script first sends one request with an invalid API key. It then synthesizes the audio of three questions directly with OpenAI, without Kong and without tracing, to stand in for a microphone. For each question, it opens a `voice-turn` span and runs the three hops through Kong. In the output, look for the `401` for the invalid key, the timing of each hop, and the trace ID and Session ID to open in Langfuse.
 
 {:.info}
-
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
-
-Look for per-hop timing in the output and the trace ID printed at the end of each turn. The `[LLM]` line shows the upstream model and token counts read from the parsed `completion.usage` field, which Kong's OpenAI-format response normalizes for every provider. After the script completes, open Langfuse, navigate to **Sessions**, and find the printed Session ID to see the three turns grouped under one conversation.
-
-A single LLM hop request and response (with the Kong response headers visible to the client) looks like this:
-
-```json
-POST /voice-ai-observability/llm
-apikey: voice-demo-key
-
-{
-  "model": "gpt-4o",
-  "messages": [
-    {"role": "system", "content": "You are a helpful voice assistant..."},
-    {"role": "user", "content": "What are the three laws of robotics?"}
-  ]
-}
-```
-{:.no-copy-code}
-
-Response (Kong normalizes any provider's reply to OpenAI format):
-
-```text
-HTTP/1.1 200 OK
-X-Kong-LLM-Model: gpt-4o
-X-Kong-Upstream-Latency: 821
-X-Kong-Proxy-Latency: 18
-
-{"choices": [{"message": {"role": "assistant", "content": "..."}}], "usage": {"prompt_tokens": 58, "completion_tokens": 44, "total_tokens": 102}}
-```
-{:.no-copy-code}
-
-Kong adds these response headers on every hop:
-
-{% table %}
-columns:
-  - title: Header
-    key: header
-  - title: Description
-    key: description
-rows:
-  - header: "`X-Kong-LLM-Model`"
-    description: Upstream model that served the request (LLM hop only)
-  - header: "`X-Kong-Upstream-Latency`"
-    description: Time (ms) Kong spent waiting for the provider
-  - header: "`X-Kong-Proxy-Latency`"
-    description: Time (ms) Kong spent processing the request
-{% endtable %}
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""Voice AI pipeline observability demo. See README for context."""
+"""Voice AI pipeline observability demo for Kong AI Gateway.
+
+Shows four things:
+  1. A request with an invalid apikey gets 401 from Kong before any provider call.
+  2. Each conversational turn runs three hops through Kong: speech-to-text (STT),
+     the LLM, and text-to-speech (TTS), each on its own AI Model.
+  3. Each turn opens a `voice-turn` parent span. Each hop sends a W3C traceparent
+     header from the current span, so Kong's spans join the turn's trace.
+  4. All turns share one langfuse.session.id, so Langfuse groups them into one Session.
+
+The question audio for each turn is synthesized first, directly with OpenAI and
+without tracing. It stands in for a microphone.
+
+Expected output: an [AUTH] 401 line, then for each of three turns an [STT], [LLM],
+and [TTS] line with timings, and the turn's trace ID. The last line prints the
+Session ID to open in Langfuse.
+
+Run: python demo.py. It needs OPENAI_TOKEN, LANGFUSE_OTLP_ENDPOINT, and
+LANGFUSE_AUTH_HEADER from the prerequisites. Set PROXY_URL if the data plane is not
+at http://localhost:8000, CHAT_MODEL to match the applied model, and
+CONSUMER_API_KEY if you changed the demo key.
+"""
 
 import os
 import sys
@@ -1329,6 +1446,7 @@ from pathlib import Path
 from openai import APIStatusError, OpenAI
 from opentelemetry import context as otel_context
 from opentelemetry import trace
+from opentelemetry.propagate import inject
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.sdk.resources import Resource
@@ -1341,7 +1459,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gpt-4o")
-VOICE_API_KEY = os.getenv("VOICE_API_KEY", "voice-demo-key")
+CONSUMER_API_KEY = os.getenv("CONSUMER_API_KEY", "voice-demo-key")
 SESSION_ID = os.getenv("SESSION_ID", f"voice-demo-{uuid.uuid4().hex[:12]}")
 
 # ANSI color codes. Disabled when stdout isn't a TTY or NO_COLOR is set.
@@ -1356,12 +1474,12 @@ CYAN   = lambda s: _c("36", s)
 RED    = lambda s: _c("31", s)
 MAGENTA= lambda s: _c("35", s)
 
-LANGFUSE_OTLP_ENDPOINT = os.environ["DECK_LANGFUSE_OTLP_ENDPOINT"]
-LANGFUSE_AUTH_HEADER = os.environ["DECK_LANGFUSE_AUTH_HEADER"]
+LANGFUSE_OTLP_ENDPOINT = os.environ["LANGFUSE_OTLP_ENDPOINT"]
+LANGFUSE_AUTH_HEADER = os.environ["LANGFUSE_AUTH_HEADER"]
 
-# DECK_OPENAI_TOKEN carries the "Bearer " prefix Kong needs; strip it for the
+# OPENAI_TOKEN carries the "Bearer " prefix Kong needs; strip it for the
 # direct OpenAI client used by the setup phase.
-RAW_OPENAI_KEY = os.environ["DECK_OPENAI_TOKEN"].removeprefix("Bearer ").strip()
+RAW_OPENAI_KEY = os.environ["OPENAI_TOKEN"].removeprefix("Bearer ").strip()
 
 
 # ---------------------------------------------------------------------------
@@ -1397,25 +1515,36 @@ HTTPXClientInstrumentor().instrument()
 stt_client = OpenAI(
     base_url=f"{PROXY_URL}/voice-ai-observability/stt",
     api_key="placeholder",
-    default_headers={"apikey": VOICE_API_KEY},
+    default_headers={"apikey": CONSUMER_API_KEY},
 )
 
 llm_client = OpenAI(
     base_url=f"{PROXY_URL}/voice-ai-observability/llm",
     api_key="placeholder",
-    default_headers={"apikey": VOICE_API_KEY},
+    default_headers={"apikey": CONSUMER_API_KEY},
 )
 
 tts_client = OpenAI(
     base_url=f"{PROXY_URL}/voice-ai-observability/tts",
     api_key="placeholder",
-    default_headers={"apikey": VOICE_API_KEY},
+    default_headers={"apikey": CONSUMER_API_KEY},
 )
 
 
 # ---------------------------------------------------------------------------
 # Out-of-band setup: synthesize question audio directly via OpenAI
 # ---------------------------------------------------------------------------
+
+def trace_headers():
+    """Return a W3C traceparent header for the current span.
+
+    The OpenAI SDK's HTTP client isn't always the one that the httpx
+    instrumentation patches, so each Kong call sends the header explicitly.
+    """
+    headers = {}
+    inject(headers)
+    return headers
+
 
 def synthesize_question_audio(text):
     """Synthesize question audio directly via OpenAI, bypassing Kong.
@@ -1448,14 +1577,16 @@ def synthesize_question_audio(text):
 def check_auth_boundary():
     """Send a request with an invalid key, expecting Kong to return 401.
 
-    Confirms key-auth is enforced on the recipe's Routes before any traced
-    turn runs. Suppress instrumentation so this setup probe doesn't pollute
-    Langfuse with an unauthenticated outlier.
+    Confirms key-auth is enforced on the recipe's AI Models before any
+    traced turn runs. Suppress instrumentation so this setup probe doesn't
+    pollute Langfuse with an unauthenticated outlier.
     """
+    bad_key = "wrong-key"
+    print(f"  {DIM(f'Attempting request with apikey={bad_key!r}...')}")
     bad_client = OpenAI(
         base_url=f"{PROXY_URL}/voice-ai-observability/llm",
         api_key="placeholder",
-        default_headers={"apikey": "wrong-key"},
+        default_headers={"apikey": bad_key},
     )
     token = otel_context.attach(
         otel_context.set_value("suppress_instrumentation", True)
@@ -1479,7 +1610,7 @@ def check_auth_boundary():
 # ---------------------------------------------------------------------------
 
 def speech_to_text(audio_bytes):
-    """Transcribe audio via the Kong STT route."""
+    """Transcribe audio via the Kong STT AI Model."""
     with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
         tmp.write(audio_bytes)
         tmp_path = Path(tmp.name)
@@ -1487,22 +1618,25 @@ def speech_to_text(audio_bytes):
     try:
         start = time.perf_counter()
         with open(tmp_path, "rb") as f:
-            transcript = stt_client.audio.transcriptions.create(
-                model="whisper-1", file=f
+            raw = stt_client.audio.transcriptions.with_raw_response.create(
+                model="whisper-1", file=f, extra_headers=trace_headers()
             )
         elapsed = time.perf_counter() - start
     finally:
         tmp_path.unlink(missing_ok=True)
 
-    print(f"  {CYAN(BOLD('[STT]'))} \"{transcript.text}\" {DIM(f'({elapsed:.3f}s)')}")
+    transcript = raw.parse()
+    upstream_ms = raw.headers.get("x-kong-upstream-latency", "-")
+
+    print(f"  {CYAN(BOLD('[STT]'))} \"{transcript.text}\" {DIM(f'(upstream={upstream_ms}ms, {elapsed:.3f}s wall)')}")
     return transcript.text, elapsed
 
 
 def llm_chat(messages):
-    """Send the conversation so far to the LLM via the Kong chat route."""
+    """Send the conversation so far to the LLM via the Kong chat AI Model."""
     start = time.perf_counter()
     raw = llm_client.chat.completions.with_raw_response.create(
-        model=CHAT_MODEL, messages=messages
+        model=CHAT_MODEL, messages=messages, extra_headers=trace_headers()
     )
     elapsed = time.perf_counter() - start
     completion = raw.parse()
@@ -1523,15 +1657,16 @@ def llm_chat(messages):
 
 
 def text_to_speech(text):
-    """Synthesize the LLM response to audio via the Kong TTS route."""
+    """Synthesize the LLM response to audio via the Kong TTS AI Model."""
     start = time.perf_counter()
-    response = tts_client.audio.speech.create(
-        model="tts-1", voice="alloy", input=text
+    raw = tts_client.audio.speech.with_raw_response.create(
+        model="tts-1", voice="alloy", input=text, extra_headers=trace_headers()
     )
-    audio_bytes = response.read()
     elapsed = time.perf_counter() - start
+    audio_bytes = raw.parse().read()
+    upstream_ms = raw.headers.get("x-kong-upstream-latency", "-")
 
-    print(f"  {CYAN(BOLD('[TTS]'))} Generated {len(audio_bytes):,} bytes of audio {DIM(f'({elapsed:.3f}s)')}")
+    print(f"  {CYAN(BOLD('[TTS]'))} Generated {len(audio_bytes):,} bytes of audio {DIM(f'(upstream={upstream_ms}ms, {elapsed:.3f}s wall)')}")
     return audio_bytes, elapsed
 
 
@@ -1643,7 +1778,7 @@ Run it:
 python demo.py
 ```
 
-Example output:
+Example output with the OpenAI tab's model:
 
 ```text
 Voice AI Pipeline Observability Demo
@@ -1653,7 +1788,8 @@ Chat Model:  gpt-4o
 Session ID:  voice-demo-7f3a2c1b9e8d
 
 Checking key-auth boundary...
-  [AUTH] expected reject -> 401 Error code: 401 - {'message': 'No API key found in request'}
+  Attempting request with apikey='wrong-key'...
+  [AUTH] expected reject -> 401 Error code: 401 - Unauthorized
 
 Synthesizing question audio (out of band, not traced)...
   Synthesized: "What are the three laws of robotics?"
@@ -1664,14 +1800,14 @@ Turn 1: "What are the three laws of robotics?"
 ============================================================
 
 1. Speech -> Text (STT)
-  [STT] "What are the three laws of robotics?" (0.876s)
+  [STT] "What are the three laws of robotics?" (upstream=642ms, 0.876s wall)
 
 2. Transcription -> LLM
   [LLM] "Isaac Asimov's three laws state that a robot must not harm a human, must obey human orders unless they conflict with the first law, and must protect its own existence unless that conflicts with the first two."
-         Model: gpt-4o  Tokens: 58 in / 44 out  Upstream: 821ms (0.842s wall)
+         Model: openai/gpt-4o  Tokens: 58 in / 44 out  Upstream: 821ms (0.842s wall)
 
 3. LLM Response -> Speech (TTS)
-  [TTS] Generated 218,400 bytes of audio (2.943s)
+  [TTS] Generated 218,400 bytes of audio (upstream=2811ms, 2.943s wall)
 
 ------------------------------------------------------------
 Turn complete: 4.661s total (stt: 0.876s + llm: 0.842s + tts: 2.943s)
@@ -1681,14 +1817,14 @@ Turn 2: "Who wrote them?"
 ============================================================
 
 1. Speech -> Text (STT)
-  [STT] "Who wrote them?" (0.412s)
+  [STT] "Who wrote them?" (upstream=298ms, 0.412s wall)
 
 2. Transcription -> LLM
   [LLM] "Isaac Asimov, the science fiction author, wrote the three laws of robotics."
-         Model: gpt-4o  Tokens: 88 in / 16 out  Upstream: 318ms (0.331s wall)
+         Model: openai/gpt-4o  Tokens: 88 in / 16 out  Upstream: 318ms (0.331s wall)
 
 3. LLM Response -> Speech (TTS)
-  [TTS] Generated 65,760 bytes of audio (0.624s)
+  [TTS] Generated 65,760 bytes of audio (upstream=498ms, 0.624s wall)
 
 ------------------------------------------------------------
 Turn complete: 1.367s total (stt: 0.412s + llm: 0.331s + tts: 0.624s)
@@ -1698,14 +1834,14 @@ Turn 3: "What year were they first published?"
 ============================================================
 
 1. Speech -> Text (STT)
-  [STT] "What year were they first published?" (0.487s)
+  [STT] "What year were they first published?" (upstream=361ms, 0.487s wall)
 
 2. Transcription -> LLM
   [LLM] "Asimov first introduced the three laws in his 1942 short story 'Runaround.'"
-         Model: gpt-4o  Tokens: 116 in / 19 out  Upstream: 401ms (0.418s wall)
+         Model: openai/gpt-4o  Tokens: 116 in / 19 out  Upstream: 401ms (0.418s wall)
 
 3. LLM Response -> Speech (TTS)
-  [TTS] Generated 70,080 bytes of audio (0.892s)
+  [TTS] Generated 70,080 bytes of audio (upstream=724ms, 0.892s wall)
 
 ------------------------------------------------------------
 Turn complete: 1.797s total (stt: 0.487s + llm: 0.418s + tts: 0.892s)
@@ -1717,69 +1853,238 @@ View this conversation in Langfuse -> Sessions -> voice-demo-7f3a2c1b9e8d
 ```
 {:.no-copy-code}
 
-### What happened
+### Open the conversation in Langfuse
 
-1. **Auth boundary check.** Before any traced traffic, the demo sent one request with `apikey: wrong-key`. The Key Auth Plugin rejected it with `401`, confirming Kong is gating every Route. This call was suppressed from instrumentation so it does not appear in Langfuse.
+Open your Langfuse project, click **Sessions**, and find the Session ID that the demo printed. The Session holds three traces, one for each turn. Open a trace to see its spans: the demo's `voice-turn` root span, one HTTP client span for each hop, and Kong's spans for that hop under each client span. This cookbook hasn't confirmed the nesting of Kong's spans against a live {{site.ai_gateway}}. If Kong's spans show up as separate traces, check the `propagation` settings in [OpenTelemetry Policy](#opentelemetry-policy).
 
-2. **Setup (not traced).** Before any spans opened, the demo made three TTS calls *directly to OpenAI* to synthesize question audio for each turn. These calls bypassed Kong entirely and stand in for the microphone source a production voice agent would have. They are explicitly suppressed from OpenTelemetry instrumentation, so they do not appear in your Langfuse traces.
+### Check the results
 
-3. **Per-turn parent span.** For each turn, the demo opened a `voice-turn` parent span via the OpenTelemetry SDK before any HTTP call. The span carries `langfuse.session.id`, `langfuse.trace.name`, and `langfuse.trace.tags` attributes. These tell Langfuse to roll the per-turn traces up under one Session.
+The demo output and Langfuse confirm the following:
 
-4. **Three traced hops through Kong.** Each `OpenAI(...).create(...)` call (STT, LLM, TTS) ran while the `voice-turn` span was active. The httpx auto-instrumentation wrapped the OpenAI SDK's underlying client, emitted a child span per call, and injected a real W3C `traceparent` header into every outbound request. Every call carried the `apikey` header, so the Key Auth Plugin admitted it before AI Proxy Advanced ran.
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Authentication before any provider call"
+    evidence: "The invalid key gets `401`. Kong rejected it before the LLM AI Model contacted the provider."
+  - behavior: "Three hops through Kong"
+    evidence: "Each turn prints an `[STT]`, `[LLM]`, and `[TTS]` line with the upstream latency from the `X-Kong-Upstream-Latency` header."
+  - behavior: "One trace for each turn"
+    evidence: "Each Langfuse trace has the `voice-turn` span as its root and the spans of all three hops in its tree, with their durations."
+  - behavior: "One Session for the conversation"
+    evidence: "The Langfuse Session with the printed ID holds the three turns."
+  - behavior: "Provider credentials stay in Kong"
+    evidence: "The demo sends only the AI Consumer key to Kong. The AI Model Providers add the provider credentials to each upstream request."
+{% endtable %}
 
-5. **Kong's per-hop spans nest under the demo's spans.** Kong's OpenTelemetry Plugin extracted the `traceparent` and rooted its server, Plugin (ai-proxy-advanced, opentelemetry, balancer, dns), and `gen_ai.*` generation spans as descendants of the demo's httpx client span. The `gen_ai.*` spans on the LLM hop carry `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens`. These are the same numbers the CLI prints from the parsed `completion.usage` field that the OpenAI-format response normalizes for every provider.
+To review the created entities, and per-consumer usage, open the `voice-ai-observability-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-6. **Two exporters, one trace.** The demo's SDK and Kong's Plugin export to the same Langfuse OTLP endpoint independently. They share `trace_id` because the `traceparent` header propagates the demo's active context to Kong, and Langfuse reassembles the tree by `trace_id`.
+## How it works
 
-7. **Session rollup.** Because every turn's root span carried the same `langfuse.session.id`, Langfuse groups all three turns under a single Session. This is how cross-turn analysis (latency progression, conversation-scoped cost, per-turn error correlation) works.
+For each turn, the voice agent calls three AI Models in sequence through Kong. Kong authenticates each call, adds the provider credentials, and exports its spans to Langfuse into the trace that the agent started.
 
-8. **Where latency actually came from, and why this is the recipe's whole point.** Look at the per-hop times printed by the demo and the matching durations in Langfuse. STT and the LLM combined typically come in under 1.5 seconds; TTS is the dominant cost, often 3–6 seconds, and it scales linearly with how long the LLM's reply is. The Problem section frames natural-sounding voice interaction as a sub-800ms budget, and the demo runs nowhere near it. That gap is exactly why per-hop observability matters. Without spans on every hop, you would see one slow turn and have no idea whether STT mis-transcribed, the LLM was wordy, or TTS choked on a long reply. With them, the answer is one glance at the waterfall: a chatty LLM cascades into a slow TTS, and the production fix (stream TTS, cap response length, switch to a faster TTS model, swap to a realtime API) is selected from the data, not guessed at. Observability is what turns "the call sounded broken" into a specific, fixable hop.
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant V as Voice agent
+    participant K as Kong AI Gateway
+    participant P as Providers
+    participant Lf as Langfuse
 
-### Verify in Langfuse
+    V->>K: POST /voice-ai-observability/stt (apikey, traceparent, audio)
+    activate K
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>P: Transcription request to OpenAI whisper-1
+    activate P
+    P-->>K: Transcript
+    deactivate P
+    K-->>V: Transcript
+    deactivate K
+    V->>K: POST /voice-ai-observability/llm (apikey, traceparent, messages)
+    activate K
+    K->>P: Chat request in the LLM provider's native format
+    activate P
+    P-->>K: Completion
+    deactivate P
+    K-->>V: OpenAI-format response
+    deactivate K
+    V->>K: POST /voice-ai-observability/tts (apikey, traceparent, text)
+    activate K
+    K->>P: Speech request to OpenAI tts-1
+    activate P
+    P-->>K: Audio
+    deactivate P
+    K-->>V: Audio
+    deactivate K
+    K->>Lf: OpenTelemetry Policy exports each hop's spans
+    V->>Lf: Demo exports the voice-turn span
+{% endmermaid %}
+<!-- vale on -->
 
-Open your Langfuse project and navigate to **Sessions** in the left nav. Find the session ID printed at the end of the demo output (search by ID or scan the recent list).
+The demo opens a `voice-turn` span before the first hop and sets `langfuse.session.id` on it. Each hop sends a W3C `traceparent` header from the current span (the demo injects it with OpenTelemetry's propagator, because the OpenAI SDK's HTTP client isn't always the one the httpx instrumentation patches), so Kong's spans join the same trace. The demo and Kong export their spans separately, and Langfuse joins them by trace ID.
 
-You should see three traces grouped under the session, one per turn. Click into the first trace and confirm the tree:
+### Key Auth AI Auth Strategy and AI Consumer
 
-- **Root**: `voice-turn` (Service: `voice-ai-demo`), with `langfuse.session.id`, `langfuse.trace.name`, and `langfuse.trace.tags` attributes attached.
-- **Three children** (one per pipeline hop), each named after the outbound HTTP call: `POST /voice-ai-observability/stt`, `POST /voice-ai-observability/llm`, `POST /voice-ai-observability/tts`.
-- **Under each httpx span**: Kong's server span plus the Plugin / balancer / dns descendants, and a `gen_ai.*` generation span (`generate_content whisper-1`, `chat <chat-model>`, `generate_content tts-1`).
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. All three AI Models reference this AI Auth Strategy in `access.auth_strategies`, so one key works for every hop.
 
-Per-hop timings in Langfuse should be within a few tens of milliseconds of the times printed by the demo CLI. Any larger discrepancy points at network overhead between the demo, Kong, and the upstream provider.
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
 
-### Explore in Konnect
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request. The providers never see the AI Consumer key."
+  - setting: "`name: voice-ai-observability-consumer` (AI Consumer)"
+    purpose: "The identity of the voice agent. For several agents or tenants, create one AI Consumer for each."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
 
-Sign in to [{{site.konnect_product_name}}](https://cloud.konghq.com/) and navigate to **API Gateway** → **Gateways** → `voice-ai-observability-recipe`. From there:
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
 
-- Open the **Gateway services** tab to see the three Services (`voice-ai-stt`, `voice-ai-llm`, `voice-ai-tts`) and click into each to inspect their Routes (`/voice-ai-observability/stt`, `/voice-ai-observability/llm`, `/voice-ai-observability/tts`).
-- Open the **Plugins** tab to confirm the global Key Auth and OpenTelemetry Plugins, plus the three per-Service AI Proxy Advanced instances.
-- Open the **Consumers** tab to find the `voice-agent` Consumer and its `voice-demo-key` credential.
-- Open the **Analytics** tab on any Service for an at-a-glance view of recipe traffic (request count, latency, status codes).
-- For deeper analysis, open the Konnect **Observability** menu in the left nav for cross-Service dashboards and historical trends.
+### AI Model Providers and AI Models
+
+The STT and TTS AI Models use the OpenAI AI Model Provider. The LLM AI Model uses a second AI Model Provider for the provider you selected. The LLM AI Model Provider is a separate entity even on the OpenAI tab, so a provider switch never touches the STT and TTS hops. Each AI Model has its own path and one capability.
+
+The following settings configure the AI Model Providers and the AI Models:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Providers)"
+    purpose: "The provider credentials. Kong adds them to each upstream request. The fields of the LLM AI Model Provider depend on the provider tab."
+  - setting: "`formats: [{type: openai}]`"
+    purpose: "All three AI Models accept OpenAI-format requests. On the LLM AI Model, Kong translates each request to the provider's native format and the response back to OpenAI format."
+  - setting: "`capabilities`"
+    purpose: "`audio/transcription` on the STT AI Model, `generate` on the LLM AI Model, and `audio/speech` on the TTS AI Model."
+  - setting: "`config.route.model`"
+    purpose: "Each AI Model answers to one value in the request's `model` field (`body_param: model`): `whisper-1` for speech-to-text, the `CHAT_MODEL` value for the LLM, and `tts-1` for text-to-speech. These are the values the demo sends. Without a selector, an AI Model accepts only its own name as `model`."
+  - setting: "`targets[].name`"
+    purpose: "`whisper-1` for STT and `tts-1` for TTS. The LLM model comes from `CHAT_MODEL`. Change it and re-apply to swap models without changing the agent."
+  - setting: "`targets[].config`"
+    purpose: "The provider `type` and provider-specific target fields, for example Bedrock's `region` or Azure's `deployment_id` and `api_version`."
+  - setting: "`config.max_request_body_size`"
+    purpose: "25 MB on the STT AI Model for audio uploads, 8 MB on the LLM AI Model, and 1 MB on the TTS AI Model, which receives text."
+  - setting: "`config.response_streaming`"
+    purpose: "`deny` on the STT AI Model, so clients can't set `stream=true`. `allow` on the LLM and TTS AI Models, so clients can request streamed responses. The demo doesn't stream."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. The default is `false`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes the AI Model's path before it forwards the request."
+{% endtable %}
+
+### OpenTelemetry Policy
+
+The [OpenTelemetry](/ai-gateway/policies/opentelemetry/) Policy has `global: true`, so it applies to all three AI Models without a reference in their `policies`. It sends the spans from the data plane to Langfuse. Kong adds `gen_ai.*` attributes to the spans, for example the provider, the model, and the token counts. See the [Gen AI OpenTelemetry spans attributes reference](/ai-gateway/llm-open-telemetry/) for the full list.
+
+The following settings configure the OpenTelemetry Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`global: true`"
+    purpose: "Applies the policy to every AI Model on the {{site.ai_gateway}}."
+  - setting: "`traces_endpoint`"
+    purpose: "The Langfuse OTLP/HTTP traces URL, from `LANGFUSE_OTLP_ENDPOINT`."
+  - setting: "`headers.Authorization`"
+    purpose: "The Basic Auth header, from `LANGFUSE_AUTH_HEADER`. Policy configuration doesn't accept `!secret`, so the value uses `!env`."
+  - setting: "`headers.x-langfuse-ingestion-version: \"4\"`"
+    purpose: "Langfuse shows new spans in real time. Without this header, Langfuse can show them up to 10 minutes later."
+  - setting: "`sampling_rate: 1`"
+    purpose: "Samples every request. This value overrides the data plane's sampling rate. Lower it for production traffic."
+  - setting: "`propagation`"
+    purpose: "Kong reads the W3C `traceparent` header from the request (`extract`) and writes it to the upstream request (`inject`), so its spans join the voice agent's trace."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key, the provider credentials, and the Langfuse keys in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault. Span attributes such as `gen_ai.input.messages` can carry prompts and responses, so review who can read the Langfuse project.
+
+### Demo span attributes
+
+The Session grouping comes from the voice agent, not from Kong. Langfuse reads trace attributes from any span in the trace.
+
+The demo sets the following attributes on each `voice-turn` span:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`langfuse.session.id`"
+    purpose: "Groups the turns of one conversation into one Langfuse Session."
+  - setting: "`langfuse.trace.name`"
+    purpose: "Names each trace `voice-turn-<N>`."
+  - setting: "`langfuse.trace.tags`"
+    purpose: "Tags each trace with `voice-ai` and `cascading-pipeline`."
+{% endtable %}
+
+### Response headers
+
+Kong adds the following response headers, which the demo reads:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: "The upstream model that served the request, with the provider name as a prefix, for example `openai/gpt-4o`. The demo reads it on the LLM hop."
+  - header: "`X-Kong-Upstream-Latency`"
+    description: "Time in milliseconds that Kong waited for the provider to respond."
+{% endtable %}
 
 ## Variations and next steps
 
-**Swap the OTel backend.** Replace the Langfuse endpoint with any OTLP-compatible backend. Change `DECK_LANGFUSE_OTLP_ENDPOINT` and `DECK_LANGFUSE_AUTH_HEADER` (and update the demo's exporter the same way) to point at Jaeger, Grafana Tempo, Honeycomb, Datadog, or Dynatrace. Two things to know before you migrate:
+You can change or extend this configuration in the following ways:
 
-- **Portable across backends.** Kong's per-hop spans, the demo's `voice-turn` span tree, and the `gen_ai.*` semantic attributes (token counts, model names, provider) are all standard OpenTelemetry GenAI semantic conventions. They render correctly in any backend that supports OTLP ingestion and the GenAI semconv registry.
-- **Langfuse-specific and won't transfer.** The `langfuse.session.id`, `langfuse.trace.name`, and `langfuse.trace.tags` attributes are how Langfuse drives its Sessions UI, conversation rollups, and LLM-aware cost panels. On a generic backend `langfuse.session.id` is just a string attribute. To recreate Sessions-style grouping you would filter traces by that attribute, or restructure to use the backend's native session/grouping concept (Datadog's `session.id`, Honeycomb's parent-id chains, etc.).
-
-**Propagate session attributes onto every span.** Kong's child spans share the `trace_id` of the demo's `voice-turn` root, but they do not carry the `langfuse.session.id` attribute themselves. For trace-level Session grouping in Langfuse this is sufficient: Langfuse only needs the attribute on the root. To filter or aggregate *individual* observations by session (for example, a per-span cost panel grouped by session), use OpenTelemetry's [`BaggageSpanProcessor`](https://opentelemetry.io/docs/languages/python/) on the demo side to copy `session.id` into baggage and have it propagated on outbound HTTP. Kong does not natively read OTel baggage onto its emitted spans, so a complete per-span propagation also requires either a Kong Plugin extension that reads the baggage header and stamps it as a span attribute, or a templating Plugin that maps a custom HTTP header onto the OTel span attributes.
-
-**Swap key-auth for SSO.** Replace the Key Auth Plugin with [OpenID Connect](/plugins/openid-connect/) when voice agents are run by humans on managed devices and you need per-user identity, JWT claims, or short-lived tokens. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) is an end-to-end example with Okta. Drop the `voice-agent` Consumer, point Kong at your IdP's issuer URL, and let `consumer_claim` map JWT subjects onto Kong Consumers automatically.
-
-**Add per-hop rate limiting.** Attach [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) to individual Services to enforce separate token budgets for STT, LLM, and TTS. This prevents a runaway LLM prompt from consuming the entire pipeline's token quota. Configure `llm_providers` per Service to track token usage against provider-specific limits.
-
-**Replace STT or TTS providers.** Update the STT or TTS Service target to use a different provider without changing the LLM configuration or the observability pipeline. Switch from OpenAI Whisper to a self-hosted speech model by changing `model.provider` and `model.options.upstream_url` on the STT target. The `gen_ai.*` span attributes and Prometheus labels update automatically to reflect the new provider.
-
-**Add Prometheus metrics dashboards.** Kong emits AI-specific Prometheus metrics (`ai_llm_requests_total`, `ai_llm_cost_total`, `ai_llm_tokens_total`, `ai_llm_provider_latency`) with a `request_mode` label that distinguishes `oneshot`, `stream`, and `realtime` traffic. Import the [{{site.ai_gateway_name}} Grafana dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/) for pre-built cost, latency, and throughput panels across all three pipeline hops.
-
-**Explore realtime speech-to-speech.** For latency-sensitive applications where per-hop observability is less critical, the AI Proxy Advanced Plugin supports `route_type: realtime/v1/realtime` with `genai_category: realtime/generation` for OpenAI Realtime connections. Realtime mode collapses the three-hop pipeline into a single persistent WebSocket, trading the per-hop waterfall view for significantly lower turn latency. Kong tracks realtime traffic with the `request_mode=realtime` Prometheus label.
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Switch the LLM provider"
+    how: "Select a different provider tab in [Apply the Kong configuration](#apply-the-kong-configuration) and re-apply. The STT and TTS AI Models and the agent's code don't change."
+  - variation: "Replace the STT or TTS provider"
+    how: "Add an AI Model Provider for the new service and point the STT or TTS AI Model's target at it. See the [AI Model reference](/ai-gateway/entities/ai-model/) for the capabilities."
+  - variation: "Send traces to another backend"
+    how: "Change `LANGFUSE_OTLP_ENDPOINT` and `LANGFUSE_AUTH_HEADER` to point at any OTLP/HTTP backend, and change the demo's exporter the same way. The `langfuse.*` attributes are specific to Langfuse."
+  - variation: "Put the session ID on every span"
+    how: "Langfuse filters and aggregations work more reliably when each span carries `langfuse.session.id`. See [Propagating trace attributes to all spans](https://langfuse.com/integrations/native/opentelemetry#propagating-attributes) in the Langfuse documentation."
+  - variation: "Add per-hop token limits"
+    how: "Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to the LLM AI Model. See the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+  - variation: "Authenticate users with an identity provider"
+    how: "Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) and map JWT claims to AI Consumers. The AI Models and AI Model Providers don't change. See the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/) for an example with Okta."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's `select_tags` and kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the control plane from Konnect:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
-export KONNECT_CONTROL_PLANE_NAME='voice-ai-observability-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
+export KONNECT_CONTROL_PLANE_NAME='voice-ai-observability-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```

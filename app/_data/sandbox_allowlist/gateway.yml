@@ -1,0 +1,881 @@
+- kind: environment
+  mode: strict
+  groups:
+    - id: bit
+      names:
+        - name: bit.arshift
+        - name: bit.band
+        - name: bit.bnot
+        - name: bit.bor
+        - name: bit.bswap
+        - name: bit.bxor
+        - name: bit.lshift
+        - name: bit.rol
+        - name: bit.ror
+        - name: bit.rshift
+        - name: bit.tobit
+        - name: bit.tohex
+    - id: coroutine
+      names:
+        - name: coroutine.create
+        - name: coroutine.resume
+        - name: coroutine.running
+        - name: coroutine.status
+        - name: coroutine.wrap
+        - name: coroutine.yield
+    - id: globals
+      names:
+        - name: _VERSION
+        - name: assert
+        - name: error
+        - name: ipairs
+        - name: next
+        - name: pairs
+        - name: pcall
+        - name: print
+        - name: select
+        - name: tonumber
+        - name: tostring
+        - name: type
+        - name: unpack
+        - name: xpcall
+    - id: io
+      names:
+        - name: io.type
+    - id: jit
+      names:
+        - name: jit.os
+        - name: jit.arch
+        - name: jit.version
+        - name: jit.version_num
+    - id: kong
+      names:
+        - name: kong.default_workspace
+        - name: kong.version
+        - name: kong.version_num
+    - id: kong.client
+      names:
+        - name: kong.client.authenticate
+        - name: kong.client.authenticate_consumer_group_by_consumer_id
+        - name: kong.client.get_consumer
+        - name: kong.client.get_consumer_group
+        - name: kong.client.get_consumer_groups
+        - name: kong.client.get_credential
+        - name: kong.client.get_forwarded_ip
+        - name: kong.client.get_forwarded_port
+        - name: kong.client.get_ip
+        - name: kong.client.get_port
+        - name: kong.client.get_protocol
+        - name: kong.client.load_consumer
+        - name: kong.client.set_authenticated_consumer_group
+        - name: kong.client.set_authenticated_consumer_groups
+        - name: kong.client.set_token
+        - name: kong.client.get_token
+        - name: kong.client.get_jwt_token_header
+        - name: kong.client.get_jwt_token_payload
+        - name: kong.client.get_identity_realm_source
+          min_version: "3.15"
+        - name: kong.client.set_identity_realm_source
+          min_version: "3.15"
+        - name: kong.client.get_principal
+          min_version: "3.16"
+    - id: kong.cluster
+      names:
+        - name: kong.cluster.get_id
+    - id: kong.ctx
+      names:
+        - name: kong.ctx.shared[*]
+        - name: kong.ctx.plugin[*]
+    - id: kong.ip
+      names:
+        - name: kong.ip.is_trusted
+    - id: kong.jwe
+      names:
+        - name: kong.jwe.decode
+        - name: kong.jwe.decrypt
+        - name: kong.jwe.encrypt
+    - id: kong.log
+      names:
+        - name: kong.log
+        - name: kong.log.alert
+        - name: kong.log.crit
+        - name: kong.log.debug
+        - name: kong.log.emerg
+        - name: kong.log.err
+        - name: kong.log.info
+        - name: kong.log.inspect
+        - name: kong.log.notice
+        - name: kong.log.serialize
+        - name: kong.log.set_serialize_value
+        - name: kong.log.warn
+        - name: kong.log.deprecation
+        - name: kong.log.deprecation.write
+    - id: kong.metrics
+      names:
+        - name: kong.metrics.counter
+          min_version: "3.16"
+        - name: kong.metrics.gauge
+          min_version: "3.16"
+        - name: kong.metrics.histogram
+          min_version: "3.16"
+        - name: kong.metrics.VALUE_TYPE
+          min_version: "3.16"
+    - id: kong.nginx
+      names:
+        - name: kong.nginx.get_subsystem
+    - id: kong.node
+      names:
+        - name: kong.node.get_hostname
+        - name: kong.node.get_id
+    - id: kong.plugin
+      names:
+        - name: kong.plugin.get_id
+    - id: kong.request
+      names:
+        - name: kong.request.get_body
+        - name: kong.request.get_forwarded_host
+        - name: kong.request.get_forwarded_path
+        - name: kong.request.get_forwarded_port
+        - name: kong.request.get_forwarded_prefix
+        - name: kong.request.get_forwarded_scheme
+        - name: kong.request.get_header
+        - name: kong.request.get_headers
+        - name: kong.request.get_host
+        - name: kong.request.get_http_version
+        - name: kong.request.get_method
+        - name: kong.request.get_path
+        - name: kong.request.get_path_with_query
+        - name: kong.request.get_port
+        - name: kong.request.get_query
+        - name: kong.request.get_query_arg
+        - name: kong.request.get_raw_body
+        - name: kong.request.get_raw_path
+        - name: kong.request.get_raw_query
+        - name: kong.request.get_scheme
+        - name: kong.request.get_start_time
+        - name: kong.request.get_uri_captures
+        - name: kong.request.get_raw_headers
+          min_version: "3.15"
+        - name: kong.request.get_id
+          min_version: "3.15"
+        - name: kong.request.get_raw_forwarded_path
+          min_version: "3.15"
+    - id: kong.response
+      names:
+        - name: kong.response.add_header
+        - name: kong.response.clear_header
+        - name: kong.response.error
+        - name: kong.response.exit
+        - name: kong.response.get_header
+        - name: kong.response.get_headers
+        - name: kong.response.get_raw_body
+        - name: kong.response.get_source
+        - name: kong.response.get_status
+        - name: kong.response.set_header
+        - name: kong.response.set_headers
+        - name: kong.response.set_raw_body
+        - name: kong.response.set_status
+    - id: kong.router
+      names:
+        - name: kong.router.get_route
+          min_version: "3.15"
+        - name: kong.router.get_service
+          min_version: "3.15"
+    - id: kong.service.request
+      names:
+        - name: kong.service.request.add_header
+        - name: kong.service.request.clear_header
+        - name: kong.service.request.clear_query_arg
+        - name: kong.service.request.enable_buffering
+        - name: kong.service.request.set_authentication_headers
+        - name: kong.service.request.set_body
+        - name: kong.service.request.set_header
+        - name: kong.service.request.set_headers
+        - name: kong.service.request.set_method
+        - name: kong.service.request.set_path
+        - name: kong.service.request.set_query
+        - name: kong.service.request.set_raw_body
+        - name: kong.service.request.set_raw_query
+        - name: kong.service.request.set_scheme
+    - id: kong.service.response
+      names:
+        - name: kong.service.response.get_body
+        - name: kong.service.response.get_header
+        - name: kong.service.response.get_headers
+        - name: kong.service.response.get_raw_body
+        - name: kong.service.response.get_status
+    - id: kong.table
+      names:
+        - name: kong.table.clear
+        - name: kong.table.merge
+        - name: kong.table.new
+          min_version: "3.15"
+    - id: kong.telemetry
+      names:
+        - name: kong.telemetry.log
+    - id: kong.tracing
+      names:
+        - name: kong.tracing.active_span
+        - name: kong.tracing.create_span
+        - name: kong.tracing.get_probability_sampling_decision
+        - name: kong.tracing.get_root_span
+        - name: kong.tracing.get_sampling_decision
+        - name: kong.tracing.get_spans
+        - name: kong.tracing.init_spans
+        - name: kong.tracing.link_span
+        - name: kong.tracing.process_span
+        - name: kong.tracing.set_active_span
+        - name: kong.tracing.set_should_sample
+        - name: kong.tracing.start_span
+    - id: math
+      names:
+        - name: math.abs
+        - name: math.acos
+        - name: math.asin
+        - name: math.atan
+        - name: math.atan2
+        - name: math.ceil
+        - name: math.cos
+        - name: math.cosh
+        - name: math.deg
+        - name: math.exp
+        - name: math.floor
+        - name: math.fmod
+        - name: math.frexp
+        - name: math.huge
+        - name: math.ldexp
+        - name: math.log
+        - name: math.log10
+        - name: math.max
+        - name: math.min
+        - name: math.modf
+        - name: math.pi
+        - name: math.pow
+        - name: math.rad
+        - name: math.random
+        - name: math.sin
+        - name: math.sinh
+        - name: math.sqrt
+        - name: math.tan
+        - name: math.tanh
+    - id: ngx
+      names:
+        - name: ngx.cookie_time
+        - name: ngx.crc32_long
+        - name: ngx.crc32_short
+        - name: ngx.decode_args
+        - name: ngx.decode_base64
+        - name: ngx.encode_args
+        - name: ngx.encode_base64
+        - name: ngx.eof
+        - name: ngx.escape_uri
+        - name: ngx.exit
+        - name: ngx.flush
+        - name: ngx.get_phase
+        - name: ngx.get_raw_phase
+        - name: ngx.hmac_sha1
+        - name: ngx.http_time
+        - name: ngx.localtime
+        - name: ngx.log
+        - name: ngx.md5
+        - name: ngx.md5_bin
+        - name: ngx.now
+        - name: ngx.null
+        - name: ngx.parse_http_time
+        - name: ngx.print
+        - name: ngx.quote_sql_str
+        - name: ngx.redirect
+        - name: ngx.say
+        - name: ngx.send_headers
+        - name: ngx.sha1_bin
+        - name: ngx.sleep
+        - name: ngx.time
+        - name: ngx.today
+        - name: ngx.unescape_uri
+        - name: ngx.update_time
+        - name: ngx.utctime
+    - id: ngx (constants)
+      names:
+        - name: ngx.AGAIN
+        - name: ngx.ALERT
+        - name: ngx.CRIT
+        - name: ngx.DEBUG
+        - name: ngx.DECLINED
+        - name: ngx.DONE
+        - name: ngx.EMERG
+        - name: ngx.ERR
+        - name: ngx.ERROR
+        - name: ngx.HTTP_ACCEPTED
+        - name: ngx.HTTP_BAD_GATEWAY
+        - name: ngx.HTTP_BAD_REQUEST
+        - name: ngx.HTTP_CLOSE
+        - name: ngx.HTTP_CONFLICT
+        - name: ngx.HTTP_CONTINUE
+        - name: ngx.HTTP_COPY
+        - name: ngx.HTTP_CREATED
+        - name: ngx.HTTP_DELETE
+        - name: ngx.HTTP_FORBIDDEN
+        - name: ngx.HTTP_GATEWAY_TIMEOUT
+        - name: ngx.HTTP_GET
+        - name: ngx.HTTP_GONE
+        - name: ngx.HTTP_HEAD
+        - name: ngx.HTTP_ILLEGAL
+        - name: ngx.HTTP_INSUFFICIENT_STORAGE
+        - name: ngx.HTTP_INTERNAL_SERVER_ERROR
+        - name: ngx.HTTP_LOCK
+        - name: ngx.HTTP_METHOD_NOT_IMPLEMENTED
+        - name: ngx.HTTP_MKCOL
+        - name: ngx.HTTP_MOVE
+        - name: ngx.HTTP_MOVED_PERMANENTLY
+        - name: ngx.HTTP_MOVED_TEMPORARILY
+        - name: ngx.HTTP_NOT_ACCEPTABLE
+        - name: ngx.HTTP_NOT_ALLOWED
+        - name: ngx.HTTP_NOT_FOUND
+        - name: ngx.HTTP_NOT_IMPLEMENTED
+        - name: ngx.HTTP_NOT_MODIFIED
+        - name: ngx.HTTP_NO_CONTENT
+        - name: ngx.HTTP_OK
+        - name: ngx.HTTP_OPTIONS
+        - name: ngx.HTTP_PARTIAL_CONTENT
+        - name: ngx.HTTP_PATCH
+        - name: ngx.HTTP_PAYMENT_REQUIRED
+        - name: ngx.HTTP_PERMANENT_REDIRECT
+        - name: ngx.HTTP_POST
+        - name: ngx.HTTP_PROPFIND
+        - name: ngx.HTTP_PROPPATCH
+        - name: ngx.HTTP_PUT
+        - name: ngx.HTTP_REQUEST_TIMEOUT
+        - name: ngx.HTTP_SEE_OTHER
+        - name: ngx.HTTP_SERVICE_UNAVAILABLE
+        - name: ngx.HTTP_SPECIAL_RESPONSE
+        - name: ngx.HTTP_SWITCHING_PROTOCOLS
+        - name: ngx.HTTP_TEMPORARY_REDIRECT
+        - name: ngx.HTTP_TOO_MANY_REQUESTS
+        - name: ngx.HTTP_TRACE
+        - name: ngx.HTTP_UNAUTHORIZED
+        - name: ngx.HTTP_UNLOCK
+        - name: ngx.HTTP_UPGRADE_REQUIRED
+        - name: ngx.HTTP_VERSION_NOT_SUPPORTED
+        - name: ngx.INFO
+        - name: ngx.NOTICE
+        - name: ngx.OK
+        - name: ngx.STDERR
+        - name: ngx.WARN
+    - id: ngx (fields)
+      names:
+        - name: ngx.arg[*]
+        - name: ngx.ctx[*]
+        - name: ngx.header[*]
+        - name: ngx.headers_sent
+        - name: ngx.is_subrequest
+        - name: ngx.status
+        - name: ngx.var[*]
+    - id: ngx.config
+      names:
+        - name: ngx.config.nginx_version
+        - name: ngx.config.ngx_lua_version
+        - name: ngx.config.subsystem
+    - id: ngx.re
+      names:
+        - name: ngx.re.find
+        - name: ngx.re.gmatch
+        - name: ngx.re.gsub
+        - name: ngx.re.match
+        - name: ngx.re.sub
+    - id: ngx.req
+      names:
+        - name: ngx.req.append_body
+        - name: ngx.req.clear_header
+        - name: ngx.req.discard_body
+        - name: ngx.req.finish_body
+        - name: ngx.req.get_body_data
+        - name: ngx.req.get_headers
+        - name: ngx.req.get_method
+        - name: ngx.req.get_post_args
+        - name: ngx.req.get_uri_args
+        - name: ngx.req.http_version
+        - name: ngx.req.init_body
+        - name: ngx.req.is_internal
+        - name: ngx.req.raw_header
+        - name: ngx.req.read_body
+        - name: ngx.req.set_body_data
+        - name: ngx.req.set_header
+        - name: ngx.req.set_method
+        - name: ngx.req.set_uri
+        - name: ngx.req.set_uri_args
+        - name: ngx.req.socket
+        - name: ngx.req.start_time
+    - id: ngx.resp
+      names:
+        - name: ngx.resp.get_headers
+    - id: ngx.worker
+      names:
+        - name: ngx.worker.count
+        - name: ngx.worker.exiting
+        - name: ngx.worker.id
+        - name: ngx.worker.pid
+        - name: ngx.worker.pids
+    - id: os
+      names:
+        - name: os.clock
+        - name: os.date
+        - name: os.difftime
+        - name: os.time
+    - id: string
+      names:
+        - name: string.byte
+        - name: string.char
+        - name: string.find
+        - name: string.format
+        - name: string.gmatch
+        - name: string.gsub
+        - name: string.len
+        - name: string.lower
+        - name: string.match
+        - name: string.rep
+        - name: string.reverse
+        - name: string.sub
+        - name: string.upper
+    - id: table
+      names:
+        - name: table.clear
+        - name: table.clone
+        - name: table.concat
+        - name: table.foreach
+        - name: table.foreachi
+        - name: table.getn
+        - name: table.insert
+        - name: table.isarray
+        - name: table.isempty
+        - name: table.maxn
+        - name: table.move
+        - name: table.new
+        - name: table.nkeys
+        - name: table.pack
+        - name: table.remove
+        - name: table.sort
+        - name: table.unpack
+- kind: environment
+  mode: lax
+  groups:
+    - id: kong.cache
+      names:
+        - name: kong.cache:get
+        - name: kong.cache:get_bulk
+        - name: kong.cache:probe
+        - name: kong.cache:invalidate
+        - name: kong.cache:invalidate_local
+        - name: kong.cache:safe_set
+        - name: kong.cache:renew
+    - id: kong.client
+      names:
+        - name: kong.client.get_aws_vpce_id
+    - id: kong.client.tls
+      names:
+        - name: kong.client.tls.disable_session_reuse
+        - name: kong.client.tls.get_full_client_certificate_chain
+        - name: kong.client.tls.request_client_certificate
+        - name: kong.client.tls.set_client_verify
+    - id: kong.configuration
+      names:
+        - name: kong.configuration[*]
+    - id: kong.db.certificates
+      names:
+        - name: kong.db.certificates:cache_key
+        - name: kong.db.certificates:select
+        - name: kong.db.certificates:select_by_cache_key
+    - id: kong.db.consumers
+      names:
+        - name: kong.db.consumers:cache_key
+        - name: kong.db.consumers:select
+        - name: kong.db.consumers:select_by_cache_key
+        - name: kong.db.consumers:select_by_custom_id
+        - name: kong.db.consumers:select_by_username
+        - name: kong.db.consumers:select_by_username_ignore_case
+    - id: kong.db.keys
+      names:
+        - name: kong.db.keys:cache_key
+        - name: kong.db.keys:select
+        - name: kong.db.keys:select_by_cache_key
+        - name: kong.db.keys:select_by_name
+    - id: kong.db.plugins
+      names:
+        - name: kong.db.plugins:cache_key
+        - name: kong.db.plugins:select
+        - name: kong.db.plugins:select_by_cache_key
+        - name: kong.db.plugins:select_by_instance_name
+    - id: kong.db.routes
+      names:
+        - name: kong.db.routes:cache_key
+        - name: kong.db.routes:select
+        - name: kong.db.routes:select_by_cache_key
+        - name: kong.db.routes:select_by_name
+    - id: kong.db.services
+      names:
+        - name: kong.db.services:cache_key
+        - name: kong.db.services:select
+        - name: kong.db.services:select_by_cache_key
+        - name: kong.db.services:select_by_name
+    - id: kong.db.snis
+      names:
+        - name: kong.db.snis:cache_key
+        - name: kong.db.snis:select
+        - name: kong.db.snis:select_by_cache_key
+        - name: kong.db.snis:select_by_name
+    - id: kong.db.targets
+      names:
+        - name: kong.db.targets:cache_key
+        - name: kong.db.targets:select
+        - name: kong.db.targets:select_by_cache_key
+        - name: kong.db.targets:select_by_target
+    - id: kong.db.upstreams
+      names:
+        - name: kong.db.upstreams:cache_key
+        - name: kong.db.upstreams:select
+        - name: kong.db.upstreams:select_by_cache_key
+        - name: kong.db.upstreams:select_by_name
+    - id: kong.dns
+      names:
+        - name: kong.dns.resolve
+        - name: kong.dns.toip
+    - id: kong.nginx
+      names:
+        - name: kong.nginx.get_statistics
+    - id: kong.node
+      names:
+        - name: kong.node.get_memory_stats
+    - id: kong.router
+      names:
+        - name: kong.router.get_route
+          max_version: "3.14"
+        - name: kong.router.get_service
+          max_version: "3.14"
+    - id: kong.service
+      names:
+        - name: kong.service.enable_recording_upstream_ssl
+        - name: kong.service.set_retries
+        - name: kong.service.set_target
+        - name: kong.service.set_target_retry_callback
+        - name: kong.service.set_timeouts
+        - name: kong.service.set_tls_cert_key
+        - name: kong.service.set_tls_verify
+        - name: kong.service.set_tls_verify_depth
+        - name: kong.service.set_tls_verify_store
+        - name: kong.service.set_upstream
+    - id: kong.vault
+      names:
+        - name: kong.vault.get
+        - name: kong.vault.is_reference
+        - name: kong.vault.parse_reference
+        - name: kong.vault.try
+        - name: kong.vault.update
+    - id: kong.websocket.client
+      names:
+        - name: kong.websocket.client.close
+        - name: kong.websocket.client.drop_frame
+        - name: kong.websocket.client.get_frame
+        - name: kong.websocket.client.set_frame_data
+        - name: kong.websocket.client.set_max_payload_size
+        - name: kong.websocket.client.set_status
+    - id: kong.websocket.upstream
+      names:
+        - name: kong.websocket.upstream.close
+        - name: kong.websocket.upstream.drop_frame
+        - name: kong.websocket.upstream.get_frame
+        - name: kong.websocket.upstream.set_frame_data
+        - name: kong.websocket.upstream.set_max_payload_size
+        - name: kong.websocket.upstream.set_status
+    - id: ngx.config
+      names:
+        - name: ngx.config.debug
+    - id: ngx.location
+      names:
+        - name: ngx.location.capture
+        - name: ngx.location.capture_multi
+    - id: ngx.req
+      names:
+        - name: ngx.req.get_body_file
+        - name: ngx.req.set_body_file
+    - id: ngx.socket
+      names:
+        - name: ngx.socket.connect
+        - name: ngx.socket.stream
+        - name: ngx.socket.tcp
+        - name: ngx.socket.udp
+    - id: ngx.thread
+      names:
+        - name: ngx.thread.kill
+        - name: ngx.thread.spawn
+        - name: ngx.thread.wait
+- kind: require
+  mode: strict
+  groups:
+    - id: argon2
+      names:
+        - name: argon2
+    - id: bcrypt
+      names:
+        - name: bcrypt
+    - id: binaryheap
+      names:
+        - name: binaryheap
+          min_version: "3.15"
+    - id: bit
+      names:
+        - name: bit
+    - id: cjson
+      names:
+        - name: cjson
+        - name: cjson.safe
+    - id: ffi-zlib
+      names:
+        - name: ffi-zlib
+          min_version: "3.15"
+    - id: kong
+      names:
+        - name: kong.constants
+        - name: kong.meta
+    - id: kong.tools
+      names:
+        - name: kong.tools.cjson
+        - name: kong.tools.gzip
+        - name: kong.tools.ip
+        - name: kong.tools.jose
+        - name: kong.tools.json
+        - name: kong.tools.mime_type
+        - name: kong.tools.rand
+        - name: kong.tools.sha1
+        - name: kong.tools.sha256
+        - name: kong.tools.string
+        - name: kong.tools.table
+        - name: kong.tools.time
+        - name: kong.tools.timestamp
+        - name: kong.tools.uri
+        - name: kong.tools.utils
+        - name: kong.tools.uuid
+        - name: kong.tools.yield
+        - name: kong.tools.header
+          min_version: "3.15"
+        - name: kong.tools.header-mapping
+          min_version: "3.15"
+        - name: kong.tools.hostname
+          min_version: "3.15"
+        - name: kong.tools.stack
+          min_version: "3.15"
+        - name: kong.tools.glob
+          min_version: "3.15"
+    - id: lua_pack
+      names:
+        - name: lua_pack
+          min_version: "3.15"
+    - id: luaxxhash
+      names:
+        - name: luaxxhash
+          min_version: "3.15"
+    - id: lxp
+      names:
+        - name: lxp
+          min_version: "3.15"
+    - id: lyaml
+      names:
+        - name: lyaml
+    - id: MessagePack
+      names:
+        - name: MessagePack
+          min_version: "3.15"
+    - id: multipart
+      names:
+        - name: multipart
+          min_version: "3.15"
+    - id: ngx
+      names:
+        - name: ngx.base64
+        - name: ngx.re
+        - name: ngx.req
+        - name: ngx.resp
+        - name: ngx.semaphore
+    - id: pl
+      names:
+        - name: pl.stringx
+        - name: pl.tablex
+        - name: pl.url
+          min_version: "3.15"
+    - id: resty
+      names:
+        - name: resty.aes
+        - name: resty.lock
+        - name: resty.md5
+        - name: resty.random
+        - name: resty.sha
+        - name: resty.sha1
+        - name: resty.sha224
+        - name: resty.sha256
+        - name: resty.sha384
+        - name: resty.sha512
+        - name: resty.string
+        - name: resty.upload
+        - name: resty.core.time
+        - name: resty.lrucache
+        - name: resty.lrucache.pureffi
+        - name: resty.ada
+        - name: resty.ada.search
+        - name: resty.cookie
+        - name: resty.ipmatcher
+        - name: resty.jit-uuid
+        - name: resty.jwt
+        - name: resty.evp
+        - name: resty.jwt-validators
+        - name: resty.hmac
+        - name: resty.passwdqc
+        - name: resty.snappy
+          min_version: "3.15"
+    - id: resty.openssl
+      names:
+        - name: resty.openssl
+        - name: resty.openssl.asn1
+        - name: resty.openssl.bn
+        - name: resty.openssl.cipher
+        - name: resty.openssl.ctx
+        - name: resty.openssl.dh
+        - name: resty.openssl.digest
+        - name: resty.openssl.ec
+        - name: resty.openssl.ecx
+        - name: resty.openssl.err
+        - name: resty.openssl.hmac
+        - name: resty.openssl.kdf
+        - name: resty.openssl.mac
+        - name: resty.openssl.objects
+        - name: resty.openssl.param
+        - name: resty.openssl.pkcs12
+        - name: resty.openssl.pkey
+        - name: resty.openssl.provider
+        - name: resty.openssl.rand
+        - name: resty.openssl.rsa
+        - name: resty.openssl.ssl
+        - name: resty.openssl.ssl_ctx
+        - name: resty.openssl.stack
+        - name: resty.openssl.version
+        - name: resty.openssl.x509
+        - name: resty.openssl.x509.altname
+        - name: resty.openssl.x509.chain
+        - name: resty.openssl.x509.crl
+        - name: resty.openssl.x509.csr
+        - name: resty.openssl.x509.name
+        - name: resty.openssl.x509.revoked
+        - name: resty.openssl.x509.store
+        - name: resty.openssl.x509.extension
+        - name: resty.openssl.x509.extension.dist_points
+        - name: resty.openssl.x509.extension.info_access
+    - id: socket
+      names:
+        - name: socket.url
+    - id: string
+      names:
+        - name: string.buffer
+    - id: table
+      names:
+        - name: table.clear
+        - name: table.clone
+        - name: table.isarray
+        - name: table.isempty
+        - name: table.new
+        - name: table.nkeys
+    - id: tablepool
+      names:
+        - name: tablepool
+    - id: version
+      names:
+        - name: version
+    - id: xml2lua
+      names:
+        - name: xml2lua
+          min_version: "3.15"
+    - id: xmlua
+      names:
+        - name: xmlua
+- kind: require
+  mode: lax
+  groups:
+    - id: kong
+      names:
+        - name: kong.concurrency
+    - id: kong.enterprise_edition
+      names:
+        - name: kong.enterprise_edition.tools.redis.v2
+        - name: kong.enterprise_edition.tools.redis.v2.config_utils
+          min_version: "3.15"
+    - id: kong.tools
+      names:
+        - name: kong.tools.oauth-client
+          min_version: "3.15"
+        - name: kong.tools.solace
+          min_version: "3.15"
+        - name: kong.tools.redis.config_utils
+          min_version: "3.15"
+    - id: pgmoon
+      names:
+        - name: pgmoon
+        - name: pgmoon.arrays
+        - name: pgmoon.hstore
+    - id: resty
+      names:
+        - name: resty.memcached
+        - name: resty.mysql
+        - name: resty.dns.resolver
+        - name: resty.jq
+        - name: resty.session
+    - id: resty.aws
+      names:
+        - name: resty.aws
+        - name: resty.aws.utils
+        - name: resty.aws.config
+        - name: resty.aws.request.validate
+        - name: resty.aws.request.build
+        - name: resty.aws.request.sign
+        - name: resty.aws.request.execute
+        - name: resty.aws.request.signatures.utils
+        - name: resty.aws.request.signatures.v4
+        - name: resty.aws.request.signatures.presign
+        - name: resty.aws.request.signatures.none
+        - name: resty.aws.service.rds.signer
+        - name: resty.aws.credentials.Credentials
+        - name: resty.aws.credentials.ChainableTemporaryCredentials
+        - name: resty.aws.credentials.CredentialProviderChain
+        - name: resty.aws.credentials.EC2MetadataCredentials
+        - name: resty.aws.credentials.EnvironmentCredentials
+        - name: resty.aws.credentials.SharedFileCredentials
+        - name: resty.aws.credentials.RemoteCredentials
+        - name: resty.aws.credentials.TokenFileWebIdentityCredentials
+        - name: resty.aws.raw-api.region_config_data
+    - id: resty.azure
+      names:
+        - name: resty.azure
+        - name: resty.azure.config
+        - name: resty.azure.utils
+        - name: resty.azure.credentials.Credentials
+        - name: resty.azure.credentials.ClientCredentials
+        - name: resty.azure.credentials.WorkloadIdentityCredentials
+        - name: resty.azure.credentials.ManagedIdentityCredentials
+        - name: resty.azure.api.keyvault
+        - name: resty.azure.api.secrets
+        - name: resty.azure.api.keys
+        - name: resty.azure.api.certificates
+        - name: resty.azure.api.auth
+        - name: resty.azure.api.request.build
+        - name: resty.azure.api.request.execute
+        - name: resty.azure.api.response.handle
+    - id: resty.gcp
+      names:
+        - name: resty.gcp
+        - name: resty.gcp.request.credentials.accesstoken
+        - name: resty.gcp.request.discovery
+    - id: resty.http
+      names:
+        - name: resty.http
+        - name: resty.http_connect
+        - name: resty.http_headers
+    - id: resty.redis
+      names:
+        - name: resty.redis
+        - name: resty.rediscluster
+        - name: resty.xmodem

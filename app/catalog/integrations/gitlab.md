@@ -25,10 +25,13 @@ related_resources:
     url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
-  - text: Import and map self-managed GitLab resources in {{site.konnect_catalog}}
-    url: /how-to/install-and-map-gitlab-resources/
   - text: Import and map SaaS GitLab resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-gitlab-saas-resources/
+faqs:
+  - q: |
+      {% include faqs/gitlab-self-managed-removed.md section='question' %}
+    a: |
+      {% include faqs/gitlab-self-managed-removed.md section='answer' %}
 discovery_support: true
 bindable_entities: "Projects"
 ---
@@ -40,40 +43,19 @@ The GitLab integration allows you to associate your {{site.konnect_catalog}} Cla
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see the following:
-* [Import and map self-managed GitLab resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-gitlab-resources/)
-* [Import and map SaaS GitLab resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-gitlab-saas-resources/)
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map SaaS GitLab resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-gitlab-saas-resources/).
 
 ## Prerequisites
 
 * You need the [Owner GitLab role](https://docs.gitlab.com/ee/user/permissions.html) to authorize the integration. This is required for event ingestion.
-* Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are supported at this time.
-* If you're using a self-hosted GitLab instance, it must be accessible from the public internet or is otherwise reachable by {{site.konnect_short_name}}. For more information, review the {{site.konnect_short_name}} hostnames [documentation](/konnect-platform/network/#hostnames)
+* Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are supported. Self-managed GitLab isn't supported.
 
 ## Authorize the GitLab integration
-{% navtabs "Authorize" %}
-{% navtab "Self-Managed" %}
-To use the GitLab integration in a self-hosted environment:
 
-1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance. This is required to enable OAuth access for your organization.
-   * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integrations/gitlab`
-   * Make sure the application has the `api` scope.
-1. In the {{site.konnect_short_name}} UI, navigate to the GitLab integration.
-1. In the **GitLab API Base URL** field, enter the full URL to your GitLab API, ending in `/api/v4`.  
-   For example: `https://gitlab.example.com/api/v4`
-1. Fill out the authorization fields using the values from your GitLab OAuth application:
-   * Application ID: The Application ID from your GitLab app
-   * Application Secret: The secret associated with your GitLab app
-   * Token Endpoint: `https://$GITLAB_HOST/oauth/token`
-   * Authorization Endpoint: `https://$GITLAB_HOST/oauth/authorize`
-1. Click **Authorize** to complete the connection.
-{% endnavtab %}
-{% navtab "SaaS" %}
 1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 1. Select **GitLab**, then **Install GitLab**.
 1. Click **Authorize**. 
-{% endnavtab %}
-{% endnavtabs %}
+
 ## Resources
 
 <!--vale off-->

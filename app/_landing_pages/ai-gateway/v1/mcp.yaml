@@ -133,7 +133,7 @@ rows:
                     This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
           - type: button
             config:
-              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
+              text: "Learn about MCP Registry"
               url: /catalog/mcp-registry/
 
   - header:

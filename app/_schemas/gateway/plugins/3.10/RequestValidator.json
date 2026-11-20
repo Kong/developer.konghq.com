@@ -12,6 +12,11 @@
           },
           "type": "array"
         },
+        "array_length_compat": {
+          "default": true,
+          "description": "If true, `minLength`/`maxLength` also apply to arrays using item count. Compatibility option for legacy schemas that use these keywords instead of `minItems`/`maxItems`.",
+          "type": "boolean"
+        },
         "body_schema": {
           "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
           "type": "string"
@@ -47,7 +52,7 @@
                 "type": "boolean"
               },
               "schema": {
-                "description": "Requred when `style` and `explode` are set. This is the schema defining the type used for the parameter. It is validated using `draft4` for JSON Schema draft 4 compliant validator. In addition to being a valid JSON Schema, the parameter schema MUST have a top-level `type` property to enable proper deserialization before validating.",
+                "description": "Required when `style` and `explode` are set. This is the schema defining the type used for the parameter. It is validated using `draft4` for JSON Schema draft 4 compliant validator. In addition to being a valid JSON Schema, the parameter schema MUST have a top-level `type` property to enable proper deserialization before validating.",
                 "type": "string"
               },
               "style": {
@@ -80,9 +85,13 @@
         },
         "version": {
           "default": "kong",
-          "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4` for using a JSON Schema Draft 4-compliant validator.",
+          "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
           "enum": [
+            "draft201909",
+            "draft202012",
             "draft4",
+            "draft6",
+            "draft7",
             "kong"
           ],
           "type": "string"

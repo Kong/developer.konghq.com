@@ -228,6 +228,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.16": [
+    {
+      "message": "Fixed an issue where a WebSocket handshake that never opened a connection drove `kong.websocket.server.active_connections` negative, reported a false duration and was not counted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the description of `kong.websocket.handshake.error.count` was ambiguous. It now states that the metric counts only protocol validation failures.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `kong.shared_dict.size` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",

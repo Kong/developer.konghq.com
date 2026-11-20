@@ -1,0 +1,26 @@
+name: datadog-default-metrics
+display_name: Datadog default metrics
+type: datadog
+title: 'Send all default metrics'
+description: 'Send all six default metrics to a Datadog agent with their default types.'
+extended_description: |
+  Send all six metrics to a Datadog agent with their default types.
+  The policy sends all metrics when you don't set `config.metrics`.
+weight: 700
+
+requirements:
+  - "A [Datadog agent](https://docs.datadoghq.com/getting_started/agent/#setup) running and reachable from the data plane"
+
+config:
+  host: ${datadog_host}
+  port: 8125
+
+variables:
+  datadog_host:
+    value: $DATADOG_HOST
+    description: The hostname or IP address of your Datadog agent.
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

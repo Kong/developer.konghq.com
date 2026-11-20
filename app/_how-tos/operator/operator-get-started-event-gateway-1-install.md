@@ -1,6 +1,6 @@
 ---
 title: Install {{site.operator_product_name}} for {{ site.event_gateway }}
-description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for {{ site.event_gateway }}.
+description: Install {{site.operator_product_name}} and prepare a Kubernetes cluster for {{ site.event_gateway }}, with either a {{site.konnect_short_name}} or an on-prem control plane.
 content_type: how_to
 permalink: /operator/get-started/event-gateway/install/
 
@@ -20,37 +20,79 @@ products:
   - operator
   
 min_version:
-  operator: '2.2'
+  operator: '2.4'
 
 works_on:
   - konnect
+  - on-prem
 
 prereqs:
+  show_works_on: true
   skip_product: true
+  operator:
+    on_prem_controllers: [GWADMIN, ONPREMEVENTGATEWAY]
+    skip_license: true
+  inline:
+    - title: A running Kubernetes cluster
+      position: before
+      include_content: prereqs/kubernetes/cluster
+      icon_url: /assets/icons/kubernetes.svg
+    - title: Helm
+      position: before
+      include_content: prereqs/helm
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "{{ site.event_gateway_short }} license"
+      topology: on-prem
+      include_content: /md/operator/event-gateway/prereqs/on-prem-cluster
+      icon_url: /assets/icons/kubernetes.svg
 
 tldr:
   q: How do I prepare a cluster for {{ site.event_gateway }} with {{site.operator_product_name}}?
-  a: Create the `kong` and `kafka` namespaces, install {{site.operator_product_name}}, then deploy a Kafka cluster for the {{ site.event_gateway_short }} examples.
+  a: |
+    Create the `kong` and `kafka` namespaces, install {{site.operator_product_name}}, then deploy a Kafka cluster for the {{ site.event_gateway_short }} examples.
+    For on-prem, also enable the `GWAdmin` and `OnPremEventGateway` controllers, store your {{ site.event_gateway_short }} license in a Secret, and create the control plane.
 
 tags:
   - install
   - helm
   - kafka
 
+faqs:
+  - q: What do I do if the on-prem {{ site.event_gateway }} control plane doesn't start?
+    a: |
+      The on-prem {{ site.event_gateway }} control plane validates its license itself, and doesn't start without a valid license.
+      The `LicenseProvisioned=True` condition on the `GWAdmin` only means that the license Secret is mounted.
+
+      Check the control plane logs:
+
+      ```bash
+      kubectl logs -n kong deployment/gw-admin
+      ```
+
+      Make sure that the Secret holds the {{ site.event_gateway_short }} license token with the `event_gateway` entitlement, not a {{ site.ee_product_name }} JSON license.
+
 related_resources:
   - text: "{{ site.event_gateway }} architecture"
     url: /event-gateway/architecture/
   - text: "{{ site.event_gateway }} with {{ site.operator_product_name }}"
-    url: /operator/konnect/event-gateway/
+    url: /operator/event-gateway/
   - text: Known limitations
     url: /event-gateway/known-limitations/
 ---
 
-This guide walks through a complete {{ site.event_gateway }} setup using {{site.operator_product_name}} and {{site.konnect_short_name}}.
+This guide walks through a complete {{ site.event_gateway }} setup using {{site.operator_product_name}}.
 
 By the end of the series, you will have:
 
-- a {{site.konnect_short_name}} {{ site.event_gateway_short }} control plane
+{% konnect %}
+content: |
+  - a {{site.konnect_short_name}} {{ site.event_gateway_short }} control plane
+{% endkonnect %}
+{% on_prem %}
+content: |
+  - an on-prem {{ site.event_gateway_short }} control plane that {{site.operator_product_name}} runs in your cluster
+{% endon_prem %}
+
 - an {{ site.event_gateway_short }} data plane in Kubernetes
 - a backend Kafka cluster
 - a virtual cluster, listener, and listener policies
@@ -73,6 +115,54 @@ kubectl create namespace kafka
 Install {{site.operator_product_name}} with Helm:
 
 {% include prereqs/products/operator.md raw=true v_maj=2 keg_install=true %}
+
+{% on_prem %}
+title: Create the control plane
+step: true
+content: |
+  With an on-prem control plane, {{ site.event_gateway }} data planes pull their configuration from a control plane in your cluster.
+  You deploy this control plane with a `GWAdmin` resource. For more information, see [On-prem control plane](/operator/event-gateway/#on-prem-control-plane).
+
+  1. Store your {{ site.event_gateway_short }} license in a Secret. {{site.operator_product_name}} only reads Secrets that have the `konghq.com/secret=true` label:
+
+     ```bash
+     kubectl create secret generic gw-admin-license -n kong \
+       --from-file=license=./event-gateway-license.jws
+     kubectl label secret gw-admin-license -n kong konghq.com/secret=true
+     ```
+     {: data-test-step="block" }
+
+  1. Create the control plane:
+
+     ```bash
+     echo '
+     apiVersion: gateway-operator.konghq.com/v1alpha1
+     kind: GWAdmin
+     metadata:
+       name: gw-admin
+       namespace: kong
+     spec:
+       license:
+         secretRef:
+           name: gw-admin-license
+           key: license
+     ' | kubectl apply -f -
+     ```
+     {: data-test-step="block" }
+
+  1. Wait for the control plane and its Pod to be ready:
+
+     ```bash
+     kubectl wait gwadmin/gw-admin -n kong \
+       --for=condition=Ready=True \
+       --timeout=5m
+
+     kubectl wait deployment/gw-admin -n kong \
+       --for=condition=Available=True \
+       --timeout=5m
+     ```
+     {: data-test-step="block" }
+{% endon_prem %}
 
 ## Install a Kafka cluster
 

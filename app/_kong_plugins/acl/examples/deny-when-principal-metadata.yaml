@@ -9,7 +9,7 @@ requirements:
 
 config:
   deny_when:
-    - "has(principal.metadata.status) && principal.metadata.status == \"suspended\""
+    - "principal.metadata != null && has(principal.metadata.status) && principal.metadata.status == \"suspended\""
 
 min_version:
   gateway: '3.16'

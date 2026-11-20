@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/tail/
   - text: Manage audit logs with kongctl
     url: /kongctl/audit-logs/
+  - text: kongctl get audit-logs
+    url: /kongctl/get/audit-logs/
+  - text: kongctl listen audit-logs
+    url: /kongctl/listen/audit-logs/
 ---
 
 Follow organization audit logs. To stream events from a webhook listener, use

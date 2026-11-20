@@ -1,0 +1,104 @@
+{
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "type": "string",
+          "description": "Directory name segment of the vault token endpoint."
+        },
+        "storage": {
+          "type": "object",
+          "properties": {
+            "current_version": {
+              "type": "string",
+              "description": "The version of the key in `keys` used to seal new credential envelopes. Rotation: add the new key under a new version, then point current_version at it -- older versions keep decrypting credentials sealed under them."
+            },
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "description": "Unique identifier of this key version, referenced by current_version."
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "PEM-encoded private key (EC or RSA) of this version of the gateway's credential key pair. Credentials are envelope-encrypted (per-credential DEK, A256GCM; the DEK is wrapped to the matching public key), so only this gateway can decrypt them.",
+                    "x-referenceable": true,
+                    "x-encrypted": true
+                  }
+                },
+                "required": [
+                  "key",
+                  "version"
+                ]
+              },
+              "description": "Versions of the gateway's credential key pair. Only the version named by current_version seals new envelopes; every version tried when decrypting."
+            },
+            "backend": {
+              "type": "string",
+              "enum": [
+                "konnect"
+              ],
+              "description": "'konnect': the encrypted credential blob lives in Kong Identity, no gateway-side store.",
+              "default": "konnect"
+            }
+          },
+          "required": [
+            "current_version",
+            "keys"
+          ],
+          "description": "Credential storage strategy. 'konnect' (default) keeps the gateway-hosted credential as an encrypted blob registered with Kong Identity."
+        }
+      },
+      "required": [
+        "directory",
+        "storage"
+      ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

@@ -90,6 +90,12 @@
     ]
   },
   {
+    "name": "ai-nvidia-nemo-guardrail",
+    "scopes": [
+      "models"
+    ]
+  },
+  {
     "name": "ai-prompt-compressor",
     "scopes": [
       "models",

@@ -10,12 +10,17 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT", "KONNECT_EVENT_GATEWAY_MIN_VERSION"];
+const PASSTHROUGH_VARIABLES = [
+  "KONNECT_DOMAIN",
+  "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT",
+  "KONNECT_EVENT_GATEWAY_MIN_VERSION",
+  "KONNECT_AI_GATEWAY_MIN_VERSION",
+];
 
 async function konnectRegion() {
   const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
   const fileContent = await fs.readFile(filePath, "utf8");
-  return yaml.load(fileContent).region;
+  return load(fileContent).region;
 }
 
 export async function getRuntimeConfig(deploymentModel, product) {
@@ -119,16 +124,23 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
+export function licenseRequired(deploymentModel) {
+  return deploymentModel === "on-prem";
+}
+
 export async function setupRuntime(runtimeConfig, docker) {
   const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
-  // Add gateway license
-  if (!process.env.KONG_LICENSE_DATA) {
-    throw new Error("Missing env variable KONG_LICENSE_DATA");
+  // On-prem gateways run under a Kong license; Konnect-managed data planes
+  // get their entitlement from Konnect.
+  if (licenseRequired(runtimeConfig.deploymentModel)) {
+    if (!process.env.KONG_LICENSE_DATA) {
+      throw new Error("Missing env variable KONG_LICENSE_DATA");
+    }
+    environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
   }
-  environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
     log(`Setting up ${deploymentModel}/${product} version: ${runtimeConfig.version}...`);
@@ -220,6 +232,13 @@ export async function resetRuntime(runtimeConfig, container) {
     for (const command of runtimeConfig.reset.commands) {
       await executeCommand(container, command);
     }
+  }
+}
+
+export async function provisionRuntime(runtimeConfig, container) {
+  log("Provisioning...");
+  for (const command of runtimeConfig.reset?.provision?.commands || []) {
+    await executeCommand(container, command);
   }
 }
 

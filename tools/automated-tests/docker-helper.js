@@ -3,10 +3,12 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 import {
-  parseExportAssignment,
+  parseExportAssignments,
   buildPersistCommand,
   base64EnvLine,
 } from "./instructions/export-assignment.js";
+import { resolveEnvVars } from "./instructions/env-vars.js";
+import { withTimeout } from "./instructions/command-timeout.js";
 
 const debugCmd = debug("debug:request");
 const debugLog = debug("debug:response");
@@ -68,7 +70,7 @@ export async function fetchImage(docker, imageName, log) {
   }
 }
 
-export async function executeCommand(container, cmd, displayCmd = cmd) {
+export async function executeCommand(container, cmd, displayCmd = cmd, timeoutMs) {
   return new Promise(async (resolve, reject) => {
     try {
       // Get decoded environment variables
@@ -87,42 +89,55 @@ export async function executeCommand(container, cmd, displayCmd = cmd) {
         Env: envArray,
       });
 
-      const result = await new Promise((resolve, reject) => {
-        execCommand.start({}, (err, stream) => {
-          // Extracted from https://github.com/apocas/dockerode/issues/736
-          let buffer = Buffer.alloc(0);
-          let output = "";
-          if (err) {
-            return reject(err);
-          }
-          stream.on("data", (chunk) => {
-            buffer = Buffer.concat([buffer, chunk]);
-
-            while (buffer.length >= 8) {
-              // Parse the header
-              const header = buffer.slice(0, 8);
-              const size = header.readUInt32BE(4); // Last 4 bytes indicate the payload size (big-endian)
-
-              // Check if the full frame is available
-              if (buffer.length < 8 + size) {
-                break; // Wait for more data if the payload is incomplete
-              }
-
-              // Extract the payload
-              const payload = buffer.slice(8, 8 + size).toString("utf-8");
-
-              // Append the payload to the appropriate stream
-              output += payload;
-              // Remove the processed frame from the buffer
-              buffer = buffer.slice(8 + size);
+      // Destroyed by the timeout below: a command that never exits (e.g.
+      // `kubectl delete` waiting on a namespace wedged in Terminating) keeps
+      // the exec stream open forever, and the stream's "end" event is the
+      // only thing that settles this promise.
+      let activeStream;
+      const result = await withTimeout(
+        new Promise((resolve, reject) => {
+          execCommand.start({}, (err, stream) => {
+            activeStream = stream;
+            // Extracted from https://github.com/apocas/dockerode/issues/736
+            let buffer = Buffer.alloc(0);
+            let output = "";
+            if (err) {
+              return reject(err);
             }
+            stream.on("data", (chunk) => {
+              buffer = Buffer.concat([buffer, chunk]);
+
+              while (buffer.length >= 8) {
+                // Parse the header
+                const header = buffer.slice(0, 8);
+                const size = header.readUInt32BE(4); // Last 4 bytes indicate the payload size (big-endian)
+
+                // Check if the full frame is available
+                if (buffer.length < 8 + size) {
+                  break; // Wait for more data if the payload is incomplete
+                }
+
+                // Extract the payload
+                const payload = buffer.slice(8, 8 + size).toString("utf-8");
+
+                // Append the payload to the appropriate stream
+                output += payload;
+                // Remove the processed frame from the buffer
+                buffer = buffer.slice(8 + size);
+              }
+            });
+            stream.on("end", function () {
+              debugLog(output);
+              return resolve(output);
+            });
           });
-          stream.on("end", function () {
-            debugLog(output);
-            return resolve(output);
-          });
-        });
-      });
+        }),
+        timeoutMs,
+        {
+          message: `Command timed out after ${timeoutMs}ms: ${displayCmd}`,
+          onTimeout: () => activeStream?.destroy?.(),
+        },
+      );
 
       const execInfo = await execCommand.inspect();
 
@@ -141,20 +156,28 @@ export async function executeCommand(container, cmd, displayCmd = cmd) {
   });
 }
 
-// Doc-sourced string commands (prereqs and steps). Commands that assign a
-// variable from a command substitution run in the throwaway exec, so the
-// variable would evaporate before the next step reads it. Wrap those so the
-// value is persisted to /env-vars.sh; the persistence contract lives in
-// instructions/export-assignment.js. Infra commands (runtime setup/reset/
-// cleanup, tests.yaml before/after) keep calling executeCommand directly, so
-// their behavior is unchanged.
+// Doc-sourced string commands (prereqs and steps). Every doc command runs
+// under errexit and pipefail (`set -eo pipefail` prepended as the first
+// line), so a failing middle command of a multi-line step or a failing left
+// side of a pipeline fails the whole step instead of being masked by the
+// last command's exit code. Failures still report the original doc command,
+// not the guarded script. Commands that assign a variable from a command
+// substitution run in the throwaway exec, so the variable would evaporate
+// before the next step reads it. Wrap those so the value is persisted to
+// /env-vars.sh; the persistence contract lives in
+// instructions/export-assignment.js (the guard line never matches the
+// assignment regex, so a failing assignment exits before anything is
+// persisted and its exit code propagates). Infra commands (runtime
+// setup/reset/cleanup, tests.yaml before/after) keep calling executeCommand
+// directly, so their behavior is unchanged.
 export async function executeDocCommand(container, cmd, exec = executeCommand) {
-  const name = parseExportAssignment(cmd);
-  if (!name) {
-    return exec(container, cmd);
+  const guarded = `set -eo pipefail\n${cmd}`;
+  const names = parseExportAssignments(guarded);
+  if (names.length === 0) {
+    return exec(container, guarded, cmd);
   }
   // Report failures against the original doc command, not the wrapped script.
-  return exec(container, buildPersistCommand(cmd, name), cmd);
+  return exec(container, buildPersistCommand(guarded, names), cmd);
 }
 
 export async function stopContainer(container) {
@@ -235,9 +258,21 @@ export async function setEnvVariable(container, name, value) {
   return;
 }
 
+// Marker separating the resolved environment from the raw /env-vars.sh content
+// in one exec's stdout, so the whole read stays a single round trip.
+const ENV_VARS_FILE_MARKER = "__ENV_VARS_FILE__";
+
 export async function getLiveEnv(container) {
   const readEnvVar = await container.exec({
-    Cmd: ["bash", "-c", "source /env-vars.sh && env"],
+    Cmd: [
+      "bash",
+      "-c",
+      // `env` gives the values bash resolved (last assignment wins); the file
+      // itself gives the write order resolveEnvVars needs to decide between a
+      // plain and a _BASE64 entry for the same name. See
+      // instructions/env-vars.js for why the order matters.
+      `source /env-vars.sh && { env; echo ${ENV_VARS_FILE_MARKER}; cat /env-vars.sh 2>/dev/null; }`,
+    ],
     AttachStdout: true,
     AttachStderr: true,
   });
@@ -265,33 +300,14 @@ export async function getLiveEnv(container) {
 
       stream.on("end", () => {
         if (stderr) return reject(new Error(stderr));
-        resolve(stdout.trim());
+        resolve(stdout);
       });
 
       stream.on("error", reject);
     });
   });
 
-  const env = {};
-  const base64Vars = [];
-  for (const envVar of output.split("\n")) {
-    const [name, ...rest] = envVar.split("=");
-    let value = rest.join("=");
+  const [envOutput, fileContent] = output.split(`${ENV_VARS_FILE_MARKER}\n`);
 
-    if (name.endsWith("_BASE64")) {
-      base64Vars.push([name.slice(0, -7), value]); // Remove _BASE64 suffix
-    } else {
-      env[name] = value;
-    }
-  }
-
-  // Apply decoded base64 values last so they always take priority over any
-  // stale plain-named value with the same key. `env`'s line order reflects
-  // bash's internal variable hash table, not insertion order, so a plain
-  // placeholder can appear after its _BASE64 counterpart and must not win.
-  for (const [originalName, value] of base64Vars) {
-    env[originalName] = Buffer.from(value, "base64").toString("utf-8");
-  }
-
-  return env;
+  return resolveEnvVars(envOutput?.trim() ?? "", fileContent);
 }

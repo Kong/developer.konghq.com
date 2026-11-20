@@ -1,0 +1,157 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "open3"
+require "socket"
+
+NETLIFY_BASE_PORT = 8888
+JEKYLL_BASE_PORT = 4000
+VITE_BASE_PORT = 3036
+LIVERELOAD_BASE_PORT = 35_729
+OFFSET_STEP = 10
+MAX_OFFSET = 190
+
+CLAIMS_DIR_NAME = "dev-port-claims"
+PORT_FILE_NAME = ".dev-ports"
+URL_FILE_RELATIVE = "tmp/dev-url"
+
+def git(*args)
+  out, _err, status = Open3.capture3("git", *args)
+  raise "`git #{args.join(' ')}` failed" unless status.success?
+
+  out.strip
+end
+
+def parse_offset(value, source)
+  offset = Integer(value, 10)
+  return offset unless offset.negative?
+
+  raise ArgumentError
+rescue ArgumentError, TypeError
+  abort "exe/dev-ports: #{source} must be a non-negative integer, got #{value.inspect}"
+end
+
+def derived_ports(offset)
+  {
+    "NETLIFY_PORT" => NETLIFY_BASE_PORT + offset,
+    "JEKYLL_PORT" => JEKYLL_BASE_PORT + offset,
+    "VITE_RUBY_PORT" => VITE_BASE_PORT + offset,
+    "LIVERELOAD_PORT" => LIVERELOAD_BASE_PORT + offset
+  }
+end
+
+# TCPServer sets SO_REUSEADDR, which on macOS lets the probe bind a specific
+# address even while a wildcard listener holds the port, so probe with a raw
+# socket that fails loudly with EADDRINUSE instead.
+def address_free?(host, port)
+  address = Addrinfo.tcp(host, port)
+  socket = Socket.new(address.afamily, :STREAM)
+  begin
+    socket.bind(address)
+    true
+  rescue Errno::EADDRINUSE
+    false
+  rescue Errno::EADDRNOTAVAIL
+    true
+  ensure
+    socket.close
+  end
+rescue SocketError, Errno::EAFNOSUPPORT, Errno::EPROTONOSUPPORT
+  # Without an IPv6 stack (for example ipv6.disable=1) ::1 cannot be resolved
+  # or bound, so treat the address as free instead of failing the whole probe.
+  true
+end
+
+def port_free?(port)
+  ["127.0.0.1", "::1"].all? { |host| address_free?(host, port) }
+end
+
+# Porcelain output is one block per worktree; a worktree whose directory was
+# deleted instead of removed with `git worktree remove` is still listed, but
+# carries a `prunable` line, and its claim is dead.
+def live_worktree_paths
+  paths = []
+  current = nil
+  git("worktree", "list", "--porcelain").each_line do |raw|
+    line = raw.chomp
+    if line.start_with?("worktree ")
+      paths << current if current
+      current = line.delete_prefix("worktree ")
+    elsif line.start_with?("prunable")
+      current = nil
+    end
+  end
+  paths << current if current
+  paths
+end
+
+def reclaim_stale_claims(claims_dir)
+  live_paths = live_worktree_paths
+  Dir.children(claims_dir).each do |name|
+    marker = File.join(claims_dir, name)
+    next unless File.file?(marker)
+
+    claimed_path = File.read(marker).strip
+    next if !claimed_path.empty? && live_paths.include?(claimed_path)
+
+    FileUtils.rm_f(marker)
+  end
+rescue Errno::ENOENT
+  # A concurrent allocator removed the marker between the scan and the read.
+  nil
+end
+
+def allocate_offset(claims_dir, worktree_root)
+  reclaim_stale_claims(claims_dir)
+  (OFFSET_STEP..MAX_OFFSET).step(OFFSET_STEP) do |offset|
+    marker = File.join(claims_dir, offset.to_s)
+    begin
+      File.open(marker, File::CREAT | File::EXCL | File::WRONLY) { |file| file.write(worktree_root) }
+    rescue Errno::EEXIST
+      next
+    end
+
+    unless derived_ports(offset).values.all? { |port| port_free?(port) }
+      FileUtils.rm_f(marker)
+      next
+    end
+
+    File.write(File.join(worktree_root, PORT_FILE_NAME), "#{offset}\n")
+    warn "exe/dev-ports: claimed port offset #{offset} for #{worktree_root}"
+    return offset
+  end
+
+  abort "exe/dev-ports: no free port offset between #{OFFSET_STEP} and #{MAX_OFFSET}; " \
+        "set PORT_OFFSET for this run or remove unused worktrees"
+end
+
+git_dir = File.expand_path(git("rev-parse", "--git-dir"))
+git_common_dir = File.expand_path(git("rev-parse", "--git-common-dir"))
+worktree_root = File.expand_path(git("rev-parse", "--show-toplevel"))
+claims_dir = File.join(git_common_dir, CLAIMS_DIR_NAME)
+FileUtils.mkdir_p(claims_dir)
+
+port_file = File.join(worktree_root, PORT_FILE_NAME)
+env_offset = ENV["PORT_OFFSET"].to_s.strip
+file_offset = File.exist?(port_file) ? File.read(port_file).strip : nil
+file_offset = nil if file_offset.to_s.empty?
+
+offset =
+  if !env_offset.empty?
+    parse_offset(env_offset, "PORT_OFFSET")
+  elsif git_dir == git_common_dir
+    0
+  elsif file_offset
+    parse_offset(file_offset, "#{PORT_FILE_NAME} in #{worktree_root}")
+  else
+    allocate_offset(claims_dir, worktree_root)
+  end
+
+ports = derived_ports(offset)
+ports.each { |name, port| puts "export #{name}=#{port}" }
+
+url = "http://localhost:#{ports.fetch('NETLIFY_PORT')}"
+url_file = File.join(worktree_root, URL_FILE_RELATIVE)
+FileUtils.mkdir_p(File.dirname(url_file))
+File.write(url_file, "#{url}\n")

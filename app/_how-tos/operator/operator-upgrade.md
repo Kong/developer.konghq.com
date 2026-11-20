@@ -58,6 +58,8 @@ faqs:
       {:.warning}
       > A Helm rollback restores the operator Deployment, but it does **not** remove CRD fields you applied when [upgrading the CRDs](#upgrade-the-crds). CRDs are additive and backward-compatible within a major version, so leaving them in place is safe. For a major-version rollback, follow the relevant migration guide (for example [1.6.x to 2.0.0](/operator/migrate/migrate-1.6.x-2.0.0/)) in reverse.
 
+automated_tests: false
+
 ---
 
 ## Review the changelog and complete pre-upgrade checks

@@ -105,9 +105,9 @@ rows:
               diagram: |
                 flowchart TD
                   A(Dev Portal &bull; Observability &bull; Catalog)
-                  B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane 
+                  B(fa:fa-gateway Kong-managed Control Plane 
                   #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 
+                  C(fa:fa-gateway Data Plane 
                   #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Konnect]
@@ -154,13 +154,13 @@ rows:
               diagram: |
                 flowchart TD
                   A[(Database)]
-                  B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane 
+                  B(fa:fa-gateway Control Plane 
                   #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane
+                  C(fa:fa-gateway Data Plane
                   #40;Kong Gateway instance#41;)
-                  D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 1
+                  D(fa:fa-gateway Data Plane 1
                   #40;Kong Gateway instance#41;)
-                  E(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Data Plane 2
+                  E(fa:fa-gateway Data Plane 2
                   #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Self-managed Control Plane]

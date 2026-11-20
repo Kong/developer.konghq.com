@@ -27,8 +27,7 @@ related_resources:
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.
 
-You can exclude specific teams from IdP synchronization to manage their membership manually in {{site.konnect_short_name}}, even while mapping is enabled for the rest of your teams.
-This can be useful when you are migrating from one IdP to another or if {{site.dev_portal}} Admins don't have access to the IdP settings and they want to create some teams manually.
+{% include konnect/idp-sync-exclude-teams.md %}
 
 This guide explains how to map the permissions, including scopes and claims, from your group of developers in your IdP to your organization's team in {{site.konnect_short_name}}. Although this guide uses Okta, Azure Active Directory (AD), and Auth0 as examples, you can use any IdP that conforms to OIDC standards. 
 
@@ -59,7 +58,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 {% endnavtab %}
 {% navtab "Auth0" %}
-1. In Auth0, create a [new team of developers](https://auth0.com/docs/get-started/tenant-settings/auth0-teams) that you want to map to Konnect. Make sure to add your test developer account. 
+1. In Auth0, create a [new team of developers](https://auth0.com/docs/get-started/auth0-teams#auth0-teams) that you want to map to Konnect. Make sure to add your test developer account. 
 
 1. [Configure a groups claim](https://auth0.com/docs/secure/tokens/json-web-tokens/create-custom-claims).
 {% endnavtab %}
@@ -127,7 +126,7 @@ body:
 {{ create-team | indent: 3 }}
 
     The team object includes a `konnect_managed` field. `konnect_managed: true` means the team is managed manually in {{site.konnect_short_name}}. `konnect_managed: false` means the team is synced from the IdP.
-    You can change this by sending a `PATCH` request to the [`/portals/{portalId}/teams/{teamId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-team). If the team is currently mapped to an IdP group, remove the mapping first by sending a `DELETE` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}` endpoint](/api/konnect/portal-management/v3/#/operations/delete-portal-idp-team-group-mapping).
+    You can change this by sending a `PATCH` request to the [`/portals/{portalId}/teams/{teamId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-team). If the team is mapped to an IdP group, remove the mapping first by sending a `DELETE` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}` endpoint](/api/konnect/portal-management/v3/#/operations/delete-portal-idp-team-group-mapping).
 
 1. Configure the IdP by sending a `POST` request to the [`/portals/{portalId}/identity-providers` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-identity-provider):
 {% capture create-idp %}
@@ -183,7 +182,7 @@ Find your {{site.dev_portal}} URL in the {{site.dev_portal}} settings in the **P
 
 If you're moving from one IdP to another, you can freeze your existing teams so they aren't affected while you set up and test the new IdP.
 
-1. For each team currently mapped to your old IdP, disable **Sync with external identity provider (IdP)** in the team's settings. This excludes the team from synchronization so its membership stays as-is.
+1. For each team mapped to your old IdP, disable **Sync with external identity provider (IdP)** in the team's settings. This excludes the team from synchronization so its membership stays as-is.
 
 1. Configure and test the new IdP by following [Set up developer teams and group claims in your IdP](#set-up-developer-teams-and-group-claims-in-your-idp) and [Map IdP developer teams in {{site.konnect_short_name}}](#map-idp-developer-teams-in-konnect).
 

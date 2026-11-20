@@ -6,7 +6,7 @@ require_relative '../../../file_cache'
 module Jekyll
   module PluginPages
     module Pages
-      class Reference < Base # rubocop:disable Style/Documentation
+      class Reference < Base
         def self.url(plugin)
           if plugin.unreleased?
             "/plugins/#{plugin.slug}/reference/#{plugin.min_release}/"
@@ -29,10 +29,11 @@ module Jekyll
             .merge(metadata)
             .merge('reference?' => true, 'toc' => false)
             .merge(versions_info)
+            .merge(aigw_onprem_data)
         end
 
         def metadata
-          @metadata ||= YAML.load(File.read(file)) || {}
+          @metadata ||= YAML.load_file(file) || {}
         end
 
         def layout
@@ -45,6 +46,12 @@ module Jekyll
           else
             { 'versioned' => true }
           end
+        end
+
+        def aigw_onprem_data
+          return {} unless site.config.fetch('aigw_onprem_plugin_reference', []).include?(@plugin.slug)
+
+          { 'aigw_onprem_url' => AIGatewayOnPremReference.url(@plugin) }
         end
       end
     end

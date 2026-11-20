@@ -26,6 +26,65 @@ related_resources:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+<!--vale off-->
+
+## 1.3.0
+
+**Release date**: 2026/10/26
+
+### Breaking Changes
+- **Debug and profiling endpoints are disabled by default and moved to a dedicated listener**: `/debug/pprof/*` no longer share the health/metrics listener. Enable them with `KEG__RUNTIME__DEBUG_LISTENER_ADDRESS_PORT` (for example, `0.0.0.0:8081`); the `KEG__ENABLE_DEBUG_ENDPOINTS` boolean is removed. This lets you firewall profiling endpoints apart from widely-scraped endpoints.
+- **Lifecycle metrics renamed**: `kong.keg.lifecycle.*` metrics are now `kong.dataplane.lifecycle.*`, and the `kong.keg.component` label key is now `kong.dataplane.component`. Old names are still emitted as deprecated aliases during the migration window. Update dashboards and alerts.
+- **Kafka response error metrics renamed**: `kong.keg.kafka.response.received.errors` → `kong.keg.kafka.response.received_errors` and `kong.keg.kafka.response.sent.errors` → `kong.keg.kafka.response.sent_errors` (old names were ambiguous). Old names are still emitted as deprecated aliases.
+- **Konnect analytics metrics renamed**: The `kong.keg.konnect.analytics.*` series moved to `kong.dataplane.analytics.*` (for example, `kong.dataplane.analytics.events`, `kong.dataplane.analytics.sent`). Old names are still emitted as deprecated aliases.
+- **`KEG__CONFIG_POLL_INTERVAL` removed**: the control plane/data plane protocol now uses long-polling, so the interval can no longer be configured.
+- **Deprecated metrics**: `kong.keg.konnect.request.duration` (use `http.client.request.duration` with the `kong.http.client.name` label), `kong.keg.konnect.analytics.queue.dropped` and `otel.sdk.processor.log.errors` (use `otel.sdk.processor.log.processed` with the `error.type="queue_full"` attribute).
+
+### Features
+- **Request Rule Validator**: A new policy that validates Kafka requests against configurable rules.
+  - [Request Rule Validator policy reference](/event-gateway/policies/request-rule-validator/)
+  - [How-to: Enforce rules on Kafka requests](/event-gateway/enforce-kafka-request-rules/)
+- **Field Masking**: A pair of new Mask Fields Consume and Produce policies that mask selected fields in record keys and values, so sensitive data can be redacted on produce or consume.
+  - [Mask Fields Consume policy reference](/event-gateway/policies/mask-fields-consume/)
+  - [Mask Fields Produce policy reference](/event-gateway/policies/mask-fields-produce/)
+  - [How-to: Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
+  - [How-to: Mask Kafka message fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)
+- **Record transcoding**: A pair of new Record Transcode Consume and Produce policies that convert records between formats (for example Avro to JSON) using schemas from the Schema Registry, driven by CEL expressions that resolve schema IDs, subjects, and versions. They support inline schemas, schema references resolved by subject/version, and per-record schema selection via headers (with a configurable destination schema header name).
+  - [Record Transcode Consume policy reference](/event-gateway/policies/record-transcode-consume/)
+  - [Record Transcode Produce policy reference](/event-gateway/policies/record-transcode-produce/)
+  - [How-to: Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)
+  - [How-to: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)
+- **AWS IAM authentication for backend clusters**: Backend clusters can now authenticate to AWS MSK using AWS IAM credentials, including assumed roles.
+  - [Backend cluster reference: Authentication](/event-gateway/entities/backend-cluster/#authentication)
+  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using AWS IAM](/event-gateway/configure-aws-iam-backend-cluster-auth/)
+- **Inline schemas and the `any` type in `schema_validation`**: You can now define validation schemas inline in the policy configuration instead of only referencing the Schema Registry, including references to other schemas, an `any` type that accepts any payload, and schema references supplied in record headers.
+  - [Schema Validation Produce policy reference](/event-gateway/policies/schema-validation-produce/)
+  - [Schema Validation Consume policy reference](/event-gateway/policies/schema-validation-consume/)
+- **ACL policy supports IncrementalAlterConfigs**: Incremental topic configuration requests are now subject to ACL rules like other operations.
+  - [ACL policy reference](/event-gateway/policies/acl/)
+
+### Bug Fixes
+- **Producing with `acks=0` could misbehave when records were rejected**: Fixed an issue where the broker never replied to `acks=0` produce requests and could terminate the connection, which broke the proxy's request/response assumptions. The proxy now mirrors broker behavior for `acks=0`, including closing the connection when the broker would.
+- **Invalid encryption metadata header bytes were silently ignored**: Fixed an issue where when an existing `kong/enc` metadata header could not be decoded, the encryption policy silently dropped the previously applied keys. It now surfaces an error for the record instead.
+- **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: Fixed an issue where these sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
+- Fixed an issue where the namespace UUID was left unresolved.
+
+## 1.2.2
+
+**Release date**: 2026/10/29
+
+### Security
+* Bumped `ca-certificates` to 20250419+deb13u1. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `libc6` to 2.41-12+deb13u4.
+* Bumped `aws-smithy-json` to 0.62.7.
+* Bumped `rustls-webpki` and `webpki-root-certs`. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `quinn-proto` to 0.11.19.
+* Bumped `zerovec` to 0.11.8.
+
+### Bug Fixes
+* **OAuth token validation failed when a JWKS key omitted `alg`**: Some identity providers, including Microsoft Entra ID, publish RSA keys without an `alg` field. The gateway now infers `RS256` for such keys and honors a declared algorithm when present, so these tokens validate correctly.
+* **Topic UUIDs were not checked against the virtual cluster**: When a client addressed a topic by UUID, the ID was passed to the backend unchanged. The gateway now checks whether the topic UUID is available in the virtual cluster.
+
 ## 1.2.1
 
 **Release date**: 2026/08/04
@@ -76,6 +135,24 @@ Use it together with the Encrypt Fields policy to enforce consistent encryption 
 - **`acl_mode` hot reload had no effect**: Switching the ACL mode at runtime is now applied without a restart.
 - **Schema Registry cache poisoned on transient failures**: A transient Schema Registry error could be cached and served indefinitely. Retriable errors are now evicted from the cache instead of being persisted.
 - **Clearer logging when a client disconnects before authenticating**: Connections that close before or during authentication now produce accurate, actionable log messages.
+
+## 1.1.3
+
+**Release date**: 2026/10/30
+
+### Security
+* Bumped `libc6` to 2.41-12+deb13u4.
+* Bumped `libssl3t64` to 3.5.7-1~deb13u3.
+* Bumped `ca-certificates` to 20250419+deb13u1. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `rustls-webpki` to 0.103.16. The previous trust store accepted certificate chains through compromised eMudhra intermediate CA keys.
+* Bumped `webpki-root-certs` to 1.0.10.
+* Bumped `aws-lc-rs` to 1.18.2.
+* Bumped `aws-smithy-json` to 0.62.7.
+* Bumped `aws-smithy-runtime-api` to 1.12.3.
+* Bumped `aws-smithy-types` to 1.5.0.
+* Bumped `quinn-proto` to 0.11.19.
+* Bumped `zerovec` to 0.11.8, which also updates `yoke`, and `zerovec-derive`.
+* Bumped `rand` to 0.10.1.
 
 ## 1.1.2
 
@@ -148,7 +225,7 @@ are being rejected without overwhelming your logging pipeline.
 ### Fixes
 
 - **Expressions using the `in` operator failed to parse**: ACL expressions containing the `in` keyword were incorrectly parsed by a regex-based parser. Switched to AST-based parsing to handle all valid expression syntax.
-- **Cryptic validation errors when environment variables resolved to empty strings**: Setting an env var reference (e.g., for SASL credentials) to an empty value produced an unhelpful error like `virtual_clusters.demo[1].auth.password: length is lower than 1`. Empty
+- **Cryptic validation errors when environment variables resolved to empty strings**: Setting an env var reference (for example, for SASL credentials) to an empty value produced an unhelpful error like `virtual_clusters.demo[1].auth.password: length is lower than 1`. Empty
 values are now caught at resolution time with a clear error message.
 - **Analytics payloads were double-compressed**: Analytics data sent to Konnect was being compressed twice, causing the backend to fail to decode it. Also fixed the healthcheck ping interval (was 5s, now uses the configured value).
 - **ACL default policy had no name in observability data**: Metrics and logs for the built-in default ACL policy were missing a policy name, making it difficult to distinguish from other policies in dashboards. Default policies now use the `__internal` prefix.

@@ -23,8 +23,14 @@ works_on:
   - on-prem
 
 prereqs:
-  kubernetes:
-    gateway_api: true
+  inline:
+    - title: Create the kong namespace
+      position: before
+      content: |
+        ```bash
+        kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
+        ```
+        {: data-test-prereq="block" }
   entities:
     services:
       - echo-service
@@ -33,7 +39,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
     controllers:
       - kongplugininstallation
 
@@ -43,6 +48,26 @@ tldr:
     Build and push a plugin as a container image, then use a `KongPluginInstallation`
     to register it with the operator. Reference it in your `GatewayConfiguration` to
     make it available in Data Planes and configure its behavior using a `KongPlugin` resource.
+
+automated_tests: false
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongplugininstallation/custom-plugin-myheader \
+          gateway/kong
+        kubectl delete -n default --ignore-not-found gatewayconfiguration/kong
+        kubectl delete --ignore-not-found gatewayclass/kong
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Plugin distribution using an OCI registry
@@ -88,22 +113,12 @@ step: true
 content: |
   To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
 
-  First, get your control plane ID:
+  First, get your control plane ID from the `KonnectGatewayControlPlane` resource {{ site.operator_product_name }} created for your `Gateway`:
 
-  <!--vale off-->
-  {% konnect_api_request %}
-  url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
-  status_code: 200
-  method: GET
-  extract_body:
-    - name: data[0].id
-      variable: CONTROL_PLANE_ID
-  capture:
-    - variable: CONTROL_PLANE_ID
-      jq: ".data[0].id"
-  indent: 2
-  {% endkonnect_api_request %}
-  <!--vale on-->
+  ```sh
+  CONTROL_PLANE_ID=$(kubectl -n kong get konnectgatewaycontrolplane kong -o jsonpath='{.status.id}')
+  ```
+  {: data-test-step="block" }
 
   Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
 
@@ -131,12 +146,14 @@ content: |
      image: kong/plugin-example:1.0.0
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
    Verify that the plugin is fetched and available by examining the status of the `KongPluginInstallation` resource:
 
    ```bash
    kubectl get kongplugininstallations.gateway-operator.konghq.com -o jsonpath-as-json='{.items[*].status}'
    ```
+   {: data-test-step="block" }
 
    The output should look like this:
 
@@ -163,7 +180,7 @@ content: |
    {:.info}
     > The `KongPluginInstallation` resource creates a `ConfigMap` with the plugin content. Additional `ConfigMap`s are created when a plugin is referenced by other resources. The operator automatically manages the lifecycle of all these `ConfigMap`s.
 
-1. Make the plugin available in a `Gateway` resource by referencing it in the `spec.dataPlaneOptions.spec.pluginsToInstall` field of the `GatewayConfiguration` resource. Plugins can be referenced across namespaces without any additional configuration.
+1. Make the plugin available in a `Gateway` resource by referencing it in the `spec.dataPlaneOptions.spec.pluginsToInstall` field of the `GatewayConfiguration` resource, and create a `Gateway` that uses the configured class. Plugins can be referenced across namespaces without any additional configuration.
 
    ```yaml
    echo '
@@ -195,8 +212,24 @@ content: |
         kind: GatewayConfiguration
         name: kong
         namespace: default
+   ---
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: Gateway
+   metadata:
+     name: kong
+     namespace: kong
+   spec:
+     gatewayClassName: kong
+     listeners:
+     - name: proxy
+       port: 80
+       protocol: HTTP
+       allowedRoutes:
+         namespaces:
+           from: All
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Deploy an example service and expose it by configuring `HTTPRoute` with the custom plugin:
 
@@ -223,15 +256,33 @@ content: |
 
 ## Validate your configuration
 
-Ensure that everything is up and running and make a request to the service.
+Ensure that everything is up and running, get the `Gateway` address, and make a request to the service.
 
-<!--vale off-->
+1. Wait for the `Gateway` to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Get the `Gateway` address:
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
+
+1. Make a request to the service
+   <!--vale off-->
 {% validation request-check %}
 url: '/echo'
 status_code: 200
+count: 6
+sleep: 5
 expected_headers:
   - "myheader: my-first-plugin"
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
+indent: 3
 {% endvalidation %}
 <!--vale on-->

@@ -1,0 +1,15 @@
+title: Allow read-only topic access
+description: Allow the principal read access to a topic.
+weight: 100
+name: acl_policy
+type: acls
+config:
+  rules:
+    - resource_type: topic
+      action: allow
+      operations:
+        - name: read
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

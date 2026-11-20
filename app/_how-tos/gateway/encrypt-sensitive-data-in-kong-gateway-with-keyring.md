@@ -137,18 +137,18 @@ When you create this plugin while Keyring is enabled, the value of `config.auth.
 ### Query the database
 
 1. Open an interactive shell in the database container:
-```sh
-docker exec -it kong-quickstart-database sh
-```
+   ```sh
+   docker exec -it kong-quickstart-database sh
+   ```
 
 1. Connect to the database. With the quickstart, you only need to specify the username `kong`:
-```sh
-psql -U kong
-```
+   ```sh
+   psql -U kong
+   ```
 
 1. Query the `plugins` table. With this query, we'll look for the value of `config.auth.header_value` for the `ai-proxy` plugin:
-```sql
-SELECT "config" -> 'auth' -> 'header_value' FROM public.plugins WHERE "name" = 'ai-proxy';
-```
+   ```sql
+   SELECT "config" -> 'auth' -> 'header_value' FROM public.plugins WHERE "name" = 'ai-proxy';
+   ```
 
 The value returned should be encrypted.

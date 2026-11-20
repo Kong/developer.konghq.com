@@ -225,6 +225,8 @@
     "config.redis.username"
   ],
   "http-log": [
+    "config.headers",
+    "config.headers.additionalProperties",
     "config.http_endpoint"
   ],
   "jwt-signer": [
@@ -318,6 +320,8 @@
     "config.session_secret"
   ],
   "opentelemetry": [
+    "config.headers",
+    "config.headers.additionalProperties",
     "config.logs_endpoint",
     "config.traces_endpoint"
   ],
@@ -342,9 +346,21 @@
     "config.cache.redis.sentinel_password",
     "config.cache.redis.sentinel_username",
     "config.cache.redis.username",
+    "config.callouts.request.body.custom",
+    "config.callouts.request.body.custom.additionalProperties",
+    "config.callouts.request.headers.custom",
+    "config.callouts.request.headers.custom.additionalProperties",
     "config.callouts.request.http_opts.proxy.auth_password",
     "config.callouts.request.http_opts.proxy.auth_username",
-    "config.callouts.request.url"
+    "config.callouts.request.query.custom",
+    "config.callouts.request.query.custom.additionalProperties",
+    "config.callouts.request.url",
+    "config.upstream.body.custom",
+    "config.upstream.body.custom.additionalProperties",
+    "config.upstream.headers.custom",
+    "config.upstream.headers.custom.additionalProperties",
+    "config.upstream.query.custom",
+    "config.upstream.query.custom.additionalProperties"
   ],
   "request-transformer-advanced": [
     "config.add.body",
@@ -416,6 +432,10 @@
     "config.oauth.client_id",
     "config.oauth.client_secret",
     "config.oauth.password",
+    "config.oauth.token_headers",
+    "config.oauth.token_headers.additionalProperties",
+    "config.oauth.token_post_args",
+    "config.oauth.token_post_args.additionalProperties",
     "config.oauth.username"
   ]
 }

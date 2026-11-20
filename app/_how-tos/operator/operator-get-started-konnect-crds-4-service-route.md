@@ -78,6 +78,7 @@ Let's deploy an `echo` service to the Kubernetes cluster and setup the `KongServ
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create a `KongService` 
 
@@ -125,6 +126,13 @@ spec:
 
 ## Set the proxy IP
 
+Wait for the DataPlane you created in [Create a control plane](/operator/get-started/konnect-crds/controlplane/) to become ready:
+
+```bash
+kubectl wait -n kong dataplane/dataplane --for=condition=Ready=True --timeout=300s
+```
+{: data-test-step="block" }
+
 Export the DataPlane's external IP for use in later steps:
 
 ```bash
@@ -132,6 +140,7 @@ export PROXY_IP=$(kubectl get service -n kong \
   -o jsonpath='{.items[?(@.spec.type=="LoadBalancer")].status.loadBalancer.ingress[0].ip}')
 echo $PROXY_IP
 ```
+{: data-test-step="block" }
 
 ## Validation
 

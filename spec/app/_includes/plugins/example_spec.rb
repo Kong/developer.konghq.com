@@ -4,14 +4,11 @@ require 'kramdown'
 
 RSpec.describe 'plugins/example.md' do
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
     stub_const('Jekyll::Drops::Plugins::Schema::SCHEMAS_BASE', fixture_schemas_base)
   end
 
   after do
-    JekyllSite.instance.data.delete('entity_examples')
     Jekyll::Drops::Plugins::Schema::FILE_INDEX
       .reject { |dir, _| dir.start_with?(fixture_schemas_base) }
       .each_key { |dir| Jekyll::Drops::Plugins::Schema::FILE_INDEX.delete(dir) }
@@ -84,6 +81,39 @@ RSpec.describe 'plugins/example.md' do
     it 'renders no credential section' do
       expect(heading_ids(html)).not_to include('create-a-consumer-and-credential')
       expect(heading_ids(html)).to include('set-up-the-plugin')
+    end
+  end
+
+  context 'when the configuration section renders both selectors' do
+    let(:html) { render_example_page('with-prerequisites') }
+
+    it 'labels every panel with an element that exists on the page' do
+      expect(dangling_aria_labelledby_ids(html)).to eq([])
+    end
+
+    it 'labels each panel with the selector of its own section' do
+      config_section = html.all('.entity-example').last
+      target_panel = config_section.find('.entity-example-target-panel[data-target="global"]')
+
+      expect(target_panel[:'aria-labelledby']).to eq(config_section.find('select.select-target')[:id])
+      expect(target_panel.find('.entity-example-format-panel[data-format="terraform"]')[:'aria-labelledby'])
+        .to eq(config_section.find('select.select-format')[:id])
+    end
+  end
+
+  context 'when the configuration section renders a single target' do
+    let(:html) { render_example_page('enable-fixture-auth-route') }
+
+    it 'labels every panel with an element that exists on the page' do
+      expect(dangling_aria_labelledby_ids(html)).to eq([])
+    end
+
+    it 'labels the target panel with the section heading when there is no scope selector' do
+      config_section = html.all('.entity-example').last
+
+      expect(config_section).not_to have_css('select.select-target')
+      expect(config_section.find('.entity-example-target-panel')[:'aria-labelledby'])
+        .to eq('set-up-the-plugin')
     end
   end
 

@@ -1,0 +1,21 @@
+description: |
+  Configure the AI Prompt Guard policy to deny messages that match a pattern and return a 403 response with JSON details about the rejection.
+  By default the policy returns a 400 response with a plain-text reason.
+
+title: Return detailed rejection details
+
+weight: 890
+
+name: prompt-guard-verbose-rejection
+display_name: Return detailed rejection details
+type: ai-prompt-guard
+
+config: 
+  deny_patterns:
+  - '\"card\".*\"5[0-9]{12}(?:[0-9]{3})?\"'
+  rejection_mode: verbose
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

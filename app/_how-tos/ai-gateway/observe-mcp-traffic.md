@@ -112,7 +112,6 @@ ai_gateway_mcp_servers:
       default_tool_acls:
         allow:
           - admin
-        deny: []
     config:
       url: http://host.docker.internal:8080/api/v3
       route:

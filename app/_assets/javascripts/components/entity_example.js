@@ -3,6 +3,10 @@ class EntityExampleComponent {
     this.elem = elem;
     this.formatSelect = this.elem.querySelector(".select-format");
     this.targetSelect = this.elem.querySelector(".select-target");
+    this.targetPanels = this.elem.querySelectorAll(
+      ".entity-example-target-panel"
+    );
+    this.followsTargetSelection = this.elem.hasAttribute("data-follow-target");
     this.formatSelectKey = "entity-example-select-format";
     this.targetSelectKey = "entity-example-select-target";
 
@@ -41,6 +45,10 @@ class EntityExampleComponent {
       this.suppressBroadcast = true;
       this.targetSelect.dispatchEvent(new Event("change"));
       this.suppressBroadcast = false;
+    } else if (this.followsTargetSelection && this.pageHasTargetSelection()) {
+      this.applyTarget(this.storedTargetSelection(), {
+        fallbackToFirstPanel: true,
+      });
     } else {
       const targetPanel = this.elem.querySelector(
         ".entity-example-target-panel"
@@ -158,6 +166,44 @@ class EntityExampleComponent {
         this.targetSelect.dispatchEvent(new Event("change", { bubbles: false }));
         this.suppressBroadcast = false;
       }
+    } else if (this.followsTargetSelection && this.pageHasTargetSelection()) {
+      this.applyTarget(option);
+    }
+  }
+
+  // A follower mirrors the selection a target selector elsewhere on the page
+  // owns. A page without one has no selection to mirror, so a stale stored
+  // value or URL parameter can't hide the block with no way back.
+  pageHasTargetSelection() {
+    return document.querySelector(".select-target") !== null;
+  }
+
+  // A target-selecting block earlier in the DOM initializes first and writes
+  // this key with the value it settles on, so a follower block reading it at
+  // init never sees a value this page doesn't offer.
+  storedTargetSelection() {
+    try {
+      return localStorage.getItem(this.targetSelectKey);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  applyTarget(target, { fallbackToFirstPanel = false } = {}) {
+    const matchingPanels = Array.from(this.targetPanels).filter(
+      (panel) => panel.dataset.target === target
+    );
+
+    if (matchingPanels.length > 0) {
+      this.elem.classList.remove("hidden");
+      this.targetPanels.forEach((panel) => {
+        panel.classList.toggle("hidden", !matchingPanels.includes(panel));
+      });
+    } else if (target === null && fallbackToFirstPanel) {
+      this.targetPanels[0].classList.remove("hidden");
+    } else {
+      this.elem.classList.add("hidden");
     }
   }
 

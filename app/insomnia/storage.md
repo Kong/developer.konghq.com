@@ -197,8 +197,8 @@ flowchart LR
     end
 
     subgraph insomniaCloud [Insomnia Cloud]
-        E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;"/>Database)
-        F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;"/>Google Cloud)
+        E(fa:fa-database Database)
+        F(fa:fa-google-cloud Google Cloud)
     end
 
     A <--> C
@@ -253,15 +253,15 @@ flowchart LR
     end
 
     subgraph insomniaCloud [Insomnia Cloud]
-        E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;" />Database)
-        F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;" />Google Cloud)
+        E(fa:fa-database Database)
+        F(fa:fa-google-cloud Google Cloud)
     end
 
     subgraph Git-based source code management provider
        subgraph .
-        G(<img src="/assets/icons/bitbucket.svg" style="max-width:25px; display:block; margin:0 auto;"/>Bitbucket)
-        H(<img src="/assets/icons/gitlab.svg" style="max-width:25px; display:block; margin:0 auto;" />GitLab)
-        I(<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" />GitHub)
+        G(fa:fa-bitbucket Bitbucket)
+        H(fa:fa-gitlab GitLab)
+        I(fa:fa-github GitHub)
         end
     end
     

@@ -20,12 +20,14 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
 
   let(:site_config) { { 'ai_gateway_policies' => { 'metadata' => { 'keep' => %w[title name description icon] } } } }
   let(:scopes_data) { [{ 'name' => slug, 'scopes' => %w[models consumers global] }] }
+  let(:priorities_data) { { slug => 925 } }
+  let(:kong_plugins_data) { { slug => api_plugin_page } }
   let(:site) do
     instance_double(
       Jekyll::Site,
       data: {
-        'kong_plugins' => { slug => api_plugin_page },
-        'policies' => { 'ai-gateway' => { 'scopes' => scopes_data } }
+        'kong_plugins' => kong_plugins_data,
+        'policies' => { 'ai-gateway' => { 'scopes' => scopes_data, 'priorities' => priorities_data } }
       },
       config: site_config
     )
@@ -64,7 +66,44 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
   end
 
   describe '#examples' do
-    it { expect(policy.examples).to eq([]) }
+    def example_fixture(name)
+      File.join(PROJECT_ROOT, 'spec/fixtures/app/_ai_gateway_policies/ai-sanitizer/examples', name)
+    end
+
+    context 'when the overview body is empty but example files exist' do
+      before do
+        allow(Dir).to receive(:glob).with(File.join(folder, 'examples', '*'))
+                                    .and_return([example_fixture('sanitize-pii.yml')])
+      end
+
+      it { expect(policy.examples).to eq([]) }
+    end
+
+    context 'when the overview has content and example files exist' do
+      before do
+        allow(File).to receive(:read).with(File.join(folder, 'index.md'))
+                                     .and_return("---\nproducts:\n  - ai-gateway\n---\nOverview body.\n")
+        allow(Dir).to receive(:glob).with(File.join(folder, 'examples', '*'))
+                                    .and_return([example_fixture('sanitize-pii.yml'), example_fixture('enabled-false.yml')])
+      end
+
+      it 'builds one AIGateway drop per file, sorted by descending weight' do
+        expect(policy.examples.map(&:slug)).to eq(%w[enabled-false sanitize-pii])
+      end
+
+      it 'builds AIGateway drops' do
+        expect(policy.examples).to all(be_a(Jekyll::Drops::PolicyConfigExample::AIGateway))
+      end
+    end
+
+    context 'when the overview has content but no example files exist' do
+      before do
+        allow(File).to receive(:read).with(File.join(folder, 'index.md'))
+                                     .and_return("---\nproducts:\n  - ai-gateway\n---\nOverview body.\n")
+      end
+
+      it { expect(policy.examples).to eq([]) }
+    end
   end
 
   describe '#api_spec_file_path' do
@@ -82,6 +121,26 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Policy do
       before { allow(File).to receive(:exist?).with(policy.api_spec_file_path).and_return(false) }
 
       it { expect(policy.api_spec_exists?).to be(false) }
+    end
+  end
+
+  describe '#priority' do
+    it 'resolves the priority from the AI Gateway priorities data' do
+      expect(policy.priority).to eq(925)
+    end
+
+    context 'when the slug has no entry in the priorities data' do
+      let(:priorities_data) { { 'other-policy' => 100 } }
+
+      it { expect(policy.priority).to be_nil }
+    end
+
+    context 'when the policy has no backing Gateway plugin' do
+      let(:kong_plugins_data) { {} }
+
+      it 'still resolves the priority from the priorities data' do
+        expect(policy.priority).to eq(925)
+      end
     end
   end
 

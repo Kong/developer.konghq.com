@@ -30,6 +30,8 @@ related_resources:
     url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
   - text: Encrypt and decrypt Kafka message fields dynamically with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-dynamic/
+  - text: Encrypt Kafka message fields selected by schema registry tags with {{site.event_gateway}}
+    url: /event-gateway/encrypt-kafka-message-fields-from-schema/
 
 phases:
   - consume
@@ -73,6 +75,10 @@ rows:
   - use_case: "[Example: Decrypt a message field using a dynamic list of field paths](/event-gateway/policies/decrypt-fields/examples/decrypt-with-dynamic-paths/)"
     description: Decrypt a message field using a dynamic list of field paths
 
+  - use_case: "[Tutorial: Decrypt fields selected by schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/)"
+    description: |
+      Decrypt the fields that carry a `PII` tag in a Confluent Schema Registry, so that consumers get plaintext records.
+
 
 {% endtable %}
 <!--vale on-->
@@ -81,6 +87,8 @@ rows:
 
 This policy runs during the [consume phase](/event-gateway/entities/policy/#phases), after [schema validation](/event-gateway/policies/schema-validation-consume/) has taken place.
 
+{% include_cached /knep/schema-validation-parent-note.md phase="consume" %}
+
 {% include_cached /knep/encrypt-decrypt-diagram.md %}
 
 {% include_cached /knep/how-encrypt-fields-works.md %}
@@ -88,4 +96,8 @@ This policy runs during the [consume phase](/event-gateway/entities/policy/#phas
 ### Key sources
 
 {% include_cached /knep/key-sources.md name=page.name %}
+
+## Security considerations
+
+If `paths` is set to an expression that reads `record.value.schema.metadata.tags` or `record.value.schema.metadata.properties`, the schema registry becomes a trusted input to this policy. Anyone with write access to the registry can change which fields get decrypted by editing a schema's tags or properties, without touching this policy's configuration at all.
 

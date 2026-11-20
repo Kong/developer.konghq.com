@@ -57,6 +57,9 @@ rows:
       [kongctl delete konnect](/kongctl/delete/konnect/)
     description: "Delete {{site.konnect_short_name}} tokens."
   - command: |
+      [kongctl delete mesh](/kongctl/delete/mesh/)
+    description: "Delete a resource from a {{site.mesh_product_name}} control plane."
+  - command: |
       [kongctl delete organization](/kongctl/delete/organization/)
     description: "Manage {{site.konnect_short_name}} system account resources."
   - command: |

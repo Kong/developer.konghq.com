@@ -1,0 +1,32 @@
+title: 'XPath extended injection'
+
+description: 'Detects intentionally malformed input that is sent to construct an XPath query for XML data, specifically in the full syntax.'
+extended_description: |
+  Detects intentionally malformed input that is sent to construct an XPath query for XML data, specifically in the full syntax.
+  Uses the following regular expression for matching: `/?(ancestor(-or-self)?|descendant(-or-self)?|following(-sibling))`
+
+weight: 900
+
+name: xpath-extended
+display_name: 'XPath extended injection'
+type: injection-protection
+
+config:
+  injection_types:
+    - xpath_extended
+  locations:
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

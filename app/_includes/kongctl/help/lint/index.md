@@ -21,48 +21,52 @@ Examples:
   # Fail on warnings and above
   kongctl lint -f config.yaml -r ruleset.yaml --fail-severity warn
   
+  # Lint declarative configuration after expanding templates and !file
+  kongctl lint -f ./templates/ -f ./team/ -r ruleset.yaml --expand
+  
   # Read from stdin
   cat config.yaml | kongctl lint -f - -r ruleset.yaml
 
 
 Flags:
-      --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
-                                - Config path: [ color-theme ]
-                                - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --config-file string      Path to the configuration file to load.
-                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
-                                - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -D, --display-only-failures   Only output results with severity equal to or greater than --fail-severity
-  -F, --fail-severity string    Results of this severity or above will trigger a failure exit code. Allowed: [ error | warn | info | hint ] (default "error")
-  -f, --filename strings        Input file(s) or directory to lint. Use '-' to read from stdin.
-  -h, --help                    help for lint
-      --log-file string         Write execution logs to the specified file instead of STDERR.
-                                - Config path: [ log-file ]
-      --log-level string        Configures the logging level. Execution logs are written to STDERR.
-                                - Config path: [ log-level ]
-                                - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
-                                - Config path: [ telemetry.enabled ]
-                                - Env var    : [ KONGCTL_NO_TELEMETRY ]
-                                - Default    : [ false ]
-      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
-                                Does not change column selection, UUID formatting, or explicit string slices.
-                                - Config path: [ text.no-trunc ]
-                                - Default    : [ false ]
-  -o, --output string           Configures the format of data written to STDOUT.
-                                - Config path: [ output ]
-                                - Allowed    : [ json|yaml|text ] (default "text")
-  -p, --profile string          Specify the profile to use for this command. (default "default")
-  -R, --recursive               Process the directory used in -f, --filename recursively
-  -r, --ruleset string          Path to a Spectral-compatible linting ruleset file (YAML or JSON)
-      --text-id-format string   Configure UUID rendering in static text-table ID columns.
-                                - Config path: [ text.id-format ]
-                                - Allowed    : [ compact|full ]
-                                - Default    : [ compact ]
-      --text-layout string      Configure static text-table column selection.
-                                - Config path: [ text.layout ]
-                                - Allowed    : [ compact|auto|wide ]
-                                - Default    : [ compact ]
+      --color-theme string                   Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                             - Config path: [ color-theme ]
+                                             - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                             - List       : [ kongctl list themes ] (default "auto")
+      --config-file string                   Path to the configuration file to load.
+                                             - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
+                                             - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+  -D, --display-only-failures[=true|false]   Only output results with severity equal to or greater than --fail-severity
+      --expand[=true|false]                  Lint declarative configuration after including !file content and expanding _templates/_extends across all inputs (!env, !ref and !secret stay unresolved)
+  -F, --fail-severity string                 Results of this severity or above will trigger a failure exit code. Allowed: [ error | warn | info | hint ] (default "error")
+  -f, --filename strings                     Input file(s) or directory to lint. Use '-' to read from stdin.
+  -h, --help[=true|false]                    help for lint
+      --log-file string                      Write execution logs to the specified file instead of STDERR.
+                                             - Config path: [ log-file ]
+      --log-level string                     Configures the logging level. Execution logs are written to STDERR.
+                                             - Config path: [ log-level ]
+                                             - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --no-telemetry[=true|false]            Disable telemetry for this command invocation. Overrides config and env.
+                                             - Config path: [ telemetry.enabled ]
+                                             - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                             - Default    : [ false ]
+      --no-trunc[=true|false]                Preserve full cell widths in static text tables beyond terminal width.
+                                             Does not change column selection, UUID formatting, or explicit string slices.
+                                             - Config path: [ text.no-trunc ]
+                                             - Default    : [ false ]
+  -o, --output string                        Configures the format of data written to STDOUT.
+                                             - Config path: [ output ]
+                                             - Allowed    : [ json|yaml|text ] (default "text")
+  -p, --profile string                       Specify the profile to use for this command. (default "default")
+  -R, --recursive[=true|false]               Process the directory used in -f, --filename recursively
+  -r, --ruleset string                       Local YAML or JSON ruleset for vacuum (partial Spectral compatibility; no custom functions). Input tags/templates are not expanded unless --expand is set; extends paths use the working directory (URLs allowed in extends).
+      --text-id-format string                Configure UUID rendering in static text-table ID columns.
+                                             - Config path: [ text.id-format ]
+                                             - Allowed    : [ compact|full ]
+                                             - Default    : [ compact ]
+      --text-layout string                   Configure static text-table column selection.
+                                             - Config path: [ text.layout ]
+                                             - Allowed    : [ compact|auto|wide ]
+                                             - Default    : [ compact ]
 
 ```

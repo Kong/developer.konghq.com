@@ -76,6 +76,12 @@ rows:
       For example, don't say: "Once you have added *this*, ..."
   - do: "Configure this *manually*."
     dont: "Configure this *by hand*."
+  - do: |
+      A control plane *doesn't receive* a signal.
+      A model *without a* target.
+    dont: |
+      A control plane receives *no* signal.
+      A model *with no* target.
 {% endtable %}
 
 ### Active voice

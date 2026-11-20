@@ -35,6 +35,10 @@ tldr:
       Create a HashiCorp Vault, then use the `POST /vault-auth` API to create a Vault object with your Vault configuration. 
       Enable the Vault Authentication and associate it with the Vault object. Create a Consumer and use the `POST /vault-auth/$VAULT/credentials/$CONSUMER` API to generate credentials for the Consumer.
 
+      {:.warning}
+      > **Important:** The Vault object is not the same as a [Vault entity](/gateway/entities/vault/). The Vault object is used only by the Vault Auth plugin. 
+      The Vault entity is a standalone entity in {{site.base_gateway}} for managing secrets.
+
 tools:
     - deck
 

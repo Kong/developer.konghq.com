@@ -32,6 +32,8 @@ related_resources:
     url: /operator/konnect/crd/gateway/certificate-ca-cert/
   - text: Config Store-backed Vaults
     url: /operator/konnect/config-store/
+  - text: Sync a Kubernetes TLS Secret to a {{site.konnect_short_name}} Config Store
+    url: /operator/konnect/how-to/config-store-secret-sync/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
   - text: Status fields
@@ -53,6 +55,10 @@ faqs:
   - q: Why isn't the secret value stored declaratively?
     a: |
       The purpose of this guide is to avoid storing the secret in etcd, which would be the case if the key was passed through a Kubernetes resource. Instead, we pass it directly to {{site.konnect_short_name}} using either the API or the UI.
+
+      {% new_in 2.4 %} If the key is already stored in a Kubernetes Secret, for example because cert-manager issues it,
+      you can sync the Secret to the Config Store with a `KonnectConfigStoreSync` instead. For more information, see
+      [Sync a Kubernetes TLS Secret to a {{site.konnect_short_name}} Config Store](/operator/konnect/how-to/config-store-secret-sync/).
   - q: Who can replace the private key once it's in the Config Store?
     a: |
       Anyone who can write secrets into the Config Store can replace the key that your listener serves, so treat
@@ -61,10 +67,15 @@ faqs:
       Config Store-backed Vault.
   - q: What happens if I delete the `KonnectConfigStore`?
     a: |
-      Deleting the `KonnectConfigStore` deletes the Config Store in {{site.konnect_short_name}} **along with every
-      secret stored in it**, including keys that other Vaults or certificates still reference. Delete it only when
-      you're sure nothing depends on its contents. For more information, see
-      [lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
+      {% new_in 2.4 %} {{site.operator_product_name}} doesn't delete a Config Store that still holds secrets. The
+      `KonnectConfigStore` stays in `Terminating` and reports `Programmed=False` with reason `DeletionBlocked` until you
+      remove the secrets from the Config Store in {{site.konnect_short_name}}.
+
+      In {{site.operator_product_name}} 2.3, deleting the `KonnectConfigStore` deletes the Config Store in
+      {{site.konnect_short_name}} **along with every secret stored in it**, including keys that other Vaults or
+      certificates still reference.
+
+      For more information, see [lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
   - q: How do I rotate a key that's stored in the Config Store?
     a: |
       Rotating a key is a Config Store operation: update the secret value in place, and the vault reference keeps
@@ -108,6 +119,26 @@ prereqs:
     konnect:
       auth: true
       control_plane: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectConfigStore` also deletes the Config Store in {{ site.konnect_short_name }} and every secret
+        in it, and deleting the `KonnectGatewayControlPlane` deletes the control plane. Delete the certificate and the
+        `KongVault` before the Config Store they reference:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found kongcertificate/cert-with-vault-key
+        kubectl delete --ignore-not-found kongvault/certvault
+        kubectl delete -n kong --ignore-not-found \
+          konnectconfigstore/cert-keys \
+          kongreferencegrant/allow-kongvault-to-konnect-resources \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 A `KongCertificate` normally carries the private key as PEM material in `spec.key`, which means the key is stored in
@@ -120,7 +151,7 @@ material never enters your cluster and never appears in the certificate object.
 
 For more information, see [Config Store-backed Vaults](/operator/konnect/config-store/).
 
-## Create a `KonnectConfigStore`
+## Create a KonnectConfigStore
 
 Use the `KonnectConfigStore` resource to create the Config Store container in {{site.konnect_short_name}}. It must
 reference the `KonnectGatewayControlPlane` that owns the Config Store:
@@ -146,7 +177,7 @@ name: cert-keys
 {% endvalidation %}
 <!-- vale on -->
 
-## Allow the `KongVault` to reference the Config Store
+## Allow the KongVault to reference the Config Store
 
 `KongVault` is cluster-scoped and `KonnectConfigStore` is namespaced, so the reference always crosses a namespace
 boundary and the namespace that holds the Config Store must allow it with a `KongReferenceGrant`. Because a
@@ -173,8 +204,9 @@ spec:
     - group: konnect.konghq.com
       kind: KonnectGatewayControlPlane' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
-## Create a `KongVault` backed by the Config Store
+## Create a KongVault backed by the Config Store
 
 Create a `KongVault` with `backend: konnect` and point `spec.configStoreRef` to the `KonnectConfigStore`. {{site.operator_product_name}}
 resolves the reference into the `config_store_id` of the Vault configuration:
@@ -227,11 +259,20 @@ Generate a self-signed certificate and key to work with:
 ```sh
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=example.localdomain.dev"
 ```
+{: data-test-step="block" }
 
 ## Write the private key into the Config Store
 
 {% navtabs "store-certificate-key" %}
 {% navtab "{{site.konnect_short_name}} API" %}
+1. Wait for the `KonnectGatewayControlPlane` and the `KonnectConfigStore` to be programmed:
+
+   ```sh
+   kubectl wait -n kong konnectgatewaycontrolplanes.konnect.konghq.com/gateway-control-plane --for=condition=Programmed --timeout=300s
+   kubectl wait -n kong konnectconfigstores.konnect.konghq.com/cert-keys --for=condition=Programmed --timeout=300s
+   ```
+   {: data-test-step="block" }
+
 1. Fetch the {{site.konnect_short_name}} IDs of the control plane and of the Config Store that {{site.operator_product_name}}
    created. The Config Store ID is published on the `KonnectConfigStore` status, so you don't have to look it up in the
    {{site.konnect_short_name}} UI:
@@ -242,16 +283,18 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
    export CONFIG_STORE_ID=$(kubectl get -n kong konnectconfigstores.konnect.konghq.com cert-keys -o jsonpath='{.status.id}')
    echo $CONFIG_STORE_ID
    ```
+   {: data-test-step="block" }
 
 1. Build the request body, using `jq` to embed the PEM file as a JSON string:
 
    ```sh
    jq -n --arg key example-tls-key --rawfile value tls.key '{key: $key, value: $value}' > secret.json
    ```
+   {: data-test-step="block" }
 
 1. Store the private key as a secret entry in the Config Store:
-{% capture command %}
-<!--vale off-->
+
+   <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets
 status_code: 201
@@ -260,8 +303,6 @@ body_cmd: $(cat secret.json)
 indent: 3
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{command | indent}}
 
 {% capture delete %}
 1. Delete the local copies of the key once it's stored:
@@ -283,7 +324,7 @@ indent: 3
 {% endnavtab %}
 {% endnavtabs %}
 
-## Create a `KongCertificate` that references the key
+## Create a KongCertificate that references the key
 
 Set `spec.key` to a vault reference of the form `{vault://PREFIX/KEY}`, where `PREFIX` is the `spec.prefix` of the
 `KongVault` and `KEY` is the Config Store entry you created. The public certificate isn't sensitive, so it stays
@@ -305,6 +346,7 @@ spec:
 $(sed 's/^/    /' tls.crt)
   key: '{vault://certvault/example-tls-key}'" | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

@@ -1,0 +1,34 @@
+name: cache-by-principal
+display_name: Cache by Principal
+type: proxy-cache
+description: 'Cache responses to GET requests using the authenticated principal to compose the cache key.'
+
+extended_description: 'Cache responses to GET requests using the authenticated [principal](/identity/principals/) to compose the cache key.'
+
+title: 'Cache by Principal'
+
+weight: 900
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - ai-consumer-group
+  - global
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - text/plain
+  - application/json
+  cache_ttl: 300
+  cache_by_principal: true
+  strategy: memory
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

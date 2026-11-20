@@ -14,6 +14,7 @@ tools:
   - kongctl
 
 works_on:
+ - on-prem
  - konnect
 
 products:

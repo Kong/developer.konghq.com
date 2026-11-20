@@ -1,0 +1,34 @@
+title: 'Detect multiple injection types'
+
+description: 'Configure the Injection Protection Policy to block SQL, Java exception, JavaScript, server-side include, and XPath injection patterns in the request path and query string.'
+
+weight: 900
+
+name: all-injections
+display_name: 'Detect multiple injection types'
+type: injection-protection
+
+config:
+  injection_types:
+    - sql
+    - java_exception
+    - js
+    - ssi
+    - xpath_abbreviated
+    - xpath_extended
+  locations:
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

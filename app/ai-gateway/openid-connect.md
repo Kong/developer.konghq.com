@@ -9,6 +9,7 @@ breadcrumbs:
   - /ai-gateway/
 
 works_on:
+  - on-prem
   - konnect
 
 products:
@@ -199,7 +200,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-### JWT access token authentication (`bearer`)
+### JWT access token authentication (bearer)
 
 For legacy reasons, stateless JWT access token authentication is named `bearer` in `config.auth_methods`.
 {{site.ai_gateway}} verifies the token's signature against the IdP's published keys and validates standard claims, such as `exp`.
@@ -587,7 +588,7 @@ ai_gateway_auth_strategies:
 ### Authorization code flow
 
 The authorization code flow is a three-legged OAuth/OpenID Connect flow, including session cookie issuance.
-The sequence diagram below describes the participants and their interactions for this usage scenario, including the use of session cookies.
+The following sequence diagram describes the participants and their interactions for this usage scenario, including the use of session cookies.
 
 {% navtabs "auth-code-auth" %}
 {% navtab "Diagram" %}
@@ -1055,9 +1056,6 @@ The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) i
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server.
 This is particularly useful in complex environments like microservices or cross-domain federations.
 
-{:.info}
-> **Note**: Only access tokens can be exchanged with the OIDC auth strategy. Token exchange isn't supported on AI MCP Servers that set `access.metadata`.
-
 #### Why use token exchange?
 
 Token exchange can be used in several critical use cases:
@@ -1263,6 +1261,14 @@ data:
       - client_credentials
     cache_tokens_salt: multi-client-auth-cache-salt
 {% endentity_example %}
+
+## Limitations
+
+The OpenID Connect AI Auth Strategy passes its `config` object to {{site.base_gateway}}'s [OpenID Connect plugin](/plugins/openid-connect/), but not every plugin capability is supported. The following plugin capabilities aren't supported in the AI Auth Strategy:
+
+* [Protected resource metadata](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata) (`config.protected_resource_metadata`)
+* [Subject token signature verification](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) for [token exchange](#token-exchange) (`config.token_exchange.subject_token_issuers[].verify_signature`)
+* [Actor tokens](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) for token exchange (`config.token_exchange.request.actor_token`)
 
 ## Schema
 

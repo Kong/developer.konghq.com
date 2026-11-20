@@ -1,0 +1,13 @@
+{
+  "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "nullable": true,
+          "oneOf": [{ "type": "array" }, { "type": "object" }]
+        }
+      }
+    }
+  }
+}

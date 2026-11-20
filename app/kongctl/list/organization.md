@@ -18,6 +18,14 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: kongctl adopt organization
+    url: /kongctl/adopt/organization/
+  - text: kongctl create organization
+    url: /kongctl/create/organization/
+  - text: kongctl delete organization
+    url: /kongctl/delete/organization/
+  - text: kongctl get organization
+    url: /kongctl/get/organization/
 ---
 
 List organizations.
@@ -25,6 +33,12 @@ List organizations.
 ## Command usage
 
 {% include_cached /kongctl/help/list/organization/index.md %}
+
+### kongctl list organization pats
+
+List all personal access tokens in the current organization. Requires organization administrator access.
+
+{% include_cached /kongctl/help/list/organization/pats.md %}
 
 ### kongctl list organization system-account
 

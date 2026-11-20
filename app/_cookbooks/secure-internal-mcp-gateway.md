@@ -1,5 +1,4 @@
 ---
-
 title: Secure Internal MCP Gateway
 description: Aggregate multiple internal APIs into a single MCP server with OAuth 2.1 authentication and tool-level access control via consumer-group ACLs.
 url: "/cookbooks/secure-internal-mcp-gateway/"
@@ -9,343 +8,694 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0'
 categories:
   - mcp
   - access-control
 featured: false
 popular: false
-
-# Machine-readable fields for AI agent setup
-
-plugins:
-  - ai-mcp-proxy
-  - ai-mcp-oauth2
-  - cors
-requires_embeddings: false
-extra_services:
-  - name: Identity Provider (Okta or Keycloak)
-    env_vars: [DECK_OAUTH_AUTH_SERVER, DECK_OAUTH_INTROSPECTION_URL, DECK_OAUTH_CLIENT_ID, DECK_OAUTH_CLIENT_SECRET]
-    hint: "Create an OAuth application for Kong (API Services / Client Credentials) and one for MCP clients (SPA / Authorization Code + PKCE). See the Identity Provider section in Prerequisites."
-
-hint: "Requires an OAuth 2.1 identity provider (Okta or Keycloak in this recipe) and Insomnia 12+ for testing."
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped Control Plane name and run the quickstart script:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='secure-internal-mcp-gateway-recipe'
-           curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN --deck-output
+           curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions a Konnect Control Plane named `secure-internal-mcp-gateway-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK
+           This provisions an {{site.ai_gateway}} named `secure-internal-mcp-gateway-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+    - title: kongctl
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
+        This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-        1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
-        1. Verify both are installed:
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Verify it's installed:
 
            ```bash
            kongctl version
-           deck version
            ```
     - title: Identity Provider
       content: |
-        You need an OAuth 2.1 identity provider. This recipe shows setup steps for Okta and Keycloak, both of which expose an RFC 7662 token introspection endpoint that the AI MCP OAuth2 Plugin calls to validate tokens. Other IdPs (Microsoft Entra ID, Auth0, AWS Cognito, Google) work too. See the [AI MCP OAuth2 Plugin: Token validation methods](/plugins/ai-mcp-oauth2/#token-validation-methods) reference for the JWKS-based path. Select your IdP below and follow the setup steps.
-
-        Set the MCP resource URL once. Both IdP tabs use the same value:
-
-        ```bash
-        export DECK_MCP_RESOURCE_URL='http://localhost:8000/ecommerce-mcp'
-        ```
+        The aggregated MCP endpoint authenticates users against your identity provider (IdP) with token introspection, and reads their teams from a `groups` claim. This cookbook covers Okta and Keycloak. Each setup creates two applications: a confidential client that Kong uses to call the introspection endpoint, and a public client for the MCP client.
 
         {% navtabs "Identity Provider" %}
-        {% tab Okta %}
+        {% navtab "Okta" %}
 
-        You need an Okta organization with admin access. The steps below create two Okta applications, configure a `groups` claim, create two groups, set up a test user (new or existing), and export Kong's introspection credentials.
+        You need an Okta organization with admin access.
 
-        **Create the {{site.base_gateway}} application**
+        **Create the Kong MCP Gateway application**
 
-        This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Okta's token introspection endpoint.
+        This confidential client represents Kong. Kong uses its credentials to call Okta's introspection endpoint ([Okta: Client Credentials flow](https://developer.okta.com/docs/guides/implement-grant-type/clientcreds/main/)).
 
-        1. In the Okta Admin Console, go to **Applications → Create App Integration**.
-        1. Select **API Services** (machine-to-machine).
-        1. Name it `Kong MCP Gateway`.
-        1. From the **General** tab, copy the **Client ID** and **Client Secret** under **Client Credentials**. Export these as `DECK_OAUTH_CLIENT_ID` and `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. In the Okta Admin Console, go to **Applications and Resources > Applications**, click **Create App Integration**, and select **Classic experience**.
+        1. Select **API Services**, then click **Next**.
+        1. Name the application `Kong MCP Gateway` and click **Save**.
+        1. On the **General** tab, in **Client Credentials**, copy the **Client ID** and the **Client secret**.
 
         **Create the MCP Client application**
 
-        This is a public client that represents the MCP client (Insomnia, Claude Code, VS Code, or any MCP-compatible tool). Public clients use Authorization Code + PKCE without a client secret.
+        This public client represents Insomnia. It uses Authorization Code with PKCE and no client secret ([Okta: Authorization Code with PKCE](https://developer.okta.com/docs/guides/implement-grant-type/authcodepkce/main/)).
 
-        1. In the Okta Admin Console, go to **Applications → Create App Integration**.
+        1. Go to **Applications and Resources > Applications**, click **Create App Integration**, and select **Classic experience**.
         1. Select **OIDC - OpenID Connect** and **Single-Page Application**, then click **Next**.
-        1. Name it `MCP Client`.
-        1. Set the sign-in redirect URI to `https://app.insomnia.rest/oauth/redirect`. This is Insomnia 12+'s built-in OAuth callback. To use a different MCP client later, register that client's redirect URI here too. The section in **Variations and next steps** covers this.
-        1. On the application's **General** tab under **Client Credentials**, confirm that **Proof Key for Code Exchange (PKCE)** is checked. Okta enables it by default for SPA app types.
-        1. Copy the **Client ID** for use in your MCP client. Insomnia and other MCP clients prompt for this value when they start the OAuth flow; the recipe does not export it as an environment variable.
+        1. Name the application `MCP Client`.
+        1. Set the sign-in redirect URI to `https://app.insomnia.rest/oauth/redirect`, Insomnia's default OAuth redirect URL.
+        1. Click **Save**.
+        1. In **Client Credentials**, confirm that client authentication is **None**. With **None**, Okta requires PKCE.
+        1. Copy the **Client ID**. You enter it in Insomnia.
 
-        {:.warning}
+        **Add the groups claim**
 
-        > Use the SPA application type, not Web. Okta SPA integrations are public clients with no client secret and use Authorization Code + PKCE by default. MCP clients perform the PKCE flow without sending a client secret, so Okta's token endpoint rejects the token exchange against a Web (confidential) integration even if PKCE is enabled on it.
+        The OpenID Connect AI Auth Strategy reads the `groups` claim and maps each value to the AI Consumer Group with the same name ([Okta: Customize tokens with a groups claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/)).
 
-        **Configure the groups claim**
+        1. Go to **Security > API** and select the `default` authorization server.
+        1. Click the **Claims** tab, then click **Add Claim**.
+        1. Set **Name** to `groups`, keep **Include in token type** as **Access Token**, and set **Value type** to **Groups**.
+        1. Set **Filter** to **Matches regex** with the value `.*`, then click **Create**.
 
-        The AI MCP OAuth2 Plugin uses the `groups` claim in access tokens to map users to Kong Consumer Groups. Configure your Okta authorization server to include this claim:
+        **Create the groups and a test user**
 
-        1. Go to **Security → API → Authorization Servers** and select your authorization server (for example, `default`).
-        1. Go to the **Claims** tab and add a new claim:
-          - **Name:** `groups`
-          - **Include in token type:** Access Token
-          - **Value type:** Groups
-          - **Filter:** Matches regex `.*` (or restrict to specific groups)
-        1. Go to the **Scopes** tab and ensure `openid` is present.
+        1. Go to **Directory > Groups** and create `warehouse-ops` and `customer-support`.
+        1. Go to **Directory > People** and add a user, for example `mcp-test-user@example.com`, or pick an existing user who can sign in.
+        1. Open the user, click the **Groups** tab, and add the user to `warehouse-ops`.
+        1. Open the `MCP Client` application, click the **Assignments** tab, and assign the user. Without this assignment, Okta blocks the sign-in.
 
-        **Set up Okta groups and a test user**
+        **Export the Okta values**
 
-        Create two groups in Okta that match the Kong Consumer Group names, plus one user assigned to one of them:
-
-        1. Go to **Directory → Groups** and create:
-          - `warehouse-ops`
-          - `customer-support`
-        1. Go to **Directory → People** and either add a new person (for example, `mcp-test-user@example.com`) or pick an existing user. Make sure the user has a password set and can sign in.
-        1. Open the user, go to the **Groups** tab, and assign them to `warehouse-ops`. To exercise the other persona later, move the same user to `customer-support` and reauthenticate from your MCP client. The IdP-issued `groups` claim drives Kong's ACLs, so changing the user's group is all that's needed.
-        1. Open the `MCP Client` application created above, go to the **Assignments** tab, and assign the same user. Without this, Okta blocks the OAuth flow at sign-in.
-
-        **Export Kong's Okta endpoints and credentials**
-
-        Export the authorization server URL, the introspection endpoint, and the **{{site.base_gateway}}** application's Client ID and Secret. The MCP Client (SPA) Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the `default` authorization server's issuer URL, its introspection endpoint, and the **Kong MCP Gateway** application's credentials:
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
-        export DECK_OAUTH_CLIENT_ID='your-kong-gateway-client-id'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
+        export OAUTH_INTROSPECTION_URL='https://your-org.okta.com/oauth2/default/v1/introspect'
+        export OAUTH_CLIENT_ID='your-kong-mcp-gateway-client-id'
+        export OAUTH_CLIENT_SECRET='your-kong-mcp-gateway-client-secret'
         ```
 
-        {% endtab %}
-        {% tab Keycloak %}
+        {% endnavtab %}
+        {% navtab "Keycloak" %}
 
-        You need a Keycloak instance with admin access. The steps below create a realm, two clients, configure a `groups` claim, create two groups, set up a test user (new or existing), and export Kong's introspection credentials.
+        You need a Keycloak realm with admin access, for example a realm named `mcp-demo`.
 
-        **Create a realm**
+        **Create the Kong MCP Gateway client**
 
-        In the Keycloak Admin Console, create a new realm (for example, `mcp-demo`), or use an existing one.
+        This confidential client represents Kong. Only confidential clients can call Keycloak's introspection endpoint ([Keycloak: OIDC endpoints](https://www.keycloak.org/securing-apps/oidc-layers)).
 
-        **Create the {{site.base_gateway}} client**
-
-        This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Keycloak's token introspection endpoint.
-
-        1. Go to **Clients → Create client**.
-        1. Set **Client ID** to `kong-mcp-gateway`.
-        1. Set **Client authentication** to **On** (confidential client).
-        1. Enable **Service accounts roles**.
-        1. From the **Credentials** tab, copy the **Client Secret**. Export the Client ID (`kong-mcp-gateway`) as `DECK_OAUTH_CLIENT_ID` and this secret as `DECK_OAUTH_CLIENT_SECRET` in the final step.
+        1. In the Keycloak Admin Console, click **Clients**, then **Create client**.
+        1. Set **Client ID** to `kong-mcp-gateway` and click **Next**.
+        1. Turn on **Client authentication**, then click **Save**.
+        1. On the **Credentials** tab, copy the **Client Secret**.
 
         **Create the MCP Client**
 
-        This is a public client that represents the MCP client (Insomnia, Claude Code, VS Code, or any MCP-compatible tool). Public clients use Authorization Code + PKCE without a client secret.
+        This public client represents Insomnia.
 
-        1. Go to **Clients → Create client**.
-        1. Set **Client ID** to `mcp-client`.
-        1. Set **Client authentication** to **Off** (public client).
-        1. Set **Valid redirect URIs** to `https://app.insomnia.rest/oauth/redirect`. This is Insomnia 12+'s built-in OAuth callback. To use a different MCP client later, add that client's redirect URI here too. The section in **Variations and next steps** covers this.
-        1. Enable **Standard flow** (Authorization Code) and confirm PKCE is required for public clients (Keycloak enforces PKCE for public clients automatically).
-        1. Note the **Client ID** (`mcp-client`) for use in your MCP client. Insomnia and other MCP clients prompt for this value when they start the OAuth flow; the recipe does not export it as an environment variable.
+        1. Click **Clients**, then **Create client**.
+        1. Set **Client ID** to `mcp-client` and click **Next**.
+        1. Keep **Client authentication** off, keep **Standard flow** on, and set **PKCE Method** to **S256**. Without a PKCE method, Keycloak accepts the client's requests without PKCE ([Keycloak: Server Administration Guide](https://www.keycloak.org/docs/latest/server_admin/index.html)).
+        1. Set **Valid redirect URIs** to `https://app.insomnia.rest/oauth/redirect`, then click **Save**.
 
-        **Configure the groups claim**
+        **Add the audience and groups mappers**
 
-        By default, Keycloak does not include a `groups` claim in access tokens. Add a client scope and mapper:
+        Keycloak's introspection endpoint answers only a client that is in the token's `aud` claim, and Keycloak doesn't add a `groups` claim by default. Add both to the tokens issued to `mcp-client`:
 
-        1. Go to **Client scopes → Create client scope**.
-        1. Name it `groups`, set type to **Default**.
-        1. In the scope, go to **Mappers → Create mapper**:
-          - **Mapper type:** Group Membership
-          - **Name:** `groups`
-          - **Token Claim Name:** `groups`
-          - **Full group path:** Off
-          - **Add to access token:** On
-        1. Go to **Clients → kong-mcp-gateway → Client scopes** and add the `groups` scope.
-        1. Repeat for the `mcp-client` client.
+        1. Open the `mcp-client` client, click the **Client scopes** tab, and click `mcp-client-dedicated`.
+        1. Click **Configure a new mapper** and select **Audience**. Set **Name** to `kong-mcp-gateway-audience`, set **Included Client Audience** to `kong-mcp-gateway`, keep **Add to access token** on, and click **Save**.
+        1. Click **Add mapper > By configuration** and select **Group Membership**. Set **Name** and **Token Claim Name** to `groups`, turn off **Full group path**, keep **Add to access token** and **Add to token introspection** on, and click **Save**.
 
-        **Set up groups and a test user**
+        **Create the groups and a test user**
 
-        Create two groups that match the Kong Consumer Group names, plus one user assigned to one of them:
+        1. Click **Groups** and create `warehouse-ops` and `customer-support`.
+        1. Click **Users** and add a user, for example `mcp-test-user`, or pick an existing one. On the **Credentials** tab, set a password and turn off **Temporary**.
+        1. On the user's **Groups** tab, add the user to `warehouse-ops`.
 
-        1. Go to **Groups** and create:
-          - `warehouse-ops`
-          - `customer-support`
-        1. Go to **Users** and either add a new user (for example, `mcp-test-user`) or pick an existing one. On the **Credentials** tab, set a password and clear **Temporary** so the user can sign in directly.
-        1. Open the user, go to the **Groups** tab, and join `warehouse-ops`. To exercise the other persona later, swap the user's group to `customer-support` and reauthenticate from your MCP client. The IdP-issued `groups` claim drives Kong's ACLs, so changing the user's group is all that's needed.
+        **Export the Keycloak values**
 
-        **Export Kong's Keycloak endpoints and credentials**
-
-        Export the realm URL, the introspection endpoint, and the **{{site.base_gateway}}** client's ID and Secret. The MCP Client's Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the realm's issuer URL, its introspection endpoint, and the `kong-mcp-gateway` credentials:
 
         ```bash
-        export DECK_OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
-        export DECK_OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
-        export DECK_OAUTH_CLIENT_ID='kong-mcp-gateway'
-        export DECK_OAUTH_CLIENT_SECRET='your-kong-gateway-client-secret'
+        export OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
+        export OAUTH_INTROSPECTION_URL='https://your-keycloak-host/realms/mcp-demo/protocol/openid-connect/token/introspect'
+        export OAUTH_CLIENT_ID='kong-mcp-gateway'
+        export OAUTH_CLIENT_SECRET='your-kong-mcp-gateway-client-secret'
         ```
 
-        {:.info}
-
-        > **Keycloak groups claim.** Ensure you configured the `groups` client scope and mapper above. Without it, the access token does not contain a `groups` claim and Consumer Group mapping fails.
-
-        {% endtab %}
+        {% endnavtab %}
         {% endnavtabs %}
-    - title: Insomnia 12+
+    - title: Insomnia
       content: |
-        This recipe verifies the gateway using [Insomnia](https://insomnia.rest/), Kong's MCP-aware API client. Insomnia speaks the MCP protocol natively and handles the full OAuth 2.1 + PKCE dance, including Protected Resource Metadata (PRM) discovery.
+        This tutorial uses [Insomnia](https://insomnia.rest/) as the MCP client. Insomnia connects to MCP servers and runs the OAuth flow that MCP servers advertise ([MCP clients in Insomnia](/insomnia/mcp-clients-in-insomnia/)).
 
-        1. Install **Insomnia** from [insomnia.rest/download](https://insomnia.rest/download).
-        1. Verify the version is 12.0 or later (Help → About on macOS, equivalent on other platforms).
-
-        See [MCP clients in Insomnia](/insomnia/mcp-clients-in-insomnia/) for an overview of MCP server testing in Insomnia.
+        Install the latest version of Insomnia from [insomnia.rest/download](https://insomnia.rest/download).
 overview: |
-  Organizations adopting MCP (Model Context Protocol) often end up with multiple API teams each exposing tools through their own MCP servers, and no centralized control over who can discover and call them. Putting {{site.base_gateway}} in front of those servers collapses them into a single aggregated MCP endpoint with one place to enforce OAuth 2.1 auth and per-tool access control.
+  Turn internal REST APIs into MCP tools behind one MCP endpoint in {{site.ai_gateway_name}}, so that users sign in with your identity provider and their team decides which tools they can call. You'll set up:
 
-  Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma that run their own authorization servers; that case calls for a different pattern covered in [Secure External MCP Gateway](/cookbooks/secure-external-mcp-gateway/).
+  * Eight MCP tools from three mock REST APIs (orders, inventory, customers), with no MCP server to run
+  * One aggregated MCP endpoint that MCP clients discover and sign in to with OAuth 2.1
+  * Tool ACLs that give the `warehouse-ops` and `customer-support` teams different tools
 
-  This recipe covers the internal case. Kong produces an internal MCP server in one of two ways: the [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin can generate one directly by converting managed REST APIs into MCP tools, with no separate MCP server to run, or it can proxy a standalone custom MCP server your team already operates in passthrough mode. Either shape sits behind the [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin, which enforces OAuth 2.1 at the edge and maps token claims to per-tool ACLs. The walkthrough below demonstrates the REST-conversion path against three mock ecommerce APIs with two Consumer Groups.
-
+  For third-party MCP servers, for example GitHub, see the [Secure External MCP Gateway cookbook](/cookbooks/secure-external-mcp-gateway/).
 ---
 
-## The problem
+## What this cookbook solves
 
-**No centralized MCP access control.** Each internal MCP server manages its own authentication,
-or worse, has none. When AI agents connect directly to these servers, there is no central policy
-governing which agent can call which tools. A warehouse automation agent and a customer support
-agent see the same tool catalog.
+Most teams expose internal APIs to AI agents through separate MCP servers, each with its own authentication and its own tool catalog, which causes the following problems:
 
-**Scattered credentials.** Each MCP server requires its own authentication setup. Developers
-juggle multiple tokens, and there is no single revocation point. Offboarding a developer means
-touching every MCP server they had access to.
+{% table %}
+columns:
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
+rows:
+  - problem: "Each team runs and secures its own MCP server, so agents connect to many endpoints and each one has its own credentials."
+    solution: "One `listener` AI MCP Server aggregates the tools of each team's `conversion-only` AI MCP Server behind `/ecommerce-mcp`."
+  - problem: "Building an MCP server for each REST API takes code that someone has to maintain."
+    solution: "A `conversion-only` AI MCP Server turns REST endpoints into MCP tools from configuration."
+  - problem: "Each agent sees every tool, so a warehouse agent can call customer-data tools."
+    solution: "Tool ACLs on each tool allow AI Consumer Groups that match IdP groups. Kong removes other tools from `tools/list` and rejects calls to them."
+  - problem: "Offboarding a user means touching every MCP server they had access to."
+    solution: "An OpenID Connect AI Auth Strategy validates each token with your IdP, so disabling the user or changing their group in the IdP takes effect at Kong."
+{% endtable %}
 
-**No federated tool governance.** API teams want to control which of their endpoints are exposed
-as MCP tools and who can call them. But without a central aggregation layer, there is no
-mechanism for a platform team to enforce organization-wide policies while letting individual
-teams manage their own tool definitions.
+## Try it out
 
-**MCP auth is nascent.** The OAuth 2.0 specification for MCP is still evolving, and identity
-provider support varies significantly. Some IdPs implement RFC 7662 token introspection, others
-only expose a JWKS endpoint for local JWT validation, and most do not yet implement RFC 8707
-(Resource Indicators), which means audience validation requires workarounds.
+Apply the configuration, connect Insomnia to the aggregated MCP endpoint, then compare the tools that each team gets.
 
-## The solution
+### Apply the Kong configuration
 
-This recipe uses {{site.base_gateway}} as a federated MCP aggregation layer with three capabilities:
+The configuration creates three `conversion-only` [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) (orders, inventory, and customers) with eight tools, one `listener` AI MCP Server that aggregates them, an OpenID Connect AI Auth Strategy for your IdP, two AI Consumer Groups (`warehouse-ops` and `customer-support`), and a [CORS](/ai-gateway/policies/cors/) Policy. The tools call `https://httpbin.konghq.com/anything`, which echoes each request. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-- **REST-to-MCP conversion.** Each API team applies the AI MCP Proxy Plugin in `conversion-only`
-mode to their existing Kong Routes. This converts selected REST endpoints into MCP tools, tagged
-for discovery. Teams control their own tool definitions and ACL policies.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
-{:.info}
-> **Tool design tip.** Automatic REST-to-MCP conversion works well when endpoints map cleanly to user actions. For multi-step workflows, hand-build a single workflow tool (`process-return(orderId, reason)`) inside a custom MCP server and put it behind Kong in passthrough mode. The same OAuth and ACL boundary applies either way.
+```bash
+kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
+  --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
+  --pat "${KONNECT_TOKEN}"
+```
 
-- **Tool aggregation.** A central Route runs the AI MCP Proxy Plugin in `listener` mode, which
-discovers all tagged tools and exposes them through a single MCP endpoint. MCP clients connect
-to one URL and see a unified tool catalog.
-- **OAuth 2.1 + ACLs.** The AI MCP OAuth2 Plugin handles the full MCP auth spec: Protected
-Resource Metadata (PRM) discovery (RFC 9728), authorization code flow with PKCE, and token
-validation via either introspection (RFC 7662) or JWKS-based JWT verification. In {{site.base_gateway}} 3.14+,
-the Plugin maps token claims directly to Kong Consumers and Consumer Groups, enabling per-tool
-ACLs without a separate authentication Plugin.
+Export the URL that MCP clients use for the aggregated endpoint. Kong advertises it as the protected resource in its OAuth metadata:
+
+```bash
+export MCP_RESOURCE_URL='http://localhost:8000/ecommerce-mcp'
+```
+
+The IdP values come from the prerequisites. The same configuration works with Okta and Keycloak. Apply the Kong configuration:
+
+```bash
+cat <<'EOF' > kong-recipe.yaml
+_defaults:
+  kongctl:
+    namespace: secure-internal-mcp-gateway-recipe
+
+ai_gateway_auth_strategies:
+- ref: secure-internal-mcp-gateway-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: secure-internal-mcp-gateway-auth
+  display_name: secure-internal-mcp-gateway OIDC auth
+  type: openid-connect
+  config:
+    issuer: !env 'OAUTH_AUTH_SERVER'
+    introspection_endpoint: !env 'OAUTH_INTROSPECTION_URL'
+    client_id:
+    - !env 'OAUTH_CLIENT_ID'
+    client_secret:
+    - !secret {source: !env 'OAUTH_CLIENT_SECRET'}
+    auth_methods:
+    - introspection
+    cache_introspection: true
+    scopes:
+    - openid
+    consumer_optional: true
+    consumer_groups_claim:
+    - groups
+    consumer_groups_optional: false
+    credential_claim:
+    - sub
+    cache_tokens_salt: secure-internal-mcp-gateway-oidc-cache
+    ssl_verify: true
+    hide_credentials: true
+
+ai_gateway_consumer_groups:
+- ref: warehouse-ops
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: warehouse-ops
+  display_name: Warehouse Operations
+- ref: customer-support
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: customer-support
+  display_name: Customer Support
+
+ai_gateway_mcp_servers:
+- ref: orders-mcp
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: orders-mcp
+  display_name: Orders API MCP tools
+  type: conversion-only
+  config:
+    url: https://httpbin.konghq.com/anything
+    route:
+      paths:
+      - /orders-api
+    max_request_body_size: 1048576
+    logging:
+      payloads: true
+  tools:
+  - name: list-orders
+    description: >-
+      List recent orders with optional filters for status and date.
+      Returns order summaries including order ID, status, and total.
+    method: GET
+    path: orders
+    annotations:
+      read_only_hint: true
+      title: List orders
+    access:
+      acls:
+        allow:
+        - warehouse-ops
+        - customer-support
+    parameters:
+    - name: status
+      in: query
+      required: false
+      description: Filter by order status (pending, shipped, delivered, cancelled)
+      schema:
+        type: string
+    - name: date
+      in: query
+      required: false
+      description: Filter by order date (YYYY-MM-DD)
+      schema:
+        type: string
+  - name: get-order
+    description: >-
+      Get full details for a specific order including line items,
+      shipping address, and payment status.
+    method: GET
+    path: orders/{orderId}
+    annotations:
+      read_only_hint: true
+      title: Get order details
+    access:
+      acls:
+        allow:
+        - warehouse-ops
+        - customer-support
+    parameters:
+    - name: orderId
+      in: path
+      required: true
+      description: The order ID
+      schema:
+        type: string
+  - name: cancel-order
+    description: >-
+      Cancel a pending order. This action cannot be undone.
+      Only customer support agents can perform cancellations.
+    method: POST
+    path: orders/{orderId}/cancel
+    annotations:
+      destructive_hint: true
+      title: Cancel order
+    access:
+      acls:
+        allow:
+        - customer-support
+    parameters:
+    - name: orderId
+      in: path
+      required: true
+      description: The order ID to cancel
+      schema:
+        type: string
+
+- ref: inventory-mcp
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: inventory-mcp
+  display_name: Inventory API MCP tools
+  type: conversion-only
+  config:
+    url: https://httpbin.konghq.com/anything
+    route:
+      paths:
+      - /inventory-api
+    max_request_body_size: 1048576
+    logging:
+      payloads: true
+  tools:
+  - name: list-inventory
+    description: >-
+      List inventory items with optional filters for category
+      or low stock alerts.
+    method: GET
+    path: inventory
+    annotations:
+      read_only_hint: true
+      title: List inventory
+    access:
+      acls:
+        allow:
+        - warehouse-ops
+        - customer-support
+    parameters:
+    - name: category
+      in: query
+      required: false
+      description: Filter by product category
+      schema:
+        type: string
+    - name: low_stock
+      in: query
+      required: false
+      description: Set to true to show only items below restock threshold
+      schema:
+        type: string
+  - name: check-inventory
+    description: >-
+      Check current stock level, reorder threshold, and product
+      details for a specific SKU.
+    method: GET
+    path: inventory/{sku}
+    annotations:
+      read_only_hint: true
+      title: Check inventory for SKU
+    access:
+      acls:
+        allow:
+        - warehouse-ops
+        - customer-support
+    parameters:
+    - name: sku
+      in: path
+      required: true
+      description: The product SKU
+      schema:
+        type: string
+  - name: restock-item
+    description: >-
+      Add units to a product's inventory. Only warehouse
+      operations staff can perform restocking.
+    method: POST
+    path: inventory/{sku}/restock
+    annotations:
+      destructive_hint: true
+      title: Restock inventory item
+    access:
+      acls:
+        allow:
+        - warehouse-ops
+    parameters:
+    - name: sku
+      in: path
+      required: true
+      description: The product SKU to restock
+      schema:
+        type: string
+    - name: quantity
+      in: query
+      required: true
+      description: Number of units to add to inventory
+      schema:
+        type: integer
+
+- ref: customers-mcp
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: customers-mcp
+  display_name: Customers API MCP tools
+  type: conversion-only
+  config:
+    url: https://httpbin.konghq.com/anything
+    route:
+      paths:
+      - /customers-api
+    max_request_body_size: 1048576
+    logging:
+      payloads: true
+  tools:
+  - name: get-customer
+    description: >-
+      Retrieve customer profile including name, contact info,
+      and account status. Only customer support can access
+      customer data.
+    method: GET
+    path: customers/{customerId}
+    annotations:
+      read_only_hint: true
+      title: Get customer details
+    access:
+      acls:
+        allow:
+        - customer-support
+    parameters:
+    - name: customerId
+      in: path
+      required: true
+      description: The customer ID
+      schema:
+        type: string
+  - name: update-customer-contact
+    description: >-
+      Update a customer's contact information. Only customer
+      support agents can modify customer records.
+    method: PUT
+    path: customers/{customerId}/contact
+    annotations:
+      destructive_hint: true
+      title: Update customer contact info
+    access:
+      acls:
+        allow:
+        - customer-support
+    parameters:
+    - name: customerId
+      in: path
+      required: true
+      description: The customer ID to update
+      schema:
+        type: string
+    - name: email
+      in: query
+      required: false
+      description: New email address
+      schema:
+        type: string
+    - name: phone
+      in: query
+      required: false
+      description: New phone number
+      schema:
+        type: string
+
+- ref: ecommerce-mcp
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: ecommerce-mcp
+  display_name: Aggregated Ecommerce MCP Server
+  type: listener
+  sources:
+  - orders-mcp
+  - inventory-mcp
+  - customers-mcp
+  access:
+    acl_attribute_type: consumer
+    auth_strategies:
+    - secure-internal-mcp-gateway-auth
+    metadata:
+      resource: !env 'MCP_RESOURCE_URL'
+      endpoint: /.well-known/oauth-protected-resource/ecommerce-mcp
+  config:
+    max_request_body_size: 1048576
+    logging:
+      payloads: true
+      audits: true
+    route:
+      paths:
+      - /ecommerce-mcp
+      protocols:
+      - http
+      - https
+    server:
+      forward_client_headers: true
+  policies:
+  - secure-internal-mcp-gateway-cors
+
+ai_gateway_policies:
+- ref: secure-internal-mcp-gateway-cors
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: secure-internal-mcp-gateway-cors
+  display_name: secure-internal-mcp-gateway CORS
+  type: cors
+  config:
+    origins:
+    - '*'
+    methods:
+    - GET
+    - HEAD
+    - PUT
+    - PATCH
+    - POST
+    - DELETE
+    - OPTIONS
+    credentials: false
+    preflight_continue: false
+EOF
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" .collapsible }
+
+### Connect Insomnia to Kong
+
+Create an MCP client in Insomnia. When Kong rejects the first request, Insomnia reads Kong's protected resource metadata, finds your IdP, and runs the sign-in.
+
+1. In Insomnia, click **MCP Clients** in the left pane, name the client `Ecommerce MCP`, and click **Create**.
+1. In **MCP Server URL**, enter `http://localhost:8000/ecommerce-mcp`.
+1. Click the **Auth** tab, select **OAuth 2.0**, set **Grant Type** to **MCP Auth Flow**, and enter the Client ID of the `MCP Client` application (Okta) or `mcp-client` (Keycloak). Leave **Client Secret** empty.
+1. Click **Connect**. Kong answers with `401` and a link to its protected resource metadata. Insomnia opens your IdP in the browser.
+1. Sign in as your test user. Insomnia connects with the IdP token. The **Events** tab shows each step of the OAuth flow.
+
+### Call tools as warehouse-ops
+
+The left pane lists the tools that Kong returns for the `warehouse-ops` group: `list-orders`, `get-order`, `list-inventory`, `check-inventory`, and `restock-item`. Kong removed `cancel-order`, `get-customer`, and `update-customer-contact`.
+
+Call `check-inventory` with `sku` set to `WIDGET-42`. The response is httpbin's echo of the request, with the URL `https://httpbin.konghq.com/anything/inventory/WIDGET-42`.
+
+If a client calls a tool that its AI Consumer Group can't use, for example `cancel-order`, Kong rejects the `tools/call` request with `403 Forbidden` before it reaches the API ([ACL evaluation logic](/ai-gateway/entities/ai-mcp-server/#acl-evaluation-logic)).
+
+### Switch to customer-support
+
+The `groups` claim decides the AI Consumer Group, so you change a user's tools in the IdP, not in Kong.
+
+1. In your IdP, remove the test user from `warehouse-ops` and add the user to `customer-support`.
+1. In Insomnia, disconnect, delete the access token on the **Auth** tab, and connect again. Sign in when the browser opens.
+
+The tool list now has seven tools: each tool except `restock-item`.
+
+### Check the results
+
+The Insomnia sessions confirm the following:
+
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "OAuth discovery and sign-in"
+    evidence: "Insomnia gets a `401` from Kong, then opens your IdP's sign-in page without any OAuth endpoint in its configuration."
+  - behavior: "One endpoint for three APIs"
+    evidence: "Tools from the orders, inventory, and customers AI MCP Servers appear in one tool list."
+  - behavior: "REST-to-MCP conversion"
+    evidence: "`check-inventory` returns httpbin's echo of `GET /anything/inventory/WIDGET-42`."
+  - behavior: "Tool ACLs from IdP groups"
+    evidence: "`warehouse-ops` gets five tools, and `customer-support` gets seven. Changing the IdP group changes the list after the next sign-in."
+{% endtable %}
+
+To review the created entities and the MCP traffic, open the `secure-internal-mcp-gateway-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
+
+## How it works
+
+The MCP client connects to the `listener` AI MCP Server on `/ecommerce-mcp`. Kong validates the IdP token, maps the `groups` claim to an AI Consumer Group, filters the aggregated tool list with each tool's ACL, and converts each allowed tool call into an HTTP request to the team's API.
 
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as {{site.base_gateway}}
-    participant IdP as Identity Provider
+    participant K as Kong AI Gateway
+    participant I as Identity Provider
     participant B as Backend APIs
 
-    C->>K: MCP initialize (no token)
+    C->>K: MCP request, no token
     activate K
-    K-->>C: 401 + WWW-Authenticate (PRM discovery, RFC 9728)
+    K-->>C: 401 and protected resource metadata
     deactivate K
-
-    C->>IdP: OAuth 2.1 authorization code + PKCE
-    activate IdP
-    IdP-->>C: Bearer token
-    deactivate IdP
-
-    C->>K: MCP initialize (Bearer token)
+    C->>I: Authorization Code with PKCE
+    activate I
+    I-->>C: Access token
+    deactivate I
+    C->>K: tools/list with the IdP token
     activate K
-    K->>IdP: Token introspection
-    activate IdP
-    IdP-->>K: Claims (sub, groups)
-    deactivate IdP
-    K-->>C: Initialize OK (mapped to Consumer + Groups)
+    K->>I: Introspect the token (else 401)
+    activate I
+    I-->>K: Claims with sub and groups
+    deactivate I
+    K->>K: Map groups to an AI Consumer Group (else rejected)
+    K-->>C: Tools that the group can call
     deactivate K
-
-    C->>K: tools/list
-    activate K
-    K-->>C: Aggregated tool catalog
-    deactivate K
-
     C->>K: tools/call
     activate K
-    alt ACL allowed (e.g. check-inventory)
-        K->>B: Route to backend API
-        activate B
-        B-->>K: Response
-        deactivate B
-        K-->>C: Tool result
-    else ACL denied (e.g. cancel-order)
-        K-->>C: 403 (group not in allow list)
-    end
+    K->>K: Tool ACL for the AI Consumer Group (else 403)
+    K->>B: HTTP request for the tool
+    activate B
+    B-->>K: Response
+    deactivate B
+    K-->>C: Tool result
     deactivate K
 {% endmermaid %}
 <!-- vale on -->
 
-This recipe demonstrates the pattern with three mock ecommerce APIs (Orders, Inventory, Customers)
-backed by httpbin, two Consumer Groups (`warehouse-ops` and `customer-support`), and OAuth
-authentication via Okta or Keycloak.
+### AI MCP Servers
+
+Each team's API has a `conversion-only` AI MCP Server, which defines MCP tools from REST endpoints and their ACLs. A `conversion-only` AI MCP Server accepts no MCP traffic itself. The `listener` AI MCP Server lists them by `name` in `sources`, exposes all their tools on one route, and applies the ACL that travels with each tool. When a client calls a tool, the listener sends the HTTP request through the `conversion-only` AI MCP Server's route plus the tool's `path` ([Tool paths in conversion-only servers](/ai-gateway/entities/ai-mcp-server/#tool-paths-in-conversion-only-servers)).
+
+The following settings configure the AI MCP Servers:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
 rows:
-  - component: "Identity Provider (Okta / Keycloak)"
-    responsibility: "OAuth 2.1 authorization server, user identity, group membership, token issuance and introspection"
-  - component: "Kong [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin"
-    responsibility: "MCP-native OAuth: PRM discovery, token introspection, Consumer and Consumer Group mapping (3.14+)"
-  - component: "Kong [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin (`conversion-only`)"
-    responsibility: "Converts REST API endpoints into MCP tools with per-tool ACL definitions"
-  - component: "Kong [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin (`listener`)"
-    responsibility: "Aggregates tagged tools into a single MCP server, enforces ACLs at call time"
-  - component: "Kong [CORS](/plugins/cors/) Plugin"
-    responsibility: "Enables browser-based MCP clients to connect to the Gateway"
-  - component: "Backend APIs (httpbin)"
-    responsibility: "Mock ecommerce services representing independent API teams"
+  - setting: "`type: conversion-only`"
+    purpose: "Defines tools for aggregation. The orders, inventory, and customers AI MCP Servers use it."
+  - setting: "`config.url`"
+    purpose: "The API base URL. All three APIs use httpbin in this cookbook."
+  - setting: "`config.route.paths` (`conversion-only`)"
+    purpose: "The route that the listener sends tool calls through, for example `/inventory-api`. Without a route, the data plane can't compile the configuration."
+  - setting: "`tools[].method`, `path`, and `parameters`"
+    purpose: "The HTTP request that the tool sends, and the tool's input. The `path` has no leading `/`, so Kong adds it to the route. Path parameters such as `{sku}` fill the path."
+  - setting: "`tools[].annotations`"
+    purpose: "MCP hints for agents, for example `read_only_hint` and `destructive_hint`."
+  - setting: "`tools[].access.acls.allow`"
+    purpose: "The AI Consumer Groups that can call the tool. The ACL travels with the tool to the listener."
+  - setting: "`type: listener` and `sources`"
+    purpose: "Aggregates the tools of the three `conversion-only` AI MCP Servers on one route."
+  - setting: "`access.auth_strategies`"
+    purpose: "Each request needs a valid IdP token."
+  - setting: "`access.acl_attribute_type: consumer`"
+    purpose: "Kong evaluates the ACLs against the caller's AI Consumer Groups."
+  - setting: "`access.metadata.resource` and `endpoint`"
+    purpose: "Kong serves protected resource metadata for `MCP_RESOURCE_URL` at `/.well-known/oauth-protected-resource/ecommerce-mcp` and adds the path to the route. The authorization server and scopes come from the AI Auth Strategy's `issuer` and `scopes`."
+  - setting: "`config.route.paths: [/ecommerce-mcp]` (`listener`)"
+    purpose: "The endpoint that MCP clients call."
+  - setting: "`config.server.forward_client_headers: true`"
+    purpose: "Kong forwards the client's request headers to the APIs when it calls a tool. The OpenID Connect AI Auth Strategy already removed the IdP token."
+  - setting: "`config.logging.payloads` and `audits: true`"
+    purpose: "Kong logs MCP payloads and an audit entry for each ACL decision."
+  - setting: "`config.max_request_body_size: 1048576`"
+    purpose: "Limits request bodies to 1 MB, which is enough for these tool calls."
 {% endtable %}
 
-### ACL matrix
-
-This recipe creates two Consumer Groups with different tool access:
+The tools have the following access:
 
 {% table %}
 columns:
@@ -356,628 +706,119 @@ columns:
   - title: customer-support
     key: support
 rows:
-  - tool: "`list-orders`"
-    warehouse: "yes"
-    support: "yes"
-  - tool: "`get-order`"
-    warehouse: "yes"
-    support: "yes"
-  - tool: "`cancel-order`"
-    warehouse: "no"
-    support: "yes"
-  - tool: "`list-inventory`"
-    warehouse: "yes"
-    support: "yes"
-  - tool: "`check-inventory`"
-    warehouse: "yes"
-    support: "yes"
+  - tool: "`list-orders`, `get-order`, `list-inventory`, `check-inventory`"
+    warehouse: "Allowed"
+    support: "Allowed"
   - tool: "`restock-item`"
-    warehouse: "yes"
-    support: "no"
-  - tool: "`get-customer`"
-    warehouse: "no"
-    support: "yes"
-  - tool: "`update-customer-contact`"
-    warehouse: "no"
-    support: "yes"
+    warehouse: "Allowed"
+    support: "Denied"
+  - tool: "`cancel-order`, `get-customer`, `update-customer-contact`"
+    warehouse: "Denied"
+    support: "Allowed"
 {% endtable %}
 
-Warehouse operations staff can view orders and manage inventory (including restocking), but
-cannot access customer data or cancel orders. Customer support agents can view orders, check
-inventory, manage customer records, and cancel orders, but cannot restock inventory.
+### OpenID Connect AI Auth Strategy and AI Consumer Groups
 
-## How it works
+Authentication is an AI Auth Strategy, not an AI Policy. The OpenID Connect AI Auth Strategy validates each token with your IdP's introspection endpoint and maps the values in the `groups` claim to the AI Consumer Groups with the same names. The AI Consumer Groups have no members in Kong, because the IdP decides group membership. Because the listener sets `access.metadata`, {{site.ai_gateway}} adds the OAuth resource server behavior that MCP clients expect ([Protected resource metadata](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata)).
 
-A request flows through the system in these steps:
+The following settings configure the OpenID Connect AI Auth Strategy:
 
-1. The client discovers the MCP server's OAuth requirements through the identity provider.
-2. The client authenticates via PKCE flow and receives an access token.
-3. The client connects to the MCP endpoint through Kong with the Bearer token.
-4. Kong's AI MCP Proxy Plugin converts streamable HTTP to SSE for the upstream.
-5. Kong's AI MCP OAuth2 Plugin validates the token via introspection and maps the user to a Consumer Group.
-6. ACL rules determine which MCP tools the Consumer Group can access.
-7. The upstream MCP server processes permitted tool calls and returns results through Kong.
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`issuer`"
+    purpose: "Your IdP's authorization server, from `OAUTH_AUTH_SERVER`. The protected resource metadata advertises it."
+  - setting: "`auth_methods: [introspection]`"
+    purpose: "Kong validates the token with the introspection endpoint, so the IdP can issue opaque tokens."
+  - setting: "`introspection_endpoint`, `client_id`, and `client_secret`"
+    purpose: "The introspection endpoint and the Kong MCP Gateway client's credentials. `client_id` and `client_secret` are lists."
+  - setting: "`cache_introspection: true`"
+    purpose: "Kong caches introspection results, so it doesn't call the IdP for each request."
+  - setting: "`scopes: [openid]`"
+    purpose: "The scope that the protected resource metadata advertises, so the MCP client requests it."
+  - setting: "`consumer_optional: true`"
+    purpose: "Kong accepts the request without an AI Consumer. The AI Auth Strategy sets `consumer_groups_claim` and no `consumer_claims`: Konnect accepts only one of the two."
+  - setting: "`consumer_groups_claim: [groups]`"
+    purpose: "Kong maps each value in the `groups` claim to the AI Consumer Group with the same name."
+  - setting: "`consumer_groups_optional: false`"
+    purpose: "Kong rejects a user whose groups match no AI Consumer Group, so a user without a team can't connect."
+  - setting: "`credential_claim: [sub]`"
+    purpose: "Kong identifies a caller without an AI Consumer by the `sub` claim."
+  - setting: "`cache_tokens_salt`"
+    purpose: "A stable, non-secret value for the token cache keys."
+  - setting: "`ssl_verify: true`"
+    purpose: "Kong verifies the IdP's TLS certificate."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the IdP token before it calls the APIs."
+{% endtable %}
 
-### AI MCP Proxy: REST-to-MCP conversion, tool aggregation, and ACL enforcement
-
-The [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin runs in two modes on this recipe. Per-team Routes use `conversion-only` mode to declare MCP tool definitions that map to existing REST endpoints, with no MCP endpoint served on those Routes. A single central Route runs the same Plugin in `listener` mode, discovers every `conversion-only` definition tagged with `ecom-mcp`, and exposes the union as one MCP server. The listener evaluates each tool's ACL against the caller's Consumer Group at call time, rejecting unauthorized invocations with `INVALID_PARAMS (-32602)` before the request leaves Kong. This split lets API teams own their own tool definitions and ACL policies while the platform team owns aggregation and the OAuth boundary.
-
-{:.info}
-> **Tool design tip.** Automatic REST-to-MCP conversion works well when endpoints map cleanly to user actions. For multi-step workflows, hand-build a single workflow tool (`process-return(orderId, reason)`) inside a custom MCP server and put it behind Kong in passthrough mode. The same OAuth and ACL boundary applies either way. Starting with decK v1.57, the `deck file openapi2mcp` command can generate `ai-mcp-proxy` tool definitions directly from an OpenAPI specification, removing the need to write tool configs by hand.
-
-#### Configuration details
-
-A `conversion-only` Plugin attached to a per-team Route declares the tools and ACLs:
-
-```yaml
-plugins:
-  - name: ai-mcp-proxy
-    tags:
-      - ecom-mcp                  # Discovery tag for the listener
-    config:
-      mode: conversion-only       # Define tools only, no MCP endpoint here
-      consumer_identifier: username
-      include_consumer_groups: true
-      tools:
-        - name: check-inventory
-          description: Check stock level for a specific SKU
-          method: GET
-          path: /inventory/{sku}
-          annotations:
-            read_only_hint: true
-          acl:
-            allow:
-              - warehouse-ops     # Only warehouse staff can see this tool
-              - customer-support
-          parameters:
-            - name: sku
-              in: path
-              required: true
-              schema:
-                type: string
-```
-{:.no-copy-code}
-
-Each tool definition includes:
-
-- **name** and **description**: what the tool does (visible to MCP clients and LLM agents).
-- **method** and **path**: the REST endpoint this tool maps to.
-- **annotations**: MCP hints like `read_only_hint` and `destructive_hint` that help agents understand the tool's behavior.
-- **acl**: which Consumer Groups can call this tool. Completely overrides `default_acl` when set.
-- **parameters**: OpenAPI 3.0 parameter definitions.
-
-The `tags` field on the Plugin entity (not the config) is what the listener uses for discovery. All `conversion-only` Plugins that should be aggregated share the same tag (`ecom-mcp`).
-
-The central Route runs the Plugin in `listener` mode:
-
-```yaml
-- name: ai-mcp-proxy
-  config:
-    mode: listener                # Aggregate tools from tagged plugins
-    consumer_identifier: username
-    include_consumer_groups: true  # Required for group-based ACL evaluation
-    server:
-      tag: ecom-mcp              # Match conversion-only plugins with this tag
-      timeout: 10000
-```
-{:.no-copy-code}
-
-The listener does not define its own tools. It inherits tool definitions **and their ACL rules** from the tagged `conversion-only` Plugins. `include_consumer_groups: true` is required on the listener for group-based ACLs to work. Without it, the listener cannot pass Consumer Group membership to the ACL evaluation logic.
-
-ACLs use a two-tier system. The `default_acl` block defines baseline rules applied to all tools that don't declare their own ACL. A per-tool `acl` block (`acl.allow` or `acl.deny`) completely overrides the default for that tool. There is no merging between the two tiers, and `deny` always takes precedence over `allow`. In this recipe, every tool defines its own `acl.allow` list, so `default_acl` is unused. See the AI MCP Proxy [reference docs](/plugins/ai-mcp-proxy/) for the full set of supported modes (including `passthrough-listener`) and ACL semantics.
-
-### AI MCP OAuth2: OAuth 2.1 authentication and Consumer mapping
-
-The [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin implements the full MCP authentication specification: Protected Resource Metadata (PRM) discovery (RFC 9728), authorization code flow with PKCE, and token validation. When an MCP client connects without a token, the Plugin returns `401` with a `WWW-Authenticate` header pointing to the PRM endpoint, which advertises the authorization server and supported scopes. When a client presents a Bearer token, the Plugin validates it (introspection or JWKS, see below), maps token claims to Kong Consumer Groups, and lets the request proceed to the AI MCP Proxy listener.
-
-#### Configuration details
-
-```yaml
-- name: ai-mcp-oauth2
-  config:
-    resource: http://localhost:8000/ecommerce-mcp
-    authorization_servers:
-      - https://your-org.okta.com/oauth2/default
-    introspection_endpoint: https://your-org.okta.com/oauth2/default/v1/introspect
-    client_id: <kong-client-id>
-    client_secret: <kong-client-secret>
-    metadata_endpoint: /.well-known/oauth-protected-resource/ecommerce-mcp
-    scopes_supported:
-      - openid
-    insecure_relaxed_audience_validation: true
-    consumer_claim:
-      - sub
-    consumer_by:
-      - username
-      - custom_id
-    consumer_optional: true
-    consumer_groups_claim:
-      - groups
-    consumer_groups_optional: false
-```
-{:.no-copy-code}
-
-Field-by-field:
-
-- **`resource`**: the canonical MCP resource URL the Plugin advertises in PRM. MCP clients use this to confirm they are talking to the right resource.
-- **`authorization_servers`**: the IdP issuer URL(s). MCP clients fetch OAuth metadata from this URL to discover the authorization and token endpoints.
-- **`introspection_endpoint`**, **`client_id`**, **`client_secret`**: the RFC 7662 introspection endpoint and Kong's confidential-client credentials. Kong calls this endpoint on every request to validate Bearer tokens; responses are cached by default to reduce IdP load.
-- **`metadata_endpoint`**: the path Kong serves the PRM document at. MCP clients fetch this when they receive a 401 with a `WWW-Authenticate` header.
-- **`consumer_claim`** and **`consumer_by`**: which token claim to look up against which Consumer field. `sub` matched against `username` or `custom_id` is the standard pattern. The recipe pairs these with `consumer_optional: true` so a matching Kong Consumer is not required at request time. The IdP is the source of truth for identity.
-- **`consumer_optional: true`**: lets the request proceed even when no pre-provisioned Kong Consumer matches the `sub` claim. Identity is captured for audit via the `credential_claim`, and Consumer Groups still drive ACLs.
-- **`consumer_groups_claim`**: which token claim contains the user's group membership. Kong maps the values directly to Consumer Groups, enabling per-tool ACLs without a separate authorization Plugin.
-- **`consumer_groups_optional: false`**: required for ACL enforcement. If the token has no `groups` claim or none of its values match a Kong Consumer Group, the request is rejected. Setting this to `true` would let an unmapped caller bypass ACLs entirely.
-- **`credential_claim`**: which claim to use as a fallback credential identifier when no matching Consumer is found, so downstream Plugins can still identify the caller.
-
-{:.warning}
-> **`insecure_relaxed_audience_validation: true`.** Most identity providers do not yet implement RFC 8707 (Resource Indicators for OAuth 2.0), so the `aud` claim in access tokens does not match the MCP resource URL. This flag relaxes audience validation until your IdP supports RFC 8707. Without it, all requests are rejected with an audience mismatch error.
-
-The Route that hosts this Plugin includes two paths: `/ecommerce-mcp` for the MCP endpoint itself and `/.well-known/oauth-protected-resource/ecommerce-mcp` for PRM discovery. The second path ensures MCP clients that ignore the `resource_metadata` URL in the `WWW-Authenticate` header and fall back to [standard PRM locations](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#protected-resource-metadata-discovery-requirements) can still discover the metadata.
-
-**Choosing a token validation method.** {{site.base_gateway}} 3.14 added JWKS-based JWT validation to the AI MCP OAuth2 Plugin alongside the existing RFC 7662 introspection support. With `introspection_endpoint`, Kong calls the IdP on every request (with caching) using `client_id` + `client_secret`. This is the right default for IdPs that expose an introspection endpoint (Okta, Keycloak, Ping Identity, FusionAuth, ORY Hydra). With `jwks_endpoint`, Kong validates signed JWTs locally against the IdP's public keys with no per-request call to the IdP. Use this when your IdP does not implement RFC 7662 introspection: Microsoft Entra ID, Auth0, AWS Cognito, and Google OAuth2 all expose JWKS endpoints and issue signed JWTs that work directly with this mode. When both are configured, introspection wins. Pick whichever matches your IdP's capabilities and your latency budget. Introspection gives instant revocation at the cost of a network hop; JWKS is faster but tokens stay valid until they expire. See the Plugin's [token validation methods](/plugins/ai-mcp-oauth2/#token-validation-methods) reference for the full schema.
+The AI Auth Strategy has no `audience_required`, so Kong doesn't check the token's `aud` claim against `MCP_RESOURCE_URL`. Okta and Keycloak don't issue tokens for that audience by default. Group mapping works without an AI Consumer: the `groups` claim from introspection selects the AI Consumer Group, and the tool ACLs use it.
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> **Production credentials:** This cookbook stores the IdP client secret in an environment variable for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference it from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
 
-## Apply the Kong configuration
+### CORS Policy
 
-This section configures the Control Plane in two parts. First, adopt the quickstart Control Plane into a kongctl namespace so the apply command below can manage it. The recipe's `select_tags` and the `secure-internal-mcp-gateway-recipe` namespace scope every resource so teardown removes only this recipe's configuration.
+The CORS Policy on the listener answers browser preflight requests, so MCP clients that run in a browser can call the endpoint. Insomnia doesn't need it.
 
-```bash
-kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
-  --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
-  --pat "${KONNECT_TOKEN}"
-```
+The following settings configure the CORS Policy:
 
-Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
-
-The configuration below creates four Kong Services (three ecommerce APIs plus one aggregated MCP server), eight MCP tools with per-tool ACLs, two Consumer Groups, OAuth 2.1 authentication via the AI MCP OAuth2 Plugin, and CORS support. The IdP-specific `DECK_OAUTH_*` env vars and the shared `DECK_MCP_RESOURCE_URL` are already exported during the Identity Provider prereq, so they do not repeat here. The configuration is identical regardless of which IdP you selected; the AI MCP OAuth2 Plugin resolves the IdP endpoints from those variables at apply time.
-
-Apply the Kong configuration:
-
-```bash
-{%- raw %}
-cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - secure-internal-mcp-gateway-recipe
-consumer_groups:
-- name: warehouse-ops
-- name: customer-support
-services:
-- name: orders-api
-  host: httpbin.konghq.com
-  port: 443
-  protocol: https
-  path: /anything
-  routes:
-  - name: orders-mcp
-    paths:
-    - /orders-mcp
-    protocols:
-    - http
-    - https
-    plugins:
-    - name: ai-mcp-proxy
-      instance_name: orders-mcp-conversion
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      - ecom-mcp
-      config:
-        mode: conversion-only
-        consumer_identifier: username
-        include_consumer_groups: true
-        max_request_body_size: 1048576
-        logging:
-          log_payloads: true
-          log_statistics: true
-        tools:
-        - name: list-orders
-          description: List recent orders with optional filters for status and date.
-          method: GET
-          path: /orders
-          annotations:
-            read_only_hint: true
-            title: List orders
-          acl:
-            allow:
-            - warehouse-ops
-            - customer-support
-          parameters:
-          - name: status
-            in: query
-            required: false
-            description: Filter by order status (pending, shipped, delivered, cancelled)
-            schema:
-              type: string
-          - name: date
-            in: query
-            required: false
-            description: Filter by order date (YYYY-MM-DD)
-            schema:
-              type: string
-        - name: get-order
-          description: Get full details for a specific order including line items and shipping.
-          method: GET
-          path: /orders/{orderId}
-          annotations:
-            read_only_hint: true
-            title: Get order details
-          acl:
-            allow:
-            - warehouse-ops
-            - customer-support
-          parameters:
-          - name: orderId
-            in: path
-            required: true
-            description: The order ID
-            schema:
-              type: string
-        - name: cancel-order
-          description: Cancel a pending order. This action cannot be undone.
-          method: POST
-          path: /orders/{orderId}/cancel
-          annotations:
-            destructive_hint: true
-            title: Cancel order
-          acl:
-            allow:
-            - customer-support
-          parameters:
-          - name: orderId
-            in: path
-            required: true
-            description: The order ID to cancel
-            schema:
-              type: string
-- name: inventory-api
-  host: httpbin.konghq.com
-  port: 443
-  protocol: https
-  path: /anything
-  routes:
-  - name: inventory-mcp
-    paths:
-    - /inventory-mcp
-    protocols:
-    - http
-    - https
-    plugins:
-    - name: ai-mcp-proxy
-      instance_name: inventory-mcp-conversion
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      - ecom-mcp
-      config:
-        mode: conversion-only
-        consumer_identifier: username
-        include_consumer_groups: true
-        max_request_body_size: 1048576
-        logging:
-          log_payloads: true
-          log_statistics: true
-        tools:
-        - name: list-inventory
-          description: List inventory items with optional filters for category or low stock.
-          method: GET
-          path: /inventory
-          annotations:
-            read_only_hint: true
-            title: List inventory
-          acl:
-            allow:
-            - warehouse-ops
-            - customer-support
-          parameters:
-          - name: category
-            in: query
-            required: false
-            description: Filter by product category
-            schema:
-              type: string
-          - name: low_stock
-            in: query
-            required: false
-            description: Set to true to show only items below restock threshold
-            schema:
-              type: string
-        - name: check-inventory
-          description: Check current stock level and details for a specific SKU.
-          method: GET
-          path: /inventory/{sku}
-          annotations:
-            read_only_hint: true
-            title: Check inventory for SKU
-          acl:
-            allow:
-            - warehouse-ops
-            - customer-support
-          parameters:
-          - name: sku
-            in: path
-            required: true
-            description: The product SKU
-            schema:
-              type: string
-        - name: restock-item
-          description: Add units to a product's inventory.
-          method: POST
-          path: /inventory/{sku}/restock
-          annotations:
-            destructive_hint: true
-            title: Restock inventory item
-          acl:
-            allow:
-            - warehouse-ops
-          parameters:
-          - name: sku
-            in: path
-            required: true
-            description: The product SKU to restock
-            schema:
-              type: string
-          - name: quantity
-            in: query
-            required: true
-            description: Number of units to add
-            schema:
-              type: integer
-- name: customers-api
-  host: httpbin.konghq.com
-  port: 443
-  protocol: https
-  path: /anything
-  routes:
-  - name: customers-mcp
-    paths:
-    - /customers-mcp
-    protocols:
-    - http
-    - https
-    plugins:
-    - name: ai-mcp-proxy
-      instance_name: customers-mcp-conversion
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      - ecom-mcp
-      config:
-        mode: conversion-only
-        consumer_identifier: username
-        include_consumer_groups: true
-        max_request_body_size: 1048576
-        logging:
-          log_payloads: true
-          log_statistics: true
-        tools:
-        - name: get-customer
-          description: Retrieve customer profile and contact information.
-          method: GET
-          path: /customers/{customerId}
-          annotations:
-            read_only_hint: true
-            title: Get customer details
-          acl:
-            allow:
-            - customer-support
-          parameters:
-          - name: customerId
-            in: path
-            required: true
-            description: The customer ID
-            schema:
-              type: string
-        - name: update-customer-contact
-          description: Update a customer's contact information.
-          method: PUT
-          path: /customers/{customerId}/contact
-          annotations:
-            destructive_hint: true
-            title: Update customer contact info
-          acl:
-            allow:
-            - customer-support
-          parameters:
-          - name: customerId
-            in: path
-            required: true
-            description: The customer ID to update
-            schema:
-              type: string
-          - name: email
-            in: query
-            required: false
-            description: New email address
-            schema:
-              type: string
-          - name: phone
-            in: query
-            required: false
-            description: New phone number
-            schema:
-              type: string
-- name: aggregated-mcp-server
-  host: httpbin.konghq.com
-  port: 443
-  protocol: https
-  path: /anything
-  routes:
-  - name: ecommerce-mcp
-    paths:
-    - /ecommerce-mcp
-    - /.well-known/oauth-protected-resource/ecommerce-mcp
-    protocols:
-    - http
-    - https
-    plugins:
-    - name: ai-mcp-oauth2
-      instance_name: ecommerce-mcp-oauth2
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      config:
-        resource: ${{ env "DECK_MCP_RESOURCE_URL" }}
-        authorization_servers:
-        - ${{ env "DECK_OAUTH_AUTH_SERVER" }}
-        introspection_endpoint: ${{ env "DECK_OAUTH_INTROSPECTION_URL" }}
-        client_id: ${{ env "DECK_OAUTH_CLIENT_ID" }}
-        client_secret: ${{ env "DECK_OAUTH_CLIENT_SECRET" }}
-        metadata_endpoint: /.well-known/oauth-protected-resource/ecommerce-mcp
-        scopes_supported:
-        - openid
-        ssl_verify: true
-        max_request_body_size: 1048576
-        insecure_relaxed_audience_validation: true
-        cache_introspection: true
-        consumer_claim:
-        - sub
-        consumer_by:
-        - username
-        - custom_id
-        consumer_optional: true
-        consumer_groups_claim:
-        - groups
-        consumer_groups_optional: false
-        credential_claim:
-        - sub
-    - name: ai-mcp-proxy
-      instance_name: ecommerce-mcp-listener
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      config:
-        mode: listener
-        consumer_identifier: username
-        include_consumer_groups: true
-        max_request_body_size: 1048576
-        server:
-          tag: ecom-mcp
-          timeout: 10000
-          forward_client_headers: true
-        logging:
-          log_payloads: true
-          log_statistics: true
-    - name: cors
-      instance_name: ecommerce-mcp-cors
-      tags:
-      - secure-internal-mcp-gateway-recipe
-      config:
-        origins:
-        - '*'
-        methods:
-        - GET
-        - HEAD
-        - PUT
-        - PATCH
-        - POST
-        - DELETE
-        - OPTIONS
-        credentials: false
-        preflight_continue: false
-EOF
-{% endraw -%}
-
-echo "
-_defaults:
-  kongctl:
-    namespace: secure-internal-mcp-gateway-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
-
-rm -f kong-recipe.yaml
-```
-{: data-test-step="block" .collapsible }
-
-## Try it out
-
-With the configuration applied and your IdP configured, the aggregated MCP endpoint is ready to accept authenticated connections. The verification path below uses [Insomnia](/insomnia/mcp-clients-in-insomnia/), Kong's MCP-aware API client, to exercise the full OAuth + ACL flow. Once verified, the same endpoint can be plugged into any MCP-compatible AI client.
-
-### Verify with Insomnia
-
-Insomnia speaks the MCP protocol natively. It auto-discovers Protected Resource Metadata (PRM) from a 401 response, runs the OAuth 2.1 + PKCE dance against the IdP, and exposes every step of the auth handshake in its **Events** panel with full request/response inspection.
-
-To verify the Gateway:
-
-1. **Create an MCP request.** In Insomnia, create a new request and select **MCP** as the request type. Enter the Gateway URL:
-
-    ```text
-    http://localhost:8000/ecommerce-mcp
-    ```
-    {:.no-copy-code}
-
-1. **Configure OAuth on the request.** Open the **Auth** tab and select **OAuth 2.0** from the dropdown. Set **Grant Type** to **MCP Auth flow**. Enter the **Client ID** copied from the `MCP Client` SPA application in your IdP (Okta) or the `mcp-client` public client (Keycloak). Set **State** to any value (for example, `recipe-test`). Insomnia uses these values when it runs the PKCE flow in the next step.
-
-1. **Initiate the connection.** Insomnia sends an MCP `initialize` request without credentials. Kong's [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin returns `401` with a `WWW-Authenticate: Bearer resource_metadata=...` header pointing at `/.well-known/oauth-protected-resource/ecommerce-mcp`. The **Events** tab shows the unauthenticated initialize, the 401, and Insomnia's follow-up GET against the PRM URL. The raw 401 response looks like this:
-
-    ```text
-    HTTP/1.1 401 Unauthorized
-    WWW-Authenticate: Bearer resource_metadata="http://localhost:8000/.well-known/oauth-protected-resource/ecommerce-mcp"
-    Content-Type: application/json
-
-    {"error":"unauthorized","error_description":"Missing access token"}
-    ```
-    {:.no-copy-code}
-
-    The `WWW-Authenticate` header is what makes the endpoint MCP-spec compliant. MCP clients read the `resource_metadata` URL, fetch the PRM document, and discover the authorization server.
-
-1. **Complete OAuth.** Insomnia opens your browser to the IdP's authorization endpoint with a generated PKCE code challenge. Sign in as your test user (currently in `warehouse-ops`), approve the application, and Insomnia captures the redirect, exchanges the authorization code for an access token, and reconnects to the MCP endpoint with `Authorization: Bearer <token>`. The OAuth handshake appears as a sequence of `MCP Auth` entries in the **Events** tab.
-
-1. **List tools.** With the connection authenticated, Insomnia populates its tool browser. With your user in `warehouse-ops`, you see five tools: `list-orders`, `get-order`, `list-inventory`, `check-inventory`, `restock-item`. The authenticated `tools/list` response body looks like this:
-
-    ```json
-    {
-      "jsonrpc": "2.0",
-      "id": 2,
-      "result": {
-        "tools": [
-          { "name": "list-orders",     "annotations": { "readOnlyHint": true } },
-          { "name": "get-order",       "annotations": { "readOnlyHint": true } },
-          { "name": "list-inventory",  "annotations": { "readOnlyHint": true } },
-          { "name": "check-inventory", "annotations": { "readOnlyHint": true } },
-          { "name": "restock-item",    "annotations": { "destructiveHint": true } }
-        ]
-      }
-    }
-    ```
-    {:.no-copy-code}
-
-    The three customer-only tools (`cancel-order`, `get-customer`, `update-customer-contact`) are filtered out by Kong before the response leaves the Gateway. Kong evaluated the `consumer_groups_claim` against each tool's ACL before returning the catalog. To see the other persona, move your test user from `warehouse-ops` to `customer-support` in the IdP and rerun the OAuth flow. The catalog flips to seven tools, with `restock-item` filtered out instead.
-
-1. **Call a permitted tool.** Select `check-inventory`, set `sku` to `WIDGET-42`, and call it. The call succeeds; the response body shows the proxied call to the inventory backend (httpbin echoes the request details in this recipe). Inspect the response headers. Kong attaches `X-Kong-Upstream-Latency` (time in ms spent waiting for the upstream MCP server) and `X-Kong-Proxy-Latency` (time in ms Kong spent on auth, ACL, and routing) on every authenticated call.
-
-1. **Call a restricted tool.** Manually invoke `cancel-order` (the tool name can be entered directly even though it's hidden from the catalog. This simulates a misbehaving client). Kong returns an MCP error with code `INVALID_PARAMS (-32602)` and a body explaining the tool is not available for your Consumer Group. The token was valid; Kong's ACL evaluated it and denied the call before the request reached any upstream.
-
-1. **(Optional) Verify the auth boundary.** Replace the captured access token with `not-a-real-token` and resend the initialize. Kong's introspection call rejects the token and the AI MCP OAuth2 Plugin returns the same `401 + WWW-Authenticate` response as the unauthenticated case. This confirms invalid credentials never bypass auth.
-
-### Explore in Konnect
-
-Open [Konnect](https://cloud.konghq.com/) and navigate to **API Gateway** → **Gateways** → **`secure-internal-mcp-gateway-recipe`**. The recipe created the following resources on this Control Plane:
-
-- **Gateway services**: the four Services the recipe registered (`orders-api`, `inventory-api`, `customers-api`, `aggregated-mcp-server`). Open the `aggregated-mcp-server` Service. Its detail page has tabs for Configuration, Routes, Plugins, and Analytics.
-  - **Routes** tab: the four Routes, including `ecommerce-mcp` with both the MCP path and the PRM well-known path.
-  - **Plugins** tab: every Plugin instance: three AI MCP Proxy (`conversion-only`), one AI MCP Proxy (`listener`), one AI MCP OAuth2, and one CORS.
-- **Consumer Groups**: `warehouse-ops` and `customer-support`. No Consumers are pre-provisioned. The AI MCP OAuth2 Plugin runs with `consumer_optional: true`, so Kong identifies the caller by the IdP-issued `sub` claim and resolves group membership from the `groups` claim against these Consumer Groups at request time.
-
-The **Analytics** tab on the `aggregated-mcp-server` Service gives an at-a-glance view of recipe traffic, including request counts, error rates, and latency for both successful tool calls and ACL denials. For a deeper dive into these analytics, plus platform-wide analytics across every Control Plane, head to the **Observability** L1 menu in Konnect.
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`origins: ['*']`"
+    purpose: "The value of the `Access-Control-Allow-Origin` header: any origin. In production, list your clients' origins."
+  - setting: "`methods`"
+    purpose: "The value of the `Access-Control-Allow-Methods` header."
+  - setting: "`credentials: false`"
+    purpose: "Kong doesn't send `Access-Control-Allow-Credentials: true`. MCP clients authenticate with the `Authorization` header, not cookies."
+  - setting: "`preflight_continue: false`"
+    purpose: "Kong answers `OPTIONS` preflight requests instead of proxying them to the APIs."
+{% endtable %}
 
 ## Variations and next steps
 
-- **Connect from an AI harness.** The same Gateway URL works in any MCP-compatible client (Claude Code, VS Code, Claude Desktop, and others). Each client handles OAuth differently, so follow the client's documentation for adding a remote MCP server. Before connecting, register that client's OAuth redirect URI on your IdP `MCP Client` application alongside Insomnia's `https://app.insomnia.rest/oauth/redirect`. Token validation, ACL evaluation, and the `groups` claim mapping are unchanged.
-- **Add rate limiting per Consumer Group.** Attach the [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugin to enforce per-tier token budgets, giving premium Consumer Groups higher quotas while protecting shared infrastructure.
-- **Expand to multiple MCP servers.** Add additional Services and Routes for other internal MCP servers (databases, monitoring, CI/CD). Each gets its own ACL configuration while sharing the same OAuth authentication flow.
-- **Add response logging for audit trails.** Enable payload logging on the AI MCP Proxy Plugin to capture tool calls and responses for compliance auditing.
-- **Integrate with external identity providers.** Replace the Okta configuration with Azure AD, Auth0, or Keycloak by updating the OAuth endpoints in the deck config.
+You can change or extend this configuration in the following ways:
+
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Point the tools at real APIs"
+    how: "Change `config.url` on each `conversion-only` AI MCP Server to the team's API, and adjust each tool's `path` and `parameters`."
+  - variation: "Add another team's tools"
+    how: "Add a `conversion-only` AI MCP Server with its tools and ACLs, and add its `name` to the listener's `sources`. The AI Auth Strategy and the AI Consumer Groups don't change."
+  - variation: "Aggregate an existing MCP server"
+    how: "Add an `upstream-server` AI MCP Server for the MCP server and add it to `sources`. See [Tool aggregation with upstream-server](/ai-gateway/entities/ai-mcp-server/#tool-aggregation-with-upstream-server)."
+  - variation: "Set a default tool ACL"
+    how: "Set `access.default_tool_acls` on the listener for tools that have no ACL of their own. A tool's own ACL replaces the default. See [ACL tool control](/ai-gateway/entities/ai-mcp-server/#acl-tool-control)."
+  - variation: "Validate JWTs locally"
+    how: "For an IdP without an introspection endpoint, set `auth_methods: [bearer]` and leave out `introspection_endpoint`. Kong validates the JWT with the IdP's signing keys. See [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication)."
+  - variation: "Check the token audience"
+    how: "If your IdP issues tokens for the MCP resource URL, set `audience_required` on the AI Auth Strategy to that URL."
+  - variation: "Limit calls for each team"
+    how: "Attach a [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to the listener to limit requests for each AI Consumer or AI Consumer Group. See [Rate limiting](/ai-gateway/entities/ai-mcp-server/#rate-limiting)."
+  - variation: "Connect another MCP client"
+    how: "Add the client's OAuth redirect URL to your IdP's MCP client application. Token validation and the tool ACLs don't change."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's `select_tags` and kongctl namespace scoped all resources, so this teardown removes
-only this recipe's configuration. Tear down the local Data Plane and delete the Control Plane
-from Konnect:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
-export KONNECT_CONTROL_PLANE_NAME='secure-internal-mcp-gateway-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
+export KONNECT_CONTROL_PLANE_NAME='secure-internal-mcp-gateway-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
+
+In Insomnia, delete the `Ecommerce MCP` MCP client. In your IdP, delete the two applications and the two groups that you created.

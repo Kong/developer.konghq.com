@@ -13,6 +13,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Reference do
       examples: [],
       latest_release_in_range: '1.0',
       publish?: true,
+      priority: 925,
       schema: { 'properties' => { 'config' => {} } },
       icon: nil,
       unreleased?: false,

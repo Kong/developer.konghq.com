@@ -28,54 +28,60 @@ List {{site.konnect_short_name}} resources.
 
 ### kongctl list konnect ai-gateway
 
-List {{site.konnect_short_name}} {{site.ai_gateway}}s.
+List or get {{site.konnect_short_name}} {{site.ai_gateway}}s.
 
 {% include_cached /kongctl/help/list/konnect/ai-gateway.md %}
 
 ### kongctl list konnect analytics
 
-The `analytics` command allows you to work with [{{site.konnect_short_name}} {{site.observability}}](/observability/) resources.
+Manage {{site.konnect_short_name}} {{site.observability}} resources.
 
 {% include_cached /kongctl/help/list/konnect/analytics.md %}
 
 ### kongctl list konnect api
 
-List {{site.konnect_short_name}} APIs.
+List or get {{site.konnect_short_name}} APIs.
 
 {% include_cached /kongctl/help/list/konnect/api.md %}
 
 ### kongctl list konnect auth-strategy
 
-List {{site.konnect_short_name}} authentication strategies.
+List or get {{site.konnect_short_name}} authentication strategies.
 
 {% include_cached /kongctl/help/list/konnect/auth-strategy.md %}
 
 ### kongctl list konnect dcr-provider
 
-Use the `list` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers.
+List or get {{site.konnect_short_name}} DCR providers.
 
 {% include_cached /kongctl/help/list/konnect/dcr-provider.md %}
 
 ### kongctl list konnect event-gateway
 
-List {{site.konnect_short_name}} event gateways.
+List or get {{site.konnect_short_name}} {{site.event_gateway_short}}s.
 
 {% include_cached /kongctl/help/list/konnect/event-gateway.md %}
 
 ### kongctl list konnect gateway
 
-List {{site.konnect_short_name}} gateways.
+Manage {{site.konnect_short_name}} {{site.base_gateway}} resources.
 
 {% include_cached /kongctl/help/list/konnect/gateway.md %}
 
+### kongctl list konnect identity
+
+Manage Kong Identity resources.
+
+{% include_cached /kongctl/help/list/konnect/identity.md %}
+
 ### kongctl list konnect organization
 
-List {{site.konnect_short_name}} organizations.
+Get current organization information.
 
 {% include_cached /kongctl/help/list/konnect/organization.md %}
 
 ### kongctl list konnect portal
 
-List {{site.konnect_short_name}} Portal configurations.
+List or get {{site.konnect_short_name}} portals.
 
 {% include_cached /kongctl/help/list/konnect/portal.md %}

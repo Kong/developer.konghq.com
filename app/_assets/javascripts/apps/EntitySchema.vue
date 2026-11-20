@@ -53,10 +53,17 @@ watch((specText), async (newSpecText, oldSpecText) => {
   })
 })
 
-function annotateNode(obj) {
+// `seen` guards against recursive schemas (for example, a filter group that can
+// contain further filter groups), which would otherwise recurse forever.
+function annotateNode(obj, seen = new WeakSet()) {
+  if (!obj || typeof obj !== 'object' || seen.has(obj)) {
+    return
+  }
+  seen.add(obj)
+
   if (Array.isArray(obj)) {
-    obj.forEach(annotateNode)
-  } else if (obj && typeof obj === 'object') {
+    obj.forEach((item) => annotateNode(item, seen))
+  } else {
     if (obj['x-referenceable'] === true && (!obj.description || !obj.description.includes('This field is [referenceable]'))) {
       const note = 'This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).'
       obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
@@ -65,7 +72,7 @@ function annotateNode(obj) {
       const note = `Min runtime version: \`${obj['x-min-runtime-version']}\``;
       obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
     }
-    Object.values(obj).forEach(annotateNode)
+    Object.values(obj).forEach((value) => annotateNode(value, seen))
   }
 }
 

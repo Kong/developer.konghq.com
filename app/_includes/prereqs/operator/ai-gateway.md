@@ -7,6 +7,7 @@ Create an [{{ site.ai_gateway }}](/ai-gateway/) control plane, an OpenAI [AI Mod
      --from-literal=token="Bearer ${OPENAI_API_KEY}"
    kubectl label secret openai-credentials -n kong konghq.com/secret=true
    ```
+   {: data-test-prereq="block" }
 
 1. Create the {{ site.ai_gateway }} resources:
 
@@ -105,7 +106,7 @@ Create an [{{ site.ai_gateway }}](/ai-gateway/) control plane, an OpenAI [AI Mod
                targetPort: 8000
    ' | kubectl apply -f -
    ```
-   {:.collapsible}
+   {: data-test-prereq="block" .collapsible }
 
 1. Wait for the resources to be ready:
 
@@ -117,6 +118,7 @@ Create an [{{ site.ai_gateway }}](/ai-gateway/) control plane, an OpenAI [AI Mod
      --for=condition=Ready=True \
      --timeout=10m
    ```
+   {: data-test-prereq="block" }
 
 1. Export the data plane address:
 
@@ -125,3 +127,4 @@ Create an [{{ site.ai_gateway }}](/ai-gateway/) control plane, an OpenAI [AI Mod
      -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
    echo $AIGW_HOST
    ```
+   {: data-test-prereq="block" }

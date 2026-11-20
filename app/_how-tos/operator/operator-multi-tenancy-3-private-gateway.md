@@ -67,6 +67,7 @@ spec:
       type: own
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a GatewayClass
 
@@ -87,12 +88,14 @@ spec:
        namespace: kong-gw-private
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for {{ site.operator_product_name }} to accept the `GatewayClass`:
 
    ```bash
    kubectl wait --for=condition=Accepted=True gatewayclass/gw-private --timeout=60s
    ```
+   {: data-test-step="block" }
 
 ## Create a Gateway
 
@@ -113,12 +116,14 @@ spec:
        port: 8080
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the gateway to be programmed:
 
    ```bash
    kubectl wait --for=condition=Programmed=True gateway/gw-private -n kong-gw-private --timeout=120s
    ```
+   {: data-test-step="block" }
 
 ## Validate
 

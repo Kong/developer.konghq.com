@@ -5,6 +5,9 @@
 {%- endif -%}
 {%- assign icon_url = "/assets/icons/code.svg" -%}
 {%- capture details_content -%}
+{% if product == 'operator' %}
+The {{ site.operator_product_name }} Helm chart installs the Gateway API CRDs when you install it, so you do not need to install them separately.
+{% else %}
 {% if include.config.gateway_api == "experimental" %}
 1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}:
 
@@ -21,6 +24,7 @@
    ```
    {: data-test-prereq="block" }
    {% endif %}
+{% endif %}
 1. Create a `Gateway` and `GatewayClass` instance to use.
 
 {% assign allowedRoutes = "All" -%}

@@ -3,7 +3,7 @@
 # Stand-in for Jekyll::Drops::PluginCredentialExample::FormattedExample whose
 # format template renders a nested component block, so the spec can assert the
 # heading level the component assigns to blocks inside format sections.
-class NestedBlockFormattedExample < ::Liquid::Drop
+class NestedBlockFormattedExample < Liquid::Drop
   def initialize(format:, presenter:, template_file:)
     super()
     @format = format
@@ -16,8 +16,6 @@ end
 
 RSpec.describe 'components/plugin_credential_example.md' do
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
 
     fixture_includes_dir = File.expand_path('../../../fixtures/includes', __dir__)
@@ -26,8 +24,6 @@ RSpec.describe 'components/plugin_credential_example.md' do
 
     allow(credential_example).to receive(:formatted_examples).and_return([nested_block_formatted_example])
   end
-
-  after { JekyllSite.instance.data.delete('entity_examples') }
 
   let(:credential_example) do
     Jekyll::Drops::PluginCredentialExample.new(
@@ -38,7 +34,7 @@ RSpec.describe 'components/plugin_credential_example.md' do
   end
 
   let(:template) do
-    <<~'LIQUID'
+    <<~LIQUID
       {% include components/plugin_credential_example.md credential_example=credential_example %}
     LIQUID
   end

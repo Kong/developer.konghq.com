@@ -6,13 +6,9 @@ RSpec.describe 'syntax_highlighting.html' do
   let(:highlighter) { instance_double(CodeHighlighter, highlight: 'HIGHLIGHTED') }
 
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
     allow(CodeHighlighter).to receive(:new).and_return(highlighter)
   end
-
-  after { JekyllSite.instance.data.delete('entity_examples') }
 
   def render(markdown)
     Capybara::Node::Simple.new(Kramdown::Document.new(markdown, input: 'GFM').to_html)

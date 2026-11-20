@@ -53,32 +53,21 @@ When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-clo
 
 ## AWS configuration for Transit Gateway peering
 
-This process includes three main steps: 
+Create and share the [Transit Gateway in AWS](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html):
 
-1. Create and share the [Transit Gateway in AWS](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html):
+1. Navigate to **VPC > Transit Gateways** in the AWS Console.
+1. Select **Create transit gateway**, provide a name, and create the gateway.
+1. Save the Transit Gateway ID.
+1. Open the **Resource Access Manager**, and select **Create Resource Share**.
+1. Choose **Transit Gateways** as the resource type and select the newly created gateway.
+1. Name the resource share and retain default managed permission settings.
+1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**API Gateway > Networks**).
+1. Create the resource share and save the resulting **RAM Share ARN**.
 
-    1. Navigate to **VPC > Transit Gateways** in the AWS Console.
-    1. Select **Create transit gateway**, provide a name, and create the gateway.
-    1. Save the Transit Gateway ID.
-    1. Open the **Resource Access Manager**, and select **Create Resource Share**.
-    1. Choose **Transit Gateways** as the resource type and select the newly created gateway.
-    1. Name the resource share and retain default managed permission settings.
-    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**API Gateway > Networks**).
-    1. Create the resource share and save the resulting **RAM Share ARN**.
-
-    {:.warning}
-    > **RAM share requirements:**
-    > * The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
-    > * Create a separate RAM share for each shared resource (do not include multiple resources in a single RAM share).
-
-2. Accept the Transit Gateway Attachment in AWS:
-
-    1. Go to **VPC > Transit Gateway Attachments** in the AWS Console.
-    1. Locate the incoming attachment request from the {{site.konnect_short_name}} AWS Account ID.
-    1. Accept the request to establish the connection.
-    1. **Important:** Make sure a Transit Gateway Attachment is set up for each AWS VPC that needs to send or receive traffic.
-
-    Each AWS VPC that needs to send or receive traffic must have its own Transit Gateway attachment.
+{:.warning}
+> **RAM share requirements:**
+> * The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
+> * Create a separate RAM share for each shared resource. **Do not** include multiple resources in a single RAM share.
 
 ## {{site.konnect_short_name}} configuration for Transit Gateway peering
 
@@ -128,6 +117,21 @@ To accept the Transit Gateway attachment in AWS, do the following:
 
 1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
 1. Wait for an attachment request from the Konnect AWS Account ID.
+1. If you have more than one pending attachment request, look up each network's Kong-side AWS VPC ID. You can find the network ID by clicking **Networks** in the {{site.konnect_short_name}} sidebar:
+
+   {% capture network_vpc_id %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID
+   status_code: 200
+   region: global
+   method: GET
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ network_vpc_id | indent }}
+
+   Match the value in `provider_metadata.vpc_id` against the VPC ID shown for each pending attachment request in the AWS console.
 1. Accept the request.
 
 Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.

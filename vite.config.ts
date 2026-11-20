@@ -61,7 +61,7 @@ export default ({ command, mode }) => {
       }
     },
     server: {
-      cors: { origin: 'http://localhost:8888' },
+      cors: { origin: process.env.NETLIFY_PORT ? `http://localhost:${process.env.NETLIFY_PORT}` : 'http://localhost:8888' },
       proxy: {
         '^/api': {
           changeOrigin: true,

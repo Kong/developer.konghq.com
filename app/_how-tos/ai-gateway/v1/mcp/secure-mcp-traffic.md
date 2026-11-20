@@ -5,7 +5,7 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/v1/
   - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advance/
+    url: /plugins/ai-proxy-advanced/
   - text: Key Auth plugin
     url: /plugins/key-auth/
 permalink: /ai-gateway/v1/mcp/secure-mcp-traffic/

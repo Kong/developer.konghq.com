@@ -113,5 +113,17 @@ RSpec.describe Jekyll::Drops::EntityExample::Utils::VariableReplacer::KongctlDat
 
       it { is_expected.to eq("value: !secret {source: !env OPENAI_AUTH_HEADER}\n") }
     end
+
+    context 'with a policy ref sentinel' do
+      let(:yaml) { "policies:\n- __kongctl_ref_my-ai-sanitizer-policy__\n" }
+
+      it { is_expected.to eq("policies:\n- !ref my-ai-sanitizer-policy#name\n") }
+    end
+  end
+
+  describe '.ref_sentinel' do
+    it 'wraps the policy name in the ref sentinel markers' do
+      expect(described_class.ref_sentinel('my-ai-sanitizer-policy')).to eq('__kongctl_ref_my-ai-sanitizer-policy__')
+    end
   end
 end

@@ -93,6 +93,7 @@ kubectl create namespace kong-system
 kubectl create namespace kong-gw-public
 kubectl create namespace kong-gw-private
 ```
+{: data-test-step="block" }
 
 ## Install {{ site.operator_product_name }}
 
@@ -102,6 +103,7 @@ kubectl create namespace kong-gw-private
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
+   {: data-test-step="block" }
 
 1. Install {{ site.operator_product_name }} scoped to the two tenant namespaces. The `watch_namespace` value prevents the operator from reconciling resources in any other namespace.
 
@@ -112,6 +114,7 @@ kubectl create namespace kong-gw-private
      --set image.tag={{ site.data.operator_latest.release }} \
      --set env.watch_namespaces="kong-system\,kong-gw-public\,kong-gw-private"
    ```
+   {: data-test-step="block" }
 
 1. Wait for {{ site.operator_product_name }} to be ready:
 
@@ -134,5 +137,6 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl -n kong-system apply -f -
 ```
+{: data-test-step="block" }
 
 The `KongLicense` controller runs inside each gateway's in-memory {{ site.kic_product_name_short }}, so the license won't reach the `Programmed` condition until a `ControlPlane` — deployed on its own or as part of a `Gateway` — picks it up. You'll confirm this in [Deploy the public gateway](/operator/dataplanes/how-to/multi-tenancy/public-gateway/) after deploying the public gateway.

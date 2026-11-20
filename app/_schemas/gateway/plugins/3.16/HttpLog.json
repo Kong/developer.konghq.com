@@ -34,9 +34,11 @@
         },
         "headers": {
           "additionalProperties": {
-            "type": "string"
+            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "type": "string",
+            "x-referenceable": true
           },
-          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string.",
+          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "type": "object"
         },
         "http_endpoint": {
@@ -164,10 +166,6 @@
           "type": "string"
         }
       },
-      "type": "object"
-    },
-    "expressions": {
-      "additionalProperties": true,
       "type": "object"
     },
     "protocols": {

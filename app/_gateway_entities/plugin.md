@@ -133,7 +133,7 @@ The complete order of precedence for plugins configured to multiple entities is:
 > **Note on precedence for Consumer Groups**
 > <br><br>
 > When a Consumer is a member of two Consumer Groups, each with a scoped instance of the same plugin, {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugin instances. 
-> Currently, this is determined by the Consumer Group name, in alphabetical order. 
+> This is determined by the Consumer Group name, in alphabetical order. 
 > For example, if you have two Consumer Groups, A and B, each with an instance of the Rate Limiting Advanced plugin, the plugin in Consumer Group A will be applied.
 > <br><br>
 > The specific rules that govern this behavior are not defined and are subject to change in future releases.
@@ -159,11 +159,8 @@ This determines plugin ordering during the [`access` phase](#plugin-contexts), a
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
 {:.info}
-> For how the reordering is decided — the principle behind it, how to predict the exact result of an
-> `ordering` configuration, and the difference between the `priority_preserving` and `legacy`
-> algorithms — see [How priority_preserving dynamic plugin ordering
-> works](/gateway/plugins/plugin-ordering-priority-preserving/) (or [How legacy dynamic plugin
-> ordering works](/gateway/plugins/plugin-ordering-legacy/) for the default algorithm on its own).
+> The result of an `ordering` configuration depends on the [`plugin_ordering_algorithm`](/gateway/configuration/#plugin-ordering-algorithm) that {{site.base_gateway}} uses.
+> To predict the result or compare the `legacy` and `priority_preserving` algorithms, see [Plugin ordering algorithms](/gateway/plugins/plugin-ordering/).
 
 The configuration looks like this:
 
@@ -228,7 +225,7 @@ In some cases, this might be compensated for when you run rate limiting before a
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
-* **Algorithm selection**: The [`plugin_ordering_algorithm`](/gateway/configuration/) parameter selects how plugins are reordered. It defaults to `legacy` (the original behavior; see [How legacy dynamic plugin ordering works](/gateway/plugins/plugin-ordering-legacy/)); set it to `priority_preserving` to only move the plugin you configure — every other plugin's order relative to the other unconfigured plugins stays the same (see [How priority_preserving dynamic plugin ordering works](/gateway/plugins/plugin-ordering-priority-preserving/)).
+* **Algorithm selection**: The [`plugin_ordering_algorithm`](/gateway/configuration/) parameter selects how plugins are reordered. It defaults to `legacy`. Set it to `priority_preserving` to move only the plugin you configure. See [Plugin ordering algorithms](/gateway/plugins/plugin-ordering/).
 
 {:.info}
 > **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.

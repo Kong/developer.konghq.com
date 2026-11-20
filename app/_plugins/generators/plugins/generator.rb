@@ -36,6 +36,7 @@ module Jekyll
         return if site.config.dig('skip', 'plugins')
 
         generate_reference_page(plugin)
+        generate_aigw_reference_page(plugin)
         generate_example_pages(plugin)
         generate_api_reference_page(plugin)
         generate_plugin_endpoint(plugin)
@@ -52,6 +53,16 @@ module Jekyll
 
       def generate_reference_page(plugin)
         reference = Jekyll::PluginPages::Pages::Reference
+                    .new(plugin:, file: File.join(plugin.folder, 'reference.md'))
+                    .to_jekyll_page
+
+        site.pages << reference
+      end
+
+      def generate_aigw_reference_page(plugin)
+        return unless aigw_onprem_plugin_reference_plugins.include?(plugin.slug)
+
+        reference = Jekyll::PluginPages::Pages::AIGatewayOnPremReference
                     .new(plugin:, file: File.join(plugin.folder, 'reference.md'))
                     .to_jekyll_page
 
@@ -97,6 +108,12 @@ module Jekyll
 
       def skip_locally?
         @build_filter.excludes_prefix?('/plugins/')
+      end
+
+      private
+
+      def aigw_onprem_plugin_reference_plugins
+        site.config.fetch('aigw_onprem_plugin_reference', [])
       end
     end
   end

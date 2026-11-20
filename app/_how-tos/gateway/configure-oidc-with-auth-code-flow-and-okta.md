@@ -115,10 +115,11 @@ automated_tests: false
 
 ## Create an application in Okta
 
-1. In Okta, navigate to **Applications > Applications** in the sidebar.
+1. In Okta, navigate to **Applications and Resources > Applications** in the sidebar.
 1. Click **Create App Integration**.
 1. Select **OIDC - OpenID Connect**.
 1. Select **Web Application**.
+1. In the **Client definition** field, select "Use Okta-generated client ID".
 1. Click **Authorization Code** for the grant type.
 1. In both the **Sign-in redirect URIs** and **Sign-out redirect URIs** fields, enter a location handled by your Route in {{site.base_gateway}}. In this tutorial, it will be your Ngrok host followed by `/anything`. For example: `https://a36f045h4597.ngrok-free.app/anything`
 1. In the Assignments section, for **Controlled access**, select **Skip group assignment for now**. We will assign the app to the [test Okta user](#okta) you created in the prerequisites next.

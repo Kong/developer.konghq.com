@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@390957c21de38af05017b1bcf982b684da0294bc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/390957c21de38af05017b1bcf982b684da0294bc'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1611,7 +1611,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -1660,7 +1659,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -1884,6 +1882,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -1899,6 +1898,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -1995,6 +1995,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -2072,6 +2134,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -2123,7 +2187,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     AuthStrategyId:
       description: 'ID of the auth strategy to use for the application. If null or not included, the default application auth strategy will be used.'
       type: string
@@ -2248,7 +2311,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -2297,7 +2359,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     TooManyRequestsError:
       description: standard error
       type: object
@@ -2344,7 +2405,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UpdateApplicationPayload:
       description: Payload required to update an application
       type: object
@@ -2416,7 +2476,7 @@ components:
         - client_secret
       title: Refresh token response
     ApiKeyCredentialListItem:
-      description: API key credential returned when listing credentials.
+      description: API key credential returned when listing or importing credentials.
       type: object
       properties:
         type:
@@ -2664,7 +2724,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ListAuthStrategiesResponse:
       type: object
       properties:
@@ -2804,7 +2863,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     Developer:
       description: A user who can use a developer portal
       type: object
@@ -2962,6 +3020,104 @@ components:
         - allowed_time_period
         - name
       title: Portal Context
+    ListDocuments:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentItem'
+      additionalProperties: false
+      required:
+        - meta
+        - data
+    ListDocumentsTree:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTree'
+      required:
+        - meta
+        - data
+    DocumentItem:
+      type: object
+      properties:
+        id:
+          description: the id of the document
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+        parent_document_id:
+          description: the id of the parent document
+          type: string
+          format: uuid
+          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
+          nullable: true
+        slug:
+          description: the slug of the document
+          type: string
+          example: getting-started
+        title:
+          description: the title of the document
+          type: string
+          example: Getting Started
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - parent_document_id
+        - slug
+        - title
+      title: Document item
+    DocumentTree:
+      description: a document tree
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+        parent_document_id:
+          type: string
+          format: uuid
+          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
+          nullable: true
+        title:
+          description: the title of the document
+          type: string
+          example: Getting Started
+        slug:
+          description: the slug of the document
+          type: string
+          example: getting-started
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTree'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - title
+        - slug
+        - metadata
+        - children
+      title: DocumentTree
     ProductActionsResponse:
       type: object
       properties:
@@ -3419,109 +3575,6 @@ components:
       example:
         owner: John Appleseed
       additionalProperties: true
-    DocumentItem:
-      type: object
-      properties:
-        id:
-          description: the id of the document
-          type: string
-          format: uuid
-          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-        parent_document_id:
-          description: the id of the parent document
-          type: string
-          format: uuid
-          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
-          nullable: true
-        slug:
-          description: the slug of the document
-          type: string
-          example: getting-started
-        title:
-          description: the title of the document
-          type: string
-          example: Getting Started
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      additionalProperties: false
-      required:
-        - id
-        - parent_document_id
-        - slug
-        - title
-        - metadata
-        - created_at
-        - updated_at
-      title: Document item
-    ListDocuments:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentItem'
-      additionalProperties: false
-      required:
-        - meta
-        - data
-    DocumentTree:
-      description: a document tree
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
-        parent_document_id:
-          type: string
-          format: uuid
-          example: dd4e1b98-3629-4dd3-acc0-759a726ffee2
-          nullable: true
-        title:
-          description: the title of the document
-          type: string
-          example: Getting Started
-        slug:
-          description: the slug of the document
-          type: string
-          example: getting-started
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        children:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTree'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      required:
-        - id
-        - title
-        - slug
-        - metadata
-        - children
-        - created_at
-        - updated_at
-      title: DocumentTree
-    ListDocumentsTree:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentTree'
-      required:
-        - meta
-        - data
     DocumentFormatContentTypeEnum:
       type: string
       default: application/json
@@ -3898,7 +3951,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     CreateRegistrationPayload:
       description: The payload to create a registration.
       type: object

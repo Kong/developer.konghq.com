@@ -62,7 +62,7 @@ metadata:
 spec:
   type: token
   token: '$KONNECT_TOKEN'
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 <!-- vale on -->
 
@@ -80,6 +80,7 @@ metadata:
 stringData:
   token: "'$KONNECT_TOKEN'"' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -90,7 +91,7 @@ spec:
   type: secretRef
   secretRef:
     name: konnect-api-auth-secret
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 <!-- vale on -->
 
@@ -101,6 +102,7 @@ Run the following command to verify that the authentication configuration was cr
 ```bash
 kubectl get konnectapiauthconfiguration konnect-api-auth -n kong
 ```
+{: data-test-step="block" }
 
 You should see output similar to the following:
 
@@ -108,15 +110,15 @@ You should see output similar to the following:
 NAME               VALID   ORGID                                  SERVERURL
 konnect-api-auth   True    5ca26716-02f7-4430-9117-1d1a7a2695e7   https://us.api.konghq.com
 ```
+{:.no-copy-code}
 
-If you prefer to work with status conditions programmatically, you can also run:
+The `KonnectAPIAuthConfiguration` is only usable once its `APIAuthValid` condition reports `True`:
 
-```bash
-kubectl get konnectapiauthconfiguration konnect-api-auth -n kong -o jsonpath="{.status.conditions[?(@.type=='APIAuthValid')]}"
-```
-
-Which should yield the follow
-
-```json
-{"lastTransitionTime":"2025-10-16T11:46:28Z","message":"Token is valid","observedGeneration":1,"reason":"Valid","status":"True","type":"APIAuthValid"}
-```
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectAPIAuthConfiguration
+name: konnect-api-auth
+conditionType: APIAuthValid
+reason: Valid
+{% endvalidation %}
+<!-- vale on -->

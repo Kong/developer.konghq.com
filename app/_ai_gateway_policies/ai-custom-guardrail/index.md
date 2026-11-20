@@ -2,6 +2,7 @@
 min_version:
   ai-gateway: '2.0'
 works_on:
+  - on-prem
   - konnect
 products:
   - ai-gateway
@@ -14,7 +15,7 @@ tags:
   - safety
 ---
 
-The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
+The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)). It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
 ## How it works
 
@@ -27,44 +28,19 @@ Here's how it works if you apply it to both requests and responses:
 
 1. The AI Custom Guardrail Policy intercepts the request and sends the request body to the guardrail service.
    - The guardrail service analyzes the request against configured moderation categories and allows or blocks the request.
-1. If allowed, the request is forwarded upstream with the AI Model entity.
+1. If allowed, the request is forwarded upstream by the AI Model.
 1. On the way back, the Policy intercepts the response and sends the response body to the guardrail service.
    - The guardrail service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
-{% comment %}
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-  autonumber
-  participant client as Client
-  participant custguardrail as AI Custom Guardrail Policy
-  participant guardrail as Guardrail service
-  participant proxy as AI Proxy/Advanced plugin
-  participant llm as Upstream AI service
-
-  client->>custguardrail:Send request
-  custguardrail<<->>guardrail:Intercept & send request body
-  guardrail->>guardrail:Check against moderation <br>categories and blocklists
-  guardrail->>custguardrail: Allow or block request
-  custguardrail->>proxy: Forward allowed request
-  proxy->>llm: Process allowed request
-  llm->>proxy: Return AI response
-  proxy->>custguardrail: Forward response
-  custguardrail->>guardrail: Intercept & send response body
-  guardrail->>guardrail: Check against moderation <br>categories and blocklists
-  guardrail->>custguardrail: Allow or block response
-  custguardrail->>client: Forward allowed response
-{% endmermaid %}
-<!-- vale on -->
-{% endcomment %}
+{% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Guardrail service" masking=true %}
 
 ## Configuration
 
 To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). The key is the parameter name, and the value can be a string or a Lua expression.
 
 Additionally, the following built-in variables are available in Lua expressions. They can be used as arguments in functions, but not in the function body:
-* `$(source)`: The current phase on which the Policy is running. The value is `INPUT` if the Policy is currently inspecting the request, and `OUTPUT` if it's inspecting the response.
+* `$(source)`: The current phase on which the Policy is running. The value is `INPUT` if the Policy is inspecting the request, and `OUTPUT` if it's inspecting the response.
 * `$(conf)`: A Lua table that corresponds to the Policy's config field, meaning it has the same values as the Policy's configuration, which allows to access sub-fields under `config`.
 * `$(content)`: The text content being inspected, extracted from the request body in the `INPUT` phase and the response body in the `OUTPUT` phase.
 * `$(resp)`:  The response from the guardrail service. 

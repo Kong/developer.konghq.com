@@ -19,13 +19,13 @@ info:
 
     Authenticate with a Konnect personal access token or system account token. The base URL is
     `https://global.api.konghq.com/v2` for all regions.
-  version: 2.5.0
+  version: 2.6.0
   title: Konnect Cloud Gateways
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@4b68cac5017ea941aa4edb3e82ebb719f5674678
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4b68cac5017ea941aa4edb3e82ebb719f5674678'
+  x-oas-source: kong/platform-api@12d31b251dc3e9d761892d4ae7458f6f58dbc335
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/12d31b251dc3e9d761892d4ae7458f6f58dbc335'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1323,6 +1323,7 @@ components:
         - `me` — Middle East
         - `in` — India
         - `sg` — Singapore
+        - `uk` — United Kingdom
       type: string
       enum:
         - us
@@ -1331,6 +1332,7 @@ components:
         - me
         - in
         - sg
+        - uk
       title: Control-Plane Geo
     GatewayVersion:
       description: |
@@ -3770,7 +3772,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
         data_plane_groups:
@@ -4002,7 +4003,6 @@ components:
           type: string
           enum:
             - control-plane
-          x-terraform-transform-const: true
         type:
           $ref: '#/components/schemas/ControlPlaneAddOnOwnerType'
         control_plane_id:
@@ -4027,7 +4027,6 @@ components:
           type: string
           enum:
             - control-plane-group
-          x-terraform-transform-const: true
         control_plane_group_id:
           description: ID of the control-plane group that owns this add-on.
           type: string
@@ -4056,7 +4055,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
       additionalProperties: false
@@ -4089,7 +4087,6 @@ components:
           type: string
           enum:
             - managed-cache.v0
-          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
       additionalProperties: false
@@ -4112,7 +4109,6 @@ components:
           type: string
           enum:
             - tiered
-          x-terraform-transform-const: true
         tier:
           description: |
             Capacity tier that determines both cache size and performance characteristics:
@@ -4678,6 +4674,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -4693,6 +4690,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -4789,6 +4787,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -4866,6 +4926,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -4917,7 +4979,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     UnauthorizedError:
       description: standard error
       type: object
@@ -4966,7 +5027,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ForbiddenError:
       description: standard error
       type: object
@@ -5015,7 +5075,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -5064,7 +5123,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -5113,7 +5171,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -5521,7 +5578,7 @@ components:
         invalid_parameters:
           - field: 'filter[owner.control_plane_geo][neq]'
             rule: enum
-            reason: '"filter[owner.control_plane_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            reason: '"filter[owner.control_plane_geo][neq]" must be one of [us, eu, au, me, in, sg, uk]'
             source: query
             choices:
               - us
@@ -5530,6 +5587,7 @@ components:
               - me
               - in
               - sg
+              - uk
     ListAddOnsInvalidControlPlaneGroupGeoBadRequestExample:
       value:
         status: 400
@@ -5539,7 +5597,7 @@ components:
         invalid_parameters:
           - field: 'filter[owner.control_plane_group_geo][neq]'
             rule: enum
-            reason: '"filter[owner.control_plane_group_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            reason: '"filter[owner.control_plane_group_geo][neq]" must be one of [us, eu, au, me, in, sg, uk]'
             source: query
             choices:
               - us
@@ -5548,6 +5606,7 @@ components:
               - me
               - in
               - sg
+              - uk
     DeleteAddOnLinkedPluginsBadRequestExample:
       value:
         status: 400

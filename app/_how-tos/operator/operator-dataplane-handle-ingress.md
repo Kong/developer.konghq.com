@@ -22,6 +22,24 @@ tldr:
   q: How do I configure {{ site.operator_product_name }} to handle Kubernetes Ingress resources?
   a: Set the `spec.ingressClass` field in the `ControlPlane` resource to match your `Ingress` resource's `spec.ingressClassName`.
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `ControlPlane` and `DataPlane` also deletes the resources {{ site.operator_product_name }} created for them. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          ingress/echo-ingress \
+          dataplane/kong-ingress-dp \
+          controlplane/kong-ingress-cp \
+          gatewayconfiguration/kong-ingress-config
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 While the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) is the preferred mechanism for configuring inbound routing, {{ site.operator_product_name }} also supports the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/).
@@ -105,7 +123,7 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
 
 ## Create the Ingress
 
-Create an `Ingress` resource that points to the echo service and specify the `spec.ingressClass` configured in the [`ControlPlane` resource](#create-the-controlplane) in the `spec;ingressClassName` field:
+Create an `Ingress` resource that points to the echo service and specify the `spec.ingressClass` configured in the [`ControlPlane` resource](#create-the-controlplane) in the `spec.ingressClassName` field:
 
 ```yaml
 echo '
@@ -137,15 +155,37 @@ spec:
    ```bash
    kubectl get controlplane,dataplane,ingress -n kong
    ```
+   {: data-test-step="block" }
+
+1. Wait for the `DataPlane` to be ready:
+
+   ```bash
+   kubectl wait dataplane/kong-ingress-dp -n kong \
+     --for=condition=Ready \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Wait for the `DataPlane` service to get an external IP:
+
+   ```bash
+   kubectl wait svc -n kong \
+     -l gateway-operator.konghq.com/dataplane-service-type=ingress \
+     --for=jsonpath='{.status.loadBalancer.ingress[0].ip}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the external IP of the `DataPlane` service:
 
    ```bash
-   export PROXY_IP=$(kubectl get svc -n kong -l app=kong-ingress-dp,gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+   export PROXY_IP=$(kubectl get svc -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
    ```
+   {: data-test-step="block" }
 
 1. Send a request to the Ingress:
 
    ```sh
    curl -i http://$PROXY_IP/
    ```
+   {: data-test-step="block" data-test-retry-count="6" }

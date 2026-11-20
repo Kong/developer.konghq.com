@@ -9,8 +9,8 @@ on:
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
-      konnect_event_gateway_min_version:
-        description: 'Minimum Konnect Event Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
+      konnect_ai_gateway_min_version:
+        description: 'Minimum Konnect AI Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
         required: false
   schedule:
     - cron: '0 0 * * MON'
@@ -35,7 +35,7 @@ jobs:
       KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
@@ -51,6 +51,18 @@ jobs:
         with:
           konnect-domain: ${{ env.KONNECT_DOMAIN }}
 
+      - name: Set AI Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
+      - name: Set AI Gateway min version
+        if: ${{ inputs.konnect_ai_gateway_min_version != '' }}
+        env:
+          MIN_VERSION: ${{ inputs.konnect_ai_gateway_min_version }}
+        run: echo "KONNECT_AI_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
       - name: Generate instruction files
         uses: './.github/reusable-steps/generate-instruction-files'
         with:
@@ -62,20 +74,8 @@ jobs:
         with:
           op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
-      - name: Set AI Gateway Image and Tag
-        run: |
-          INPUT_IMAGE="${{ inputs.gateway_image }}"
-          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
-          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
-
       - name: Pre-pull AI Gateway quickstart dependencies
         run: docker pull ghcr.io/jqlang/jq:latest
-
-      - name: Set Event Gateway min version
-        if: ${{ inputs.konnect_event_gateway_min_version != '' }}
-        env:
-          MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
-        run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: tools/automated-tests
@@ -103,10 +103,13 @@ jobs:
           TESTS_AWS_REGION: ${{ secrets.AWS_REGION }}
           TESTS_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           TESTS_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TESTS_MANTLE_MODEL_ID: ${{ secrets.MANTLE_MODEL_ID }}
+          TESTS_BEDROCK_VPC_ENDPOINT: ${{ secrets.BEDROCK_VPC_ENDPOINT }}
           TESTS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TESTS_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TESTS_GCP_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON_BASE64 }}
           TESTS_VERTEX_UPSTREAM_URL: ${{ secrets.VERTEX_UPSTREAM_URL }}
+          TESTS_SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           DEBUG=tests:* npm run run-tests
 

@@ -30,18 +30,21 @@ If any paths correspond to removed commands (the include file no longer exists),
 
 ## Prerequisites
 
-Check that `kongctl` is installed and up to date. Run:
+Check that `kongctl` is installed and its version matches the latest version recorded in `app/_data/tools/kongctl.yml`. Run:
 
 ```sh
 which kongctl && kongctl version
-# If missing: brew install kongctl (or: brew upgrade kongctl)
 ```
 
-Ask the user to upgrade to the latest version before proceeding:
+Then read `app/_data/tools/kongctl.yml` and find the entry with `latest: true`. Compare its `version` value to the installed version.
 
-> "Before I start, please upgrade kongctl to the latest version. You can use `brew upgrade kongctl` or `curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version <version-name>`. Let me know when that's done."
+- If `kongctl` is missing, ask the user to install it: `brew install kongctl`.
+- If the installed version matches the latest version in `kongctl.yml`, continue.
+- If they differ, stop and tell the user:
 
-Only continue once the user confirms their version is up to date.
+> "Your installed kongctl is `<installed version>`, but `app/_data/tools/kongctl.yml` records `<latest version>` as latest. Please upgrade before I continue: `brew upgrade kongctl` or `curl -fsSL https://get.konghq.com/kongctl | sh -s -- --version <latest version>`. Let me know when that's done."
+
+Only continue once the versions align.
 
 Only run kongctl commands with the `--help` flag.
 
@@ -114,6 +117,8 @@ For a removed 2-level command that previously had a resource group (e.g. `get/ev
 ```
 
 ### Step 3: Create reference pages
+
+After creating pages, add crosslinks to sibling pages for the same resource in Step 7.
 
 The structure depends on command depth:
 
@@ -265,10 +270,39 @@ For example, `explain` (no subcommands) becomes:
             - path: /kongctl/explain/
 ```
 
-### Step 7: Summarize and report to the user
+### Step 7: Add crosslinks between related command pages
+
+Pages for the same resource under different verbs must link to each other in `related_resources`. For example, `get/mesh.md`, `create/mesh.md`, `apply/mesh.md`, `delete/mesh.md`, `dump/mesh.md`, and `inspect/mesh.md` all link to each other. The same applies to `get/ai-gateway.md`, `adopt/ai-gateway.md`, and `list/ai-gateway.md`.
+
+1. Find every page for the resource (the flat `.md` file under each verb directory). Search for the singular and plural names, because some verbs use the plural (for example `list/extensions.md` sits alongside `get/extension.md`):
+
+   ```sh
+   find app/kongctl -mindepth 2 -maxdepth 2 \( -name "<resource>.md" -o -name "<resource>s.md" \) | sort
+   ```
+
+   Include the pages you just created. If only one page exists for the resource (for example `get/me.md`), skip it.
+
+2. In each page, keep the existing `related_resources` entries (the verb index link and anything else, such as the declarative resource reference) and append one entry for every other page, in alphabetical order by verb. Don't add an entry that links to the page itself, and don't duplicate an existing URL:
+
+   ```yaml
+   related_resources:
+     - text: kongctl get mesh commands   # existing entry, unchanged
+       url: /kongctl/get/
+     - text: kongctl apply mesh
+       url: /kongctl/apply/mesh/
+     - text: kongctl create mesh
+       url: /kongctl/create/mesh/
+   ```
+
+3. Also update the existing sibling pages when you add a new verb for a resource. For example, if you add `inspect/mesh.md`, add an `inspect mesh` entry to the existing `get/mesh.md`, `create/mesh.md`, and the others.
+
+Section-only pages (3-level commands documented as `###` sections) don't get sibling links. The `konnect` wrapper pages (`get/konnect.md`, `inspect/konnect.md`, and so on) don't either: they exist under almost every verb, so linking them would add a dozen unrelated links to each page.
+
+### Step 8: Summarize and report to the user
 
 List the following:
 * New pages created
 * Pages updated
+* Crosslinks added (which pages now link to each other)
 * Removed commands processed (index entries removed, redirects added, crosslinks cleaned up)
 * Commands that were checked and help text that was pulled from them

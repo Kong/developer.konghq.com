@@ -10,7 +10,7 @@ requirements:
 name: validate-all-messages
 type: schema_validation
 condition: >
-  context.topic.name == "my_topic"
+  {{context.topic.name == "my_topic"}}
 config:
   type: confluent_schema_registry
   schema_registry:

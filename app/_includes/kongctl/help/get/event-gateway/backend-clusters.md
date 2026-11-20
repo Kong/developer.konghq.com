@@ -30,8 +30,8 @@ Flags:
                                       - Default   : [ https://us.api.konghq.com ]
       --color-theme string            Configures the CLI UI/theme (prompt, tables, TUI elements).
                                       - Config path: [ color-theme ]
-                                      - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                      - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                      - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                      - List       : [ kongctl list themes ] (default "auto")
       --columns stringArray           Select text columns as HEADER=.field (repeatable or comma-separated).
                                       Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string            Path to the configuration file to load.
@@ -41,7 +41,7 @@ Flags:
                                       - Config path: [ konnect.event-gateway.id ]
       --gateway-name string           The name of the event gateway that owns the resource.
                                       - Config path: [ konnect.event-gateway.name ]
-  -h, --help                          help for backend-clusters
+  -h, --help[=true|false]             help for backend-clusters
       --jq string                     Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string               Controls colorized output for jq filter results.
                                       - Config path: [ jq.color.enabled ]
@@ -50,18 +50,18 @@ Flags:
                                       - Config path: [ jq.color.theme ]
                                       - Examples   : [ friendly, github-dark, dracula ]
                                       - Reference  : [ https://xyproto.github.io/splash/docs/ ] (default "friendly")
-  -r, --jq-raw-output                 Output string jq results without JSON quotes (like jq -r).
+  -r, --jq-raw-output[=true|false]    Output string jq results without JSON quotes (like jq -r).
                                       - Config path: [ jq.raw-output ]
       --log-file string               Write execution logs to the specified file instead of STDERR.
                                       - Config path: [ log-file ]
       --log-level string              Configures the logging level. Execution logs are written to STDERR.
                                       - Config path: [ log-level ]
                                       - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-telemetry                  Disable telemetry for this command invocation. Overrides config and env.
+      --no-telemetry[=true|false]     Disable telemetry for this command invocation. Overrides config and env.
                                       - Config path: [ telemetry.enabled ]
                                       - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                       - Default    : [ false ]
-      --no-trunc                      Preserve full cell widths in static text tables beyond terminal width.
+      --no-trunc[=true|false]         Preserve full cell widths in static text tables beyond terminal width.
                                       Does not change column selection, UUID formatting, or explicit string slices.
                                       - Config path: [ text.no-trunc ]
                                       - Default    : [ false ]

@@ -10,29 +10,29 @@ Examples:
 
 
 Flags:
-      --auto-approve                 Skip confirmation prompts for delete operations
+      --auto-approve[=true|false]    Skip confirmation prompts for delete operations
       --base-url string              Base URL for Konnect API requests.
                                      - Config path: [ konnect.base-url ]
                                      - Default   : [ https://us.api.konghq.com ]
       --color-theme string           Configures the CLI UI/theme (prompt, tables, TUI elements).
                                      - Config path: [ color-theme ]
-                                     - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
-                                     - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
+                                     - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                     - List       : [ kongctl list themes ] (default "auto")
       --config-file string           Path to the configuration file to load.
                                      - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                      - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-      --force                        Force deletion even when related resources exist (not configurable)
-  -h, --help                         help for spat
+      --force[=true|false]           Force deletion even when related resources exist (not configurable)
+  -h, --help[=true|false]            help for spat
       --log-file string              Write execution logs to the specified file instead of STDERR.
                                      - Config path: [ log-file ]
       --log-level string             Configures the logging level. Execution logs are written to STDERR.
                                      - Config path: [ log-level ]
                                      - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --no-telemetry                 Disable telemetry for this command invocation. Overrides config and env.
+      --no-telemetry[=true|false]    Disable telemetry for this command invocation. Overrides config and env.
                                      - Config path: [ telemetry.enabled ]
                                      - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                      - Default    : [ false ]
-      --no-trunc                     Preserve full cell widths in static text tables beyond terminal width.
+      --no-trunc[=true|false]        Preserve full cell widths in static text tables beyond terminal width.
                                      Does not change column selection, UUID formatting, or explicit string slices.
                                      - Config path: [ text.no-trunc ]
                                      - Default    : [ false ]

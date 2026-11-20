@@ -31,6 +31,30 @@ RSpec.describe Jekyll::Drops::Plugins::AIGWPolicySchema do
     end
   end
 
+  describe '#compatible_protocols' do
+    let(:schema_json) do
+      JSON.dump(
+        'properties' => {
+          'config' => config_schema,
+          'protocols' => {
+            'type' => 'array',
+            'items' => { 'type' => 'string', 'enum' => %w[grpc grpcs http https ws wss] }
+          }
+        }
+      )
+    end
+
+    it 'reads the protocol enum the info box renders' do
+      expect(drop.compatible_protocols).to eq(%w[grpc grpcs http https ws wss])
+    end
+
+    context 'when the schema has no protocol enum' do
+      let(:schema_json) { JSON.dump({ 'properties' => { 'config' => config_schema, 'protocols' => {} } }) }
+
+      it { expect(drop.compatible_protocols).to be_nil }
+    end
+  end
+
   describe 'slug-to-filename conversion' do
     context 'with a single-word slug' do
       let(:slug) { 'cors' }

@@ -1,0 +1,33 @@
+description:  Configure the AI Request Transformer policy to use OpenAI GPT-4 to add an element to the client request body before proxying it.
+title: Add data to a request body
+
+weight: 900
+
+requirements:
+  - You have an OpenAI subscription.
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: An API key to connect to the OpenAI API.
+
+name: add-data-to-request-body
+display_name: Add data to a request body
+type: ai-request-transformer
+
+config:
+  prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in.
+  transformation_extract_pattern: '{((.|\n)*)}'
+  llm:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    model:
+      provider: openai
+      name: gpt-4
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

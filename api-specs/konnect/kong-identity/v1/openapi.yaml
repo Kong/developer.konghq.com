@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.8.0
-  x-oas-source: kong/platform-api@8f7389e74d923c3dd92c6234789f15b6d2d79960
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f7389e74d923c3dd92c6234789f15b6d2d79960'
+  version: 1.9.6
+  x-oas-source: kong/platform-api@6755f8b07d7235dc06b5cd7e58163a5973e21abd
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6755f8b07d7235dc06b5cd7e58163a5973e21abd'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -782,7 +782,7 @@ components:
       name: clientId
       in: path
       required: true
-      description: The OAuth 2.0 client ID
+      description: 'The OAuth 2.0 client ID. A client whose client_id is the URL of its Client ID Metadata Document is registered and managed by that document: it is not addressable through these endpoints, and any request that targets it is rejected.'
     clientSecretId:
       schema:
         type: string
@@ -943,7 +943,7 @@ components:
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/SecretEnabled'
+          $ref: '#/components/schemas/UpdateSecretEnabled'
     ClientSecretList:
       type: object
       properties:
@@ -1016,7 +1016,11 @@ components:
         format: uri
       nullable: false
     LoginURI:
-      description: The URI of the login page where the user is redirected to authenticate in interactive flows. The login page must be secure (HTTPS).
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        The URI of the login page where the user is redirected to authenticate in interactive flows. The login page must be secure (HTTPS).
       type: string
       format: uri
       nullable: true
@@ -1050,7 +1054,7 @@ components:
       description: The OAuth 2.0 client ID
       type: string
       example: kYa9iQFU5xPDSIUH9z1z
-      maxLength: 36
+      maxLength: 48
       minLength: 1
       pattern: '[-_\w]+'
       readOnly: true
@@ -1093,6 +1097,13 @@ components:
       description: Requested authentication method for OAuth 2.0 endpoints.
       type: string
       default: client_secret_post
+      enum:
+        - private_key_jwt
+        - client_secret_post
+        - none
+    UpdateTokenEndpointAuthMethod:
+      description: Requested authentication method for OAuth 2.0 endpoints.
+      type: string
       enum:
         - private_key_jwt
         - client_secret_post
@@ -1245,6 +1256,9 @@ components:
       description: 'Specifies whether the secret is enabled. If the secret is not enabled, it will not be usable during authentication phase.'
       type: boolean
       default: true
+    UpdateSecretEnabled:
+      description: 'Specifies whether the secret is enabled. If the secret is not enabled, it will not be usable during authentication phase.'
+      type: boolean
     Claim:
       type: object
       properties:
@@ -1602,6 +1616,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -1617,6 +1632,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -1713,6 +1729,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -1790,6 +1868,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -1841,7 +1921,6 @@ components:
         - instance
         - detail
         - invalid_parameters
-      title: Error
     NotFoundError:
       description: standard error
       type: object
@@ -1890,7 +1969,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     ConflictError:
       description: standard error
       type: object
@@ -1939,7 +2017,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     SortQuery:
       description: |
         The `asc` suffix is optional as the default sort order is ascending.
@@ -2033,7 +2110,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
     LegacyStringFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
@@ -2125,7 +2201,6 @@ components:
         - title
         - instance
         - detail
-      title: Error
   examples:
     ConnectedAppsResponse:
       value:
@@ -2831,7 +2906,7 @@ components:
               allow_scopes:
                 $ref: '#/components/schemas/ClientAllowScopes'
               token_endpoint_auth_method:
-                $ref: '#/components/schemas/TokenEndpointAuthMethod'
+                $ref: '#/components/schemas/UpdateTokenEndpointAuthMethod'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
           examples:

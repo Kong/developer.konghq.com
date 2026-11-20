@@ -7,18 +7,18 @@
             "body": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
             "headers": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
@@ -37,9 +37,9 @@
             "querystring": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             }
@@ -62,18 +62,18 @@
             "body": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
             "headers": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
@@ -92,9 +92,9 @@
             "querystring": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             }
@@ -141,27 +141,27 @@
             "body": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
             "headers": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
             "querystring": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             }
@@ -173,18 +173,18 @@
             "body": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
             "headers": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },
@@ -203,9 +203,9 @@
             "querystring": {
               "default": [],
               "items": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "type": "array"
             },

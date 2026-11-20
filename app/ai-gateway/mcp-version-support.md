@@ -6,6 +6,7 @@ layout: reference
 products:
   - ai-gateway
 works_on:
+  - on-prem
   - konnect
 breadcrumbs:
   - /ai-gateway/

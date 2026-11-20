@@ -1,0 +1,25 @@
+title: Sanitize PII
+description: Sanitize PII from model responses.
+weight: 100
+name: pii-sanitizer
+display_name: PII Sanitizer
+type: ai-sanitizer
+condition: 'model.name == "gpt-4o"'
+config:
+  patterns:
+    - email
+    - phone
+  fail_on_error: true
+  thresholds:
+    redaction:
+      score: 0.9
+      actions:
+        - redact
+        - log
+  providers:
+    openai:
+      model: gpt-4o
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

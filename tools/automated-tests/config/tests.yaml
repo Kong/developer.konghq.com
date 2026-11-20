@@ -48,4 +48,4 @@ products:
   kic:
     extractInstructionsAs: block
   operator:
-    extractInstructionsAs: block
+    extractInstructionsAs: default

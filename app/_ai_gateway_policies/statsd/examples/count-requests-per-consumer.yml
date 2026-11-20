@@ -1,0 +1,38 @@
+name: statsd-count-requests-per-consumer
+display_name: StatsD count requests per consumer
+type: statsd
+title: 'Count requests per AI Consumer'
+description: 'Send the number of requests per AI Consumer to a StatsD server.'
+extended_description: |
+  Send the number of requests per AI Consumer to a StatsD server.
+  The `username` identifier puts the name of the AI Consumer in the metric name, for example `kong.service.<entity>.user.<username>.request.count`.
+weight: 800
+
+scopes:
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+  - global
+
+requirements:
+  - "A [StatsD server](https://github.com/statsd/statsd) reachable from the data plane"
+  - "An [AI Consumer](/ai-gateway/entities/ai-consumer/) that authenticates to the AI Agent or AI MCP Server"
+
+variables:
+  host:
+    value: $HOST
+    description: The IP address or hostname of the StatsD server to send data to.
+
+config:
+  host: ${host}
+  port: 8125
+  metrics:
+    - name: request_per_user
+      stat_type: counter
+      sample_rate: 1
+      consumer_identifier: username
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

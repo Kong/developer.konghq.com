@@ -1,0 +1,40 @@
+title: Route requests based on a location header
+
+description: "Configure the policy to route requests to different hosts based on the value of the `location` header."
+
+
+
+weight: 900
+
+name: route-requests-based-on-a-location-header
+
+display_name: Route requests based on a location header
+
+type: route-by-header
+
+scopes:
+- ai-agent
+- ai-mcp-server
+- ai-consumer
+- global
+
+variables:
+  east_hostname:
+    value: $EAST_HOSTNAME
+    description: The hostname that receives requests with the `location` header set to `us-east`, for example `east.example.com`
+  west_hostname:
+    value: $WEST_HOSTNAME
+    description: The hostname that receives requests with the `location` header set to `us-west`, for example `west.example.com`
+config:
+  rules:
+  - upstream_name: ${east_hostname}
+    condition:
+      location: us-east
+  - upstream_name: ${west_hostname}
+    condition:
+      location: us-west
+
+tools:
+- konnect-api
+- terraform
+- kongctl

@@ -1,0 +1,29 @@
+title: Enable rate limiting for IP addresses
+description: Protect your LLM services with IP rate limiting.
+extended_description: |
+  Protect your LLM services with IP rate limiting.
+  The AI Rate Limiting Advanced Policy analyzes query costs and token responses to provide an enterprise-grade rate limiting strategy.
+weight: 900
+min_version:
+  ai-gateway: '2.0'
+name: ip-rate-limiting
+display_name: Rate limiting for IP addresses
+type: ai-rate-limiting-advanced
+requirements:
+- An existing [AI Model](/ai-gateway/entities/ai-model/).
+config:
+  policies:
+  - match:
+    - type: ip
+      values:
+      - 127.0.0.1
+      - 192.0.2.0
+    limits:
+    - limit: 100
+      window_size: 60
+    - limit: 1000
+      window_size: 3600
+tools:
+- konnect-api
+- terraform
+- kongctl

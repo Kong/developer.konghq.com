@@ -4,6 +4,7 @@
 
 <!-- vale off -->
 {% konnect_crd %}
+section: prereqs
 kind: KonnectGatewayControlPlane
 apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:

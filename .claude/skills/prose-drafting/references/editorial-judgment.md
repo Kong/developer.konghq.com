@@ -79,3 +79,21 @@ literally named file or line. The inverse also applies: don't invent new
 sections, cross-links, or speculative content beyond what was actually
 asked for, even when it seems like a reasonable addition — flag it and ask
 instead of expanding scope unilaterally.
+
+## Don't restate the schema
+
+When documenting, do not duplicate what is already in the schema. Decide
+what needs to be documented that isn't already in the schema.
+
+The docs site renders the schema (for example `{% entity_schema %}` on entity
+pages, and generated schema pages for plugins and policies), so prose that
+restates it is redundant and goes stale when the schema changes. 
+
+- Before writing a sentence about a field, check whether the rendered schema
+  already conveys it: name, type, default, required, enum values, one-line
+  description. If it does, don't write it.
+- Document only what the schema doesn't say: when and why to use a setting,
+  how fields interact, constraints that span fields, runtime behavior,
+  gotchas, and examples.
+- If a field's schema description is wrong or unclear, flag it to the writer
+  instead of covering for it in prose.

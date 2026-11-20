@@ -1,0 +1,13 @@
+title: Sanitize PII
+description: Sanitize PII from model responses.
+weight: 100
+name: pii-sanitizer
+display_name:
+type: ai-sanitizer
+config:
+  patterns:
+    - email
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -33,9 +33,9 @@ rows:
       - **Hybrid mode (on-prem):** The data plane can't receive a valid configuration from the control plane, and errors will appear in the data plane log.
     action: |
       Update the schema for all affected plugins by setting these values to `true`.
-      See the full list of affected plugins and fields in the table below.
+      See the full list of affected plugins and fields in the following table.
       <br>
-      To see your plugin's schema, find your plugin on the [Plugin Hub](/plugins/), then open the **Configuration reference** tab.
+      To see your plugin's schema, find your plugin on the [Plugin Hub](/plugins/), then click the **Configuration reference** tab.
 
   - category: HashiCorp Vault
     impact: |
@@ -159,6 +159,7 @@ rows:
       * `cluster_cache_redis.ssl_verify`
       * `redis.ssl_verify`
       * `session_memcached_ssl_verify`
+      * `tls_client_auth_ssl_verify`
   - plugin: "[Proxy Cache Advanced](/plugins/proxy-cache-advanced/)"
     fields: "`redis.ssl_verify`"
   - plugin: "[Rate Limiting](/plugins/rate-limiting/)"

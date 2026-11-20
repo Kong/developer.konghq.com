@@ -1,6 +1,6 @@
 ---
 title: GitHub Copilot BYOK Custom Endpoint
-description: Route GitHub Copilot Chat and agent traffic through {{site.base_gateway}} via Copilot's Bring Your Own Key Custom Endpoint, with per-Consumer attribution, request normalization, and token rate limiting.
+description: Route GitHub Copilot chat and agent requests from VS Code through {{site.ai_gateway_name}}, with a per-developer API key, request normalization, and a token budget for each developer.
 url: "/cookbooks/github-copilot-byok/"
 content_type: cookbook
 layout: cookbook
@@ -8,863 +8,623 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0'
 categories:
   - llm
   - access-control
 featured: false
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - pre-function
-  - key-auth
-  - ai-proxy-advanced
-  - ai-rate-limiting-advanced
-requires_embeddings: false
-providers:
-  - openai
-  - azure
-  - bedrock
-extra_services:
-  - name: GitHub Copilot Business or Enterprise
-    env_vars: []
-    hint: "Each developer needs a GitHub Copilot Business or Enterprise seat, and the org administrator must enable the 'Bring Your Own Language Model Key in VS Code' Copilot policy plus Editor Preview Features. See the GitHub Copilot section in Prerequisites."
-
-hint: "Requires GitHub Copilot Business or Enterprise seats, VS Code 1.122 or later, an admin who can enable the BYOK Copilot policy, and one LLM provider credential (OpenAI, Azure OpenAI, or AWS Bedrock)."
-
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped control plane and local data plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Set the recipe-scoped control plane name and run the quickstart script. The `-e` flags raise the data plane's nginx body buffer so Copilot's large request payloads (full conversation context, tool definitions, file contents) stay in memory instead of spilling to disk:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The two `-e` settings raise the data plane's request body buffer and limit to 16 MB, so the large request bodies that Copilot sends (conversation history, tool definitions, file contents) stay in memory instead of being buffered to disk:
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='github-copilot-byok-recipe'
-           curl -Ls https://get.konghq.com/quickstart | \
+           curl -Ls https://get.konghq.com/ai | \
              bash -s -- -k $KONNECT_TOKEN \
                -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=16m \
-               -e KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE=16m \
-               --deck-output
+               -e KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE=16m
            ```
 
-           This provisions a {{site.konnect_product_name}} control plane named `github-copilot-byok-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK + jq
+           This provisions an {{site.ai_gateway}} named `github-copilot-byok-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+    - title: kongctl
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
+        This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
-        1. Install **decK** version 1.43 or later from [developer.konghq.com/deck](/deck/).
-        1. Install **jq** from [jqlang.org](https://jqlang.org/).
-
-        You can verify all three are installed:
-
-        ```bash
-        kongctl version
-        deck version
-        jq --version
-        ```
-    - title: GitHub Copilot in VS Code
-      content: |
-        This recipe routes GitHub Copilot Chat and agent traffic through {{site.base_gateway}} using Copilot's **Bring Your Own Key Custom Endpoint**. The Custom Endpoint feature is currently in stable VS Code on Copilot Enterprise seats and in preview on Copilot Business seats. Verify the current availability matrix at the [VS Code language models docs](https://code.visualstudio.com/docs/copilot/customization/language-models) before you start.
-
-        1. Install **VS Code** version 1.122 or later from [code.visualstudio.com](https://code.visualstudio.com/).
-        1. Install the **GitHub Copilot** and **GitHub Copilot Chat** extensions and sign in with a GitHub account that has a Copilot Business or Enterprise seat.
-        1. Have your **Copilot administrator** enable both of the following in the GitHub organization's Copilot policy settings:
-           - **Bring Your Own Language Model Key in VS Code** (the BYOK policy gate).
-           - **Editor Preview Features** (required as long as Custom Endpoint is preview on your seat type).
-
-           Without these, the VS Code Chat picker will not surface the Custom Endpoint option, or will accept the configuration and reject every request at runtime.
-
-        1. Generate two Consumer credentials. These become the API key values each developer enters into the VS Code **Add Models...** wizard. Export them now so the apply step picks them up:
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
+        1. Verify it's installed:
 
            ```bash
-           export DECK_COPILOT_KEY_ALICE="$(openssl rand -hex 24)"
-           export DECK_COPILOT_KEY_BOB="$(openssl rand -hex 24)"
+           kongctl version
            ```
+    - title: VS Code and GitHub Copilot
+      content: |
+        This tutorial adds a custom endpoint model to GitHub Copilot chat in VS Code. VS Code calls this feature [bring your own language model key (BYOK)](https://code.visualstudio.com/docs/agent-customization/language-models#_bring-your-own-language-model-key).
 
-           When you later paste a key into VS Code, copy it with `printf '%s' "$DECK_COPILOT_KEY_ALICE"` rather than `echo "$DECK_COPILOT_KEY_ALICE"`. In zsh, output that lacks a trailing newline is rendered with a bold `%`. That character is not part of the key, and pasting it produces a `401 No API key found in request` from Key Auth.
-
-           In production, generate one credential per developer (or one per VS Code workstation) and distribute through your secrets manager rather than shell exports.
-
-        {:.warning}
-        > **Inline ghost-text completions cannot be proxied.** Copilot's autocomplete (the gray suggestion text that appears as you type) always runs on GitHub's infrastructure and is not affected by the Custom Endpoint setting. The recipe governs Copilot Chat and agent (`@workspace`, `#editor`, Copilot CLI) traffic only.
+        1. Install VS Code and set up GitHub Copilot from the [VS Code setup guide](https://code.visualstudio.com/docs/setup/copilot).
+        1. If you use Copilot Business or Copilot Enterprise, ask your organization administrator to enable the **Bring Your Own Language Model Key in VS Code** policy in the Copilot policy settings on GitHub.com. Without this policy, you can't add your own models ([GitHub documentation](https://docs.github.com/en/copilot/concepts/models/bring-your-own-key)).
     - title: AI Credentials
       content: |
+        Pick the provider you want to route to and export its credentials. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
+
         {% navtabs "Providers" %}
         {% navtab "OpenAI" %}
-        This tutorial uses OpenAI:
-
-        1. [Create an OpenAI account](https://platform.openai.com/).
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Create a decK variable for the API key. The `openai` provider expects the full `Authorization` value, including the `Bearer ` prefix:
+        1. Export the API key:
 
-           ```bash
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-OPENAI-KEY'
+           ```sh
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
         {% endnavtab %}
         {% navtab "Azure OpenAI" %}
-        This tutorial uses [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/):
+        Azure binds each deployment to one model, and the deployment ID selects the upstream model ([Azure OpenAI REST API reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference)).
 
-        1. Ensure you have an Azure OpenAI resource with at least one chat deployment.
-        1. Create decK variables for your resource. `DECK_AZURE_DEPLOYMENT_ID` is the deployment name you assigned in the Azure portal, not the underlying model name:
+        1. [Create an Azure OpenAI resource](https://portal.azure.com/#create/Microsoft.CognitiveServicesOpenAI).
+        1. Deploy a chat model in the resource, for example `gpt-4o`.
+        1. Export your credentials. `AZURE_DEPLOYMENT_ID` is the deployment name that you chose in the Azure portal. Use the current API version from the Azure OpenAI REST API reference:
 
-           ```bash
-           export DECK_AZURE_API_KEY='YOUR-AZURE-OPENAI-KEY'
-           export DECK_AZURE_INSTANCE='your-azure-resource'
-           export DECK_AZURE_DEPLOYMENT_ID='your-deployment-name'
-           export DECK_AZURE_API_VERSION='2024-10-21'
+           ```sh
+           export AZURE_API_KEY='your-azure-api-key'
+           export AZURE_INSTANCE='your-instance-name'
+           export AZURE_DEPLOYMENT_ID='your-deployment-id'
+           export AZURE_API_VERSION='YOUR-API-VERSION'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
-        This tutorial uses [AWS Bedrock](https://docs.aws.amazon.com/bedrock/):
+        1. Get an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
+        1. Export your AWS credentials and region:
 
-        1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for the chat model you plan to use.
-        1. Create decK variables with your AWS credentials:
-
-           ```bash
-           export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-           export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-           export DECK_AWS_REGION='us-east-1'
+           ```sh
+           export AWS_ACCESS_KEY_ID='your-access-key'
+           export AWS_SECRET_ACCESS_KEY='your-secret-key'
+           export AWS_REGION='us-east-1'
            ```
         {% endnavtab %}
         {% endnavtabs %}
-
 overview: |
-  This recipe puts {{site.ai_gateway_name}} in front of an LLM provider so every
-  GitHub Copilot Chat and agent request from your engineering team flows through a
-  control point you own. Kong holds the provider API key and injects it server-side,
-  authenticates each developer with a Consumer-scoped credential, normalizes the
-  request body so reasoning models accept it, and attributes every token to a named
-  developer in {{site.konnect_short_name}} {{site.observability}}
+  Put {{site.ai_gateway_name}} between GitHub Copilot chat in VS Code and your LLM provider, so that each developer uses their own revocable API key and the provider key stays in {{site.ai_gateway}}. You'll set up:
 
-  The recipe configures Copilot's
-  [Bring Your Own Key (BYOK) Custom Endpoint](https://code.visualstudio.com/docs/copilot/customization/language-models)
-  in VS Code to post to a Kong Route at `/github-copilot/v1/chat/completions`, then
-  uses four Kong plugins on that Route: 
-    * The [Pre-function](/plugins/pre-function/)
-  plugin to normalize the request
-    * The [Key Auth](/plugins/key-auth/) plugin to
-  authenticate each developer, 
-    * The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin to inject the provider key and forward the request
-    * The [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) plugin to enforce
-  per-Consumer token budgets
+  * A custom endpoint model in VS Code that sends Copilot chat and agent requests to {{site.ai_gateway}}
+  * An API key and a token budget for each developer
+  * A model alias that decouples the model name in VS Code from the upstream model
+  * A {{site.konnect_short_name}} dashboard for Copilot usage by developer
 
-  Scope: this recipe governs Copilot Chat and agent traffic (the Chat view, agent
-  modes, and Copilot CLI). Inline ghost-text code completions always run on
-  GitHub's infrastructure and cannot be proxied through Kong, regardless of the
-  Custom Endpoint setting.
+  This cookbook covers Copilot chat and agent requests. Inline suggestions (code completions) don't use custom endpoint models, so they don't go through {{site.ai_gateway}} ([VS Code documentation](https://code.visualstudio.com/docs/agent-customization/language-models#_bring-your-own-language-model-key)).
 ---
 
-## The problem
+## What this cookbook solves
 
-Routing GitHub Copilot through a central control point breaks down on three independent fronts at once. Each one is a real wall teams hit; together they are why provider-credential reuse falls apart.
-
-**Credentials live on developer machines.** A team that enables Copilot BYOK without a gateway distributes provider API keys directly to every engineer through 1Password, shell profiles, or chat. Every request is indistinguishable on the provider bill, every leaked key is a fleet-wide rotation, and there is no way to revoke one developer without touching everyone.
-
-**Copilot pins request fields that some upstreams reject.** VS Code's Custom Endpoint client posts requests with `temperature: 0.1` hard-coded into the body, and Copilot's BYOK schema does not expose a field for changing it. When the upstream is a reasoning model (gpt-5 family, o-series), the provider returns:
-
-```text
-400 ... 'temperature' does not support 0.1 ... Only the default (1) value is supported
-```
-{:.no-copy-code}
-
-You can't fix this in VS Code's BYOK configuration. The request has to be normalized at the gateway.
-
-**Org-policy model allowlists reject the wrong name.** GitHub Copilot Business and Enterprise let admins pin an allowlist of model IDs that BYOK requests are permitted to claim. A request that names any other model is rejected by Copilot before it ever leaves VS Code, with:
-
-```text
-400 "cannot use own model - must be: gpt-5-mini"
-```
-{:.no-copy-code}
-
-This is enforced by GitHub's policy layer, not by the LLM provider or by Kong. It means the model ID a developer types into VS Code (`models[].id` in the BYOK config) has to match the org's allowlist, regardless of what model Kong actually forwards to upstream.
-
-**No per-developer attribution.** Even when traffic reaches the provider, the bill is a single line item. There is no built-in way to see which developer used how many tokens, which model, or how often a developer is approaching the team's monthly budget. Cost decisions become retroactive.
-
-The root issue is that trust, normalization, and accounting all need to happen on a server you control before the request hits the provider. That control point is what this recipe builds.
-
-## The solution
-
-This recipe puts {{site.base_gateway}} between VS Code and the LLM provider so every Copilot Chat or agent request flows through a server you control:
-
-- **Developers never hold the provider key.** Kong holds it and injects it server-side. Each developer authenticates to Kong with their own short-lived Consumer credential, which is the value they paste into VS Code's `apiKey` field. Rotating one developer is a single decK-config change; rotating the provider key is also one change, not a fleet-wide push.
-- **Per-Consumer attribution.** Every request is attributed to a named Consumer in {{site.konnect_short_name}} {{site.observability}}, so cost, token usage, and model mix can be sliced per developer.
-- **Server-side request normalization.** A Pre-function Plugin instance runs ahead of every other Plugin on the Route and rewrites two things in the request before any other Plugin sees it: it converts Copilot's `Authorization: Bearer <apiKey>` header into the `apikey` header that the Key Auth Plugin expects, and it strips `temperature` from the JSON body so reasoning models accept the request.
-- **Token-budget rate limiting.** Each Consumer has a per-minute token budget enforced by the AI Rate Limiting Advanced Plugin. Exhaustion returns `429 Too Many Requests` until the window resets.
-- **Org-allowlist alignment.** The Kong target's `model_alias` is parameterized by `DECK_CHAT_MODEL`, so the same env var pins both the name VS Code sends and the name Kong matches against. If the org policy mandates `gpt-5-mini`, you set the env var to `gpt-5-mini`, and the VS Code `id` field uses the same value. Kong's `model.name` independently controls what is actually sent upstream.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant VS as VS Code Copilot
-    participant K as Kong Gateway
-    participant L as LLM Provider
-
-    VS->>K: POST /github-copilot/v1/chat/completions<br/>Authorization: Bearer &lt;apiKey&gt;<br/>body: {model, messages, temperature: 0.1}
-    activate K
-    K->>K: pre-function (Bearer to apikey, strip temperature)
-    K->>K: key-auth (validate apikey, attach Consumer)
-    K->>K: ai-proxy-advanced (alias match, inject provider key)
-    K->>K: ai-rate-limiting-advanced (per-Consumer token budget)
-    K->>L: Forwarded request (provider auth + normalized body)
-    activate L
-    L-->>K: Provider response
-    deactivate L
-    K-->>VS: OpenAI-format response (+ X-AI-RateLimit headers)
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+With bring your own key (BYOK) in VS Code, each developer configures a provider API key in their own editor, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: "VS Code GitHub Copilot extension"
-    responsibility: "Posts Chat and agent requests to the Custom Endpoint URL using the OpenAI Chat Completions API shape."
-  - component: "Kong, [Pre-function](/plugins/pre-function/) plugin"
-    responsibility: "Rewrites `Authorization: Bearer` to `apikey` so Key Auth can match it; strips `temperature` from the body so reasoning models accept it."
-  - component: "Kong, [Key Auth](/plugins/key-auth/) Plugin"
-    responsibility: "Validates the per-developer credential and attaches the request to the matching Consumer for downstream attribution and rate-limit counting."
-  - component: "Kong, [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin"
-    responsibility: "Matches the body's `model` against `model_alias`, injects the provider API key server-side, translates to the upstream's native format if needed, and forwards."
-  - component: "Kong, [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) Plugin"
-    responsibility: "Counts prompt + completion tokens against the Consumer's per-window budget and returns `429` on exhaustion."
-  - component: "LLM provider"
-    responsibility: "Model inference. Receives the Kong-injected credential and the normalized request body."
+  - problem: "Each developer holds a copy of the provider API key, and VS Code sends requests directly to the provider. A leaked key means rotating it on every machine."
+    solution: "The AI Model Provider keeps the provider credentials in Kong. Each developer holds only their own AI Consumer key, which you revoke without touching the others."
+  - problem: "GitHub reports BYOK usage from client telemetry only, so platform teams can't see reliable usage and cost for each developer."
+    solution: "The Key Auth AI Auth Strategy maps each key to an AI Consumer. {{site.konnect_short_name}} shows tokens and cost for each AI Consumer, and the cookbook's dashboard groups them by developer."
+  - problem: "Nothing limits how many tokens one developer spends. Agent sessions with large workspace context use up the budget fast."
+    solution: "The AI Rate Limiting Advanced Policy gives each AI Consumer a token budget and returns `429` when the budget runs out."
+  - problem: "VS Code sends the key as `Authorization: Bearer`, and the request body can carry parameters that a model doesn't support, for example `temperature` for the newest OpenAI models."
+    solution: "A global Pre-Function Policy copies the Bearer token to the `apikey` header before authentication and removes `temperature` from the request body."
+  - problem: "Each developer's `chatLanguageModels.json` names the upstream model, so changing the model means editing every developer's settings."
+    solution: "The AI Model answers to an alias. You change the upstream model in Kong, and developers keep the same model ID in VS Code."
 {% endtable %}
 
-## How it works
+## Try it out
 
-When a developer asks Copilot Chat a question, the request flows through Kong before reaching the LLM provider. Here is the complete lifecycle:
+Apply the configuration, create the usage dashboard, add Kong as a custom endpoint model in VS Code, then use Copilot chat to test authentication, the model alias, and the token budget.
 
-1. **Request from VS Code.** The Copilot extension posts `POST /github-copilot/v1/chat/completions` to Kong with the developer's Consumer credential in the `Authorization: Bearer <apiKey>` header and an OpenAI-format chat body. The body's `model` field equals the value of `models[].id` in `chatLanguageModels.json`, which the recipe pins to `DECK_CHAT_MODEL`.
+### Apply the Kong configuration
 
-1. **Header and body normalization.** The Pre-function Plugin runs first (priority approximately 1,000,000, above every other Plugin on the Route). It checks the `Authorization` header, strips the `Bearer ` prefix, and writes the bare credential into a new `apikey` header that the Key Auth Plugin will read. In the same pass it decodes the JSON body, removes the `temperature` field if present, and writes the body back. From this point on, all subsequent Plugins see a normalized request.
+The configuration creates an AI Model Provider with your provider's credentials, a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy, a Key Auth AI Auth Strategy, two AI Consumers (`copilot-developer-alice` and `copilot-developer-bob`) with API keys, an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy, and an AI Model on `/github-copilot`. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-1. **Per-developer authentication.** The Key Auth Plugin reads the `apikey` header, looks up the matching credential in the Control Plane, and attaches the request to the corresponding Consumer (`copilot-developer-alice` or `copilot-developer-bob` in this recipe). Unknown credentials are rejected with `401 Unauthorized`.
-
-1. **Alias matching and provider-key injection.** The AI Proxy Advanced Plugin reads the body's `model` field and matches it against the `model_alias` configured on each target. The recipe configures one target whose `model_alias` equals `DECK_CHAT_MODEL`, so a request that uses any other model name is rejected with `400 model not configured`. On a match, Kong injects the provider API key into the upstream request and, if the upstream uses a non-OpenAI format (Bedrock), translates the body from OpenAI to the upstream format.
-
-1. **Token rate limiting.** The AI Rate Limiting Advanced Plugin counts prompt and completion tokens against the Consumer's per-window budget. Rate-limit headers (`X-AI-RateLimit-Remaining-*`) are added to the response. Exhaustion returns `429 Too Many Requests` with a `Retry-After` header.
-
-1. **Response back to VS Code.** The provider response flows back through Kong to VS Code. Copilot renders the chat reply or runs the requested tool call.
-
-### Pre-function: request normalization
-
-The Pre-function Plugin runs Lua in the `access` phase before any other Plugin on the Route. The recipe uses it to fix two things Copilot's BYOK client cannot fix itself: it converts `Authorization: Bearer <apiKey>` into the `apikey` header that Key Auth expects, and it strips the hard-coded `temperature: 0.1` field from the body so reasoning models accept the request. Both rewrites have to happen before Key Auth and AI Proxy Advanced run, which is why Pre-function (priority around 1,000,000) is the right tool: it has the highest access-phase priority of any standard Kong Plugin.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-plugins:
-  - name: pre-function
-    config:
-      access:
-        - |
-          local cjson = require "cjson.safe"
-
-          local auth = kong.request.get_header("Authorization")
-          if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
-            ngx.req.set_header("apikey", string.sub(auth, 8))
-          end
-
-          local body = kong.request.get_raw_body()
-          if body then
-            local json = cjson.decode(body)
-            if json and json.temperature ~= nil then
-              json.temperature = nil
-              kong.service.request.set_raw_body(cjson.encode(json))
-            end
-          end
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`access`**. An array of Lua source strings, each of which becomes a function executed during the `access` phase. Each function has full access to the [Kong PDK](/gateway/pdk/reference/) and the `ngx` namespace.
-
-**`ngx.req.set_header("apikey", ...)`**. The standard PDK function `kong.service.request.set_header` only mutates headers sent upstream; it does not change what later Plugins see. The Authorization-to-apikey rewrite has to be visible to the next Plugin in the chain (Key Auth), so the recipe drops down to `ngx.req.set_header`, which mutates the underlying nginx request and is visible to every PDK reader for the remainder of the request lifecycle.
-
-**Body rewrite via `kong.service.request.set_raw_body`**. Replaces the body that gets forwarded upstream. For OpenAI and Azure OpenAI (passthrough paths), this is the body the provider sees. For AWS Bedrock with `llm_format: openai`, the AI Proxy Advanced Plugin translates the request from OpenAI to Bedrock format on the way out and emits its own upstream body; verify that the temperature normalization survives that translation in your environment if you point this recipe at Bedrock with a reasoning-style upstream.
-
-{:.warning}
-> **VS Code Copilot pins `temperature: 0.1` with no UI override.** Reasoning models (gpt-5 family, o-series) reject any temperature other than the default 1 with `400 ... 'temperature' does not support 0.1 ... Only the default (1) value is supported`. The Pre-function strip above is what makes those models usable as Copilot BYOK upstreams. If you remove this Plugin, requests against reasoning models fail with this exact error.
-
-### Key Auth: per-developer authentication
-
-The Key Auth Plugin authenticates each request against a Consumer credential. The recipe ships two Consumers (`copilot-developer-alice` and `copilot-developer-bob`) so the per-Consumer attribution in {{site.konnect_short_name}} Analytics is visible from the first apply. Each developer enters their assigned credential into the VS Code **Add Models... → Custom Endpoint → Chat Completions** wizard, which stores it in the OS keychain and writes a `${input:chat.lm.secret.<id>}` placeholder into `chatLanguageModels.json`. The Pre-function Plugin above ensures Key Auth sees the rewritten value in the `apikey` header it expects.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: key-auth
-    config:
-      key_names:
-        - apikey
-      hide_credentials: true
-```
-{:.no-copy-code}
-
-**`key_names: [apikey]`**. The header name Key Auth reads. Pre-function normalizes Copilot's `Authorization: Bearer` into this header, so a single name suffices and no fallback to query string or other headers is needed.
-
-**`hide_credentials: true`**. Strips the `apikey` header from the request before it is forwarded upstream. The provider never sees the Consumer's gateway credential. In {{site.base_gateway}} 3.14 and later, this defaults to `true`; the recipe sets it explicitly to document intent.
-
-**Consumer scaling.** Add one Consumer per developer (or per VS Code workstation) with its own `keyauth_credentials` entry. The recipe defines two for demonstration; production deployments typically generate Consumers programmatically as part of developer onboarding.
-
-### AI Proxy Advanced: provider routing and format translation
-
-The AI Proxy Advanced Plugin holds the provider API key, matches the request body's `model` field against the `model_alias` on a target, and forwards. With one target on the recipe, the `model_alias` acts as a hard gate: any model name VS Code sends other than `DECK_CHAT_MODEL` is rejected with `400 model not configured`. This is what makes the org-policy allowlist alignment work. Set `DECK_CHAT_MODEL` to the name your Copilot admin requires, and the VS Code `id` field has to match, or Kong refuses the request.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-plugins:
-  - name: ai-proxy-advanced
-    config:
-      llm_format: openai
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-        - route_type: llm/v1/chat
-          auth:
-            header_name: Authorization
-            header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-          logging:
-            log_statistics: true
-            log_payloads: true
-          model:
-            model_alias: ${{ env "DECK_CHAT_MODEL" }}
-            provider: openai
-            name: ${{ env "DECK_CHAT_MODEL" }}
-            options:
-              input_cost: 0.25
-              output_cost: 2.00
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`llm_format: openai`**. Copilot speaks the OpenAI Chat Completions API. For OpenAI and Azure OpenAI upstreams the request passes through natively. For AWS Bedrock the Plugin translates the request from OpenAI to Bedrock's `InvokeModel` shape and the response back, so Copilot's client sees an OpenAI-shaped response in both cases.
-
-**`route_type: llm/v1/chat`**. Selects the chat-completions translation path. See the [AI Proxy Advanced reference](/plugins/ai-proxy-advanced/reference/) for the full list of supported Route types.
-
-**`model.model_alias`** equals **`model.name`** in this recipe. The alias is what VS Code sends in the body and what Kong matches; the name is what Kong sends upstream. For OpenAI and Azure OpenAI both are the same value (the user-visible model ID); for Bedrock, the alias can be a friendly bare name while the upstream `name` is the long Bedrock model ID. Change the env var pair if you want the user-facing alias to differ from the upstream name.
-
-**`auth`**. The credential block injected on every upstream request. The shape varies by provider; the Apply section's per-provider navtabs show the OpenAI, Azure OpenAI, and Bedrock variants. The provider key is never sent to VS Code and never sits on the developer's machine.
-
-**`max_request_body_size: 10485760`**. Sets the maximum allowed body to 10 MB. Copilot Chat conversations accumulate large context (chat history, open files, workspace symbols), and the default body limit can reject these requests.
-
-**`response_streaming: allow`**. Lets the Plugin pass Server-Sent Events streaming responses from the provider back to VS Code. Copilot Chat renders streamed token output progressively.
-
-**`logging.log_statistics`** and **`logging.log_payloads`**. Emit token-usage data and request/response bodies to any attached logging Plugin (for example, [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/)) for per-developer audit and cost attribution. {{site.konnect_short_name}} Analytics captures token usage independently of these fields.
-
-**`model.options.input_cost`** and **`model.options.output_cost`**. USD per 1,000,000 tokens for prompt and completion respectively. Kong multiplies the reported `prompt_tokens` and `completion_tokens` by these rates per request and emits the result as the `cost` metric to {{site.konnect_short_name}} Analytics, which is what populates the **Total cost** tile on the dashboard. The recipe ships with `0.25` / `2.00`. Reasonable for a small reasoning-class model like `gpt-5-mini`; replace with the published rates for whatever provider/model your `DECK_CHAT_MODEL` resolves to (for example, `gpt-4o` is roughly `2.50` / `10.00`). Without these fields Konnect would have to look up the rate from its own internal price list, which lags newly released models. Set them explicitly to avoid empty cost tiles.
-
-{:.warning}
-> **The GitHub org-policy allowlist runs in front of Kong.** Copilot Business and Enterprise let admins pin an allowlist of models BYOK requests are permitted to claim. When the policy is set and your request names a different model, VS Code returns `400 "cannot use own model - must be: gpt-5-mini"` before the request ever reaches Kong. To resolve, set `DECK_CHAT_MODEL` (and the matching VS Code `models[].id`) to the model the policy mandates; if you want Kong to actually forward to a different upstream model, change `model.name` (the upstream name) independently of `model_alias` (the VS Code-facing name).
-
-### AI Rate Limiting Advanced: per-Consumer token budgets
-
-The AI Rate Limiting Advanced Plugin counts prompt and completion tokens against a per-Consumer budget. Counting tokens, not requests, is the correct unit for LLM cost control. A single Copilot agent run can be 30K+ tokens once workspace context, tool definitions, and conversation history are included. When a Consumer exhausts its budget, Kong returns `429 Too Many Requests` until the window resets.
-
-#### Configuration details
-
-```yaml
-plugins:
-  - name: ai-rate-limiting-advanced
-    config:
-      policies:
-        - limits:
-            - limit: 50000
-              window_size: 60
-          window_type: sliding
-      identifier: consumer
-      tokens_count_strategy: total_tokens
-      strategy: local
-      llm_format: openai
-```
-{:.no-copy-code}
-
-**`policies`** is an array of rate-limiting policies. Each policy has a `limits` array of limit + window pairs and an optional `match` block for targeting specific providers or models. With no `match` block the policy applies to every request. The recipe configures 50,000 total tokens per 60-second sliding window per Consumer.
-
-**`identifier: consumer`** scopes the counter to the Kong Consumer attached by Key Auth. Each developer gets their own bucket. Without Key Auth attaching a Consumer, this identifier would degrade to a single shared bucket; the Pre-function header rewrite is what makes per-Consumer counting work for Copilot's Bearer-style auth.
-
-**`tokens_count_strategy: total_tokens`** counts both prompt (input) and completion (output) tokens. Alternatives are `prompt_tokens`, `completion_tokens`, or `cost`.
-
-**`window_type: sliding`** uses a sliding-window algorithm. `fixed` is the alternative and resets all counters at the window boundary.
-
-**`strategy: local`** keeps counters in memory on each Kong node. Fine for single-node and development. For multi-node production, switch to `strategy: redis` with a shared Redis instance so counters stay consistent across nodes.
-
-**`llm_format: openai`** must match the AI Proxy Advanced Plugin's `llm_format` so the rate limiter parses token counts from the response correctly.
-
-Kong returns token rate-limit headers with every response:
-
-{% table %}
-columns:
-  - title: Header
-    key: header
-  - title: Description
-    key: description
-rows:
-  - header: "`X-AI-RateLimit-Limit-{window}-{provider}`"
-    description: "Maximum tokens allowed in the window."
-  - header: "`X-AI-RateLimit-Remaining-{window}-{provider}`"
-    description: "Tokens remaining in the current window."
-  - header: "`X-AI-RateLimit-Reset`"
-    description: "Seconds until the quota is restored."
-  - header: "`X-AI-RateLimit-Retry-After`"
-    description: "Seconds clients should wait before retrying after a `429` response."
-{% endtable %}
-
-When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After` header.
-
-{:.info}
-> In production, store provider credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, Azure, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. Per-developer Consumer credentials are also good vault candidates as the team scales beyond a handful of seats.
-
-
-## Apply the Kong configuration
-
-This section configures the Control Plane in two parts. First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it. The recipe's `select_tags` and the `github-copilot-byok-recipe` namespace scope every resource so teardown removes only this recipe's configuration.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
-kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
+kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --namespace "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
+Generate an API key for each of the two developers. Each developer enters their key in VS Code. The credential's `api_key` field is write-only, so its value must come from an environment variable:
 
-The provider tabs below create a Service and Route at `/github-copilot`, a Pre-function Plugin for header and body normalization, a Key Auth Plugin scoped to the Service, an AI Proxy Advanced Plugin for provider-key injection and OpenAI-format passthrough or translation, an AI Rate Limiting Advanced Plugin for per-Consumer token budgets, and two demonstration Consumers with key-auth credentials. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
+```bash
+export COPILOT_KEY_ALICE="$(openssl rand -hex 24)"
+export COPILOT_KEY_BOB="$(openssl rand -hex 24)"
+```
 
-Select your provider below, export the required environment variables, and apply.
+Export the model alias. VS Code sends this value as the `model` field, and the AI Model answers only to this value:
+
+```bash
+export COPILOT_MODEL_ALIAS='kong-copilot'
+```
+
+Select your provider. Each tab exports `CHAT_MODEL`, the upstream model that Kong sends to the provider, then applies the configuration. Provider credentials come from the prerequisites.
 
 {% navtabs "Providers" %}
 {% navtab "OpenAI" %}
 
-Export your environment variables. Set `DECK_CHAT_MODEL` to whatever model name the Copilot org policy permits. If the policy is unrestricted, pick any OpenAI chat model your account has access to:
+Export the model env var:
 
 ```bash
-export DECK_CHAT_MODEL='gpt-4o'   # must match VS Code's models[].id and the org Copilot allowlist
+export CHAT_MODEL='gpt-4o'
 ```
-
-{:.warning}
-> `DECK_CHAT_MODEL` is the contract between Copilot's policy, VS Code's `models[].id`, and Kong's `model_alias`. If your Copilot administrator has pinned a specific model (for example, `gpt-5-mini`), set this env var to that exact value and use the same string in `chatLanguageModels.json`. A mismatch fails as either `400 "cannot use own model - must be: ..."` (rejected by GitHub policy before Kong) or `400 model not configured` (rejected by Kong).
-
-`KONNECT_CONTROL_PLANE_NAME`, `DECK_OPENAI_TOKEN`, `DECK_COPILOT_KEY_ALICE`, and `DECK_COPILOT_KEY_BOB` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - github-copilot-byok-recipe
-services:
-- name: github-copilot-byok
-  url: http://localhost
-  routes:
-  - name: github-copilot-byok
-    paths:
-    - /github-copilot
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: pre-function
-    instance_name: github-copilot-byok-normalize
-    config:
-      access:
-      - |
-        local cjson = require "cjson.safe"
-
-        local auth = kong.request.get_header("Authorization")
-        if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
-          ngx.req.set_header("apikey", string.sub(auth, 8))
-        end
-
-        local body = kong.request.get_raw_body()
-        if body then
-          local json = cjson.decode(body)
-          if json and json.temperature ~= nil then
-            json.temperature = nil
-            kong.service.request.set_raw_body(cjson.encode(json))
-          end
-        end
-  - name: key-auth
-    instance_name: github-copilot-byok-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: github-copilot-byok-proxy
-    config:
-      llm_format: openai
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: ${{ env "DECK_CHAT_MODEL" }}
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            input_cost: 0.25
-            output_cost: 2.00
-  - name: ai-rate-limiting-advanced
-    instance_name: github-copilot-byok-ratelimit
-    config:
-      policies:
-      - limits:
-        - limit: 50000
-          window_size: 60
-        window_type: sliding
-      identifier: consumer
-      tokens_count_strategy: total_tokens
-      strategy: local
-      llm_format: openai
-consumers:
-- username: copilot-developer-alice
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_ALICE" }}
-- username: copilot-developer-bob
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_BOB" }}
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: github-copilot-byok-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: github-copilot-byok-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-provider
+  display_name: github-copilot-byok
+  type: openai
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: Authorization
+        value: !secret {source: !env 'OPENAI_TOKEN'}
+ai_gateway_auth_strategies:
+- ref: github-copilot-byok-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-auth
+  display_name: github-copilot-byok key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: copilot-developer-alice
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-alice
+  display_name: 'Copilot developer: Alice'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-alice-credential
+    name: copilot-developer-alice-credential
+    display_name: Alice's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
+- ref: copilot-developer-bob
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-bob
+  display_name: 'Copilot developer: Bob'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-bob-credential
+    name: copilot-developer-bob-credential
+    display_name: Bob's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
+ai_gateway_policies:
+- ref: github-copilot-byok-normalize
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-normalize
+  display_name: github-copilot-byok request normalization
+  type: pre-function
+  global: true
+  config:
+    access:
+    - |
+      local cjson = require "cjson.safe"
+
+      local auth = kong.request.get_header("Authorization")
+      if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
+        ngx.req.set_header("apikey", string.sub(auth, 8))
+      end
+
+      local body = kong.request.get_raw_body()
+      if body then
+        local json = cjson.decode(body)
+        if json and json.temperature ~= nil then
+          json.temperature = nil
+          kong.service.request.set_raw_body(cjson.encode(json))
+        end
+      end
+- ref: github-copilot-byok-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-ratelimit
+  display_name: github-copilot-byok token rate limiting
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - limits:
+      - limit: 50000
+        window_size: 60
+      window_type: sliding
+    identifier: consumer
+    tokens_count_strategy: total_tokens
+    strategy: local
+ai_gateway_models:
+- ref: github-copilot-byok-model
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-model
+  display_name: github-copilot-byok
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - github-copilot-byok-auth
+  policies:
+  - github-copilot-byok-ratelimit
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /github-copilot
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'COPILOT_MODEL_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: github-copilot-byok-provider
+    config:
+      type: openai
+      input_cost: 0.25
+      output_cost: 2.0
+EOF
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
 {% endnavtab %}
 {% navtab "Azure OpenAI" %}
 
-Export your environment variables. For Azure OpenAI, `DECK_CHAT_MODEL` is sent as the body's `model` field, which Azure largely ignores in favor of the deployment in the URL path. It still has to match the VS Code `models[].id` and the Copilot org allowlist:
+Export the model env var. The deployment ID from the prerequisites selects the upstream model, so set `CHAT_MODEL` to the model of that deployment:
 
 ```bash
-export DECK_CHAT_MODEL='gpt-4o'   # must match VS Code's models[].id and the org Copilot allowlist
+export CHAT_MODEL='gpt-4o'
 ```
-
-{:.warning}
-> `DECK_CHAT_MODEL` is the contract between Copilot's policy, VS Code's `models[].id`, and Kong's `model_alias`. If your Copilot administrator has pinned a specific model (for example, `gpt-5-mini`), set this env var to that exact value and use the same string in `chatLanguageModels.json`. A mismatch fails as either `400 "cannot use own model - must be: ..."` (rejected by GitHub policy before Kong) or `400 model not configured` (rejected by Kong).
-
-`KONNECT_CONTROL_PLANE_NAME`, the `DECK_AZURE_*` credentials, `DECK_COPILOT_KEY_ALICE`, and `DECK_COPILOT_KEY_BOB` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - github-copilot-byok-recipe
-services:
-- name: github-copilot-byok
-  url: http://localhost
-  routes:
-  - name: github-copilot-byok
-    paths:
-    - /github-copilot
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: pre-function
-    instance_name: github-copilot-byok-normalize
-    config:
-      access:
-      - |
-        local cjson = require "cjson.safe"
-
-        local auth = kong.request.get_header("Authorization")
-        if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
-          ngx.req.set_header("apikey", string.sub(auth, 8))
-        end
-
-        local body = kong.request.get_raw_body()
-        if body then
-          local json = cjson.decode(body)
-          if json and json.temperature ~= nil then
-            json.temperature = nil
-            kong.service.request.set_raw_body(cjson.encode(json))
-          end
-        end
-  - name: key-auth
-    instance_name: github-copilot-byok-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: github-copilot-byok-proxy
-    config:
-      llm_format: openai
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: api-key
-          header_value: ${{ env "DECK_AZURE_API_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: ${{ env "DECK_CHAT_MODEL" }}
-          provider: azure
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
-            azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID" }}
-            azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-            input_cost: 0.25
-            output_cost: 2.00
-  - name: ai-rate-limiting-advanced
-    instance_name: github-copilot-byok-ratelimit
-    config:
-      policies:
-      - limits:
-        - limit: 50000
-          window_size: 60
-        window_type: sliding
-      identifier: consumer
-      tokens_count_strategy: total_tokens
-      strategy: local
-      llm_format: openai
-consumers:
-- username: copilot-developer-alice
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_ALICE" }}
-- username: copilot-developer-bob
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_BOB" }}
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: github-copilot-byok-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: github-copilot-byok-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-provider
+  display_name: github-copilot-byok
+  type: azure
+  config:
+    auth:
+      type: basic
+      headers:
+      - name: api-key
+        value: !secret {source: !env 'AZURE_API_KEY'}
+    service: azure-openai
+    instance: !env 'AZURE_INSTANCE'
+ai_gateway_auth_strategies:
+- ref: github-copilot-byok-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-auth
+  display_name: github-copilot-byok key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: copilot-developer-alice
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-alice
+  display_name: 'Copilot developer: Alice'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-alice-credential
+    name: copilot-developer-alice-credential
+    display_name: Alice's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
+- ref: copilot-developer-bob
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-bob
+  display_name: 'Copilot developer: Bob'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-bob-credential
+    name: copilot-developer-bob-credential
+    display_name: Bob's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
+ai_gateway_policies:
+- ref: github-copilot-byok-normalize
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-normalize
+  display_name: github-copilot-byok request normalization
+  type: pre-function
+  global: true
+  config:
+    access:
+    - |
+      local cjson = require "cjson.safe"
+
+      local auth = kong.request.get_header("Authorization")
+      if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
+        ngx.req.set_header("apikey", string.sub(auth, 8))
+      end
+
+      local body = kong.request.get_raw_body()
+      if body then
+        local json = cjson.decode(body)
+        if json and json.temperature ~= nil then
+          json.temperature = nil
+          kong.service.request.set_raw_body(cjson.encode(json))
+        end
+      end
+- ref: github-copilot-byok-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-ratelimit
+  display_name: github-copilot-byok token rate limiting
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - limits:
+      - limit: 50000
+        window_size: 60
+      window_type: sliding
+    identifier: consumer
+    tokens_count_strategy: total_tokens
+    strategy: local
+ai_gateway_models:
+- ref: github-copilot-byok-model
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-model
+  display_name: github-copilot-byok
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - github-copilot-byok-auth
+  policies:
+  - github-copilot-byok-ratelimit
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /github-copilot
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'COPILOT_MODEL_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: github-copilot-byok-provider
+    config:
+      api_version: !env 'AZURE_API_VERSION'
+      deployment_id: !env 'AZURE_DEPLOYMENT_ID'
+      type: azure
+      input_cost: 0.25
+      output_cost: 2.0
+EOF
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
 {% endnavtab %}
 {% navtab "AWS Bedrock" %}
 
-Export your environment variables. Bedrock model IDs include a `provider.model-version-vN:M` shape, and the value here is what Kong sends upstream **and** what VS Code's `models[].id` has to match:
+Export the model env var. Use a Bedrock model ID that supports tool calling, because Copilot agent mode needs it:
 
 ```bash
-export DECK_CHAT_MODEL='anthropic.claude-sonnet-4-5-20250929-v1:0'   # must match VS Code's models[].id
+export CHAT_MODEL='anthropic.claude-sonnet-4-5-20250929-v1:0'
 ```
-
-{:.warning}
-> `DECK_CHAT_MODEL` is the contract between Copilot's policy, VS Code's `models[].id`, and Kong's `model_alias`. If your Copilot administrator has pinned a specific model (for example, `gpt-5-mini`), set this env var to that exact value and use the same string in `chatLanguageModels.json`. For Bedrock, you can split the user-facing alias from the upstream model name by editing the deck config so that `model_alias` references one env var (matching VS Code and the policy) and `model.name` references a different one (the real Bedrock model ID). A mismatch fails as either `400 "cannot use own model - must be: ..."` (rejected by GitHub policy before Kong) or `400 model not configured` (rejected by Kong).
-
-`KONNECT_CONTROL_PLANE_NAME`, the `DECK_AWS_*` credentials, `DECK_COPILOT_KEY_ALICE`, and `DECK_COPILOT_KEY_BOB` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - github-copilot-byok-recipe
-services:
-- name: github-copilot-byok
-  url: http://localhost
-  routes:
-  - name: github-copilot-byok
-    paths:
-    - /github-copilot
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: pre-function
-    instance_name: github-copilot-byok-normalize
-    config:
-      access:
-      - |
-        local cjson = require "cjson.safe"
-
-        local auth = kong.request.get_header("Authorization")
-        if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
-          ngx.req.set_header("apikey", string.sub(auth, 8))
-        end
-
-        local body = kong.request.get_raw_body()
-        if body then
-          local json = cjson.decode(body)
-          if json and json.temperature ~= nil then
-            json.temperature = nil
-            kong.service.request.set_raw_body(cjson.encode(json))
-          end
-        end
-  - name: key-auth
-    instance_name: github-copilot-byok-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: github-copilot-byok-proxy
-    config:
-      llm_format: openai
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: ${{ env "DECK_CHAT_MODEL" }}
-          provider: bedrock
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            bedrock:
-              aws_region: ${{ env "DECK_AWS_REGION" }}
-            input_cost: 0.25
-            output_cost: 2.00
-  - name: ai-rate-limiting-advanced
-    instance_name: github-copilot-byok-ratelimit
-    config:
-      policies:
-      - limits:
-        - limit: 50000
-          window_size: 60
-        window_type: sliding
-      identifier: consumer
-      tokens_count_strategy: total_tokens
-      strategy: local
-      llm_format: openai
-consumers:
-- username: copilot-developer-alice
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_ALICE" }}
-- username: copilot-developer-bob
-  keyauth_credentials:
-  - key: ${{ env "DECK_COPILOT_KEY_BOB" }}
-EOF
-{% endraw -%}
-
-echo "
 _defaults:
   kongctl:
     namespace: github-copilot-byok-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+ai_gateway_model_providers:
+- ref: github-copilot-byok-provider
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-provider
+  display_name: github-copilot-byok
+  type: bedrock
+  config:
+    auth:
+      type: aws
+      access_key_id: !env 'AWS_ACCESS_KEY_ID'
+      secret_access_key: !secret {source: !env 'AWS_SECRET_ACCESS_KEY'}
+ai_gateway_auth_strategies:
+- ref: github-copilot-byok-auth
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-auth
+  display_name: github-copilot-byok key auth
+  type: key-auth
+  config:
+    key_names:
+    - apikey
+    hide_credentials: true
+ai_gateway_consumers:
+- ref: copilot-developer-alice
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-alice
+  display_name: 'Copilot developer: Alice'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-alice-credential
+    name: copilot-developer-alice-credential
+    display_name: Alice's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_ALICE'}
+- ref: copilot-developer-bob
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: copilot-developer-bob
+  display_name: 'Copilot developer: Bob'
+  type: api-key
+  credentials:
+  - ref: copilot-developer-bob-credential
+    name: copilot-developer-bob-credential
+    display_name: Bob's Copilot API key
+    type: api-key
+    api_key: !secret {source: !env 'COPILOT_KEY_BOB'}
+ai_gateway_policies:
+- ref: github-copilot-byok-normalize
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-normalize
+  display_name: github-copilot-byok request normalization
+  type: pre-function
+  global: true
+  config:
+    access:
+    - |
+      local cjson = require "cjson.safe"
+
+      local auth = kong.request.get_header("Authorization")
+      if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
+        ngx.req.set_header("apikey", string.sub(auth, 8))
+      end
+
+      local body = kong.request.get_raw_body()
+      if body then
+        local json = cjson.decode(body)
+        if json and json.temperature ~= nil then
+          json.temperature = nil
+          kong.service.request.set_raw_body(cjson.encode(json))
+        end
+      end
+- ref: github-copilot-byok-ratelimit
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-ratelimit
+  display_name: github-copilot-byok token rate limiting
+  type: ai-rate-limiting-advanced
+  config:
+    policies:
+    - limits:
+      - limit: 50000
+        window_size: 60
+      window_type: sliding
+    identifier: consumer
+    tokens_count_strategy: total_tokens
+    strategy: local
+ai_gateway_models:
+- ref: github-copilot-byok-model
+  ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
+  name: github-copilot-byok-model
+  display_name: github-copilot-byok
+  type: model
+  formats:
+  - type: openai
+  capabilities:
+  - generate
+  access:
+    auth_strategies:
+    - github-copilot-byok-auth
+  policies:
+  - github-copilot-byok-ratelimit
+  config:
+    max_request_body_size: 10485760
+    response_streaming: allow
+    logging:
+      payloads: true
+    route:
+      paths:
+      - /github-copilot
+      protocols:
+      - http
+      - https
+      methods:
+      - POST
+      - OPTIONS
+      strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'COPILOT_MODEL_ALIAS'
+  targets:
+  - name: !env 'CHAT_MODEL'
+    provider: github-copilot-byok-provider
+    config:
+      region: !env 'AWS_REGION'
+      type: bedrock
+      input_cost: 0.25
+      output_cost: 2.0
+EOF
+
+kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
-
 ```
 {: data-test-step="block" .collapsible }
 
 {% endnavtab %}
 {% endnavtabs %}
 
-
 ### Create the Copilot Usage dashboard
 
-Create a custom dashboard at the org level, pre-filtered to this recipe's Gateway Service. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (Consumer) usage, and latency for traffic through the `github-copilot-byok` Service. The dashboard JSON is in the code block below; if a labeled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
+The dashboard shows cost, token usage, request volume, model mix, usage for each developer (AI Consumer), and latency for Copilot traffic. It's an organization-level resource, so the command reuses a dashboard with the `github-copilot-byok-recipe` label if one exists.
+
+Create the dashboard definition:
 
 ```bash
-# Look up the Control Plane and Service IDs so the dashboard's gateway_service
-# preset filter resolves to the scoped UUID Konnect expects.
-CP_ID=$(kongctl get gateway control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
-  --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-SERVICE_ID=$(kongctl api get "/v2/control-planes/${CP_ID}/core-entities/services" \
-  --pat "${KONNECT_TOKEN}" -o json \
-  --jq '.data[] | select(.name=="github-copilot-byok") | .id' -r)
-
-if [ -z "${CP_ID}" ] || [ -z "${SERVICE_ID}" ]; then
-  echo "Refusing to create dashboard: CP_ID='${CP_ID}' SERVICE_ID='${SERVICE_ID}'."
-  echo "Confirm the apply step succeeded and the Service is visible in Konnect, then retry."
-  exit 1
-fi
-
-EXISTING_DASHBOARDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=github-copilot-byok-recipe" \
-  --pat "${KONNECT_TOKEN}" -o json --jq '.data | length')
-
-if [ "${EXISTING_DASHBOARDS}" -gt 0 ]; then
-  echo "Copilot Usage dashboard already exists. Reusing."
-else
-  cat <<'EOF' | jq --arg ref "${CP_ID}:${SERVICE_ID}" '.definition.preset_filters[0].value = [$ref]' > copilot-usage-dashboard.json
+cat <<'EOF' > copilot-usage-dashboard.json
 {
   "name": "Copilot Usage",
   "definition": {
@@ -961,7 +721,6 @@ else
           "chart": { "type": "donut", "chart_title": "Copilot health check" },
           "query": {
             "filters": [
-              { "field": "gateway_service", "operator": "not_empty" },
               { "field": "ai_provider", "operator": "not_empty" },
               { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
@@ -979,7 +738,6 @@ else
           "chart": { "type": "donut", "chart_title": "Copilot provider usage" },
           "query": {
             "filters": [
-              { "field": "gateway_service", "operator": "not_empty" },
               { "field": "ai_provider", "operator": "not_empty" },
               { "field": "ai_provider", "value": ["UNSPECIFIED"], "operator": "not_in" }
             ],
@@ -1072,61 +830,70 @@ else
         }
       }
     ],
-    "template_id": "AI_GATEWAY",
-    "preset_filters": [
-      { "field": "gateway_service", "value": [], "operator": "in" }
-    ]
+    "template_id": "AI_GATEWAY"
   },
   "labels": {
     "recipe": "github-copilot-byok-recipe"
   }
 }
 EOF
+```
+{:.collapsible}
+
+Create the dashboard in {{site.konnect_short_name}}:
+
+```bash
+EXISTING_DASHBOARDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=github-copilot-byok-recipe" \
+  --pat "${KONNECT_TOKEN}" -o json --jq '.data | length')
+
+if [ "${EXISTING_DASHBOARDS}" -gt 0 ]; then
+  echo "Copilot Usage dashboard already exists. Reusing."
+else
   DASHBOARD_ID=$(kongctl api post /v2/dashboards \
     -f copilot-usage-dashboard.json \
     --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-  rm -f copilot-usage-dashboard.json
-  echo "Created Copilot Usage dashboard (id: ${DASHBOARD_ID}). Open it in Konnect at Observability → Custom dashboards → 'Copilot Usage'."
+  echo "Created Copilot Usage dashboard (id: ${DASHBOARD_ID})."
 fi
 ```
 {: data-test-step="block" .collapsible }
 
+{:.info}
+> The dashboard shows LLM traffic for the whole organization. To show only this cookbook's {{site.ai_gateway}}, add a filter in the {{site.konnect_short_name}} dashboard editor.
 
-## Try it out
+### Connect VS Code to Kong
 
-With the configuration applied, configure VS Code Copilot to post Chat and agent requests to Kong, then ask a question and watch the request, attribution, and rate-limit headers flow through {{site.konnect_short_name}} Analytics.
+VS Code sends requests for a [custom endpoint model](https://code.visualstudio.com/docs/agent-customization/language-models#_add-a-custom-endpoint-model) to any URL that speaks the OpenAI Chat Completions API. VS Code keeps the API key in its secret storage and sends it as `Authorization: Bearer <key>`.
 
-{:.warning}
-> **Do not paste a raw API key into `chatLanguageModels.json`.** The `apiKey` field only accepts a `${input:chat.lm.secret.<id>}` placeholder, which VS Code mints when you enter a key into the **Add Models... → Custom Endpoint → Chat Completions** wizard. A raw value in that field is silently dropped: VS Code sends `Authorization: Bearer` with no key, and Kong returns `401 No API key found in request`.
+Print Alice's key, so that you can paste it into VS Code:
 
-### Add the Custom Endpoint to VS Code
+```bash
+printf '%s\n' "$COPILOT_KEY_ALICE"
+```
 
-VS Code stores Custom Endpoint API keys in its encrypted OS-keychain secret storage. `chatLanguageModels.json` only ever sees a `${input:chat.lm.secret.<id>}` placeholder that resolves to the stored value at request time. The only supported way to mint that placeholder is the **Add Models...** wizard, which prompts for the key and writes both the secret entry and the placeholder for you.
+Add the custom endpoint model in VS Code:
 
-In VS Code:
+1. In the Chat view, open the model picker and select **Manage Language Models** (gear icon). You can also run **Chat: Manage Language Models** from the Command Palette.
+1. Select **Add Models**, then select **Custom Endpoint**.
+1. Enter `Kong` as the group name.
+1. Enter a display name, and paste Alice's key as the API key.
+1. Select **Chat Completions** as the API type.
 
-1. Open the **Chat** view (`Ctrl+Alt+I` / `Cmd+Ctrl+I`).
-1. Click the **model picker** at the bottom of the Chat input.
-1. Select **Manage Language Models...**.
-1. Click **Add Models...** → **Custom Endpoint** → **Chat Completions**.
-1. When VS Code prompts for an **API key**, paste the value of `$DECK_COPILOT_KEY_ALICE`. Copy it with `printf '%s' "$DECK_COPILOT_KEY_ALICE"` (not `echo`) so a trailing zsh `%` marker is never included. That character is a prompt artifact, not part of the key, and pasting it produces a `401` from Key Auth.
-
-VS Code stores the literal key in the OS keychain and opens `chatLanguageModels.json` with a generated stub entry whose `apiKey` field is already filled in with a `${input:chat.lm.secret.<id>}` placeholder. Edit the `name`, `models[].id`, `models[].name`, and `models[].url` fields to match this recipe. **Leave the `apiKey` line exactly as the wizard wrote it**:
+VS Code opens `chatLanguageModels.json`. Update the model entry to match the following example, and keep the `apiKey` value that VS Code wrote, because it references the key in secret storage:
 
 ```json
 [
   {
-    "name": "Kong AI Gateway",
+    "name": "Kong",
     "vendor": "customendpoint",
-    "apiKey": "${input:chat.lm.secret.157fd74e}",
+    "apiKey": "${input:kongApiKey}",
     "apiType": "chat-completions",
     "models": [
       {
-        "id": "gpt-4o",
-        "name": "GPT-4o (via Kong)",
-        "url": "http://localhost:8000/github-copilot/v1/chat/completions",
+        "id": "kong-copilot",
+        "name": "Kong Copilot",
+        "url": "http://localhost:8000/github-copilot/chat/completions",
         "toolCalling": true,
-        "vision": true,
+        "vision": false,
         "maxInputTokens": 128000,
         "maxOutputTokens": 16000
       }
@@ -1136,149 +903,272 @@ VS Code stores the literal key in the OS keychain and opens `chatLanguageModels.
 ```
 {:.no-copy-code}
 
-The hex suffix after `chat.lm.secret.` is per-entry. Yours will differ from the example. Four behaviors are load-bearing:
+The model fields have the following roles:
 
-- **`apiKey`** is a `${input:chat.lm.secret.<id>}` reference, not a literal. Re-running the **Add Models...** wizard mints a new secret and a new placeholder; replacing the wizard-generated value with a raw key disables auth entirely. To rotate, open **Manage Language Models...** → select the entry → **Edit API Key** and VS Code updates the stored secret behind the same placeholder.
-- **`models[].id`** must equal `DECK_CHAT_MODEL` exactly. VS Code sends this string as the body's `model` field, and Kong's `model_alias` rejects anything else with `400 model not configured`. If your Copilot administrator has pinned an allowlist (for example, `gpt-5-mini`), set this value AND `DECK_CHAT_MODEL` to that exact name.
-- **`models[].url`** is the **full** chat-completions path. VS Code posts to the URL verbatim; it does not append `/chat/completions` for you.
-- **Window reload after edits.** After editing `chatLanguageModels.json`, run **Developer: Reload Window** so VS Code re-parses the file. The Chat model picker shows the new entry. Select **GPT-4o (via Kong)**.
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Purpose
+    key: purpose
+rows:
+  - field: "`id`"
+    purpose: "The model identifier that VS Code sends in the `model` field. It must equal `COPILOT_MODEL_ALIAS`."
+  - field: "`url`"
+    purpose: "The full endpoint URL. VS Code uses a URL that ends in `/chat/completions` as it is."
+  - field: "`toolCalling`"
+    purpose: "Set to `true`. VS Code shows a model in agent mode only if it supports tool calling."
+  - field: "`maxInputTokens` and `maxOutputTokens`"
+    purpose: "Together they define the context window that VS Code uses. Set them from your upstream model's documentation."
+{% endtable %}
+
+Save the file. If the model doesn't appear in the model picker, restart VS Code.
 
 ### Ask Copilot a question
 
-In the Chat view, with **GPT-4o (via Kong)** selected, ask any question. For example:
+Select **Kong Copilot** in the Chat view's model picker and send a prompt, for example:
 
 ```text
-> Explain what a Kong Consumer is in one sentence.
+Explain what an API gateway does in one sentence.
 ```
 {:.no-copy-code}
 
-Copilot Chat sends the request through Kong, which authenticates the developer, normalizes the body, injects the provider key, and forwards. The response streams back into the Chat view. Subsequent requests reuse the same credential silently.
+The answer streams into the Chat view. Kong copied the Bearer token to `apikey`, authenticated Alice's AI Consumer, matched the `kong-copilot` alias, and sent the request upstream with the provider credentials. If Copilot shows a `401` error, the key didn't reach Kong. Update the API key from the gear icon next to the **Kong** provider in the Language Models editor, and paste the key again.
 
-### Confirm Bearer-to-apikey rewrite and temperature strip
+### Hit the model alias boundary
 
-The Pre-function Plugin is doing two invisible-to-the-developer rewrites on every request. To verify them, you can inspect the request payload in {{site.konnect_short_name}} Analytics or with `log_payloads: true` going to a logging Plugin sink. Two signals confirm correctness:
+The AI Model answers only to the alias. In `chatLanguageModels.json`, change `id` to another value, for example `gpt-4o`, save the file, and send a prompt. Kong finds no AI Model for that name and rejects the request before any provider call. On runtime 2.3.1, the status is `500` after about 12 seconds, with `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local'` in the body.
 
-- Key Auth attributes the request to the matching Consumer (`copilot-developer-alice` or `copilot-developer-bob`), visible in the **Top developers** tiles on the **Copilot Usage** dashboard.
-- The upstream payload (visible in `log_payloads: true` output) does not contain a `temperature` field. If you point this Kong Service at a reasoning model (gpt-5, o-series) and Copilot Chat returns answers instead of `400`, the strip is working.
+Change `id` back to `kong-copilot`, and requests succeed again.
 
-If you want to see the rewrites live during local development, temporarily insert two `kong.log.notice` lines at the top of the Pre-function access block to dump the inbound headers and body, then watch the data plane logs:
+### Hit the rate limit
 
-{% raw %}
-```bash
-docker logs -f $(docker ps --filter ancestor=kong/kong-gateway --format '{{.Names}}') 2>&1 \
-  | grep -iE 'authorization|apikey'
-```
-{% endraw %}
-
-Remove the diagnostic lines once you have confirmed `"authorization":"Bearer <key>"` is arriving. Leaving them in writes the full prompt, tool definitions, and file contents from every Copilot request into your gateway logs.
-
-### Hit the model-alias gate
-
-To see the alias guardrail in action, edit `chatLanguageModels.json` and change `models[].id` to a different model name, for example `gpt-3.5-turbo`. Save. Re-select the model in the picker and ask Copilot another question. Kong rejects the request:
+Each AI Consumer can use 50,000 tokens in a 60-second sliding window. Agent requests that carry workspace context are large, so a few prompts in quick succession use up the budget. For example, ask Copilot to summarize several files in your repository. When Alice's budget runs out, Copilot shows an error with the status:
 
 ```text
-Request failed: 400 model not configured
+429 Too Many Requests
 ```
 {:.no-copy-code}
 
-Change `id` back to the value of `DECK_CHAT_MODEL` and the request succeeds again. This is the Kong-side enforcement boundary: developers cannot use a model the platform team has not configured a target for, even if VS Code's UI offers it.
+Bob's AI Consumer has `identifier: consumer` on the same AI Rate Limiting Advanced Policy. Select the gear icon next to the **Kong** provider in the Language Models editor, replace the API key with the value of `COPILOT_KEY_BOB`, and send a prompt. In a test on runtime 2.3.1 from one machine, Alice and Bob shared one token counter, so Bob's request was also limited. This cookbook hasn't confirmed separate budgets for developers on different machines.
 
-### Hit the per-Consumer rate limit
+### Check the results
 
-The recipe configures 50,000 total tokens per 60-second sliding window per Consumer. Copilot agent runs with workspace context routinely consume 30,000+ tokens per turn. A single multi-tool reply can come close to exhausting the window on its own. Send two or three prompts in quick succession that each include meaningful file context (for example, ask Copilot to summarize a file in your repo) and Kong returns:
+The Copilot sessions confirm the following:
 
-```text
-Request failed: 429 Too Many Requests
-```
-{:.no-copy-code}
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Per-developer authentication"
+    evidence: "Copilot answers with Alice's key and with Bob's key. Neither developer holds the provider key."
+  - behavior: "Bearer token accepted"
+    evidence: "VS Code sends `Authorization: Bearer`, and the Key Auth AI Auth Strategy still authenticates the request, because the global Pre-Function Policy copied the token to `apikey` first."
+  - behavior: "Model alias"
+    evidence: "Requests with `id: kong-copilot` succeed. Another `id` gets an error before any provider call."
+  - behavior: "Token budget"
+    evidence: "Alice gets `429 Too Many Requests` after about 50,000 tokens in a minute. Whether Bob still has his own budget depends on how Kong separates the counters (see the `identifier: consumer` row in How it works)."
+  - behavior: "Usage for each developer"
+    evidence: "The Copilot Usage dashboard shows requests and tokens for `copilot-developer-alice` and `copilot-developer-bob`."
+{% endtable %}
 
-The response includes a `Retry-After` header indicating how many seconds remain in the window. Because `identifier: consumer` scopes the bucket to the developer, the other Consumer (`copilot-developer-bob`) still has its full budget at the same instant — rotate VS Code's stored credential via **Manage Language Models... → Edit API Key** to the value of `$DECK_COPILOT_KEY_BOB` to verify.
+To review the created entities and per-consumer usage, open the `github-copilot-byok-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu. The Copilot Usage dashboard is in **{{site.observability}} > Dashboards**.
 
-### Explore in Konnect
+## How it works
 
-Open [{{site.konnect_product_name}}](https://cloud.konghq.com/) to see the recipe's resources in place.
+VS Code sends each chat or agent request to Kong with the developer's key as a Bearer token. A global Pre-Function Policy copies the token to the `apikey` header, the Key Auth AI Auth Strategy identifies the AI Consumer, the AI Model matches the alias, the AI Rate Limiting Advanced Policy checks the developer's token budget, and Kong forwards the request with the provider credentials.
 
-**Copilot Usage dashboard**
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant VS as VS Code
+    participant K as Kong AI Gateway
+    participant L as LLM Provider
 
-Navigate to **Observability → Custom dashboards → `Copilot Usage`**. The dashboard is pre-filtered to the `github-copilot-byok` Gateway Service and surfaces:
+    VS->>K: POST /github-copilot/chat/completions (Authorization Bearer key, model kong-copilot)
+    activate K
+    K->>K: Global Pre-Function Policy copies the Bearer token to apikey and removes temperature
+    K->>K: Key Auth AI Auth Strategy identifies the AI Consumer (else 401)
+    K->>K: AI Model matches the alias in the model field
+    K->>K: AI Rate Limiting Advanced Policy checks the token budget (else 429)
+    K->>L: Request with the provider credentials and the upstream model
+    activate L
+    L-->>K: Response
+    deactivate L
+    K-->>VS: OpenAI-format response
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
 
-- Total cost, total tokens, and request count for the recipe's traffic.
-- Top Copilot models by token and request volume, plus a model-usage trend line.
-- Health-check, provider-share, and average-latency breakdowns.
-- Per-developer (Consumer) usage broken out by request count and token volume — the per-developer ceilings the rate limiter enforces are directly visible here.
-- An AI security report scoped to 4XX responses on the recipe's Route.
+### Pre-Function Policy
 
-LLM analytics data takes 2–5 minutes to surface after the first successful request. If the dashboard remains empty beyond that, see [Troubleshooting](#troubleshooting) below.
+The Pre-Function Policy runs Lua code from its `config.access` list in the access phase. It's global, because a global Pre-Function Policy runs before authentication, while one listed on the AI Model runs after it ([sandboxing](/ai-gateway/sandboxing/)). The Key Auth AI Auth Strategy reads the `apikey` header, so the header must exist before authentication runs.
 
-**Gateway resources**
+The following settings configure the Pre-Function Policy:
 
-Navigate to **API Gateway → Gateways → `github-copilot-byok-recipe`**. The Control Plane the quickstart provisioned and `kongctl adopt` attached to this namespace surfaces:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`global: true`"
+    purpose: "Runs the policy for each request on the {{site.ai_gateway}}, before authentication. If one {{site.ai_gateway}} has several global Pre-Function Policies, only the one with the highest ID takes effect."
+  - setting: "`ngx.req.set_header(\"apikey\", ...)`"
+    purpose: "Copies the token from an `Authorization: Bearer` header into the `apikey` header that the Key Auth AI Auth Strategy reads."
+  - setting: "`kong.service.request.set_raw_body(...)`"
+    purpose: "Removes `temperature` from the JSON body, so the provider uses its default. The newest OpenAI models expect Chat Completions requests without `temperature` ([OpenAI migration guide](https://developers.openai.com/api/docs/guides/latest-model)). This cookbook hasn't confirmed against a live {{site.ai_gateway}} that the AI Model forwards the changed body."
+{% endtable %}
 
-- **Gateway services → `github-copilot-byok`**. The Service the apply block registered. Its detail page has tabs for Configuration, Routes, Plugins, and Analytics.
-  - **Routes** tab: the `/github-copilot` Route.
-  - **Plugins** tab: Pre-function, Key Auth, AI Proxy Advanced, and AI Rate Limiting Advanced, all scoped to the Service.
-- **Consumers**: `copilot-developer-alice` and `copilot-developer-bob`, each with a Key Auth credential.
+The policy uses only functions and modules that the Lua sandbox allows (`cjson.safe`, `ngx.req.set_header`, `kong.request.get_raw_body`, and `kong.service.request.set_raw_body`).
 
-The Gateway Service's **Analytics** tab and the **Observability** L1 menu remain available for deeper exploration beyond the curated dashboard above.
+### Key Auth AI Auth Strategy and AI Consumers
 
-## Troubleshooting
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy matches the `apikey` header to an AI Consumer credential and rejects unknown keys with `401` before any provider call. The AI Consumer is the identity that the rate limit and analytics use.
 
-### `401 No API key found in request` from VS Code
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumers:
 
-Kong's Key Auth Plugin returns this when the `apikey` header is missing. Which, for Copilot, means the `Authorization` header was either absent or arrived as a bare `Bearer` with no value. Verify in this order:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "The header that Kong reads the key from. The Pre-Function Policy fills it from the Bearer token."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the `apikey` header before it forwards the request, so the provider never sees a developer's key."
+  - setting: "`ai_gateway_consumers[].credentials`"
+    purpose: "One AI Consumer for each developer, with an `api-key` credential. The `api_key` field is write-only, so it reads `COPILOT_KEY_ALICE` and `COPILOT_KEY_BOB` with `!secret`."
+{% endtable %}
 
-1. **Confirm the request reached Kong with a non-empty Bearer value.** Add the diagnostic `kong.log.notice` lines described in the [Confirm Bearer-to-apikey rewrite](#confirm-bearer-to-apikey-rewrite-and-temperature-strip) section and look for `"authorization":"Bearer <key>"`. If the value is literally `Bearer` with nothing after, VS Code did not resolve the secret placeholder.
-1. **Re-mint the placeholder.** Open **Manage Language Models...**, remove the {{site.ai_gateway_name}} entry, run **Add Models... → Custom Endpoint → Chat Completions** again, and paste the key when prompted. A `chatLanguageModels.json` entry whose `apiKey` was hand-typed (rather than wizard-generated) is silently invalid even if its shape looks identical to a working one.
-1. **Strip stray characters from the key.** Copy the value with `printf '%s' "$DECK_COPILOT_KEY_ALICE"`. zsh's trailing `%` marker for newline-less output is a common silent-401 source.
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Usage for each AI Consumer appears in {{site.konnect_short_name}} analytics.
 
-### Dashboard is empty after a few minutes
+### AI Model Provider and AI Model
 
-If **Observability → Custom dashboards → `Copilot Usage`** shows no data 5+ minutes after a successful request, work outward from the data plane:
+The AI Model Provider holds the provider credentials. The AI Model `github-copilot-byok-model` accepts OpenAI-format requests on `/github-copilot`, answers to one alias, and routes to one target that references the AI Model Provider. VS Code sends the alias, and Kong sends the target's upstream model to the provider.
 
-1. **Confirm requests reached the data plane.** Tail `docker logs` on the Kong container and trigger a Copilot prompt; you should see access-log lines for `POST /github-copilot/v1/chat/completions`. If the access log is silent, the request never left VS Code or never hit Kong — fix the client side first.
+The following settings configure the AI Model Provider and the AI Model:
 
-1. **Confirm the data plane is reporting to Konnect telemetry.** A data plane that was relaunched (for example, recreated with new env vars) sometimes fails to reconnect to the telemetry endpoint:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The provider credentials. Kong adds them to each upstream request. The fields depend on the provider tab."
+  - setting: "`formats: [{type: openai}]`"
+    purpose: "The AI Model accepts OpenAI Chat Completions requests, which is the API type that the VS Code model uses. Kong translates the request for providers with another native format, for example Bedrock."
+  - setting: "`access.auth_strategies`"
+    purpose: "Each request must have a valid AI Consumer key."
+  - setting: "`policies`"
+    purpose: "Attaches the AI Rate Limiting Advanced Policy to the AI Model. The Pre-Function Policy isn't listed, because it's global."
+  - setting: "`config.route.model`"
+    purpose: "Kong reads the `model` field of the request body (`body_param: model`) and matches it against `COPILOT_MODEL_ALIAS`. An AI Model accepts one value."
+  - setting: "`targets[].name`"
+    purpose: "The upstream model, from `CHAT_MODEL`. Change it and re-apply to switch models without changing VS Code settings."
+  - setting: "`targets[].config`"
+    purpose: "The provider `type` and provider-specific target fields, for example Azure's `deployment_id` and `api_version`, or Bedrock's `region`."
+  - setting: "`targets[].config.input_cost` and `output_cost`"
+    purpose: "The cost for 1 million input and output tokens, which {{site.konnect_short_name}} uses for cost tracking. The values `0.25` and `2.00` are examples. Replace them with your provider's pricing for the model."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default. Copilot requests carry conversation history, tool definitions, and file contents."
+  - setting: "`config.response_streaming: allow`"
+    purpose: "Kong passes streamed responses to VS Code, which shows the answer as it arrives."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads for audits. The default is `false`."
+{% endtable %}
 
-   {% raw %}
-   ```bash
-   docker logs $(docker ps --filter ancestor=kong/kong-gateway --format '{{.Names}}') 2>&1 \
-     | grep -iE 'telemetry|cluster_telemetry|connected to.*tp\.konghq'
-   ```
-   {% endraw %}
+### AI Rate Limiting Advanced Policy
 
-   A healthy node shows a successful connection to `{region}.tp.konghq.com:443`. Repeated TLS or DNS errors mean telemetry is silently dropping; restart the container and re-check.
+The AI Rate Limiting Advanced Policy counts prompt and completion tokens, the unit that drives LLM cost. Each AI Consumer gets 50,000 tokens in a 60-second sliding window. When an AI Consumer uses up the budget, Kong returns `429 Too Many Requests` until the window allows requests again.
 
-1. **Confirm raw requests are landing in Konnect.** Open **Observability → Analytics → Requests**, scope to the `github-copilot-byok-recipe` Control Plane, and verify recent 2xx entries appear. If this view is populated but the custom dashboard is not, the dashboard's filter or tiles are the issue. If this view is also empty, telemetry is the issue (step 2).
+The following settings configure the AI Rate Limiting Advanced Policy:
 
-1. **Confirm the dashboard filter resolved to a real Service ID.** The dashboard's `preset_filters[0].value` is set by jq to `${CP_ID}:${SERVICE_ID}` during creation. Re-run the lookups and verify both IDs return non-empty values:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.policies[].limits`"
+    purpose: "The token limit and the window size in seconds: `50000` and `60`."
+  - setting: "`identifier: consumer`"
+    purpose: "Counts usage for each AI Consumer. In a test on runtime 2.3.1, two AI Consumers that called from the same machine shared one counter. This cookbook hasn't confirmed separate budgets for developers on different machines."
+  - setting: "`window_type: sliding`"
+    purpose: "A sliding window, for smoother limits than the `fixed` window."
+  - setting: "`tokens_count_strategy: total_tokens`"
+    purpose: "Counts prompt and completion tokens. Other values count only prompt tokens, only completion tokens, or cost."
+  - setting: "`strategy: local`"
+    purpose: "Keeps the counters in memory on each data plane node. For several nodes, use `redis` so that the nodes share the counters."
+{% endtable %}
 
-   ```bash
-   CP_ID=$(kongctl get gateway control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
-     --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
-   echo "CP_ID=${CP_ID}"
-   kongctl api get "/v2/control-planes/${CP_ID}/core-entities/services" \
-     --pat "${KONNECT_TOKEN}" -o json \
-     --jq '.data[] | select(.name=="github-copilot-byok") | .id' -r
-   ```
+{:.info}
+> The 60-second window lets a few prompts use up the budget in this cookbook. In production, most teams use daily or monthly budgets, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Store the provider credentials and the AI Consumer keys in [AI Vaults](/ai-gateway/entities/ai-vault/) instead of environment variables.
 
-   If either is empty, delete the dashboard via the cleanup block below and re-run the dashboard creation step.
+### Response headers
 
-1. **Send a few more requests if tiles still look empty.** Several tiles filter out `ai_provider = UNSPECIFIED`. Brand-new gateways occasionally tag the first request or two as `UNSPECIFIED` while the AI Proxy Advanced Plugin reports provider metadata back to Konnect; a handful of additional Copilot prompts brings the tiles to life.
+Kong adds the following rate limit headers to each response:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-AI-RateLimit-Limit-minute-policy-1`"
+    description: "The token limit for the 60-second window of the first entry in `config.policies`."
+  - header: "`X-AI-RateLimit-Remaining-minute-policy-1`"
+    description: "The tokens left in the current window. Kong rejects a request whose prompt is larger than this value with `429`."
+  - header: "`X-AI-RateLimit-Reset`"
+    description: "The seconds until the quota is restored."
+  - header: "`X-AI-RateLimit-Retry-After`"
+    description: "On a `429` response, the seconds until the AI Consumer can send requests again. There is no plain `Retry-After` header."
+{% endtable %}
 
 ## Variations and next steps
 
-- **Add SSO with Consumer Group tiers.** Replace Key Auth with the [OpenID Connect](/plugins/openid-connect/) Plugin pointed at your IdP, define Consumer Groups for `copilot-standard-users` and `copilot-power-users`, scope separate AI Proxy Advanced Plugins to each group, and let the user's group claim drive which model they can access. The [Claude Code SSO](/cookbooks/claude-code-sso/) recipe demonstrates this pattern end-to-end.
-- **Add code-secret PII redaction.** Add the [AI Sanitizer](/plugins/ai-sanitizer/) Plugin before AI Proxy Advanced to redact API keys, tokens, and other secrets from prompts before they reach the LLM provider. Developers pasting `.env` snippets into Copilot Chat is a real exfiltration risk; this Plugin catches it server-side.
-- **Switch to monthly token budgets.** The 60-second window here is intentionally aggressive for the demo so a few prompts visibly exhaust it. Production teams usually enforce monthly budgets, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%} for a 5 million token monthly ceiling per Consumer. Combine multiple `limits` entries to enforce burst and sustained budgets simultaneously.
-- **Multi-node rate limiting with Redis.** The recipe uses `strategy: local`, which keeps counters in memory on each Kong node. For multi-node clusters, switch to `strategy: redis` and point to a shared Redis instance.
-- **Move credentials into a vault.** Use [Kong Vaults](/gateway/secrets-management/) to source provider keys and Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the Konnect Config Store. Replace {% raw %}`${{ env "DECK_OPENAI_TOKEN" }}`{% endraw %} style references with `{vault://backend/key}` references.
-- **Cover non-Copilot OpenAI-format clients.** This recipe works for any client that speaks the OpenAI Chat Completions API and authenticates with `Authorization: Bearer`. Cursor, Continue, and similar IDE assistants can point at the same Route with their own Consumer credential.
+You can change or extend this configuration in the following ways:
+
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Switch the upstream model"
+    how: "Change `CHAT_MODEL` and re-apply the configuration from [Apply the Kong configuration](#apply-the-kong-configuration). Developers keep the `kong-copilot` model ID in VS Code."
+  - variation: "Send the apikey header from VS Code"
+    how: "Add `\"requestHeaders\": {\"apikey\": \"${apiKey}\"}` to the model in `chatLanguageModels.json`. VS Code then sends the key in `apikey` instead of `Authorization` ([custom authentication headers](https://code.visualstudio.com/docs/agent-customization/language-models#_custom-endpoint-configuration-reference)), and the Pre-Function Policy only removes `temperature`."
+  - variation: "Change the token budget"
+    how: "Change `limits` in the AI Rate Limiting Advanced Policy, for example `limits: [{limit: 5000000, window_size: 2592000}]` for 5 million tokens a month. Add several `limits` entries to set a burst limit and a sustained limit in the same policy."
+  - variation: "Share rate limit counters"
+    how: "Set `strategy: redis` and point the policy at a shared Redis instance, so that all data plane nodes use the same counters."
+  - variation: "Add a developer"
+    how: "Add an `ai_gateway_consumers` entry with its own credential and re-apply. The AI Model and the policies don't change."
+  - variation: "Use single sign-on"
+    how: "Replace the Key Auth AI Auth Strategy with an [OpenID Connect](/ai-gateway/openid-connect/) AI Auth Strategy, as in the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/)."
+  - variation: "Redact sensitive data"
+    how: "Attach an [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy to the AI Model, so that personal data in prompts doesn't reach the provider."
+  - variation: "Support other OpenAI-format clients"
+    how: "Point any client that speaks the OpenAI Chat Completions API at `/github-copilot` with its own AI Consumer key. See the [Basic LLM Routing cookbook](/cookbooks/basic-llm-routing/)."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's `select_tags` and kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
 
-Delete the **Copilot Usage** custom dashboard. The dashboard is an org-level resource and outlives the Control Plane, so remove it before tearing down Kong:
+The Copilot Usage dashboard is an organization-level resource that outlives the {{site.ai_gateway}}. Delete it first:
 
 ```bash
 DASHBOARD_IDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=github-copilot-byok-recipe" \
@@ -1296,11 +1186,18 @@ else
   done
 fi
 ```
+{: data-test-step="block" .collapsible }
 
-Tear down Kong by deleting the local data plane and the {{site.konnect_product_name}} Control Plane:
+Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
-export KONNECT_CONTROL_PLANE_NAME='github-copilot-byok-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
+export KONNECT_CONTROL_PLANE_NAME='github-copilot-byok-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
 
-Remove the {{site.ai_gateway_name}} entry from VS Code. Open the Chat view → model picker → **Manage Language Models...** → select **{{site.ai_gateway_name}}** → **Remove**. This deletes the entry from `chatLanguageModels.json` AND the stored secret from the OS keychain. Copilot resumes routing to GitHub's hosted models for the seat.
+Remove the dashboard definition:
+
+```bash
+rm -f copilot-usage-dashboard.json
+```
+
+In VS Code, delete the `Kong` entry from `chatLanguageModels.json`, so that Copilot stops showing a model whose endpoint no longer exists.

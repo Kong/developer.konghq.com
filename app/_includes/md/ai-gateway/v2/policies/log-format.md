@@ -99,13 +99,18 @@ content: |
                     "response_model": "gpt-4o-2024-08-06",
                     "operation_name": "chat",
                     "llm_latency": 972,
-                    "plugin_id": "f3adc007-171c-5519-8763-3a0eef79bde3"
+                    "plugin_id": "f3adc007-171c-5519-8763-3a0eef79bde3",
+                    "model_id": "2b1e3f0a-6c1d-4c2e-9f5a-7d8e4a9b0c11"
                 },
                 "usage": {
+                    "input_tokens": 13,
+                    "output_tokens": 12,
                     "prompt_tokens": 13,
                     "completion_tokens": 12,
                     "total_tokens": 25,
                     "cost": 0,
+                    "input_token_cost": 0,
+                    "output_token_cost": 0,
                     "time_per_token": 81,
                     "time_to_first_token": 971
                 }

@@ -4,12 +4,8 @@ require 'kramdown'
 
 RSpec.describe 'components/plugin_credential_example.html' do
   before do
-    JekyllSite.instance.data['entity_examples'] =
-      { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
   end
-
-  after { JekyllSite.instance.data.delete('entity_examples') }
 
   let(:drop) do
     Jekyll::Drops::PluginCredentialExample.new(

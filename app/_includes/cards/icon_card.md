@@ -7,7 +7,7 @@
 {% endcapture %}
 <div class="card card__highlighted flex-col gap-5">
 {% if cta_url %}
-    <a href="{{cta_url}}" class="flex gap-5 hover:no-underline w-full items-center p-6 text-primary">
+    <a href="{{cta_url}}" class="flex gap-5 hover:no-underline w-full items-center p-6 text-primary no-icon">
     {{card_content}}
     </a>
 {% else %}

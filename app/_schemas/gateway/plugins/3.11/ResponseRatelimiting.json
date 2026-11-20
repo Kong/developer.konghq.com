@@ -33,7 +33,29 @@
           "type": "string"
         },
         "limits": {
-          "additionalProperties": true,
+          "additionalProperties": {
+            "properties": {
+              "day": {
+                "type": "number"
+              },
+              "hour": {
+                "type": "number"
+              },
+              "minute": {
+                "type": "number"
+              },
+              "month": {
+                "type": "number"
+              },
+              "second": {
+                "type": "number"
+              },
+              "year": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
           "description": "A map that defines rate limits for the plugin.",
           "minLength": 1,
           "type": "object"
@@ -154,5 +176,13 @@
       },
       "type": "object"
     }
-  }
+  },
+  "x-supported-partials": [
+    {
+      "name": "redis-ce",
+      "paths": [
+        "config.redis"
+      ]
+    }
+  ]
 }

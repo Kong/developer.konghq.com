@@ -2,6 +2,7 @@ To manage adopt entities, you first need to create a `KonnectGatewayControlPlane
 
 <!-- vale off -->
 {% konnect_crd %}
+section: prereqs
 kind: KonnectGatewayControlPlane
 apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:

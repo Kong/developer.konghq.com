@@ -26,36 +26,24 @@ The core issue addressed here is the lack of documentation on configuring Kong w
 
 Here are the steps to achieve this configuration:
 
-1. Create a Managed Identity in Azure
+1. Navigate to the Azure portal and create a new managed identity. Note the `AZURE_CLIENT_ID` of the created identity.
 
-- Navigate to the Azure portal and create a new managed identity. Note the `AZURE_CLIENT_ID` of the created identity.
+2. Assign the managed identity to the Azure VM or AKS instance where Kong is deployed.
 
-2. Assign the Managed Identity to Your Azure Resource
+3. Go to your Azure Key Vault instance and add an access policy. Grant the managed identity `Secrets -> Get` permission.
 
-- Assign the managed identity to the Azure VM or AKS instance where Kong is deployed.
+4. Set the following environment variables in the Kong environment, replacing the placeholders with actual values:
 
-3. Configure Access Policies in Azure Key Vault
+   ```
+   AZURE_CLIENT_ID=
+   KONG_VAULT_AZURE_VAULT_URI=
+   ```
 
-- Go to your Azure Key Vault instance and add an access policy. Grant the managed identity `Secrets -> Get` permission.
+5. Use the following command to retrieve a secret from Azure Key Vault:
 
-4. Set Required Environment Variables in Kong
-
-- Set the following environment variables in the Kong environment, replacing the placeholders with actual values:
-
-```
-
-AZURE_CLIENT_ID=
-KONG_VAULT_AZURE_VAULT_URI=
-```
-
-5. Retrieve Secrets from Azure Key Vault in Kong
-
-- Use the following command to retrieve a secret from Azure Key Vault:
-
-```bash
-
-kong vault get {vault://azure/your-secret-name}
-```
+   ```bash
+   kong vault get {vault://azure/your-secret-name}
+   ```
 
 During this process, you might encounter error messages related to authentication or missing environment variables. These errors often indicate a misconfiguration in the environment variables or access policies. Ensure that the `AZURE_CLIENT_ID` and `KONG_VAULT_AZURE_VAULT_URI` are correctly set and that the managed identity has the appropriate permissions in Azure Key Vault.
 
