@@ -29,7 +29,7 @@ related_resources:
     url: /kong-harnesses/doctor/
 ---
 
-A {{site.kong_harnesses}} profile sends the {{ site.claude_code }} model requests to [{{site.ai_gateway}}](/ai-gateway/).
+A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with `ANTHROPIC_BASE_URL`, and that setting moves only the model requests.
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to hosts such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
@@ -205,7 +205,7 @@ The environment variables go in the `env` key, and `skipWebFetchPreflight` and `
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
-No {{site.kong_harnesses}} profile gets [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
+A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
 Activation sets `ANTHROPIC_BASE_URL` to the gateway in the user settings file, and {{ site.claude_code }} reads that value before it decides to fetch the settings.
 A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
