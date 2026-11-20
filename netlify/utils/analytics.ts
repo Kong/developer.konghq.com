@@ -1,9 +1,15 @@
 export type AnalyticsEvent = {
-  path: string;
-  format: "html" | "markdown";
-  user_agent: string;
-  status_code: number;
-  ip: string;
+  x_edge_request_id: string;
+  logged_at_utc: string;
+  x_host_header: string;
+  cs_uri_stem: string;
+  sc_status: number;
+  cs_user_agent: string;
+  c_ip: string;
+  cs_method: string;
+  cs_referer_domain: string;
+  cs_uri_query_utm_ktm: string;
+  sc_content_type: string;
 };
 
 const TIMEOUT_MS = 2000;
@@ -14,11 +20,10 @@ export const sendEvent = async (event: AnalyticsEvent): Promise<void> => {
     const key = Netlify.env.get("ANALYTICS_API_KEY");
     if (!url || !key) return;
 
-    const { path, format, user_agent, status_code, ip } = event;
     await fetch(url, {
       method: "POST",
       headers: { "content-type": "application/json", "x-api-key": key },
-      body: JSON.stringify({ path, format, user_agent, status_code, ip }),
+      body: JSON.stringify(event),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     }).catch(() => {});
   } catch {

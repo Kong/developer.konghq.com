@@ -4,11 +4,17 @@ import assert from "node:assert/strict";
 import { sendEvent, type AnalyticsEvent } from "../../../netlify/utils/analytics.ts";
 
 const event: AnalyticsEvent = {
-  path: "/kongctl/",
-  format: "html",
-  user_agent: "curl/8.0",
-  status_code: 200,
-  ip: "203.0.113.42",
+  x_edge_request_id: "01HZX3",
+  logged_at_utc: "2026-11-20T14:03:12Z",
+  x_host_header: "developer.konghq.com",
+  cs_uri_stem: "/kongctl/",
+  sc_status: 200,
+  cs_user_agent: "curl/8.0",
+  c_ip: "203.0.113.42",
+  cs_method: "GET",
+  cs_referer_domain: "www.google.com",
+  cs_uri_query_utm_ktm: "utm_source=x",
+  sc_content_type: "text/html; charset=utf-8",
 };
 
 type FetchCall = { url: string; init: RequestInit };
@@ -40,7 +46,7 @@ describe("sendEvent", () => {
   });
 
   it("POSTs the event as JSON with the auth header", async () => {
-    await sendEvent({ ...event, request_id: "abc", timestamp: "2026-11-20T10:00:00.000Z" } as typeof event);
+    await sendEvent(event);
 
     assert.equal(calls.length, 1);
     assert.equal(calls[0].url, "https://analytics.example.test/events");
@@ -48,8 +54,11 @@ describe("sendEvent", () => {
     const headers = new Headers(calls[0].init.headers);
     assert.equal(headers.get("content-type"), "application/json");
     assert.equal(headers.get("x-api-key"), "secret-key");
-    assert.deepEqual(JSON.parse(calls[0].init.body as string), event);
-    assert.equal(typeof JSON.parse(calls[0].init.body as string).status_code, "number");
+    const body = JSON.parse(calls[0].init.body as string);
+    assert.deepEqual(body, event);
+    assert.deepEqual(Object.keys(body).sort(), Object.keys(event).sort());
+    assert.equal(Object.keys(body).length, 11);
+    assert.equal(typeof body.sc_status, "number");
   });
 
   it("calls no fetch when the URL is unset", async () => {
