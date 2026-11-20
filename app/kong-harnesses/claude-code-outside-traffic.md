@@ -30,12 +30,12 @@ related_resources:
 ---
 
 A {{site.kong_harnesses}} profile sends the {{ site.claude_code }} model requests to [{{site.ai_gateway}}](/ai-gateway/).
-{{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and other requests straight to Anthropic, GitHub, Datadog and other hosts.
+{{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to hosts such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
 It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
-`kong-harnesses profile create` writes that profile for you, unless you pass `--auto-updates on` or `--anthropic-telemetry on`, or turn on Anthropic telemetry when it asks.
+`kong-harnesses profile create` writes that profile for you, unless you pass `--auto-updates on` or `--anthropic-telemetry on`, or answer yes to the telemetry question.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -67,7 +67,7 @@ rows:
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
-    destination: "`api.anthropic.com`. {{ site.claude_code }} skips the check with a gateway key, and when the nonessential traffic switch is on. With `fast_mode` set to `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available."
+    destination: "`api.anthropic.com`"
     member: "`fast_mode`"
     cost: Developers can't use fast mode.
   - traffic: WebFetch domain check
@@ -77,28 +77,31 @@ rows:
   - traffic: claude.ai connectors
     destination: "`mcp-proxy.anthropic.com`"
     member: "`connectors`"
-    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. With a gateway sign-in they never load, even when `connectors` is `true`. With the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
+    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. When developers use a gateway sign-in, the connectors never load, even when `connectors` is `true`. When the profile uses the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
-    destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally a GitHub issue on `github.com`. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
+    destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally `github.com` for a GitHub issue"
     member: "`bug_command` and `feedback_command`"
-    cost: "Developers can't send a conversation to Anthropic. Each member turns off all of these commands."
+    cost: "Developers can't send a conversation to Anthropic. Each member turns off all of these commands. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead of sending it."
   - traffic: Feedback survey
     destination: Anthropic
     member: "`feedback_survey`"
-    cost: "{{ site.claude_code }} doesn't ask developers to rate a session."
+    cost: "{{ site.claude_code }} doesn't ask developers to rate a session, or to send the session transcript and log after the rating."
   - traffic: Official plugin marketplace install
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. Developers can add it with `/plugin marketplace add`."
   - traffic: Artifacts
-    destination: "`claude.ai` and `*.frame.claudeusercontent.com`"
+    destination: "`claude.ai`, `*.frame.claudeusercontent.com`, and `api.anthropic.com` for the organization policy"
     member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
-    cost: "Claude can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions."
+    cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com` and `*-review.googlesource.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and Gerrit change lookups also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that the nonessential traffic switch turns off, `auto_updates` set to `false` turns off only automatic updates."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the Gerrit change lookups of a Claude desktop app Code tab session also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, turns off, `auto_updates` set to `false` turns off only automatic updates."
 {% endtable %}
+
+{{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
+When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available.
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
 The default depends on the model provider and the sign-in.
@@ -135,11 +138,13 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 * The {{site.ai_gateway}} host
 * Your identity provider, for the sign-in
 * `claude.ai`, `claude.com` and `platform.claude.com`, when the profile uses the developers' own Claude subscriptions, because {{ site.claude_code }} signs in to claude.ai itself. Organizations that use single sign-on also need `sso.claude.com`.
+* `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy and server-managed settings
 * `code.claude.com` and `claude.com`, for the documentation lookups of the built-in `claude-code-guide` agent and for pre-approved WebFetch requests
 * The OpenTelemetry collector, when the profile sends telemetry to one
 * The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds
 * `storage.googleapis.com`, for the plugin metadata that `/plugin` shows
-* `registry.npmjs.org`, for npm and bun installs of {{ site.claude_code }}, npm-source plugins and MCP servers that `npx` starts
+* `downloads.claude.ai`, for plugin executable downloads
+* `registry.npmjs.org`, for npm and bun installs of {{ site.claude_code }}, npm-source plugins and their Node.js package dependencies, and MCP servers that `npx` starts
 * `bridge.claudeusercontent.com`, for the Claude in Chrome extension
 
 {{ site.claude_code }} can add hosts in a new release, so check [Network access requirements](https://code.claude.com/docs/en/network-config#network-access-requirements) in the {{ site.claude_code }} documentation for the current list.
@@ -200,7 +205,9 @@ The environment variables go in the `env` key, and `skipWebFetchPreflight` and `
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
-A gateway setup can't rely on server-managed settings, because they require a direct connection to `api.anthropic.com`, and a credential such as a Team or Enterprise sign-in or an Anthropic API key.
+A gateway sign-in doesn't get server-managed settings.
+{{site.kong_harnesses}} gives {{ site.claude_code }} the gateway sign-in through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch of [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
+A profile that uses the developers' own Claude subscriptions doesn't use `apiKeyHelper`, so a Team or Enterprise sign-in still gets them.
 {{ site.claude_code }} also skips the fetch when the shell exports a custom `ANTHROPIC_BASE_URL`.
 
 {% table %}
@@ -236,7 +243,7 @@ rows:
     setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When you turn on a feature that the second switch turns off, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead, as activation does."
 {% endtable %}
 
-## {{ site.claude_code }} on the web and in Slack
+## {{ site.claude_code }} on the web and Claude in Slack
 
 {{ site.claude_code }} on the web, Claude Tag and the earlier {{ site.claude_code }} in Slack run sessions outside the developer's computer.
 Those sessions don't use the {{site.kong_harnesses}} profile, and their model requests don't go through its gateway.
@@ -266,10 +273,10 @@ The switch also turns off direct messages to Claude.
 
 The earlier {{ site.claude_code }} in Slack answers only Pro, Max and Ultra accounts, in a Slack workspace that no organization connected to Claude Tag.
 Your organization's Claude settings don't control these personal accounts.
-To block the app, a Slack administrator controls the Claude app in Slack:
+To block the app, a Slack administrator removes the Claude app and stops new installs:
 
-* A workspace administrator decides whether to install the Claude app.
-* On Enterprise Grid, an organization administrator decides which workspaces get the Claude app.
-* When an administrator removes the Claude app from a workspace, every user in that workspace loses access at once.
+* A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace. Every user in that workspace loses access at once.
+* A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) with **Only allow pre-approved apps**, and doesn't approve the Claude app, so that members can't install it again.
+* On Enterprise Grid, an Org Owner or Org Admin [restricts the Claude app for the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Manage Apps** > **Restrict an app**. Restricting the app doesn't remove existing installations, so also remove it from each workspace.
 
 [{{ site.claude_code }} in Slack](https://code.claude.com/docs/en/slack) has the details.
