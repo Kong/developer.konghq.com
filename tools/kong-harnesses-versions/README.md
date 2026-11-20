@@ -26,7 +26,7 @@ Run the steps in this order:
    GH_TOKEN=<token> node fetch-versions.js
    ```
 
-   Set `GH_TOKEN` to a GitHub token. Without it the request fails, and the script exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
+   Set `GH_TOKEN` to a GitHub token. Without it the script sends the request with no token, and when the request fails it exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
 
 3. Update the help text from the installed binary:
 

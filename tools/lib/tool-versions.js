@@ -283,13 +283,15 @@ export async function syncReleases({
   return seriesList;
 }
 
-function compareVersions(a, b) {
-  const aParts = a.split('.').map(Number);
-  const bParts = b.split('.').map(Number);
+// BigInt, because a Number loses digits above 2^53 and would then pick another
+// latest release than the changelog sync and `sort -V` in the workflow.
+export function compareVersions(a, b) {
+  const aParts = a.split('.').map(BigInt);
+  const bParts = b.split('.').map(BigInt);
 
   for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-    const aNum = aParts[i] || 0;
-    const bNum = bParts[i] || 0;
+    const aNum = aParts[i] ?? 0n;
+    const bNum = bParts[i] ?? 0n;
 
     if (aNum > bNum) return 1;
     if (aNum < bNum) return -1;

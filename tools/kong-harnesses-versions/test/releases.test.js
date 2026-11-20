@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { syncReleases } from '../../lib/tool-versions.js';
+import { compareVersions, syncReleases } from '../../lib/tool-versions.js';
 
 const dataFile = 'app/_data/tools/kong-harnesses.yml';
 
@@ -172,4 +172,10 @@ test('reads every page, so a newer release on a later page is still the latest',
     'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=2',
   ]);
   assert.match(writes[0].content, /- release: "0\.2"\n {4}version: "0\.2\.0"\n {4}latest: true\n/);
+});
+
+test('compareVersions orders parts above 2^53 by their digits', () => {
+  assert.equal(compareVersions('0.0.9007199254740993', '0.0.9007199254740992'), 1);
+  assert.equal(compareVersions('0.0.9007199254740992', '0.0.9007199254740993'), -1);
+  assert.equal(compareVersions('1.2.3', '1.2.3'), 0);
 });
