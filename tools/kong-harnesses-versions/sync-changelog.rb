@@ -31,7 +31,8 @@ module KongHarnessesChangelog
   TOOLING_SCOPES = %w[ci deps ksai threat-model].freeze
 
   # The elements that the export knows how to write back. It refuses any other, such
-  # as a footnote, math, raw HTML or an HTML comment, rather than guess.
+  # as a footnote, math, raw HTML or an HTML comment, rather than guess. A strikethrough
+  # is an HTML element with its own mark (`strikethrough?`).
   ELEMENTS = %i[root blank header p text ul ol li strong em codespan codeblock a img br hr
                 blockquote smart_quote typographic_sym entity eob].freeze
   # The export refuses every control character in what it writes, so this one can stand
@@ -71,7 +72,7 @@ module KongHarnessesChangelog
   # placeholder such as `<profile>` is text, not HTML, also at the start of a line. The
   # writer escapes both, so the site also shows them as text. An HTML comment or a tag
   # that HTML knows, such as `<del>`, is still read as HTML, so the export refuses it
-  # rather than show it.
+  # rather than show it, but a `~~` strikethrough stays.
   class Parser < Kramdown::Parser::GFM
     def initialize(source, options)
       super
@@ -89,6 +90,12 @@ module KongHarnessesChangelog
 
     # A placeholder at the start of a line is text too. A comment or a tag that HTML
     # knows is still read as HTML.
+    # A strikethrough is an HTML element in kramdown's tree, so it is marked apart from
+    # raw HTML, which the export refuses.
+    def parse_strikethrough_gfm
+      super.tap { |element| element.options[:strikethrough] = true }
+    end
+
     def parse_block_html
       tag = [/^#{OPT_SPACE}#{HTML_TAG_RE}/o, /^#{OPT_SPACE}#{HTML_TAG_CLOSE_RE}/o].filter_map { |pattern| @src[1] if @src.check(pattern) }.first
       @src.check(/^#{OPT_SPACE}#{HTML_COMMENT_RE}/o) || HTML_ELEMENT[tag.to_s.downcase] ? super : false
@@ -175,6 +182,12 @@ module KongHarnessesChangelog
 
     def convert_typographic_sym(el, _opts)
       SYMBOLS.fetch(el.value)
+    end
+
+    # release-please writes a `~~` strikethrough of a subject as it is, so the writer
+    # writes it back as `~~`.
+    def convert_html_element(el, opts)
+      el.options[:strikethrough] ? "~~#{inner(el, opts)}~~" : super
     end
 
     def convert_header(el, opts)
@@ -331,11 +344,17 @@ module KongHarnessesChangelog
     heading
   end
 
+  def strikethrough?(element)
+    element.type == :html_element && element.options[:strikethrough] == true
+  end
+
   # Refuses an element that the export cannot write back, and drops every attribute but
   # the language of a code block, so no attribute list reaches the page.
   def cleaned(element)
-    raise 'The changelog has raw HTML or a strikethrough, which the export cannot write back safely.' if %i[html_element xml_comment xml_pi].include?(element.type)
-    raise "The changelog has #{element.type}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
+    unless strikethrough?(element)
+      raise 'The changelog has raw HTML, which the export cannot write back safely.' if %i[html_element xml_comment xml_pi].include?(element.type)
+      raise "The changelog has #{element.type}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
+    end
 
     language = element.attr['class'].to_s[/(?:\A|\s)language-(\S+)/, 1] if element.type == :codeblock
     element.attr.clear
@@ -584,6 +603,11 @@ module KongHarnessesChangelog
     version.match?(/\A\d+\.\d+\.\d+-/)
   end
 
+  # Why a published release that is no prerelease by its version is no final release.
+  def not_final(version)
+    "v#{version}".match?(STABLE_TAG) ? 'is marked as a pre-release' : 'has no vX.Y.Z tag'
+  end
+
   def core(version)
     version[/\A\d+\.\d+\.\d+/]
   end
@@ -597,10 +621,11 @@ module KongHarnessesChangelog
   # a final release of the same X.Y.Z is out. The prerelease's section stays after that,
   # because release-please takes the version in its manifest, the prerelease, as the
   # last release, so the final section lists only the commits after it. The export
-  # writes each release that it leaves out, and why, to `log`. Text before the first
-  # heading goes. A heading with no version, or no heading for `highest`, the highest
-  # final release, stops the sync, so a changelog that lost its sections cannot empty
-  # the page. So does a changelog with no entries for users left.
+  # writes each release that it leaves out, and why, to `log`, and each final release
+  # that has no section. Text before the first heading goes. A heading with no version,
+  # or no heading for `highest`, the highest final release, stops the sync, so a
+  # changelog that lost its sections cannot empty the page. So does a changelog with no
+  # entries for users left.
   def export(markdown, published:, highest:, finals: published.select { |version| "v#{version}".match?(STABLE_TAG) }, log: $stderr)
     releases = []
     # The lines as kramdown counts them, which also ends a line at a lone CR.
@@ -632,8 +657,9 @@ module KongHarnessesChangelog
     releases.zip(versions).each do |release, version|
       reason = if finals.include?(version) then nil
                elsif !published.include?(version) then 'is not published'
-               elsif !prerelease?(version) then 'is not a final release'
-               elsif !finals.include?(core(version)) then "is a prerelease, and no final #{core(version)} release is published"
+               elsif !prerelease?(version) then not_final(version)
+               elsif !published.include?(core(version)) then "is a pre-release, and no #{core(version)} release is published"
+               elsif !finals.include?(core(version)) then "is a pre-release, and the #{core(version)} release #{not_final(core(version))}"
                end
       sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines) }
       reason ||= 'has no entries for users' if sections.all? { |kept, _| kept.empty? }
@@ -644,6 +670,10 @@ module KongHarnessesChangelog
       root.children.concat(checked(with_source_version(release[:heading], version), name_of(release[:heading])), *sections.map(&:first))
     end
     raise 'The changelog has no entries for users in its published releases.' if root.children.empty?
+
+    (finals - versions).sort_by { |version| Gem::Version.new(version) }.reverse_each do |version|
+      log.puts("The changelog has no section for #{version}, a published final release.")
+    end
 
     output, = Writer.convert(root, options)
     output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
@@ -837,8 +867,9 @@ module KongHarnessesChangelog
       fragment = html(root)
       code = fragment.css('code').map(&:text)
       fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
-        # A label that release-please writes has no `\` or `&`.
-        form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)/
+        # A label that release-please writes has no `\` or `&`, and no attribute list
+        # follows the link, also one that gives no attribute.
+        form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)(?!\{:)/
         written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
         written.call(raw) - code.sum(&written) < links.length
       end

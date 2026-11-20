@@ -29,7 +29,7 @@ module KongHarnessesChangelogLinks
   ELEMENTS = {
     'h1' => HEADING, 'h2' => HEADING, 'h3' => HEADING, 'h4' => HEADING, 'h5' => HEADING, 'h6' => HEADING,
     'p' => {}, 'ul' => {}, 'ol' => {}, 'li' => {}, 'strong' => {}, 'em' => {}, 'pre' => {},
-    'blockquote' => {}, 'br' => {}, 'hr' => {}, 'code' => {}
+    'blockquote' => {}, 'br' => {}, 'hr' => {}, 'code' => {}, 'del' => {}
   }.freeze
   # A reader sees the text of these apart from the text around them.
   BLOCKS = %w[h1 h2 h3 h4 h5 h6 p ul ol li pre blockquote br hr].freeze
@@ -90,8 +90,8 @@ module KongHarnessesChangelogLinks
   # Undoes what a browser undoes before it follows an address: character references,
   # percent-encoding (until nothing changes, so a double encoding cannot hide a name),
   # full-width forms, the dots that host names accept in place of ".", backslashes,
-  # tabs and line breaks, the characters that show nothing by default, the format
-  # characters, such as U+FFF9 or U+13430, and letter case.
+  # tabs and line breaks, also U+2028 and U+2029, the characters that show nothing by
+  # default, the format characters, such as U+FFF9 or U+13430, and letter case.
   def normalize(text)
     value = text
     loop do
@@ -113,13 +113,17 @@ module KongHarnessesChangelogLinks
     normalize(text).match?(ADDRESS)
   end
 
-  # Every control character but a tab and a line break, every format character, such as
-  # the characters that change the order of text, as in a Trojan Source attack, and the
-  # noncharacters, as the text or an attribute holds them after the HTML parser read its
-  # character references. A soft hyphen, the zero width characters, the word joiner and
-  # U+FEFF change no order and show at most a hyphen, and normalize takes them out
-  # before the address check. Tag characters have their own rule.
-  HIDDEN = /[[\p{Cc}&&[^\t\n]][\p{Cf}&&[^\u00ad\u200b-\u200d\u2060\ufeff\u{e0000}-\u{e007f}]]\p{Noncharacter_Code_Point}]/
+  # Every control character but a tab and a line break, the line and paragraph
+  # separators, every character that shows nothing by default and every format
+  # character, such as a variation selector, a Hangul filler or a character that
+  # changes the order of text, as in a Trojan Source attack, and the noncharacters, as
+  # the text or an attribute holds them after the HTML parser read its character
+  # references. A soft hyphen, the zero width characters, the word joiner and U+FEFF
+  # change no order and show at most a hyphen, and normalize takes them out before the
+  # address check. Tag characters and the emoji variation selectors have their own rule.
+  HIDDEN = /[[\p{Cc}&&[^\t\n]]\p{Zl}\p{Zp}[[\p{Default_Ignorable_Code_Point}\p{Cf}]&&[^\u00ad\u200b-\u200d\u2060\ufeff\u{e0000}-\u{e007f}]]\p{Noncharacter_Code_Point}]/
+  # One text or emoji variation selector right after an emoji picks how it shows.
+  EMOJI_STYLE = /(?<=\p{Emoji})[\ufe0e\ufe0f]/
   # A tag character shows nothing outside the flag of a subdivision. Unicode recommends
   # only the flags of England, Scotland and Wales, each a black flag, the tag characters
   # of its code and a cancel tag, so any other run of tag characters is hidden text.
@@ -127,6 +131,7 @@ module KongHarnessesChangelogLinks
   FLAGS = Regexp.union(%w[gbeng gbsct gbwls].map { |code| "\u{1f3f4}#{code.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}" })
 
   def hidden_text?(text)
+    text = text.gsub(EMOJI_STYLE, '')
     text.match?(HIDDEN) || text.gsub(FLAGS, '').match?(TAG)
   end
 

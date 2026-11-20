@@ -41,10 +41,10 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a mail address with no dot', 'mail me@localhost now'],
       ['a mailto address', 'write to mailto:me now'],
       ['an xmpp address', 'chat on xmpp:me now'],
-      ['a strikethrough', 'a ~~gone~~ word'],
       # Each character that shows nothing by default goes before the checks read the text.
       ['a tag character in a host', "see www\u{e0020}.example.com"],
       ['a function application in a scheme', "see https:/\u2061/evil.example"],
+      ['a line separator in a host', "see ww\u2028w.evil.example"],
       ['an annotation character in the repository', "run `github.com/Kong\ufff9/kong-harnesses`"],
       ['a hieroglyph format control in the repository', "run `github.com/Kong\u{13430}/kong-harnesses`"],
       ['the repository in tag characters after a black flag', "see \u{1f3f4}#{'see github.com/kong/kong-harnesses'.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}"],
@@ -72,7 +72,9 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a mail address in a code span', 'run `git config user.email me@example.org`'],
       ['dots in a GitHub address that are no segment', 'see `github.com/a/b/compare/v1...v2`'],
       ['the flag of a region', "go to \u{1f3f4}\u{e0067}\u{e0062}\u{e0073}\u{e0063}\u{e0074}\u{e007f} now"],
-      ['a soft hyphen, a zero width joiner and a word joiner', "a\u00adb c\u200dd e\u2060f"]
+      ['a soft hyphen, a zero width joiner and a word joiner', "a\u00adb c\u200dd e\u2060f"],
+      ['a strikethrough', 'a ~~gone~~ word'],
+      ['one variation selector right after an emoji', "a \u2764\ufe0f and 1\ufe0f\u20e3"]
     ].each do |name, text|
       it "accepts #{name}" do
         expect { described_class.check(entry(text)) }.not_to raise_error
@@ -90,7 +92,8 @@ RSpec.describe KongHarnessesChangelogLinks do
     end
 
     ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;', "\u202e", '&#x2066;', '&#xfffe;', "\u{e0041}\u{e0042}", '&#xE0041;',
-     "\u{e0067}\u{e007f}", "\u2061", "\ufff9", '&#xfffb;', "\u{13430}", '&#x1343f;', "\u00ad\u{1f3f4}\u{e0075}\u{e0073}\u{e0063}\u{e0061}\u{e007f}"].each do |control|
+     "\u{e0067}\u{e007f}", "\u2061", "\ufff9", '&#xfffb;', "\u{13430}", '&#x1343f;', "\u{1f600}\u{e0100}", '&#xE0100;', "a\ufe0f", "\u3164",
+     "\uffa0", "\ufff0", "\u180b", "\u034f", "\u2028", '&#x2029;', "\u00ad\u{1f3f4}\u{e0075}\u{e0073}\u{e0063}\u{e0061}\u{e007f}"].each do |control|
       it "refuses the hidden character #{control.inspect}" do
         expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a hidden code point/)
       end
