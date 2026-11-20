@@ -7,7 +7,7 @@ const event = {
   path: "/kongctl/",
   format: "html",
   user_agent: "curl/8.0",
-  timestamp: "2026-11-20T10:00:00.000Z",
+  status_code: 200,
 };
 
 type FetchCall = { url: string; init: RequestInit };
@@ -39,7 +39,7 @@ describe("sendEvent", () => {
   });
 
   it("POSTs the event as JSON with the auth header", async () => {
-    await sendEvent({ ...event, request_id: "abc" } as typeof event);
+    await sendEvent({ ...event, request_id: "abc", timestamp: "2026-11-20T10:00:00.000Z" } as typeof event);
 
     assert.equal(calls.length, 1);
     assert.equal(calls[0].url, "https://analytics.example.test/events");
@@ -48,6 +48,7 @@ describe("sendEvent", () => {
     assert.equal(headers.get("content-type"), "application/json");
     assert.equal(headers.get("x-api-key"), "secret-key");
     assert.deepEqual(JSON.parse(calls[0].init.body as string), event);
+    assert.equal(typeof JSON.parse(calls[0].init.body as string).status_code, "number");
   });
 
   it("calls no fetch when the URL is unset", async () => {

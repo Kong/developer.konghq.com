@@ -33,20 +33,22 @@ export default async (request: Request, context: Context) => {
     return url;
   }
 
+  const response = await context.next({ sendConditionalRequest: true });
+
   try {
     context.waitUntil(
       sendEvent({
         path: pagePath(pathname),
         format: isMarkdown(pathname) ? "markdown" : "html",
         user_agent: request.headers.get("User-Agent") || "",
-        timestamp: new Date().toISOString(),
+        status_code: response.status,
       }),
     );
   } catch {
     // analytics must never affect the served page
   }
 
-  return await context.next({ sendConditionalRequest: true });
+  return response;
 };
 
 export const config: Config = {

@@ -23,7 +23,7 @@ const setup = (nextResponse: Response = new Response("page", { status: 200 })) =
 };
 
 describe("serve-markdown handler", () => {
-  let events: Record<string, string>[];
+  let events: Record<string, any>[];
 
   beforeEach(() => {
     events = [];
@@ -70,7 +70,8 @@ describe("serve-markdown handler", () => {
     assert.equal(events[0].format, "html");
     assert.equal(events[0].path, "/kongctl/");
     assert.equal(events[0].user_agent, "test-agent");
-    assert.ok(!Number.isNaN(Date.parse(events[0].timestamp)));
+    assert.equal(events[0].status_code, 200);
+    assert.deepEqual(Object.keys(events[0]).sort(), ["format", "path", "status_code", "user_agent"]);
   });
 
   it("rewrites an Accept markdown request and sends no event in run 1", async () => {
@@ -91,8 +92,16 @@ describe("serve-markdown handler", () => {
       assert.equal(events.length, 1);
       assert.equal(events[0].format, "markdown");
       assert.equal(events[0].path, "/kongctl/");
+      assert.equal(events[0].status_code, 200);
     });
   }
+
+  it("sends the status of the next response for a markdown request (run 2)", async () => {
+    await run("/kongctl.md", { accept: "text/markdown" }, new Response("moved", { status: 301 }));
+
+    assert.equal(events.length, 1);
+    assert.equal(events[0].status_code, 301);
+  });
 
   it("rewrites / to /index.md with no event", async () => {
     const { result, nextCalls } = await run("/", { accept: "text/markdown" });
@@ -149,6 +158,30 @@ describe("serve-markdown handler", () => {
 
     assert.equal(result, notModified);
     assert.equal(events.length, 1);
+    assert.equal(events[0].status_code, 304);
+  });
+
+  it("sends status code 404 for a missing page", async () => {
+    const { result } = await run("/this-page-does-not-exist/", {}, new Response("missing", { status: 404 }));
+
+    assert.equal((result as Response).status, 404);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].status_code, 404);
+  });
+
+  it("rejects with the same error and sends no event when next throws", async () => {
+    const { context, waited } = setup();
+    const failure = new Error("origin failed");
+    context.next = async () => {
+      throw failure;
+    };
+    const request = new Request(`${ORIGIN}/kongctl/`, { headers: { "user-agent": "test-agent" } });
+
+    await assert.rejects((handler as any)(request, context), failure);
+    await Promise.all(waited);
+
+    assert.equal(waited.length, 0);
+    assert.equal(events.length, 0);
   });
 });
 
