@@ -1,5 +1,5 @@
 import type { Config, Context } from "@netlify/edge-functions";
-import { sendEvent } from "../utils/analytics.ts";
+import { sendEvent, type AnalyticsEvent } from "../utils/analytics.ts";
 
 const pagePath = (pathname: string) => {
   if (pathname.endsWith("/index.md")) {
@@ -16,11 +16,48 @@ const REWRITE_MARKER = "_md_rewrite";
 const isMarkdown = (pathname: string) =>
   pathname.endsWith(".md") || pathname === "/llms.txt";
 
+const utmKtmQuery = (search: string) =>
+  search
+    .slice(1)
+    .split("&")
+    .filter((pair) => /^(utm_|ktm_)/.test(pair))
+    .join("&");
+
+const refererDomain = (referer: string | null) => {
+  try {
+    return referer ? new URL(referer).hostname.toLowerCase() : "";
+  } catch {
+    return "";
+  }
+};
+
+const buildEvent = (
+  request: Request,
+  context: Context,
+  response: Response,
+  url: URL,
+  startedAt: Date,
+  rewritten: boolean,
+): AnalyticsEvent => ({
+  x_edge_request_id: context.requestId || "",
+  logged_at_utc: startedAt.toISOString().replace(/\.\d{3}Z$/, "Z"),
+  x_host_header: url.hostname,
+  cs_uri_stem: rewritten ? pagePath(url.pathname) : url.pathname,
+  sc_status: response.status,
+  cs_user_agent: request.headers.get("User-Agent") || "",
+  c_ip: context.ip || "",
+  cs_method: request.method,
+  cs_referer_domain: refererDomain(request.headers.get("Referer")),
+  cs_uri_query_utm_ktm: utmKtmQuery(url.search),
+  sc_content_type: response.headers.get("content-type") || "",
+});
+
 export default async (request: Request, context: Context) => {
   if (request.method !== "GET") {
     return;
   }
 
+  const startedAt = new Date();
   const url = new URL(request.url);
   const { pathname } = url;
   const acceptHeader = request.headers.get("Accept") || "";
@@ -41,13 +78,7 @@ export default async (request: Request, context: Context) => {
 
   try {
     context.waitUntil(
-      sendEvent({
-        path: rewritten ? pagePath(pathname) : pathname,
-        format: isMarkdown(pathname) ? "markdown" : "html",
-        user_agent: request.headers.get("User-Agent") || "",
-        status_code: response.status,
-        ip: context.ip || "",
-      }),
+      sendEvent(buildEvent(request, context, response, url, startedAt, rewritten)),
     );
   } catch {
     // analytics must never affect the served page

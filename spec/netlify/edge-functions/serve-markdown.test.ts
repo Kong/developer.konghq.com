@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, it } from "node:test";
+import { afterEach, beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
 
 import handler, { config } from "../../../netlify/edge-functions/serve-markdown.ts";
@@ -12,6 +12,7 @@ const setup = (nextResponse: Response = new Response("page", { status: 200 })) =
   const nextCalls: NextCall[] = [];
   const context: Record<string, any> = {
     ip: "203.0.113.42",
+    requestId: "req-123",
     waitUntil: (promise: Promise<unknown>) => {
       waited.push(promise);
     },
@@ -44,18 +45,24 @@ describe("serve-markdown handler", () => {
   });
 
   afterEach(() => {
+    mock.timers.reset();
     delete (globalThis as any).Netlify;
   });
 
   const run = async (
     path: string,
-    { method = "GET", accept, userAgent = "test-agent" }: { method?: string; accept?: string; userAgent?: string } = {},
+    {
+      method = "GET",
+      accept,
+      userAgent = "test-agent",
+      headers: extraHeaders = {},
+    }: { method?: string; accept?: string; userAgent?: string; headers?: Record<string, string> } = {},
     nextResponse?: Response,
   ) => {
     const { context, waited, nextCalls, nextResponse: expected } = setup(nextResponse);
-    const headers: Record<string, string> = { "user-agent": userAgent };
+    const headers: Record<string, string> = { "user-agent": userAgent, ...extraHeaders };
     if (accept) headers.accept = accept;
-    const request = new Request(`${ORIGIN}${path}`, { method, headers });
+    const request = new Request(path.startsWith("http") ? path : `${ORIGIN}${path}`, { method, headers });
     const result = await (handler as any)(request, context);
     await Promise.all(waited);
     return { result, nextCalls, expected };
@@ -68,12 +75,127 @@ describe("serve-markdown handler", () => {
     assert.deepEqual(nextCalls[0], [{ sendConditionalRequest: true }]);
     assert.equal(result, expected);
     assert.equal(events.length, 1);
-    assert.equal(events[0].format, "html");
-    assert.equal(events[0].path, "/kongctl/");
-    assert.equal(events[0].user_agent, "test-agent");
-    assert.equal(events[0].status_code, 200);
-    assert.equal(events[0].ip, "203.0.113.42");
-    assert.deepEqual(Object.keys(events[0]).sort(), ["format", "ip", "path", "status_code", "user_agent"]);
+    assert.equal(events[0].cs_uri_stem, "/kongctl/");
+    assert.equal(events[0].sc_status, 200);
+    assert.equal(events[0].cs_user_agent, "test-agent");
+    assert.equal(events[0].c_ip, "203.0.113.42");
+  });
+
+  it("sends exactly the log field set", async () => {
+    await run("/kongctl/");
+
+    assert.deepEqual(Object.keys(events[0]).sort(), [
+      "c_ip",
+      "cs_method",
+      "cs_referer_domain",
+      "cs_uri_query_utm_ktm",
+      "cs_uri_stem",
+      "cs_user_agent",
+      "logged_at_utc",
+      "sc_content_type",
+      "sc_status",
+      "x_edge_request_id",
+      "x_host_header",
+    ]);
+  });
+
+  it("sends the platform request id", async () => {
+    await run("/kongctl/");
+
+    assert.equal(events[0].x_edge_request_id, "req-123");
+  });
+
+  it("sends the time at handler start, to the second, in UTC", async () => {
+    mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-11-20T14:03:12.345Z") });
+    const { context, waited } = setup();
+    context.next = async () => {
+      mock.timers.tick(5000);
+      return new Response("page", { status: 200 });
+    };
+
+    await (handler as any)(new Request(`${ORIGIN}/kongctl/`), context);
+    await Promise.all(waited);
+
+    assert.match(events[0].logged_at_utc, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    assert.equal(events[0].logged_at_utc, "2026-11-20T14:03:12Z");
+  });
+
+  it("sends the hostname without a port", async () => {
+    await run("http://localhost:8938/kongctl/");
+
+    assert.equal(events[0].x_host_header, "localhost");
+  });
+
+  it("sends the method", async () => {
+    await run("/kongctl/");
+
+    assert.equal(events[0].cs_method, "GET");
+  });
+
+  it("sends a long User-Agent unchanged", async () => {
+    const userAgent = `Mozilla/5.0 ${"x".repeat(588)}`;
+
+    await run("/kongctl/", { userAgent });
+
+    assert.equal(userAgent.length, 600);
+    assert.equal(events[0].cs_user_agent, userAgent);
+  });
+
+  it("sends the lowercase referrer hostname without port or path", async () => {
+    await run("/kongctl/", { headers: { referer: "https://www.Google.com:443/search?q=kong" } });
+
+    assert.equal(events[0].cs_referer_domain, "www.google.com");
+  });
+
+  it("sends an empty referrer domain when the header is missing", async () => {
+    await run("/kongctl/");
+
+    assert.equal(events[0].cs_referer_domain, "");
+  });
+
+  it("sends an empty referrer domain when the header is not a URL", async () => {
+    await run("/kongctl/", { headers: { referer: "not a url" } });
+
+    assert.equal(events[0].cs_referer_domain, "");
+  });
+
+  it("keeps only utm_ and ktm_ parameters, in order and as encoded", async () => {
+    await run("/kongctl/?foo=1&utm_source=x&ktm_id=y&UTM_x=z");
+
+    assert.equal(events[0].cs_uri_query_utm_ktm, "utm_source=x&ktm_id=y");
+  });
+
+  it("keeps percent-encoding in the query field", async () => {
+    await run("/kongctl/?utm_term=a%20b&ktm_id=y%2Fz");
+
+    assert.equal(events[0].cs_uri_query_utm_ktm, "utm_term=a%20b&ktm_id=y%2Fz");
+  });
+
+  it("keeps the marker out of the query field", async () => {
+    await run("/kongctl.md?utm_source=x&_md_rewrite=1", { accept: "text/markdown" });
+
+    assert.equal(events[0].cs_uri_query_utm_ktm, "utm_source=x");
+  });
+
+  it("sends an empty query field when there is no query", async () => {
+    await run("/kongctl/");
+
+    assert.equal(events[0].cs_uri_query_utm_ktm, "");
+  });
+
+  it("sends the content type of the next response", async () => {
+    await run("/kongctl/", {}, new Response("page", { headers: { "content-type": "text/html; charset=utf-8" } }));
+
+    assert.equal(events[0].sc_content_type, "text/html; charset=utf-8");
+  });
+
+  it("sends an empty content type when the next response has none", async () => {
+    const response = new Response(null, { status: 304 });
+
+    await run("/kongctl/", {}, response);
+
+    assert.equal(response.headers.get("content-type"), null);
+    assert.equal(events[0].sc_content_type, "");
   });
 
   it("sends an empty ip when the platform gives none", async () => {
@@ -85,7 +207,7 @@ describe("serve-markdown handler", () => {
     await Promise.all(waited);
 
     assert.equal(events.length, 1);
-    assert.equal(events[0].ip, "");
+    assert.equal(events[0].c_ip, "");
   });
 
   it("rewrites an Accept markdown request with the marker and sends no event in run 1", async () => {
@@ -122,17 +244,15 @@ describe("serve-markdown handler", () => {
     assert.equal(nextCalls.length, 1);
     assert.equal(result, expected);
     assert.equal(events.length, 1);
-    assert.equal(events[0].format, "markdown");
-    assert.equal(events[0].path, "/kongctl/");
-    assert.equal(events[0].status_code, 200);
+    assert.equal(events[0].cs_uri_stem, "/kongctl/");
+    assert.equal(events[0].sc_status, 200);
   });
 
   it("logs /index.md?_md_rewrite=1 as /", async () => {
     await run("/index.md?_md_rewrite=1", { accept: "text/markdown" });
 
     assert.equal(events.length, 1);
-    assert.equal(events[0].path, "/");
-    assert.equal(events[0].format, "markdown");
+    assert.equal(events[0].cs_uri_stem, "/");
   });
 
   for (const accept of [undefined, "text/markdown"]) {
@@ -142,17 +262,15 @@ describe("serve-markdown handler", () => {
       assert.equal(nextCalls.length, 1);
       assert.equal(result, expected);
       assert.equal(events.length, 1);
-      assert.equal(events[0].format, "markdown");
-      assert.equal(events[0].path, "/kongctl.md");
-      assert.equal(events[0].status_code, 200);
+      assert.equal(events[0].cs_uri_stem, "/kongctl.md");
+      assert.equal(events[0].sc_status, 200);
     });
 
     it(`logs the raw path for a direct /index.md request (Accept: ${accept ?? "none"})`, async () => {
       await run("/index.md", { accept });
 
       assert.equal(events.length, 1);
-      assert.equal(events[0].path, "/index.md");
-      assert.equal(events[0].format, "markdown");
+      assert.equal(events[0].cs_uri_stem, "/index.md");
     });
   }
 
@@ -160,16 +278,15 @@ describe("serve-markdown handler", () => {
     await run("/kongctl.md?_md_rewrite=1", { accept: "text/markdown" }, new Response("moved", { status: 301 }));
 
     assert.equal(events.length, 1);
-    assert.equal(events[0].status_code, 301);
+    assert.equal(events[0].sc_status, 301);
   });
 
-  it("counts /llms.txt as markdown", async () => {
+  it("counts /llms.txt", async () => {
     const { nextCalls } = await run("/llms.txt");
 
     assert.equal(nextCalls.length, 1);
     assert.equal(events.length, 1);
-    assert.equal(events[0].format, "markdown");
-    assert.equal(events[0].path, "/llms.txt");
+    assert.equal(events[0].cs_uri_stem, "/llms.txt");
   });
 
   it("serves /llms.txt unchanged when the client accepts markdown", async () => {
@@ -179,8 +296,7 @@ describe("serve-markdown handler", () => {
     assert.equal(result, expected);
     assert.equal(nextCalls.length, 1);
     assert.equal(events.length, 1);
-    assert.equal(events[0].format, "markdown");
-    assert.equal(events[0].path, "/llms.txt");
+    assert.equal(events[0].cs_uri_stem, "/llms.txt");
   });
 
   for (const method of ["HEAD", "OPTIONS"]) {
@@ -212,15 +328,15 @@ describe("serve-markdown handler", () => {
 
     assert.equal(result, notModified);
     assert.equal(events.length, 1);
-    assert.equal(events[0].status_code, 304);
+    assert.equal(events[0].sc_status, 304);
   });
 
-  it("sends status code 404 for a missing page", async () => {
+  it("sends status 404 for a missing page", async () => {
     const { result } = await run("/this-page-does-not-exist/", {}, new Response("missing", { status: 404 }));
 
     assert.equal((result as Response).status, 404);
     assert.equal(events.length, 1);
-    assert.equal(events[0].status_code, 404);
+    assert.equal(events[0].sc_status, 404);
   });
 
   it("rejects with the same error and sends no event when next throws", async () => {
