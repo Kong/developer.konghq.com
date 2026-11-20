@@ -143,6 +143,17 @@ describe("serve-markdown handler", () => {
     assert.equal(events[0].path, "/llms.txt");
   });
 
+  it("serves /llms.txt unchanged when the client accepts markdown", async () => {
+    const { result, nextCalls, expected } = await run("/llms.txt", { accept: "text/markdown" });
+
+    assert.ok(!(result instanceof URL));
+    assert.equal(result, expected);
+    assert.equal(nextCalls.length, 1);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].format, "markdown");
+    assert.equal(events[0].path, "/llms.txt");
+  });
+
   for (const method of ["HEAD", "OPTIONS"]) {
     it(`ignores ${method} requests`, async () => {
       const { result, nextCalls } = await run("/kongctl/", { method });

@@ -23,7 +23,7 @@ export default async (request: Request, context: Context) => {
   const { pathname } = url;
   const acceptHeader = request.headers.get("Accept") || "";
 
-  if (acceptHeader.includes("text/markdown") && !pathname.endsWith(".md")) {
+  if (acceptHeader.includes("text/markdown") && !isMarkdown(pathname)) {
     if (pathname === "/") {
       url.pathname = "/index.md";
     } else {
