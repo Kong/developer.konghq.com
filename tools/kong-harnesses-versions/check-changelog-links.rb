@@ -43,14 +43,23 @@ module KongHarnessesChangelogLinks
   # The languages that the site's Shiki highlighter loads or maps to one, and text.
   # Shiki stops the site build on any other language of a code block.
   def languages
-    @languages ||= begin
-      source = File.read(SHIKI)
-      loaded = source[/langs:\s*\[(.*?)\]/m, 1].to_s.scan(/"([^"]+)"/).flatten
-      mapped = source[/languageMap\s*=\s*\{(.*?)\}/m, 1].to_s.scan(/^\s*"?([\w+-]+)"?\s*:/).flatten
-      raise "#{SHIKI} has no list of languages that this check can read." if loaded.empty? || mapped.empty?
+    @languages ||= languages_in(File.read(SHIKI))
+  end
 
-      [*loaded, *mapped, 'text'].to_set
-    end
+  # Reads every entry of the `langs` list and every key of `languageMap`, and refuses an
+  # entry that it cannot read, so a new form in the file cannot drop a language.
+  def languages_in(source)
+    loaded = entries(source, /langs:\s*\[(.*?)\]/m) { |entry| entry[/\A(["'])([\w+-]+)\1\z/, 2] }
+    mapped = entries(source, /languageMap\s*=\s*\{(.*?)\}/m) { |entry| entry[/\A(["']?)([\w+-]+)\1\s*:\s*(["'])[\w+-]+\3\z/, 2] }
+    [*loaded, *mapped, 'text'].to_set
+  end
+
+  def entries(source, list)
+    body = source[list, 1] or raise "#{SHIKI} has no list of languages that this check can read."
+    items = body.split(',').map(&:strip).reject(&:empty?)
+    raise "#{SHIKI} has an empty list of languages." if items.empty?
+
+    items.map { |item| yield(item) || raise("#{SHIKI} has a language entry that this check cannot read: #{item}") }
   end
 
   # The language of a fenced code block, such as ```sh in an upgrade step.

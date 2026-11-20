@@ -66,6 +66,22 @@ RSpec.describe KongHarnessesChangelogLinks do
       expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
     end
 
+    it 'reads every language of the Shiki plugin and refuses an entry that it cannot read' do
+      shiki = <<~JS
+        langs: [
+          "yaml", 'fish',
+          "json"
+        ],
+        const languageMap = { bash: "fish", 'sh': 'fish',
+            console: "fish" };
+      JS
+      expect(described_class.languages_in(shiki)).to eq(Set['yaml', 'fish', 'json', 'bash', 'sh', 'console', 'text'])
+      expect { described_class.languages_in(shiki.sub('"json"', '"json" // the API')) }.to raise_error(/cannot read: "json" \/\/ the API/)
+      expect { described_class.languages_in(shiki.sub('console: "fish"', 'console: fishLanguage')) }.to raise_error(/cannot read: console: fishLanguage/)
+      expect { described_class.languages_in('langs: []') }.to raise_error(/empty list|no list/)
+      expect(described_class.languages).to include('yaml', 'go', 'bash', 'text')
+    end
+
     it 'accepts the published changelog data' do
       markdown = JSON.parse(File.read(described_class::DATA_FILE)).fetch('markdown')
 

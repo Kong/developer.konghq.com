@@ -33,16 +33,14 @@ module KongHarnessesChangelog
   # as a footnote, math, raw HTML or an HTML comment, rather than guess.
   ELEMENTS = %i[root blank header p text ul ol li strong em codespan codeblock a img br hr
                 blockquote smart_quote typographic_sym entity eob].freeze
-  # The elements of a block that hold text, which an address can run across.
+  # The elements of a block that hold text.
   INLINE = %i[strong em a].freeze
 
   REMOVED = "\u0000"
   LINE_BREAK = "\u0001"
-  # An address that a reader sees, which ends before white space, and before a quote or
-  # a punctuation mark that ends a sentence, as GFM ends an autolink.
-  WEB_ADDRESS = %r{<https?://[^[:space:]<>]*>|https?://(?:[^[:space:]<>()]|\([^[:space:]<>()]*\))*(?<![.,:;!?'"‘’“”*_~])}i
-  # The characters that kramdown's typographic symbols show.
-  SYMBOLS = { mdash: '—', ndash: '–', hellip: '…', laquo: '«', raquo: '»', laquo_space: '« ', raquo_space: ' »' }.freeze
+  # The characters that kramdown's typographic symbols show, with a no-break space in the
+  # two forms with a space.
+  SYMBOLS = { mdash: '—', ndash: '–', hellip: '…', laquo: '«', raquo: '»', laquo_space: "«\u00a0", raquo_space: "\u00a0»" }.freeze
   QUOTES = { lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”' }.freeze
   # The release-please preset links an issue number and a user name even inside a code
   # span, so the export puts the plain text back in code.
@@ -205,7 +203,7 @@ module KongHarnessesChangelog
     raise "The changelog has #{element.type}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
 
     attributes = element.attr.dup
-    language = attributes['class'].to_s[/\Alanguage-([\w+-]+)\z/, 1] if element.type == :codeblock && attributes.keys == ['class']
+    language = attributes['class'].to_s[/(?:\A|\s)language-(\S+)/, 1] if element.type == :codeblock
     element.attr.clear
     # The site's highlighter stops the build on a language that it does not know.
     element.attr['class'] = "language-#{KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text'}" if language
@@ -213,9 +211,6 @@ module KongHarnessesChangelog
     attributes
   end
 
-  # Every link goes and keeps its text, an image gives its alt text, and an address
-  # that is its own text goes, so the page has no links. Code stays as it is, but for
-  # the links that the release-please preset adds inside it.
   # Kramdown makes the paragraph of a list item loose when a blank line comes after it,
   # also when only a reference definition follows the blank line. The writer writes no
   # blank line after the last item, so that item is tight unless an item before it is
@@ -228,12 +223,33 @@ module KongHarnessesChangelog
   end
 
   # The site's parser ends a paragraph at a line that starts a block, also inside code,
-  # where the writer cannot escape it.
-  CODE_LINE_BLOCK = /\n[ \t]*(?:[#>:<^{*+=~`-]|\d+[.)])/
+  # where the writer cannot escape it. The export asks the parser whether the code that
+  # it writes reads back as the same code.
+  def code_breaks_paragraph?(element)
+    return false unless element.value.include?("\n")
 
+    root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
+    root.children << Kramdown::Element.new(:p).tap { |paragraph| paragraph.children << Kramdown::Element.new(:codespan, element.value) }
+    reread, = Kramdown::Parser::GFM.parse(Writer.convert(root, options).first, options)
+    blocks = reread.children.reject { |child| child.type == :blank }
+    !(blocks.map(&:type) == [:p] && blocks.first.children.map(&:type) == [:codespan] && blocks.first.children.first.value == element.value)
+  end
+
+  # A link that the parser gives with its own web or mail address as its text.
+  def own_address?(text, address)
+    address.match?(/\A(?:https?|mailto):/i) && [address, address.sub(/\Amailto:/i, '')].include?(text)
+  end
+
+  # Every link goes and keeps its text, and an image gives its alt text, so the page has
+  # no links. A link whose text is a reference or its own address goes with its text.
+  # Code stays as it is, but for the links that the release-please preset adds inside
+  # it. An address in plain text stays text, as the site's parser shows it, so the
+  # export refuses it: only the parser can say where an address ends.
   def without_links(element)
     attributes = cleaned(element)
-    raise 'The changelog has code with a line that starts a block, which the export cannot write back safely.' if element.type == :codespan && element.value.match?(CODE_LINE_BLOCK)
+    raise 'The changelog has code with a line that starts a block, which the export cannot write back safely.' if element.type == :codespan && code_breaks_paragraph?(element)
+    # The writer writes nothing for a code block of only white space.
+    return [] if element.type == :codeblock && element.value.strip.empty?
     if %i[codespan codeblock].include?(element.type)
       element.value = PRESET_LINKS.reduce(element.value) { |value, link| value.gsub(link, '\1') }
       return [element]
@@ -243,14 +259,17 @@ module KongHarnessesChangelog
     when :a
       address = attributes.fetch('href', '').to_s
       text = text_of(element)
-      return [removed] if reference?(text, address) || text == address || text == address.delete_prefix('mailto:')
+      return [removed] if reference?(text, address) || own_address?(text, address)
 
       children
     when :img
       [Kramdown::Element.new(:text, attributes.fetch('alt', '').to_s)]
     else
-      element.children = separated(joined(children))
-      without_addresses(element) if %i[p header].include?(element.type)
+      element.children = merged(separated(joined(children)))
+      if %i[p header].include?(element.type)
+        clear_of_addresses(element)
+        tidied_block(element)
+      end
       tightened(element) if %i[ul ol].include?(element.type)
       # A heading, paragraph or block quote with nothing left shows nothing, and the
       # writer cannot write an empty one.
@@ -273,9 +292,25 @@ module KongHarnessesChangelog
     end
   end
 
+  # Two lists of the same kind with only blank lines between them read back as one, as
+  # when the export drops an empty list between them, so the export makes them one.
+  def merged(children)
+    children.each_with_object([]) do |child, list|
+      index = list.rindex { |element| element.type != :blank }
+      if index && %i[ul ol].include?(child.type) && list[index].type == child.type
+        list[index].children.concat(child.children)
+        list.pop(list.length - index - 1)
+      else
+        list << child
+      end
+    end
+  end
+
+  # Joins text next to text, and code next to code, because no Markdown can write two
+  # code spans with no character between them: their backticks would run together.
   def joined(children)
     children.each_with_object([]) do |child, list|
-      if child.type == :text && list.last&.type == :text
+      if %i[text codespan].include?(child.type) && list.last&.type == child.type
         list.last.value += child.value
       else
         list << (child.type == :text ? Kramdown::Element.new(:text, child.value.dup) : child)
@@ -283,22 +318,7 @@ module KongHarnessesChangelog
     end
   end
 
-  # The pieces of a block's text, in order, that an address can run across: text,
-  # entities and typographic symbols, also inside bold and emphasis. Code and line
-  # breaks end a run.
-  def runs(element, list = [[]])
-    element.children.each do |child|
-      case child.type
-      when :text, :entity, :smart_quote, :typographic_sym then list.last << child
-      when *INLINE then runs(child, list)
-      else list << []
-      end
-    end
-    list
-  end
-
-  # The text that a reader sees of a piece, so an address ends where the page shows it
-  # end, also at an entity such as `&#32;`.
+  # The text that a reader sees of a piece.
   def visible_text(piece)
     case piece.type
     when :text then piece.value
@@ -308,30 +328,29 @@ module KongHarnessesChangelog
     end
   end
 
-  # Removes every bare address from a block, as a reader sees it across bold, emphasis,
-  # entities and typographic symbols, drops the brackets that held only removed links, and drops bold or
-  # emphasis that is then empty. Each removed link takes one space with it.
-  def without_addresses(block)
-    runs(block).each do |run|
-      offset = 0
-      spans = run.map { |piece| [piece, offset, offset += visible_text(piece).length] }
-      addresses = run.map { |piece| visible_text(piece) }.join.to_enum(:scan, WEB_ADDRESS).map { Regexp.last_match.offset(0) }
-      spans.each do |piece, from, to|
-        covered = addresses.select { |start, stop| start < to && stop > from }
-        next if covered.empty?
-
-        text = visible_text(piece)
-        kept = covered.reverse.reduce(text) do |value, (start, stop)|
-          mark = start >= from ? REMOVED : ''
-          value[0...[start - from, 0].max] + mark + value[[stop - from, text.length].min..]
-        end
-        piece.type = :text
-        piece.value = kept
-        piece.options.clear
-      end
+  # The text of a block outside code, with a space for code and a line break.
+  def prose_of(element)
+    case element.type
+    when :text, :entity, :smart_quote, :typographic_sym then visible_text(element)
+    when :codespan, :br then ' '
+    else element.children.map { |child| prose_of(child) }.join
     end
+  end
+
+  # Refuses a block with an address in its text, which the page cannot show, and a
+  # removed link right before a word, or a quote mark and a word, as `[#1](...)'s`,
+  # because the text would then lose what the link held.
+  def clear_of_addresses(block)
+    prose = prose_of(block)
+    entry = prose.delete(REMOVED).strip[0, 120].inspect
+    raise "The changelog has an address in the text of #{entry}. The page shows no addresses, so write it as a link at the source." if KongHarnessesChangelogLinks.normalize(prose).include?('//')
+    raise "The changelog has a link right before a word in #{entry}. Put a space or a punctuation mark after the link at the source." if prose.match?(/#{REMOVED}(?=[[:alnum:]]|['"‘’“”][[:alnum:]])/o)
+  end
+
+  # Drops the brackets that held only removed links, and bold or emphasis that is then
+  # empty. The writer drops a line break at the start or the end of a block.
+  def tidied_block(block)
     tidied(block)
-    # The writer drops a line break at the start or the end of a block.
     block.children.shift while block.children.first&.type == :br
     block.children.pop while block.children.last&.type == :br
   end
@@ -372,14 +391,16 @@ module KongHarnessesChangelog
     end
   end
 
-  # Quotes that held only a removed address go with it.
+  # Quotes that held only a removed link go with it.
   def without_empty_quotes(children)
     children.each_with_object([]) do |child, list|
       opening, inside = list.last(2)
-      if child.type == :smart_quote && %i[rsquo rdquo].include?(child.value) && inside&.type == :text &&
-         inside.value.match?(/\A\s*#{REMOVED}+\s*\z/) && opening&.type == :smart_quote && %i[lsquo ldquo].include?(opening.value)
+      # Kramdown can turn either quote of the pair, so any two of the same kind count.
+      if child.type == :smart_quote && inside&.type == :text && !inside.options[:quoted] && inside.value.match?(/\A\s*#{REMOVED}+\s*\z/) &&
+         opening&.type == :smart_quote && child.value.to_s[1] == opening.value.to_s[1]
         list.pop(2)
-        list << Kramdown::Element.new(:text, REMOVED)
+        # A quote of a pair that went cannot open another pair.
+        list << Kramdown::Element.new(:text, REMOVED, nil, quoted: true)
       else
         list << child
       end
@@ -446,7 +467,7 @@ module KongHarnessesChangelog
         without_links(element)
       end
     end
-    kept.all? { |element| element.type == :blank } ? [[], []] : [[without_links(title).first, *kept], sources]
+    kept.all? { |element| element.type == :blank } ? [[], []] : [[without_links(title).first, *merged(kept)], sources]
   end
 
   # Only text of a published release reaches the site. release-please writes a section
@@ -544,46 +565,58 @@ module KongHarnessesChangelog
 
   # The text that a reader sees, with an image as its alt text and each block edge and
   # run of white space as one space, and the spans of it that the export may take out:
-  # a link that is a reference or its own address, and a bare address.
+  # a whole link that is a reference or its own address, as the parser gives it, and
+  # the brackets and quotes next to it.
   def reading(fragment)
     text = +''
     spans = []
-    # Each piece of text that the export reads as one: an address can run across text,
-    # links, bold and emphasis, but not into code, a line break or another block.
-    pieces = [[0, :text]]
+    codes = []
     add = ->(value) { value.each_char { |char| text << (char.match?(/\s/) ? ' ' : char) unless char.match?(/\s/) && (text.empty? || text.end_with?(' ')) } }
     walk = lambda do |node|
       next add.call(node.text) if node.text?
       next add.call(node['alt'].to_s) if node.name == 'img'
 
-      apart = BLOCKS.include?(node.name) || node.name == 'code'
       add.call(' ') if BLOCKS.include?(node.name)
-      pieces << [text.length, node.name == 'code' ? :code : :text] if apart
       from = text.length
       node.children.each(&walk)
-      label = text[from..].strip
-      address = node['href'].to_s
-      spans << [from, text.length] if node.name == 'a' && (reference?(label, address) || [address, address.delete_prefix('mailto:')].include?(label))
+      spans << [from, text.length] if node.name == 'a' && removable_link?(text[from..].strip, node['href'].to_s)
+      codes << [from, text.length] if node.name == 'code'
       add.call(' ') if BLOCKS.include?(node.name)
-      pieces << [text.length, :text] if apart
     end
     fragment.children.each(&walk)
-    # The export takes out a link before it looks for an address, so an address ends
-    # where a removed link starts.
-    scanned = spans.each_with_object(text.dup) { |(from, to), copy| copy[from...to] = REMOVED * (to - from) }
-    pieces.each_cons(2).to_a.push([pieces.last, [text.length]]).each do |(from, kind), (to)|
-      found = scanned[from...to].to_enum(:scan, kind == :code ? Regexp.union(PRESET_LINKS) : /#{WEB_ADDRESS}|[()\[\]‘’“”'"]/o).map { Regexp.last_match }
-      found.each do |match|
-        if kind == :code
-          kept = match.captures.compact.first
-          inside = match[0].index(kept)
-          spans.push([from + match.begin(0), from + match.begin(0) + inside], [from + match.begin(0) + inside + kept.length, from + match.end(0)])
-        else
-          spans << match.offset(0).map { |offset| from + offset }
-        end
-      end
+    codes.each { |from, to| spans.concat(code_link_spans(text[from...to]).map { |start, stop| [from + start, from + stop] }) }
+    [text, spans + beside(text, spans)]
+  end
+
+  # A link that the check lets the export take out whole: its text is a number, an
+  # issue number, a hash or its own web or mail address.
+  def removable_link?(label, address)
+    label.match?(/\A#?\d+\z|\A\h{7,40}\z/) || (address.match?(/\A(?:https?|mailto):/i) && [address, address.sub(/\Amailto:/i, '')].include?(label))
+  end
+
+  # In code, the link syntax around an issue number or a user name, where the parser
+  # finds such a link when it reads the code as Markdown.
+  def code_link_spans(code)
+    links = html(Parser.parse(code, options).first).css('a').select { |link| link.text.match?(/\A[#@][\w-]+\z/) }
+    links.flat_map do |link|
+      written = "[#{link.text}](#{link['href']})"
+      starts = (0..code.length).select { |index| code[index, written.length] == written }
+      starts.flat_map { |start| [[start, start + 1], [start + 1 + link.text.length, start + written.length]] }
     end
-    [text, spans]
+  end
+
+  # The brackets and quote marks next to a span, with only white space between, which
+  # the export takes out with a removed link.
+  def beside(text, spans)
+    spans.flat_map do |from, to|
+      before = from - 1
+      before -= 1 while before >= 0 && text[before] == ' '
+      after = to
+      after += 1 while after < text.length && text[after] == ' '
+      # Kramdown can turn a quote either way, so either form counts on each side.
+      [(before if before >= 0 && '([{‘’“”\'"'.include?(text[before])), (after if after < text.length && ')]}‘’“”\'"'.include?(text[after]))]
+        .compact.map { |index| [index, index + 1] }
+    end
   end
 
   # Whether a reader sees all of the source text in the kept text, with only its spans
@@ -615,8 +648,11 @@ module KongHarnessesChangelog
   # The writer is not built for the GFM parser, so the export renders its own output
   # again with the parser and options of the site, tables and HTML too, and refuses it
   # unless the HTML shows the same as that of the tree that it wrote. It also refuses the
-  # tree unless a reader sees all the text of the source in it, with only removed links,
-  # addresses, brackets and quotes taken out, and no two words joined.
+  # tree unless a reader sees all the text of the source in it, with only whole links
+  # that the parser gives as a reference or their own address, and the brackets and
+  # quotes next to them, taken out, and no two words joined. It reads that text from a
+  # second rendering, with no rule of the export. It also refuses a code block that
+  # lost its language.
   def written(output, tree, source = nil)
     reread, = Kramdown::Parser::GFM.parse(output, options)
     raise 'The export would write a link back, so it refuses the changelog.' if types_of(reread).intersect?(%i[a img])
@@ -624,8 +660,14 @@ module KongHarnessesChangelog
     return output unless source
 
     raise 'The export would leave out text that a reader sees, so it refuses the changelog.' unless all_kept?(reading(html(source)), reading(html(tree)).first)
+    raise 'The export would change the language of a code block, so it refuses the changelog.' unless code_languages(html(source)).map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') } == code_languages(html(tree))
 
     output
+  end
+
+  def code_languages(fragment)
+    # A code block of only white space goes.
+    fragment.css('pre code').reject { |code| code.text.strip.empty? }.map { |code| code['class'].to_s[/(?:\A|\s)language-(\S+)/, 1] }
   end
 
   # `get` takes a path of the GitHub API and an Accept type, and gives the status code
