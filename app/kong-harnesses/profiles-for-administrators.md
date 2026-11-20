@@ -77,13 +77,14 @@ rows:
 Use the `anthropic` mode unless the gateway serves Claude only through Microsoft Foundry or Amazon Bedrock Mantle and you want {{ site.claude_code }} to use that cloud's model IDs.
 The `anthropic` mode is the only mode that sets up other agent CLIs, and the only mode in which {{ site.claude_code }} reads the model list from the gateway.
 When the gateway lists a new model whose ID contains `claude` or `anthropic` in a successful `GET /v1/models` response, the model shows up in the next {{ site.claude_code }} session without a new `setup`.
-For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate` again after you add the model.
+For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
 A profile from `profile create` names one model, the `--model` value.
 
 In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the AI Model that serves {{ site.claude_code }} uses the Anthropic format.
-{{ site.claude_code }} names the profile's `--model` value in the `model` field of each request, so add that value to `config.route.model.values` of the AI Model, and keep the deployment name or the upstream model ID in `targets[].name`.
+{{ site.claude_code }} names the model that the developer uses in the `model` field of each request, by default the profile's `--model` value.
+Add each model ID that the route must accept to `config.route.model.values` of the AI Model, and keep the deployment name or the upstream model ID in `targets[].name`.
 For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
 For the `mantle` mode, use a `bedrock` AI Model Provider, and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
