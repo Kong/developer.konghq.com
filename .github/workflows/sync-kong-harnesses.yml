@@ -251,8 +251,8 @@ jobs:
         env:
           BRANCH: ${{ needs.base.outputs.branch }}
         run: |
-          if [ ! -f tools/kong-harnesses-versions/fetch-changelog.js ]; then
-            echo "::error::Branch $BRANCH has no tools/kong-harnesses-versions/fetch-changelog.js, so its changelog can't be synced yet"
+          if [ ! -f tools/kong-harnesses-versions/fetch-changelog.js ] || [ ! -f tools/kong-harnesses-versions/check-changelog-links.rb ]; then
+            echo "::error::Branch $BRANCH has no changelog sync scripts in tools/kong-harnesses-versions, so its changelog can't be synced yet"
             exit 1
           fi
 
@@ -265,12 +265,22 @@ jobs:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
         run: node tools/kong-harnesses-versions/fetch-changelog.js
 
+      # Renders the changelog with the site's Markdown converter and refuses any link
+      # or text that still leads into the internal repository.
+      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Check the changelog for links into kong-harnesses
+        run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           title: Sync kong-harnesses Changelog
           commit-message: Sync kong-harnesses Changelog
-          branch: sync-kong-harnesses-changelog-${{ needs.base.outputs.slug }}
+          branch: sync-kong-harnesses-changelog/${{ needs.base.outputs.branch }}
           base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}
