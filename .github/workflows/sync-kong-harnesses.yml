@@ -73,6 +73,11 @@ jobs:
   kong-harnesses-versions:
     name: Fetch kong-harnesses Versions
     needs: base
+    # Runs for one base branch queue, so an older run can't replace the data
+    # that a newer run wrote to the same pull request.
+    concurrency:
+      group: sync-kong-harnesses-${{ needs.base.outputs.branch }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -125,9 +130,8 @@ jobs:
       # The same checks as scripts/install-release.sh in Kong/kong-harnesses.
       # Anyone who can write to that repository can replace an archive and its
       # SHA256SUMS.txt line, so only the build provenance proves that the release
-      # workflow built the archive from the tag. GitHub's private Sigstore
-      # instance signs that provenance, because the repository is internal, so
-      # gh attestation verify checks it.
+      # workflow built the archive from the tag, and gh attestation verify
+      # checks it.
       - name: Install the newest kong-harnesses release
         id: install
         env:
@@ -135,8 +139,10 @@ jobs:
           REPO: Kong/kong-harnesses
         run: |
           # Anyone who can write to the repository can mark an older release as
-          # the latest one, so the highest vX.Y.Z release wins.
-          tag=$(gh release list -R "$REPO" --exclude-drafts --exclude-pre-releases --limit 1000 --json tagName --jq '.[].tagName' \
+          # the latest one, so the highest vX.Y.Z release wins. The selection is
+          # the one that fetch-versions.js makes: every page, no drafts and no
+          # prereleases.
+          tag=$(gh api --paginate "repos/$REPO/releases?per_page=100" --jq '.[] | select(.draft or .prerelease | not) | .tag_name' \
             | { grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' || true; } | sort -V | tail -1)
           if [ -z "$tag" ]; then
             echo "::error::No vX.Y.Z release in $REPO"

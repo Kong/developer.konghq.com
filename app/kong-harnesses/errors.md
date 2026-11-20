@@ -65,7 +65,7 @@ rows:
     meaning: "A partial result. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one. `profile activate --dry-run` can exit with 4 without a change to any file, when it leaves out a client."
     action: "Follow the message, then run the command again."
   - value: "130"
-    meaning: "You canceled the command, for example with Ctrl+C. The message says what the command changed, if anything."
+    meaning: "You canceled the command, for example with Ctrl+C. The message says that the command stopped, and for some commands what it did before it stopped."
     action: "Run the command again when you are ready."
 {% endtable %}
 
@@ -117,11 +117,20 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 ### "the profile file is in" an encoding that kong-harnesses can't read
 
-`profile import` reads a file in UTF-8, with or without a byte-order mark, or in UTF-16 with a byte-order mark. The message names what it found instead: "UTF-32", "UTF-16 without a byte-order mark", "UTF-16 with a broken character", "a text encoding that is not UTF-8", or "UTF-8 with a byte-order mark" for a file with two byte-order marks. Open the file in a text editor, save a copy as UTF-8, and import the copy.
+`profile import` reads a file in UTF-8, with or without a byte-order mark, or in UTF-16 with a byte-order mark. The message names what it found instead, and the fix for it:
+
+* "UTF-16 without a byte-order mark": Save a copy with a byte-order mark, for example in PowerShell with `Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
+* "UTF-32": Save a copy as UTF-16, for example in PowerShell with `Get-Content -Raw PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
+* "UTF-16 with a broken character": The file is cut short or damaged. Get the profile file again.
+* "a text encoding that is not UTF-8", or "UTF-8 with a byte-order mark" for a file with two byte-order marks: Save a copy as UTF-8 with an editor, then import the copy.
 
 ### "OIDC discovery failed; check issuer access and retry"
 
 `profile create` couldn't read the discovery document of your identity provider. Check that the issuer URL is right and that this computer can reach it over HTTPS, then run the command again.
+
+### "profile creation rejected"
+
+`profile create` refused the values that you gave. When the message ends with "check the public flag values and scopes", a flag value isn't valid, for example a URL or a scope. When it ends with "check the profile name and public values", the profile that it built from the values isn't valid. Check the values against the [profile file reference](/kong-harnesses/profile-file/), then run the command again.
 
 ### "OIDC metadata is incompatible with profile creation"
 
@@ -135,6 +144,14 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 Another {{site.kong_harnesses}} command, such as a sign-in or a renewal, uses the profile now. Wait for that command to finish, then run the import again.
 
+### "the existing sign-in or a client's settings could not be inspected"
+
+`profile import` checks the saved sign-in and the settings of each agent CLI before it replaces a profile, and one of them didn't answer, for example a locked password store. Unlock the password store if it is locked, then run the import again.
+
+### "no Secret Service runs in this session, so kong-harnesses cannot reach a saved sign-in"
+
+`profile import` and other commands print this message on Linux when the session has no keyring. The fix is in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token).
+
 ### "still uses this profile, so its security identity cannot change"
 
 The profile that you import changes a [security identity field](/kong-harnesses/profile-file/#security-identity), and an agent CLI still uses the installed profile. Run the command that the message names, `kong-harnesses profile cleanup --client CLIENT_NAME`, or activate another profile in that client. Then import the profile, and activate it again.
@@ -145,11 +162,11 @@ Your organization delivers the profile to {{ site.claude_code }} through managed
 
 ### "your organization's managed settings run the selected profile"
 
-Your organization delivers the profile to {{ site.claude_code }} through managed settings, so `profile delete` can't remove it, and `profile cleanup` can't take it out of {{ site.claude_code }}. Ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
+`profile delete` prints this message when your organization delivers the profile to {{ site.claude_code }} through managed settings. The managed settings run the credential helper of the profile, and `profile cleanup` can't take the helper out either. Ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
 
-### "your administrator installed a profile with this name for every user"
+### "your administrator installed a profile with this name for every user" or "installed this profile for every user"
 
-An administrator installed this profile for every user of the computer, so you can't replace or remove it. Sign in to it with `kong-harnesses login`, or ask your administrator to change it.
+An administrator installed this profile for every user of the computer, so `profile import` can't replace it, and `profile delete` can't remove it. Sign in to it with `kong-harnesses login`, or ask your administrator to change it.
 
 ### "selected profile is invalid"
 
@@ -161,7 +178,7 @@ The installed profile has a schema version that this release can't read, usually
 
 ### "selected profile is missing, invalid, or unsupported"
 
-`token`, `credential`, `doctor` and the MCP credential helper print this message when the profile isn't installed, can't be read, or needs a newer release. Run `kong-harnesses profile list` to check that the profile is installed. If it is, install it again with `kong-harnesses profile import`, or update {{site.kong_harnesses}} when a newer release wrote it.
+The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile, because the profile isn't installed, can't be read, or needs a newer release. `login`, `token`, `credential` and `doctor` print it only when they can't tell which of these is the cause. Otherwise, they print one of the messages above, such as "selected profile does not exist". Run `kong-harnesses profile list` to check that the profile is installed. If it is, install it again with `kong-harnesses profile import`, or update {{site.kong_harnesses}} when a newer release wrote it.
 
 ### "the profile installed for every user can be changed by an account that is not an administrator"
 
@@ -169,11 +186,23 @@ An administrator installed the profile for every user of the computer, but its f
 
 ### "selected profile configures no supported agent client"
 
-`status` without `--client` reports on each agent CLI that the profile lists, and the profile doesn't list one that this release supports. Install or select an agent CLI that the profile lists, or use a profile that configures your agent CLI. Check the blocks in [`clients`](/kong-harnesses/profile-file/#clients).
+`status`, `doctor` and `login --diagnostics` without `--client` work on each agent CLI that the profile has a block for, and the profile doesn't have a block for one that this release supports. Name the agent CLI with `--client CLIENT_NAME`, or use a profile that has a block for a supported agent CLI in [`clients`](/kong-harnesses/profile-file/#clients).
 
 ### "selected profile still has a saved sign-in"
 
 `profile delete` refuses a profile that is still signed in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
+
+### "the saved sign-in could not be inspected, so the profile was not deleted"
+
+`profile delete` couldn't find out whether the profile is still signed in, for example because the password store is locked, and it doesn't delete a profile that could still have a sign-in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
+
+### "cannot tell whether the profile still has a saved sign-in and did not delete it"
+
+The message starts with "no Secret Service runs in this session". On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses. Delete the profile from a desktop session with a keyring, such as GNOME Keyring.
+
+### "profile delete could not inspect"
+
+`profile delete` checks the settings of each agent CLI before it removes the profile. When the message ends with "retry later", the check didn't finish, so run `profile delete` again. When the message ends with "settings configuration", the settings of that agent CLI can't be read. Fix the settings file of that client, then run `profile delete` again.
 
 ### "selected profile is still activated"
 
@@ -207,11 +236,19 @@ The profile uses an `http://` gateway, and a proxy variable in the shell applies
 
 ### "is not configured: it can choose a proxy"
 
-The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes Agent pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It sets up the other clients only when all of their checks pass. When one of them fails, `profile activate` changes no client settings. Give these clients a profile with an `https://` gateway.
+The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes Agent pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It sets up the other clients. When a check of one of them fails, `profile activate` changes no client settings. A failure later, while it writes the settings, can leave some clients set up. Give these clients a profile with an `https://` gateway.
 
 ### "managed settings could send"
 
 The message starts with "your organization's managed settings could send". The profile uses an `http://` gateway, and the managed settings of {{ site.claude_code }} could send its requests through a proxy, because they win over the `NO_PROXY` value that `profile activate` writes. The message names the cause, such as a `NO_PROXY` value that leaves out the gateway host, or a managed settings source that {{site.kong_harnesses}} can't read. Use an `https://` gateway, or ask your administrator to make the change that the message names.
+
+### "fleet build needs an https:// gateway"
+
+The profile uses an `http://` gateway. `fleet build` can't check the proxy settings of the managed computers when it runs, so a proxy there could read the credential. Build from a profile with an `https://` `gateway_origin`.
+
+### "fleet build cannot use a Claude subscription profile yet"
+
+The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in. Build from a profile that doesn't use `sign_in: subscription`.
 
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
 

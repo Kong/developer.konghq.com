@@ -27,7 +27,7 @@ test('fetches releases from the public Kong/kongctl repo', async () => {
   assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kongctl/releases?per_page=100&page=1');
 });
 
-test('a failed request suggests GH_TOKEN for rate limits without calling the public repo internal', async () => {
+test('a failed request suggests GH_TOKEN for rate limits', async () => {
   const { fetchImpl } = fakeFetch([], { ok: false, status: 403, statusText: 'Forbidden' });
   const { writeFile, writes } = fakeWriter();
 
@@ -36,7 +36,7 @@ test('a failed request suggests GH_TOKEN for rate limits without calling the pub
     (error) =>
       /Kong\/kongctl/.test(error.message) &&
       /GH_TOKEN/.test(error.message) &&
-      !/internal repository/.test(error.message),
+      /rate-limited/.test(error.message),
   );
   assert.equal(writes.length, 0);
 });

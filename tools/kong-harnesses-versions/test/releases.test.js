@@ -90,13 +90,13 @@ test('throws an error naming the token requirement when the request fails', asyn
       repo: 'Kong/kong-harnesses',
       dataFile,
       name: 'kong-harnesses',
-      internalRepo: true,
+      tokenRequired: true,
       fetch: fetchImpl,
       writeFile,
       env: {},
     }),
     (error) =>
-      /GH_TOKEN/.test(error.message) && /internal repository/.test(error.message),
+      /GH_TOKEN/.test(error.message) && !/rate-limited/.test(error.message),
   );
   assert.equal(writes.length, 0);
 });

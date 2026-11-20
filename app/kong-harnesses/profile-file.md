@@ -32,10 +32,10 @@ related_resources:
 
 A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI. A profile doesn't contain secrets, so an administrator can share one file with every developer. [`kong-harnesses profile create`](/kong-harnesses/profile/create/) writes a profile for you, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) installs one from a file or an HTTPS URL.
 
-The file is JSON of up to 65536 bytes, saved as UTF-8, or as UTF-16 with a byte-order mark. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see an installed profile, run:
+The file is JSON of up to 65536 bytes, saved as UTF-8, or as UTF-16 with a byte-order mark. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see the document of an installed profile, run this command with [jq](https://jqlang.org/). The JSON output of `profile get` puts the document in `profile`:
 
 ```sh
-kong-harnesses profile get PROFILE_NAME -o json
+kong-harnesses profile get PROFILE_NAME -o json | jq '.profile'
 ```
 
 ## Example
@@ -208,7 +208,7 @@ Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `mod
 
 A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients when their checks pass.
+* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients. When a check of one of them fails, it changes no client settings.
 * When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY` in the shell that starts the agent CLI, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the message names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently.
 * From 0.18.0, for {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. A proxy variable or `NO_PROXY` value in the project settings of {{ site.claude_code }} wins over these values, and `profile activate` refuses when the managed settings could send the requests through a proxy. For these cases, see the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check).
 * `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
@@ -266,7 +266,7 @@ rows:
   - field: "`scopes`"
     description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. Each scope appears once, and is 1 to 128 visible ASCII characters, except double quotes and backslashes. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
   - field: "`max_access_token_lifetime_seconds`"
-    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 360 to 86400. The default is 3600."
+    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400. Releases up to 0.17.1 also accepted 360. The default is 3600."
 {% endtable %}
 
 ### Security identity
@@ -477,7 +477,7 @@ rows:
     on: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway."
 {% endtable %}
 
-From version 18, when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, whatever `auto_updates` is. A value that you export in the shell then can't turn those features off.
+From version 18, when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or a `subscription` profile sets `true` for `artifact`, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, whatever `auto_updates` is. A value that you export in the shell then can't turn those features off.
 
 When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its own default, which loads every tool at the start behind a gateway.
 

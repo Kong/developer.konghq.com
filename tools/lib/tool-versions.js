@@ -207,7 +207,7 @@ export async function syncReleases({
   repo,
   dataFile,
   name,
-  internalRepo = false,
+  tokenRequired = false,
   fetch = globalThis.fetch,
   writeFile = (filePath, content) => fs.writeFileSync(filePath, content, 'utf8'),
   env = process.env,
@@ -225,8 +225,8 @@ export async function syncReleases({
     );
 
     if (!response.ok) {
-      const tokenHint = internalRepo
-        ? `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`
+      const tokenHint = tokenRequired
+        ? `Set GH_TOKEN to a GitHub token that can read ${repo}.`
         : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
       throw new Error(
         `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
