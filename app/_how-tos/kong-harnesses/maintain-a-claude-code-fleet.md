@@ -56,11 +56,11 @@ faqs:
 
 A fleet build contains the {{ site.claude_code }} settings that every managed computer of your organization gets. To change those settings, you make a new build with `--record` set to the record of the build that the computers have now. For a build with `--delivery mdm`, the new build takes the settings of the earlier build out of the policy that you pass with `--policy` before it adds its own, so a value that the new settings drop doesn't stay on the computers. For a file build, the new drop-in replaces the earlier one.
 
-Repeat in each new build every flag of the earlier build that you keep, such as the version range and `--model`. A flag that you leave out can remove its setting from the computers. For a build with `--mcp-servers exclusive`, also pass the `managed-mcp.json` that the computers have now with `--mcp-config`.
+Repeat in each new build every flag of the earlier build that you keep. `fleet build` refuses a rebuild that leaves out the `--model` IDs or the version range of the earlier build. To drop them on purpose, pass `--profile-models` to give the computers the models of the profile again, or `--claude-code-any-version` to let them run any {{ site.claude_code }} version. Another flag that you leave out can remove its setting from the computers. For a build with `--mcp-servers exclusive`, also pass the `managed-mcp.json` that the computers have now with `--mcp-config`.
 
-The commands on this page are for macOS. On Linux or Windows, use the `--platform` and `--executable` values of the earlier build. On Linux, use the file build, because `fleet build` refuses `--delivery mdm` there. On Windows, the MDM policy is `Settings.json`. For a file build, pass the `managed-settings.json` that the computers have now with `--policy`, so that `fleet build` checks the combined policy and keeps the custom headers that the policy sets. If the computers have no `managed-settings.json`, replace `--policy POLICY_FILE` with `--NO_POLICY_FLAG`.
+The commands on this page are for macOS. On Linux or Windows, use the `--platform` and `--executable` values of the earlier build. On Linux, use the file build, because `fleet build` refuses `--delivery mdm` there. On Windows, the MDM policy is `Settings.json`. For a file build, pass the `managed-settings.json` that the computers have now with `--policy`, so that `fleet build` checks the combined policy and keeps the custom headers that the policy sets. If the computers get no {{ site.claude_code }} policy of your own, replace `--policy POLICY_FILE` with `--no-policy`.
 
-Replace each placeholder with the value for your deployment. `RECORD_FILE` is the record of the build that the computers have now. For each platform, use its current build record to make a new build, and use a separate output folder for each build. `POLICY_FILE` is the MDM policy that the computers get now, or their `managed-settings.json` for a file build.
+Replace each placeholder with the value for your deployment. `RECORD_FILE` is the record of the build that the computers have now. For each platform, use its current build record to make a new build, and use a separate output folder for each build. `POLICY_FILE` is the MDM policy that the computers get now, or their `managed-settings.json` for a file build. `MCP_MODE` is the `--mcp-servers` value of the earlier build, `exclusive`, `allowlist` or `any`. `fleet build` refuses a profile with gateway MCP servers when you leave out `--mcp-servers`.
 
 ## Hold the fleet to a range of {{ site.claude_code }} versions
 
@@ -77,6 +77,7 @@ kong-harnesses fleet build --profile work \
   --executable /usr/local/bin/kong-harnesses \
   --policy POLICY_FILE \
   --record RECORD_FILE \
+  --mcp-servers MCP_MODE \
   --claude-code-minimum OLDEST_VERSION \
   --claude-code-maximum NEWEST_VERSION \
   --output-dir NEW_FOLDER
@@ -91,6 +92,7 @@ kong-harnesses fleet build --profile work \
   --executable /usr/local/bin/kong-harnesses \
   --policy POLICY_FILE \
   --record RECORD_FILE \
+  --mcp-servers MCP_MODE \
   --claude-code-minimum OLDEST_VERSION \
   --claude-code-maximum NEWEST_VERSION \
   --output-dir NEW_FOLDER
@@ -117,7 +119,6 @@ A session fails when {{site.ai_gateway}} doesn't serve its model, so the gateway
 
 Add the new model version to {{site.ai_gateway}} as an [AI Model](/ai-gateway/entities/ai-model/), and keep the AI Model of the earlier version.
 
-{% comment %}Depends on fleet build --model when the Claude provider of the profile is the Anthropic API. Check the flag before this page merges.{% endcomment %}
 Build new managed settings from the record of the build that the computers have now, into a new or empty `NEW_FOLDER`. Name the new model ID with `--model`, and repeat the other flags of the earlier build, such as the version range:
 
 {% navtabs "fleet-model" %}
@@ -129,6 +130,7 @@ kong-harnesses fleet build --profile work \
   --executable /usr/local/bin/kong-harnesses \
   --policy POLICY_FILE \
   --record RECORD_FILE \
+  --mcp-servers MCP_MODE \
   --claude-code-minimum OLDEST_VERSION \
   --claude-code-maximum NEWEST_VERSION \
   --model NEW_MODEL_ID \
@@ -144,6 +146,7 @@ kong-harnesses fleet build --profile work \
   --executable /usr/local/bin/kong-harnesses \
   --policy POLICY_FILE \
   --record RECORD_FILE \
+  --mcp-servers MCP_MODE \
   --claude-code-minimum OLDEST_VERSION \
   --claude-code-maximum NEWEST_VERSION \
   --model NEW_MODEL_ID \
