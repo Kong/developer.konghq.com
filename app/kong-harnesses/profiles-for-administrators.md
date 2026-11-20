@@ -62,7 +62,7 @@ rows:
     model: The model name that the gateway serves
     clients: |
       {{ site.claude_code }}, Codex, OpenCode, omp and pi.
-      Hermes Agent too, when the profile signs in through an identity provider with `--audience-parameter audience` and the default scopes.
+      Hermes Agent too, when the profile uses the default sign-in with `--audience-parameter audience` and the default scopes.
     picker: The built-in models and the models that the gateway lists at `GET /v1/models`
   - mode: "`foundry` (Microsoft Foundry)"
     model: The Foundry deployment name
@@ -183,8 +183,10 @@ For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
 When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
-`setup` sends the same test request and doesn't set up an agent CLI whose route doesn't match.
-When a route matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
+`setup` sends the same test request, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
+When the gateway has no route or refuses the sign-in, `setup` doesn't set up that agent CLI.
+When the request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
+When a route matches only on a header that the agent CLI sends and `setup` still refuses it, developers run `setup` with `--skip-route-check`.
 For more options, such as gateway MCP servers and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
 ### Sign-in kinds
@@ -281,7 +283,7 @@ rows:
   - item: Size
     rule: At most 65,536 bytes.
   - item: Time
-    rule: 5 seconds each to connect, to finish the TLS handshake and to send the response headers, and 10 seconds for the whole download.
+    rule: 5 seconds each to connect, to finish the TLS handshake and to receive the response headers, and 10 seconds for the whole download.
   - item: Access
     rule: "{{site.kong_harnesses}} doesn't send cookies or credentials, so the server must answer without a sign-in."
   - item: Network

@@ -49,6 +49,7 @@ kong-harnesses setup ./PROFILE_NAME.json
 `setup` runs `profile import`, `login` and `profile activate`, in this order.
 Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
 It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
+When `setup` sets up OpenCode or Hermes Agent, also when the same run sets up {{ site.claude_code }}, the developer runs the sign-in command that `kong-harnesses status` names for that agent CLI, then restarts the agent CLI.
 When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists.
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
@@ -61,6 +62,7 @@ A step that is already done changes nothing: a sign-in that works stays, and an 
 When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` names the fix.
 When the command doesn't name `--client`, `setup` leaves that agent CLI out and sets up the others.
 When the command names `--client`, `setup` stops.
+When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
 When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
 Fix the cause, then run `setup` again.
 
@@ -83,10 +85,12 @@ rows:
       {{ site.claude_code }} runs it to get a short-lived access token, or the static key of a key profile.
       A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains.
       `profile cleanup` restores the removed value.
-  - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` and `env.CLAUDE_CODE_API_KEY_HELPER_TTL_MS`"
+  - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`"
     value: |
-      `1`, and a 5-minute cache for the `apiKeyHelper` result.
+      `1`, which turns on the model discovery from the gateway.
       Discovery has an effect only in the `anthropic` mode.
+  - key: "`env.CLAUDE_CODE_API_KEY_HELPER_TTL_MS`"
+    value: "`300000`, a 5-minute cache for the `apiKeyHelper` result."
   - key: "`env.ANTHROPIC_AUTH_TOKEN` and `env.ANTHROPIC_API_KEY`"
     value: Empty, so a key in the shell doesn't replace the sign-in.
   - key: "Model keys, such as `env.ANTHROPIC_MODEL`"
@@ -94,9 +98,7 @@ rows:
   - key: "Feature switches, such as `env.DISABLE_TELEMETRY`"
     value: "The {{ site.claude_code }} features that the profile turns off or on."
   - key: "`env.ANTHROPIC_CUSTOM_HEADERS`"
-    value: |
-      The headers that the profile's `attribution` block names, when the profile has one.
-      For a `subscription` profile, the session hook in the `hooks` row adds the `x-kong-id-token` header.
+    value: The headers that the profile's `attribution` block names, when the profile has one.
   - key: "`hooks`"
     value: |
       For a `subscription` profile, a hook on {{ site.claude_code }} session events adds `x-kong-id-token` with a short-lived access token from the identity provider to `env.ANTHROPIC_CUSTOM_HEADERS`, so the gateway can identify the developer of each request.
