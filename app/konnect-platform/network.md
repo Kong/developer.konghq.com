@@ -280,11 +280,6 @@ If you enable both IP and VPCE allowlists, a request is allowed only if it comes
 
 Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
 
-{:.warning}
-> **Important:**
-> * After you enable the VPCE ID allowlist, you can no longer use the {{site.konnect_short_name}} UI, because the allowlist applies to the {{site.konnect_short_name}} APIs that the UI uses.
-> * To change or disable the allowlist, you must send the request through an allowed endpoint, so you must include the VPCE ID of an endpoint for the Global geo in the list. See the [Global geo service name](/gateway/aws-private-link/#regional-privatelink-service-names) for your AWS region.
-> * You must add at least one endpoint ID to the list before you can enable it.
 
 You can configure a VPCE ID allowlist for {{site.konnect_short_name}} using the API or the UI.
 
@@ -335,4 +330,10 @@ To configure the allowlist in the {{site.konnect_short_name}} UI:
 The allowlist is enabled when you add the endpoint IDs. To change or disable the allowlist, send a PATCH request to the `/organizations/$ORG_ID/vpce-id-allow-list` endpoint. See the API tab for an example.
 {% endnavtab %}
 {% endnavtabs %}
+
+{:.warning}
+> **Important:**
+> * After you enable the VPCE ID allowlist, you can no longer use the {{site.konnect_short_name}} UI, because the allowlist applies to the {{site.konnect_short_name}} APIs that the UI uses.
+> * To change or disable the allowlist, you must send the request through an allowed endpoint, so you must include the VPCE ID of an endpoint for the Global geo in the list. See the [Global geo service name](/gateway/aws-private-link/#regional-privatelink-service-names) for your AWS region.
+> * You must add at least one endpoint ID to the list before you can enable it.
 
