@@ -52,13 +52,17 @@ It skips `login` for an `environment-key` profile, and when every agent CLI that
 Without `--client`, `setup` sets up every installed agent CLI that the profile lists.
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
-With `--auto-approve`, `setup` doesn't ask, and prints the same summary to stderr.
+With `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
+The sign-in step still opens the browser, or asks for the static key.
 Use `--auto-approve` only in an onboarding script that your organization owns, because it skips the developer's check of the gateway and the identity provider.
 When a step fails, the developer runs the same command again, and `setup` continues from that step.
-When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` leaves that agent CLI out and names the fix.
-Fix the route or the sign-in, then run `setup` again.
+When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` names the fix.
+Without `--client`, `setup` leaves that agent CLI out and sets up the others.
+With `--client`, `setup` stops.
+When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
+Fix the cause, then run `setup` again.
 
-`login` saves the sign-in in the desktop's native vault: only the renewal credential, or the static key.
+`login` saves the sign-in in the operating system's credential store: only the renewal credential, or the static key.
 
 ## {{ site.claude_code }} settings
 
@@ -92,8 +96,8 @@ rows:
       For a `subscription` profile, also the `x-kong-id-token` header.
   - key: "`hooks`"
     value: |
-      Only for a `subscription` profile.
-      A hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway can identify the developer of each request.
+      For a `subscription` profile, a hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway can identify the developer of each request.
+      When the gateway or the profile names a model that can't run WebSearch, a `PostToolUse` hook on WebSearch replaces a result without a search with a statement that no search ran.
 {% endtable %}
 
 Each provider mode also writes its own keys:
@@ -117,7 +121,8 @@ rows:
       The model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
 {% endtable %}
 
-`profile activate` also writes the settings of each other agent CLI that the profile sets up, see [`profile activate`](/kong-harnesses/profile/activate/).
+`profile activate` also writes the settings of each other agent CLI that the profile sets up.
+For these settings, see [`profile activate`](/kong-harnesses/profile/activate/).
 It refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
 In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
 ## Cleanup
