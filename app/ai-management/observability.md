@@ -234,10 +234,11 @@ features:
 
 ## Logs
 
-The Logs page shows your {{site.ai_gateway}} data plane and control plane logs, newest first.
+The Logs page shows your {{site.ai_gateway}} control plane logs and the runtime logs of Dedicated Cloud Gateways, newest first.
+Runtime logs from self-managed data planes do not appear on this page.
 
 * Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
-* Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (for example, the data plane or the control plane), or **Control Plane**.
+* Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (a Dedicated Cloud Gateway or the control plane), or **Control Plane**.
 * The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
 * Click an entry to open its details: a summary, its attributes, and the full message.
 
