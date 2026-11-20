@@ -335,7 +335,7 @@ rows:
     recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
   - feature: Automatic updates
     why: The update check and other background requests go outside the gateway, to Anthropic, GitHub and Homebrew. The same setting turns off release notes, Remote Control and pull request status badges, unless the profile turns on a feature such as telemetry. Then only automatic updates turn off.
-    recover: "Run `claude update` when you want a newer release, or ask your administrator to keep automatic updates on in the profile."
+    recover: "Run `claude update` when you want a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. You can also ask your administrator to keep automatic updates on in the profile."
   - feature: WebFetch domain check
     why: "{{ site.claude_code }} asks `api.anthropic.com` whether it may fetch each domain."
     recover: "WebFetch still works, without Anthropic's list of blocked domains. To limit the domains, add `WebFetch(domain:...)` permission rules."

@@ -29,7 +29,8 @@ related_resources:
     url: /kong-harnesses/doctor/
 ---
 
-A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with `ANTHROPIC_BASE_URL`, and that setting moves only the model requests.
+A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Foundry and Mantle provider modes.
+Only the requests that go to that base URL, such as the model requests, pass through the gateway.
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to services such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
@@ -89,7 +90,7 @@ rows:
   - traffic: Official plugin marketplace install
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
-    cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. Developers can add it with `/plugin marketplace add`."
+    cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration for good, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
   - traffic: Artifacts
     destination: "`claude.ai`, `*.frame.claudeusercontent.com`, and `api.anthropic.com` for the publish requests and the organization policy"
     member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
@@ -97,11 +98,12 @@ rows:
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
-When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available, unless the organization turned fast mode off.
+When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped check, or a check that fails with a network error, as available, unless the organization turned fast mode off.
+When a proxy answers the check with its own page, {{ site.claude_code }} reads that page as an organization that [turned fast mode off](https://code.claude.com/docs/en/fast-mode#fast-mode-has-been-disabled-by-your-organization), so let the check reach `api.anthropic.com` through the proxy.
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
 The default depends on the model provider and the sign-in.
@@ -208,7 +210,7 @@ To stop developers from turning the settings back on, set them in [managed setti
 Managed settings take precedence over the user settings file that `profile activate` writes.
 A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
-Activation sets `ANTHROPIC_BASE_URL` to the gateway in the user settings file, and {{ site.claude_code }} reads that value before it decides to fetch the settings.
+Activation writes the gateway base URL to the user settings file, with the provider switch in the Foundry and Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
 A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
@@ -277,7 +279,7 @@ Your organization's Claude settings don't control these personal accounts.
 To block the app, a Slack administrator removes the Claude app and stops new installs:
 
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace. Every user in that workspace loses access at once.
-* A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) with **Only allow pre-approved apps**, and doesn't approve the Claude app, so that members can't install it again.
+* A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) with **Only allow pre-approved apps**, and restricts the Claude app, so that members can't install it again.
 * On Enterprise Grid, an Org Owner or Org Admin [restricts the Claude app for the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Manage Apps** > **Restrict an app**. Restricting the app doesn't remove existing installations, so also remove it from each workspace.
 
 [{{ site.claude_code }} in Slack](https://code.claude.com/docs/en/slack) has the details.
