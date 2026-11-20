@@ -68,7 +68,7 @@ cleanup:
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
         Replace each placeholder with the value for your deployment.
-        For a file build, `fleet remove` lists the files to delete from each managed computer:
+        For a file build without `--mcp-servers exclusive`, `fleet remove` lists the files to delete from each managed computer:
 
         ```sh
         kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json
@@ -125,15 +125,15 @@ This is a file build.
 The keys that the build doesn't set stay as your file sets them, lists combine, and a single value of the build replaces your value.
 A value in your file that the build doesn't set, such as `forceLoginMethod`, or a list entry, such as one in `allowedProviders`, can still send {{ site.claude_code }} around the gateway.
 The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in your `managed-settings.json`.
-For a file build, always pass a copy of the `managed-settings.json` that the computers have with `--policy`.
+A file build needs `--policy` or `--no-policy`.
+If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
 The build then refuses a value that would stop {{ site.claude_code }} from reaching the gateway, and keeps your headers in its value.
-
-A file build needs `--policy`.
-If the computers don't have a `managed-settings.json` or another {{ site.claude_code }} policy of your own, pass `--no-policy` in its place.
+If the computers don't have a `managed-settings.json` or another {{ site.claude_code }} policy of your own, pass `--no-policy`.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
 A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a key that the build sets, such as `apiKeyHelper` or a variable in `env`.
+No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
 Also make sure that no file adds an `allowedProviders` entry or sets a key such as `forceLoginMethod`, because lists combine from every file and such a key applies from any file.
 
 By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} ignores the file, apart from a few keys such as `env`.
@@ -149,8 +149,8 @@ Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 `fleet build` refuses a policy that would stop {{ site.claude_code }} from reaching the gateway, and names the value.
 It lists each of your values that it changes.
 
-If you keep {{ site.claude_code }} policy in the claude.ai admin console, move it into your MDM policy or your `managed-settings.json`.
-Then remove it from the admin console.
+If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
+Then remove it from its source.
 A key from the credential helper doesn't start the fetch of server-managed settings.
 But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
 The server-managed settings then rank above the build, and the credential helper isn't in effect.
@@ -330,7 +330,7 @@ Otherwise, it refuses the profile, because another account could send every deve
 `fleet build` also writes a record file, `kong-harnesses-fleet-BUILD_ID.json`, in the output folder, outside `root`.
 `BUILD_ID` is the build ID that `fleet build` prints.
 Keep the record with your policy.
-You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`.
+You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
 You can't create it again.
 
 ## Install on the managed computers
@@ -382,8 +382,8 @@ In {{ site.claude_code }}, run `/status`.
 The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` for a file build, or `(file + drop-ins)` when the computers also have your `managed-settings.json`, or `(plist)` or `(HKLM)` for an MDM build.
 If your organization sets `managedSourcesBehavior` to `merge`, the line lists each source that {{ site.claude_code }} merged and ends with `, merged`.
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
-If the line shows `(remote)`, the server-managed settings from the claude.ai admin console rank above the build.
-Remove them from the admin console.
+If the line shows `(remote)`, server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
+Find their source, and remove them there.
 A computer can keep a cached copy of them for up to 24 hours after its last fetch.
 
 Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
