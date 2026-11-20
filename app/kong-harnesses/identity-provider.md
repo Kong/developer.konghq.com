@@ -85,7 +85,7 @@ rows:
   - setting: ID token signature
     value: |
       An RSA or ECDSA algorithm, such as `RS256` or `ES256`.
-      See [Discovery document](#discovery-document).
+      See [ID token](/kong-harnesses/identity-provider/checks/#id-token).
     flag: "None"
   - setting: Callback, also called the redirect URI
     value: |
@@ -159,7 +159,8 @@ A renewal response without `scope` keeps the last accepted list.
 A response with a `scope` value that breaks these rules fails the sign-in or the renewal.
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
-When the identity provider refuses a refresh token with `invalid_grant`, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+When the identity provider refuses a refresh token, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+For the responses that remove the saved sign-in, see [HTTP responses](/kong-harnesses/identity-provider/checks/#http-responses).
 
 For the revocation at sign-out, see [`kong-harnesses logout`](/kong-harnesses/logout/).
 
@@ -206,20 +207,13 @@ Before you give the profile to developers, check that the gateway accepts access
 
 ## Discovery document
 
-{{site.kong_harnesses}} reads the OIDC discovery document of the identity provider when you create the profile.
-The issuer URL must match the `issuer` value in the discovery document character by character, including a trailing slash.
-
-[`profile create`](/kong-harnesses/profile/create/) refuses a discovery document that doesn't meet the rules in [Discovery document](/kong-harnesses/identity-provider/checks/#discovery-document) of the checks page.
-For example, the document must list the `code` response type and an RSA or ECDSA ID token signature algorithm.
+[`profile create`](/kong-harnesses/profile/create/) reads the OIDC discovery document of the identity provider, and refuses a document that doesn't meet the rules in [Discovery document](/kong-harnesses/identity-provider/checks/#discovery-document) of the checks page.
 
 Some identity providers omit `none` from the advertised methods for public clients.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, create the production profile with the flag, which skips only the check for `none`.
 
-Each sign-in in the browser runs the same checks again.
-The sign-in also fails when an endpoint that `profile create` saved in the profile differs from the current discovery document.
-The revocation endpoint counts only when the profile has one.
-If an endpoint changes and the new discovery document passes the checks, create the profile again.
+If an endpoint in the discovery document changes, sign-in fails until you create the profile again.
 
 ## Access token lifetime
 
@@ -248,3 +242,5 @@ kong-harnesses profile create \
 Add `--redirect-uri`, `--scope`, `--audience-parameter`, `--public-client-evidence` or `--max-token-lifetime-seconds` when your identity provider needs them.
 
 If you create a profile again with a different issuer, endpoint, client ID, callback, `--scope` list, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+While a client still uses the old profile, `profile create` and [`profile import`](/kong-harnesses/profile/import/) refuse a new profile with the same name and one of these changes.
+First, activate another profile in that client with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), or run [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/).
