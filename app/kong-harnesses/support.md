@@ -49,11 +49,11 @@ kong-harnesses doctor --profile work --report > report.json
 
 Replace `work` with your profile name.
 
-To include a real model request, add `--inference`. kong-harnesses sends the request on the {{ site.claude_code }} route, and the request costs the same as any other model request. If the profile doesn't set up {{ site.claude_code }}, `doctor` refuses `--inference` and doesn't write the report.
+Add `--inference` to test the {{ site.claude_code }} route with a model request. The request can cost money. If the selected profile doesn't configure {{ site.claude_code }}, `doctor` refuses `--inference` and doesn't write the report.
 
-The report names the kong-harnesses release and the operating system. For {{ site.claude_code }}, it also lists the settings and shell variables that {{ site.claude_code }} acts on, and names the {{ site.claude_code }} release when it can read it. For each other agent CLI, it names the configuration file and whether that file exists.
+The report holds the `doctor` findings for each agent CLI, and names the kong-harnesses release, the operating system and the CPU architecture. For {{ site.claude_code }}, it also lists the settings and shell variables that {{ site.claude_code }} acts on, and names the {{ site.claude_code }} release when it can read it. For each other agent CLI, it names the configuration file that `doctor` finds, and whether that file exists.
 
-The report replaces credential values, such as access tokens and keys, with `<redacted>`. In gateway and proxy URLs, it keeps only the scheme, host and port, and replaces a path with `/<redacted>`. Check the report for sensitive data before you send it.
+The report shows a value only when the value can't hold a credential: an empty value, a switch value such as `1` or `false`, and a value that names a route, a model, a trust file or a limit. It replaces each other value with `<redacted>`, also the values of hooks, the status line and custom headers, because a command or a header can carry a token. It shows a gateway or proxy URL as its scheme, host and port only, and adds `/<redacted>` when the URL has a path after the host. Check the report for sensitive data before you send it.
 
 Open a ticket on the [Kong Support portal](https://support.konghq.com/support/s/), describe what you did and what happened, and attach `report.json`.
 
