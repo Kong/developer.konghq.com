@@ -285,13 +285,6 @@ rows:
 The default rules start with no notifications set up.
 To get notified, edit a rule and add an email address or a webhook. For more information, see [Alert notifications](#alert-notifications).
 
-### Detection
-
-The default rules use automatic detection: they learn a baseline from your traffic.
-The **Monitoring readiness** of a rule shows **Learning baseline** until the rule has enough traffic history, and then **Baseline ready**.
-
-A rule that you create compares the metric with a threshold that you set, for a duration that you set.
-
 ### Create an alert
 
 1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
@@ -321,14 +314,6 @@ A rule can notify by email, by webhook, or by both.
 For a webhook, select a saved webhook or click **New webhook**.
 When you create a webhook, you can select its provider.
 To learn about delivery problems, add a failure notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
-
-### Investigate an alert
-
-1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
-1. In the Observability sidebar, click **Alerts**.
-1. On the **Activity** tab, click an alert.
-1. In the alert history, click an entry. The event page opens and lists the affected sessions.
-1. Click **Investigate in Sessions**.
 
 ## Logs
 
