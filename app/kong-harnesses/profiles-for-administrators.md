@@ -71,13 +71,14 @@ rows:
 
 Use the `anthropic` mode unless the gateway serves Claude only through Microsoft Foundry or Amazon Bedrock Mantle and you want {{ site.claude_code }} to use that cloud's model IDs.
 The `anthropic` mode is the only mode that sets up other agent CLIs, and the only mode in which {{ site.claude_code }} reads the model list from the gateway.
-When you add a model whose ID contains `claude` or `anthropic` to the gateway, it shows up in the next {{ site.claude_code }} session without a new `setup`.
-For a model with another ID, `profile activate` adds a model picker entry from the gateway's model list, so developers run `setup` again after you add it.
+When the gateway lists a new model whose ID contains `claude` or `anthropic` in a successful `GET /v1/models` response, the model shows up in the next {{ site.claude_code }} session without a new `setup`.
+For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
 A profile from `profile create` names one model, the `--model` value.
 
 In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the AI Model that serves {{ site.claude_code }} uses the Anthropic format.
+{{ site.claude_code }} names the profile's `--model` value in the `model` field of each request, so add that value to `config.route.model.values` of the AI Model, and keep the deployment name or the upstream model ID in `targets[].name`.
 For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
 For the `mantle` mode, use a `bedrock` AI Model Provider, and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
@@ -167,8 +168,10 @@ rows:
 Use the value that your identity provider reads.
 
 With these flags, `profile create` reads the endpoints of your identity provider from its OIDC discovery document, saves the profile, and installs it on your computer.
-It then sends a test request without a sign-in to the gateway route of each agent CLI that the profile sets up, and warns about each route that the gateway doesn't have.
-For more options, such as MCP servers that the gateway serves and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
+It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
+When the gateway answers that no route matches, `profile create` warns that the agent CLI may not be able to use the gateway, and keeps the agent CLI in the profile.
+A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
+For more options, such as MCP servers that the gateway serves, except in a `subscription` profile, and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
 ### Sign-in kinds
 
@@ -194,6 +197,8 @@ rows:
     use: |
       The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
       Leave out `--issuer`, `--client-id` and `--audience`.
+      Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
+      On Linux, when `XDG_RUNTIME_DIR` isn't set, create a private directory with `mktemp -d` and set `XDG_RUNTIME_DIR` to it before you run {{site.kong_harnesses}}.
     limits: The profile doesn't set up OpenCode or Hermes Agent.
   - kind: "`subscription`"
     use: |
@@ -202,7 +207,8 @@ rows:
       See [Serve Claude subscriptions and company Claude models](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
     limits: |
       Needs the `anthropic` mode.
-      The profile sets up only {{ site.claude_code }}.
+      The profile sets up only {{ site.claude_code }}, and can't list gateway MCP servers.
+      Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
 {% endtable %}
 
 In the `anthropic` mode, {{ site.claude_code }} sends a static key in both the `Authorization: Bearer` and the `x-api-key` headers.
@@ -270,8 +276,9 @@ rows:
 {% endtable %}
 
 To change the profile, publish the new file at the same URL or give developers the new file.
-When the change keeps the gateway origin, the identity provider and the sign-in kind, developers run the same `setup` command again.
-When it changes one of them, `setup` stops while an agent CLI still uses the old profile.
+When the change keeps the profile's security identity, developers run the same `setup` command again.
+The security identity includes the gateway origin, the issuer and its endpoints, the client ID, the redirect URI, the audience, the audience parameter, the scopes and the sign-in kind.
+When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup`, run `setup` again, and sign in again.
 
 ## What setup changes on a developer's computer
@@ -295,6 +302,8 @@ Add `--client claude-code` to set up only {{ site.claude_code }}.
 With `--auto-approve`, `setup` doesn't ask, and prints the same summary to stderr.
 Use `--auto-approve` only in an onboarding script that your organization owns, because it skips the developer's check of the gateway and the identity provider.
 When a step fails, the developer runs the same command again, and `setup` continues from that step.
+When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` leaves that agent CLI out and names the fix.
+Fix the route or the sign-in, then run `setup` again.
 
 `login` saves the sign-in in the desktop's native vault: only the renewal credential, or the static key.
 `profile activate` writes these keys to the {{ site.claude_code }} user settings, `~/.claude/settings.json`, or `settings.json` in `CLAUDE_CONFIG_DIR` when it's set:
@@ -317,7 +326,11 @@ rows:
     value: The models that the profile names.
   - key: "Feature switches, such as `env.DISABLE_TELEMETRY`"
     value: "The {{ site.claude_code }} features that the profile turns off or on."
-  - key: "`hooks` and `env.ANTHROPIC_CUSTOM_HEADERS`"
+  - key: "`env.ANTHROPIC_CUSTOM_HEADERS`"
+    value: |
+      The headers that the profile's `attribution` block names, when the profile has one.
+      For a `subscription` profile, also the `x-kong-id-token` header.
+  - key: "`hooks`"
     value: |
       Only for a `subscription` profile.
       A hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway knows which developer sent each request.
@@ -347,7 +360,7 @@ rows:
 `profile activate` also writes the settings of each other agent CLI that the profile sets up, see [`profile activate`](/kong-harnesses/profile/activate/).
 It refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
 In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
-[`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) gives back each value that activation replaced.
+[`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) restores each value that activation replaced, when the key still has the value that activation wrote.
 A value that the developer changed after activation stays as the developer left it.
 
 ## Private certificate authorities
@@ -355,6 +368,7 @@ A value that the developer changed after activation stays as the developer left 
 When the gateway, the identity provider or the profile server uses a certificate from a private certificate authority (CA), add the CA to the system trust store of each developer's computer and of your own computer, usually through mobile device management (MDM).
 {{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store and need nothing more.
 The browser that opens for the sign-in must also trust the identity provider's certificate.
+Hermes Agent reads the system trust store, but the sign-in script of its {{site.ai_gateway}} plugin doesn't, so sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 
 omp and pi don't read the system trust store by default, so set one of these variables in the environment where they start:
 
@@ -415,6 +429,15 @@ sudo update-ca-trust
 ```
 
 {% endnavtab %}
+{% navtab "Alpine" %}
+
+```sh
+apk add ca-certificates
+cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
+update-ca-certificates
+```
+
+{% endnavtab %}
 {% endnavtabs %}
 
 Each WSL distribution has its own trust store.
@@ -432,7 +455,8 @@ rows:
   - program: "{{ site.claude_code }}"
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, in the `env` block of the {{ site.claude_code }} user settings.
-      `profile activate` doesn't change this key.
+      `profile activate` doesn't set this key and leaves a value that you set in place.
+      When it removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, it restores the value that the key had before that release.
   - program: Codex
     setting: "`CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex."
   - program: OpenCode
@@ -442,8 +466,8 @@ rows:
   - program: "{{site.kong_harnesses}}"
     setting: |
       `SSL_CERT_FILE` set to a file with every CA that {{site.kong_harnesses}} needs, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts each agent CLI, because the agent CLIs run {{site.kong_harnesses}} to get each token.
-      The file replaces the system trust store for {{site.kong_harnesses}}.
-      On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`.
+      On Linux, the file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
+      On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`, and the file then replaces the system trust store for {{site.kong_harnesses}}.
 {% endtable %}
 
 `profile create` doesn't take a CA bundle.
