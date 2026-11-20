@@ -71,7 +71,7 @@ rows:
   - code: "`1`"
     problem: The network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
   - code: "`2`"
-    problem: The profile, the agent CLI or its settings, the shell that starts the agent CLI, the settings that load the gateway MCP servers, or the kong-harnesses install.
+    problem: The profile, the agent CLI or its settings, the shell that starts the agent CLI, or the kong-harnesses install.
   - code: "`3`"
     problem: The sign-in, or a missing key for a gateway MCP server.
   - code: "`130`"
@@ -101,7 +101,7 @@ rows:
     next: |
       Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
       If your administrator installed the profile for every user, ask your administrator to install it again.
-      If the report says that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
+      If the lines before the agent CLI reports say that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
     what: You're signed in to the profile. For a profile that uses a static key, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
     next: |
@@ -117,7 +117,8 @@ rows:
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, remove what kong-harnesses owns in that agent CLI with `kong-harnesses profile cleanup --client CLIENT_NAME`.
+      When the settings are inconsistent with what kong-harnesses wrote, inspect them and remove the leftover values manually.
+      To undo only what kong-harnesses changed, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
       When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
       For OpenCode, remove the gateway plugin entry that kong-harnesses didn't record from the settings file first, then activate the profile.
   - check: "`claude-code`"
@@ -126,7 +127,7 @@ rows:
   - check: "`npm` and `plugin`"
     what: For OpenCode, npm can read the gateway plugin package from the registry, and a plugin version that works is in the OpenCode cache.
     next: |
-      Fix npm access to the registry first, for example the npm token.
+      If the `npm` check reports an access problem, fix it first, for example the npm token.
       Then do what the `fix:` line says, for example remove an old plugin from the cache and start OpenCode once.
   - check: "`issuer`"
     what: kong-harnesses connects to the identity provider of the profile. A profile that uses a static key skips this check.
@@ -141,7 +142,7 @@ rows:
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
       When a proxy in the shell applies to an `http://` gateway on this computer, add the exact gateway host, without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
-      For an IPv6 loopback address, add each form of the address, such as `[::1]:8000,[::1],::1`.
+      For an IPv6 loopback address, add instead each form of the address, with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
       When project settings or managed settings of {{ site.claude_code }} set a proxy variable, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
       Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
@@ -149,7 +150,7 @@ rows:
     what: |
       The gateway has a route for the requests that the agent CLI sends.
       `doctor` sends a request with the JSON body `{}` to check for the route.
-      When it sends your credential, it also checks that the gateway accepts the credential on that route.
+      When it sends your credential, an HTTP `401` or `403` answer means that the gateway refuses the credential on that route.
     next: |
       When the check fails because the gateway doesn't have a route, or refuses the sign-in on it, ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
       When the check reports a warning with a `fix:` line, do what it says before you contact the operators, for example sign in, unset a variable, or make the managed settings readable.
@@ -164,7 +165,7 @@ rows:
       When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
-    what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves, or the models that the profile lists.
+    what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists, or gateway discovery adds those models next to the built-in models.
     next: |
       Do what the `fix:` line says, when the report has one.
       It's usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which updates the menu.
@@ -183,10 +184,11 @@ rows:
     next: |
       Remove a static Anthropic credential from the `env` block first, because `profile activate` refuses a credential there.
       Then do what the `fix:` line says, usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again.
-      When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line names `kong-harnesses profile cleanup` first.
+      When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line can name `kong-harnesses profile cleanup` first.
+      After the cleanup, inspect the settings and remove any leftover values manually.
   - check: "`overrides`"
     what: |
-      For each credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider, such as `CLAUDE_CODE_USE_BEDROCK`, that the shell that starts {{ site.claude_code }} sets, the `env` block of the settings file sets the same variable, which takes precedence.
+      For each credential variable that isn't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider that is turned on, such as `CLAUDE_CODE_USE_BEDROCK`, in the shell that starts {{ site.claude_code }}, the `env` block of the settings file sets the same variable, which takes precedence.
       The `env` block itself doesn't turn on a switch for another provider, or set a credential for the provider mode of the profile.
     next: |
       Do each step that the `fix:` line names.
@@ -228,7 +230,7 @@ To clean up one agent CLI, add `--client`, for example `--client claude-code`.
    ```
 
 `profile cleanup` changes only the values that kong-harnesses still owns.
-If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and names each of those settings in a `Left as edited` line.
+If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and its output names each setting or group of settings that holds your edits.
 If `profile cleanup` can't tell which values it owns, it exits with `2`, or with `4` when it changed another agent CLI.
 Inspect the settings, and remove the remaining values manually.
 If `profile cleanup` changes settings but can't finish the cleanup for one or more agent CLIs, it exits with `4`, also with `--client`.
