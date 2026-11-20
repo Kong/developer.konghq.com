@@ -120,6 +120,8 @@ When the profile has a saved sign-in, `logout` asks you to type the profile name
 - When the profile doesn't have a sign-in on this computer, `logout` doesn't ask you to confirm, and shows `Already signed out`. It also removes any keys of gateway MCP servers that are left.
 - When `logout` says that the local cleanup is incomplete, or that the saved sign-in needs attention, run `logout` again. The table in [When the login or logout command fails](#when-the-login-or-logout-command-fails) lists each of these lines.
 
+Each time `logout` removes the sign-in or the key from this computer, it also removes the saved keys of gateway MCP servers for the profile.
+
 A {{ site.claude_code }} session that already has an access token can use it until the token expires.
 
 For a profile that uses a key from your administrator, `logout` removes the key from this computer only. The key works at the gateway until your administrator revokes it. For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key. On Linux, `logout` first takes a lock on the profile in `XDG_RUNTIME_DIR`, so set that variable in the job before you run `logout`. If this computer still has a saved sign-in or key for the profile, `logout` asks you to confirm and removes it. In a Linux session without Secret Service, `logout` doesn't check for a saved sign-in or key, so to remove one that an earlier setup saved, run `logout` in a desktop session with a keyring. `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set. Remove the variable from the job environment yourself.
