@@ -113,7 +113,7 @@ An agent has its own identity, separate from the users who manage it:
 
 * **Own access rules:** The rules that apply to an agent are independent from the rules that apply to the users who manage it.
 * **Own credentials:** An agent authenticates with its own credentials like [virtual keys](#virtual-keys) to call models, or with an OAuth client from your identity provider to call MCP servers.
-* **Own attribution:** {{site.ai_gateway}} attributes to the agent the requests it makes, not to the users who manage it.
+* **Own attribution:** {{site.ai_gateway}} attributes requests to the agent that makes them, not to the users who manage it.
 
 When an agent acts on behalf of a user (for example, when it authenticates to an MCP server for that user), {{site.ai_gateway}} identifies the agent and the user separately. An access decision can depend on the user, the agent, or both.
 
