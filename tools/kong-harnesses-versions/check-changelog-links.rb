@@ -14,8 +14,9 @@ require 'yaml'
 # pass. It reads the text of each element as a reader sees it, joined across inline
 # markup such as bold, and refuses `//`, `www.`, `mailto:`, `xmpp:` and an `@` between
 # two characters of a name, as in `user@host`, outside code. Text in code is not a link,
-# but it still must not name the kong-harnesses repository. It also refuses a control
-# character, which shows nothing.
+# but it still must not name the kong-harnesses repository. It also refuses a control,
+# bidirectional or noncharacter code point, which shows nothing or changes the order of
+# the text around it.
 module KongHarnessesChangelogLinks
   module_function
 
@@ -107,14 +108,16 @@ module KongHarnessesChangelogLinks
     normalize(text).match?(ADDRESS)
   end
 
-  # Every control character but a tab and a line break, as the text or an attribute
-  # holds it after the HTML parser read its character references.
-  CONTROL = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/
+  # Every control character but a tab and a line break, the characters that change the
+  # order of text, as in a Trojan Source attack, and the noncharacters, as the text or an
+  # attribute holds them after the HTML parser read its character references. A zero
+  # width space changes no order, and normalize takes it out before the address check.
+  HIDDEN = /[[\p{Cc}&&[^\t\n]]\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069\p{Noncharacter_Code_Point}]/
 
-  def control?(fragment)
+  def hidden?(fragment)
     found = false
     fragment.traverse do |node|
-      found ||= node.text? ? node.content.match?(CONTROL) : node.element? && node.attribute_nodes.any? { |attribute| attribute.value.match?(CONTROL) }
+      found ||= node.text? ? node.content.match?(HIDDEN) : node.element? && node.attribute_nodes.any? { |attribute| attribute.value.match?(HIDDEN) }
     end
     found
   end
@@ -127,7 +130,7 @@ module KongHarnessesChangelogLinks
   # highlights it with its own template, which adds no address from the changelog text.
   def html_problems(html)
     fragment = Nokogiri::HTML5.fragment(html)
-    found = control?(fragment) ? ['a control character'] : []
+    found = hidden?(fragment) ? ['a control, bidirectional or noncharacter code point'] : []
     fragment.traverse do |node|
       if node.element?
         allowed = ELEMENTS[node.name]

@@ -69,14 +69,14 @@ RSpec.describe KongHarnessesChangelogLinks do
       expect { described_class.check(entry('use go@1.21 now')) }.to raise_error(/`go@1\.21` can go in backticks/)
     end
 
-    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;'].each do |control|
-      it "refuses the control character #{control.inspect}" do
-        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a control character/)
+    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;', "\u202e", '&#x2066;', '&#xfffe;'].each do |control|
+      it "refuses the hidden character #{control.inspect}" do
+        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a control, bidirectional or noncharacter code point/)
       end
     end
 
     it 'refuses a control character in an attribute' do
-      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a control character')
+      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a control, bidirectional or noncharacter code point')
     end
 
     # The spec loads the site plugins, which highlight code blocks with Shiki, so these

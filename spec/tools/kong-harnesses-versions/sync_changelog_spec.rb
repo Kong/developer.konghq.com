@@ -84,8 +84,7 @@ RSpec.describe KongHarnessesChangelog do
     ["* fix x ([abc1234](#{commit})), closes [kong-harnesses#7](https://github.com/Kong/kong-harnesses/issues/7)", '* fix x'],
     # The label of a reference is compared as a reader sees it, here as `octo/sample#456`.
     ["* fix x ([abc1234](#{commit})), closes [octo/__sample__#456](https://github.com/octo/__sample__/issues/456)", '* fix x'],
-    ["* fix x &#40;[&#35;1](#{issue})&#41;", '* fix x'],
-    ["* fix x ([`#1`](#{issue}))", '* fix x'],
+    ["* fix x &#40;[#1](#{issue})&#41;", '* fix x'],
     # release-please links every `#N` and `@user` of a subject, so such a link in running
     # text becomes its label.
     ["* fix [#1](#{issue})'s crash", '* fix #1’s crash'],
@@ -96,15 +95,12 @@ RSpec.describe KongHarnessesChangelog do
     ["* [#1](#{issue})", '* \\#1'],
     ["1. First\n2. [#1](#{issue})\n3. Second", "1.  First\n2.  \\#1\n3.  Second"],
     ["* fix ([#1](#{issue}), [#2](https://github.com/Kong/kong-harnesses/issues/2))", '* fix (#1, #2)'],
-    ["* fix [&#35;1](#{issue}) now", '* fix #1 now'],
     ['* fix x (#1) ([#2](https://github.com/Kong/kong-harnesses/issues/2))', '* fix x (#1)'],
     ["* fix x\n  * nested ([#1](#{issue}))", "* fix x\n  * nested (#1)"],
     ["> fix x ([#1](#{issue}))", '> fix x (#1)'],
     ["* **cli:** ([#1](#{issue}))", '* **cli:**'],
     ["* run `printf 'a  b'`  twice ([#1](#{issue}))", "* run `printf 'a  b'` twice"],
     ["* <profile> now works ([#1](#{issue}))", '* \\<profile> now works'],
-    ["* **cli:** fix x ([abc1234](#{commit}))\n\n  more text", "* **cli:** fix x\n\n  more text"],
-    ["* **cli:** fix x ([abc1234](#{commit}))\n  * nested", "* **cli:** fix x\n  * nested"],
     # Text that only looks like Markdown stays text, so the writer escapes it.
     ['* literal \\[mode](optional)', '* literal \\[mode\\](optional)'],
     ['* accept values with a | delimiter', '* accept values with a \\| delimiter'],
@@ -207,6 +203,22 @@ RSpec.describe KongHarnessesChangelog do
   # Any other link, with a label or an address that release-please does not write, or
   # in a place where it writes no such link, is refused, and the entry is named.
   [
+    # A subject is one line, so references before more text are not its end.
+    "* **cli:** fix x ([abc1234](#{commit}))\n\n  more text",
+    "* **cli:** fix x ([abc1234](#{commit}))\n  * nested",
+    # A label with an image, code or an entity is not the label that release-please writes.
+    '* fix x ([#12![Diagram](diagram.png)](https://github.com/Kong/kong-harnesses/issues/12))',
+    '* fix x ([#12![](diagram.png)](https://github.com/Kong/kong-harnesses/issues/12))',
+    '* fix [#1![](https://example.com/a.png)2](https://github.com/Kong/kong-harnesses/issues/12) now',
+    '* thanks [@bob![x](a.png)](https://github.com/bob)',
+    "* fix x ([`#1`](#{issue}))",
+    "* fix x ([&#35;1](#{issue}))",
+    "* fix [&#35;1](#{issue}) now",
+    # release-please writes no character reference in an address.
+    '* fix x ([#12](https://github.com/Kong/kong-harnesses/issues/&#49;2))',
+    '* fix x ([#12](https://github.com/Kong/kong-harnesses/issues/1&#50;))',
+    '* fix [#12](https://github.com/Kong/kong-harnesses&#47;issues/12) now',
+    '* fix [#12](https://git&#104;ub.com/Kong/kong-harnesses/issues/12) now',
     "* fix ([#1](#{issue}), [#2](#{issue}))",
     *['https://github-com', 'https://githubXcom', 'https://evilgithub.com', 'https://github.com.evil.example', 'http://github.com', 'https://github.com:443',
       'https://u@github.com', 'https://GitHub.com'].flat_map do |site|
@@ -275,6 +287,12 @@ RSpec.describe KongHarnessesChangelog do
     expect { exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0?x)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
     expect(exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0-rc.1...v1.0.0) (2026-01-01)\n\n### Features\n\n* add\n"))
       .to eq("## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n")
+    # Each tag form that release-please can write, with prerelease and build parts.
+    %w[v1.0.0-rc-1 v1.0.0-rc.1+build.5 v0.9.0+b-2].each do |tag|
+      expect(exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/#{tag}...v1.0.0)\n\n### Features\n\n* add\n")).to eq("## 1.0.0\n\n### Features\n\n* add\n"), tag
+    end
+    expect(exported("## 1.0.0\n\n### Features\n\n* final\n\n## [1.0.0-rc-1+b.5](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0-rc-1+b.5)\n\n### Features\n\n* add\n",
+                    %w[1.0.0-rc-1+b.5 1.0.0])).to eq("## 1.0.0\n\n### Features\n\n* final\n\n## 1.0.0-rc-1+b.5\n\n### Features\n\n* add\n")
   end
 
   it 'changes no text inside a code block' do
@@ -300,12 +318,24 @@ RSpec.describe KongHarnessesChangelog do
     expect { exported(section("* a `x\n  <profile>` y")) }.to raise_error(/code with a line that starts a block/)
   end
 
-  # A control character shows nothing, raw or as a character reference, and Check B must
-  # not read one as a mark.
-  ["\u0000", "\u0001", "\u0005", "\u007f", "\u0085", '&#0;', '&#1;', '&#x2;', '&#11;', '&#13;', '&#x7f;', '&#127;'].each do |control|
-    it "refuses the control character #{control.inspect}" do
-      expect { exported(section("* fix it (#{control}) now")) }.to raise_error(/control character/)
+  # A control character shows nothing and a bidirectional one changes the order of the
+  # text around it, raw or as a character reference, and Check B must not read one as a
+  # mark. The refusal names the entry.
+  ["\u0000", "\u0001", "\u0005", "\u007f", "\u0085", '&#0;', '&#1;', '&#x2;', '&#11;', '&#13;', '&#x7f;', '&#127;',
+   "\u202e", "\u2066", '&#x202a;', '&#8297;', "\u200f", '&#xfffe;', "\u{10ffff}"].each do |control|
+    it "refuses the hidden character #{control.inspect}" do
+      expect { exported(section("* fix it (#{control}) now")) }.to raise_error(/a control, bidirectional or noncharacter code point in "fix it/)
     end
+  end
+
+  it 'refuses a character reference to no character and names the entry' do
+    ['&#xd800;', '&#xdfff;', '&#x110000;'].each do |reference|
+      expect { exported(section("* fix it (#{reference}) now")) }.to raise_error(/a character reference to no character in "fix it/), reference
+    end
+  end
+
+  it 'keeps a zero width space, which changes no order' do
+    expect(exported(section("* fix\u200bit"))).to eq(section("* fix\u200bit"))
   end
 
   it 'reads no character of the text as a mark' do
@@ -313,10 +343,18 @@ RSpec.describe KongHarnessesChangelog do
     expect(described_class.reading(described_class.html(described_class.parse("* fix it (I) and (C), closes R\n")))).to eq('fix it (I) and (C), closes R')
   end
 
-  it 'takes off only the `(#N)` at the end of a breaking change note' do
+  # A breaking change note is the author's text, so its `(#N)` stays as text.
+  it 'keeps the `(#N)` of a breaking change note as text' do
     expect(exported(section("* **profile:** run login again ([#1](#{issue}))", '⚠ BREAKING CHANGES')))
-      .to eq(section('* **profile:** run login again', '⚠ BREAKING CHANGES'))
+      .to eq(section('* **profile:** run login again (#1)', '⚠ BREAKING CHANGES'))
     expect { exported(section("* **profile:** run login again ([#1](#{issue})) ([abc1234](#{commit}))", '⚠ BREAKING CHANGES')) }.to raise_error(/has a link in "/)
+    # What googleapis/release-please-action 45996ed1 writes for the commit
+    # "fix: require a restart\n\nBREAKING CHANGE: Follow the procedure in issue (#12)\n- Restart the service".
+    generated = "## [1.2.3](https://github.com/Kong/kong-harnesses/compare/v1.2.2...v1.2.3) (2026-11-20)\n\n\n### ⚠ BREAKING CHANGES\n\n" \
+                "* Follow the procedure in issue ([#12](https://github.com/Kong/kong-harnesses/issues/12))\n    - Restart the service\n\n### Bug Fixes\n\n" \
+                '* require a restart ([abc1234](https://github.com/Kong/kong-harnesses/commit/abc1234000000000000000000000000000000000))'
+    expect(exported(generated, ['1.2.3'])).to eq("## 1.2.3 (2026-11-20)\n\n### ⚠ BREAKING CHANGES\n\n* Follow the procedure in issue (#12)\n  * Restart the service\n\n" \
+                                                 "### Bug Fixes\n\n* require a restart\n")
     # release-please writes a `#### ` line of the note under it, which kramdown reads as
     # text of the same paragraph, so the `(#N)` is in running text and stays as text.
     expect(exported(section("* **api:** drop v1 ([#12](https://github.com/Kong/kong-harnesses/issues/12))\n    #### Deleted\n    - endpoint 1", '⚠ BREAKING CHANGES')))
@@ -478,8 +516,23 @@ RSpec.describe KongHarnessesChangelog do
       fake = described_class.parse("* **a:** see #{tail}\n")
       expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), fake) }.to raise_error(/change the text that a reader sees near "/), tail
     end
-    breaking = described_class.parse("### ⚠ BREAKING CHANGES\n\n* **a:** see ([abc1234](#{commit}))\n")
+    # Check B takes nothing off a breaking change note, nor off an entry with more than
+    # one block, so a loss there is refused wherever it is.
     page = "### ⚠ BREAKING CHANGES\n\n* **a:** see\n"
-    expect { described_class.written(page, described_class.parse(page), breaking) }.to raise_error(/change the text that a reader sees near "/)
+    ["### ⚠ BREAKING CHANGES\n\n* **a:** see ([abc1234](#{commit}))\n", "### ⚠ BREAKING CHANGES\n\n* **a:** see ([#1](#{issue}))\n"].each do |markdown|
+      expect { described_class.written(page, described_class.parse(page), described_class.parse(markdown)) }.to raise_error(/change the text that a reader sees near "/)
+    end
+    ["* **a:** see ([#1](#{issue}))\n  * b\n", "* **a:** see ([#1](#{issue}))\n\n  b\n"].each do |markdown|
+      page = markdown.sub(" ([#1](#{issue}))", '')
+      expect { described_class.written(page, described_class.parse(page), described_class.parse(markdown)) }.to raise_error(/change the text that a reader sees near "/), markdown
+    end
+    # Check B reads a link as kramdown writes it, so it sees a character reference in an
+    # address that the HTML parser would read, and it compares a label as HTML, image and
+    # code too. Kramdown writes `&#35;` in a label as `#`, so only the export refuses it.
+    ['([#12](https://github.com/Kong/kong-harnesses/issues/&#49;2))', '([#12](https://git&#104;ub.com/Kong/kong-harnesses/issues/12))',
+     "([#1![](a.png)](#{issue}))", "([`#1`](#{issue}))"].each do |tail|
+      fake = described_class.parse("* **a:** see #{tail}\n")
+      expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), fake) }.to raise_error(/character reference in a link|change the text that a reader sees near "/), tail
+    end
   end
 end
