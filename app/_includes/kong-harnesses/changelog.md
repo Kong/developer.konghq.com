@@ -1,3 +1,4 @@
+<!--vale off-->
 {% raw %}
 ## 0.17.1 (2026-11-19)
 
@@ -117,3 +118,4 @@
 
 * **threat-model:** note that immutable releases are on
 {% endraw %}
+<!--vale on-->

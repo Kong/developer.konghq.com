@@ -7,6 +7,7 @@ const repo = 'Kong/kong-harnesses';
 
 // The repository is internal, so links into it break for readers of the site.
 // The Mesh changelog drops them the same way (mesh.ignored_links_regex).
+// Vale stays off because the entries are commit subjects full of code names.
 export function publicChangelog(markdown, repoName = repo) {
   const base = `https://github\\.com/${repoName.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}`;
   const body = markdown
@@ -15,7 +16,7 @@ export function publicChangelog(markdown, repoName = repo) {
     .replace(new RegExp(`\\[([^\\]]*)\\]\\(${base}[^)]*\\)`, 'gi'), '$1')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
-  return `{% raw %}\n${body}\n{% endraw %}\n`;
+  return `<!--vale off-->\n{% raw %}\n${body}\n{% endraw %}\n<!--vale on-->\n`;
 }
 
 export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = process.env }) {

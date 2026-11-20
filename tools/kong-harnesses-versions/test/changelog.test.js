@@ -21,20 +21,20 @@ const releasePleaseChangelog = `# Changelog
 test('drops every link into the internal repository and keeps the release versions and entries', () => {
   assert.equal(
     publicChangelog(releasePleaseChangelog),
-    '{% raw %}\n' +
+    '<!--vale off-->\n{% raw %}\n' +
       '## 0.17.1 (2026-11-19)\n\n' +
       '### ⚠ BREAKING CHANGES\n\n' +
       '* **profile:** run login again after the upgrade\n\n' +
       '### Bug Fixes\n\n' +
       '* **profile:** accept plain http for a gateway on loopback\n' +
       '* **docs:** follow the [Claude Code settings](https://code.claude.com/docs/en/settings) {{ unchanged }}\n' +
-      '{% endraw %}\n',
+      '{% endraw %}\n<!--vale on-->\n',
   );
 });
 
 test('matches the repository link whatever the owner case', () => {
   assert.equal(
     publicChangelog('* fix ([#1](https://github.com/kong/kong-harnesses/pull/1))\n'),
-    '{% raw %}\n* fix\n{% endraw %}\n',
+    '<!--vale off-->\n{% raw %}\n* fix\n{% endraw %}\n<!--vale on-->\n',
   );
 });
