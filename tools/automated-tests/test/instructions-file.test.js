@@ -545,6 +545,22 @@ test("unset ai-gateway version inputs force generation of an explicitly targeted
   });
 });
 
+test("an ai-gateway guide is unaffected by the event-gateway version input", async () => {
+  await inTempDir(async (dir) => {
+    const file = await writeHowTo(
+      dir,
+      "ai-gateway-gated.md",
+      aiGatewayHowTo("gated", "2.3"),
+    );
+
+    const urls = await testeableUrlsFromFiles(config, [file], {
+      eventGatewayMinVersion: "1.1",
+    });
+
+    assert.deepEqual(urls, ["http://localhost:8888/ai-gateway/gated/"]);
+  });
+});
+
 test("selectRunnableGroups returns only groups matching both filters", () => {
   const groups = {
     "on-prem": { gateway: ["on-prem/gateway.yaml"], operator: ["on-prem/operator.yaml"] },
@@ -617,6 +633,12 @@ test("normalizeReleasePrefix returns the text before the first dash", () => {
   assert.equal(normalizeReleasePrefix("latest"), "latest");
   assert.equal(normalizeReleasePrefix(""), "");
   assert.equal(normalizeReleasePrefix(undefined), undefined);
+});
+
+test("a numeric version input is compared as its string form instead of crashing the comparator", () => {
+  assert.equal(normalizeReleasePrefix(2.3), "2.3");
+  assert.equal(effectiveVersionUnderTest(2.1, 2.2), "2.1");
+  assert.equal(effectiveVersionUnderTest(2.3, "2.2"), "2.2");
 });
 
 test("a release-candidate version input contributes its release prefix", () => {

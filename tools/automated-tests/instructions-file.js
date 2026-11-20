@@ -36,8 +36,13 @@ export function isNumericVersion(value) {
 
 // A version input may carry a release suffix (`2.3.2-rc.2`). Only the release
 // prefix is the version itself; the suffix is not comparable, so it is stripped
-// before the numeric check. A value with no `-` is returned unchanged.
+// before the numeric check. A value with no `-` is returned unchanged. Numbers
+// (a YAML unquoted `2.3` reaches the helper as a number) are stringified so the
+// value that is stored is the value `compareVersions` can split.
 export function normalizeReleasePrefix(value) {
+  if (typeof value === "number") {
+    value = String(value);
+  }
   if (typeof value !== "string") {
     return value;
   }
