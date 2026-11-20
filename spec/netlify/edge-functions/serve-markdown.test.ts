@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-import handler from "../../../netlify/edge-functions/serve-markdown.ts";
+import handler, { config } from "../../../netlify/edge-functions/serve-markdown.ts";
 
 const ORIGIN = "https://developer.konghq.com";
 
@@ -149,5 +149,19 @@ describe("serve-markdown handler", () => {
 
     assert.equal(result, notModified);
     assert.equal(events.length, 1);
+  });
+});
+
+describe("serve-markdown config", () => {
+  const excluded = config.excludedPath as string[];
+
+  it("excludes asset directories and machine files", () => {
+    for (const pattern of ["/assets/*", "/vite/assets/*", "/robots.txt", "/**/*.xml"]) {
+      assert.ok(excluded.includes(pattern), `${pattern} is excluded`);
+    }
+  });
+
+  it("does not exclude all .txt files, so /llms.txt runs the function", () => {
+    assert.ok(!excluded.includes("/**/*.txt"));
   });
 });
