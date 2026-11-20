@@ -73,7 +73,13 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
     - title: Stop the OpenTelemetry Collector
       content: |
-        
+        Stop and remove the OpenTelemetry Collector container:
+
+        ```sh
+        docker rm -f otel-collector
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/opentelemetry.svg
 
 automated_tests: false
 ---
@@ -95,14 +101,14 @@ entities:
           enabled: true
           max_failures: 3
           sampling_window_seconds: 60
-          recovery_period_ms: 15000
+          recovery_period_ms: 30000
         half_open_calls: 1
 {% endentity_examples %}
 
 This configuration example uses low thresholds so that you can open the circuit quickly:
 * `policy_circuit.max_failures`: The circuit opens after 3 failures in the sampling window.
 * `policy_circuit.sampling_window_seconds`: The plugin counts failures over 60 seconds.
-* `policy_circuit.recovery_period_ms`: The circuit stays open for 15 seconds before the next request can probe the upstream.
+* `policy_circuit.recovery_period_ms`: The circuit stays open for 30 seconds before the next request can probe the upstream.
 * `half_open_calls`: The plugin admits one probe request after the recovery period.
 
 ## Export circuit breaker metrics with OpenTelemetry
@@ -149,6 +155,8 @@ display_headers: true
 {% endvalidation %}
 
 After the third failure, the circuit opens.
+Send the next requests within 30 seconds.
+After that, the recovery period ends, and the plugin lets the next request through as a probe.
 
 ## Validate
 
@@ -173,14 +181,14 @@ display_headers: true
 
 ### Let the circuit recover
 
-Wait at least 15 seconds for the recovery period to end, then send a request to the healthy path.
+Wait at least 30 seconds for the recovery period to end, then send a request to the healthy path.
 This request becomes the probe, which reaches the upstream and succeeds, so the circuit closes:
 
 {% validation request-check %}
 url: '/anything/status/200'
 status_code: 200
 display_headers: true
-sleep: 15
+sleep: 30
 {% endvalidation %}
 
 Send one more request. The circuit is now closed, so {{site.base_gateway}} proxies it to the upstream:
@@ -215,10 +223,15 @@ You should see the following metrics:
 ```
 {:.no-copy-code}
 
-The Collector writes a new block of metrics on every push. Counters are cumulative.
-Look at the most recent block in the Collector logs to see the totals for the requests.
+The Collector writes a new block of metrics on every push, and counters are cumulative.
+To see the totals for the requests in this guide, print the most recent block for one metric.
+For example, use the following command for the `kong.circuit_breaker.policy.failure` counter:
 
-For example, the `kong.circuit_breaker.policy.failure` counter looks like this:
+```sh
+docker logs otel-collector 2>&1 | grep -A 13 'Name: kong.circuit_breaker.policy.failure' | tail -14
+```
+
+The output looks like this:
 
 ```sh
      -> Name: kong.circuit_breaker.policy.failure
@@ -229,9 +242,11 @@ For example, the `kong.circuit_breaker.policy.failure` counter looks like this:
      -> AggregationTemporality: Cumulative
 NumberDataPoints #0
 Data point attributes:
-     -> kong.service.name: Str(example-clean-service)
-     -> kong.plugin.id: Str(2f4b6ea2-0060-4a41-9770-caf23711e1bc)
      -> kong.circuit_breaker.circuit: Str(policy)
+     -> kong.service.name: Str(example-clean-service)
+     -> kong.plugin.id: Str(7bf7d75c-f1e8-4dd6-8edd-c9b173986885)
+StartTimestamp: 2026-11-20 21:54:47.607062784 +0000 UTC
+Timestamp: 2026-11-20 21:57:30.046518016 +0000 UTC
 Value: 3
 ```
 {:.no-copy-code}
