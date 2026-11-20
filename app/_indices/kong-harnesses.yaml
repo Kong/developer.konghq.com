@@ -5,6 +5,7 @@ groups:
       - items:
           - path: /kong-harnesses/
           - path: /kong-harnesses/support/
+          - path: /kong-harnesses/publish-a-profile/
 
   - title: CLI References
     sections:
