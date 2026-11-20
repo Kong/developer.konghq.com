@@ -8,8 +8,8 @@ const repo = 'Kong/kong-harnesses';
 // Readers of the site need what changed for them, not the repository's own build, CI,
 // docs and review work, so only these sections are published.
 const userSections = new Set(['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance']);
-// Scopes of fixes to the repository's own tooling and reviews.
-const internalScopes = new Set(['ci', 'ksai', 'threat-model']);
+// Scopes of changes to the repository's own tooling, reviews and dependency pins.
+const internalScopes = new Set(['ci', 'deps', 'ksai', 'threat-model']);
 
 function userFacingRelease(release) {
   const [heading, ...sections] = release.split(/^(?=### )/m);
@@ -34,23 +34,43 @@ function userFacingRelease(release) {
 }
 
 // The repository is internal, so links into it break for readers of the site.
-// The Mesh changelog drops them the same way (mesh.ignored_links_regex).
-// Vale stays off because the entries are commit subjects full of code names.
-export function publicChangelog(markdown, repoName = repo) {
-  const base = `https://github\\.com/${repoName.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}(?![\\w.-])`;
-  const body = markdown
-    .replace(/^# Changelog\s*\n/, '')
-    .replace(new RegExp(` \\(\\[[^\\]]*\\]\\(${base}/(?:issues|pull|commit)/[^)]*\\)\\)`, 'gi'), '')
-    .replace(new RegExp(`\\[([^\\]]*)\\]\\(${base}[^)]*\\)`, 'gi'), '$1')
+// The Mesh changelog drops them too (mesh.ignored_links_regex).
+const internalUrl = String.raw`https?://(?:www\.)?github\.com/kong/kong-harnesses(?![\w.-])[^\s)>]*`;
+const anyInternalUrl = /github\.com\/kong\/kong-harnesses(?![\w.-])/i;
+
+function withoutInternalLinks(markdown) {
+  const labels = new Set();
+  const text = markdown
+    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?${internalUrl}>?.*\n?`, 'gim'), (_, label) => {
+      labels.add(label.toLowerCase());
+      return '';
+    })
+    .replace(new RegExp(String.raw` ?\(\[[^\]]*\]\(<?${internalUrl}>?\)\)`, 'gi'), '')
+    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?${internalUrl}>?(?:\s+"[^"]*")?\s*\)`, 'gi'), '$1')
+    .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, linkText, label) =>
+      labels.has((label || linkText).toLowerCase()) ? linkText : link,
+    )
+    .replace(/\[([^\]]+)\](?![([:])/g, (link, label) => (labels.has(label.toLowerCase()) ? label : link))
+    .replace(new RegExp(` ?<${internalUrl}>`, 'gi'), '')
+    .replace(new RegExp(` ?${internalUrl}`, 'gi'), '')
+    .replace(/ \(\)/g, '')
+    .replace(/[ \t]+$/gm, '');
+  if (anyInternalUrl.test(text)) {
+    throw new Error('A link into the internal kong-harnesses repository is left in the changelog.');
+  }
+  return text;
+}
+
+// The page prints the result as a Liquid variable, which Jekyll does not parse as a
+// template, so text such as {{ }} or {% endraw %} in a commit subject stays text.
+export function publicChangelog(markdown) {
+  return withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, ''))
     .split(/^(?=## )/m)
     .map(userFacingRelease)
     .filter(Boolean)
     .join('\n\n')
-    .replace(/\n{3,}/g, '\n\n');
-  if (body.includes('{% endraw')) {
-    throw new Error('The changelog contains {% endraw %}, which would end the raw block early.');
-  }
-  return `<!--vale off-->\n{% raw %}\n${body}\n{% endraw %}\n<!--vale on-->\n`;
+    .replace(/\n{3,}/g, '\n\n')
+    .concat('\n');
 }
 
 export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = process.env }) {
@@ -74,13 +94,14 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
     throw new Error(`GitHub API request for ${repo} CHANGELOG.md at ${tag} failed (${file.status} ${file.statusText}).`);
   }
 
-  fs.writeFileSync(outFile, publicChangelog(await file.text()), 'utf8');
+  fs.mkdirSync(path.dirname(outFile), { recursive: true });
+  fs.writeFileSync(outFile, `${JSON.stringify({ markdown: publicChangelog(await file.text()) }, null, 2)}\n`, 'utf8');
   return tag;
 }
 
 const isEntry = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isEntry) {
-  syncChangelog({ outFile: path.resolve(__dirname, '../../app/_includes/kong-harnesses/changelog.md') })
+  syncChangelog({ outFile: path.resolve(__dirname, '../../app/_data/kong-harnesses/changelog.json') })
     .then((tag) => console.log(`Wrote the kong-harnesses changelog at ${tag}`))
     .catch((error) => {
       console.error(`Error: ${error.message}`);
