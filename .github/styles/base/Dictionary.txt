@@ -398,6 +398,7 @@ inlineString
 inso
 Instana
 instrumentations
+Intune
 invalidation
 invalidations
 involvedObject
@@ -411,6 +412,7 @@ Istio's
 istioctl
 item_title
 jaq
+Jamf
 Javascript
 jetstack
 Jira
@@ -832,6 +834,8 @@ subtrees
 sudo
 Supabase
 superset
+supersedence
+Supersedence
 supports_konnect
 svg
 svgs
