@@ -81,7 +81,7 @@ cleanup:
         kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy POLICY_FILE --mcp-config MCP_CONFIG_FILE --output-dir fleet-macos-removed
         ```
 
-        `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
+        When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
         A value that the build replaced gets your earlier value back, if the value of the build still applies.
         A value that you changed after the build stays as you set it.
         If you set a value after the build, and your value is the same as the value of the build, `fleet remove` takes it out too, because it can't tell the two apart.
@@ -108,6 +108,7 @@ In this guide, you choose how the settings reach the computers and which MCP ser
 ## Sign in on your own computer
 
 When the Claude provider of the profile is the Anthropic API, `fleet build` reads the model list of the gateway with your own sign-in, and refuses to build when it can't read the list.
+So the computer where you run `fleet build` must reach the gateway.
 For that provider, sign in to the profile first with [`kong-harnesses login`](/kong-harnesses/login/):
 
 ```sh
@@ -148,13 +149,15 @@ A file whose name sorts after `kong-harnesses.json` in alphabetical order must n
 A file whose name sorts before `kong-harnesses.json` loses each value that the build sets, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
 No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
-Also make sure that no file adds an `allowedProviders` entry or sets a key such as `forceLoginMethod`, because lists combine from every file and such a key applies from any file.
+Also make sure that no file adds an `allowedProviders` entry, because lists combine from every file.
+No file may set `forceLoginMethod` either, because the build doesn't set it, so a value of it in any file applies.
 
 By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 It still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
-So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build, and {{ site.claude_code }} doesn't load the gateway MCP servers.
+So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build.
+If that list doesn't allow the addresses of the gateway MCP servers, {{ site.claude_code }} doesn't load them.
 For those computers, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
@@ -162,7 +165,10 @@ If they don't get a {{ site.claude_code }} policy of your own, pass `--no-policy
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies the file and the MDM policy together.
-Then also check your `managed-settings.json` and the files in `managed-settings.d` for values that conflict with the build, because {{ site.claude_code }} merges them with the MDM policy.
+Then also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
+A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies each key that the MDM policy leaves unset, such as `model`.
+Remove each value that conflicts with the build, and each list entry or key that you don't want on the computers.
+Login keys, such as `forceLoginMethod`, still come only from the highest MDM policy or file with a policy key.
 Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 
 `fleet build` refuses a policy that would stop {{ site.claude_code }} from reaching the gateway, and names the value.
@@ -206,7 +212,7 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 * The computers already have a `managed-mcp.json`.
   {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, and not the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
-* Your own managed settings set `strictKnownMarketplaces`, or its newer name `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+* Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
 When the policy that you pass with `--policy` sets one of these values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
@@ -217,7 +223,7 @@ If the profile has gateway MCP servers, use `exclusive`, and if the computers ha
 For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
-With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and kong-harnesses tells developers which servers {{ site.claude_code }} doesn't load when a session starts.
+With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and when a session starts, kong-harnesses names each server that the developer added and that {{ site.claude_code }} doesn't load.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -365,7 +371,7 @@ The managed settings, in the file or in the MDM policy, hold what `kong-harnesse
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses at the path of `--executable`.
-  One hook tells developers which MCP servers {{ site.claude_code }} doesn't load when a session starts.
+  When a session starts, one hook names each MCP server that the developer added and that {{ site.claude_code }} doesn't load.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
@@ -434,26 +440,35 @@ On Windows, the copy command that `fleet build` prints gives the files the acces
 
 ## Validate
 
-On each test computer, sign in to the computer as a developer.
+Check the build on each test computer before the first prompt, so that no request leaves the computer before you know that the build is in effect.
+
+Sign in to the test computer as a developer.
 If you built with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers, first add those servers as the developer:
 
 ```sh
 kong-harnesses profile activate work --client claude-code
 ```
 
-Then start {{ site.claude_code }}:
+Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
+
+```sh
+kong-harnesses doctor --profile work --client claude-code
+```
+
+`doctor` says that the managed settings of your organization set up the profile, and names the build ID.
+Make sure that the build ID is the one that `fleet build` printed for this platform.
+`doctor` shows a fix for each problem that it finds, and it names the setting that blocks a gateway MCP server.
+Before the first request, it also says that the developer isn't signed in yet, which is expected.
+
+Start {{ site.claude_code }}, and run `/status` before you send a prompt:
 
 ```sh
 claude
 ```
 
-Send a short prompt, such as `Say hello`.
-On the first request, kong-harnesses opens the browser.
-Sign in with your identity provider account.
-
-In {{ site.claude_code }}, run `/status`.
-The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses.
-If the line doesn't show `Enterprise managed settings`, {{ site.claude_code }} found no managed source with a policy key, so the build isn't in effect.
+The `Setting sources` line shows `Enterprise managed settings` with the sources that {{ site.claude_code }} found and uses.
+Other files in `managed-settings.d` and other policies give the same labels, so only the build ID from `doctor` confirms the fleet build.
+If the line doesn't show `Enterprise managed settings`, no managed source delivers a policy key, so the build isn't in effect.
 A source can be on the computer and still have no policy key, so read the `Skipped sources` line, and check the paths in [Check what the build holds](#check-what-the-build-holds).
 Then deploy the build again.
 The labels:
@@ -485,20 +500,15 @@ The labels:
   Remove the `policyHelper`.
 
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
+To list the entries that {{ site.claude_code }} dropped from the managed settings, also run `claude doctor`.
+
+When the build ID and the source are correct, send a short prompt, such as `Say hello`.
+On the first request, kong-harnesses opens the browser.
+Sign in with your identity provider account.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
-The `doctor` check in the next step also names the setting that blocks a gateway MCP server.
 
-Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
-
-```sh
-kong-harnesses doctor --profile work --client claude-code
-```
-
-`doctor` shows a fix for each problem that it finds.
-`doctor` says that the managed settings of your organization set up the profile, and names the build ID.
-`/status` names only the source, and other policies can use the same source, so make sure that the build ID is the one that `fleet build` printed for this platform.
-Do this before you install on the other managed computers.
+Do these checks before you install on the other managed computers.
 
 To keep the fleet on supported {{ site.claude_code }} versions or to move it to a new model, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
