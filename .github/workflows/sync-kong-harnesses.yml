@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       dev_site_base_branch:
-        description: "Branch to sync, for example main. Leave empty for release/kong-harnesses while it exists, else the default branch."
+        description: "Branch to sync. Leave empty for release/kong-harnesses while it exists, else the default branch. The branch needs the scripts in tools/kong-harnesses-versions."
         required: false
         type: string
   schedule:
@@ -11,6 +11,12 @@ on:
 
 permissions:
   contents: read
+
+# GitHub runs a plain run step without pipefail, so a failed command at the
+# start of a pipeline would go unnoticed.
+defaults:
+  run:
+    shell: bash
 
 jobs:
   # GitHub runs a schedule only from the default branch, so this job sends the
@@ -21,6 +27,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       branch: ${{ steps.pick.outputs.branch }}
+      slug: ${{ steps.pick.outputs.slug }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
@@ -33,18 +40,34 @@ jobs:
           REQUESTED: ${{ inputs.dev_site_base_branch }}
           REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
         run: |
+          # git ls-remote --exit-code exits with 2 only for a missing branch, so
+          # any other failure stops the run instead of picking another branch.
+          branch_exists() {
+            git ls-remote --exit-code "$REPOSITORY_URL" "refs/heads/$1" >/dev/null && return 0
+            status=$?
+            if [ "$status" -eq 2 ]; then
+              return 1
+            fi
+            echo "::error::Could not list the branches of $REPOSITORY_URL"
+            exit "$status"
+          }
           if [ -n "$REQUESTED" ]; then
-            if ! git ls-remote --exit-code "$REPOSITORY_URL" "refs/heads/$REQUESTED" >/dev/null; then
+            if ! branch_exists "$REQUESTED"; then
               echo "::error::Branch $REQUESTED does not exist"
               exit 1
             fi
             branch="$REQUESTED"
-          elif git ls-remote --exit-code "$REPOSITORY_URL" refs/heads/release/kong-harnesses >/dev/null; then
+          elif branch_exists release/kong-harnesses; then
             branch=release/kong-harnesses
           else
             branch=$(git ls-remote --symref "$REPOSITORY_URL" HEAD | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')
           fi
+          if [ -z "$branch" ]; then
+            echo "::error::Could not find the default branch of $REPOSITORY_URL"
+            exit 1
+          fi
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "slug=${branch//\//-}" >> "$GITHUB_OUTPUT"
 
   kong-harnesses-versions:
     name: Fetch kong-harnesses Versions
@@ -83,6 +106,15 @@ jobs:
           ref: ${{ needs.base.outputs.branch }}
           persist-credentials: false
 
+      - name: Check that the branch has the sync scripts
+        env:
+          BRANCH: ${{ needs.base.outputs.branch }}
+        run: |
+          if [ ! -f tools/kong-harnesses-versions/package-lock.json ]; then
+            echo "::error::Branch $BRANCH has no tools/kong-harnesses-versions, so it can't be synced yet"
+            exit 1
+          fi
+
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "26"
@@ -96,6 +128,7 @@ jobs:
       # instance signs that provenance, because the repository is internal, so
       # gh attestation verify checks it.
       - name: Install the newest kong-harnesses release
+        id: install
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
           REPO: Kong/kong-harnesses
@@ -103,7 +136,11 @@ jobs:
           # Anyone who can write to the repository can mark an older release as
           # the latest one, so the highest vX.Y.Z release wins.
           tag=$(gh release list -R "$REPO" --exclude-drafts --exclude-pre-releases --limit 1000 --json tagName --jq '.[].tagName' \
-            | grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' | sort -V | tail -1)
+            | { grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' || true; } | sort -V | tail -1)
+          if [ -z "$tag" ]; then
+            echo "::error::No vX.Y.Z release in $REPO"
+            exit 1
+          fi
           archive="kong-harnesses_${tag}_linux_amd64.tar.gz"
           bundle="kong-harnesses_${tag}.sigstore.json"
           work="$RUNNER_TEMP/kong-harnesses"
@@ -132,6 +169,7 @@ jobs:
           esac
           tar -xzf "$archive" -C bin kong-harnesses
           echo "$work/bin" >> "$GITHUB_PATH"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
       - name: Verify kong-harnesses install
         run: kong-harnesses version --full
@@ -139,18 +177,26 @@ jobs:
       - name: Fetch versions
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          TAG: ${{ steps.install.outputs.tag }}
         run: |
           cd tools/kong-harnesses-versions
           npm ci
           node extract-help.js
           node fetch-versions.js
+          # The help comes from the verified binary, so the release data must
+          # name the same release as the latest one.
+          latest=$(awk '/version:/ { gsub(/"/, "", $2); version = $2 } /latest: true/ { print version }' ../../app/_data/tools/kong-harnesses.yml)
+          if [ "$latest" != "${TAG#v}" ]; then
+            echo "::error::The release data names ${latest:-no release} as the latest, but the help comes from $TAG"
+            exit 1
+          fi
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           title: Sync kong-harnesses Releases
           commit-message: Sync kong-harnesses Releases
-          branch: sync-kong-harnesses-releases
+          branch: sync-kong-harnesses-releases-${{ needs.base.outputs.slug }}
           base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}

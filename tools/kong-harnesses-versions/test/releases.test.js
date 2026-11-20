@@ -53,7 +53,7 @@ test('fetches releases from the GitHub API for the configured repo', async () =>
   await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kong-harnesses/releases');
+  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=1');
 });
 
 test('sends an Authorization Bearer header built from GH_TOKEN when it is set', async () => {
@@ -101,11 +101,12 @@ test('throws an error naming the token requirement when the request fails', asyn
   assert.equal(writes.length, 0);
 });
 
-test('accepts releases tagged without a leading v', async () => {
+test('ignores tags that the install script refuses, so the data and the help name one release', async () => {
   const { fetchImpl } = fakeFetch([
-    { tag_name: '0.5.2', published_at: '2026-10-05T12:00:00Z', draft: false, prerelease: false },
-    { tag_name: '0.5.10', published_at: '2026-10-06T12:00:00Z', draft: false, prerelease: false },
-    { tag_name: '0.5.9', published_at: '2026-10-05T18:00:00Z', draft: false, prerelease: false },
+    { tag_name: 'v0.5.10', published_at: '2026-10-06T12:00:00Z', draft: false, prerelease: false },
+    { tag_name: '0.6.0', published_at: '2026-10-07T12:00:00Z', draft: false, prerelease: false },
+    { tag_name: 'v0.6.1-hotfix', published_at: '2026-10-08T12:00:00Z', draft: false, prerelease: false },
+    { tag_name: 'v0.07.0', published_at: '2026-10-09T12:00:00Z', draft: false, prerelease: false },
   ]);
   const { writeFile, writes } = fakeWriter();
 
@@ -132,20 +133,26 @@ test('derives the released date from published_at', async () => {
   assert.equal(writes[0].content, 'name: kong-harnesses\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
 });
 
-test('consumes whatever the API returned without paginating', async () => {
-  const releases = [1, 2, 3, 4, 5, 6].map((minor) => ({
-    tag_name: `v0.${minor}.0`,
-    published_at: `2026-09-0${minor}T10:00:00Z`,
+test('reads every page, so a newer release on a later page is still the latest', async () => {
+  const firstPage = Array.from({ length: 100 }, (_, patch) => ({
+    tag_name: `v0.1.${patch}`,
+    published_at: '2026-09-01T10:00:00Z',
     draft: false,
     prerelease: false,
   }));
-  const { fetchImpl, calls } = fakeFetch(releases);
+  const secondPage = [{ tag_name: 'v0.2.0', published_at: '2026-09-02T10:00:00Z', draft: false, prerelease: false }];
+  const calls = [];
+  const fetchImpl = async (url) => {
+    calls.push(url);
+    return { ok: true, status: 200, statusText: 'OK', json: async () => (calls.length === 1 ? firstPage : secondPage) };
+  };
   const { writeFile, writes } = fakeWriter();
 
   await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
-  assert.equal(calls.length, 1);
-  assert.ok(!calls[0].url.includes('?'), 'the sync must not request further pages');
-  const releaseLines = writes[0].content.split('\n').filter((line) => line.trim().startsWith('- release:'));
-  assert.equal(releaseLines.length, releases.length);
+  assert.deepEqual(calls, [
+    'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=1',
+    'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=2',
+  ]);
+  assert.match(writes[0].content, /- release: "0\.2"\n {4}version: "0\.2\.0"\n {4}latest: true\n/);
 });

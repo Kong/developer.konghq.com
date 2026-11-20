@@ -24,7 +24,7 @@ test('fetches releases from the public Kong/kongctl repo', async () => {
 
   await syncReleases({ repo: 'Kong/kongctl', dataFile, name: 'kongctl', fetch: fetchImpl, writeFile });
 
-  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kongctl/releases');
+  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kongctl/releases?per_page=100&page=1');
 });
 
 test('a failed request suggests GH_TOKEN for rate limits without calling the public repo internal', async () => {

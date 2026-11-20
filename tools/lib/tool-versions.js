@@ -197,6 +197,12 @@ export async function buildCobraCommandTree({
   }
 }
 
+const RELEASES_PER_PAGE = 100;
+
+// The same rule as the sync workflow and the kong-harnesses install script, so
+// the release data names the release whose help the pages show.
+const STABLE_TAG = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
+
 export async function syncReleases({
   repo,
   dataFile,
@@ -211,21 +217,31 @@ export async function syncReleases({
     headers.Authorization = `Bearer ${env.GH_TOKEN}`;
   }
 
-  const response = await fetch(`https://api.github.com/repos/${repo}/releases`, { headers });
-
-  if (!response.ok) {
-    const tokenHint = internalRepo
-      ? `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`
-      : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
-    throw new Error(
-      `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
+  const releases = [];
+  for (let page = 1; ; page += 1) {
+    const response = await fetch(
+      `https://api.github.com/repos/${repo}/releases?per_page=${RELEASES_PER_PAGE}&page=${page}`,
+      { headers },
     );
+
+    if (!response.ok) {
+      const tokenHint = internalRepo
+        ? `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`
+        : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
+      throw new Error(
+        `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
+      );
+    }
+
+    const batch = await response.json();
+    releases.push(...batch);
+    if (batch.length < RELEASES_PER_PAGE) {
+      break;
+    }
   }
 
-  const releases = await response.json();
-
   const validReleases = releases
-    .filter((release) => !release.draft && !release.prerelease)
+    .filter((release) => !release.draft && !release.prerelease && STABLE_TAG.test(release.tag_name))
     .map((release) => ({
       version: release.tag_name.replace(/^v/, ''),
       released: release.published_at.split('T')[0],
