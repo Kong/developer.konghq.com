@@ -34,7 +34,9 @@ prereqs:
   inline:
     - title: Microsoft Intune
       content: |
-        You need an account that can add and assign apps in the [Microsoft Intune admin center](https://intune.microsoft.com), and a group of Windows 11 devices or users that need kong-harnesses.
+        You need an account in the [Microsoft Intune admin center](https://intune.microsoft.com) with the **Create**, **Assign**, **Update** and **Delete** permissions for **Mobile apps**. To add the app of a new release, the account also needs the **Relate** permission for **Mobile apps**, which supersedence uses. The built-in Application Manager role has these permissions.
+
+        You also need a group of Windows 11 devices, or of their users, that meet the [Win32 app prerequisites](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-win32#prerequisites): each device is joined or registered to Microsoft Entra ID and enrolled in Intune.
     - title: kong-harnesses Windows installer
       content: |
         Download the file that ends in `_windows_amd64.msi` for x64 computers, or in `_windows_arm64.msi` for Arm computers, and check it as in [Check a downloaded file](/kong-harnesses/install/#check-a-downloaded-file).
@@ -68,7 +70,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. Select the `.intunewin` file.
 1. Click **OK**.
 1. In the **Name** field, enter a name that contains the release and the processor type, for example `kong-harnesses v1.2.3 x64`.
-1. Click **Edit description**.
+1. Click **Edit Description**.
 1. In the description field, enter `Installs kong-harnesses for every user of the computer`.
 1. Click **OK**.
 1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
@@ -94,7 +96,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
    1. Disable **Uninstall previous version**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
 1. Click **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
-1. Select the groups of devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so select the same groups for each release.
+1. Select a test group with one device, or with the user of one device. Add the other groups after the [validation](#validate) passes on that device.
 1. Click **Select**.
 1. Click **Next**.
 1. On the **Review + create** page, click **Create**.
@@ -109,7 +111,7 @@ To remove kong-harnesses from the devices, see the removal steps in [Windows ins
 
 ## Validate
 
-When Intune reports the install on a test device as successful, check the installation on that device. In PowerShell, run:
+When Intune reports the install on the test device as successful, open a new PowerShell window on that device. The install changes the system `PATH`, and a PowerShell window that was open before the install doesn't see the change. Run:
 
 ```powershell
 (Get-Command kong-harnesses).Source
@@ -124,4 +126,6 @@ expected:
 render_output: false
 {% endvalidation %}
 
-The version must be the release that you added to Intune.
+The command prints the release that you added to Intune, with its initial `v`, for example `v1.2.3`.
+
+When the check passes, add the other groups that need kong-harnesses. Open the **Properties** of the app, click **Edit** next to **Assignments**, add the groups under **Required**, and click **Review + save** and **Save**. A new app doesn't copy the assignments of the previous app, so test each release on the test group first, and then add the same groups.

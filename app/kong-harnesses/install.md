@@ -113,7 +113,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    ```
 
    If the command fails and prints `No receipt for 'com.konghq.kong-harnesses' found at '/'.`, the installer package didn't install kong-harnesses. Skip the next steps.
-1. Check that the path of the executable has no links:
+1. Check that the path of the executable doesn't contain a link:
 
    ```sh
    /bin/ls -ld /usr/local /usr/local/bin /usr/local/bin/kong-harnesses
@@ -132,20 +132,20 @@ A newer package replaces the installed version. To remove kong-harnesses:
    cksum /usr/local/bin/kong-harnesses
    ```
 
-   The first number must match the number in the `./bin/kong-harnesses` line of the receipt. If the numbers don't match, or the receipt has no `./bin/kong-harnesses` line, another install replaced the copy of the package, so skip the next step.
+   The first number must match the number in the `./bin/kong-harnesses` line of the receipt. If the numbers don't match, or the receipt doesn't have a `./bin/kong-harnesses` line, another install replaced the copy of the package, so skip the next step.
 1. Delete the executable of the package:
 
    ```sh
    sudo rm /usr/local/bin/kong-harnesses
    ```
 
-1. Check that the path of the license and notices has no links:
+1. Check that the path of the license and notices doesn't contain a link:
 
    ```sh
    /bin/ls -ld /usr/local /usr/local/share /usr/local/share/doc /usr/local/share/doc/kong-harnesses
    ```
 
-   Each of the four lines must start with `d`. If a line starts with `l`, or the command prints `No such file or directory`, skip the next two steps, because `rm` can delete files in another folder through a link.
+   Each of the four lines must start with `d`. If a line starts with something else, or the command prints `No such file or directory`, skip the next two steps, because `rm` can delete files in another folder through a link.
 1. Delete the license and notices of the package:
 
    ```sh
@@ -165,7 +165,22 @@ A newer package replaces the installed version. To remove kong-harnesses:
    sudo pkgutil --forget com.konghq.kong-harnesses
    ```
 
-To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the bundle ID of an app bundle, or by a package receipt with that ID. This package doesn't install an app bundle, and its package receipt is `com.konghq.kong-harnesses`. Assign the package to one test Mac first. For a new release, use a test Mac that has the previous release, because a receipt of the previous release also passes the receipt check. Assign the package to other Macs only if Intune reports the install on the test Mac as successful, and `pkgutil --pkg-info com.konghq.kong-harnesses` on the test Mac shows a `version` that is the release version without its initial `v`, for example `1.2.3`. If either check fails, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
+### Deploy the installer package with an MDM tool
+
+Add the installer package to the MDM tool, such as Jamf Pro, without changes. The package is signed and notarized, and it doesn't contain installer scripts.
+
+1. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs.
+1. Assign the package to one test Mac first. For a new release, use a test Mac that has the previous release, because a receipt of the previous release also passes a receipt check.
+1. On the test Mac, check the receipt:
+
+   ```sh
+   pkgutil --pkg-info com.konghq.kong-harnesses
+   ```
+
+   The `version` line must show the release version without its initial `v`, for example `1.2.3`.
+1. Assign the package to other Macs only if the MDM tool reports the install on the test Mac as successful, and the `version` matches.
+
+The macOS app (PKG) type of Intune detects an install by the bundle ID of an app bundle, or by a package receipt with that ID. This package doesn't install an app bundle, and its package receipt is `com.konghq.kong-harnesses`. If Intune doesn't report the install on the test Mac as successful, or the `version` doesn't match, deploy the package with an MDM tool that can check the release version. That tool can check the `version` in the receipt, or the output of `/usr/local/bin/kong-harnesses version`, which is the release version with its initial `v`, for example `v1.2.3`.
 
 ## Windows installer
 
