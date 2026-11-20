@@ -26,6 +26,8 @@ related_resources:
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - text: kong-harnesses doctor
     url: /kong-harnesses/doctor/
+  - text: Deploy the kong-harnesses Windows installer with Intune
+    url: /kong-harnesses/deploy-with-intune/
 ---
 
 A developer who installs kong-harnesses for themselves follows the steps on the [kong-harnesses page](/kong-harnesses/#install-kong-harnesses). An administrator who installs it for every user of a computer, or deploys it to many computers with a mobile device management (MDM) tool, uses the installer for the platform: the installer package (`.pkg`) on macOS, the Windows installer (`.msi`), or the `.deb` or `.rpm` package on Linux.
@@ -111,13 +113,13 @@ A newer package replaces the installed version. To remove kong-harnesses:
    ```
 
    If the command fails and prints `No receipt for 'com.konghq.kong-harnesses' found at '/'.`, the installer package didn't install kong-harnesses. Skip the next steps.
-1. Check that the install path has a file, not a link:
+1. Check that the path of the executable has no links:
 
    ```sh
-   ls -l /usr/local/bin/kong-harnesses
+   /bin/ls -ld /usr/local /usr/local/bin /usr/local/bin/kong-harnesses
    ```
 
-   The output must start with `-`. If the command prints `No such file or directory`, skip the next three steps. If the output starts with `l`, another install put a link at this path, so skip the next three steps. If the link goes to a path that contains `Cellar`, Homebrew installed this copy, so remove it with Homebrew.
+   The lines of `/usr/local` and `/usr/local/bin` must start with `d`, and the line of `/usr/local/bin/kong-harnesses` must start with `-`. If a line starts with something else, or the command prints `No such file or directory`, skip the next three steps, because `rm` can delete a file in another folder through a link. If `/usr/local/bin/kong-harnesses` is a link to a path that contains `Cellar`, Homebrew installed this copy, so remove it with Homebrew.
 1. Show the checksum that the package receipt has for the executable:
 
    ```sh
@@ -137,7 +139,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    sudo rm /usr/local/bin/kong-harnesses
    ```
 
-1. Check that the folders of the license and notices are folders, not links:
+1. Check that the path of the license and notices has no links:
 
    ```sh
    /bin/ls -ld /usr/local /usr/local/share /usr/local/share/doc /usr/local/share/doc/kong-harnesses
@@ -163,7 +165,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    sudo pkgutil --forget com.konghq.kong-harnesses
    ```
 
-To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the bundle ID of an app bundle, or by a package receipt with that ID. This package installs no app bundle, and its package receipt is `com.konghq.kong-harnesses`. Assign the package to one test Mac first. Assign it to other Macs only if Intune reports the install on the test Mac as successful, and `pkgutil --pkg-info com.konghq.kong-harnesses` on the test Mac shows the package. If it doesn't, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
+To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the bundle ID of an app bundle, or by a package receipt with that ID. This package doesn't install an app bundle, and its package receipt is `com.konghq.kong-harnesses`. Assign the package to one test Mac first. For a new release, use a test Mac that has the previous release, because a receipt of the previous release also passes the receipt check. Assign the package to other Macs only if Intune reports the install on the test Mac as successful, and `pkgutil --pkg-info com.konghq.kong-harnesses` on the test Mac shows a `version` that is the release version without its initial `v`, for example `1.2.3`. If either check fails, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
 
 ## Windows installer
 
@@ -186,64 +188,7 @@ Make sure that only administrators can change `C:\Program Files\Kong\kong-harnes
 
 ### Deploy the Windows installer with Intune
 
-Releases don't include an `.intunewin` file, so you wrap the installer yourself. Add one Windows app (Win32) for each processor type.
-
-Wrap the installer:
-
-1. Check the installer as in [Check a downloaded file](#check-a-downloaded-file), and put the installer alone in an empty folder.
-1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), and open PowerShell in the folder that contains `IntuneWinAppUtil.exe`.
-1. Wrap the installer:
-
-   ```powershell
-   .\IntuneWinAppUtil.exe -c '<folder>' -s '<folder>\<file>' -o '<output-folder>'
-   ```
-
-   Use full paths. `<output-folder>` must be a folder other than `<folder>`.
-
-Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags** page between the pages of these steps, click **Next** on that page.
-
-1. Navigate to **Apps** > **All Apps**.
-1. Click **Create**.
-1. In the **Select app type** pane, select **Windows**.
-1. Select **Windows app (Win32)**.
-1. Click **Select**.
-1. On the **App information** page, click **Select app package file**.
-1. In the **App package file** pane, click the browse button.
-1. Select the `.intunewin` file.
-1. Click **OK**.
-1. In the **Name** field, enter a name that contains the release and the processor type, for example `kong-harnesses v1.2.3 x64`.
-1. Click **Edit description**.
-1. In the description field, enter `Installs kong-harnesses for every user of the computer`.
-1. Click **OK**.
-1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
-1. Click **Next**.
-1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
-1. In the **Install behavior** section, select **System**.
-1. From the **Device restart behavior** dropdown menu, select "No specific action". This setting stops the install from restarting the device.
-1. Click **Next**.
-1. On the **Requirements** page, in the **Check operating system architecture** section, select **Yes. Specify the systems the app can be installed on.**
-1. Select the **Install on x64 system** checkbox for the `_windows_amd64.msi` installer, or the **Install on ARM64 system** checkbox for the `_windows_arm64.msi` installer. Make sure that no other architecture checkbox is selected, because the two installers replace each other.
-1. From the **Minimum operating system** dropdown menu, select the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
-1. Click **Next**.
-1. On the **Detection rules** page, from the **Rules format** dropdown menu, select "Manually configure detection rules".
-1. Click **Add**.
-1. From the **Rule type** dropdown menu, select "MSI". Keep the product code that Intune reads from the installer.
-1. Click **OK**.
-1. Click **Next**.
-1. On the **Dependencies** page, click **Next**.
-1. On the **Supersedence** page, for a new release, add the app of the previous release. Skip these steps for the first release:
-   1. Click **Add**.
-   1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
-   1. Click **Select**.
-   1. Disable **Uninstall previous version**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
-1. Click **Next**.
-1. On the **Assignments** page, under **Required**, click **Add group**.
-1. Select the groups of devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so select the same groups for each release.
-1. Click **Select**.
-1. Click **Next**.
-1. On the **Review + create** page, click **Create**.
-
-Add a new app in the same way for each new release. Intune allows at most 10 superseded apps in a supersedence graph, including apps that the new app supersedes through other apps, and each release adds one. When all assigned devices run the new release, remove the assignments of the previous app. Then open the **Properties** of the new app, click **Edit** next to **Supersedence**, remove the previous app, click **Review + save** and **Save**, and delete the previous app.
+Releases don't include an `.intunewin` file, so you wrap the installer and add one Windows app (Win32) for each processor type and each release. For the steps, see [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/deploy-with-intune/).
 
 ## Linux packages
 

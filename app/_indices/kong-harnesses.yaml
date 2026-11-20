@@ -5,6 +5,7 @@ groups:
       - items:
           - path: /kong-harnesses/
           - path: /kong-harnesses/install/
+          - path: /kong-harnesses/deploy-with-intune/
 
   - title: CLI References
     sections:
