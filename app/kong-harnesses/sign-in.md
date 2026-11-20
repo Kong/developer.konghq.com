@@ -48,7 +48,7 @@ For a profile that uses a key from your administrator, `login` asks for the key 
 
 A profile for a CI job reads its key from `KONG_HARNESSES_STATIC_KEY` each time the agent CLI asks for one. kong-harnesses doesn't save this key, and `login` refuses the profile. Set the variable in the environment where the agent CLI starts.
 
-OpenCode and Hermes Agent sign in through their own plugin, so `login`, `logout`, `credential` and `token` refuse `--client opencode` and `--client hermes`. Use the plugin commands for those agent CLIs. For OpenCode, start OpenCode once after activation, so that it installs the plugin. Then run `opencode auth login`, select the provider that has the name of the profile, and restart OpenCode to load the model list. To sign out of OpenCode, run `opencode auth logout`. For Hermes Agent, sign in with `hermes auth add kong-ai-gateway`. To remove all credentials of the `kong-ai-gateway` provider, run `hermes auth logout kong-ai-gateway`. To remove one credential from a pool, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with its index, entry ID or exact label.
+OpenCode and Hermes Agent sign in through their own plugin, so `login`, `logout`, `credential` and `token` refuse `--client opencode` and `--client hermes`. Use the plugin commands for those agent CLIs. For OpenCode, start OpenCode once after activation, so that it installs the plugin. Then sign in with `opencode auth login PROFILE_NAME` in OpenCode 2, or with `opencode auth login --provider PROFILE_NAME` in OpenCode 1, and restart OpenCode to load the model list. If the sign-in fails with `Integration not found` or `Unknown provider`, OpenCode couldn't install the plugin. Run `kong-harnesses doctor --profile PROFILE_NAME --client opencode`, and follow its `npm` and `plugin` steps. To sign out of OpenCode, run `opencode auth logout`. For Hermes Agent, sign in with `hermes auth add kong-ai-gateway`. To remove all credentials of the `kong-ai-gateway` provider, run `hermes auth logout kong-ai-gateway`. To remove one credential from a pool, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with its index, entry ID or exact label.
 
 You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you. Run `login` first for a profile that uses a key from your administrator, because only `login` asks for the key. To use your own Claude subscription, run `kong-harnesses login --profile PROFILE_NAME` for your identity at the gateway before you start {{ site.claude_code }}. Then sign in to Claude with `/login` in {{ site.claude_code }}. For a profile that signs in through an identity provider, also run `login` before you first use an agent CLI that gets its token from [`token`](/kong-harnesses/token/), such as the `codex`, `omp` and `pi` clients, because `token` doesn't open a browser.
 
@@ -99,7 +99,7 @@ kong-harnesses login --profile PROFILE_NAME --replace
 
 For a profile that uses a key from your administrator and already has a saved key, `login --replace` removes the saved key, asks for the new key, and saves it. When the profile doesn't have a saved sign-in or key yet, `login --replace` says that no usable login exists, so run a plain `login`. When the saved sign-in or key is damaged or doesn't match the profile, `login --replace` says that the sign-in needs attention, so also run a plain `login`.
 
-When the saved sign-in is damaged or doesn't match the profile, a plain `login` asks you to type the profile name to confirm. kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in. The identity provider can keep the old authorization active. When the secret store is locked or refuses access, `login` doesn't ask, and prints the line for that problem from the table in [When kong-harnesses can't give an access token](#when-kong-harnesses-can-t-give-an-access-token).
+When the saved sign-in is damaged or doesn't match the profile, a plain `login` asks you to type the profile name to confirm. kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in. The identity provider can keep the old authorization active. When the secret store is locked, refuses access or doesn't run in the session, `login` doesn't ask, and prints the line for that problem from the table in [When kong-harnesses can't give an access token](#when-kong-harnesses-can-t-give-an-access-token).
 
 When the last renewal stopped before it finished, a plain `login` starts a new sign-in without a confirmation. If the new sign-in fails, the next request for an access token can still resume the renewal.
 
@@ -114,7 +114,7 @@ kong-harnesses logout --profile PROFILE_NAME
 When the profile has a saved sign-in, `logout` asks you to type the profile name to confirm. What it does depends on the profile and the saved sign-in:
 
 - When the profile names a revocation endpoint and the saved sign-in can be used, `logout` revokes the sign-in at the identity provider, then removes it from this computer.
-- When `logout` can't confirm that the identity provider revoked all authorizations for the profile, it disables the sign-in on this computer and says that the sign-out at the identity provider is unconfirmed. This happens when the identity provider doesn't confirm the revocation, and when this computer has a sign-in from an earlier release that kong-harnesses can't read. `logout` removes that earlier sign-in without a revocation, so a later `logout` can show `Already signed out` while its authorization is still active. Check the authorization at the identity provider, and revoke it there if it's still active. Then run `logout` again to finish the removal from this computer, or to confirm that the sign-in is gone from it.
+- When `logout` can't confirm that the identity provider revoked all authorizations for the profile, it disables the sign-in on this computer and says that the sign-out at the identity provider is unconfirmed. This happens when the identity provider doesn't confirm the revocation, and when this computer has a sign-in from an earlier release that kong-harnesses can't read. `logout` removes that earlier sign-in without a revocation, and it reports the unconfirmed sign-out also when the removal from this computer fails. A later `logout` can show `Already signed out` while the earlier authorization is still active. Check the authorization at the identity provider, and revoke it there if it's still active. Then run `logout` again to finish the removal from this computer, or to confirm that the sign-in is gone from it.
 - When the profile doesn't name a revocation endpoint, `logout` says that it can't confirm the sign-out at the identity provider. It asks before it removes the sign-in from this computer.
 - When the saved sign-in is damaged or doesn't match the profile, `logout` removes it from this computer only.
 - When the profile doesn't have a sign-in on this computer, `logout` doesn't ask you to confirm, and shows `Already signed out`. It also removes any keys of gateway MCP servers that are left.
@@ -128,7 +128,7 @@ For a profile that uses a key from your administrator, `logout` removes the key 
 
 When the [`credential`](/kong-harnesses/credential/) command can't give {{ site.claude_code }} an access token, it prints one line that starts with `Error:`, and {{ site.claude_code }} shows that line. The line says what's wrong, and many lines also say what to run. The table lists the start of each line after `Error:`. When the browser doesn't open for a first sign-in, kong-harnesses also prints the sign-in URL. Open the URL in a browser on the same computer while kong-harnesses waits for the sign-in. When kong-harnesses stops waiting, the URL no longer works, so run `kong-harnesses login --profile PROFILE_NAME` to get a new URL.
 
-In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems. Every kong-harnesses command prints the `profile storage is unavailable` and `the profiles in FOLDER could not be moved` lines, because kong-harnesses checks the profile folder before the command runs. [`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the session has no `XDG_RUNTIME_DIR`, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
+In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems. Commands that load the profile store can print the `profile storage is unavailable` and `the profiles in FOLDER could not be moved` lines, because kong-harnesses checks the profile folder before the command runs. [`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the session has no `XDG_RUNTIME_DIR`, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
 
 {% table %}
 columns:
@@ -203,8 +203,8 @@ rows:
     cause: The request stopped before kong-harnesses wrote the token.
     fix: Try again.
   - message: "`access token output could not be prepared` or `access token output could not be completed`"
-    cause: kong-harnesses couldn't prepare or complete the output of the token.
-    fix: "Try again. If it keeps failing, run `kong-harnesses doctor --profile PROFILE_NAME`."
+    cause: kong-harnesses got a token, but it couldn't prepare or complete the output of the token, for example because the agent CLI stopped reading.
+    fix: "Restart the agent CLI and try again. If a script runs the command, check that its output destination accepts data."
   - message: "`fresh login is required`"
     cause: "`token` doesn't open a browser, so it can't start a new sign-in, and the saved sign-in can't be renewed: the identity provider rejected it during renewal, the sign-in is missing or expired, or the saved sign-in is damaged or doesn't match the profile. `token` also prints this line when the token that it got isn't a valid bearer token."
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
@@ -230,13 +230,13 @@ columns:
 rows:
   - message: "`OpenCode owns authentication`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client opencode`."
-    fix: "Run `opencode auth login`, select the provider that has the name of the profile, and restart OpenCode. To sign out, run `opencode auth logout`."
+    fix: "Follow the OpenCode steps in [Sign in to a profile](#sign-in-to-a-profile). If OpenCode says `Integration not found` or `Unknown provider`, run `kong-harnesses doctor --profile PROFILE_NAME --client opencode`, and follow its `npm` and `plugin` steps. To sign out, run `opencode auth logout`."
   - message: "`the Kong AI Gateway plugin owns authentication for Hermes`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client hermes`."
     fix: "To sign in, run `hermes auth add kong-ai-gateway`. To remove all credentials of the `kong-ai-gateway` provider, run `hermes auth logout kong-ai-gateway`. To remove one credential from a pool, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with its index, entry ID or exact label."
   - message: "`login requires an interactive controlling terminal` or `logout requires an interactive controlling terminal`"
     cause: "`login` or `logout` ran without a terminal, for example in a script or a CI job."
-    fix: "Run the command in a terminal. In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`."
+    fix: "Run the command in a terminal. In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`, set the variable in the job, and don't run `login` for that profile."
   - message: "`login accepts only one mode flag`"
     cause: "`login` got both `--replace` and `--diagnostics`."
     fix: "Run `login` with one of the two flags."
