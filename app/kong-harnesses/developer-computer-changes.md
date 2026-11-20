@@ -49,18 +49,18 @@ kong-harnesses setup ./PROFILE_NAME.json
 `setup` runs `profile import`, `login` and `profile activate`, in this order.
 Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
 It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
-Without `--client`, `setup` sets up every installed agent CLI that the profile lists.
+When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists.
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
-With `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
+When the developer adds `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
 The sign-in step still opens the browser, or asks for the static key.
 Use `--auto-approve` only in an onboarding script that your organization owns, because it skips the developer's check of the gateway and the identity provider.
 When a step fails, `setup` stops and names the step.
 Fix the reported error, then run the same `setup` command again.
 A step that is already done changes nothing: a sign-in that works stays, and an agent CLI that is already set up stays as it is.
 When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` names the fix.
-Without `--client`, `setup` leaves that agent CLI out and sets up the others.
-With `--client`, `setup` stops.
+When the command doesn't name `--client`, `setup` leaves that agent CLI out and sets up the others.
+When the command names `--client`, `setup` stops.
 When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
 Fix the cause, then run `setup` again.
 
@@ -127,7 +127,7 @@ rows:
 
 `profile activate` also writes the settings of each other agent CLI that the profile sets up.
 For these settings, see [`profile activate`](/kong-harnesses/profile/activate/).
-It refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
+`profile activate` refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
 In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
 
 ## Cleanup
