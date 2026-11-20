@@ -5,6 +5,12 @@ groups:
       - items:
           - path: /kong-harnesses/
 
+  - title: How-to Guides
+    sections:
+      - items:
+          - path: /kong-harnesses/roll-out-claude-code-through-mdm/
+          - path: /kong-harnesses/maintain-a-claude-code-fleet/
+
   - title: CLI References
     sections:
       - title: Get Started
