@@ -315,11 +315,28 @@ rows:
       See [Null handling](#null-handling).
     example: |
       `has(principal.metadata.department) && principal.metadata.department == "finance"`
+  - field: "`principal.groups`"
+    type: "`list<map>`"
+    description: |
+      The groups and teams of the authenticated Principal, including memberships through nested teams. Each entry has an `id` and a `type` (`group` or `team`). Match on the group ID, not the group name.
+      This shape applies to expressions that the data plane evaluates, such as plugin conditions and ACL rules. [Token Vault](/kong-identity/token-vault/) credential selectors run in {{site.konnect_short_name}} and use their own fields.
+      `null` if no Principal is authenticated or the Principal has no groups.
+      Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
+    example: |
+      `principal.groups != null && principal.groups.exists(g, g.id == "a1b2c3d4-...")`
+  - field: "`principal.type`"
+    type: "`string`"
+    description: |
+      The kind of the authenticated entity, as Kong Identity reports it: `principal`, `group`, or `project`. Agents and virtual keys report `principal`. This is not the Kong Identity principal type (`user` or `agent`).
+      `null` if no Principal is authenticated, or if the Principal comes from an older control plane.
+      Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
+    example: |
+      `principal.type == "principal"`
 {% endtable %}
 <!--vale on-->
 
 {:.info}
-> `consumer.*` and `consumer_group.*` fields are only populated after an authentication plugin (such as Key Auth or Basic Auth) has run. On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
+> `consumer.*` and `consumer_group.*` fields are only populated after an authentication plugin (for example, Key Auth or Basic Auth) has run. On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
 
 #### Plugin state fields
 
@@ -379,6 +396,8 @@ You can compare these directly using `null`:
 consumer.id != null
 route.tags != null && "internal" in route.tags
 ```
+
+If the Principal has no groups, `principal.groups` is `null`, not an empty list. Test for `null` before you call `exists()` or `size()`.
 
 The `kong.ctx.shared` and `principal.metadata` fields are maps whose inner keys are not pre-populated by {{site.base_gateway}}.
 Accessing a missing key in these maps causes a runtime error.
