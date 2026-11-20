@@ -38,104 +38,51 @@ function userFacingRelease(release) {
   return kept.length ? [heading.trim(), ...kept].join('\n\n') : '';
 }
 
-// The repository is internal, so links into it break for readers of the site.
-// The Mesh changelog drops them too (mesh.ignored_links_regex).
-const repositoryPaths = new Map([
-  ['github.com', '/kong/kong-harnesses'],
-  ['www.github.com', '/kong/kong-harnesses'],
-  ['api.github.com', '/repos/kong/kong-harnesses'],
-  ['raw.githubusercontent.com', '/kong/kong-harnesses'],
-]);
-// A link address as Markdown writes it, with or without a scheme. Each one is parsed
-// before it is judged, so a port, letter case or percent-encoding cannot hide it.
-const address = String.raw`(?:https?:)?//[^\s)>]*`;
-// A last check of the plain text, for an address that is not a link, as in a code span.
-const anyInternalUrl = /(?:github\.com|api\.github\.com\/repos|raw\.githubusercontent\.com)\/kong\/kong-harnesses(?![\w.-])/i;
-// The title forms that CommonMark allows after a link address.
-const titleForms = String.raw`"[^"]*"|'[^']*'|\([^)]*\)`;
-const linkTitle = String.raw`(?:\s+(?:${titleForms}))?`;
-// A link whose address a later pass emptied, which the page would show as text.
-const emptiedLink = new RegExp(String.raw`\]\(\s*(?:${titleForms})?\s*\)`);
-// Marks where a link was removed, so the cleanup touches only the text next to it.
+// The repository is internal, so links into it break for readers of the site, and the
+// changelog has no other links. So every link goes and keeps only its text, which needs
+// no list of the forms an address into the repository can take. The Mesh changelog
+// drops such links too (mesh.ignored_links_regex). check-changelog-links.rb then renders
+// the result as the site does and stops the sync if anything still leads there.
 const removed = '\u0000';
-// A relative address resolves against the page, as a reader's browser does.
-const page = 'https://developer.konghq.com/kong-harnesses/changelog/';
-
-// The path in the repository that the address names, such as "/commit/c0ffee1", or
-// null for an address outside it. An address that cannot be parsed stops the sync,
-// because the check cannot tell where it leads.
-function repositoryPath(link) {
-  let url;
-  let path;
-  try {
-    url = new URL(link, page);
-    path = decodeURIComponent(url.pathname).toLowerCase();
-  } catch {
-    throw new Error(`The changelog has a link address that is not a valid URL: ${link}`);
-  }
-  const prefix = repositoryPaths.get(url.hostname.replace(/\.$/, ''));
-  if (!prefix || !path.startsWith(prefix) || /^[\w.-]/.test(path.slice(prefix.length))) {
-    return null;
-  }
-  return path.slice(prefix.length);
-}
+const linkTitle = String.raw`(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?`;
+const inlineLink = new RegExp(
+  String.raw`(!?)\[([^\]]*)\]\(\s*(<[^>\n]*>|[^()\s]*(?:\([^()\s]*\)[^()\s]*)*)${linkTitle}\s*\)`,
+  'g',
+);
+const definition = /^ {0,3}\[([^\]]+)\]:[ \t]*(\S*).*(?:\n|$)/gm;
 
 // An issue or pull request number, or the hash of a commit link, means nothing without
 // its link. A word of hex letters, such as "defaced", is a hash only on a commit link.
-function linkText(text, path) {
-  const reference = /^#?\d+$/.test(text) || (/^\/commits?\//.test(path) && /^[0-9a-f]{7,40}$/i.test(text));
+function linkText(text, address) {
+  const reference = /^#?\d+$/.test(text) || (/\/commits?\//i.test(address) && /^[0-9a-f]{7,40}$/i.test(text));
   return reference ? removed : text;
 }
 
-function assertNoInternalLinks(text) {
-  const addresses = [
-    ...[...text.matchAll(/\]\(\s*<?([^\s)>]*)/g)].map((match) => match[1]),
-    ...[...text.matchAll(/^ {0,3}\[[^\]]+\]:[ \t]*<?([^\s>]+)/gm)].map((match) => match[1]),
-    ...[...text.matchAll(/<([a-z][a-z0-9+.-]*:[^\s>]*)>/gi)].map((match) => match[1]),
-    ...[...text.matchAll(/(?:https?:)?\/\/[^\s)>\/][^\s)>]*/gi)].map((match) => match[0]),
-  ];
-  if (anyInternalUrl.test(text) || emptiedLink.test(text) || addresses.some((link) => repositoryPath(link) !== null)) {
-    throw new Error('A link into the internal kong-harnesses repository is left, or left broken, in the changelog.');
-  }
-}
-
-function withoutInternalLinks(markdown) {
-  if (markdown.includes(removed)) {
-    throw new Error('The changelog contains a NUL character.');
-  }
-  const labels = new Map();
-  const text = markdown
-    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?(${address})>?.*\n?`, 'gim'), (definition, label, link) => {
-      const path = repositoryPath(link);
-      if (path === null) {
-        return definition;
-      }
-      labels.set(label.toLowerCase(), path);
-      return '';
-    })
-    .replace(new RegExp(String.raw`\(\[[^\]]*\]\(\s*<?(${address})>?${linkTitle}\s*\)\)`, 'gi'), (link, url) =>
-      repositoryPath(url) === null ? link : removed,
+function withoutLinks(markdown, labels) {
+  return markdown
+    .split(/(`+[^`]*`+)/)
+    .map((part, index) =>
+      index % 2
+        ? part
+        : part
+            .replace(definition, '')
+            .replace(inlineLink, (_, image, text, address) => (image ? text : linkText(text, address)))
+            .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, text, label) => {
+              const address = labels.get((label || text).toLowerCase());
+              return address === undefined ? link : linkText(text, address);
+            })
+            .replace(/\[([^\]]+)\](?![([:])/g, (link, text) => {
+              const address = labels.get(text.toLowerCase());
+              return address === undefined ? link : linkText(text, address);
+            })
+            .replace(/<[a-z][a-z0-9+.-]*:[^\s<>]*>/gi, removed)
+            .replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s<>]*/gi, removed),
     )
-    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?(${address})>?${linkTitle}\s*\)`, 'gi'), (link, label, url) => {
-      const path = repositoryPath(url);
-      return path === null ? link : linkText(label, path);
-    })
-    .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, label, reference) => {
-      const path = labels.get((reference || label).toLowerCase());
-      return path === undefined ? link : linkText(label, path);
-    })
-    .replace(/\[([^\]]+)\](?![([:])/g, (link, label) => {
-      const path = labels.get(label.toLowerCase());
-      return path === undefined ? link : linkText(label, path);
-    })
-    .replace(/<(https?:\/\/[^\s>]*)>/gi, (link, url) => (repositoryPath(url) === null ? link : removed))
-    .replace(/https?:\/\/[^\s)>]*/gi, (url) => (repositoryPath(url) === null ? url : removed))
+    .join('')
     // Brackets that held only removed links go, then each mark takes one space with it.
     .replace(new RegExp(String.raw`\(\s*(?:${removed}\s*)+\)`, 'g'), removed)
     .replace(new RegExp(`\\(${removed}+ ?`, 'g'), '(')
     .replace(new RegExp(` ?${removed}+`, 'g'), '');
-  assertNoInternalLinks(text);
-  return text;
 }
 
 // Kramdown reads <name> outside a code span as an HTML tag and shows nothing, so a
@@ -143,7 +90,7 @@ function withoutInternalLinks(markdown) {
 function withEscapedTags(markdown) {
   return markdown
     .split(/(`+[^`]*`+)/)
-    .map((part, index) => (index % 2 ? part : part.replace(/<(?!https?:\/\/|mailto:)/g, '&lt;')))
+    .map((part, index) => (index % 2 ? part : part.replace(/</g, '&lt;')))
     .join('');
 }
 
@@ -158,12 +105,19 @@ function withEscapedTags(markdown) {
 // the final release of the same version is published. The candidate's section stays
 // after that, because release-please takes the version in its manifest, the candidate,
 // as the last release, so the final section lists only the commits after it. Text
-// before the first heading goes. A heading with no version, or no heading for `highest`, the highest published
-// release, stops the sync, so a changelog that lost its sections cannot empty the page.
-// So does a changelog with no entries for users left.
+// before the first heading goes. A heading with no version, or no heading for `highest`,
+// the highest published release, stops the sync, so a changelog that lost its sections
+// cannot empty the page. So does a changelog with no entries for users left. Links are
+// removed only from the text that is kept, so a section that is left out cannot stop
+// the sync.
 export function publicChangelog(markdown, { published, highest }) {
+  if (markdown.includes(removed)) {
+    throw new Error('The changelog contains a NUL character.');
+  }
+  const labels = new Map([...markdown.matchAll(definition)].map((match) => [match[1].toLowerCase(), match[2]]));
   const versions = new Set();
-  const releases = withEscapedTags(withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, '')))
+  const kept = markdown
+    .replace(/^# Changelog\s*\n/, '')
     .split(/^(?=## )/m)
     .filter((release) => {
       if (!release.startsWith('## ')) {
@@ -175,15 +129,19 @@ export function publicChangelog(markdown, { published, highest }) {
       }
       versions.add(version);
       return published.has(version) && published.has(version.split('-')[0]);
-    });
+    })
+    .map(userFacingRelease)
+    .filter(Boolean);
   if (!versions.has(highest)) {
     throw new Error(`The changelog has no section for ${highest}, the highest published release.`);
   }
-  const kept = releases.map(userFacingRelease).filter(Boolean);
   if (!kept.length) {
     throw new Error('The changelog has no entries for users in its published releases.');
   }
-  return kept.join('\n\n').replace(/\n{3,}/g, '\n\n').concat('\n');
+  return withEscapedTags(withoutLinks(kept.join('\n\n'), labels))
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd()
+    .concat('\n');
 }
 
 export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = process.env }) {

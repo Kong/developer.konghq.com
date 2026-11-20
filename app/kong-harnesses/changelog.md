@@ -31,7 +31,7 @@ related_resources:
     url: /changelogs/
 ---
 
-This page lists the changes for users in recent {{site.kong_harnesses}} releases, newest first. A release with no changes for users, such as one with only build or documentation changes, is not listed.
+This page lists the changes for users in recent {{site.kong_harnesses}} releases, newest first. A release with no changes for users, such as one with only build or documentation changes, is not listed. A release that had a release candidate, such as `0.18.0-rc.1`, lists only the changes after that candidate, so also read the release candidate sections of the same version.
 
 If a release needs a step when you upgrade, that release lists the step under **⚠ BREAKING CHANGES**. Do these steps after you install the new release, before you use it.
 
