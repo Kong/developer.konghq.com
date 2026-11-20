@@ -479,9 +479,9 @@ kuma
 Kuma's
 kumactl
 kustomization
-KWallet
 kustomizations
 kustomize
+KWallet
 keystores
 kv
 Lakera

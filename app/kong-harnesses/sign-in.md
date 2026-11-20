@@ -26,11 +26,11 @@ related_resources:
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 ---
 
-kong-harnesses signs you in to {{site.ai_gateway}} and gives your agent CLI, such as {{ site.claude_code }}, a short-lived access token each time the agent CLI asks for one. The profile decides how you sign in: through your company's identity provider in a browser, or with a key from your administrator. kong-harnesses keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. When an access token expires, kong-harnesses gets a new one from the identity provider without opening the browser.
+kong-harnesses signs you in to {{ site.ai_gateway }} and gives your agent CLI, such as {{ site.claude_code }}, an access token each time the agent CLI asks for one. The profile decides how you sign in: through your company's identity provider in a browser, or with a key from your administrator. kong-harnesses keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. For a profile that signs in through an identity provider, kong-harnesses gets a new access token from the identity provider when the old one expires, without opening the browser.
 
 ## Sign in to a profile
 
-Run the `login` command with the name of the profile:
+Run the [`login`](/kong-harnesses/login/) command with the name of the profile:
 
 ```sh
 kong-harnesses login --profile <profile>
@@ -40,11 +40,13 @@ For a profile that signs in through an identity provider, kong-harnesses opens y
 
 For a profile that uses a key from your administrator, `login` asks for the key and doesn't show it as you type.
 
+A profile for a CI job reads its key from `KONG_HARNESSES_STATIC_KEY` each time the agent CLI asks for one. kong-harnesses doesn't save this key, and `login` refuses the profile. Set the variable in the environment where the agent CLI starts.
+
 You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you.
 
 ## Check the sign-in
 
-Show the sign-in of a profile with the `status` command, which doesn't use the network:
+Show the sign-in of a profile with the [`status`](/kong-harnesses/status/) command, which doesn't use the network:
 
 ```sh
 kong-harnesses status --profile <profile>
@@ -67,6 +69,10 @@ rows:
     meaning: "The saved sign-in can't be used. Run `kong-harnesses login --profile <profile>`."
   - state: "`Usable; an interrupted refresh resumes on the next call`"
     meaning: The last renewal stopped before it finished. The sign-in still works, and the next request for an access token resumes the renewal.
+  - state: "`KONG_HARNESSES_STATIC_KEY is unset or holds no valid key`"
+    meaning: "The profile reads its key from the environment, and the variable doesn't hold a valid key. Set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator."
+  - state: "`Managed by the client`"
+    meaning: "The profile uses your own Claude subscription, and {{ site.claude_code }} keeps the sign-in. Sign in to Claude in {{ site.claude_code }} with `/login`."
 {% endtable %}
 
 To check the whole setup, including a request to the gateway, run [`kong-harnesses doctor`](/kong-harnesses/doctor/).
@@ -85,7 +91,7 @@ When the saved sign-in can't be used, a plain `login` finds the problem and asks
 
 ## Sign out
 
-Remove the sign-in from this computer with the `logout` command:
+Remove the sign-in from this computer with the [`logout`](/kong-harnesses/logout/) command:
 
 ```sh
 kong-harnesses logout --profile <profile>
@@ -97,7 +103,7 @@ For a profile that uses a key from your administrator, `logout` removes the key 
 
 ## When kong-harnesses can't give an access token
 
-When kong-harnesses can't give {{ site.claude_code }} an access token, it prints one line, and {{ site.claude_code }} shows that line. The line says what's wrong and what to run. In a terminal, `token`, `status` and `login` print the same line for many of these problems.
+When the [`credential`](/kong-harnesses/credential/) command can't give {{ site.claude_code }} an access token, it prints one line, and {{ site.claude_code }} shows that line. The line says what's wrong and what to run. In a terminal, [`token`](/kong-harnesses/token/), `status` and `login` print the same line for many of these problems.
 
 {% table %}
 columns:
@@ -113,7 +119,7 @@ rows:
     fix: "Run `kong-harnesses login --profile <profile>`."
   - message: "`the last renewal of this sign-in did not finish`"
     cause: A renewal stopped before it finished. The saved sign-in still works.
-    fix: "Nothing: the next request resumes the renewal. If requests keep failing, run `kong-harnesses login --profile <profile>`. `login` replaces the saved sign-in only after the new sign-in is saved, so a sign-in that fails or that you cancel leaves the old one as it was."
+    fix: "Nothing: the next request resumes the renewal. If requests keep failing, run `kong-harnesses login --profile <profile>`. If the new sign-in fails, the old one stays as it was."
   - message: "`the sign-in server cannot be reached`"
     cause: kong-harnesses can't reach the identity provider.
     fix: "Check your network or VPN, or run `kong-harnesses doctor --profile <profile>`."
@@ -136,7 +142,7 @@ rows:
     cause: The Linux keyring is locked.
     fix: Unlock the keyring, then try again.
   - message: "`your system password store refused access to your sign-in`"
-    cause: The Linux keyring refused access to the sign-in.
+    cause: The system password store refused access to the sign-in.
     fix: "Run `kong-harnesses login --profile <profile>`."
   - message: "`Windows cannot save or read your sign-in in this session`"
     cause: The Windows session can't use DPAPI, for example an SSH session that signed in with a key.
@@ -155,7 +161,25 @@ rows:
     fix: "Set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator."
   - message: "`a proxy is set for the plain-HTTP gateway`"
     cause: "The profile uses an `http://` gateway on this computer, and a proxy variable applies to the gateway host where the agent CLI starts. The proxy could read the access token."
-    fix: "Add the gateway host to `NO_PROXY` where the agent CLI starts, then try again."
+    fix: "Add the gateway host to `NO_PROXY` where the agent CLI starts, then try again. For a gateway at `[::1]`, use `http://127.0.0.1` as the gateway address instead, because clients read an IPv6 address in `NO_PROXY` differently."
+  - message: "`selected profile does not exist`"
+    cause: kong-harnesses doesn't have a profile with this name.
+    fix: "Run `kong-harnesses profile list` to see the installed profiles."
+  - message: "`selected profile is invalid`"
+    cause: The saved profile can't be read.
+    fix: Install the profile again from a trusted source.
+  - message: "`selected profile uses an unsupported format`"
+    cause: The profile uses a format that this kong-harnesses build doesn't support.
+    fix: Install the profile again with this kong-harnesses build.
+  - message: "`the profile installed for every user can be changed by an account that is not an administrator`"
+    cause: kong-harnesses doesn't use a profile for every user that an account without administrator rights can change.
+    fix: Ask your administrator to install the profile again.
+  - message: "`this profile uses your own Claude subscription`"
+    cause: "The profile uses your own Claude subscription, so {{ site.claude_code }} sends its own sign-in, and kong-harnesses doesn't give it a token."
+    fix: "Sign in to Claude in {{ site.claude_code }} with `/login`."
+  - message: "`credential operation could not complete`"
+    cause: kong-harnesses stopped for a reason that it can't name.
+    fix: "Try again later. If it keeps failing, run `kong-harnesses doctor --profile <profile>`."
 {% endtable %}
 
 ## Find out why a sign-in fails
