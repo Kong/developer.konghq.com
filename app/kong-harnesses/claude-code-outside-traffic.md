@@ -33,7 +33,8 @@ A {{site.kong_harnesses}} profile sends the {{ site.claude_code }} model request
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and other requests straight to Anthropic, GitHub, Datadog and other hosts.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
-If your network policy says that all {{ site.claude_code }} traffic must pass through the gateway, keep every feature in the following tables off.
+When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
+It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
 `kong-harnesses profile create` writes that profile for you, unless you turn on Anthropic telemetry when it asks.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
@@ -66,7 +67,7 @@ rows:
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
-    destination: "`api.anthropic.com`"
+    destination: "`api.anthropic.com`. {{ site.claude_code }} skips the check with a gateway key, and when the nonessential traffic switch is on. With `fast_mode` set to `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available."
     member: "`fast_mode`"
     cost: Developers can't use fast mode.
   - traffic: WebFetch domain check
@@ -78,7 +79,7 @@ rows:
     member: "`connectors`"
     cost: "{{ site.claude_code }} doesn't load the MCP connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
-    destination: "Anthropic, and optionally a GitHub issue on `github.com`. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
+    destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally a GitHub issue on `github.com`. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
     member: "`bug_command` and `feedback_command`"
     cost: "Developers can't send a conversation to Anthropic. Each member turns off all of these commands."
   - traffic: Feedback survey
@@ -96,7 +97,7 @@ rows:
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com` and `api.anthropic.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check and the pull request and merge request status badges also turn off. Run `claude update` to install a newer release."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check and the pull request and merge request status badges also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that the nonessential traffic switch turns off, `auto_updates` set to `false` turns off only automatic updates."
 {% endtable %}
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
@@ -123,8 +124,9 @@ For that reason, {{site.kong_harnesses}} refuses a profile that turns on a featu
 A member that the profile leaves out never causes a conflict.
 
 `auto_updates` set to `false` doesn't cause a conflict.
-When the profile turns on one of the features that the nonessential traffic switch turns off, activation leaves that switch out and keeps the feature on.
-Then the update cutoff still applies, but {{ site.claude_code }} fetches the release notes and the list of Anthropic's MCP servers again.
+When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
+{{ site.claude_code }} reads a blank switch as off, so the feature stays on, even when the developer's shell exports the switch.
+Then `auto_updates` set to `false` turns off only automatic updates, and {{ site.claude_code }} fetches the release notes and the list of Anthropic's MCP servers again.
 
 ## Traffic that stays
 
@@ -231,7 +233,7 @@ rows:
   - member: None, for artifacts
     setting: "`enableArtifact: false`, or `CLAUDE_CODE_DISABLE_ARTIFACT=1`"
   - member: "`auto_updates`"
-    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` when the profile doesn't turn on a feature that it turns off"
+    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When the profile turns on a feature that the second switch turns off, activation writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead."
 {% endtable %}
 
 ## {{ site.claude_code }} on the web and in Slack
