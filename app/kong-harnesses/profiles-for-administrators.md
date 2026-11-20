@@ -80,20 +80,23 @@ When the gateway lists a new model whose ID contains `claude` or `anthropic` in 
 For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
-A profile from `profile create` names one model, the `--model` value.
+A profile from `profile create` names one model, the `--model` value, for every {{ site.claude_code }} model role.
+To offer more than one model, export the profile as in [Profile hosting](#profile-hosting), set some roles in `clients.claude-code.models` to other model IDs, such as `opus` and `haiku`, and host the edited file.
+The model picker shows each model that a role names.
 
-In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the AI Model that serves {{ site.claude_code }} uses the Anthropic format.
+In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.claude_code }} uses the Anthropic format.
 {{ site.claude_code }} names the model that the developer uses in the `model` field of each request, by default the profile's `--model` value.
-Add each model ID that the route must accept to `config.route.model.values` of the AI Model, and keep the deployment name or the upstream model ID in `targets[].name`.
+Add each model ID that the route must accept to `config.route.model.values` of the AI Model, and set `targets[].name` to the upstream deployment name or model ID.
 For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
-For the `mantle` mode, use a `bedrock` AI Model Provider, and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
+For the `mantle` mode, use a `bedrock` [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
 
 ## Profile creation
 
 Create the profile on your own computer with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
 Run it without flags to answer the questions instead.
-For the default or the `subscription` sign-in, `profile create` connects to your identity provider, so your computer must trust its certificate first, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
+For the default or the `subscription` sign-in, `profile create` connects to your identity provider, so your computer must trust its certificate first.
+For a private CA, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
 
 The identity provider needs a public OIDC client, without a client secret, for the authorization code flow with PKCE (S256) and refresh tokens.
 Register `http://localhost:9876/callback` as a sign-in redirect URI of the client, or register another loopback URI and pass it with `--redirect-uri`.
@@ -165,7 +168,8 @@ rows:
   - placeholder: "`GATEWAY_ORIGIN`"
     value: |
       The `https://` origin of the gateway without a path, such as `https://ai-gateway.example.com`.
-      Developers' computers must trust the gateway certificate, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
+      Developers' computers must trust the gateway certificate.
+      For a private CA, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
   - placeholder: "`MODEL_NAME`, `FOUNDRY_DEPLOYMENT_NAME` or `BEDROCK_MODEL_ID`"
     value: The model ID that the profile sets for every {{ site.claude_code }} model role, in the format of the provider mode.
 {% endtable %}
@@ -173,10 +177,10 @@ rows:
 `--audience-parameter` sets how the sign-in request names the audience: `resource` (the default), `audience` or `none`.
 Use the value that your identity provider reads.
 
-With these flags, `profile create` reads the endpoints of your identity provider from its OIDC discovery document, saves the profile, and installs it on your computer.
+When you give these flags, `profile create` reads the endpoints of your identity provider from its OIDC discovery document, saves the profile, and installs it on your computer.
 For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
-When the gateway answers that no route matches, `profile create` warns that the agent CLI may not be able to use the gateway, and keeps the agent CLI in the profile.
+When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
 For more options, such as MCP servers that the gateway serves, except in a `subscription` profile, and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
@@ -286,4 +290,4 @@ To change the profile, publish the new file at the same URL or give developers t
 When the change keeps the profile's security identity, developers run the same `setup` command again.
 The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the profile's gateway CA bundle, if it has one.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
-Developers then run `kong-harnesses profile cleanup`, run `setup` again, and sign in again.
+Developers then run `kong-harnesses profile cleanup` and run `setup` again, which signs them in again.
