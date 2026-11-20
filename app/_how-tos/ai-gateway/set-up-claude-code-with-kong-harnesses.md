@@ -324,7 +324,7 @@ rows:
     why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. When the profile uses the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
-    why: It bills at a higher rate, and it needs fast mode access on the Anthropic organization behind the gateway.
+    why: "`profile create` turns it off, because fast mode costs more per token on the API and draws on usage credits on a subscription. It also needs fast mode access on the Anthropic organization behind the gateway."
     recover: "Ask your administrator to set `fast_mode` to `true` in the profile. Fast mode works only on the providers that the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements) list."
   - feature: "`/bug`, `/feedback` and the feedback survey"
     why: They send your conversation or your ratings to Anthropic.

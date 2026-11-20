@@ -60,11 +60,11 @@ columns:
     key: cost
 rows:
   - traffic: Usage metrics
-    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API provider mode, also through the gateway. On a third-party provider such as Azure AI Foundry, usage metrics are off by default."
+    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API provider mode, also through the gateway. When the profile selects a third-party provider, such as Azure AI Foundry, usage metrics are off by default, unless [a host platform](#traffic-that-goes-outside-the-gateway) routes the session."
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
-    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in. {{ site.claude_code }} doesn't fetch feature flags on a third-party provider such as Azure AI Foundry."
+    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in. When the profile selects a third-party provider, such as Azure AI Foundry, {{ site.claude_code }} doesn't fetch feature flags, unless [a host platform](#traffic-that-goes-outside-the-gateway) routes the session."
     member: "`feature_flags`"
     cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the advisor tool, Code Mode, MCP tasks, Claude-drafted feedback, and the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
@@ -136,10 +136,11 @@ Artifacts need a Pro, Max, Ultra, Team or Enterprise plan, a claude.ai sign-in a
 Only that profile signs in to claude.ai, and it always uses the Anthropic API provider mode.
 The [artifacts availability](https://code.claude.com/docs/en/artifacts#availability) conditions name the organization settings and the run contexts that also turn artifacts off.
 In the profile, `artifact` set to `true` also needs `artifact` set to `true` on the gateway route.
+When `feature_flags` is `false`, Claude can't read artifact comments or another organization's public artifact, even while the nonessential traffic switch is blank.
 `enableArtifact: true` doesn't override a `false` from another settings file, from `CLAUDE_CODE_DISABLE_ARTIFACT` or from the organization setting.
 
 On Team and Enterprise plans, an Owner can turn off artifacts for the organization with the **Artifacts** toggle in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts).
-On Enterprise plans with role-based access control, you can also remove the **Artifacts** permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
+If your Enterprise organization uses custom roles, you can also remove the **Artifacts** permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
 
 ### Skill and plugin sync from claude.ai
 
@@ -237,6 +238,11 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 
 Set a profile member to `false` where the table lists one, or set the {{ site.claude_code }} settings directly.
 
+Activation writes the user settings file of {{ site.claude_code }}.
+Command-line flags, the shared project settings and the local project settings [take precedence](https://code.claude.com/docs/en/settings#settings-precedence) over that file, so a repository or a developer can turn a feature back on for one project.
+Only [managed settings](https://code.claude.com/docs/en/managed-settings) enforce a value.
+`kong-harnesses doctor` checks the user settings file, so it doesn't report a project setting or a command-line flag that changes one of these settings.
+
 ### In the profile
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
@@ -318,7 +324,7 @@ rows:
   - member: "`connectors`"
     setting: "`ENABLE_CLAUDEAI_MCP_SERVERS=false`. `disableClaudeAiConnectors: true` has the same effect, but activation doesn't write it."
   - member: "`bug_command`"
-    setting: "`DISABLE_BUG_COMMAND=1`"
+    setting: "`DISABLE_FEEDBACK_COMMAND=1` and `DISABLE_BUG_COMMAND=1`, its earlier name"
   - member: "`feedback_command`"
     setting: "`DISABLE_FEEDBACK_COMMAND=1`"
   - member: "`feedback_survey`"

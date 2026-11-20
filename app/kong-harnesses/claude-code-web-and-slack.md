@@ -46,7 +46,7 @@ To turn off cloud sessions for a Team or Enterprise organization:
 1. Open [**Organization settings** > **Claude Code**](https://claude.ai/admin-settings/claude-code).
 1. Turn off cloud sessions, which sets the `allow_remote_sessions` policy to off.
 
-If your organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
+If your Enterprise organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
 The cloud sessions permission controls only the sessions on Anthropic's infrastructure, not the sessions in a self-hosted environment.
 The organization setting applies only to the accounts of your organization.
 [{{ site.claude_code }} on the web](https://code.claude.com/docs/en/claude-code-on-the-web) explains cloud sessions.
@@ -62,8 +62,14 @@ The switch also turns off direct messages to Claude.
 The earlier {{ site.claude_code }} in Slack answers only Pro, Max and Ultra accounts, in a Slack workspace that no organization connected to Claude Tag.
 Your organization's Claude settings don't control these personal accounts.
 To block the app, a Slack administrator removes the Claude app and stops new installs.
-Do these steps only when no workspace that they reach is connected to Claude Tag, because Claude Tag uses the same Claude app.
-Removing the app from a connected workspace [deletes that workspace's Claude Tag data](https://claude.com/docs/claude-tag/concepts/data-lifecycle#delete-data-or-request-deletion), and the Enterprise Grid restriction and uninstall change every workspace in the organization.
+
+{:.warning}
+> Do these steps only when no workspace that they reach is connected to Claude Tag, because Claude Tag uses the same Claude app.
+> Removing the app from a connected workspace [deletes that workspace's Claude Tag data](https://claude.com/docs/claude-tag/concepts/data-lifecycle#delete-data-or-request-deletion), and the Enterprise Grid restriction and uninstall change every workspace in the organization.
+
+To see which workspaces are connected, an Owner of your Claude organization opens **Connected workspaces** in [**Claude's access** > **Channels** > **Slack**](https://claude.ai/admin-settings/claude-tag/channels/slack).
+An **Enterprise Grid** row with the status **Active** connects every workspace in that Grid, also the workspaces that no one paired on their own.
+
 The administrator can use these steps:
 
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace.
