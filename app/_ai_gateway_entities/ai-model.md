@@ -205,7 +205,7 @@ By default, AI Models expose all endpoints using OpenAI-compatible format. {{sit
 
 The [`formats`](#schema-aigateway-model-formats) array lets you control the request and response format. Each entry has a `type` that selects the format. The default `openai` format translates upstream provider responses into the OpenAI shape, so clients use one API format regardless of provider.
 
-If you need the provider's native format instead, set [`formats[].type`](#schema-aigateway-model-formats-type) to a non-OpenAI value. The AI Model passes requests upstream without conversion, while {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation. You can also customize the endpoint paths through [`config.route.paths`](#schema-aigateway-model-config-route-paths) if needed.
+To use a different API format, set [`formats[].type`](#schema-aigateway-model-formats-type) to a non-OpenAI value. With the `anthropic` format, {{site.ai_gateway}} converts Anthropic Messages requests for any provider. With a provider-specific format, such as `bedrock`, the AI Model passes requests upstream without conversion. In both cases, {{site.ai_gateway}} continues to provide analytics, logging, and cost calculation. You can also customize the endpoint paths through [`config.route.paths`](#schema-aigateway-model-config-route-paths) if needed.
 
 <!-- vale off -->
 {% table %}
@@ -221,7 +221,7 @@ rows:
     provider: All supported providers (default)
     capabilities: Translates between OpenAI request and response shapes and the upstream provider format.
   - format: "`anthropic`"
-    provider: "[Anthropic](/ai-gateway/ai-providers/anthropic/#supported-native-llm-formats-for-anthropic)"
+    provider: "Any provider for Messages; [Anthropic](/ai-gateway/ai-providers/anthropic/#supported-native-llm-formats-for-anthropic) for batch processing and skills management"
     capabilities: Messages, batch processing, skills management.
   - format: "`bedrock`"
     provider: "[Amazon Bedrock](/ai-gateway/ai-providers/bedrock/#supported-native-llm-formats-for-amazon-bedrock)"
@@ -244,7 +244,24 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-When a native format is set, only the corresponding provider is supported with its specific APIs.
+The `bedrock`, `gemini`, `cohere`, `huggingface`, and `typesafe` formats work only with their own provider and its specific APIs.
+The `anthropic` format also works with other providers for `generate` requests.
+See [Format and provider compatibility](#format-and-provider-compatibility).
+
+### Format and provider compatibility
+
+An AI Model's format determines which providers and capabilities it supports.
+The `openai` format works with every provider that supports the capability, and a provider-specific format works with its own provider.
+The `anthropic` format is the exception: for the `generate` capability, {{site.ai_gateway}} converts Anthropic Messages requests and responses for any provider, so clients like {{ site.claude_code }} can use models from other providers.
+For example, an AI Model with `formats: [{type: anthropic}]` can route to an OpenAI target, and an AI Model on an Ollama provider can serve both the OpenAI (`/chat/completions`) and Anthropic (`/v1/messages`) endpoints.
+
+The following table lists the providers that each format and capability supports:
+
+{% include md/ai-gateway/v2/format-support.md %}
+
+For Amazon Bedrock, the `endpoint_type` setting in the target `config` selects the Runtime or Mantle endpoint.
+Runtime is the default.
+For the differences, see [Choose a Bedrock endpoint](/ai-gateway/ai-providers/bedrock/#choose-a-bedrock-endpoint).
 
 ### Expose all formats
 
