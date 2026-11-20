@@ -35,8 +35,8 @@ Only the requests that go to that base URL, such as the model requests, pass thr
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
-It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
-`kong-harnesses profile create` writes a profile that sets every member in the table to `false`, unless you turn on automatic updates or telemetry to Anthropic with a flag or in its questions.
+It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as the {{site.ai_gateway}} host, so allow those hosts in your network policy.
+`kong-harnesses profile create` writes a profile that sets every member in the table to `false`, with the exceptions in [In the profile](#in-the-profile).
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -56,7 +56,7 @@ columns:
     key: cost
 rows:
   - traffic: Usage metrics
-    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API directly"
+    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API directly, which means the Anthropic API provider mode and not a third-party provider such as Amazon Bedrock"
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
@@ -64,7 +64,7 @@ rows:
     member: "`feature_flags`"
     cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
-    destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} connects directly to the Claude API, and the organization has no zero data retention or HIPAA agreement"
+    destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} uses the Anthropic API directly, and the organization has no zero data retention or HIPAA agreement"
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
@@ -94,11 +94,11 @@ rows:
   - traffic: Artifacts
     destination: "`api.anthropic.com` for the publish requests and the organization policy, `*.frame.claudeusercontent.com` for the artifact reads, and `claude.ai`, which serves the published page"
     member: "None. The `artifact` member writes nothing."
-    cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
+    cost: "Developers can't publish session output as a web page on claude.ai, and {{ site.claude_code }} can't read the files of an artifact. Artifacts need a claude.ai sign-in and the Anthropic API provider mode, so they work only with a profile that uses the developers' own Claude subscriptions, which always uses that mode. They are also unavailable when the organization has customer-managed encryption keys, HIPAA or zero data retention turned on. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turns on for a claude.ai subscription, and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
@@ -122,15 +122,15 @@ Some {{ site.claude_code }} switches turn off more than one feature:
 * The `/bug` and `/feedback` switches each turn off all of the feedback commands.
 * The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, the feedback commands and the feedback survey.
 
-With the usage metrics or nonessential traffic switch on, `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1` shows the feedback survey again and sends the ratings only to your OpenTelemetry collector.
-`feedback_survey` set to `false` keeps the survey off even then.
-
 For that reason, {{site.kong_harnesses}} refuses a profile that turns on a feature while another member turns it off:
 
 * `feature_flags`, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
 * `bug_command` or `feedback_command` set to `true` while the other command member is `false`.
 
 A member that the profile leaves out never causes a conflict.
+
+When the usage metrics switch or the nonessential traffic switch is on, `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1` shows the feedback survey again and sends the ratings only to your OpenTelemetry collector.
+`feedback_survey` set to `false` keeps the survey off even then.
 
 In a schema 18 profile, `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on usage metrics, feature flags, error reports, a feedback command or the feedback survey, activation writes the nonessential traffic switch blank.
@@ -144,7 +144,7 @@ The background runs of plugin `command` sources, which can install dependencies,
 When every kind of traffic in the table is off, a {{ site.claude_code }} session contacts these hosts:
 
 * The {{site.ai_gateway}} host
-* Your identity provider, for the sign-in
+* Your identity provider, for the sign-in, when the profile signs in through one. A profile with a key from the administrator has none.
 * `claude.ai`, `claude.com` and `platform.claude.com`, when the profile uses the developers' own Claude subscriptions, because {{ site.claude_code }} signs in to claude.ai itself. Organizations that use single sign-on also need `sso.claude.com`.
 * `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy
 * `code.claude.com` and `claude.com`, for the documentation lookups of the built-in `claude-code-guide` agent and for pre-approved WebFetch requests
@@ -166,7 +166,7 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on`, or the automatic updates choice in the questions, writes no update setting, so the {{ site.claude_code }} update settings stay in effect.
+* `--auto-updates on`, or the automatic updates choice in the questions, doesn't write an update setting, so the {{ site.claude_code }} update settings stay in effect.
 * `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
