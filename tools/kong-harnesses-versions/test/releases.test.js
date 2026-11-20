@@ -13,6 +13,8 @@ function fakeFetch(releases, { ok = true, status = 200, statusText = 'OK' } = {}
   return { fetchImpl, calls };
 }
 
+const stable = { tag_name: 'v0.1.0', published_at: '2026-01-01T00:00:00Z', draft: false, prerelease: false };
+
 function fakeWriter() {
   const writes = [];
   return { writeFile: (filePath, content) => writes.push({ filePath, content }), writes };
@@ -47,7 +49,7 @@ test('groups releases by major.minor series, keeping the highest patch and marki
 });
 
 test('fetches releases from the GitHub API for the configured repo', async () => {
-  const { fetchImpl, calls } = fakeFetch([]);
+  const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
   await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
@@ -57,7 +59,7 @@ test('fetches releases from the GitHub API for the configured repo', async () =>
 });
 
 test('sends an Authorization Bearer header built from GH_TOKEN when it is set', async () => {
-  const { fetchImpl, calls } = fakeFetch([]);
+  const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
   await syncReleases({
@@ -73,7 +75,7 @@ test('sends an Authorization Bearer header built from GH_TOKEN when it is set', 
 });
 
 test('sends no Authorization header when GH_TOKEN is not set', async () => {
-  const { fetchImpl, calls } = fakeFetch([]);
+  const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
   await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} });
@@ -120,6 +122,21 @@ test('ignores tags that the install script refuses, so the data and the help nam
       '    latest: true\n' +
       '    released: 2026-10-06\n',
   );
+});
+
+test('fails without writing when no vX.Y.Z release is left', async () => {
+  const { fetchImpl } = fakeFetch([
+    { tag_name: 'v0.5.0', published_at: '2026-10-02T10:00:00Z', draft: true, prerelease: false },
+    { tag_name: 'v0.5.1-rc1', published_at: '2026-10-03T10:00:00Z', draft: false, prerelease: true },
+    { tag_name: '0.6.0', published_at: '2026-10-07T12:00:00Z', draft: false, prerelease: false },
+  ]);
+  const { writeFile, writes } = fakeWriter();
+
+  await assert.rejects(
+    syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile }),
+    /No vX\.Y\.Z release in Kong\/kong-harnesses/,
+  );
+  assert.equal(writes.length, 0);
 });
 
 test('derives the released date from published_at', async () => {

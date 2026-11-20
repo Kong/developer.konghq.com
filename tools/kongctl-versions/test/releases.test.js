@@ -13,13 +13,15 @@ function fakeFetch(releases, { ok = true, status = 200, statusText = 'OK' } = {}
   return { fetchImpl, calls };
 }
 
+const stable = { tag_name: 'v0.1.0', published_at: '2026-01-01T00:00:00Z', draft: false, prerelease: false };
+
 function fakeWriter() {
   const writes = [];
   return { writeFile: (filePath, content) => writes.push({ filePath, content }), writes };
 }
 
 test('fetches releases from the public Kong/kongctl repo', async () => {
-  const { fetchImpl, calls } = fakeFetch([]);
+  const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
   await syncReleases({ repo: 'Kong/kongctl', dataFile, name: 'kongctl', fetch: fetchImpl, writeFile });

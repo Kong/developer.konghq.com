@@ -140,9 +140,9 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 {{site.kong_harnesses}} couldn't read the profile from the file or URL that you gave, or couldn't save it. Check that the file exists and that you can read it, or that the URL opens from this computer over HTTPS. Then run the import again.
 
-### "profile is busy; retry the import"
+### "profile is busy; retry the import" or "profile is busy; retry creation"
 
-Another {{site.kong_harnesses}} command, such as a sign-in or a renewal, uses the profile now. Wait for that command to finish, then run the import again.
+Another {{site.kong_harnesses}} command, such as a sign-in or a renewal, uses the profile now. Wait for that command to finish, then run `profile import` or `profile create` again.
 
 ### "the existing sign-in or a client's settings could not be inspected"
 
@@ -170,7 +170,11 @@ An administrator installed this profile for every user of the computer, so `prof
 
 ### "selected profile is invalid"
 
-The installed copy of the profile can't be read. Install the profile again from your administrator's file or URL with `kong-harnesses profile import`.
+The installed copy of the profile can't be read. Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`. `profile delete` can't check the client settings of an invalid profile, and it keeps a saved sign-in. When its result says that the login may remain, import the profile, then run `kong-harnesses logout --profile PROFILE_NAME`. For an agent CLI that still uses the profile, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
+
+### "the installed profile of this name is invalid, so import cannot replace it"
+
+`profile import` doesn't replace an installed profile that it can't read. Run `kong-harnesses profile delete PROFILE_NAME`, then run the import again. The steps after the delete are in ["selected profile is invalid"](#selected-profile-is-invalid).
 
 ### "selected profile needs a newer kong-harnesses"
 
@@ -184,9 +188,9 @@ The MCP header helper that {{ site.claude_code }} runs prints this message when 
 
 An administrator installed the profile for every user of the computer, but its file or folder lets other accounts change it, so {{site.kong_harnesses}} doesn't use it. Ask your administrator to install the profile again.
 
-### "selected profile configures no supported agent client"
+### "selected profile configures no agent client that this kong-harnesses sets up"
 
-`status`, `doctor` and `login --diagnostics` without `--client` work on each agent CLI that the profile has a block for, and the profile doesn't have a block for one that this release supports. Name the agent CLI with `--client CLIENT_NAME`, or use a profile that has a block for a supported agent CLI in [`clients`](/kong-harnesses/profile-file/#clients).
+`status`, `doctor` and `login --diagnostics` without `--client` work on each agent CLI that the profile has a block for, and the profile doesn't have a block for one that this release sets up. Ask your administrator for a profile with a block for your agent CLI in [`clients`](/kong-harnesses/profile-file/#clients). To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
 ### "selected profile still has a saved sign-in"
 
@@ -236,19 +240,11 @@ The profile uses an `http://` gateway, and a proxy variable in the shell applies
 
 ### "is not configured: it can choose a proxy"
 
-The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes Agent pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It sets up the other clients. When a check of one of them fails, `profile activate` changes no client settings. A failure later, while it writes the settings, can leave some clients set up. Give these clients a profile with an `https://` gateway.
+The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes Agent pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It sets up the other clients. When a check of their settings fails before the write, `profile activate` changes no client settings. A failure later, while it writes the settings, can leave some clients set up. Give these clients a profile with an `https://` gateway.
 
 ### "managed settings could send"
 
 The message starts with "your organization's managed settings could send". The profile uses an `http://` gateway, and the managed settings of {{ site.claude_code }} could send its requests through a proxy, because they win over the `NO_PROXY` value that `profile activate` writes. The message names the cause, such as a `NO_PROXY` value that leaves out the gateway host, or a managed settings source that {{site.kong_harnesses}} can't read. Use an `https://` gateway, or ask your administrator to make the change that the message names.
-
-### "fleet build needs an https:// gateway"
-
-The profile uses an `http://` gateway. `fleet build` can't check the proxy settings of the managed computers when it runs, so a proxy there could read the credential. Build from a profile with an `https://` `gateway_origin`.
-
-### "fleet build cannot use a Claude subscription profile yet"
-
-The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in. Build from a profile that doesn't use `sign_in: subscription`.
 
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
 
@@ -266,6 +262,13 @@ Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI
 
 `status`, `profile activate` or `profile cleanup` worked on several agent CLIs, and failed for each client in the list, for different reasons. Run the command again with `--client CLIENT_NAME` for each client to see each reason.
 
+### "selected profile does not configure"
+
+The message names an agent CLI that you gave with `--client`, in `profile activate` or `setup`, and the installed profile has no block for it. The end of the message tells you what to do:
+
+* "ask your administrator for a profile that sets it up, then import it": No command adds the client to the profile. Ask your administrator for a profile with a block for this agent CLI in [`clients`](/kong-harnesses/profile-file/#clients), then [import it](/kong-harnesses/profile/import/).
+* "so create the profile again": You made the profile with an older `profile create`, which didn't add this client. Run [`kong-harnesses profile create`](/kong-harnesses/profile/create/) again for the profile.
+
 ### "no supported agent client was detected" or "does not configure any detected agent client"
 
 `profile activate` didn't find an agent CLI on this computer that the profile sets up. Install the agent CLI, or name the client with `--client CLIENT_NAME`. Check that the profile has a block for that client in [`clients`](/kong-harnesses/profile-file/#clients).
@@ -277,6 +280,53 @@ The agent CLI would lose its credential helper when the folder is removed. [Inst
 ### "requires an interactive controlling terminal"
 
 The command asks you a question, and it runs without a terminal, for example in a script. Run it in a terminal.
+
+## Setup errors
+
+[`kong-harnesses setup`](/kong-harnesses/setup/) runs its steps in order and keeps each finished step when a later step fails.
+
+### "setup without a profile source asks profile create's questions, which needs a terminal"
+
+`setup` without a profile file or URL asks the questions of `profile create`, and it runs without a terminal, for example in a script. Give `setup` the file or URL of the profile, or run it in a terminal.
+
+### "setup stopped at step"
+
+The message names the step that failed and the reason, and the lines before it can give more detail. Fix the cause, using the entry for that message on this page, then run the same `setup` command again. It keeps the work of the finished steps, so it is safe to run again.
+
+When the message says that `setup` leaves a client out, or that a client "cannot be configured", the gateway or this computer refuses that agent CLI, and the line above names the fix. Until you make that fix, `setup` leaves the client out each time, or stops at the same step when it is the only client. To set up the other agent CLIs that the gateway serves, run `setup` without `--client`.
+
+## Fleet build errors
+
+Most `fleet build` and `fleet remove` errors name the flag to add or take out. [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/) describes `--policy`, `--no-policy`, `--mcp-servers`, `--mcp-config` and `fleet remove`. [Keep a {{ site.claude_code }} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) describes a new build with `--record`, which needs the record of the build that the computers have now.
+
+### "fleet build needs an https:// gateway"
+
+The profile uses an `http://` gateway. `fleet build` can't check the proxy settings of the managed computers when it runs, so a proxy there could read the credential. Build from a profile with an `https://` `gateway_origin`.
+
+### "fleet build cannot use a Claude subscription profile yet"
+
+The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in. Build from a profile that doesn't use `sign_in: subscription`.
+
+## Errors that ask you to retry
+
+These messages say only that an operation failed, or ask you to retry later. Check the part of the computer that the message names, then run the command again:
+
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: What to check
+    key: check
+rows:
+  - message: "`profile creation could not verify local storage; retry later`, `profile creation failed; retry after checking local storage`, `profile creation failed`, `profile lock could not be verified; retry after checking local storage` or `profile storage could not be read`"
+    check: "The profile folder of {{site.kong_harnesses}}: that the disk isn't full, and that your account can read and write the folder."
+  - message: "`could not write the identity header to Claude Code's settings; retry later`"
+    check: "That your account can write the {{ site.claude_code }} settings file."
+  - message: "`the key for the gateway MCP server SERVER could not be read; retry later`"
+    check: "That the password store, such as the macOS Keychain, is unlocked."
+  - message: "`diagnosis could not complete; retry later`"
+    check: "Run `doctor` again. If it fails again, collect a debug log as [Collect details for support](#collect-details-for-support) describes."
+{% endtable %}
 
 ## Collect details for support
 

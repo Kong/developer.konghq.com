@@ -208,12 +208,12 @@ Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `mod
 
 A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients. When a check of one of them fails, it changes no client settings.
+* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients. When a check of their settings fails before the write, it changes no client settings.
 * When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY` in the shell that starts the agent CLI, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the message names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently.
 * From 0.18.0, for {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. A proxy variable or `NO_PROXY` value in the project settings of {{ site.claude_code }} wins over these values, and `profile activate` refuses when the managed settings could send the requests through a proxy. For these cases, see the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check).
 * `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
 
-The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors).
+The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Fleet build errors](/kong-harnesses/errors/#fleet-build-errors).
 
 ## Sign-in fields
 
@@ -250,7 +250,7 @@ rows:
   - field: "`discovery_url`"
     description: "Required. The issuer URL without a trailing `/`, followed by `/.well-known/openid-configuration`."
   - field: "`authorization_endpoint`, `token_endpoint`, `jwks_uri`"
-    description: "Required. The endpoints from the discovery document."
+    description: "Required. The endpoints from the discovery document. `profile create` and `profile import` refuse an `authorization_endpoint` with a query that sets a parameter that the sign-in request adds: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`."
   - field: "`revocation_endpoint`"
     description: "Version 4 and later. The endpoint that `logout` uses to revoke the sign-in."
   - field: "`client_id`"
@@ -266,14 +266,14 @@ rows:
   - field: "`scopes`"
     description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. Each scope appears once, and is 1 to 128 visible ASCII characters, except double quotes and backslashes. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
   - field: "`max_access_token_lifetime_seconds`"
-    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400. Releases up to 0.17.1 also accepted 360. The default is 3600."
+    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400. The default is 3600. Releases up to 0.17.1 also accepted 360. A profile that they installed with 360 still reads, but sign-in refuses it, so give developers a profile with 365 or more."
 {% endtable %}
 
 ### Security identity
 
 These fields make up the security identity of a profile: `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
 
-A saved sign-in belongs to one security identity. When you import a profile that changes one of these fields, each developer runs `kong-harnesses login` again. `profile import` refuses the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then import the profile and activate it again. A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values. A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
+A saved sign-in belongs to one security identity. When you import a profile that changes one of these fields, each developer signs in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes for each kind of profile. An `environment_key` profile has no saved sign-in, so it needs no new sign-in. `profile import` refuses the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then import the profile and activate it again. A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values. A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
 ## Routes
 
@@ -331,7 +331,7 @@ rows:
 
 Some blocks have more rules:
 
-* The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
+* The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, so it can't use `static_key`, `environment_key` or `subscription`. It also sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
 * A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
 * A profile named `constructor` or `prototype` can't set up OpenCode.
@@ -408,9 +408,9 @@ Each choice is `true` or `false`. From version 14, each choice is optional, and 
 
 `profile activate` keeps the value that a setting had before it wrote the setting the first time. When a later profile leaves the choice out, or sets `auto_updates: true`, `profile activate` puts that earlier value back, so a setting that you or another tool wrote before can still turn the feature off.
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile import` refuses a profile that turns on a feature and also turns off a setting that it needs:
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
 
-* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`.
+* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or, in a `subscription` profile, `true` for `artifact`. Releases up to 0.17.1 accepted `artifact: true` with `auto_updates: false`, so a profile that they installed with this pair still reads.
 * `feature_flags: true` can't go with `anthropic_telemetry: false`.
 * From version 18, `error_reports: true` and `feedback_survey: true` can't go with `anthropic_telemetry: false`.
 * `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
@@ -434,8 +434,8 @@ rows:
     off: "Writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`."
     on: "Leaves the advisor tool on. The route needs `advisor: true`."
   - choice: "`artifact`"
-    off: "Writes nothing."
-    on: "Writes nothing. The route needs `artifact: true`."
+    off: "From version 14, writes `enableArtifact: false`. Versions 12 and 13 write nothing."
+    on: "From version 14, writes `enableArtifact: true`. Versions 12 and 13 write nothing. The route needs `artifact: true`."
   - choice: "`hint_headers`"
     off: "Writes `CLAUDE_CODE_GATEWAY_HINT_HEADERS=0`."
     on: "Writes `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1`."
@@ -505,7 +505,7 @@ rows:
   - field: "`nonstreaming_fallback`"
     description: "`false` writes `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1`."
   - field: "`extra_body`"
-    description: "A JSON object with at least one field, that activation writes to `CLAUDE_CODE_EXTRA_BODY`. Without spaces between the tokens, it is up to 4096 bytes of printable ASCII, and each key appears once."
+    description: "A JSON object with at least one field, that activation writes to `CLAUDE_CODE_EXTRA_BODY`. Without spaces between the tokens, it is up to 4096 bytes of printable ASCII. Each key appears once in its object, also in a nested object."
   - field: "`artifact`"
     description: "Only in the top-level `request_shape` of versions 8 to 11. Activation ignores it. It stays so that older profiles still import."
 {% endtable %}

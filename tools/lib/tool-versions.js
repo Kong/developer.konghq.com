@@ -247,9 +247,10 @@ export async function syncReleases({
       released: release.published_at.split('T')[0],
     }));
 
+  // The sync runs extract-help.js first, so an empty list must stop it rather
+  // than keep the old release data beside the new help.
   if (validReleases.length === 0) {
-    console.warn('No valid releases found');
-    return [];
+    throw new Error(`No vX.Y.Z release in ${repo}`);
   }
 
   const releasesBySeries = {};
