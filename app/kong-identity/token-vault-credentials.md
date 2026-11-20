@@ -303,7 +303,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   secret: $STATIC_SECRET
-  selector: '"$GROUP_ID" in principal.groups'
+  selector: 'principal.groups.exists(g, g.id == "$GROUP_ID")'
   priority: 10
 {% endkonnect_api_request %}
 <!--vale on-->
