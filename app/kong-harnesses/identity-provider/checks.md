@@ -46,6 +46,7 @@ It also refuses a response with more than 16,384 bytes of headers, or a body tha
   The name can't be `default`, `con`, `prn`, `aux`, `nul`, or `com` or `lpt` followed by a digit from 1 to 9.
 * `display_name` and `description` in a profile file: 1 to 80 and 1 to 240 printable ASCII characters.
 * `--client-id`: 1 to 256 visible ASCII characters.
+* `--redirect-uri`: See [Callback](/kong-harnesses/identity-provider/#callback).
 * `--audience`: An absolute URI of 1 to 2,048 bytes of visible ASCII characters, without user information or a fragment.
 * `--scope`: 2 to 16 scopes, with `openid` and `offline_access`.
   Each scope has 1 to 128 visible ASCII characters, without `"` or `\`, and the list can't have a scope twice.
@@ -76,7 +77,7 @@ The query of `authorization_endpoint` can't have a parameter that {{site.kong_ha
 While the developer signs in, {{site.kong_harnesses}} keeps waiting when a request comes to another path or without the `state` of this sign-in.
 A request to the callback path with that `state` ends the wait, and it must meet these checks:
 
-* It is a `GET` request without a body, with a `Host` header that has the exact host and port of the callback in the profile.
+* It is a `GET` request without a body, with a `Host` header that has the exact host and port of the callback in the profile, such as `localhost:9876`.
 * Its path is the callback path, without percent encoding.
 * Each of `state`, `code`, `error`, `error_description`, `error_uri`, `iss` and `session_state` occurs at most once, with a value that isn't empty.
 * It has `code` or `error`, but not both.
@@ -97,7 +98,7 @@ The TLS certificate of the identity provider must chain to the system trust stor
 If the identity provider uses a certificate from a private CA, add the CA to that trust store.
 
 A response with a status other than `2xx` fails the request.
-At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved sign-in.
+At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body of at most 65,536 bytes with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved sign-in.
 For other error responses, the renewal fails and the saved sign-in stays.
 
 A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
@@ -135,6 +136,7 @@ Each of these URLs, and `revocation_endpoint` when the document lists it, must m
 
 At each sign-in, {{site.kong_harnesses}} reads the discovery document again and runs these checks again.
 `authorization_endpoint`, `token_endpoint` and `jwks_uri` must also be the same as the values that `profile create` saved in the profile, and so must `revocation_endpoint` when the profile has one.
+When one of them changes, sign-in fails until you create the profile again.
 
 {{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
 For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
