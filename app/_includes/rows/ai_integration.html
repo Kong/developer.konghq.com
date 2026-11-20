@@ -1,0 +1,28 @@
+{% assign integration = include.integration %}
+{% assign cat = include.category %}
+{% assign rendered_description = integration.description | liquify %}
+<div
+  class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary{% endunless %}"
+  data-card="ai-integration-row"
+  data-category="{{ cat.slug }}"
+  data-categories="{{ integration.categories | join: ',' }}"
+  data-title="{{ integration.title | downcase }}"
+  data-description="{{ rendered_description | downcase | truncate: 200 }}"
+>
+  <a href="{{ integration.url }}" class="flex items-center gap-4 hover:no-underline text-secondary w-full">
+    {% if cat.icon %}
+    <span class="text-icon">{% include_svg cat.icon width="24" height="24" %}</span>
+    {% endif %}
+
+    <div class="flex flex-col gap-0.5 flex-grow min-w-0">
+      <h3>{{ integration.title }}</h3>
+      <span class="text-sm text-terciary line-clamp-1">{{ rendered_description }}</span>
+    </div>
+
+    <div class="flex items-center gap-4 flex-shrink-0">
+      {% if cat %}{% include badge.html text=cat.text %}{% endif %}
+
+      <span class="text-sm text-primary whitespace-nowrap">View integration &rarr;</span>
+    </div>
+  </a>
+</div>
