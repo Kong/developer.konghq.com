@@ -40,7 +40,7 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
 1. Check the checksum of the file. On macOS, run:
 
    ```sh
-   grep -F '<file>' SHA256SUMS.txt | shasum -a 256 --check
+   awk -v file='<file>' '$2 == file' SHA256SUMS.txt | shasum -a 256 --check
    ```
 
    On Linux, run the same command with `sha256sum --check` in place of `shasum -a 256 --check`. The command must print `<file>: OK`.
@@ -48,11 +48,11 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
    On Windows, run in PowerShell:
 
    ```powershell
-   (Get-FileHash <file> -Algorithm SHA256).Hash -eq (Select-String -Path SHA256SUMS.txt -SimpleMatch '<file>').Line.Split(' ')[0]
+   (Get-FileHash '<file>' -Algorithm SHA256).Hash -eq ((Select-String -Path SHA256SUMS.txt -Pattern ('^[0-9a-f]{64}  ' + [regex]::Escape('<file>') + '$')).Line.Split(' ')[0])
    ```
 
    The command must print `True`.
-1. Install the [GitHub CLI](https://cli.github.com/), and check the build provenance of the file:
+1. Install the [GitHub CLI](https://cli.github.com/), and check the build provenance of the file. The command is the same in a macOS or Linux terminal and in PowerShell:
 
    ```sh
    gh attestation verify <file> --bundle kong-harnesses_<tag>.sigstore.json --repo Kong/kong-harnesses --signer-workflow Kong/kong-harnesses/.github/workflows/release.yml --source-ref refs/tags/<tag>
@@ -73,10 +73,10 @@ The installer package installs `kong-harnesses` in `/usr/local/bin` for every us
 To check the permissions, run:
 
 ```sh
-ls -ld /usr/local /usr/local/bin
+ls -lde /usr/local /usr/local/bin
 ```
 
-The owner of each folder must be `root`, and only the owner and the `admin` or `wheel` group can have write permission. If a folder doesn't exist, the package creates it, and only administrators can change it.
+The owner of each folder must be `root`. Only the owner and the `admin` or `wheel` group can have write permission, and no access control entry that the command shows can give another account write permission. If a folder doesn't exist, the package creates it, and only administrators can change it.
 
 1. Download the file that ends in `_darwin_arm64.pkg` for Apple silicon, or in `_darwin_amd64.pkg` for an Intel Mac.
 1. Check the package as in [Check a downloaded file](#check-a-downloaded-file).
@@ -100,25 +100,36 @@ The owner of each folder must be `root`, and only the owner and the `admin` or `
    sudo installer -pkg <file> -target /
    ```
 
-A newer package replaces the installed version. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, check first that the installer package installed it. On a Mac where Homebrew installed kong-harnesses, the command prints an error, so remove it with Homebrew instead:
+A newer package replaces the installed version. To remove kong-harnesses:
 
-```sh
-pkgutil --pkg-info com.konghq.kong-harnesses
-```
+1. Ask each developer to [remove their settings](#remove-the-settings-of-a-developer).
+1. Check that the installer package installed kong-harnesses:
 
-Then delete the files of the package:
+   ```sh
+   pkgutil --pkg-info com.konghq.kong-harnesses
+   ```
 
-```sh
-sudo rm -r /usr/local/bin/kong-harnesses /usr/local/share/doc/kong-harnesses
-```
+   If the command prints `No receipt for 'com.konghq.kong-harnesses' found`, the installer package didn't install kong-harnesses. Skip the next steps.
+1. Check that the file at the install path is the copy of the package:
 
-Then delete the package receipt:
+   ```sh
+   ls -l /usr/local/bin/kong-harnesses
+   ```
 
-```sh
-sudo pkgutil --forget com.konghq.kong-harnesses
-```
+   If the output shows a link (`->`) to a Homebrew folder, Homebrew installed this copy. Remove it with Homebrew, and skip the next steps.
+1. Delete the files of the package:
 
-To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the app bundles in the package, and this package installs a command-line tool without an app bundle. Test the detection on one Mac before you deploy the package with Intune.
+   ```sh
+   sudo rm -r /usr/local/bin/kong-harnesses /usr/local/share/doc/kong-harnesses
+   ```
+
+1. Delete the package receipt:
+
+   ```sh
+   sudo pkgutil --forget com.konghq.kong-harnesses
+   ```
+
+To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the app bundles in the package, and this package installs a command-line tool without an app bundle. Assign the package to one test Mac first. Assign it to other Macs only if Intune reports the install on the test Mac as successful. If it doesn't, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
 
 ## Windows installer
 
@@ -126,24 +137,28 @@ The Windows installer installs kong-harnesses in `C:\Program Files\Kong\kong-har
 
 1. Download the file that ends in `_windows_amd64.msi` for an x64 computer, or in `_windows_arm64.msi` for an Arm computer.
 1. Check the installer as in [Check a downloaded file](#check-a-downloaded-file).
-1. Open PowerShell as an administrator, and run the installer:
+1. Open PowerShell as an administrator.
+1. Run the installer. Replace `<msi-path>` with the full path of the installer:
 
    ```powershell
-   (Start-Process msiexec.exe -ArgumentList '/i', '<file>', '/qn', '/norestart' -Wait -PassThru).ExitCode
+   (Start-Process msiexec.exe -ArgumentList '/i "<msi-path>" /qn /norestart' -Wait -PassThru).ExitCode
    ```
 
-   The command prints `0` when the install is complete. It prints `3010` when the install is complete and the computer must restart to finish it, so schedule a restart. It prints `1641` when the install is complete and the installer started a restart. With `/qn`, the installer doesn't show errors, so any other number means that the install failed.
+   The command prints `0` when the install is complete. It prints `3010` when the install is complete and the computer must restart to finish it, so schedule a restart. With `/qn`, the installer doesn't show errors, so any other number means that the install failed.
 
-A newer installer replaces the installed version, and Windows Installer refuses an older installer. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, run the same command as an administrator with `'/x'` in place of `'/i'`, with the installer that installed it.
+A newer installer replaces the installed version, and Windows Installer refuses an older installer. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, run the same command as an administrator with `/x` in place of `/i`, with the installer that installed it. If you don't have that installer, remove **Kong Harnesses** in **Settings** > **Apps** > **Installed apps**.
 
-Make sure that only administrators can change `C:\Program Files\Kong\kong-harnesses` and the folders that contain it. An account that can change these folders can replace kong-harnesses with a program that takes the sign-in of each developer. When kong-harnesses runs from this folder, `kong-harnesses doctor --profile <profile>` checks these permissions. If another account can change them, the check fails and names the fix.
+Make sure that only administrators can change `C:\Program Files\Kong\kong-harnesses` and the folders that contain it. An account that can change these folders can replace kong-harnesses with a program that takes the sign-in of each developer. When kong-harnesses runs from this folder, a developer who runs `kong-harnesses doctor --profile <profile>` also checks these permissions. If another account can change them, the check fails and names the fix.
 
 ### Deploy the Windows installer with Intune
 
-Releases don't include an `.intunewin` file, so you wrap the installer yourself. Add one Windows app (Win32) for each processor type:
+Releases don't include an `.intunewin` file, so you wrap the installer yourself. Add one Windows app (Win32) for each processor type.
+
+Wrap the installer:
 
 1. Check the installer as in [Check a downloaded file](#check-a-downloaded-file), and put the installer alone in an empty folder.
-1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), and open PowerShell in the folder that contains `IntuneWinAppUtil.exe`. Wrap the installer:
+1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), and open PowerShell in the folder that contains `IntuneWinAppUtil.exe`.
+1. Wrap the installer:
 
    ```powershell
    .\IntuneWinAppUtil.exe -c '<folder>' -s '<folder>\<file>' -o '<output-folder>'
@@ -151,12 +166,40 @@ Releases don't include an `.intunewin` file, so you wrap the installer yourself.
 
    Use full paths. `<output-folder>` must be a folder other than `<folder>`.
 
-1. In the Microsoft Intune admin center, go to **Apps** > **All Apps**, select **Create**, and select the app type **Windows app (Win32)**. Upload the `.intunewin` file. Intune reads the installer and fills in the install and uninstall commands. Keep these commands, and keep the install behavior **System**.
-1. Under **Requirements**, select **x64** for the `_windows_amd64.msi` installer, or **ARM64** for the `_windows_arm64.msi` installer, and set **Minimum operating system** to the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
-1. Under **Detection rules**, select **Manually configure detection rules**, and add a rule of type **MSI**. Intune fills in the product code of the installer. Keep it.
-1. For a new release, under **Supersedence**, select the app of the previous release for the same processor type, and set **Uninstall previous version** to **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
-1. Under **Assignments**, assign the app as **Required** to the devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so give each release the same assignments.
-1. Under **Review + create**, select **Create**.
+Add the app in the Microsoft Intune admin center:
+
+1. Navigate to **Apps** > **All Apps**.
+1. Click **Create**.
+1. In the **Select app type** pane, select **Windows app (Win32)**.
+1. Click **Select**.
+1. On the **App information** page, click **Select app package file**.
+1. Select the `.intunewin` file.
+1. Click **OK**.
+1. In the **Name** field, enter a name that contains the release and the processor type, for example `kong-harnesses v1.2.3 x64`.
+1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
+1. Click **Next**.
+1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
+1. In the **Install behavior** field, select **System**.
+1. Click **Next**.
+1. On the **Requirements** page, in the **Operating system architecture** field, select **x64** for the `_windows_amd64.msi` installer, or **ARM64** for the `_windows_arm64.msi` installer.
+1. In the **Minimum operating system** field, select the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
+1. Click **Next**.
+1. On the **Detection rules** page, in the **Rules format** field, select **Manually configure detection rules**.
+1. Click **Add**.
+1. In the **Rule type** field, select **MSI**. Keep the product code that Intune reads from the installer.
+1. Click **OK**.
+1. Click **Next**.
+1. On the **Dependencies** page, click **Next**.
+1. On the **Supersedence** page, for a new release, click **Add**. For the first release, skip to the **Assignments** page.
+1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
+1. Click **Select**.
+1. In the **Uninstall previous version** field, select **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
+1. Click **Next**.
+1. On the **Assignments** page, under **Required**, click **Add group**.
+1. Select the groups of devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so select the same groups for each release.
+1. Click **Select**.
+1. Click **Next**.
+1. On the **Review + create** page, click **Create**.
 
 Add a new app in the same way for each new release. Intune allows at most 10 apps in a supersedence chain, and each release adds one. When all assigned devices run the new release, remove the supersedence of the previous app from the new app, and delete the previous app.
 
@@ -203,7 +246,7 @@ Removing kong-harnesses doesn't remove the sign-in, the profiles or the coding a
    kong-harnesses logout --profile <profile>
    ```
 
-   OpenCode and Hermes Agent keep their own sign-in. For OpenCode, also run `opencode auth logout`. For Hermes Agent, also run `hermes auth remove kong-ai-gateway 1`.
+   OpenCode and Hermes Agent keep their own sign-in. For OpenCode, also run `opencode auth logout`, and select the provider that has the name of the profile. For Hermes Agent, run `hermes auth list kong-ai-gateway` to find the index of each credential, and remove each one with `hermes auth remove kong-ai-gateway <index>`.
 
 1. Remove the settings that kong-harnesses added to the coding agents:
 
