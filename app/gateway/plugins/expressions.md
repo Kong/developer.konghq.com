@@ -319,6 +319,7 @@ rows:
     type: "`list<map>`"
     description: |
       The groups and teams of the authenticated Principal, including memberships through nested teams. Each entry has an `id` and a `type` (`group` or `team`). Match on the group ID, not the group name.
+      This shape applies to expressions that the data plane evaluates, such as plugin conditions and ACL rules. [Token Vault](/kong-identity/token-vault/) credential selectors run in {{site.konnect_short_name}} and use their own fields.
       `null` if no Principal is authenticated or the Principal has no groups. Only AI Gateway data planes load groups. On other data planes, the value is `null`.
       Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
     example: |
