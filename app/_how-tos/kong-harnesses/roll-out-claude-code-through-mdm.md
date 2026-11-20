@@ -82,7 +82,8 @@ cleanup:
         ```
 
         `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
-        A value that the build replaced gets your earlier value back.
+        A value that the build replaced gets your earlier value back, if the value of the build still applies.
+        A value that you changed after the build stays as you set it.
         Deploy that policy in place of the current one.
         If no other settings are left, `fleet remove` tells you to remove the policy instead.
 
@@ -103,7 +104,7 @@ In this guide, you choose how the settings reach the computers and which MCP ser
 
 When the Claude provider of the profile is the Anthropic API, `fleet build` reads the model list of the gateway with your own sign-in, and refuses to build when it can't read the list.
 For another Claude provider, such as Amazon Bedrock, it uses the models of the profile.
-Sign in to the profile first:
+Sign in to the profile first with [`kong-harnesses login`](/kong-harnesses/login/):
 
 ```sh
 kong-harnesses login --profile work
@@ -135,7 +136,9 @@ If the computers don't have a `managed-settings.json` or another {{ site.claude_
 A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a key that the build sets, such as `apiKeyHelper` or a variable in `env`.
 Also make sure that no file adds an `allowedProviders` entry or sets a key such as `forceLoginMethod`, because lists combine from every file and such a key applies from any file.
 
-On a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} ignores the file, apart from a few keys such as `env`.
+By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} ignores the file, apart from a few keys such as `env`.
+If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies the file and the MDM policy together.
+Then check both sources for values that conflict with the build, also for an MDM build.
 For those computers, build with `--delivery mdm`.
 This is an MDM build.
 Pass the policy that the computers get now with `--policy`.
@@ -165,7 +168,7 @@ When the profile doesn't have gateway MCP servers, use `allowlist`, the default,
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist`, the default, locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
-  To get the gateway MCP servers, each developer runs `kong-harnesses profile activate work --client claude-code`.
+  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) `work --client claude-code`.
 * `--mcp-servers any` doesn't add a lock, and leaves MCP servers to each developer.
   A lock that your own managed settings set still applies.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
@@ -196,6 +199,7 @@ Replace each placeholder with the value for your deployment:
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
 To give it the same settings, add `--wsl inherit`.
+This option needs the default drive mount under `/mnt` and Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
 It also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` that sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
@@ -340,7 +344,8 @@ With your MDM tool, install the following on each managed computer:
    To find the supported versions and hold the fleet to them, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 1. The kong-harnesses package for the platform, at the path of `--executable`: the macOS installer package at `/usr/local/bin/kong-harnesses`, the Linux `.deb` or `.rpm` package at `/usr/bin/kong-harnesses`, or the Windows installer at `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
    To install them, and to deploy the Windows installer with Intune, see [Install kong-harnesses for every user of a computer](/kong-harnesses/install/).
-   A Homebrew install isn't at these paths, and isn't for managed computers.
+   Don't install kong-harnesses with Homebrew on a managed computer.
+   On an Intel Mac, Homebrew uses the same `/usr/local/bin` path as the package.
 1. The CA of the gateway in the system trust store, if the gateway certificate comes from a private CA.
    The build doesn't install a CA.
 1. The files under `root` in the output folder, with their paths, as an administrator.
@@ -354,12 +359,12 @@ For example, on macOS, put the files in one package with `pkgbuild`.
 Replace each placeholder with the value for your deployment:
 
 ```sh
-pkgbuild --root fleet-macos/root --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root fleet-macos/root --install-location / --ownership recommended --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
-A macOS package installs the files as root.
-On Linux, `fleet build` prints a `sudo cp -R` command, which creates the files as root.
+With `--ownership recommended`, the macOS package installs the files as root.
+On Linux, `fleet build` prints a copy command that keeps these modes and creates the files as root.
 
 ## Validate
 
@@ -381,7 +386,7 @@ If the line shows `(remote)`, the server-managed settings from the claude.ai adm
 Remove them from the admin console.
 A computer can keep a cached copy of them for up to 24 hours after its last fetch.
 
-Run `kong-harnesses doctor` to check the setup:
+Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 
 ```sh
 kong-harnesses doctor --profile work --client claude-code
