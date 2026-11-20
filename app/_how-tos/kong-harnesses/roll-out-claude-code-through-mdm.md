@@ -47,7 +47,7 @@ prereqs:
       content: |
         You need a mobile device management (MDM) tool that installs packages and a configuration profile or policy on the managed computers, such as Jamf Pro on macOS or Microsoft Intune on Windows.
         On Linux, you can use your configuration management tool.
-        You also need administrator rights on one managed computer to test the result.
+        You also need administrator rights on one managed computer for each platform that you deploy to, to test the result.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
@@ -142,6 +142,7 @@ A file build needs `--policy` or `--no-policy`.
 If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
 The build then keeps your headers in its value.
 If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, pass `--no-policy`.
+For a file build, `--policy` takes only a `managed-settings.json`, not an MDM policy.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
@@ -153,7 +154,8 @@ Also make sure that no file adds an `allowedProviders` entry, because lists comb
 No file may set `forceLoginMethod` either, because the build doesn't set it, so a value of it in any file applies.
 
 By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
-It still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
+So those computers need an MDM build, because the credential helper and the hooks of a file build don't apply there.
+{{ site.claude_code }} still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
 So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build.
@@ -185,7 +187,7 @@ The server-managed settings then rank above the build, and the build's `apiKeyHe
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
 When the profile has gateway MCP servers, `fleet build` needs this flag.
 When the profile doesn't have gateway MCP servers, use `allowlist`, the default, or `any`.
-When the profile has gateway MCP servers, also check the following cases, such as a `managed-mcp.json` on the computers, where only `exclusive` loads them.
+When the profile has gateway MCP servers, a `managed-mcp.json` on the computers or some of your own managed settings can leave `exclusive` as the only mode that loads them.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
@@ -436,11 +438,14 @@ The build sets every folder to mode 755 and every file to mode 644, so each acco
 By default, `pkgbuild` sets root as the owner of each file in the package, so the package installs the files as root.
 On Linux, `fleet build` prints a copy command that creates the files as root, and sets each folder that the build writes to mode 755 and each file to mode 644.
 The command doesn't change `/etc`.
-On Windows, the copy command that `fleet build` prints gives the files the access rules of `C:\Program Files`.
+On Windows, the copy command that `fleet build` prints gives each file the access rules of the folder that holds it.
+If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on the computer with its own rules, the files get those rules, so make sure that each folder on the path follows the rule in the install step.
 
 ## Validate
 
-Check the build on each test computer before the first prompt, so that no request leaves the computer before you know that the build is in effect.
+Check the build on each test computer before the first prompt, so that you know that the build is in effect before a prompt goes to a model.
+The checks themselves, such as `doctor`, can still send requests to the gateway, but none of them sends a prompt.
+For a Windows build with `--wsl inherit`, also do these checks in {{ site.claude_code }} in each WSL distribution that developers use, because a check on Windows doesn't test Windows interop or the CA in the distribution.
 
 Sign in to the test computer as a developer.
 If you built with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers, first add those servers as the developer:
@@ -466,10 +471,11 @@ Start {{ site.claude_code }}, and run `/status` before you send a prompt:
 claude
 ```
 
-The `Setting sources` line shows `Enterprise managed settings` with the sources that {{ site.claude_code }} found and uses.
+The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} selected, or with the sources that it merged.
 Other files in `managed-settings.d` and other policies give the same labels, so only the build ID from `doctor` confirms the fleet build.
 If the line doesn't show `Enterprise managed settings`, no managed source delivers a policy key, so the build isn't in effect.
-A source can be on the computer and still have no policy key, so read the `Skipped sources` line, and check the paths in [Check what the build holds](#check-what-the-build-holds).
+Check that each file of the build is at its path in [Check what the build holds](#check-what-the-build-holds).
+For an MDM build, also check that the policy holds the settings of the build, not only control keys such as `managedSourcesBehavior`.
 Then deploy the build again.
 The labels:
 
@@ -504,10 +510,10 @@ To list the entries that {{ site.claude_code }} dropped from the managed setting
 
 When the build ID and the source are correct, send a short prompt, such as `Say hello`.
 On the first request, kong-harnesses opens the browser.
-Sign in with your identity provider account.
+Sign in with the developer's identity provider account.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in the MDM policy that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
 
 Do these checks before you install on the other managed computers.
 
