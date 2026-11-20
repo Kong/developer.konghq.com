@@ -112,29 +112,31 @@ rows:
             description: Use Claude Code with kong-harnesses and an Okta sign-in
             cta:
               url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
-  # When a Claude Code release fails in a provider mode, replace the "No
-  # Claude Code release" line with one bullet per release and mode: the
-  # release, the mode, what breaks and how to avoid it. Remove the bullet when
-  # a later release passes in that mode.
-  - columns:
+  # When a tested Claude Code release fails in a provider mode, replace the
+  # "Kong knows of no" line with one bullet per release and mode: the release,
+  # the mode, what breaks, how to avoid it and, once it ships, the release with
+  # the fix. Keep the bullet after the fix ships, so developers who still run
+  # the failing release see it. Remove it when no supported release is older.
+  - header:
+      type: h3
+      text: "Known issues with Claude Code releases"
+    columns:
       - blocks:
           - type: structured_text
             config:
-              header:
-                type: h3
-                text: "Known issues with Claude Code releases"
               blocks:
                 - type: text
                   text: |
-                    Kong tests each new Claude Code release through {{site.ai_gateway}} in every provider mode that [kong-harnesses](/kong-harnesses/) sets up. When a release fails in a mode, Kong lists it here with what breaks and how to avoid it, and removes the entry when a later release passes in that mode.
+                    Kong tests new Claude Code releases through {{site.ai_gateway}} in the provider modes that [kong-harnesses](/kong-harnesses/) sets up. When a tested release fails in a mode, Kong lists it here with what breaks and how to avoid it.
 
-                    No Claude Code release has a known issue.
+                    Kong knows of no tested Claude Code release that fails in a provider mode.
 
                     To keep Claude Code on a release that works:
 
-                    - A profile that `kong-harnesses profile create` builds turns off Claude Code auto-updates, unless you turn them on with `--auto-updates on`. Claude Code then stays on the release that you installed until you run `claude update`.
-                    - To go back to an earlier release, run `claude install <version>`.
-                    - Without kong-harnesses, set `DISABLE_AUTOUPDATER` to `1` in the `env` of your Claude Code settings.
+                    - Keep auto-updates off. A kong-harnesses profile turns them off, unless your administrator created it with `kong-harnesses profile create --auto-updates on`. Run `claude update` when you want a newer release.
+                    - To go back to an earlier release, run `claude install <version>`. This installs the native build, also when you installed Claude Code with npm or Homebrew.
+                    - To get new releases later, run `claude install stable`. The stable channel gets releases later than the latest channel and skips releases with major regressions.
+                    - If you don't use kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/settings), such as `~/.claude/settings.json`.
   - header:
       type: h3
       text: "Claude Code provider modes"
