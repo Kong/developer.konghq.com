@@ -61,12 +61,13 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 * Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes, and the response can't name a scope that the profile doesn't request.
   The profile requests `openid`, `profile`, `email` and `offline_access` by default, so keep **Include in token scope** on in the `profile` and `email` client scopes.
   In each other default client scope of the client, turn off **Include in token scope**.
-  When your `--scope` list leaves out `profile` or `email`, turn off **Include in token scope** in that client scope too.
+  When your `--scope` list leaves out `profile` or `email`, turn off **Include in token scope** in each client scope that it leaves out.
 * Refresh token rotation: You can keep **Revoke Refresh Token** off.
-  Keycloak still sends a new refresh token in each renewal response, and {{site.kong_harnesses}} saves it in place of the old one.
+  When **Use Refresh Tokens** is on, Keycloak sends a new refresh token in each successful renewal response.
+  {{site.kong_harnesses}} saves the new token in place of the old one.
   If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
   This setting is the number of times that a client can use a refresh token again, so a higher value lets a copied refresh token stay usable.
-* Audience: Set `--audience-parameter none` to use the Audience mapper as the source of the gateway audience.
+* Audience: Set `--audience-parameter none`, so that the sign-in request doesn't send `resource` and the Audience mapper is the only source of the gateway audience.
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
   Keep **Add to ID token** off in the mapper, as it is by default ([Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded)), because {{site.kong_harnesses}} refuses an ID token whose `aud` has any value other than the client ID.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
