@@ -116,9 +116,7 @@ The callback is the address on the developer's computer that the browser returns
 {{site.kong_harnesses}} listens on that address while the developer signs in with [`kong-harnesses login`](/kong-harnesses/login/) or [`kong-harnesses setup`](/kong-harnesses/setup/), so the developer must open the sign-in page in a browser on the same computer.
 The developer must finish the sign-in in the browser within 2 minutes.
 At each sign-in in the browser, {{site.kong_harnesses}} sends `prompt=consent` to ask for the consent screen, but the identity provider can skip it.
-{{site.kong_harnesses}} ignores callback parameters that it doesn't use.
-When the callback has an `iss` value, it must match the issuer of the profile.
-When the discovery document sets `authorization_response_iss_parameter_supported` to `true`, the callback must have an `iss` value.
+For the checks on the callback request, see [Callback](/kong-harnesses/identity-provider/checks/#callback).
 
 Register the callback of the profile in the client as an exact value, not as a pattern.
 Use the same host, port and path in the client.
@@ -148,8 +146,8 @@ To let several profiles sign in at the same time, give each profile a different 
 The sign-in fails if the identity provider doesn't issue a refresh token.
 Give the client the refresh token grant type and the `offline_access` scope.
 
-When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag, up to 16 scopes.
-[`profile create`](/kong-harnesses/profile/create/) refuses a list without `openid` or `offline_access`.
+When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag.
+For the rules of the list, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
 
 When the token response has a `scope` value, it can't be empty, and each scope in it must match a different scope that the profile requests.
 A returned scope matches a requested scope when it is the same, when it is the same after {{site.kong_harnesses}} decodes its percent escapes, or when it is the last path segment of exactly one requested URI scope, such as `access_as_user` for `api://API_ID/access_as_user`.
@@ -172,7 +170,8 @@ Set `config.audience_required` to a list that contains the gateway audience, as 
 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
-The value must be an absolute URI, such as `api://default`, without user information or a fragment.
+For example, use `api://default`.
+For the rules of the value, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
 The `aud` claim of the access token can differ from the `--audience` value.
 
 Set `--audience-parameter` to match how your identity provider reads the audience from the sign-in request:
@@ -209,26 +208,9 @@ Before you give the profile to developers, check that the gateway accepts access
 
 {{site.kong_harnesses}} reads the OIDC discovery document of the identity provider when you create the profile.
 The issuer URL must match the `issuer` value in the discovery document character by character, including a trailing slash.
-For the URL, response and token checks, see [Identity provider checks](/kong-harnesses/identity-provider/checks/).
 
-[`profile create`](/kong-harnesses/profile/create/) refuses a discovery document that doesn't meet these rules:
-
-* The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
-  `grant_types_supported`, `token_endpoint_auth_methods_supported` and `code_challenge_methods_supported` follow the same rule when the document lists them.
-* The issuer, `authorization_endpoint`, `token_endpoint` and `jwks_uri`, and also `revocation_endpoint` when the document lists it, are canonical `https` URLs.
-  The issuer can't have a query, and the query of `authorization_endpoint` can't have a parameter that {{site.kong_harnesses}} sets.
-  See [URLs](/kong-harnesses/identity-provider/checks/#urls).
-* `response_types_supported` lists the `code` response type.
-* `id_token_signing_alg_values_supported` lists at least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`.
-  Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists.
-* When the discovery document lists `authorization_response_iss_parameter_supported`, it is `true` or `false`.
-* When the discovery document lists one of these fields, the field has the value that {{site.kong_harnesses}} needs:
-  * `code_challenge_methods_supported` lists the `S256` PKCE method.
-  * `grant_types_supported` lists the `authorization_code` and `refresh_token` grant types.
-  * `token_endpoint_auth_methods_supported` lists the `none` method, for a public client.
-
-{{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
-For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
+[`profile create`](/kong-harnesses/profile/create/) refuses a discovery document that doesn't meet the rules in [Discovery document](/kong-harnesses/identity-provider/checks/#discovery-document) of the checks page.
+For example, the document must list the `code` response type and an RSA or ECDSA ID token signature algorithm.
 
 Some identity providers omit `none` from the advertised methods for public clients.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
@@ -265,4 +247,4 @@ kong-harnesses profile create \
 
 Add `--redirect-uri`, `--scope`, `--audience-parameter`, `--public-client-evidence` or `--max-token-lifetime-seconds` when your identity provider needs them.
 
-If you create a profile again with a different issuer, endpoint, client ID, callback, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+If you create a profile again with a different issuer, endpoint, client ID, callback, `--scope` list, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
