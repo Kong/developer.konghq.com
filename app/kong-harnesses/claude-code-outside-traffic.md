@@ -35,7 +35,7 @@ Those requests don't pass through the gateway, so the gateway can't log, limit o
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
 It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
-`kong-harnesses profile create` writes that profile for you, unless you turn on Anthropic telemetry when it asks.
+`kong-harnesses profile create` writes that profile for you, unless you pass `--auto-updates on` or `--anthropic-telemetry on`, or turn on Anthropic telemetry when it asks.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -57,7 +57,7 @@ rows:
   - traffic: Usage metrics
     destination: "`api.anthropic.com` and `http-intake.logs.us5.datadoghq.com`"
     member: "`anthropic_telemetry`"
-    cost: Anthropic doesn't get latency, reliability and usage data from your sessions. Feature flags, error reports and the feedback survey also turn off.
+    cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
     destination: "`api.anthropic.com`"
     member: "`feature_flags`"
@@ -77,7 +77,7 @@ rows:
   - traffic: claude.ai connectors
     destination: "`mcp-proxy.anthropic.com`"
     member: "`connectors`"
-    cost: "{{ site.claude_code }} doesn't load the MCP connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
+    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. With a gateway sign-in they never load, even when `connectors` is `true`. With the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
     destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally a GitHub issue on `github.com`. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
     member: "`bug_command` and `feedback_command`"
@@ -92,12 +92,12 @@ rows:
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. Developers can add it with `/plugin marketplace add`."
   - traffic: Artifacts
     destination: "`claude.ai` and `*.frame.claudeusercontent.com`"
-    member: "None. Set `enableArtifact: false` in {{ site.claude_code }} settings."
+    member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
     cost: "Claude can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions."
   - traffic: Automatic updates and other nonessential traffic
-    destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com` and `api.anthropic.com`"
+    destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com` and `*-review.googlesource.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check and the pull request and merge request status badges also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that the nonessential traffic switch turns off, `auto_updates` set to `false` turns off only automatic updates."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and Gerrit change lookups also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that the nonessential traffic switch turns off, `auto_updates` set to `false` turns off only automatic updates."
 {% endtable %}
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
@@ -126,7 +126,7 @@ A member that the profile leaves out never causes a conflict.
 `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
 {{ site.claude_code }} reads a blank switch as off, so the feature stays on, even when the developer's shell exports the switch.
-Then `auto_updates` set to `false` turns off only automatic updates, and {{ site.claude_code }} fetches the release notes and the list of Anthropic's MCP servers again.
+Then `auto_updates` set to `false` turns off only automatic updates, and the other traffic in the automatic updates row of the table comes back.
 
 ## Traffic that stays
 
@@ -141,7 +141,6 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 * `storage.googleapis.com`, for the plugin metadata that `/plugin` shows
 * `registry.npmjs.org`, for npm and bun installs of {{ site.claude_code }}, npm-source plugins and MCP servers that `npx` starts
 * `bridge.claudeusercontent.com`, for the Claude in Chrome extension
-* `*-review.googlesource.com`, for Gerrit change lookups in a Claude desktop app session on a `googlesource.com` checkout
 
 {{ site.claude_code }} can add hosts in a new release, so check [Network access requirements](https://code.claude.com/docs/en/network-config#network-access-requirements) in the {{ site.claude_code }} documentation for the current list.
 
@@ -201,7 +200,8 @@ The environment variables go in the `env` key, and `skipWebFetchPreflight` and `
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
-{{ site.claude_code }} skips the fetch of server-managed settings when a custom `ANTHROPIC_BASE_URL` is set in the shell, so a gateway setup can't rely on server-managed settings.
+A gateway setup can't rely on server-managed settings, because they require a direct connection to `api.anthropic.com`, and a credential such as a Team or Enterprise sign-in or an Anthropic API key.
+{{ site.claude_code }} also skips the fetch when the shell exports a custom `ANTHROPIC_BASE_URL`.
 
 {% table %}
 columns:
@@ -230,10 +230,10 @@ rows:
     setting: "`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`"
   - member: "`official_marketplace_autoinstall`"
     setting: "`CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`"
-  - member: None, for artifacts
+  - member: "None yet, for artifacts. The `artifact` member writes nothing."
     setting: "`enableArtifact: false`, or `CLAUDE_CODE_DISABLE_ARTIFACT=1`"
   - member: "`auto_updates`"
-    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When the profile turns on a feature that the second switch turns off, activation writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead."
+    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When you turn on a feature that the second switch turns off, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead, as activation does."
 {% endtable %}
 
 ## {{ site.claude_code }} on the web and in Slack
@@ -249,8 +249,8 @@ In a self-hosted environment, the conversation still goes to `api.anthropic.com`
 To turn off cloud sessions for a Team or Enterprise organization:
 
 1. Sign in to claude.ai as an Owner of your organization.
-1. Open the [{{ site.claude_code }} admin settings](https://claude.ai/admin-settings/claude-code).
-1. Turn off cloud sessions.
+1. Open [**Organization settings** > **Claude Code**](https://claude.ai/admin-settings/claude-code).
+1. Turn off cloud sessions, which sets the `allow_remote_sessions` policy to off.
 
 If your organization uses custom roles, also leave the cloud sessions permission out of each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
 The organization setting applies only to the accounts of your organization.

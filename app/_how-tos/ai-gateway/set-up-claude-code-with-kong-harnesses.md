@@ -319,7 +319,7 @@ columns:
     key: recover
 rows:
   - feature: claude.ai connectors
-    why: Connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway.
+    why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. With the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
     why: It bills at a higher rate, and it needs fast mode access on the Anthropic organization behind the gateway.
