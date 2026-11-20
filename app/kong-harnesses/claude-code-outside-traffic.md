@@ -173,11 +173,12 @@ For that reason, {{site.kong_harnesses}} refuses a profile that turns on a featu
 
 * `feature_flags` set to `true` while `anthropic_telemetry` is `false`.
 * In a schema 18 profile, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
-* `bug_command` or `feedback_command` set to `true` while the other command member is `false`.
+* `bug_command` and `feedback_command` set to different values.
+  In a schema 18 profile, also one of the two set while the profile leaves out the other.
 * In a profile of an earlier schema, a member set to `true` for a feature that the nonessential traffic switch turns off, while `auto_updates` is `false`.
   For `artifact`, [Earlier schemas](#earlier-schemas) says when an installed profile stays valid.
 
-A member that the profile leaves out never causes a conflict.
+Apart from the two command members in a schema 18 profile, a member that the profile leaves out never causes a conflict.
 
 While the usage metrics switch or the nonessential traffic switch is on, [`CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1`](https://code.claude.com/docs/en/env-vars#variables) can send the survey ratings to your OpenTelemetry collector instead of Anthropic.
 `feedback_survey` set to `false` keeps the survey off even then.
@@ -241,8 +242,9 @@ Set a profile member to `false` where the table lists one, or set the {{ site.cl
 Activation writes the user settings file of {{ site.claude_code }}.
 Command-line flags, the shared project settings and the local project settings [take precedence](https://code.claude.com/docs/en/settings#settings-precedence) over that file, so a repository or a developer can turn a feature back on for one project.
 Only [managed settings](https://code.claude.com/docs/en/managed-settings) enforce a value.
+A session that starts with a [`--setting-sources`](https://code.claude.com/docs/en/cli-reference#cli-flags) list that leaves out `user` doesn't read the user settings file, so none of the settings that activation writes apply to that session.
 Two keys on this page are [exceptions](https://code.claude.com/docs/en/settings#exceptions-to-managed-settings-precedence): `enableArtifact: false` and `disableClaudeAiConnectors: true` from any settings source win even over managed settings.
-Activation writes `enableArtifact: false` for `artifact` set to `false`, so a project file or a flag can't turn the Artifact tool back on.
+In a schema 14 or later profile, activation writes `enableArtifact: false` for `artifact` set to `false`, so while {{ site.claude_code }} reads the user settings file, no other settings source can turn the Artifact tool back on.
 `kong-harnesses doctor` checks the user settings file, so it doesn't report a project setting or a command-line flag that changes one of these settings.
 
 ### In the profile
@@ -295,7 +297,8 @@ If a developer changes or removes one of these settings later, the `anthropic` c
 
 The following table gives the {{ site.claude_code }} settings that each profile member writes.
 To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
-To turn off feature flags by hand while a computer runs {{ site.claude_code }} before v2.1.319, use `DISABLE_GROWTHBOOK`, as the [environment variables reference](https://code.claude.com/docs/en/env-vars#variables) explains.
+{{ site.claude_code }} reads `DISABLE_GROWTHBOOK` from v2.1.124, and its newer name `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` from v2.1.319.
+To turn off feature flags by hand on a computer that runs {{ site.claude_code }} v2.1.318 or earlier, use `DISABLE_GROWTHBOOK`, as the [environment variables reference](https://code.claude.com/docs/en/env-vars#variables) explains.
 The environment variables go in the `env` key, and `skipWebFetchPreflight`, `enableArtifact` and `disableClaudeAiConnectors` are top-level keys.
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
@@ -317,7 +320,7 @@ rows:
   - member: "`anthropic_telemetry`"
     setting: "`DISABLE_TELEMETRY=1`"
   - member: "`feature_flags`"
-    setting: "`DISABLE_GROWTHBOOK=1`, which {{ site.claude_code }} reads from v2.1.124, and `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`, its newer name, which {{ site.claude_code }} reads from v2.1.319"
+    setting: "`DISABLE_GROWTHBOOK=1`, and in a schema 18 profile also `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`"
   - member: "`error_reports`"
     setting: "`DISABLE_ERROR_REPORTING=1`"
   - member: "`fast_mode`"
