@@ -102,6 +102,7 @@ The owner of each folder must be `root`. Only the owner and the `admin` or `whee
 
 A newer package replaces the installed version. To remove kong-harnesses:
 
+1. If an MDM tool deploys the package to the Mac, remove the Mac from that deployment, so that the tool doesn't install the package again.
 1. Ask each developer to [remove their settings](#remove-the-settings-of-a-developer).
 1. Check that the installer package installed kong-harnesses:
 
@@ -116,7 +117,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    ls -l /usr/local/bin/kong-harnesses
    ```
 
-   The output must start with `-`. If it starts with `l`, another install put a link at this path, so skip the next three steps. If the link goes to a path that contains `Cellar`, Homebrew installed this copy, so remove it with Homebrew.
+   The output must start with `-`. If the command prints `No such file or directory`, skip the next three steps. If the output starts with `l`, another install put a link at this path, so skip the next three steps. If the link goes to a path that contains `Cellar`, Homebrew installed this copy, so remove it with Homebrew.
 1. Show the checksum that the package receipt has for the executable:
 
    ```sh
@@ -136,6 +137,13 @@ A newer package replaces the installed version. To remove kong-harnesses:
    sudo rm /usr/local/bin/kong-harnesses
    ```
 
+1. Check that the folders of the license and notices are folders, not links:
+
+   ```sh
+   /bin/ls -ld /usr/local /usr/local/share /usr/local/share/doc /usr/local/share/doc/kong-harnesses
+   ```
+
+   Each of the four lines must start with `d`. If a line starts with `l`, or the command prints `No such file or directory`, skip the next two steps, because `rm` can delete files in another folder through a link.
 1. Delete the license and notices of the package:
 
    ```sh
@@ -149,7 +157,6 @@ A newer package replaces the installed version. To remove kong-harnesses:
    ```
 
    If the folder has other files, the command fails and keeps the folder and its files.
-
 1. Delete the package receipt:
 
    ```sh
@@ -173,7 +180,7 @@ The Windows installer installs kong-harnesses in `C:\Program Files\Kong\kong-har
 
    The command prints `0` when the install is complete. It prints `3010` when the install is complete and the computer must restart to finish it, so schedule a restart. With `/qn`, the installer doesn't show errors, so any other number means that the install failed.
 
-A newer installer replaces the installed version, and Windows Installer refuses an older installer. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, run the same command as an administrator with `/x` in place of `/i`, with the installer that installed it. If you don't have that installer, remove **Kong Harnesses** in **Settings** > **Apps** > **Installed apps**.
+A newer installer replaces the installed version, and Windows Installer refuses an older installer. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). If Intune manages the app, remove the **Required** assignment for the users or devices before you uninstall it, because Intune installs the app again while a **Required** assignment applies. To remove kong-harnesses, run the same command as an administrator with `/x` in place of `/i`, with the installer that installed it. If you don't have that installer, remove **Kong Harnesses** in **Settings** > **Apps** > **Installed apps**.
 
 Make sure that only administrators can change `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe` and the folders that contain it. An account that can change the file or these folders can replace kong-harnesses with a program that takes the sign-in of each developer. When kong-harnesses runs from this folder, a developer who runs `kong-harnesses doctor --profile <profile>` also checks these permissions. If another account can change them, the check fails and names the fix.
 
@@ -212,6 +219,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. Click **Next**.
 1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
 1. In the **Install behavior** section, select **System**.
+1. From the **Device restart behavior** dropdown menu, select "No specific action". This setting stops the install from restarting the device.
 1. Click **Next**.
 1. On the **Requirements** page, in the **Check operating system architecture** section, select **Yes. Specify the systems the app can be installed on.**
 1. Select the **Install on x64 system** checkbox for the `_windows_amd64.msi` installer, or the **Install on ARM64 system** checkbox for the `_windows_arm64.msi` installer. Make sure that no other architecture checkbox is selected, because the two installers replace each other.
@@ -235,7 +243,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. Click **Next**.
 1. On the **Review + create** page, click **Create**.
 
-Add a new app in the same way for each new release. Intune allows at most 10 superseded apps in a supersedence graph, including apps that the new app supersedes through other apps, and each release adds one. When all assigned devices run the new release, remove the assignments of the previous app. Then remove the previous app from the **Supersedence** page of the new app, and delete the previous app.
+Add a new app in the same way for each new release. Intune allows at most 10 superseded apps in a supersedence graph, including apps that the new app supersedes through other apps, and each release adds one. When all assigned devices run the new release, remove the assignments of the previous app. Then open the **Properties** of the new app, click **Edit** next to **Supersedence**, remove the previous app, click **Review + save** and **Save**, and delete the previous app.
 
 ## Linux packages
 
