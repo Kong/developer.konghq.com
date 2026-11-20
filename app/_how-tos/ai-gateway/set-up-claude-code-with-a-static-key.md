@@ -52,6 +52,9 @@ prereqs:
       content: |
         On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
+    - title: jq
+      include_content: md/ai-gateway/v2/prereqs/jq
+      icon_url: /assets/icons/code.svg
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
@@ -233,6 +236,8 @@ ai_gateway_models:
 
 {{ site.claude_code }} sends the key in the `Authorization: Bearer` header and in the `x-api-key` header. With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header. When `hide_credentials` is `true`, {{site.ai_gateway}} removes that header before it sends the request to Anthropic, and the AI Model Provider sets `x-api-key` to your Anthropic key. Anthropic doesn't get the developer's key.
 
+The AI Auth Strategy schema doesn't list `header_auth_schemes`. The strategy passes extra `config` properties to the [`key-auth` plugin](/plugins/key-auth/reference/), and the plugin reads `header_auth_schemes` in {{site.ai_gateway}} 2.4 and later.
+
 ## Create the kong-harnesses profile
 
 A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It holds no secrets. A static-key profile names no identity provider, so it needs only a name, the gateway origin and the model.
@@ -248,21 +253,27 @@ kong-harnesses profile create --name quickstart --sign-in static-key --gateway-o
 kong-harnesses saves the profile and installs it on this computer. It also sends a test request without the key to the gateway route of each agent CLI that the profile sets up. This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
 
 {:.info}
-> In production, the administrator creates the profile once. Each developer gets the HTTPS URL or JSON file of the profile, and a key of their own. The profile holds no key, so send each key on its own, through a secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile:
+> In production, the administrator creates the profile once, with the `https://` origin of the gateway. To give developers the profile as a JSON file, the administrator saves it from the installed profile:
 >
 > ```sh
-> kong-harnesses setup <profile-url> --client claude-code
+> kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
+> ```
+>
+> The administrator shares the file or puts it at an HTTPS URL. The profile holds no key, so the administrator sends each developer a key of their own through a password manager or another secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file:
+>
+> ```sh
+> kong-harnesses setup <profile>.json --client claude-code
 > ```
 >
 > `setup` installs the profile, asks for the key, and configures {{ site.claude_code }} in one run.
 >
-> A developer who has only the key and the gateway URL can run `setup` with no profile:
+> A developer who has only the key can run `setup` with no profile:
 >
 > ```sh
 > kong-harnesses setup --client claude-code
 > ```
 >
-> `setup` then asks the questions of `profile create`, such as the gateway URL and the model. At the **Sign-in** question, the developer picks **Use a key from the administrator**.
+> `setup` then asks the questions of `profile create`. The developer needs the gateway URL and the model ID from the administrator, because `setup` can ask for the model before it asks for the key. At the **Sign-in** question, the developer picks **Use a key from the administrator**.
 
 ## Save the key and configure {{ site.claude_code }}
 
