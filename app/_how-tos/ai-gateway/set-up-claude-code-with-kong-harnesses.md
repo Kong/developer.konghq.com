@@ -39,6 +39,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: "{{ site.claude_code }} traffic outside {{site.ai_gateway}}"
+    url: /kong-harnesses/claude-code-outside-traffic/
 
 prereqs:
   inline:
@@ -343,6 +345,7 @@ rows:
 {% endtable %}
 
 A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
+[{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
 {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
 
