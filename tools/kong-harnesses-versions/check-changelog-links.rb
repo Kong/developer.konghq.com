@@ -6,12 +6,13 @@ require 'jekyll'
 require 'nokogiri'
 require 'yaml'
 
-# fetch-changelog.js removes every link from the kong-harnesses changelog, because the
+# sync-changelog.rb removes every link from the kong-harnesses changelog, because the
 # page has none. This check does not trust that: it renders the result with the site's
 # own Markdown converter, reads the HTML with a real parser, and stops the sync when the
 # page would hold anything that a browser could follow. It allows only plain elements
-# with plain attributes, so no form of an address in an attribute can pass, and no `//`
-# in text outside a code span. Text in a code span is not a link, but it still must not
+# with plain attributes, so no form of an address in an attribute can pass. It reads the
+# text of each element as a reader sees it, joined across inline markup such as bold,
+# and refuses any `//` outside code. Text in code is not a link, but it still must not
 # name the kong-harnesses repository.
 module KongHarnessesChangelogLinks
   module_function
@@ -28,6 +29,8 @@ module KongHarnessesChangelogLinks
     # The language of a fenced code block, such as ```sh in an upgrade step.
     'code' => { 'class' => /\Alanguage-[\w+-]+\z/ }
   }.freeze
+  # A reader sees the text of these apart from the text around them.
+  BLOCKS = %w[h1 h2 h3 h4 h5 h6 p ul ol li pre blockquote br hr].freeze
 
   # The hosts that serve the repository, matched only as a whole name, so notgithub.com
   # or github.com.example.com does not match.
@@ -79,16 +82,30 @@ module KongHarnessesChangelogLinks
             found << "the attribute #{attribute.name} on <#{node.name}>"
           end
         end
-      elsif node.text?
-        text = normalize(node.content)
-        in_code = node.ancestors.any? { |parent| parent.name == 'code' }
-        found << "the address in #{node.content[0, 200].inspect}" if !in_code && text.include?('//')
-        found << "the kong-harnesses repository in #{node.content[0, 200].inspect}" if text.match?(REPOSITORY)
-      elsif !node.fragment?
+      elsif !node.text? && !node.fragment?
         found << "a #{node.class.name.split('::').last} node"
       end
+      next unless node.fragment? || BLOCKS.include?(node.name)
+
+      seen = visible(node)
+      found << "the address in #{seen.strip[0, 200].inspect}" if normalize(visible(node, code: false)).include?('//')
+      found << "the kong-harnesses repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(REPOSITORY)
     end
     found.uniq
+  end
+
+  # The text of a block as a reader sees it: inline elements join their text, and a block
+  # inside it stands apart, so a space takes its place, as it does for code without `code`.
+  def visible(node, code: true)
+    node.children.map do |child|
+      if child.text?
+        child.content
+      elsif !child.element? || BLOCKS.include?(child.name) || (!code && child.name == 'code')
+        ' '
+      else
+        visible(child, code: code)
+      end
+    end.join
   end
 
   def check(markdown)

@@ -32,7 +32,10 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['the repository in a code span', 'run `go install github.com/Kong/kong-harnesses/cmd/x`'],
       ['the repository at the end of a sentence', 'see github.com/Kong/kong-harnesses.'],
       ['an HTML comment', '<!-- note -->'],
-      ['a footnote', "see [^1]\n\n[^1]: a note"]
+      ['a footnote', "see [^1]\n\n[^1]: a note"],
+      ['the repository split by bold', 'see github.com/**Kong**/kong-harnesses'],
+      ['the repository split by a code span', 'see `github.com`/Kong/kong-harnesses'],
+      ['an address split by bold', 'see https:**//**example.com']
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
