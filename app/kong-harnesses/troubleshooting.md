@@ -76,7 +76,7 @@ rows:
   - code: "`3`"
     problem: The sign-in, or a missing key for a gateway MCP server.
   - code: "`130`"
-    problem: The run stopped before `doctor` finished the report, for example after Ctrl+C.
+    problem: You canceled `doctor` before it finished the report, for example with Ctrl+C.
 {% endtable %}
 
 ## Next step for each check
@@ -95,7 +95,7 @@ rows:
   - check: "`install`"
     what: |
       The `install` check runs once, before the reports.
-      On Windows, only administrators can change a kong-harnesses install under `Program Files`.
+      On Windows, only administrators can change a kong-harnesses install under `Program Files`, and the folders above it.
     next: Ask your administrator to install kong-harnesses again with its MSI, or to remove write access for every account that isn't an administrator.
   - check: "`profile`"
     what: The profile is installed, and kong-harnesses can read it.
@@ -118,7 +118,7 @@ rows:
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, and the `fix:` line names `kong-harnesses profile cleanup --client CLIENT_NAME`, run it first.
+      When the settings are inconsistent with what kong-harnesses wrote, and the `fix:` line names `profile cleanup`, run that command first.
       When the settings have two ownership documents, `profile cleanup` refuses them, so remove the leftover values and both documents manually, then activate the profile, as the `fix:` line says.
       If `profile cleanup` reports that the settings no longer match what kong-harnesses installed, inspect them and remove the leftover values manually.
       When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
@@ -132,8 +132,11 @@ rows:
       If the `npm` check reports an access problem, fix it first, for example the npm token.
       Then do what the `fix:` line says, for example remove an old plugin from the cache and start OpenCode once.
   - check: "`issuer`"
-    what: kong-harnesses connects to the identity provider of the profile. A profile that uses a static key skips this check.
+    what: |
+      The `issuer` check tests a direct connection to the token endpoint of the identity provider of the profile, and skips that test when a proxy applies.
+      A profile that uses a static key skips this check.
     next: |
+      If `doctor` reports a proxy for the endpoint, check that the proxy can connect to the endpoint.
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
   - check: "`gateway`"
@@ -151,6 +154,7 @@ rows:
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line names only that `profile activate` step, run it on its own.
       When project settings or managed settings of {{ site.claude_code }} set a proxy variable, or `doctor` can't read them, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
+      The same applies when a settings file sets one proxy variable twice with different letter case, or sets a proxy variable to a value that isn't a string.
       Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
     what: |
