@@ -113,7 +113,7 @@ rows:
       If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
       For more about the sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
   - check: "`client`"
-    what: kong-harnesses set up the agent CLI for this profile, and the agent CLI settings still contain what kong-harnesses wrote.
+    what: kong-harnesses, or the managed settings of your organization, set up the agent CLI for this profile, and the agent CLI settings still contain what that setup wrote.
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
@@ -136,15 +136,18 @@ rows:
       If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
   - check: "`gateway`"
     what: |
+      The `gateway` check tests a direct connection to the gateway.
       For an `http://` gateway, the check fails when a proxy applies to the gateway.
-      For an `https://` gateway, the check tests a direct connection, and skips that test when a proxy applies, or when `--inference` runs for {{ site.claude_code }}.
-      Other checks, such as `catalog`, can send their requests through the proxy of an `https://` gateway.
+      For an `https://` gateway, the check skips the test when a proxy applies.
+      When `--inference` runs for {{ site.claude_code }}, the check doesn't test the connection, and fails only an `http://` gateway that a proxy applies to.
+      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
       When a proxy in the shell applies to an `http://` gateway on this computer, add the exact gateway host, without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
       For an IPv6 loopback address, add instead each form of the address, with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
+      When the `fix:` line names only that `profile activate` step, run it on its own.
       When project settings or managed settings of {{ site.claude_code }} set a proxy variable, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
       Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
@@ -206,7 +209,10 @@ rows:
       If your organization's managed settings block the servers, ask your administrator.
       When `doctor` can't read a saved key, or your own MCP settings block the servers, do what the `fix:` line says.
   - check: "`inference`"
-    what: "With `--inference` only: one small model request through the route of {{ site.claude_code }} gets a complete answer. The request can cost money."
+    what: |
+      With `--inference` only, one small model request through the route of {{ site.claude_code }} gets a complete answer.
+      The request can cost money.
+      For a profile that uses your Claude subscription, `doctor` doesn't send the request, so send a prompt from {{ site.claude_code }} to test the route.
     next: |
       Read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
       Do what the `fix:` line says, when the report has one.
@@ -258,5 +264,6 @@ Do that step, then run `profile delete` again.
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
 `profile delete` also refuses while you're signed in.
 `profile delete` asks you to type the profile name to confirm.
-`logout` asks too when it removes a saved sign-in or key from this computer, which a CI profile that reads its key from the environment doesn't have.
+`logout` asks too when the profile has a saved sign-in or key on this computer.
+When only gateway MCP keys are left, `logout` removes them without asking.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
