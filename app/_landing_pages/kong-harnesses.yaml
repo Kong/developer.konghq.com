@@ -57,3 +57,26 @@ rows:
             text: Read the reference
             url: /kong-harnesses/example-reference/
             align: end
+
+  - header:
+      type: h2
+      text: "Roll out Claude Code to managed computers"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Roll out through MDM
+            description: Build the Claude Code managed settings for a profile and deploy them to every managed computer.
+            cta:
+              text: Roll out through MDM
+              url: /kong-harnesses/roll-out-claude-code-through-mdm/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Keep a fleet current
+            description: Hold managed computers to a range of Claude Code versions and move them to a new model.
+            cta:
+              text: Keep a fleet current
+              url: /kong-harnesses/maintain-a-claude-code-fleet/
+              align: end
