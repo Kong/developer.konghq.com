@@ -38,7 +38,7 @@ For this to work, register one client for {{site.kong_harnesses}} in the identit
 
 {{site.kong_harnesses}} is tested with Okta.
 For the Okta steps, see the prerequisites of [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
-Other OIDC identity providers need the same settings.
+Other OIDC identity providers need the same kinds of settings, with values that depend on the identity provider.
 
 ## Client settings
 
@@ -69,12 +69,17 @@ rows:
       `code`, with the authorization code in the query of the callback.
       If the identity provider has a response mode setting, select `query`.
     flag: "None"
+  - setting: Token type
+    value: |
+      `Bearer`, at sign-in and at renewal.
+      A client that requires DPoP or another token type fails.
+    flag: "None"
   - setting: PKCE
     value: "Required, with the `S256` method."
     flag: "None"
   - setting: ID token signature
     value: |
-      An asymmetric algorithm.
+      An RSA or ECDSA algorithm, such as `RS256` or `ES256`.
       See [Discovery document](#discovery-document).
     flag: "None"
   - setting: Callback, also called the redirect URI
@@ -95,7 +100,8 @@ rows:
     flag: "`--audience`, `--audience-parameter`"
   - setting: Access token lifetime
     value: |
-      From 6 minutes to 1 hour by default.
+      The `expires_in` value of the identity provider must be in the range that the profile accepts, more than 360 and at most 3600 seconds by default.
+      `--max-token-lifetime-seconds` sets the highest lifetime that the profile accepts.
       See [Access token lifetime](#access-token-lifetime).
     flag: "`--max-token-lifetime-seconds`"
 {% endtable %}
@@ -103,12 +109,13 @@ rows:
 ## Callback
 
 The callback is the address on the developer's computer that the identity provider sends the browser back to after the sign-in.
-{{site.kong_harnesses}} listens on that address while the developer signs in, so the developer must open the sign-in page in a browser on the same computer.
-Each sign-in asks the identity provider to show its consent screen.
+{{site.kong_harnesses}} listens on that address while the developer signs in with [`kong-harnesses login`](/kong-harnesses/login/) or [`kong-harnesses setup`](/kong-harnesses/setup/), so the developer must open the sign-in page in a browser on the same computer.
+At each sign-in in the browser, {{site.kong_harnesses}} sends `prompt=consent` to ask for the consent screen, but the identity provider can skip it.
+For example, Keycloak shows it only when consent is on for the client, and Auth0 doesn't show it for a first-party native application by default.
 
 Register the callback of the profile in the client as an exact value, not as a pattern.
 For example, a profile with `http://127.0.0.1:9876/callback` fails to sign in when the client has `http://localhost:9876/callback`.
-`kong-harnesses profile get` and `kong-harnesses doctor` show the callback of a profile, so you can compare it with the client.
+[`kong-harnesses profile get`](/kong-harnesses/profile/get/) and [`kong-harnesses doctor`](/kong-harnesses/doctor/) show the callback of a profile, so you can compare it with the client.
 
 To use another callback, set `--redirect-uri` when you create the profile.
 The value must:
@@ -124,12 +131,13 @@ Some identity providers have their own rules for a loopback callback.
 For example, Microsoft Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`.
 In Entra ID, register the callback under **Mobile and desktop applications**.
 The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
-If you register a `127.0.0.1` callback in Entra ID, include the port that the profile uses.
+To register a `127.0.0.1` callback in Entra ID, add it to `replyUrlsWithType` in the application manifest, and include the port that the profile uses.
 
 During a sign-in, {{site.kong_harnesses}} listens on the port of the callback.
 For a `localhost` callback, it listens on `127.0.0.1`, and also on `[::1]` when the computer has it.
 Two sign-ins on the same computer conflict when they need the same address and port, even with different paths.
-A second sign-in stops with a message that another program is using the callback address, and it works again when the port is free.
+For example, a profile with a `localhost` callback and a profile with a `127.0.0.1` callback on the same port conflict, because both listen on `127.0.0.1`.
+A second sign-in stops with the message "another program on this computer, such as another sign-in, is using the sign-in callback address", and it works again when the port is free.
 To let several profiles sign in at the same time, give each profile a different port.
 
 ## Offline access and renewal
@@ -137,14 +145,17 @@ To let several profiles sign in at the same time, give each profile a different 
 {{site.kong_harnesses}} renews the access token with a refresh token.
 The sign-in fails if the identity provider doesn't issue a refresh token.
 Give the client the refresh token grant type, and allow the `offline_access` scope for it.
+In Keycloak, keep `offline_access` as an optional client scope of the client, and check that users have the realm role `offline_access` and that the client scope includes it.
 In Auth0, also turn on **Allow Offline Access** in the API of the gateway.
 
 A profile requests `openid`, `profile`, `email` and `offline_access` by default.
 When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag, up to 16 scopes.
 `profile create` refuses a list without `openid` or `offline_access`.
 
-When the token response lists scopes, each scope must be one that the profile requests, and the response must keep each API scope that the profile requests.
-Otherwise, the sign-in fails.
+When the token response lists scopes, each scope must be one that the profile requests.
+The response must also keep each scope that the profile requests, other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
+At renewal, each listed scope must be one that the sign-in response gave.
+Otherwise, the sign-in or the renewal fails.
 
 The identity provider can rotate the refresh token on each use, or keep the same one.
 {{site.kong_harnesses}} saves each new refresh token that it gets.
@@ -157,13 +168,12 @@ For what `logout` does with it, see [`kong-harnesses logout`](/kong-harnesses/lo
 
 The gateway checks the audience of an access token when the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) sets [`config.audience_required`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-audience-required).
 Set `config.audience_required` to a list that contains the value that the identity provider puts in the `aud` claim of its access tokens.
-The gateway reads the `aud` claim by default.
 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
 The value must be an absolute URI, such as `api://default`.
 It is often the same as the `aud` claim, but not always.
-For example, a Microsoft Entra ID v2.0 access token has the application ID of the API, a GUID, in `aud`, and a v1.0 access token has the Application ID URI.
+For example, a Microsoft Entra ID v2.0 access token has the application ID of the API, a GUID, in `aud`, and a v1.0 access token can have the application ID or the Application ID URI.
 
 Identity providers read the audience from the sign-in request in different ways.
 Set `--audience-parameter` to match your identity provider:
@@ -187,7 +197,7 @@ rows:
     description: |
       The sign-in request doesn't send the audience.
       Use this value when the client, the authorization server or a scope sets the audience.
-      If the identity provider selects the gateway API through a scope, request that scope with `--scope`, with the default scopes.
+      If the identity provider selects the gateway API through a scope, give that scope with `--scope`, together with `openid`, `offline_access` and each other scope that you need.
 {% endtable %}
 
 {{site.kong_harnesses}} doesn't check the audience of the access token.
@@ -197,15 +207,17 @@ So the identity provider must also give the gateway audience to the access token
 
 These settings give the access token the gateway audience in some identity providers:
 
-* Auth0: Register the gateway as an API.
+* Auth0: Register the gateway as an API, with an identifier that is an absolute URI, such as `https://gateway.example.com/api`.
   Set `--audience` to the identifier of the API, and set `--audience-parameter audience`.
 * Keycloak: Keycloak ignores the `resource` parameter by default, so set `--audience-parameter none`.
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
   Use the dedicated client scope, because {{site.kong_harnesses}} refuses a token response with a scope that the profile doesn't request.
 * Microsoft Entra ID: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
   Give the client the delegated permission of the gateway API, and grant admin consent if the tenant or the API scope needs it.
-  Request the full URI of the API scope with `--scope`, with the default scopes.
-* PingFederate: Make the access token management instance of the gateway the default of the client, and set its **Audience Claim Value** to the `--audience` value.
+  Give the full URI of the API scope with `--scope`, together with `openid`, `offline_access` and each other scope that you need.
+* PingFederate: Keep `--audience-parameter resource`, and create a JWT access token management instance for the gateway.
+  Add the `--audience` value to its **Resource URIs**, and set its **Audience Claim Value** to the `--audience` value.
+  Select the instance in the OpenID Connect policy of the client and as the **Default Access Token Manager** of the client, because the renewal request doesn't send `resource`.
 
 Before you give the profile to developers, check that the gateway accepts an access token from a sign-in, and an access token from a renewal.
 
@@ -221,8 +233,8 @@ For Microsoft Entra ID, use the issuer of your tenant, `https://login.microsofto
 * An `https` URL in `authorization_endpoint`, `token_endpoint` and `jwks_uri`.
 * The `code` response type in `response_types_supported`.
 * At least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512` in `id_token_signing_alg_values_supported`.
-  {{site.kong_harnesses}} doesn't accept symmetric algorithms, such as `HS256`.
-  Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists, because a discovery document can list one while the client signs with `HS256`.
+  {{site.kong_harnesses}} doesn't accept other algorithms, such as `HS256` or `EdDSA`.
+  Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists, because a discovery document can list one while the client signs with another algorithm.
 
 It also refuses a discovery document that lists one of these capabilities without the value that {{site.kong_harnesses}} needs:
 
@@ -232,6 +244,7 @@ It also refuses a discovery document that lists one of these capabilities withou
 
 {{site.kong_harnesses}} accepts a discovery document that leaves out one of these three fields, and checks each field that the identity provider supplies.
 A missing field doesn't prove that the identity provider supports the capability.
+For example, if the discovery document leaves out `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 Test the sign-in and a renewal in a non-production deployment before you give the profile to developers.
 
 Some identity providers, such as Microsoft Entra ID, don't list `none` even for a public client.
@@ -247,12 +260,12 @@ If a saved endpoint changes and the new discovery document passes the checks, cr
 ## Access token lifetime
 
 {{site.kong_harnesses}} reads the lifetime of each access token from the `expires_in` value of the token response, at sign-in and at renewal.
-It refuses a lifetime under 360 seconds, which is 6 minutes.
+It refuses a lifetime of 360 seconds, which is 6 minutes, or less, so the identity provider must issue access tokens for more than 6 minutes, such as 10 minutes.
 It also refuses a lifetime over the limit of the profile, which is 3600 seconds, or 1 hour, by default.
 
 The defaults of identity providers differ.
 For example, Keycloak issues access tokens for 5 minutes, Auth0 for 24 hours, and Microsoft Entra ID for 60 to 90 minutes.
-In Keycloak, raise the access token lifespan to at least 6 minutes.
+In Keycloak, raise the access token lifespan to more than 6 minutes, such as 10 minutes.
 If your identity provider issues longer access tokens, find the longest access token lifetime in its policy, and set `--max-token-lifetime-seconds` to that value, up to 86400 seconds.
 If the policy allows more than 86400 seconds, which is 24 hours, reduce it to 86400 seconds or less.
 After a change to this value, developers must run `kong-harnesses login` again.
