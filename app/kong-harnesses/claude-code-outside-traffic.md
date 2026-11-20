@@ -29,7 +29,7 @@ related_resources:
     url: /kong-harnesses/doctor/
 ---
 
-A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Foundry and Mantle provider modes.
+A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Microsoft Foundry and Amazon Bedrock Mantle provider modes.
 Only the requests that go to that base URL, such as the model requests, pass through the gateway.
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to services such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
@@ -56,15 +56,15 @@ columns:
     key: cost
 rows:
   - traffic: Usage metrics
-    destination: "`api.anthropic.com` and `http-intake.logs.us5.datadoghq.com`"
+    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only in the Anthropic API provider mode"
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
-    destination: "`api.anthropic.com`"
+    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in"
     member: "`feature_flags`"
-    cost: "Features that {{ site.claude_code }} turns on through feature flags are unavailable, including Remote Control and the other [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching)."
+    cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
-    destination: "`browser-intake-us5-datadoghq.com`"
+    destination: "`browser-intake-us5-datadoghq.com`, only in the Anthropic API provider mode and when an Anthropic rollout turns error reports on"
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
@@ -92,18 +92,19 @@ rows:
     member: "`official_marketplace_autoinstall`"
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration for good, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
   - traffic: Artifacts
-    destination: "`claude.ai`, `*.frame.claudeusercontent.com`, and `api.anthropic.com` for the publish requests and the organization policy"
+    destination: "`api.anthropic.com` for the publish requests and the organization policy, `*.frame.claudeusercontent.com` for the artifact reads, and `claude.ai`, which serves the published page"
     member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
     cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
 When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped check, or a check that fails with a network error, as available, unless the organization turned fast mode off.
 When a proxy answers the check with its own page, {{ site.claude_code }} reads that page as an organization that [turned fast mode off](https://code.claude.com/docs/en/fast-mode#fast-mode-has-been-disabled-by-your-organization), so let the check reach `api.anthropic.com` through the proxy.
+When the proxy can't let it through, set `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK=1` in {{ site.claude_code }} settings, because the variable that activation writes doesn't cover that case.
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
 The default depends on the model provider and the sign-in.
@@ -131,7 +132,7 @@ A member that the profile leaves out never causes a conflict.
 `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
 A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
-Then `auto_updates` set to `false` turns off only automatic updates, and the other traffic in the automatic updates row of the table comes back, unless its own member keeps it off.
+Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and the other traffic in the automatic updates row of the table comes back, unless its own member keeps it off.
 
 ## Traffic that stays
 
@@ -143,7 +144,7 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 * `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy
 * `code.claude.com` and `claude.com`, for the documentation lookups of the built-in `claude-code-guide` agent and for pre-approved WebFetch requests
 * The OpenTelemetry collector, when the profile sends telemetry to one
-* The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds
+* The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds, such as a marketplace that {{ site.claude_code }} clones from `github.com`
 * `storage.googleapis.com`, for the plugin metadata that `/plugin` shows
 * `downloads.claude.ai`, for plugin executable downloads
 * `registry.npmjs.org`, for npm and bun installs of {{ site.claude_code }}, npm-source plugins and their Node.js package dependencies, and MCP servers that `npx` starts
@@ -210,7 +211,7 @@ To stop developers from turning the settings back on, set them in [managed setti
 Managed settings take precedence over the user settings file that `profile activate` writes.
 A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
-Activation writes the gateway base URL to the user settings file, with the provider switch in the Foundry and Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
+Activation writes the gateway base URL to the user settings file, with the provider switch in the Microsoft Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
 A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
@@ -281,5 +282,6 @@ To block the app, a Slack administrator removes the Claude app and stops new ins
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace. Every user in that workspace loses access at once.
 * A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) with **Only allow pre-approved apps**, and restricts the Claude app, so that members can't install it again.
 * On Enterprise Grid, an Org Owner or Org Admin [restricts the Claude app for the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Manage Apps** > **Restrict an app**. Restricting the app doesn't remove existing installations, so also remove it from each workspace.
+* On Enterprise Grid, when the Claude app is installed for the whole organization, an Org Owner or Org Admin [uninstalls it from the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Installed Apps**. That removes the app from all workspaces.
 
 [{{ site.claude_code }} in Slack](https://code.claude.com/docs/en/slack) has the details.
