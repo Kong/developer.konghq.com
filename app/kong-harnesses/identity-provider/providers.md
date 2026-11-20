@@ -58,13 +58,16 @@ They come from the documentation of each identity provider, and they aren't test
 * Consent: Keycloak shows the consent screen only when consent is on for the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
+* Scopes: The token response names each default client scope of the client that has **Include in token scope** on, such as `profile` and `email`, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
+  Request each of these scopes with `--scope`, or turn off **Include in token scope** in the client scope, because the response can't name a scope that the profile doesn't request.
 * Refresh token rotation: If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
   This setting is the number of times that a client can use a refresh token again, so a higher value lets a copied refresh token stay usable.
 * Audience: Keycloak ignores the `resource` parameter by default, so set `--audience-parameter none`.
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
   If you use a shared client scope, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
-* Access token lifetime: Set the **Access Token Lifespan** of the realm, or of the client, to at least 7 minutes, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
+* Access token lifetime: Set the **Access Token Lifespan** of the realm, or of the client, from 7 to 60 minutes, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
+  For a longer lifespan, up to 24 hours, set `--max-token-lifetime-seconds` to the lifespan in seconds.
 
 ## Microsoft Entra ID
 
