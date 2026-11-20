@@ -174,7 +174,7 @@ rows:
     description: |
       The sign-in request doesn't send the audience.
       Use this value when the client, the authorization server or a scope sets the audience.
-      If the identity provider selects the gateway API through a scope, as Microsoft Entra ID does, give every scope with `--scope`: the default scopes and the scope of the gateway API.
+      If the identity provider selects the gateway API through a scope, as Microsoft Entra ID does, give each scope with its own `--scope` flag: the default scopes and the API scope that your identity provider exposes for the gateway.
 {% endtable %}
 
 {{site.kong_harnesses}} doesn't check the audience of the access token.
