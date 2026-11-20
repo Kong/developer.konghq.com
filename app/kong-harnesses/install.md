@@ -68,7 +68,7 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
 The installer package installs `kong-harnesses` in `/usr/local/bin` for every user of the Mac, and the license and third-party notices in `/usr/local/share/doc/kong-harnesses`. Kong signs the package with its Developer ID Installer certificate, and Apple notarizes it. The notarization ticket is stapled to the package, so the package installs without network access.
 
 {:.warning}
-> Do not install kong-harnesses in another way on a Mac that has the installer package. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`, and a release archive can also go to that path. The removal steps below cannot tell a copy from a release archive from the copy of the package. The package keeps the permissions of folders that exist, so before you install the package, make sure that only administrators can change `/usr/local` and `/usr/local/bin`.
+> Do not install kong-harnesses in another way on a Mac that has the installer package. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`, and a release archive can also go to that path. The removal steps for the package cannot tell a copy from a release archive from the copy of the package. The package keeps the permissions of folders that exist, so before you install the package, make sure that only administrators can change `/usr/local` and `/usr/local/bin`.
 
 To check the permissions, run:
 
@@ -163,7 +163,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    sudo pkgutil --forget com.konghq.kong-harnesses
    ```
 
-To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the app bundles in the package, and this package installs a command-line tool without an app bundle. Assign the package to one test Mac first. Assign it to other Macs only if Intune reports the install on the test Mac as successful. If it doesn't, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
+To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. Assign the `_darwin_arm64.pkg` package to Apple silicon Macs, and the `_darwin_amd64.pkg` package to Intel Macs. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the bundle ID of an app bundle, or by a package receipt with that ID. This package installs no app bundle, and its package receipt is `com.konghq.kong-harnesses`. Assign the package to one test Mac first. Assign it to other Macs only if Intune reports the install on the test Mac as successful, and `pkgutil --pkg-info com.konghq.kong-harnesses` on the test Mac shows the package. If it doesn't, deploy the package with an MDM tool that detects the install by the package receipt `com.konghq.kong-harnesses` or by the file `/usr/local/bin/kong-harnesses`.
 
 ## Windows installer
 
