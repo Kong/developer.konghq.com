@@ -9,7 +9,7 @@ columns:
     key: url
   - title: Cloud sign-in skip switch
     key: skip
-  - title: Other settings
+  - title: Other mode-specific settings
     key: other
 rows:
 {%- for mode in provider_modes.modes %}
