@@ -19,11 +19,14 @@ module KongHarnessesChangelogLinks
   ROOT = File.expand_path('../..', __dir__)
   DATA_FILE = File.join(ROOT, 'app/_data/kong-harnesses/changelog.json')
 
-  HEADING = %w[id].freeze
+  # Each element maps the attributes it may have to the values they may take.
+  HEADING = { 'id' => /\A[\w-]*\z/ }.freeze
   ELEMENTS = {
     'h1' => HEADING, 'h2' => HEADING, 'h3' => HEADING, 'h4' => HEADING, 'h5' => HEADING, 'h6' => HEADING,
-    'p' => [], 'ul' => [], 'ol' => [], 'li' => [], 'strong' => [], 'em' => [], 'code' => [], 'pre' => [],
-    'blockquote' => [], 'br' => [], 'hr' => [], 'del' => []
+    'p' => {}, 'ul' => {}, 'ol' => {}, 'li' => {}, 'strong' => {}, 'em' => {}, 'pre' => {},
+    'blockquote' => {}, 'br' => {}, 'hr' => {}, 'del' => {},
+    # The language of a fenced code block, such as ```sh in an upgrade step.
+    'code' => { 'class' => /\Alanguage-[\w+-]+\z/ }
   }.freeze
 
   # The hosts that serve the repository, matched only as a whole name, so notgithub.com
@@ -57,15 +60,23 @@ module KongHarnessesChangelogLinks
   end
 
   def problems(markdown)
+    html_problems(html(markdown))
+  end
+
+  # Outside the site build, kramdown renders a code block as plain <pre><code>. The site
+  # highlights it with its own template, which adds no address from the changelog text.
+  def html_problems(html)
     found = []
-    Nokogiri::HTML5.fragment(html(markdown)).traverse do |node|
+    Nokogiri::HTML5.fragment(html).traverse do |node|
       if node.element?
         allowed = ELEMENTS[node.name]
         if allowed.nil?
           found << "the element <#{node.name}>"
         else
           node.attribute_nodes.each do |attribute|
-            found << "the attribute #{attribute.name} on <#{node.name}>" unless allowed.include?(attribute.name)
+            next if allowed[attribute.name]&.match?(attribute.value)
+
+            found << "the attribute #{attribute.name} on <#{node.name}>"
           end
         end
       elsif node.text?

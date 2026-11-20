@@ -31,7 +31,8 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['an invisible character in the host', "see git​hub.com/Kong/kong-harnesses"],
       ['the repository in a code span', 'run `go install github.com/Kong/kong-harnesses/cmd/x`'],
       ['the repository at the end of a sentence', 'see github.com/Kong/kong-harnesses.'],
-      ['an HTML comment', '<!-- note -->']
+      ['an HTML comment', '<!-- note -->'],
+      ['a footnote', "see [^1]\n\n[^1]: a note"]
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
@@ -50,6 +51,13 @@ RSpec.describe KongHarnessesChangelogLinks do
       it "accepts #{name}" do
         expect { described_class.check(entry(text)) }.not_to raise_error
       end
+    end
+
+    # The spec loads the site plugins, which highlight code blocks with Shiki, so these
+    # cases give the HTML that kramdown renders for the sync job.
+    it 'accepts the language of a code block, and no other class' do
+      expect(described_class.html_problems('<pre><code class="language-sh">x</code></pre>')).to be_empty
+      expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
     end
 
     it 'accepts the published changelog data' do

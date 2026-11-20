@@ -79,6 +79,17 @@ test('removes every link and keeps its text, except a reference number or commit
     ['* see [x][r]\n\n    [r]: https://github.com/Kong/kong-harnesses', '* see x'],
     ['* see [x][r]\n\n> [r]: https://github.com/Kong/kong-harnesses', '* see x'],
     ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a ` x `` d'],
+    ['* use [`profile activate`](/reference/) now', '* use `profile activate` now'],
+    ['* use [`a]b` here](/x) now', '* use `a]b` here now'],
+    ['* use [`profile activate`][ref] now\n\n[ref]: /reference/', '* use `profile activate` now'],
+    ['* use [`profile activate`][] now\n\n[`Profile activate`]: /reference/', '* use `profile activate` now'],
+    ['* use [`profile activate`] now\n\n[`profile activate`]: /reference/', '* use `profile activate` now'],
+    ['* [![badge](https://img.example/x.svg)](https://example.com/evil) entry', '* badge entry'],
+    ['* see [a [b] c](https://example.com/x) d', '* see a [b] c d'],
+    ['* see [the\n  guide](https://example.com/g) now', '* see the\n  guide now'],
+    ['* a \\` https://example.com/x ` end', '* a \\` ` end'],
+    // A footnote stays for the rendered check to refuse, because kramdown makes it a link.
+    ['* see [^1] now\n\n[^1]: a note', '* see [^1] now\n\n[^1]: a note'],
   ];
   for (const [entry, expected] of entries) {
     assert.equal(exported(`## 1.0.0\n\n### Features\n\n${entry}\n`), `## 1.0.0\n\n### Features\n\n${expected}\n`);
@@ -89,6 +100,25 @@ test('pairs code spans as kramdown does and leaves their text as it is', () => {
   assert.equal(
     exported('## 1.0.0\n\n### Features\n\n* run `` a ` <path> `` and see <path>\n'),
     '## 1.0.0\n\n### Features\n\n* run `` a ` <path> `` and see &lt;path>\n',
+  );
+  const kept = [
+    // A run ends at the next place where the same run appears, even inside a longer run.
+    '* ``<a>``` x',
+    // A code span goes on to the next line of its paragraph.
+    '* run `curl\n  https://example.com/x` now',
+  ];
+  for (const entry of kept) {
+    assert.equal(exported(`## 1.0.0\n\n### Features\n\n${entry}\n`), `## 1.0.0\n\n### Features\n\n${entry}\n`);
+  }
+  // A single backtick between white space opens no span.
+  assert.equal(
+    exported('## 1.0.0\n\n### Features\n\n* x ` <b> https://example.com/a ` y\n'),
+    '## 1.0.0\n\n### Features\n\n* x ` &lt;b> ` y\n',
+  );
+  // An escaped backslash does not escape the backtick after it.
+  assert.equal(
+    exported('## 1.0.0\n\n### Features\n\n* a \\\\` https://example.com/x ` end\n'),
+    '## 1.0.0\n\n### Features\n\n* a \\\\` https://example.com/x ` end\n',
   );
 });
 
@@ -149,6 +179,10 @@ test('escapes an HTML-like placeholder outside code spans, so Kramdown shows it'
     exported('## 1.0.0\n\n### Features\n\n* run profile get <profile> or `profile get <profile>`\n'),
     '## 1.0.0\n\n### Features\n\n* run profile get &lt;profile> or `profile get <profile>`\n',
   );
+  assert.equal(
+    exported('## 1.0.0\n\n### Features\n\n* run profile get \\<profile>\n'),
+    '## 1.0.0\n\n### Features\n\n* run profile get \\<profile>\n',
+  );
 });
 
 test('publishes only the sections of published releases', () => {
@@ -187,4 +221,21 @@ test('keeps the spaces of an entry when it removes a link', () => {
     exported("## 1.0.0\n\n### Features\n\n* run `printf 'a  b'`  twice ([#1](https://github.com/Kong/kong-harnesses/pull/1))\n"),
     "## 1.0.0\n\n### Features\n\n* run `printf 'a  b'`  twice\n",
   );
+});
+
+test('changes no text inside a code block', () => {
+  const fenced = [
+    '  ```toml',
+    '  [mode]: automatic',
+    '  see [x](https://github.com/Kong/kong-harnesses) and <profile>',
+    '',
+    '',
+    '',
+    '### Documentation',
+    '* **ci:** [#1]',
+    '  ```',
+  ].join('\n');
+  const indented = ['      [mode]: automatic', '', '      ## not a heading <b>'].join('\n');
+  const changelog = `## 1.0.0\n\n### Features\n\n* set it:\n\n${fenced}\n\n* or:\n\n${indented}\n\n* last\n`;
+  assert.equal(exported(changelog), `## 1.0.0\n\n### Features\n\n* set it:\n\n${fenced}\n\n* or:\n\n${indented}\n\n* last\n`);
 });
