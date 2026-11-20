@@ -67,7 +67,7 @@ tldr:
 faqs:
   - q: How do I set up {{ site.claude_code }} for my developers?
     a: |
-      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create`.
+      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create --model my-claude-bedrock`.
       The AI Model in this guide accepts the Anthropic format, so keep the default `anthropic` provider in the profile, even though the model runs on Bedrock.
       Save the profile as a file with `kong-harnesses profile get <profile> -o json | jq .profile > <profile>.json`.
       In that file, set `"experimental_betas": false` in the `request_shape` block of `clients.claude-code`, so {{ site.claude_code }} doesn't send the experimental beta fields that Bedrock rejects.
