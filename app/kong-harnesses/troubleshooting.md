@@ -37,7 +37,7 @@ When you want to stop using kong-harnesses on a computer, [`kong-harnesses profi
 Check the profile and the agent CLI that fails:
 
 ```sh
-kong-harnesses doctor --profile PROFILE_NAME --client claude-code
+kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 ```
 
 Replace `PROFILE_NAME` with the name of your installed profile, here and in each command on this page.
@@ -69,11 +69,11 @@ columns:
     key: problem
 rows:
   - code: "`1`"
-    problem: The network, the identity provider, the gateway, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
+    problem: The network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
   - code: "`2`"
-    problem: The profile, the agent CLI or its settings, the shell that starts the agent CLI, the gateway MCP servers, or the kong-harnesses install.
+    problem: The profile, the agent CLI or its settings, the shell that starts the agent CLI, the settings that load the gateway MCP servers, or the kong-harnesses install.
   - code: "`3`"
-    problem: The sign-in.
+    problem: The sign-in, or a missing key for a gateway MCP server.
   - code: "`130`"
     problem: The run stopped before `doctor` finished the report, for example after Ctrl+C.
 {% endtable %}
@@ -106,7 +106,8 @@ rows:
     what: You're signed in to the profile. For a profile that uses a static key, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
     next: |
       Do what the `fix:` line says, usually `kong-harnesses login --profile PROFILE_NAME`.
-      For OpenCode and Hermes, the agent CLI can own the sign-in, and then `doctor` reports `ok` without a check, so check the sign-in in the agent CLI.
+      For OpenCode and Hermes, the agent CLI can own the sign-in.
+      Then `doctor` reports `ok` and says that the client owns it, so check the sign-in in the agent CLI.
       When the `fix:` line names the sign-in command of the agent CLI, run that command.
       For a CI profile that reads its key from the environment, set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator, because `login` refuses that profile.
       If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
@@ -135,11 +136,11 @@ rows:
   - check: "`gateway`"
     what: |
       The `gateway` check tests a direct connection to the gateway, and skips that test when a proxy applies.
-      Other checks, such as `catalog`, send their requests through the proxy.
+      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
-      When a proxy in the shell applies to an `http://` gateway on this computer, add the exact gateway host to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
+      When a proxy in the shell applies to an `http://` gateway on this computer, add the exact gateway host, without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
       For an IPv6 loopback address, add each form of the address, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
       When project settings or managed settings of {{ site.claude_code }} set a proxy variable, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
@@ -185,8 +186,8 @@ rows:
       When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line names `kong-harnesses profile cleanup` first.
   - check: "`overrides`"
     what: |
-      The `env` block of the settings file takes precedence over each credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, that the shell that starts {{ site.claude_code }} sets.
-      Neither the shell nor the `env` block of the settings file turns on a switch for another provider, such as `CLAUDE_CODE_USE_BEDROCK`, or sets a credential of another provider mode.
+      For each credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider, such as `CLAUDE_CODE_USE_BEDROCK`, that the shell that starts {{ site.claude_code }} sets, the `env` block of the settings file sets the same variable, which takes precedence.
+      The `env` block itself doesn't turn on a switch for another provider, or set a credential for the provider mode of the profile.
     next: |
       Do each step that the `fix:` line names.
       It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
@@ -195,7 +196,7 @@ rows:
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
       `doctor` doesn't send a request to a server that takes its own OAuth sign-in or a saved key.
     next: |
-      Run `kong-harnesses profile activate PROFILE_NAME --client claude-code` to install the servers.
+      If {{ site.claude_code }} doesn't load a server, do what the `fix:` line says, usually `kong-harnesses profile activate PROFILE_NAME --client claude-code`, which installs the servers.
       For a server that takes a key, run `kong-harnesses login --profile PROFILE_NAME`, which asks for each missing key.
       If the gateway refuses the sign-in on an MCP route, or doesn't serve a server that the profile lists, ask the gateway operators.
       If your organization's managed settings block the servers, ask your administrator.
@@ -211,6 +212,8 @@ rows:
 
 `kong-harnesses setup` and `kong-harnesses profile activate` change the settings of each agent CLI that they set up.
 `kong-harnesses profile cleanup` gives back the values that those settings contained before, and removes the values that kong-harnesses added.
+Without `--client`, `profile cleanup` works on every supported agent CLI, and also removes the settings that other profiles wrote.
+To clean up one agent CLI, add `--client`, for example `--client claude-code`.
 
 1. Show what `profile cleanup` would change:
 
@@ -224,12 +227,9 @@ rows:
    kong-harnesses profile cleanup
    ```
 
-Without `--client`, `profile cleanup` works on every supported agent CLI.
-To clean up one agent CLI, add `--client`, for example `--client claude-code`.
-
 `profile cleanup` changes only the values that kong-harnesses still owns.
-If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is.
-If `profile cleanup` can't tell which values it owns, it exits with `2`.
+If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and names each of those settings in a `Left as edited` line.
+If `profile cleanup` can't tell which values it owns, it exits with `2`, or with `4` when it changed another agent CLI.
 Inspect the settings, and remove the remaining values manually.
 If `profile cleanup` changes settings but can't finish the cleanup for one or more agent CLIs, it exits with `4`, also with `--client`.
 Do the step that the message names, then run it again.
@@ -250,9 +250,8 @@ kong-harnesses profile delete PROFILE_NAME
 
 While an agent CLI still uses the profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup` command for that agent CLI.
 Do that step, then run `profile delete` again.
-`profile cleanup` without `--client` also removes the settings that other profiles wrote in every agent CLI.
 
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
 `profile delete` also refuses while you're signed in.
-It asks you to type the profile name to confirm.
+`profile delete` asks you to type the profile name to confirm, and `logout` asks too when the profile has a saved sign-in.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
