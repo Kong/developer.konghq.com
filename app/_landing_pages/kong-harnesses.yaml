@@ -1,0 +1,59 @@
+metadata:
+  title: kong-harnesses
+  content_type: landing_page
+  description: This page is an introduction to kong-harnesses, Kong's OIDC credential helper that obtains short-lived access tokens for coding agents.
+  tools:
+    - kong-harnesses
+  breadcrumbs:
+    - /tools/
+rows:
+  - header:
+      type: h1
+      text: "kong-harnesses"
+      sub_text: |
+        Kong's OIDC credential helper for coding agents
+
+  - header:
+      type: h2
+      text: What is kong-harnesses?
+    columns:
+      - blocks:
+        - type: text
+          config: |
+            kong-harnesses obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
+            It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
+
+  - header:
+      type: h2
+      text: "Install kong-harnesses"
+    columns:
+      - blocks:
+        - type: tabs
+          tab_group: install-on-os
+          config:
+            - title: macOS
+              include_content: tools/kong-harnesses/install/osx
+            - title: Linux
+              include_content: tools/kong-harnesses/install/linux
+            - title: Windows
+              include_content: tools/kong-harnesses/install/windows
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Get started
+          description: Learn how to use kong-harnesses for the first time.
+          cta:
+            text: Get started
+            url: /kong-harnesses/get-started/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Reference
+          description: Look up kong-harnesses commands and options.
+          cta:
+            text: Read the reference
+            url: /kong-harnesses/example-reference/
+            align: end
