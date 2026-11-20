@@ -112,6 +112,18 @@ rows:
             description: Use Claude Code with kong-harnesses and an Okta sign-in
             cta:
               url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
+  - header:
+      type: h3
+      text: "Claude Code provider modes"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              A provider mode decides which API format Claude Code uses and which settings point it at {{site.ai_gateway}}. Kong checks the `latest` release channel of Claude Code every hour and tests the newest release in the following modes. The tests send each request through the current {{site.ai_gateway}} release, set up as in [the Anthropic guide](/ai-gateway/use-claude-code-with-ai-gateway-anthropic/), to a mock model provider that Kong runs for the tests. Kong doesn't test the Amazon Bedrock and Google Vertex AI modes of Claude Code.
+
+              In each mode, Claude Code runs a session with a tool call and a subagent. The test also checks that {{site.ai_gateway}} forwards the `anthropic-version` and `anthropic-beta` request headers and the `system`, `messages`, `tools`, `thinking`, `context_management` and `output_config` request body fields unchanged, as the [Claude Code gateway guide](https://code.claude.com/docs/en/llm-gateway-protocol) asks. In the Claude Platform on AWS mode, it also checks the `anthropic-workspace-id` header.
+
+              {% include md/ai-gateway/v2/claude-code-provider-modes.md heading_level=3 %}
   # When a tested Claude Code release fails in a provider mode, replace the
   # "Kong knows of no" line with one bullet per release and mode: the release,
   # the mode, what breaks, how to avoid it and, once it ships, the release with
@@ -127,28 +139,16 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong tests each new Claude Code release on the latest channel through {{site.ai_gateway}} in the Anthropic API, Microsoft Foundry and Amazon Bedrock Mantle provider modes that [kong-harnesses](/kong-harnesses/) sets up. When a tested release fails in one of these modes, Kong lists it here with what breaks and how to avoid it.
+                    Kong tests each new Claude Code release in the [provider modes above](#claude-code-provider-modes). When a tested release fails in one of these modes, Kong lists it here with what breaks and how to avoid it.
 
-                    Kong knows of no tested Claude Code release that fails in a provider mode.
+                    Kong knows of no tested Claude Code release that fails in one of these modes.
 
                     To keep Claude Code on a release that works:
 
-                    - Keep auto-updates off. A kong-harnesses profile turns them off, unless your administrator created it with `kong-harnesses profile create --auto-updates on`. Run `claude update` when you want a newer release.
+                    - Keep auto-updates off. A [kong-harnesses](/kong-harnesses/) profile turns them off, unless your administrator created it with `kong-harnesses profile create --auto-updates on`. Run `claude update` when you want a newer release.
                     - To go back to an earlier release, run `claude install <version>` with a release that worked in your mode, then check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew.
                     - To get new releases later, run `claude install stable`. The stable channel gets releases later than the latest channel and skips releases with major regressions.
                     - If you don't use kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`.
-  - header:
-      type: h3
-      text: "Claude Code provider modes"
-    columns:
-      - blocks:
-          - type: text
-            config: |
-              A provider mode decides which API format Claude Code uses and which settings point it at {{site.ai_gateway}}. Kong checks the `latest` release channel of Claude Code every hour and tests the newest release in the following modes. The tests send each request through the current {{site.ai_gateway}} release, set up as in [the Anthropic guide](/ai-gateway/use-claude-code-with-ai-gateway-anthropic/), to a mock model provider that Kong runs for the tests. Kong doesn't test the Amazon Bedrock and Google Vertex AI modes of Claude Code.
-
-              In each mode, Claude Code runs a session with a tool call and a subagent. The test also checks that {{site.ai_gateway}} forwards the `anthropic-version` and `anthropic-beta` request headers and the `system`, `messages`, `tools`, `thinking`, `context_management` and `output_config` request body fields unchanged, as the [Claude Code gateway guide](https://code.claude.com/docs/en/llm-gateway-protocol) asks. In the Claude Platform on AWS mode, it also checks the `anthropic-workspace-id` header.
-
-              {% include md/ai-gateway/v2/claude-code-provider-modes.md heading_level=3 %}
   - header:
       type: h2
       text: "Codex CLI"
