@@ -1,6 +1,6 @@
 ---
 title: "{{ site.claude_code }} traffic outside {{site.ai_gateway}}"
-description: "Lists the hosts that {{ site.claude_code }} contacts outside {{site.ai_gateway}} when it runs with a {{site.kong_harnesses}} profile. Covers the profile member and {{ site.claude_code }} setting that turn off each kind of traffic, what turning it off costs, and how to turn off {{ site.claude_code }} on the web and in Slack."
+description: "Lists the hosts that {{ site.claude_code }} contacts outside {{site.ai_gateway}} with a {{site.kong_harnesses}} profile, the profile member and {{ site.claude_code }} setting that turn off each kind of traffic and what that costs, and how to turn off {{ site.claude_code }} on the web and in Slack."
 content_type: reference
 layout: reference
 
@@ -69,7 +69,7 @@ rows:
   - traffic: Fast mode availability check
     destination: "`api.anthropic.com`"
     member: "`fast_mode`"
-    cost: Developers can't use fast mode.
+    cost: "`fast_mode` set to `false` turns fast mode off, so developers can't use it. When `fast_mode` is `true`, a skipped or failed check doesn't turn fast mode off, as the paragraph after this table explains."
   - traffic: WebFetch domain check
     destination: "`api.anthropic.com`"
     member: "`webfetch_preflight`"
@@ -145,7 +145,9 @@ A member set to `false` keeps its own traffic off, and a gateway key still stops
 The sync of the plugins of a claude.ai account doesn't depend on `auto_updates`.
 When the developer signs in to claude.ai and feature flags are on, {{ site.claude_code }} downloads new and updated plugins at each start.
 Set `feature_flags` to `false`, or set `syncClaudeAiPlugins` to `false`, to stop that sync.
-The background runs of plugin `command` sources, which can install dependencies, also start again, because only the nonessential traffic switch stops them.
+The background runs of plugin `command` sources, which can install dependencies, also start again.
+To stop them without the nonessential traffic switch, set [`disableCommandPluginSources`](https://code.claude.com/docs/en/settings-reference#disablecommandpluginsources) to `true` in managed settings.
+That setting also stops the installs, updates and loading of the plugins that use a `command` source, and `allowManagedHooksOnly` set to `true` has the same effect while `disableCommandPluginSources` is unset.
 
 ## Traffic that stays
 
@@ -174,7 +176,7 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`. For that value, activation writes neither `DISABLE_AUTOUPDATER` nor the nonessential traffic switch, so all of the automatic updates row stays on where its own conditions apply, unless the developer's own {{ site.claude_code }} settings turn it off.
+* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`. For that value, activation doesn't write `DISABLE_AUTOUPDATER`. It writes the nonessential traffic switch blank when the profile also turns on a feature that the switch turns off, as [Members that depend on each other](#members-that-depend-on-each-other) explains, and doesn't write the switch otherwise. So all of the automatic updates row stays on where its own conditions apply, unless the developer sets `DISABLE_AUTOUPDATER`, or sets the nonessential traffic switch when activation doesn't write it blank.
 * `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
