@@ -67,6 +67,15 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 
 {% include_cached /plugins/confluent/auth.md slug=page.slug name=page.name %}
 
+## Delivery guarantees {% new_in 3.18 %}
+
+The plugin supports `producer_idempotence`, `producer_transactions`, and `transactional_id_prefix`. They behave the same as in the [Kafka Upstream](/plugins/kafka-upstream/#delivery-guarantees) plugin.
+
+The Confluent plugin ignores producer settings by default. Set `producer_config_enabled` to `true` to enable them.
+Idempotence and transactions also need `producer_async` set to `false` and `producer_request_acks` set to `-1`.
+
+See [Kafka Upstream delivery guarantees](/plugins/kafka-upstream/#delivery-guarantees) for the transaction behavior, prerequisites, and retry guidance.
+
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
