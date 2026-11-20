@@ -126,7 +126,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong tests each new Claude Code release through {{site.ai_gateway}} in every provider mode that kong-harnesses sets up. When a release fails in a mode, Kong lists it here with what breaks and how to avoid it, and removes the entry when a later release passes in that mode.
+                    Kong tests each new Claude Code release through {{site.ai_gateway}} in every provider mode that [kong-harnesses](/kong-harnesses/) sets up. When a release fails in a mode, Kong lists it here with what breaks and how to avoid it, and removes the entry when a later release passes in that mode.
 
                     No Claude Code release has a known issue.
 
