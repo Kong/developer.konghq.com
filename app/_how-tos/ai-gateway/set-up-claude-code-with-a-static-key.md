@@ -283,7 +283,11 @@ Save the key in the profile:
 kong-harnesses login --profile quickstart
 ```
 
-`login` asks for the key and doesn't show it as you type. Paste the key from `CONSUMER_API_KEY`. To see it, run `echo "$CONSUMER_API_KEY"` in the shell where you created the key.
+`login` asks for the key and doesn't show it as you type. Paste the key from `CONSUMER_API_KEY`. To copy the key without showing it, run one of these commands in the shell where you created the key:
+
+* On macOS: `printf %s "$CONSUMER_API_KEY" | pbcopy`
+* In WSL: `printf %s "$CONSUMER_API_KEY" | clip.exe`
+* On Linux: `printf %s "$CONSUMER_API_KEY" | wl-copy`, or `xclip -selection clipboard` in place of `wl-copy`
 
 Configure {{ site.claude_code }} to use the profile:
 
