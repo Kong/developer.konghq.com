@@ -166,7 +166,7 @@ That setting also stops the installs, updates and loading of the plugins that us
 Some {{ site.claude_code }} switches turn off more than one feature:
 
 * The usage metrics switch (`DISABLE_TELEMETRY`) also turns off feature flags, error reports and the feedback survey.
-* The `/bug` and `/feedback` switches each turn off all of the feedback commands.
+* `DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, so {{ site.claude_code }} reads the two as one switch, and either of them turns off `/feedback`, `/bug` and `/share`.
 * The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, `/feedback`, Claude-drafted feedback and the feedback survey, and, for a profile that uses the developers' own Claude subscriptions, artifacts.
 
 For that reason, {{site.kong_harnesses}} refuses a profile that turns on a feature while another member turns it off:
@@ -241,6 +241,7 @@ Set a profile member to `false` where the table lists one, or set the {{ site.cl
 Activation writes the user settings file of {{ site.claude_code }}.
 Command-line flags, the shared project settings and the local project settings [take precedence](https://code.claude.com/docs/en/settings#settings-precedence) over that file, so a repository or a developer can turn a feature back on for one project.
 Only [managed settings](https://code.claude.com/docs/en/managed-settings) enforce a value.
+Two keys on this page are [exceptions](https://code.claude.com/docs/en/settings#exceptions-to-managed-settings-precedence): `enableArtifact: false` and `disableClaudeAiConnectors: true` from any settings file win even over managed settings.
 `kong-harnesses doctor` checks the user settings file, so it doesn't report a project setting or a command-line flag that changes one of these settings.
 
 ### In the profile
@@ -293,6 +294,7 @@ If a developer changes or removes one of these settings later, the `anthropic` c
 
 The following table gives the {{ site.claude_code }} settings that each profile member writes.
 To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
+When a cell also gives an earlier name, either name works when you set it by hand.
 The environment variables go in the `env` key, and `skipWebFetchPreflight`, `enableArtifact` and `disableClaudeAiConnectors` are top-level keys.
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
@@ -324,7 +326,7 @@ rows:
   - member: "`connectors`"
     setting: "`ENABLE_CLAUDEAI_MCP_SERVERS=false`. `disableClaudeAiConnectors: true` has the same effect, but activation doesn't write it."
   - member: "`bug_command`"
-    setting: "`DISABLE_FEEDBACK_COMMAND=1` and `DISABLE_BUG_COMMAND=1`, its earlier name"
+    setting: "`DISABLE_BUG_COMMAND=1`"
   - member: "`feedback_command`"
     setting: "`DISABLE_FEEDBACK_COMMAND=1`"
   - member: "`feedback_survey`"

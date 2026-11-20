@@ -46,7 +46,7 @@ To turn off cloud sessions for a Team or Enterprise organization:
 1. Open [**Organization settings** > **Claude Code**](https://claude.ai/admin-settings/claude-code).
 1. Turn off cloud sessions, which sets the `allow_remote_sessions` policy to off.
 
-If your Enterprise organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
+If your organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
 The cloud sessions permission controls only the sessions on Anthropic's infrastructure, not the sessions in a self-hosted environment.
 The organization setting applies only to the accounts of your organization.
 [{{ site.claude_code }} on the web](https://code.claude.com/docs/en/claude-code-on-the-web) explains cloud sessions.
@@ -69,6 +69,8 @@ To block the app, a Slack administrator removes the Claude app and stops new ins
 
 To see which workspaces are connected, an Owner of your Claude organization opens **Connected workspaces** in [**Claude's access** > **Channels** > **Slack**](https://claude.ai/admin-settings/claude-tag/channels/slack).
 An **Enterprise Grid** row with the status **Active** connects every workspace in that Grid, also the workspaces that no one paired on their own.
+That list shows only the pairings of your own Claude organization, and a workspace can be paired with [another Claude organization](https://claude.com/docs/claude-tag/admins/workspaces#pair-another-workspace).
+Before you remove the app from a workspace, check with the Owners of the other Claude organizations in your company that none of them connected it.
 
 The administrator can use these steps:
 
