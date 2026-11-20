@@ -32,7 +32,7 @@ related_resources:
 
 A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI. A profile doesn't contain secrets, so an administrator can share one file with every developer. [`kong-harnesses profile create`](/kong-harnesses/profile/create/) writes a profile for you, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) installs one from a file or an HTTPS URL.
 
-The file is JSON of up to 65536 bytes. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see an installed profile, run:
+The file is JSON of up to 65536 bytes, saved as UTF-8, or as UTF-16 with a byte-order mark. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see an installed profile, run:
 
 ```sh
 kong-harnesses profile get <name> -o json
@@ -187,9 +187,9 @@ rows:
   - field: "`description`"
     description: "A longer description, 1 to 240 printable ASCII characters."
   - field: "`gateway_origin`"
-    description: "Required. The origin of {{site.ai_gateway}}, without a path. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`."
+    description: "Required. The origin of {{site.ai_gateway}}, without a path. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. An `http://` gateway needs 0.17.1 or later. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`."
   - field: "`gateway_ca_bundle`"
-    description: "Version 12 and later. PEM certificate authorities for the gateway certificate, up to 32 KB. Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself. From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so. Add the certificate authority to the system trust store of each computer instead."
+    description: "Version 12 and later. PEM certificate authorities for the gateway certificate, up to 32 KB. Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself. From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so. Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes."
   - field: "`sign_in`"
     description: "Version 12 and later. How developers get a credential. See [Sign-in fields](#sign-in-fields)."
   - field: "`routes`"
@@ -245,7 +245,7 @@ rows:
   - field: "`client_id`"
     description: "Required. The ID of the public client that you registered for {{site.kong_harnesses}}, 1 to 256 visible ASCII characters."
   - field: "`redirect_uri`"
-    description: "Where the identity provider sends the browser after sign-in. The default is `http://localhost:9876/callback`. Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port. Its path is 2 to 256 characters of letters, digits and `-._~/`, without a query or a fragment. Register the same value with the identity provider."
+    description: "Where the identity provider sends the browser after sign-in. The default is `http://localhost:9876/callback`. Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port from 1 to 65535. Its path is 2 to 256 characters of letters, digits and `-._~/`, without a `.` or `..` segment, `//`, a query or a fragment. Register the same value with the identity provider."
   - field: "`audience`"
     description: "Required. The audience that the gateway accepts in a token, as an absolute URI without user information or a fragment."
   - field: "`audience_parameter`"
@@ -253,7 +253,7 @@ rows:
   - field: "`public_client_evidence`"
     description: "Version 6 and later. Set to `deployment` when the discovery document doesn't list the `none` token endpoint authentication method, and your deployment shows in another way that the client is public."
   - field: "`scopes`"
-    description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
+    description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. Each scope appears once, and is 1 to 128 visible ASCII characters other than `"` and `\`. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
   - field: "`max_access_token_lifetime_seconds`"
     description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 360 to 86400. The default is 3600."
 {% endtable %}
@@ -262,7 +262,7 @@ rows:
 
 These fields make up the security identity of a profile: `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
 
-A saved sign-in belongs to one security identity. When you import a profile that changes one of these fields, each developer runs `kong-harnesses login` again. `profile import` refuses the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then import the profile and activate it again. A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
+A saved sign-in belongs to one security identity. When you import a profile that changes one of these fields, each developer runs `kong-harnesses login` again. `profile import` refuses the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then import the profile and activate it again. A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values. A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
 ## Routes
 
@@ -323,7 +323,12 @@ Some blocks have more rules:
 * The `hermes` block also needs `model`, the gateway model that Hermes starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
 * A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
-* `profile activate` doesn't set up pi for a profile with `attribution`, or for a version 3 to 11 profile with `telemetry`.
+* A profile named `constructor` or `prototype` can't set up OpenCode.
+
+`profile activate` also refuses some agent CLIs for a profile that has fields they can't use:
+
+* Hermes and pi don't take `attribution`.
+* In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp` and pi, and top-level `models` stops Codex.
 
 ### Claude Code
 
@@ -389,11 +394,13 @@ rows:
 
 Each choice is `true` or `false`. From version 14, each choice is optional, and a choice that the profile leaves out changes nothing. Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices. For a profile before version 14, `profile activate` sets each choice from `anthropic_telemetry` to `webfetch_preflight` to `false`, as the releases before 0.9.0 did.
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile import` refuses a profile that turns on a feature and also turns off a setting that it needs:
+`profile activate` keeps the value that a setting had before it wrote the setting the first time. When a later profile leaves the choice out, or sets `auto_updates: true`, `profile activate` puts that earlier value back, so a setting that you or another tool wrote before can still turn the feature off.
+
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile import` refuses a profile that turns on a feature and also turns off a setting that it needs:
 
 * Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`.
 * `feature_flags: true` can't go with `anthropic_telemetry: false`.
-* From version 18, `feedback_survey: true` can't go with `anthropic_telemetry: false`.
+* From version 18, `error_reports: true` and `feedback_survey: true` can't go with `anthropic_telemetry: false`.
 * `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
 
 {% table %}
@@ -406,7 +413,7 @@ columns:
     key: on
 rows:
   - choice: "`auto_updates`"
-    off: "Writes `DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. From version 18, it writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`."
+    off: "Writes `DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, except for the version 18 case after this table."
     on: "Writes nothing."
   - choice: "`tool_search`"
     off: "Writes `ENABLE_TOOL_SEARCH=false`."
@@ -440,13 +447,13 @@ rows:
     on: "Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank. From release 0.18.0, it also writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`, for each schema version."
   - choice: "`bug_command`"
     off: "Writes `DISABLE_BUG_COMMAND=1`."
-    on: "Leaves `DISABLE_BUG_COMMAND` blank."
+    on: "Leaves `DISABLE_BUG_COMMAND` blank. `/bug` uploads the conversation to Anthropic."
   - choice: "`feedback_command`"
     off: "Writes `DISABLE_FEEDBACK_COMMAND=1`."
-    on: "Leaves `DISABLE_FEEDBACK_COMMAND` blank."
+    on: "Leaves `DISABLE_FEEDBACK_COMMAND` blank. `/feedback` uploads the conversation to Anthropic."
   - choice: "`feedback_survey`"
     off: "Writes `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`."
-    on: "Leaves `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY` blank."
+    on: "Leaves `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY` blank. The survey sends session ratings to Anthropic."
   - choice: "`cost_warnings`"
     off: "Writes `DISABLE_COST_WARNINGS=1`."
     on: "Leaves `DISABLE_COST_WARNINGS` blank."
@@ -457,6 +464,8 @@ rows:
     off: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=1`, so auto mode asks the model API for its verdict. A model that isn't Claude doesn't give one, so auto mode then asks about or denies each checked action. You can't combine it with `experimental_betas: false` in `request_shape`."
     on: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway."
 {% endtable %}
+
+From version 18, when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, whatever `auto_updates` is. A value that you export in the shell then can't turn those features off.
 
 When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its own default, which loads every tool at the start behind a gateway.
 
@@ -524,7 +533,7 @@ rows:
   - field: "`multiplier`"
     description: "A number above 0 and up to 10 that each price is multiplied by, both the prices here and the prices from the gateway model list. The default is 1."
   - field: "`models`"
-    description: "Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens. Each model sets all four prices, from 0 to 10000. A price here takes precedence over the price from the gateway model list."
+    description: "Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens. Each model sets all four prices, from 0 to 10000. Model IDs are unique without regard to case, and can't end with `[1m]`. A price here takes precedence over the price from the gateway model list."
 {% endtable %}
 
 #### Telemetry
@@ -550,7 +559,7 @@ rows:
 
 `attribution` declares headers that the agent CLIs send with each request, so that the gateway can group the spend. It has one field, `headers`, which maps a header name to its value, with 1 to 8 headers. The gateway reads a header named `Ai-Cost-<name>` as a cost tag.
 
-A header name is an HTTP token of up to 64 bytes, and appears once. A value is 1 to 128 printable ASCII characters. These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent` and `X-Api-Key`.
+A header name is an HTTP token of up to 64 bytes, and appears once without regard to case. A value is 1 to 128 printable ASCII characters. These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent` and `X-Api-Key`.
 
 {{site.kong_harnesses}} ignores a `caller` field from an older profile, so that the profile still imports.
 

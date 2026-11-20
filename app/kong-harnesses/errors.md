@@ -33,7 +33,7 @@ related_resources:
 
 When a command fails, {{site.kong_harnesses}} prints a line that starts with `Error:` to standard error, and says what to do next. For a wrong flag or argument, most commands also print `Run 'kong-harnesses <command> --help' for usage`.
 
-`kong-harnesses doctor` works in another way. It prints its findings, and the `--report` output, to standard output. When a check fails, its exit code comes from the first failed check: 2 for a profile or setup problem, 3 for a sign-in problem, and 1 for any other problem. A warning alone exits with 0.
+`kong-harnesses doctor` works in another way. It prints its findings, and the `--report` output, to standard output. For each agent CLI, the failed check to fix first gives a code: 2 for a profile or setup problem, 3 for a sign-in problem, and 1 for any other problem. `doctor` exits with the most severe of these codes across the profile and every agent CLI, in the order 2, then 1, then 3. A warning alone exits with 0. To act on the findings, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
 {:.info}
 > The text of a message can change between releases. In a script, check the exit code, not the message.
@@ -62,7 +62,7 @@ rows:
     meaning: "The command needs a sign-in, a new sign-in, or a key that isn't saved yet. When a renewal of the sign-in didn't finish, the next command resumes it."
     action: "Run `kong-harnesses login --profile <name>`, or set the key that the message names. If the message says that the next call resumes the renewal, run the command again first."
   - value: "4"
-    meaning: "The command did part of its work. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and then failed for another one."
+    meaning: "A partial result. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one. `profile activate --print` can exit with 4 without a change to any file, when it leaves out a client."
     action: "Follow the message, then run the command again."
   - value: "130"
     meaning: "You canceled the command, for example with Ctrl+C. The message says what the command changed, if anything."
@@ -99,7 +99,19 @@ Check the file against the [profile file reference](/kong-harnesses/profile-file
 
 ### "need an HTTPS gateway"
 
-Release 0.18.0 and later. The full message is "a Claude subscription and a gateway MCP server with its own OAuth sign-in need an HTTPS gateway". Change `gateway_origin` in the profile to an `https://` URL. Earlier releases refuse the same profile with "profile import rejected".
+The full message is `a Claude subscription and a gateway MCP server with its own OAuth sign-in need an HTTPS gateway; give the profile an https:// gateway_origin`. A `subscription` profile, and a profile with an `oauth` MCP server, send a sign-in that only HTTPS keeps private. Change `gateway_origin` in the profile to an `https://` URL. `profile create` prints the same message with `--gateway-origin` in place of `gateway_origin`.
+
+### "the profile file is in" an encoding that kong-harnesses can't read
+
+The message names the encoding of the file, such as UTF-32 or UTF-16 without a byte-order mark. Save the file as UTF-8, or as UTF-16 with a byte-order mark. In PowerShell, run `Set-Content -Encoding utf8 <file>`.
+
+### "OIDC discovery failed; check issuer access and retry"
+
+`profile create` couldn't read the discovery document of your identity provider. Check that the issuer URL is right and that this computer can reach it over HTTPS, then run the command again.
+
+### "OIDC metadata is incompatible with profile creation"
+
+`profile create` read the discovery document of your identity provider, but can't build a profile from it. For example, the issuer in the document differs from the issuer that you gave, or an endpoint doesn't use `https://`. Check the issuer URL, and the settings of the identity provider.
 
 ### "profile import failed; retry after checking source access"
 
@@ -125,9 +137,9 @@ An administrator installed this profile for every user of the computer, so you c
 
 The installed copy of the profile can't be read. Install the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
-### "selected profile needs a newer kong-harnesses" or "uses an unsupported format"
+### "selected profile needs a newer kong-harnesses"
 
-The installed profile has a schema version that this release can't read, usually because a newer release installed it. [Update {{site.kong_harnesses}}](/kong-harnesses/), then run the command again. Up to 0.17.1, the message is "selected profile uses an unsupported format; reinstall it with this version", and the fix is the same: update {{site.kong_harnesses}}.
+The installed profile has a schema version that this release can't read, usually because a newer release installed it. [Update {{site.kong_harnesses}}](/kong-harnesses/), then run the command again.
 
 ### "selected profile is missing, invalid, or unsupported"
 
@@ -156,6 +168,10 @@ The profile is already signed in, and `login` keeps that sign-in. To sign in wit
 ### "no key for the gateway MCP server"
 
 The message ends with "is saved on this computer". A gateway MCP server in the profile takes a key, and you didn't save one yet. Run `kong-harnesses login --profile <name>`, and enter the key from your administrator when `login` asks for it.
+
+### "the system password store did not save the key of a gateway MCP server"
+
+`login` saved the sign-in, but the system password store refused the key of a gateway MCP server. Unlock the password store if it is locked, then run `kong-harnesses login --profile <name>` again.
 
 ### "the sign-in is saved, but a gateway MCP server has no key yet"
 
