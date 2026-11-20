@@ -65,10 +65,10 @@ rows:
    https://YOUR_WORKDAY_HOST/ccx/service/customreport2/<tenant>/<report-owner>/<Report_Name>?format=csv
    ```
 
-**Watch out for:**
+Check the following before you export:
 
 * **A supervisory organization with two managers**: Workday puts both IDs in one cell, which {{site.konnect_short_name}} rejects with `must be a single manager`. Use a calculated field (**Extract Single Instance**) to pick one manager.
-* **Vacant managers**: When an organization's manager position is vacant, its workers export with no manager. Assign an interim manager, or use a calculated field that falls back to the manager of the superior organization.
+* **Vacant managers**: When an organization's manager position is vacant, its workers export without a manager. Assign an interim manager, or use a calculated field that falls back to the manager of the superior organization.
 * **No ready-made Manager ID field**: Some tenants don't include one. If yours doesn't, create a calculated field that returns the Employee ID of the worker's manager.
 
 {% endnavtab %}
@@ -123,7 +123,7 @@ rows:
 
    For small organizations, the OData v2 API returns the same data from `EmpJob` (`userId`, `managerId`, `costCenter`) and `User` (`email`). Effective-dated queries default to today.
 
-**Watch out for:**
+Check the following before you export:
 
 * **`NO_MANAGER` at the top**: The top person often has the literal value `NO_MANAGER` instead of an empty value. Clear that cell before you upload, or {{site.konnect_short_name}} reports `does not match a row in the file`.
 * **Multiple employments and global assignments**: These give one person several User IDs and rows. Keep only the primary employment.
@@ -196,7 +196,7 @@ rows:
 
    Worker type `C` marks contingent workers.
 
-**Watch out for:**
+Check the following before you export:
 
 * **Several people without a line manager**: Many tenants have more than one. Assign line managers to everyone except the top person.
 * **A stale manager hierarchy in OTBI**: OTBI's manager folders depend on the **Refresh Manager Hierarchy** process. Run it before the export, or use HCM Extracts.
@@ -253,7 +253,7 @@ rows:
    The Workers API (`GET https://api.adp.com/hr/v2/workers`) returns the same fields.
    Filter to active workers with `$filter=workers/workAssignments/assignmentStatus/statusCode/codeValue eq 'A'`, page with `$top` and `$skip` until it returns HTTP 204, and take `reportsTo` from the assignment where `primaryIndicator` is true.
 
-**Watch out for:**
+Check the following before you export:
 
 * **Mixed ID types**: Reports To Position ID doesn't match an Associate ID. Use **Reports To Associate ID** in the manager column.
 * **Vacant or terminated managers**: The reporting line is tied to a position, so it can point to a vacant position or to someone who has left. Fix those people in ADP before you export.

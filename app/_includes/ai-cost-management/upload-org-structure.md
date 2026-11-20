@@ -8,7 +8,7 @@ Choose whether to use an export from your HR system (HRIS) or a sample file:
 {% navtabs "org-structure" %}
 {% navtab "Use export from existing HRIS" %}
 
-Use the file you exported in the Export org chart from your HRIS prerequisite.
+Use the CSV file you exported from your HRIS.
 Save it as `org-structure.csv` in your current directory, or replace `org-structure.csv` with the path to your file in the import command.
 
 {% endnavtab %}
