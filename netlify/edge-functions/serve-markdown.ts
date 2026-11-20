@@ -11,6 +11,8 @@ const pagePath = (pathname: string) => {
   return pathname;
 };
 
+const REWRITE_MARKER = "_md_rewrite";
+
 const isMarkdown = (pathname: string) =>
   pathname.endsWith(".md") || pathname === "/llms.txt";
 
@@ -30,15 +32,17 @@ export default async (request: Request, context: Context) => {
       url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
     }
 
+    url.search = url.search ? `${url.search}&${REWRITE_MARKER}=1` : `?${REWRITE_MARKER}=1`;
     return url;
   }
 
+  const rewritten = url.searchParams.get(REWRITE_MARKER) === "1";
   const response = await context.next({ sendConditionalRequest: true });
 
   try {
     context.waitUntil(
       sendEvent({
-        path: pagePath(pathname),
+        path: rewritten ? pagePath(pathname) : pathname,
         format: isMarkdown(pathname) ? "markdown" : "html",
         user_agent: request.headers.get("User-Agent") || "",
         status_code: response.status,

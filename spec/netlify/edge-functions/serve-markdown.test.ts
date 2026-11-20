@@ -88,50 +88,79 @@ describe("serve-markdown handler", () => {
     assert.equal(events[0].ip, "");
   });
 
-  it("rewrites an Accept markdown request and sends no event in run 1", async () => {
+  it("rewrites an Accept markdown request with the marker and sends no event in run 1", async () => {
     const { result, nextCalls } = await run("/kongctl/", { accept: "text/markdown" });
 
     assert.ok(result instanceof URL);
     assert.equal(result.pathname, "/kongctl.md");
+    assert.equal(result.search, "?_md_rewrite=1");
     assert.equal(nextCalls.length, 0);
     assert.equal(events.length, 0);
   });
 
+  it("keeps the visitor query in the rewrite URL and appends the marker", async () => {
+    const { result } = await run("/kongctl/?utm_source=x&foo=1", { accept: "text/markdown" });
+
+    assert.ok(result instanceof URL);
+    assert.equal(result.pathname, "/kongctl.md");
+    assert.equal(result.search, "?utm_source=x&foo=1&_md_rewrite=1");
+  });
+
+  it("rewrites / to /index.md with the marker and no event", async () => {
+    const { result, nextCalls } = await run("/", { accept: "text/markdown" });
+
+    assert.ok(result instanceof URL);
+    assert.equal(result.pathname, "/index.md");
+    assert.equal(result.search, "?_md_rewrite=1");
+    assert.equal(nextCalls.length, 0);
+    assert.equal(events.length, 0);
+  });
+
+  it("logs the page path for a marked rewrite (run 2)", async () => {
+    const { nextCalls, result, expected } = await run("/kongctl.md?_md_rewrite=1", { accept: "text/markdown" });
+
+    assert.equal(nextCalls.length, 1);
+    assert.equal(result, expected);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].format, "markdown");
+    assert.equal(events[0].path, "/kongctl/");
+    assert.equal(events[0].status_code, 200);
+  });
+
+  it("logs /index.md?_md_rewrite=1 as /", async () => {
+    await run("/index.md?_md_rewrite=1", { accept: "text/markdown" });
+
+    assert.equal(events.length, 1);
+    assert.equal(events[0].path, "/");
+    assert.equal(events[0].format, "markdown");
+  });
+
   for (const accept of [undefined, "text/markdown"]) {
-    it(`counts /kongctl.md once as markdown on /kongctl/ (Accept: ${accept ?? "none"})`, async () => {
+    it(`logs the raw path for a direct /kongctl.md request (Accept: ${accept ?? "none"})`, async () => {
       const { result, nextCalls, expected } = await run("/kongctl.md", { accept });
 
       assert.equal(nextCalls.length, 1);
       assert.equal(result, expected);
       assert.equal(events.length, 1);
       assert.equal(events[0].format, "markdown");
-      assert.equal(events[0].path, "/kongctl/");
+      assert.equal(events[0].path, "/kongctl.md");
       assert.equal(events[0].status_code, 200);
+    });
+
+    it(`logs the raw path for a direct /index.md request (Accept: ${accept ?? "none"})`, async () => {
+      await run("/index.md", { accept });
+
+      assert.equal(events.length, 1);
+      assert.equal(events[0].path, "/index.md");
+      assert.equal(events[0].format, "markdown");
     });
   }
 
-  it("sends the status of the next response for a markdown request (run 2)", async () => {
-    await run("/kongctl.md", { accept: "text/markdown" }, new Response("moved", { status: 301 }));
+  it("sends the status of the next response for a marked rewrite (run 2)", async () => {
+    await run("/kongctl.md?_md_rewrite=1", { accept: "text/markdown" }, new Response("moved", { status: 301 }));
 
     assert.equal(events.length, 1);
     assert.equal(events[0].status_code, 301);
-  });
-
-  it("rewrites / to /index.md with no event", async () => {
-    const { result, nextCalls } = await run("/", { accept: "text/markdown" });
-
-    assert.ok(result instanceof URL);
-    assert.equal(result.pathname, "/index.md");
-    assert.equal(nextCalls.length, 0);
-    assert.equal(events.length, 0);
-  });
-
-  it("logs /index.md as /", async () => {
-    await run("/index.md", { accept: "text/markdown" });
-
-    assert.equal(events.length, 1);
-    assert.equal(events[0].path, "/");
-    assert.equal(events[0].format, "markdown");
   });
 
   it("counts /llms.txt as markdown", async () => {
