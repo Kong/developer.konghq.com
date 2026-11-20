@@ -335,7 +335,7 @@ rows:
 <!--vale on-->
 
 {:.info}
-> `consumer.*` and `consumer_group.*` fields are only populated after an authentication plugin (such as Key Auth or Basic Auth) has run. On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
+> `consumer.*` and `consumer_group.*` fields are only populated after an authentication plugin (for example, Key Auth or Basic Auth) has run. On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
 
 #### Plugin state fields
 
