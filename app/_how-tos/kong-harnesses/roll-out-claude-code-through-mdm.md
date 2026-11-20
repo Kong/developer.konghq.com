@@ -379,7 +379,8 @@ pkgbuild --root fleet-macos/root --install-location / --ownership recommended --
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
 With `--ownership recommended`, the macOS package installs the files as root.
-On Linux, `fleet build` prints a copy command that keeps these modes and creates the files as root.
+On Linux, `fleet build` prints a copy command that creates the files as root, and sets each folder that the build writes to mode 755 and each file to mode 644.
+The command doesn't change `/etc`.
 On Windows, the copy command that `fleet build` prints gives the files the access rules of `C:\Program Files`.
 
 ## Validate
