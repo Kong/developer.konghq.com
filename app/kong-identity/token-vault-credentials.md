@@ -335,7 +335,6 @@ headers:
   - 'Content-Type: application/json'
 body:
   secret: $NEW_STATIC_SECRET
-  selector: '"$GROUP_ID" in principal.groups'
   priority: 10
 {% endkonnect_api_request %}
 <!--vale on-->
