@@ -34,6 +34,17 @@ export function isNumericVersion(value) {
   return value.split(".").every((segment) => /^\d+$/.test(segment));
 }
 
+// A version input may carry a release suffix (`2.3.2-rc.2`). Only the release
+// prefix is the version itself; the suffix is not comparable, so it is stripped
+// before the numeric check. A value with no `-` is returned unchanged.
+export function normalizeReleasePrefix(value) {
+  if (typeof value !== "string") {
+    return value;
+  }
+  const separator = value.indexOf("-");
+  return separator === -1 ? value : value.slice(0, separator);
+}
+
 export function compareVersions(a, b) {
   const aSegments = a.split(".").map(Number);
   const bSegments = b.split(".").map(Number);
@@ -49,8 +60,14 @@ export function compareVersions(a, b) {
   return 0;
 }
 
-export function effectiveVersionUnderTest(imageTag, eventGatewayMinVersion) {
-  const candidates = [imageTag, eventGatewayMinVersion].filter(isNumericVersion);
+// Normalize before filtering, not inside the check: the value that is stored
+// must be the value that is compared, because compareVersions maps every dotted
+// segment to Number and a raw release-candidate tag turns the comparison into
+// NaN (which fails the gate open).
+export function effectiveVersionUnderTest(imageTag, minVersion) {
+  const candidates = [imageTag, minVersion]
+    .map(normalizeReleasePrefix)
+    .filter(isNumericVersion);
 
   if (candidates.length === 0) {
     return null;
@@ -64,13 +81,22 @@ export function effectiveVersionUnderTest(imageTag, eventGatewayMinVersion) {
 export async function testeableUrlsFromFiles(
   config,
   files,
-  { explicit = false, imageTag, eventGatewayMinVersion } = {},
+  {
+    explicit = false,
+    imageTag,
+    eventGatewayMinVersion,
+    aiGatewayMinVersion,
+  } = {},
 ) {
   const howTosUrls = [];
   const skipped = [];
   const versionUnderTest = effectiveVersionUnderTest(
     imageTag,
     eventGatewayMinVersion,
+  );
+  const aiVersionUnderTest = effectiveVersionUnderTest(
+    imageTag,
+    aiGatewayMinVersion,
   );
 
   const parsedFiles = files.map((file) => {
@@ -125,12 +151,32 @@ export async function testeableUrlsFromFiles(
         );
       }
 
+      const requiredAiGatewayVersion =
+        frontmatter.min_version && frontmatter.min_version["ai-gateway"]
+          ? String(frontmatter.min_version["ai-gateway"])
+          : null;
+      const needsNewerAiGateway =
+        aiVersionUnderTest &&
+        frontmatter.products.includes("ai-gateway") &&
+        isNumericVersion(requiredAiGatewayVersion) &&
+        compareVersions(requiredAiGatewayVersion, aiVersionUnderTest) > 0;
+
+      if (needsNewerAiGateway && explicit) {
+        const relativeFilePath = file.replace("../../", "");
+        throw new Error(
+          `${relativeFilePath} requires AI Gateway >= ${requiredAiGatewayVersion}, ` +
+          `but the version under test is ${aiVersionUnderTest}. ` +
+          `Unset KONG_IMAGE_TAG and KONNECT_AI_GATEWAY_MIN_VERSION to generate it anyway.`
+        );
+      }
+
       const skipHowTo =
         isNonFirstSeriesPage ||
         content.includes("@todo") ||
         frontmatter.automated_tests === false ||
         frontmatter.published === false ||
-        needsNewerEventGateway;
+        needsNewerEventGateway ||
+        needsNewerAiGateway;
 
       let howToUrl;
       if (frontmatter.permalink) {
@@ -153,6 +199,9 @@ export async function testeableUrlsFromFiles(
           message = "Tagged with published=false";
         } else if (needsNewerEventGateway) {
           message = `Requires Event Gateway >= ${requiredEventGatewayVersion}, generating for ${versionUnderTest}`;
+          reason = "min-version";
+        } else if (needsNewerAiGateway) {
+          message = `Requires AI Gateway >= ${requiredAiGatewayVersion}, generating for ${aiVersionUnderTest}`;
           reason = "min-version";
         } else {
           message = "Tagged with @todo.";
