@@ -36,7 +36,7 @@ Download the files from the kong-harnesses repository at `https://cloudsmith.io/
 
 Check each file before you install it or add it to an MDM tool. The checksum shows that the file is complete. The build provenance shows that the release workflow of kong-harnesses built the file from the release tag.
 
-1. Download `SHA256SUMS.txt` and `kong-harnesses_<tag>.sigstore.json` from the same release, into the folder of the file. `<tag>` is the release version with its initial `v`, for example `v1.2.3`. In the commands on this page, `<file>` is the full filename of the downloaded file, with its extension.
+1. Download `SHA256SUMS.txt` and `kong-harnesses_<tag>.sigstore.json` from the same release, into the folder of the file. `<tag>` is the release version with its initial `v`, for example `v1.2.3`. In the commands on this page, `<file>` is the full filename of the downloaded file, with its extension. Run the commands in this section in that folder.
 1. Check the checksum of the file. On macOS, run:
 
    ```sh
@@ -48,7 +48,7 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
    On Windows, run in PowerShell:
 
    ```powershell
-   (Get-FileHash '<file>' -Algorithm SHA256).Hash -eq ((Select-String -Path SHA256SUMS.txt -Pattern ('^[0-9a-f]{64}  ' + [regex]::Escape('<file>') + '$')).Line.Split(' ')[0])
+   "$((Get-FileHash '<file>' -Algorithm SHA256).Hash)  <file>" -in (Get-Content SHA256SUMS.txt)
    ```
 
    The command must print `True`.
@@ -73,7 +73,7 @@ The installer package installs `kong-harnesses` in `/usr/local/bin` for every us
 To check the permissions, run:
 
 ```sh
-ls -lde /usr/local /usr/local/bin
+/bin/ls -lde /usr/local /usr/local/bin
 ```
 
 The owner of each folder must be `root`. Only the owner and the `admin` or `wheel` group can have write permission, and no access control entry that the command shows can give another account write permission. If a folder doesn't exist, the package creates it, and only administrators can change it.
@@ -109,18 +109,24 @@ A newer package replaces the installed version. To remove kong-harnesses:
    pkgutil --pkg-info com.konghq.kong-harnesses
    ```
 
-   If the command prints `No receipt for 'com.konghq.kong-harnesses' found`, the installer package didn't install kong-harnesses. Skip the next steps.
+   If the command fails and prints `No receipt for 'com.konghq.kong-harnesses' found at '/'.`, the installer package didn't install kong-harnesses. Skip the next steps.
 1. Check that the file at the install path is the copy of the package:
 
    ```sh
    ls -l /usr/local/bin/kong-harnesses
    ```
 
-   If the output shows a link (`->`) to a Homebrew folder, Homebrew installed this copy. Remove it with Homebrew, and skip the next steps.
-1. Delete the files of the package:
+   If the output shows a link (`->`) to a path that contains `Cellar`, Homebrew installed this copy. Remove it with Homebrew, and skip the next step.
+1. Delete the executable of the package:
 
    ```sh
-   sudo rm -r /usr/local/bin/kong-harnesses /usr/local/share/doc/kong-harnesses
+   sudo rm /usr/local/bin/kong-harnesses
+   ```
+
+1. Delete the license and notices of the package:
+
+   ```sh
+   sudo rm -r /usr/local/share/doc/kong-harnesses
    ```
 
 1. Delete the package receipt:
@@ -166,7 +172,7 @@ Wrap the installer:
 
    Use full paths. `<output-folder>` must be a folder other than `<folder>`.
 
-Add the app in the Microsoft Intune admin center:
+Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags** page between the pages of these steps, click **Next** on that page.
 
 1. Navigate to **Apps** > **All Apps**.
 1. Click **Create**.
@@ -176,6 +182,9 @@ Add the app in the Microsoft Intune admin center:
 1. Select the `.intunewin` file.
 1. Click **OK**.
 1. In the **Name** field, enter a name that contains the release and the processor type, for example `kong-harnesses v1.2.3 x64`.
+1. Click **Edit description**.
+1. In the description field, enter `Installs kong-harnesses for every user of the computer`.
+1. Click **OK**.
 1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
 1. Click **Next**.
 1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
@@ -190,10 +199,11 @@ Add the app in the Microsoft Intune admin center:
 1. Click **OK**.
 1. Click **Next**.
 1. On the **Dependencies** page, click **Next**.
-1. On the **Supersedence** page, for a new release, click **Add**. For the first release, skip to the **Assignments** page.
-1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
-1. Click **Select**.
-1. In the **Uninstall previous version** field, select **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
+1. On the **Supersedence** page, for a new release, add the app of the previous release. Skip these steps for the first release:
+   1. Click **Add**.
+   1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
+   1. Click **Select**.
+   1. In the **Uninstall previous version** field, select **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
 1. Click **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
 1. Select the groups of devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so select the same groups for each release.
@@ -246,7 +256,7 @@ Removing kong-harnesses doesn't remove the sign-in, the profiles or the coding a
    kong-harnesses logout --profile <profile>
    ```
 
-   OpenCode and Hermes Agent keep their own sign-in. For OpenCode, also run `opencode auth logout`, and select the provider that has the name of the profile. For Hermes Agent, run `hermes auth list kong-ai-gateway` to find the index of each credential, and remove each one with `hermes auth remove kong-ai-gateway <index>`.
+   OpenCode and Hermes keep their own sign-in. For OpenCode, also run `opencode auth logout`, and select the provider that has the name of the profile. For Hermes, run `hermes auth list kong-ai-gateway` to find the index of each credential. Remove the credentials with `hermes auth remove kong-ai-gateway <index>`, from the highest index to the lowest, because a removal renumbers the credentials after it.
 
 1. Remove the settings that kong-harnesses added to the coding agents:
 
