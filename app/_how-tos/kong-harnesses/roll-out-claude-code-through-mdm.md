@@ -240,7 +240,7 @@ To give it the same settings, add `--wsl inherit`.
 This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 If interop is off, the credential helper tells the developer to turn it on.
 This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
-It also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` that sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
+With this option, `fleet build` also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` that sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
 The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
 
@@ -348,7 +348,8 @@ The managed settings, in the file or in the MDM policy, hold what `kong-harnesse
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
   The settings don't hold a credential.
 * The models of the gateway.
-  The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`.
+  The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
+  For a model ID that doesn't name its family, add the family, such as `--model opus=MODEL_ID`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
   A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
   Another new model needs a new build.
@@ -396,10 +397,10 @@ After the checks in [Validate](#validate) pass on each test computer, install th
 
 `fleet build` prints the command that packages or copies the files for the platform, with the full path of the `root` folder.
 For example, on macOS, it prints a `pkgbuild` command like this one, which puts the files in one package.
-Replace each placeholder with the value for your deployment:
+Replace each placeholder with the value for your deployment, and `/PATH/TO` with the folder where you ran `fleet build`:
 
 ```sh
-pkgbuild --root fleet-macos/root --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root /PATH/TO/fleet-macos/root --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
@@ -425,13 +426,16 @@ The `Setting sources` line shows `Enterprise managed settings` with the source t
 
 * `(drop-ins)`: a file build, with only the files in `managed-settings.d`.
 * `(file)`: only your `managed-settings.json`.
-  The build didn't reach the computer, so deploy the files under `root`, or the MDM policy, again.
+  The build didn't reach the computer.
+  For a file build, check that the drop-in is at the path in [Check what the build holds](#check-what-the-build-holds).
+  For an MDM build, check that the MDM policy reached the computer and has the settings of the build.
+  Then deploy the build again.
 * `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
 * `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Find their source, and remove them there.
-  A computer can keep a cached copy of them for up to 24 hours after its last fetch.
+  If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 
@@ -446,7 +450,9 @@ Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 kong-harnesses doctor --profile work --client claude-code
 ```
 
-`doctor` says that the managed settings of your organization set up the profile, and names the build.
+`doctor` says that the managed settings of your organization set up the profile, and names the build ID.
+`/status` names only the source, and other policies can use the same source, so make sure that the build ID is the one that `fleet build` printed for this platform.
+Do this before you install on the other managed computers.
 It shows a fix for each problem that it finds.
 
 To keep the fleet on supported {{ site.claude_code }} versions or to move it to a new model, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
