@@ -189,7 +189,8 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 
 1. Navigate to **Apps** > **All Apps**.
 1. Click **Create**.
-1. In the **Select app type** pane, select **Windows app (Win32)**.
+1. In the **Select app type** pane, select **Windows**.
+1. Select **Windows app (Win32)**.
 1. Click **Select**.
 1. On the **App information** page, click **Select app package file**.
 1. In the **App package file** pane, click the browse button.
