@@ -6,6 +6,13 @@
 {%- if include.config.url contains 'https://' %}{% assign is_https = false %}{% endif -%}
 
 {% assign capture_size = include.config.capture | size %}
+{%- assign has_content_type = false -%}
+{%- assign has_accept = false -%}
+{%- for header in include.config.headers -%}
+{%- assign header_name = header | split: ':' | first | strip | downcase -%}
+{%- if header_name == 'content-type' %}{% assign has_content_type = true %}{% endif -%}
+{%- if header_name == 'accept' %}{% assign has_accept = true %}{% endif -%}
+{%- endfor -%}
 {%- capture curl_cmd %}{% if include.config.sleep %}sleep {{include.config.sleep}} && {% endif %}{% if count > 1%}for _  in {1..{{count}}}; do
 {% endif %}curl {% if include.config.insecure %}-k {% endif %}{% if include.config.display_headers %}-i {% endif %}{% if include.config.method %}-X {{include.config.method}} {% endif %}{% if include.config.mtls%}-k --key key.pem --cert cert.pem {% endif %}"{% if is_https %}https://{% endif %}{{ include.config.url }}" \
      {% if include.config.output %}-o {{include.config.output}} {% endif %}--no-progress-meter --fail-with-body {% if include.config.headers %} \{%- endif -%}{% for header in include.config.headers %}
@@ -15,9 +22,11 @@
      --cookie {{include.config.cookie}}{%- endif %}{% if include.config.form_data %} \{% for data in include.config.form_data %}
      -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.config.form_url_encoded_data %} \{% for data in include.config.form_url_encoded_data %}
      -d "{{data[0]}}={{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.config.body_file %} \
-     -F file="{{ include.config.body_file }}"{% endif %}{% if include.config.body %} \
-     --json '{{ include.config.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.config.body_cmd %} \
-     --json "{{ include.config.body_cmd }}"{% endif %}{% endcapture -%}
+     -F file="{{ include.config.body_file }}"{% endif %}{% if include.config.body or include.config.body_cmd %}{% unless has_content_type %} \
+     -H "Content-Type: application/json"{% endunless %}{% unless has_accept %} \
+     -H "Accept: application/json"{% endunless %}{% endif %}{% if include.config.body %} \
+     --data-binary '{{ include.config.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.config.body_cmd %} \
+     --data-binary "{{ include.config.body_cmd }}"{% endif %}{% endcapture -%}
 ```bash
 {% if capture_size == 1 -%}
 {{ include.config.capture[0].variable }}=$({{ curl_cmd }}{% if include.config.capture[0].jq %} | jq -r "{{ include.config.capture[0].jq | strip }}"{% elsif include.config.capture[0].command %} | {{ include.config.capture[0].command | strip }}{% endif %}{% if include.config.inline_sleep %}
