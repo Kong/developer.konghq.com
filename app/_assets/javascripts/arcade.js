@@ -7,7 +7,7 @@ import { track } from "./arcade/analytics";
 
 const CODES = [
   ["0", "4", "5", "1"],
-  ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a", " "],
+  ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a"],
 ];
 // The whole code must be typed within this window, measured from its first key.
 const WINDOW_MS = 10000;

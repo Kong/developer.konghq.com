@@ -4,7 +4,7 @@
 import { headerLogos } from "./trophy";
 
 const HOVER_MS = 3000;
-const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A", "␣"];
+const CODE = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
 
 function addBackFace(logo) {
   const back = document.createElement("span");
@@ -17,10 +17,7 @@ function addBackFace(logo) {
     item.textContent = key;
     code.append(item);
   });
-  const prompt = document.createElement("span");
-  prompt.className = "logo-flip-prompt";
-  prompt.textContent = "input this";
-  back.append(code, prompt);
+  back.append(code);
   logo.append(back);
 }
 
@@ -42,7 +39,10 @@ export function initLogoFlip() {
       }, HOVER_MS);
     });
     logo.addEventListener("mouseleave", reset);
-    logo.addEventListener("focus", () => logo.classList.add("is-flipped"));
+    // A mouse click also focuses the link, so flip on keyboard focus only.
+    logo.addEventListener("focus", () => {
+      if (logo.matches(":focus-visible")) logo.classList.add("is-flipped");
+    });
     logo.addEventListener("blur", reset);
   });
 }
