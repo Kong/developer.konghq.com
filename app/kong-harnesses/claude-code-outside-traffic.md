@@ -64,7 +64,7 @@ rows:
     member: "`feature_flags`"
     cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
-    destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} uses the Anthropic API directly, and the organization has no zero data retention or HIPAA agreement"
+    destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} uses the Anthropic API directly, and the organization doesn't have a zero data retention or HIPAA agreement"
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
@@ -86,7 +86,7 @@ rows:
   - traffic: Feedback survey
     destination: Anthropic
     member: "`feedback_survey`"
-    cost: "{{ site.claude_code }} doesn't ask developers to rate a session, or to send the session transcript and log after the rating."
+    cost: "{{ site.claude_code }} doesn't ask developers to rate a session, or to send the session transcript and log after the rating. On a third-party provider, that follow-up writes the transcript and log to a local file instead of sending them."
   - traffic: Official plugin marketplace install
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
@@ -98,7 +98,7 @@ rows:
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turns on for a claude.ai subscription, and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
@@ -135,7 +135,7 @@ When the usage metrics switch or the nonessential traffic switch is on, `CLAUDE_
 In a schema 18 profile, `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on usage metrics, feature flags, error reports, a feedback command or the feedback survey, activation writes the nonessential traffic switch blank.
 A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
-Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and {{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, unless its own member keeps it off.
+Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and {{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, but only where that traffic's own conditions apply. A member set to `false` keeps its own traffic off, and a gateway key still stops the fast mode availability check.
 `FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while automatic updates are off.
 The background runs of plugin `command` sources, which can install dependencies, also start again, because only the nonessential traffic switch stops them.
 
@@ -265,7 +265,7 @@ If all model traffic must pass through the gateway, turn off each of these produ
 ### {{ site.claude_code }} on the web
 
 {{ site.claude_code }} on the web runs cloud sessions on Anthropic's infrastructure, or in your organization's [self-hosted environment](https://code.claude.com/docs/en/self-hosted-environments) when you route them there.
-In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you configure the runner to send model requests to Amazon Bedrock or Google Cloud's Agent Platform.
+In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you configure the runner to send model requests to Amazon Bedrock or Google Vertex AI.
 To turn off cloud sessions for a Team or Enterprise organization:
 
 1. Sign in to claude.ai as an Owner of your organization.
