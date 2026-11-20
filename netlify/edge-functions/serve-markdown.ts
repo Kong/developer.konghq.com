@@ -1,26 +1,52 @@
-import type { Config } from "@netlify/edge-functions";
+import type { Config, Context } from "@netlify/edge-functions";
+import { sendEvent } from "../utils/analytics.ts";
 
-export default async (request: Request) => {
-  const acceptHeader = request.headers.get("Accept") || "";
+const pagePath = (pathname: string) => {
+  if (pathname.endsWith("/index.md")) {
+    return pathname.slice(0, -"index.md".length);
+  }
+  if (pathname.endsWith(".md")) {
+    return `${pathname.replace(/(\.html)?\.md$/, "")}/`;
+  }
+  return pathname;
+};
 
-  if (!acceptHeader.includes("text/markdown")) {
+const isMarkdown = (pathname: string) =>
+  pathname.endsWith(".md") || pathname === "/llms.txt";
+
+export default async (request: Request, context: Context) => {
+  if (request.method !== "GET") {
     return;
   }
 
   const url = new URL(request.url);
   const { pathname } = url;
+  const acceptHeader = request.headers.get("Accept") || "";
 
-  if (pathname.endsWith(".md")) {
-    return;
+  if (acceptHeader.includes("text/markdown") && !pathname.endsWith(".md")) {
+    if (pathname === "/") {
+      url.pathname = "/index.md";
+    } else {
+      url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
+    }
+
+    return url;
   }
 
-  if (pathname === "/") {
-    url.pathname = "/index.md";
-  } else {
-    url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
+  try {
+    context.waitUntil(
+      sendEvent({
+        path: pagePath(pathname),
+        format: isMarkdown(pathname) ? "markdown" : "html",
+        user_agent: request.headers.get("User-Agent") || "",
+        timestamp: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    // analytics must never affect the served page
   }
 
-  return url;
+  return await context.next({ sendConditionalRequest: true });
 };
 
 export const config: Config = {
