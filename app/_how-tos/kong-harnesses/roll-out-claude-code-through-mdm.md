@@ -141,20 +141,20 @@ columns:
   - title: File
     key: file
   - title: macOS
-    key: macos
+    key: macos_path
   - title: Linux
-    key: linux
+    key: linux_path
   - title: Windows
-    key: windows
+    key: windows_path
 rows:
   - file: Managed settings
-    macos: "`/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`"
-    linux: "`/etc/claude-code/managed-settings.d/kong-harnesses.json`"
-    windows: "`C:\\Program Files\\ClaudeCode\\managed-settings.d\\kong-harnesses.json`"
+    macos_path: "`/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`"
+    linux_path: "`/etc/claude-code/managed-settings.d/kong-harnesses.json`"
+    windows_path: "`C:\\Program Files\\ClaudeCode\\managed-settings.d\\kong-harnesses.json`"
   - file: Profile
-    macos: "`/Library/Application Support/kong-harnesses/profiles/work.json`"
-    linux: "`/etc/kong-harnesses/profiles/work.json`"
-    windows: "`C:\\Program Files\\kong-harnesses\\profiles\\work.json`"
+    macos_path: "`/Library/Application Support/kong-harnesses/profiles/work.json`"
+    linux_path: "`/etc/kong-harnesses/profiles/work.json`"
+    windows_path: "`C:\\Program Files\\kong-harnesses\\profiles\\work.json`"
 {% endtable %}
 
 The managed settings hold what `kong-harnesses profile activate` writes for one developer, for every account on the computer:
