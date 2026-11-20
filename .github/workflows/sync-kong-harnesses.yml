@@ -1,0 +1,160 @@
+name: Sync kong-harnesses
+on:
+  workflow_dispatch:
+    inputs:
+      dev_site_base_branch:
+        description: "Branch to sync, for example main. Leave empty for release/kong-harnesses while it exists, else the default branch."
+        required: false
+        type: string
+  schedule:
+    - cron: "0 1 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  # GitHub runs a schedule only from the default branch, so this job sends the
+  # sync to the docs release branch while that branch exists.
+  base:
+    name: Pick the base branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      branch: ${{ steps.pick.outputs.branch }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - name: Pick the base branch
+        id: pick
+        env:
+          REQUESTED: ${{ inputs.dev_site_base_branch }}
+          REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          if [ -n "$REQUESTED" ]; then
+            if ! git ls-remote --exit-code "$REPOSITORY_URL" "refs/heads/$REQUESTED" >/dev/null; then
+              echo "::error::Branch $REQUESTED does not exist"
+              exit 1
+            fi
+            branch="$REQUESTED"
+          elif git ls-remote --exit-code "$REPOSITORY_URL" refs/heads/release/kong-harnesses >/dev/null; then
+            branch=release/kong-harnesses
+          else
+            branch=$(git ls-remote --symref "$REPOSITORY_URL" HEAD | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+  kong-harnesses-versions:
+    name: Fetch kong-harnesses Versions
+    needs: base
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token for the releases
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: releases-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: kong-harnesses
+          permission-contents: read
+
+      - name: Create GitHub App Token for the pull request
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: pr-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: developer.konghq.com
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.base.outputs.branch }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "26"
+          cache: npm
+          cache-dependency-path: tools/kong-harnesses-versions/package-lock.json
+
+      # The same checks as scripts/install-release.sh in Kong/kong-harnesses.
+      # Anyone who can write to that repository can replace an archive and its
+      # SHA256SUMS.txt line, so only the build provenance proves that the release
+      # workflow built the archive from the tag. GitHub's private Sigstore
+      # instance signs that provenance, because the repository is internal, so
+      # gh attestation verify checks it.
+      - name: Install the newest kong-harnesses release
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          REPO: Kong/kong-harnesses
+        run: |
+          # Anyone who can write to the repository can mark an older release as
+          # the latest one, so the highest vX.Y.Z release wins.
+          tag=$(gh release list -R "$REPO" --exclude-drafts --exclude-pre-releases --limit 1000 --json tagName --jq '.[].tagName' \
+            | grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' | sort -V | tail -1)
+          archive="kong-harnesses_${tag}_linux_amd64.tar.gz"
+          bundle="kong-harnesses_${tag}.sigstore.json"
+          work="$RUNNER_TEMP/kong-harnesses"
+          mkdir -p "$work/bin"
+          cd "$work"
+          gh release download "$tag" -R "$REPO" -p "$archive" -p SHA256SUMS.txt -p "$bundle"
+          awk -v name="$archive" '$2 == name' SHA256SUMS.txt > expected
+          if [ "$(wc -l < expected)" -ne 1 ]; then
+            echo "::error::SHA256SUMS.txt has no single line for $archive"
+            exit 1
+          fi
+          sha256sum --check expected
+          commit=$(gh api "repos/$REPO/commits/refs/tags/$tag" --jq .sha)
+          gh attestation verify "$archive" --bundle "$bundle" --repo "$REPO" \
+            --signer-workflow "$REPO/.github/workflows/release.yml" \
+            --source-ref "refs/tags/$tag" --source-digest "$commit"
+          # A tag on a commit that never reached main runs that commit's own
+          # release workflow, which the provenance names just the same.
+          status=$(gh api "repos/$REPO/compare/$commit...refs/heads/main" --jq .status)
+          case $status in
+            ahead | identical) ;;
+            *)
+              echo "::error::The release workflow built $archive from $commit, which is not on main"
+              exit 1
+              ;;
+          esac
+          tar -xzf "$archive" -C bin kong-harnesses
+          echo "$work/bin" >> "$GITHUB_PATH"
+
+      - name: Verify kong-harnesses install
+        run: kong-harnesses version --full
+
+      - name: Fetch versions
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+        run: |
+          cd tools/kong-harnesses-versions
+          npm ci
+          node extract-help.js
+          node fetch-versions.js
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          title: Sync kong-harnesses Releases
+          commit-message: Sync kong-harnesses Releases
+          branch: sync-kong-harnesses-releases
+          base: ${{ needs.base.outputs.branch }}
+          labels: skip-changelog,review:general
+          token: ${{ steps.pr-token.outputs.token }}
+          add-paths: |
+            app/_includes/kong-harnesses/help/**
+            app/kong-harnesses/**
+            app/_data/tools/kong-harnesses.yml
