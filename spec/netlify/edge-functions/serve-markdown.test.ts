@@ -219,7 +219,34 @@ describe("serve-markdown config", () => {
     }
   });
 
+  it("excludes the static file types published outside /assets/", () => {
+    for (const pattern of ["/**/*.yaml", "/**/*.yml", "/**/*.sh", "/**/*.ps1"]) {
+      assert.ok(excluded.includes(pattern), `${pattern} is excluded`);
+    }
+  });
+
   it("does not exclude all .txt files, so /llms.txt runs the function", () => {
     assert.ok(!excluded.includes("/**/*.txt"));
+  });
+
+  it("runs the function for counted paths and skips the excluded static files", () => {
+    const patterns = excluded.map((pattern) => new URLPattern({ pathname: pattern }));
+    const runs = (path: string) => !patterns.some((pattern) => pattern.test({ pathname: path }));
+
+    for (const path of ["/kongctl/", "/kongctl.md", "/llms.txt", "/index.md", "/"]) {
+      assert.ok(runs(path), `${path} is counted`);
+    }
+
+    for (const path of [
+      "/manifests/kic/echo-service.yaml",
+      "/insomnia/Flights-Service-0.1.0.yaml",
+      "/mesh/installer.sh",
+      "/mesh/installer.ps1",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/feeds/security-advisories.xml",
+    ]) {
+      assert.ok(!runs(path), `${path} is excluded`);
+    }
   });
 });
