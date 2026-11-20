@@ -115,7 +115,7 @@ At each sign-in in the browser, {{site.kong_harnesses}} sends `prompt=consent` t
 Register the callback of the profile in the client as an exact value, not as a pattern.
 The profile uses one fixed port.
 Use the same host, port and path in the client.
-If your identity provider accepts any port for a loopback callback, as RFC 8252 allows, the port can be different.
+If your identity provider ignores the port when it matches a loopback callback, as RFC 8252 allows, the port that you register can differ from the port in the profile.
 [`kong-harnesses profile get`](/kong-harnesses/profile/get/) and [`kong-harnesses doctor`](/kong-harnesses/doctor/) show the callback of a profile.
 
 To use another callback, set `--redirect-uri`.
@@ -144,12 +144,12 @@ Give the client the refresh token grant type and the `offline_access` scope.
 When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag, up to 16 scopes.
 [`profile create`](/kong-harnesses/profile/create/) refuses a list without `openid` or `offline_access`.
 
-When the token response has a `scope` value, it can't be empty or list a scope twice, and each scope must match a scope that the profile requests.
+When the token response has a `scope` value, it can't be empty, and each scope in it must match a different scope that the profile requests.
 A scope matches when it is the same, differs only in percent encoding, or is the last path segment of exactly one requested URI scope, such as `access_as_user` for `api://API_ID/access_as_user`.
 The response must also keep each scope that the profile requests, other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
-These rules also apply at renewal, where each listed scope must also be one in the last accepted scope list.
-At first, that list is the scopes of the sign-in response, or the scopes of the profile when the response doesn't list scopes.
-After each renewal that lists scopes, it is the scopes of that response.
+These rules also apply at renewal, where each listed scope must also match a scope in the last accepted list.
+At first, that list is the requested scopes that the sign-in response matched, or the scopes of the profile when the response doesn't list scopes.
+After each renewal that lists scopes, it is the requested scopes that the renewal response matched.
 Otherwise, the sign-in or the renewal fails.
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
@@ -166,8 +166,7 @@ Set `config.audience_required` to a list that contains the gateway audience, as 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
 The value must be an absolute URI, such as `api://default`.
-The `aud` claim can be a different value, as in Microsoft Entra ID.
-For the audience settings of Auth0, Keycloak, Microsoft Entra ID and PingFederate, see [Identity provider settings](/kong-harnesses/identity-provider/providers/).
+The `aud` claim can be a different value.
 
 Set `--audience-parameter` to match how your identity provider reads the audience from the sign-in request:
 
@@ -185,7 +184,7 @@ rows:
   - value: "`audience`"
     description: |
       The sign-in request sends the audience in the `audience` parameter.
-      Use this value for an identity provider that reads `audience`, such as Auth0.
+      Use this value for an identity provider that reads `audience`.
   - value: "`none`"
     description: |
       The sign-in request doesn't send the audience.
@@ -202,11 +201,12 @@ Before you give the profile to developers, check that the gateway accepts access
 ## Discovery document
 
 {{site.kong_harnesses}} reads the OIDC discovery document of the identity provider when you create the profile.
-The issuer URL must use `https` and match the `issuer` value in the discovery document character by character, including a trailing slash.
+The issuer URL must be a canonical `https` URL without a query, with the same rules as the endpoints below, and match the `issuer` value in the discovery document character by character, including a trailing slash.
 
 [`profile create`](/kong-harnesses/profile/create/) refuses a discovery document that doesn't meet these rules:
 
-* Each `*_supported` field that the document lists is a nonempty JSON array of unique strings.
+* The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
+  `grant_types_supported`, `token_endpoint_auth_methods_supported` and `code_challenge_methods_supported` follow the same rule when the document lists them.
 * A canonical `https` URL in `authorization_endpoint`, `token_endpoint` and `jwks_uri`, and also in `revocation_endpoint` when the document lists it.
   A canonical URL has a lowercase host, and it doesn't have the port `443`, user information, a fragment or a `.` or `..` path segment.
   Its percent encoding uses uppercase hexadecimal digits, and it doesn't encode a letter, a digit, `-`, `.`, `_`, `~`, `\` or a control character.
@@ -225,7 +225,7 @@ The issuer URL must use `https` and match the `issuer` value in the discovery do
 {{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
 For example, if the discovery document leaves out `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 
-Some identity providers, such as Microsoft Entra ID, don't list `none` even for a public client.
+Some identity providers omit `none` from the advertised methods for public clients.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, add the flag, which skips only the check for `none`, to the production profile.
 
@@ -240,7 +240,7 @@ If an endpoint changes and the new discovery document passes the checks, create 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, because a renewed access token must still have 360 seconds left when a client gets it.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
-It also refuses a lifetime over the limit of the profile, 3600 seconds by default.
+{{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
 If your identity provider issues longer access tokens, find the longest access token lifetime in its policy, and set `--max-token-lifetime-seconds` to that value, from 365 to 86400 seconds.
 If the policy allows more than 86400 seconds, reduce it to 86400 seconds.

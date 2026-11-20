@@ -33,15 +33,14 @@ related_resources:
 
 These settings add to the client settings in [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
 They come from the documentation of each identity provider, and they aren't tested with {{site.kong_harnesses}}.
-For Okta, see the prerequisites of [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
-
-Before you give a profile to developers, check that the gateway accepts access tokens from a sign-in and from a renewal.
 
 ## Auth0
 
+* Issuer: Use `https://YOUR_AUTH0_DOMAIN/`, with the trailing slash.
 * Consent: Auth0 can show a confirmation prompt for a loopback callback, such as `localhost` or `127.0.0.1`, even when **Allow Skipping User Consent** is on in the API.
 * Offline access: Turn on **Allow Offline Access** in the API of the gateway.
-  Turn on **Refresh Token Rotation** for the native application, which also detects the reuse of a refresh token.
+  To use rotating refresh tokens, turn on **Allow Refresh Token Rotation** under **Refresh Token Rotation** in the settings of the native application.
+  Keep **Rotation Overlap Period** at 0, because Auth0 doesn't detect the reuse of a refresh token during that period, as [Configure Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/configure-refresh-token-rotation) describes.
 * Audience: Register the gateway as an API, with an identifier that is an absolute URI, such as `https://gateway.example.com/api`.
   Set `--audience` to the identifier of the API, and set `--audience-parameter audience`.
 * Access token lifetime: Auth0 issues access tokens for 24 hours by default.
@@ -64,7 +63,7 @@ Before you give a profile to developers, check that the gateway accepts access t
 
 * Issuer: Use the issuer of your tenant, `https://login.microsoftonline.com/TENANT_ID/v2.0`, not `common`, `organizations` or `consumers`.
 * Callback: Register the callback under **Mobile and desktop applications**.
-  Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`.
+  Entra ID ignores the port only for a `localhost` callback, as [Callback](/kong-harnesses/identity-provider/#callback) describes, and doesn't accept `[::1]`.
   The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
   To register a `127.0.0.1` callback, add it to `publicClient.redirectUris` in the application manifest, keep every redirect URI that is already there, and include the port that the profile uses:
 
@@ -82,7 +81,7 @@ Before you give a profile to developers, check that the gateway accepts access t
   Give the client the delegated permission of the gateway API, and grant admin consent if the tenant or the API scope needs it.
   Give the full URI of the API scope with `--scope`.
 * Token version: Set `api.requestedAccessTokenVersion` to `2` in the [manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest) of the gateway API to get v2.0 access tokens.
-  With `null` or `1`, Entra ID issues v1.0 access tokens.
+  When `api.requestedAccessTokenVersion` is `null` or `1`, Entra ID issues v1.0 access tokens.
   A v2.0 access token has the application ID of the gateway API, a GUID, in `aud`, and a v1.0 access token can have the application ID or the Application ID URI.
   Put the value that your tokens have in `config.audience_required`.
 * Access token lifetime: Entra ID issues access tokens for 60 to 90 minutes by default.
@@ -94,3 +93,5 @@ Before you give a profile to developers, check that the gateway accepts access t
   Sign its access tokens with an asymmetric key, and set its **Type Header Value** to `at+jwt`.
   Add the `--audience` value to its **Resource URIs**, and set its **Audience Claim Value** to the `--audience` value.
   Select the instance in the OpenID Connect policy of the client and as the **Default Access Token Manager** of the client, because the code exchange and the renewal request don't send `resource`.
+* Access token lifetime: The JWT access token management instance sets the lifetime in whole minutes, and it issues access tokens for 120 minutes by default, as [Configuring an access token management instance](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_access_token_management_instance.html) describes.
+  Set its **Token Lifetime** from 7 to 60 minutes, or keep 120 minutes and set `--max-token-lifetime-seconds 7200`.
