@@ -31,6 +31,7 @@ related_resources:
 
 A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Azure AI Foundry and Amazon Bedrock Mantle provider modes.
 Only the requests that go to that base URL, such as the model requests, pass through the gateway.
+Unless the profile uses the developers' own Claude subscriptions, {{site.kong_harnesses}} also gives {{ site.claude_code }} a gateway key through `apiKeyHelper`: the key from a gateway sign-in, or a key that the administrator issues.
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to services such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
@@ -56,13 +57,13 @@ columns:
     key: cost
 rows:
   - traffic: Usage metrics
-    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API directly, which means the Anthropic API provider mode and not a third-party provider such as Amazon Bedrock"
+    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API directly, which means the Anthropic API provider mode and not a third-party provider such as Azure AI Foundry"
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
-    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in"
+    destination: "`api.anthropic.com`, and `claude.ai` for the skill and plugin sync of a claude.ai sign-in"
     member: "`feature_flags`"
-    cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the sync of the skills and plugins of a claude.ai account."
+    cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the advisor tool, Code Mode, MCP tasks, Claude-drafted feedback, and the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
     destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} uses the Anthropic API directly, and the organization doesn't have a zero data retention or HIPAA agreement"
     member: "`error_reports`"
@@ -78,7 +79,7 @@ rows:
   - traffic: claude.ai connectors
     destination: "`mcp-proxy.anthropic.com`"
     member: "`connectors`"
-    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. When developers use a gateway sign-in, the connectors never load, even when `connectors` is `true`. When the profile uses the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
+    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. With a gateway key, the connectors never load, even when `connectors` is `true`. When the profile uses the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
     destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally `github.com` for a GitHub issue"
     member: "`bug_command` and `feedback_command`"
@@ -93,15 +94,15 @@ rows:
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration permanently, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
   - traffic: Artifacts
     destination: "`api.anthropic.com` for the publish requests and the organization policy, `*.frame.claudeusercontent.com` for the artifact reads, and `claude.ai`, which serves the published page"
-    member: "None. The `artifact` member writes nothing, but `auto_updates` set to `false` turns artifacts off through the nonessential traffic switch, until activation writes that switch blank."
+    member: "None. The `artifact` member writes nothing, but `auto_updates` set to `false` turns artifacts off through the nonessential traffic switch (`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`), until activation writes that switch blank."
     cost: "Developers can't publish session output as a web page on claude.ai, and {{ site.claude_code }} can't read the files of an artifact. Artifacts need a claude.ai sign-in and the Anthropic API provider mode, so they work only with a profile that uses the developers' own Claude subscriptions, which always uses that mode. Without feature flags, Claude can't read artifact comments or another organization's public artifact. They are also unavailable when the organization has customer-managed encryption keys, HIPAA or zero data retention turned on. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
-    destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
+    destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`, and the marketplace hosts that plugin updates download from, such as `github.com` and `registry.npmjs.org`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups also turn off. A code review lookup asks `*-review.googlesource.com` for the change that matches the `Change-Id` of HEAD, when a Claude desktop app Code tab session starts in a trusted checkout whose `origin` is a `googlesource.com` host. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
 
-{{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
+{{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
 When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped check, or a check that fails with a network error, as available, unless the organization turned fast mode off.
 When a proxy answers the check with its own page, {{ site.claude_code }} reads that page as an organization that [turned fast mode off](https://code.claude.com/docs/en/fast-mode#fast-mode-has-been-disabled-by-your-organization), so let the check reach `api.anthropic.com` through the proxy.
 When the proxy can't let it through, set `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK=1` in {{ site.claude_code }} settings, because the variable that activation writes doesn't cover that case.
@@ -120,7 +121,7 @@ To be sure that the traffic stays off, set each member to `false`.
 
 Some {{ site.claude_code }} switches turn off more than one feature:
 
-* The usage metrics switch also turns off feature flags, error reports and the feedback survey.
+* The usage metrics switch (`DISABLE_TELEMETRY`) also turns off feature flags, error reports and the feedback survey.
 * The `/bug` and `/feedback` switches each turn off all of the feedback commands.
 * The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, the feedback commands and the feedback survey.
 
@@ -140,6 +141,7 @@ A blank value turns the switch itself off, so the feature stays on, even when th
 Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and {{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, but only where that traffic's own conditions apply.
 A member set to `false` keeps its own traffic off, and a gateway key still stops the fast mode availability check.
 `FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while `auto_updates` is `false`.
+The sync of the plugins of a claude.ai account doesn't depend on `auto_updates`. With a claude.ai sign-in and feature flags on, {{ site.claude_code }} downloads new and updated plugins at each start. Set `feature_flags` to `false`, or set `syncClaudeAiPlugins` to `false`, to stop that sync.
 The background runs of plugin `command` sources, which can install dependencies, also start again, because only the nonessential traffic switch stops them.
 
 ## Traffic that stays
@@ -169,14 +171,14 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on`, or the automatic updates choice in the questions, doesn't write an update setting, so the {{ site.claude_code }} update settings stay in effect.
+* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`. For that value, activation doesn't write an update setting, so the {{ site.claude_code }} update settings stay in effect.
 * `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
 Activation then writes the nonessential traffic switch blank, so {{ site.claude_code }} sends the other nonessential traffic again, as [Members that depend on each other](#members-that-depend-on-each-other) explains.
 
 To keep a feature on, set its member to `true` in the profile file.
-The members need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
+The members other than `auto_updates` need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
 The following part of a profile file keeps the WebFetch domain check on, and keeps the other traffic off:
 
 ```json
@@ -221,10 +223,11 @@ The environment variables go in the `env` key, and `skipWebFetchPreflight`, `ena
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
+A developer can still turn the plugin updates back on with `FORCE_AUTOUPDATE_PLUGINS=1`, so also set `FORCE_AUTOUPDATE_PLUGINS` to `0` in the managed settings `env` block. A managed `env` value [takes precedence](https://code.claude.com/docs/en/env-vars#precedence) over the user and project settings, and replaces the shell value in most sessions.
 A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
 Activation writes the gateway base URL to the user settings file, with the provider switch in the Azure AI Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
-A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
+With a gateway key, {{ site.claude_code }} gets its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
 columns:
