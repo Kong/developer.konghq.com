@@ -1,4 +1,3 @@
-updated: 2026-11-20
 modes:
   - name: Anthropic API
     switch: None (default)
