@@ -19,15 +19,14 @@ module KongHarnessesChangelogLinks
 
   ROOT = File.expand_path('../..', __dir__)
   DATA_FILE = File.join(ROOT, 'app/_data/kong-harnesses/changelog.json')
+  SHIKI = File.join(ROOT, 'app/_plugins/converters/shiki.rb')
 
   # Each element maps the attributes it may have to the values they may take.
   HEADING = { 'id' => /\A[\w-]*\z/ }.freeze
   ELEMENTS = {
     'h1' => HEADING, 'h2' => HEADING, 'h3' => HEADING, 'h4' => HEADING, 'h5' => HEADING, 'h6' => HEADING,
     'p' => {}, 'ul' => {}, 'ol' => {}, 'li' => {}, 'strong' => {}, 'em' => {}, 'pre' => {},
-    'blockquote' => {}, 'br' => {}, 'hr' => {},
-    # The language of a fenced code block, such as ```sh in an upgrade step.
-    'code' => { 'class' => /\Alanguage-[\w+-]+\z/ }
+    'blockquote' => {}, 'br' => {}, 'hr' => {}, 'code' => {}
   }.freeze
   # A reader sees the text of these apart from the text around them.
   BLOCKS = %w[h1 h2 h3 h4 h5 h6 p ul ol li pre blockquote br hr].freeze
@@ -40,6 +39,25 @@ module KongHarnessesChangelogLinks
     (?::\d*)?[\/:]+(?:repos\/+)?kong\/+kong-harnesses(?:\.git)?
     (?![a-z0-9_\-]|\.[a-z0-9_\-])
   /x
+
+  # The languages that the site's Shiki highlighter loads or maps to one, and text.
+  # Shiki stops the site build on any other language of a code block.
+  def languages
+    @languages ||= begin
+      source = File.read(SHIKI)
+      loaded = source[/langs:\s*\[(.*?)\]/m, 1].to_s.scan(/"([^"]+)"/).flatten
+      mapped = source[/languageMap\s*=\s*\{(.*?)\}/m, 1].to_s.scan(/^\s*"?([\w+-]+)"?\s*:/).flatten
+      raise "#{SHIKI} has no list of languages that this check can read." if loaded.empty? || mapped.empty?
+
+      [*loaded, *mapped, 'text'].to_set
+    end
+  end
+
+  # The language of a fenced code block, such as ```sh in an upgrade step.
+  def language?(node, attribute)
+    node.name == 'code' && attribute.name == 'class' && attribute.value.start_with?('language-') &&
+      languages.include?(attribute.value.delete_prefix('language-'))
+  end
 
   def html(markdown)
     config = Jekyll::Configuration.from(YAML.safe_load_file(File.join(ROOT, 'jekyll.yml')))
@@ -77,7 +95,7 @@ module KongHarnessesChangelogLinks
           found << "the element <#{node.name}>"
         else
           node.attribute_nodes.each do |attribute|
-            next if allowed[attribute.name]&.match?(attribute.value)
+            next if allowed[attribute.name]&.match?(attribute.value) || language?(node, attribute)
 
             found << "the attribute #{attribute.name} on <#{node.name}>"
           end

@@ -105,7 +105,7 @@ RSpec.describe KongHarnessesChangelog do
     ['* literal \\[mode](optional)', '* literal \\[mode\\](optional)'],
     ['* literal \\[foo](https://example.com) next', '* literal \\[foo\\] next'],
     ['* \\![foo](https://example.com) next', '* !foo next'],
-    ["* ```\n  [x](https://example.com)", '* \\`\\`\\` x'],
+    ["* ```\n  [x](https://example.com)", '* &#96;&#96;&#96; x'],
     ['* accept values with a | delimiter', '* accept values with a \\| delimiter'],
     # An entity stays an entity, so it cannot start a table, emphasis or a code span.
     ['* **cli:** use &#124; between values', '* **cli:** use &#124; between values'],
@@ -119,7 +119,9 @@ RSpec.describe KongHarnessesChangelog do
     ["* a\\\n  \\> b", "* a  \n  \\> b"],
     ["* a\\\n  1\\. b", "* a  \n  1\\. b"],
     ["* a\\\n  \\- b", "* a  \n  \\- b"],
-    ["* Before\\\n  \\-\\-\\-", "* Before  \n  \\---"],
+    # Kramdown reads `--` as a dash, so each `-` of a run keeps its escape.
+    ["* Before\\\n  \\-\\-\\-", "* Before  \n  \\-\\-\\-"],
+    ["* use a\\-\\-b, a\\.\\.\\.b and a\\>\\>b", "* use a\\-\\-b, a\\.\\.\\.b and a\\>\\>b"],
     ["* Before\\\n  \\=\\=\\=", "* Before  \n  \\==="],
     # Kramdown's writer gives a rule as `* * *`, which after a list marker is a rule alone.
     ['* ___', '* ___'],
@@ -131,10 +133,33 @@ RSpec.describe KongHarnessesChangelog do
     ['* see **[https://example.com](https://example.com)** now', '* see now'],
     ['* run profile get <profile> or `profile get <profile>`', '* run profile get \\<profile> or `profile get <profile>`'],
     ['* run profile get \\<profile>', '* run profile get \\<profile>'],
-    ['* x ` <profile> https://example.com/a ` y', '* x \\` \\<profile> \\` y'],
-    ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a \\` x \\`\\` d'],
+    # A placeholder at the start of a line is text too.
+    ['* <profile> now works ([#1](https://github.com/Kong/kong-harnesses/issues/1))', '* \\<profile> now works'],
+    ["* run it\n  <name> at the start", '* run it \\<name> at the start'],
+    ["* run it\\\n  <name> at the start", "* run it  \n  \\<name> at the start"],
+    # An address ends where a reader sees it end, at an entity or a no-break space too.
+    ['* Move data from https://example.com/archive&#32;before you delete the old file.', '* Move data from&#32;before you delete the old file.'],
+    ["* go https://example.com/a\u00a0word", "* go\u00a0word"],
+    # Quotes that held only an address go, and a removed address does not join words.
+    ["* see 'https://example.com/a' word", '* see word'],
+    ['* say (https://evil.example)"hi" now', '* say ”hi” now'],
+    # A quote mark, a dash and an entity show as they did, and an entity is text.
+    ["* use it's \"x\"", '* use it’s “x”'],
+    ['* a\\--- b', '* a-– b'],
+    ['* &#44;', '* &#44;'],
+    # A paragraph after a reference definition stays a paragraph of its own.
+    ["* a\n  {: .x}\n  [r]: https://example.com/pull/3\n  b", "* a\n\n  b"],
+    # Kramdown shows an ordered list from 1 whatever its first number.
+    ["3. a\n4. b", "1.  a\n2.  b"],
+    # The site's highlighter knows sh, but not rust.
+    ["* run:\n\n  ```sh\n  koha up\n  ```", "* run:\n\n      koha up\n  {: .language-sh}"],
+    ["* run:\n\n  ```rust\n  fn main() {}\n  ```", "* run:\n\n      fn main() {}\n  {: .language-text}"],
+    ['* x ` <profile> https://example.com/a ` y', '* x &#96; \\<profile> &#96; y'],
+    ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a &#96; x &#96;&#96; d'],
     # Code spans as kramdown pairs them, also across the lines of a paragraph.
-    ['* ``<a>``` x', '* `<a>`\\` x'],
+    ['* ``<a>``` x', '* `<a>`&#96; x'],
+    # The site's table parser pairs an escaped backtick with the one of a code span.
+    ['* \\`a `x|y` b', '* &#96;a `x|y` b'],
     ["* run `curl\n  https://example.com/x` now", "* run `curl\n  https://example.com/x` now"],
     ['* a \\\\` https://example.com/x ` end', '* a \\\\``  https://example.com/x  `` end'],
     ["* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url [docs](http://h/x)",
@@ -165,6 +190,7 @@ RSpec.describe KongHarnessesChangelog do
     ['* a <!-- note --> b', '* a <del>x</del> b', '* a <b>x</b> b', '* a ~~x~~ b'].each do |entry|
       expect { exported(section(entry)) }.to raise_error(/raw HTML or a strikethrough/)
     end
+    expect { exported(section("* a `x\n  <b>` y")) }.to raise_error(/code with a line that starts a block/)
     expect { exported(section("* a\u0000b")) }.to raise_error(/NUL/)
   end
 
@@ -224,7 +250,10 @@ RSpec.describe KongHarnessesChangelog do
             '<https://example.com/q>', '![i](https://example.com/i.png)', '[r]', "\n[r]: https://example.com/pull/3\n",
             'word', ' ', "it's", '"q"', '--', '&amp;', '{: .x}', ':', '-',
             'https://exa**mple**.com/a', 'https://example.com/?x=1&amp;y=2', '**[https://example.com](https://example.com)**',
-            '<!-- note -->', '<del>x</del>', '<b>', '</b>'] +
+            '<!-- note -->', '<del>x</del>', '<b>', '</b>',
+            # Addresses that end at an entity, a no-break space or a quote, and list starts.
+            'https://example.com/y&#32;', "https://example.com/y\u00a0", "'https://example.com/y'", '"https://example.com/y"',
+            "\n3. ", "\n<name> "] +
            # Every ASCII punctuation character as an entity, and every character that the
            # GFM parser escapes with a backslash. A slash and a backslash are left out,
            # because the check refuses two of them in a row, as a browser reads `\\` as `//`.
@@ -286,5 +315,13 @@ RSpec.describe KongHarnessesChangelog do
     tree = described_class.parse("* **x** y\n")
     tree.children.first.children.first.children.first.children.first.children.clear
     expect { described_class.written("* **** y\n", tree) }.to raise_error(/would change what a reader sees/)
+  end
+
+  it 'refuses a page that leaves out or joins words of the source' do
+    source = described_class.parse("* see https://example.com/a and b\n")
+    ["* see b\n", "* seeand b\n", "* see and\n"].each do |page|
+      expect { described_class.written(page, described_class.parse(page), source) }.to raise_error(/leave out text/), page
+    end
+    expect(described_class.written("* see and b\n", described_class.parse("* see and b\n"), source)).to eq("* see and b\n")
   end
 end

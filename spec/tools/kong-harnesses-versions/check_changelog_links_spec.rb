@@ -59,8 +59,10 @@ RSpec.describe KongHarnessesChangelogLinks do
 
     # The spec loads the site plugins, which highlight code blocks with Shiki, so these
     # cases give the HTML that kramdown renders for the sync job.
-    it 'accepts the language of a code block, and no other class' do
+    it 'accepts a language that the site highlights, and no other class' do
       expect(described_class.html_problems('<pre><code class="language-sh">x</code></pre>')).to be_empty
+      expect(described_class.html_problems('<pre><code class="language-text">x</code></pre>')).to be_empty
+      expect(described_class.html_problems('<pre><code class="language-rust">x</code></pre>')).to eq(['the attribute class on <code>'])
       expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
     end
 
