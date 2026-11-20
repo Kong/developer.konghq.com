@@ -129,7 +129,7 @@ The sources, from highest to lowest:
 1. The managed settings file, `managed-settings.json`, with the files in its `managed-settings.d` folder.
 
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
-{{ site.claude_code }} uses that value only when no administrator source is on the computer.
+{{ site.claude_code }} uses that value only when no administrator source is on the computer, and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -153,6 +153,8 @@ Also make sure that no file adds an `allowedProviders` entry or sets a key such 
 By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 It still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
+But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
+So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build, and {{ site.claude_code }} doesn't load the gateway MCP servers.
 For those computers, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
@@ -251,6 +253,7 @@ The sandbox allowlists of the host still apply, unless your own managed settings
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
 To give it the same settings, add `--wsl inherit`.
+If your `--policy` sets `wslInheritsWindowsSettings` to `true`, `fleet build` refuses a Windows build without `--wsl inherit`, so add the option or set the key to `false` in the policy.
 This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 If interop is off, the credential helper tells the developer to turn it on.
 This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
@@ -431,7 +434,14 @@ On Windows, the copy command that `fleet build` prints gives the files the acces
 
 ## Validate
 
-On each test computer, sign in to the computer as a developer and start {{ site.claude_code }}:
+On each test computer, sign in to the computer as a developer.
+If you built with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers, first add those servers as the developer:
+
+```sh
+kong-harnesses profile activate work --client claude-code
+```
+
+Then start {{ site.claude_code }}:
 
 ```sh
 claude
@@ -477,7 +487,6 @@ The labels:
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
-With `allowlist` or `any`, the developer must run `profile activate` first.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
 The `doctor` check in the next step also names the setting that blocks a gateway MCP server.
 
