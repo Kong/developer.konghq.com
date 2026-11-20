@@ -127,8 +127,8 @@ The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in
 For a file build, always pass a copy of the `managed-settings.json` that the computers have with `--policy`.
 The build then refuses a value that would stop {{ site.claude_code }} from reaching the gateway, and keeps your headers in its value.
 
-When the profile sets attribution headers, a file build needs `--policy`.
-If the computers have no `managed-settings.json`, pass `--NO_POLICY_FLAG` in its place.
+A file build needs `--policy`.
+If the computers don't have a `managed-settings.json` or another {{ site.claude_code }} policy of your own, pass `--no-policy` in its place.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
@@ -141,7 +141,7 @@ This is an MDM build.
 Pass the policy that the computers get now with `--policy`.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
-Linux has no MDM policy, so on Linux the settings always go in a file.
+Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 
 `fleet build` refuses a policy that would stop {{ site.claude_code }} from reaching the gateway, and names the value.
 It lists each of your values that it changes.
@@ -156,19 +156,19 @@ The server-managed settings then rank above the build, and the credential helper
 
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
 When the profile has gateway MCP servers, `fleet build` needs this flag.
-When the profile has no gateway MCP servers, use `allowlist`, the default, or `any`.
+When the profile doesn't have gateway MCP servers, use `allowlist`, the default, or `any`.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
   The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build, and {{ site.claude_code }} loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
-  This mode takes no `--mcp-url` or `--mcp-command`.
+  This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist`, the default, locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
-  It adds no servers.
+  It doesn't add servers.
   To get the gateway MCP servers, each developer runs `kong-harnesses profile activate work --client claude-code`.
-* `--mcp-servers any` adds no lock and leaves MCP servers to each developer.
+* `--mcp-servers any` doesn't add a lock, and leaves MCP servers to each developer.
   A lock that your own managed settings set still applies.
-  This mode takes no `--mcp-url` or `--mcp-command`.
+  This mode doesn't take `--mcp-url` or `--mcp-command`.
 
 If the computers already have a `managed-mcp.json` and the profile has gateway MCP servers, use `exclusive` with `--mcp-config`.
 {{ site.claude_code }} then loads only the servers in that file, so with `allowlist` or `any` it doesn't load the gateway MCP servers, even after `profile activate`.
@@ -189,9 +189,9 @@ Replace each placeholder with the value for your deployment:
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
-  If the computers have no `managed-settings.json`, replace `--policy POLICY_FILE` with `--NO_POLICY_FLAG`.
+  If the computers don't have a `managed-settings.json`, replace `--policy POLICY_FILE` with `--no-policy`.
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
-  If the computers get no {{ site.claude_code }} policy now, leave out `--policy`.
+  If the computers don't get a {{ site.claude_code }} policy now, leave out `--policy`.
 
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
@@ -303,12 +303,13 @@ rows:
 The managed settings, in the file or in the MDM policy, hold what `kong-harnesses profile activate` writes for one developer, for every account on the computer:
 
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
-  The settings hold no credential.
+  The settings don't hold a credential.
 * The models of the gateway.
+  The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
-  A model that the gateway adds later shows in `/model` with no new build when its ID contains `claude` or `anthropic`.
+  A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
   Another new model needs a new build.
-  For another Claude provider, the models come from the profile, or from `--model`.
+  For another Claude provider, `/model` shows only the models of the build.
 * The gateway prices of the models for `/cost`, when the gateway or the profile states them.
 * The {{ site.claude_code }} features that the profile turns off behind the gateway.
 * A lock to the gateway.
@@ -341,7 +342,7 @@ With your MDM tool, install the following on each managed computer:
    To install them, and to deploy the Windows installer with Intune, see [Install kong-harnesses for every user of a computer](/kong-harnesses/install/).
    A Homebrew install isn't at these paths, and isn't for managed computers.
 1. The CA of the gateway in the system trust store, if the gateway certificate comes from a private CA.
-   The build installs no CA.
+   The build doesn't install a CA.
 1. The files under `root` in the output folder, with their paths, as an administrator.
    On macOS and Linux, root must own each file and every folder above it, and no group or other account can write to them.
    On Windows, only SYSTEM, Administrators or TrustedInstaller can own or write to each file and every folder up to `C:\Program Files`, and no link can be on the path.
