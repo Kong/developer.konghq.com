@@ -6,6 +6,7 @@ groups:
           - path: /kong-harnesses/
           - path: /kong-harnesses/profiles-for-administrators/
           - path: /kong-harnesses/private-certificate-authorities/
+          - path: /kong-harnesses/developer-computer-changes/
 
   - title: CLI References
     sections:
