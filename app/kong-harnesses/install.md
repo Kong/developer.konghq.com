@@ -48,10 +48,10 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
    On Windows, run in PowerShell:
 
    ```powershell
-   "$((Get-FileHash '<file>' -Algorithm SHA256).Hash)  <file>" -in (Get-Content SHA256SUMS.txt)
+   "$((Get-FileHash '<file>' -Algorithm SHA256).Hash.ToLowerInvariant())  <file>" -cin (Get-Content SHA256SUMS.txt)
    ```
 
-   The command must print `True`.
+   The command must print `True`. The check is case-sensitive, so enter the filename exactly as it is in `SHA256SUMS.txt`.
 1. Install the [GitHub CLI](https://cli.github.com/), and check the build provenance of the file. The command is the same in a macOS or Linux terminal and in PowerShell:
 
    ```sh
@@ -68,7 +68,7 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
 The installer package installs `kong-harnesses` in `/usr/local/bin` for every user of the Mac, and the license and third-party notices in `/usr/local/share/doc/kong-harnesses`. Kong signs the package with its Developer ID Installer certificate, and Apple notarizes it. The notarization ticket is stapled to the package, so the package installs without network access.
 
 {:.warning}
-> Do not use both Homebrew and the installer package on one Mac. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`. The package keeps the permissions of folders that exist, so before you install the package, make sure that only administrators can change `/usr/local` and `/usr/local/bin`.
+> Do not install kong-harnesses in another way on a Mac that has the installer package. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`, and a release archive can also go to that path. The removal steps below cannot tell a copy from a release archive from the copy of the package. The package keeps the permissions of folders that exist, so before you install the package, make sure that only administrators can change `/usr/local` and `/usr/local/bin`.
 
 To check the permissions, run:
 
@@ -110,13 +110,13 @@ A newer package replaces the installed version. To remove kong-harnesses:
    ```
 
    If the command fails and prints `No receipt for 'com.konghq.kong-harnesses' found at '/'.`, the installer package didn't install kong-harnesses. Skip the next steps.
-1. Check that the file at the install path is the copy of the package:
+1. Check that the install path has a file, not a link:
 
    ```sh
    ls -l /usr/local/bin/kong-harnesses
    ```
 
-   If the output shows a link (`->`) to a path that contains `Cellar`, Homebrew installed this copy. Remove it with Homebrew, and skip the next three steps.
+   The output must start with `-`. If it starts with `l`, another install put a link at this path, so skip the next three steps. If the link goes to a path that contains `Cellar`, Homebrew installed this copy, so remove it with Homebrew.
 1. Show the checksum that the package receipt has for the executable:
 
    ```sh
@@ -129,7 +129,7 @@ A newer package replaces the installed version. To remove kong-harnesses:
    cksum /usr/local/bin/kong-harnesses
    ```
 
-   The first number must match the number in the `./bin/kong-harnesses` line of the receipt. If the numbers don't match, another install replaced the copy of the package, so skip the next step.
+   The first number must match the number in the `./bin/kong-harnesses` line of the receipt. If the numbers don't match, or the receipt has no `./bin/kong-harnesses` line, another install replaced the copy of the package, so skip the next step.
 1. Delete the executable of the package:
 
    ```sh
@@ -139,8 +139,16 @@ A newer package replaces the installed version. To remove kong-harnesses:
 1. Delete the license and notices of the package:
 
    ```sh
-   sudo rm -r /usr/local/share/doc/kong-harnesses
+   sudo rm -f /usr/local/share/doc/kong-harnesses/LICENSE /usr/local/share/doc/kong-harnesses/COPYRIGHT
    ```
+
+1. Delete the folder of the license and notices:
+
+   ```sh
+   sudo rmdir /usr/local/share/doc/kong-harnesses
+   ```
+
+   If the folder has other files, the command fails and keeps the folder and its files.
 
 1. Delete the package receipt:
 
@@ -227,7 +235,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. Click **Next**.
 1. On the **Review + create** page, click **Create**.
 
-Add a new app in the same way for each new release. Intune allows at most 10 apps in a supersedence chain, and each release adds one. When all assigned devices run the new release, remove the supersedence of the previous app from the new app, and delete the previous app.
+Add a new app in the same way for each new release. Intune allows at most 10 superseded apps in a supersedence graph, including apps that the new app supersedes through other apps, and each release adds one. When all assigned devices run the new release, remove the assignments of the previous app. Then remove the previous app from the **Supersedence** page of the new app, and delete the previous app.
 
 ## Linux packages
 
