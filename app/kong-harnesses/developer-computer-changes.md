@@ -66,7 +66,8 @@ When the test request doesn't contain a part that the agent CLI adds itself, suc
 When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
 Fix the cause, then run `setup` again.
 
-`login` saves the sign-in in the operating system's credential store: only the renewal credential, or the static key.
+`login` saves the renewal credential or the static key in the operating system's credential store.
+It also saves there the key of each gateway MCP server that asks for a key, when the developer enters it.
 
 ## {{ site.claude_code }} settings
 

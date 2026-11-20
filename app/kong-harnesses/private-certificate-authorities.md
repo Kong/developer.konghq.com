@@ -166,7 +166,7 @@ rows:
       OpenCode and Hermes Agent sign in through their own plugins and don't run {{site.kong_harnesses}} for a token.
       On Linux, the file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
       On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`, and the file then replaces the system trust store for {{site.kong_harnesses}}.
-      A file with only the private CA then breaks the token renewal against a public identity provider or a public profile server.
+      A file with only the private CA then breaks the token renewal with a public identity provider, and the profile download from a public profile server.
       On macOS, create the bundle with `cat /etc/ssl/cert.pem CA_CERTIFICATE_FILE > CA_BUNDLE_FILE`.
 {% endtable %}
 
