@@ -39,16 +39,19 @@ jobs:
           REQUESTED: ${{ inputs.dev_site_base_branch }}
           REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
         run: |
-          # git ls-remote --exit-code exits with 2 only for a missing branch, so
-          # any other failure stops the run instead of picking another branch.
+          # git ls-remote reads its argument as a pattern, so release/* would
+          # match. Only a valid branch name that the output lists exactly counts,
+          # and a failed listing stops the run instead of picking another branch.
           branch_exists() {
-            git ls-remote --exit-code "$REPOSITORY_URL" "refs/heads/$1" >/dev/null && return 0
-            status=$?
-            if [ "$status" -eq 2 ]; then
-              return 1
+            if ! git check-ref-format --branch "$1" >/dev/null; then
+              echo "::error::$1 is not a valid branch name"
+              exit 1
             fi
-            echo "::error::Could not list the branches of $REPOSITORY_URL"
-            exit "$status"
+            if ! refs=$(git ls-remote "$REPOSITORY_URL" "refs/heads/$1"); then
+              echo "::error::Could not list the branches of $REPOSITORY_URL"
+              exit 1
+            fi
+            printf '%s\n' "$refs" | awk -v ref="refs/heads/$1" '$2 == ref { found = 1 } END { exit !found }'
           }
           if [ -n "$REQUESTED" ]; then
             if ! branch_exists "$REQUESTED"; then
@@ -194,7 +197,7 @@ jobs:
         with:
           title: Sync kong-harnesses Releases
           commit-message: Sync kong-harnesses Releases
-          branch: sync-kong-harnesses-releases/${{ needs.base.outputs.branch }}
+          branch: sync-kong-harnesses/releases/${{ needs.base.outputs.branch }}
           base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}
