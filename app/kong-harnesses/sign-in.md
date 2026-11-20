@@ -42,7 +42,7 @@ Run `login` in an interactive terminal, not in a script or a CI job. `logout` al
 
 For a profile that signs in through an identity provider, kong-harnesses opens your browser at the sign-in page of the identity provider. The terminal also prints the sign-in URL, so you can open the URL yourself if the browser doesn't open. Open it in a browser on the same computer, because the browser sends the sign-in result to a callback address on this computer. To print the URL without opening a browser, add `--no-browser`.
 
-When the profile already has a usable sign-in, `login` keeps it, and asks for and saves any missing keys of the gateway MCP servers that the profile names. After a new sign-in, follow the step in the `Next` field, and restart each agent CLI that uses the profile if it's running.
+When the profile already has a usable sign-in, `login` keeps it and asks for and saves any missing keys of the gateway MCP servers that the profile names. After a new sign-in, follow the step in the `Next` field, and restart each agent CLI that uses the profile if it's running.
 
 For a profile that uses a key from your administrator, `login` asks for the key and doesn't show it as you type.
 
@@ -50,7 +50,7 @@ A profile for a CI job reads its key from `KONG_HARNESSES_STATIC_KEY` each time 
 
 OpenCode and Hermes Agent sign in through their own plugin, so `login`, `logout`, `credential` and `token` refuse `--client opencode` and `--client hermes`. Use the plugin commands for those agent CLIs. For OpenCode, run `opencode auth login` and `opencode auth logout`. For Hermes Agent, sign in with `hermes auth add kong-ai-gateway`. To remove all credentials of the `kong-ai-gateway` provider, run `hermes auth logout kong-ai-gateway`. To remove one credential from a pool, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with its index, entry ID or exact label.
 
-You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you. Run `login` first for a profile that uses a key from your administrator, because only `login` asks for the key. To use your own Claude subscription, run `kong-harnesses login --profile PROFILE_NAME` for your identity at the gateway. Then sign in to Claude with `/login` in {{ site.claude_code }}. For a profile that signs in through an identity provider, also run `login` before you first use an agent CLI that gets its token from [`token`](/kong-harnesses/token/), such as the `codex`, `omp` and `pi` clients, because `token` doesn't open a browser.
+You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you. Run `login` first for a profile that uses a key from your administrator, because only `login` asks for the key. To use your own Claude subscription, run `kong-harnesses login --profile PROFILE_NAME` for your identity at the gateway before you start {{ site.claude_code }}. Then sign in to Claude with `/login` in {{ site.claude_code }}. For a profile that signs in through an identity provider, also run `login` before you first use an agent CLI that gets its token from [`token`](/kong-harnesses/token/), such as the `codex`, `omp` and `pi` clients, because `token` doesn't open a browser.
 
 ## Check the sign-in
 
@@ -85,7 +85,7 @@ rows:
 
 Without `--profile` or `KONG_HARNESSES_PROFILE`, `status` lists every profile. When the list shows `Unknown` for a profile, run `kong-harnesses status --profile PROFILE_NAME` to find the cause. When `Profile state` shows `Unreadable; reimport it`, [import the profile](/kong-harnesses/profile/import/) again. When it shows `Unreadable; ask your administrator to reinstall it`, the profile is installed for every user, so ask your administrator to install it again.
 
-To check the whole setup, including a request to the gateway, run [`kong-harnesses doctor`](/kong-harnesses/doctor/).
+To check the whole setup, including a request to the gateway, run [`kong-harnesses doctor --profile PROFILE_NAME`](/kong-harnesses/doctor/).
 
 ## Sign in again
 
@@ -97,7 +97,7 @@ kong-harnesses login --profile PROFILE_NAME --replace
 
 `login --replace` asks you to type the profile name to confirm. It disables the current sign-in on this computer before it starts the new one, so if the new sign-in fails, run `login` again. The identity provider can keep the old authorization active.
 
-For a profile that uses a key from your administrator and already has a saved key, `login --replace` removes the saved key, asks for the new key, and saves it. When the profile doesn't have a saved sign-in or key yet, `login --replace` says that no usable login exists, so run a plain `login`.
+For a profile that uses a key from your administrator and already has a saved key, `login --replace` removes the saved key, asks for the new key, and saves it. When the profile doesn't have a saved sign-in or key yet, `login --replace` says that no usable login exists, so run a plain `login`. When the saved sign-in or key can't be used, `login --replace` says that the sign-in needs attention, so also run a plain `login`.
 
 When the saved sign-in can't be used, a plain `login` asks you to type the profile name to confirm. kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in. The identity provider can keep the old authorization active.
 
@@ -114,7 +114,7 @@ kong-harnesses logout --profile PROFILE_NAME
 When the profile has a saved sign-in, `logout` asks you to type the profile name to confirm. What it does depends on the profile and the saved sign-in:
 
 - When the profile names a revocation endpoint and the saved sign-in can be used, `logout` revokes the sign-in at the identity provider, then removes it from this computer.
-- When the identity provider doesn't confirm the revocation, `logout` disables the sign-in on this computer and says that the sign-out at the identity provider is unconfirmed. Check the authorization at the identity provider. Then run `logout` again to finish the removal from this computer, or to confirm that the sign-in is gone from it.
+- When `logout` can't confirm that the identity provider revoked all authorizations for the profile, it disables the sign-in on this computer and says that the sign-out at the identity provider is unconfirmed. This happens when the identity provider doesn't confirm the revocation, and when this computer has a sign-in from an earlier release that kong-harnesses can't read. Check the authorization at the identity provider. Then run `logout` again to finish the removal from this computer, or to confirm that the sign-in is gone from it.
 - When the profile doesn't name a revocation endpoint, `logout` says that it can't confirm the sign-out at the identity provider. It asks before it removes the sign-in from this computer.
 - When the saved sign-in can't be used, `logout` removes it from this computer only.
 - When the profile doesn't have a sign-in on this computer, `logout` doesn't ask you to confirm, and shows `Already signed out`. It also removes any keys of gateway MCP servers that are left.
@@ -122,13 +122,13 @@ When the profile has a saved sign-in, `logout` asks you to type the profile name
 
 A {{ site.claude_code }} session that already has an access token can use it until the token expires.
 
-For a profile that uses a key from your administrator, `logout` removes the key from this computer only. The key works at the gateway until your administrator revokes it. For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key. If this computer still has a saved sign-in or key for the profile, `logout` asks you to confirm and removes it. `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set. Remove the variable from the job environment yourself.
+For a profile that uses a key from your administrator, `logout` removes the key from this computer only. The key works at the gateway until your administrator revokes it. For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key. If this computer still has a saved sign-in or key for the profile, `logout` asks you to confirm and removes it. In a Linux session without Secret Service, `logout` doesn't check for a saved sign-in or key, so to remove one that an earlier setup saved, run `logout` in a desktop session with a keyring. `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set. Remove the variable from the job environment yourself.
 
 ## When kong-harnesses can't give an access token
 
 When the [`credential`](/kong-harnesses/credential/) command can't give {{ site.claude_code }} an access token, it prints one line that starts with `Error:`, and {{ site.claude_code }} shows that line. The line says what's wrong, and many lines also say what to run. The table lists the start of each line after `Error:`. When the browser doesn't open for a first sign-in, kong-harnesses also prints the sign-in URL. Open the URL in a browser on the same computer while kong-harnesses waits for the sign-in. When kong-harnesses stops waiting, the URL no longer works, so run `kong-harnesses login --profile PROFILE_NAME` to get a new URL.
 
-In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems. [`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in.
+In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems. [`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
 
 {% table %}
 columns:
@@ -153,7 +153,7 @@ rows:
     fix: "Run `kong-harnesses login --profile PROFILE_NAME` in a terminal. The terminal prints the sign-in URL."
   - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
     cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
-    fix: "If another sign-in uses the address, wait until it finishes. Otherwise, stop the program that uses the port of the callback address. Then try again. On Windows, the line can also say that Windows reserved the port. `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports. If Windows reserved the port, ask your administrator for a profile with a free callback port."
+    fix: "If another sign-in uses the address, wait until it finishes. Otherwise, stop the program that uses the port of the callback address. Then try again. On Windows, the line can also say that Windows reserved the port. `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports. If Windows reserved the port, ask your administrator for a profile with a free callback port. To find the port, run `kong-harnesses profile get PROFILE_NAME` and read the `Redirect URI` field."
   - message: "`another kong-harnesses command, such as a sign-in or a renewal, is using this profile`"
     cause: Another kong-harnesses command uses the profile, such as a sign-in that waits for the browser.
     fix: Try again when the other command finishes.
@@ -171,7 +171,7 @@ rows:
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
   - message: "`Windows cannot save or read your sign-in in this session`"
     cause: The Windows session can't use DPAPI, for example an SSH session that signed in with a key.
-    fix: Use your desktop session, or an SSH session that signed in with your password.
+    fix: Use your desktop session, where you set up kong-harnesses. An SSH session that signed in with your password can also use DPAPI.
   - message: "`no Secret Service runs in this session`"
     cause: The Linux session doesn't have a keyring.
     fix: "Use a desktop session with a keyring, such as GNOME Keyring or KWallet. In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`."
@@ -186,10 +186,10 @@ rows:
     fix: "Set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator in the environment where the agent CLI starts. Don't run `login` for this profile."
   - message: "`a proxy is set for the plain-HTTP gateway GATEWAY_URL`"
     cause: "The profile uses an `http://` gateway on this computer, and a proxy variable applies to the gateway host where the agent CLI starts. The proxy could read the access token."
-    fix: "Add the gateway host to `NO_PROXY` in your shell, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the line names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently. For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, so that its settings exclude the gateway from the proxy. For omp and pi, set the same exclusions where the agent CLI starts. Codex, OpenCode and Hermes Agent need an `https://` gateway, because kong-harnesses doesn't set them up for an `http://` gateway. You can also use an `https://` gateway. Then try again."
+    fix: "Add the gateway host to `NO_PROXY` in your shell, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the line names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently. For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, so that its settings exclude the gateway from the proxy. Project and managed settings can override these exclusions, so then run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` from the project folder, follow its proxy steps, and restart {{ site.claude_code }}. For omp and pi, set the same exclusions where the agent CLI starts. Codex, OpenCode and Hermes Agent need an `https://` gateway, because kong-harnesses doesn't set them up for an `http://` gateway. You can also use an `https://` gateway. Then try again."
   - message: "`profile storage is unavailable, because`"
     cause: "kong-harnesses can't find an absolute path for your user configuration directory. The line names the variable: `AppData` on Windows, `HOME` on macOS, or `HOME` and `XDG_CONFIG_HOME` on Linux."
-    fix: "Set `AppData` on Windows, or `HOME` on macOS. On Linux, set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`. Then try again."
+    fix: "On Windows, set `AppData` to your roaming application data folder. On macOS, set `HOME` to your home folder. On Linux, set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`. Then try again."
   - message: "`the profiles in FOLDER could not be moved to FOLDER`"
     cause: kong-harnesses couldn't move the profiles of an earlier release to their new folder.
     fix: Move the profile folder to the path that the line gives, then run the command again.
@@ -213,7 +213,7 @@ rows:
     fix: "If this is the first sign-in, run `kong-harnesses login --profile PROFILE_NAME` in a terminal. If `login` fails, run `kong-harnesses login --profile PROFILE_NAME --diagnostics`, and follow the step in the `Next` field. Otherwise, try again later. If it keeps failing, run `kong-harnesses doctor --profile PROFILE_NAME`."
 {% endtable %}
 
-For the profile selection errors of `credential`, `token`, `login` and `logout`, such as `requires a profile`, `accepts one profile`, an invalid profile name after `--profile` and `KONG_HARNESSES_PROFILE holds an invalid profile name`, for the lines that start with `selected profile`, and for `the profile installed for every user can be changed by an account that is not an administrator`, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+For errors about which profile a command uses, including the lines that start with `selected profile`, see [Profile errors](/kong-harnesses/errors/#profile-errors).
 
 ## When the login or logout command fails
 
@@ -247,7 +247,7 @@ rows:
     cause: "`login --replace` found no saved sign-in or key to replace."
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
   - message: "`local sign-in disabled; server sign-out unconfirmed`"
-    cause: "`logout` disabled the sign-in on this computer, but the identity provider didn't confirm the revocation."
+    cause: "`logout` disabled the sign-in on this computer, but it couldn't confirm that the identity provider revoked all authorizations for the profile. For example, the identity provider didn't confirm the revocation, or this computer has a sign-in from an earlier release that kong-harnesses can't read."
     fix: "Run `kong-harnesses status --profile PROFILE_NAME` to check the sign-in on this computer. Check the authorization at the identity provider, then run `kong-harnesses logout --profile PROFILE_NAME` again."
   - message: "`server sign-out confirmed; local cleanup incomplete`"
     cause: The identity provider confirmed the revocation, but kong-harnesses couldn't remove everything from this computer.
@@ -280,10 +280,10 @@ rows:
     cause: The sign-in or the confirmation stopped before kong-harnesses saved a sign-in.
     fix: "Run `kong-harnesses login --profile PROFILE_NAME` again."
   - message: "`the sign-in is saved, but a gateway MCP server has no key yet`"
-    cause: You stopped `login` before you entered the key of a gateway MCP server.
+    cause: "`login` saved the sign-in but not the key of a gateway MCP server: you stopped `login`, the prompt timed out, or the text that you entered isn't a valid key."
     fix: "Run `kong-harnesses login --profile PROFILE_NAME` again to add the key."
   - message: "`the sign-in is saved, but the system password store did not save the key of a gateway MCP server`"
-    cause: The system password store didn't save the key, for example because it's locked.
+    cause: The system password store couldn't read, remove or save the key, for example because it's locked.
     fix: "Unlock the system password store if it's locked, then run `kong-harnesses login --profile PROFILE_NAME`."
 {% endtable %}
 
