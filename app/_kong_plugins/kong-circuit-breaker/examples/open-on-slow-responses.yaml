@@ -1,0 +1,38 @@
+description: 'Open the circuit when the percentage of slow upstream responses in a sampling window crosses a threshold.'
+
+extended_description: |
+  Open the circuit when the percentage of slow upstream responses in a sampling window crosses a threshold.
+
+  This is useful when a backend slows down but keeps returning successful responses, and when a fixed count of slow responses would open the circuit too easily on a busy Service.
+  The `min_samples` setting keeps a low-traffic Route from opening the circuit after only a few slow requests.
+
+  In this example, the latency circuit behaves as follows:
+  1. A response is slow when the time to first byte from the upstream exceeds 2000 milliseconds. A slow response counts as a failure.
+  1. When a 60 second sampling window ends, the plugin checks the window. If at least 20 requests arrived and 25 percent or more were slow, the circuit opens.
+  1. After 30 seconds, the next request becomes a probe, and the circuit closes if the probe sample passes.
+
+  With `open_when` set to `failure_percentage`, the plugin uses only the percentage threshold.
+
+title: 'Open the circuit on slow responses'
+
+weight: 800
+
+config:
+  latency_circuit:
+    enabled: true
+    max_upstream_ttfb_ms: 2000
+    open_when: failure_percentage
+    failure_percentage: 25
+    min_samples: 20
+    sampling_window_seconds: 60
+    recovery_period_ms: 30000
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
