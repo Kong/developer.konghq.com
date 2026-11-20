@@ -64,7 +64,7 @@ rows:
     member: "`feature_flags`"
     cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
-    destination: "`browser-intake-us5-datadoghq.com`, only in the Anthropic API provider mode and when an Anthropic rollout turns error reports on"
+    destination: "`browser-intake-us5-datadoghq.com`, only when an Anthropic rollout turns error reports on, the developer signs in with a Claude Pro, Max or Ultra subscription, {{ site.claude_code }} connects directly to the Claude API, and the organization has no zero data retention or HIPAA agreement"
     member: "`error_reports`"
     cost: Anthropic doesn't get stack traces when {{ site.claude_code }} fails.
   - traffic: Fast mode availability check
@@ -93,12 +93,12 @@ rows:
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration for good, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
   - traffic: Artifacts
     destination: "`api.anthropic.com` for the publish requests and the organization policy, `*.frame.claudeusercontent.com` for the artifact reads, and `claude.ai`, which serves the published page"
-    member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
+    member: "None. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
     cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
@@ -122,6 +122,9 @@ Some {{ site.claude_code }} switches turn off more than one feature:
 * The `/bug` and `/feedback` switches each turn off all of the feedback commands.
 * The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, the feedback commands and the feedback survey.
 
+With the usage metrics or nonessential traffic switch on, `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1` shows the feedback survey again and sends the ratings only to your OpenTelemetry collector.
+`feedback_survey` set to `false` keeps the survey off even then.
+
 For that reason, {{site.kong_harnesses}} refuses a profile that turns on a feature while another member turns it off:
 
 * `feature_flags`, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
@@ -129,10 +132,11 @@ For that reason, {{site.kong_harnesses}} refuses a profile that turns on a featu
 
 A member that the profile leaves out never causes a conflict.
 
-`auto_updates` set to `false` doesn't cause a conflict.
+In a schema 18 profile, `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
 A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
-Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and the other traffic in the automatic updates row of the table comes back, unless its own member keeps it off.
+Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and {{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, unless its own member keeps it off.
+`FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while automatic updates are off.
 
 ## Traffic that stays
 
@@ -162,7 +166,7 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
 * `--auto-updates on`, or the automatic updates choice in the questions, keeps automatic updates on.
-* `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
+* `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports. It removes only the profile restriction, so the provider and account conditions in the table still apply.
 
 To keep a feature on, set its member to `true` in the profile file.
 The members need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
@@ -241,7 +245,7 @@ rows:
     setting: "`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`"
   - member: "`official_marketplace_autoinstall`"
     setting: "`CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`"
-  - member: "None yet, for artifacts. The `artifact` member writes nothing."
+  - member: "None, for artifacts. The `artifact` member writes nothing."
     setting: "`enableArtifact: false`, or `CLAUDE_CODE_DISABLE_ARTIFACT=1`"
   - member: "`auto_updates`"
     setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When you turn on a feature that the second switch turns off, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead, as activation does."
@@ -256,14 +260,14 @@ If all model traffic must pass through the gateway, turn off each of these produ
 ### {{ site.claude_code }} on the web
 
 {{ site.claude_code }} on the web runs cloud sessions on Anthropic's infrastructure, or in your organization's [self-hosted environment](https://code.claude.com/docs/en/self-hosted-environments) when you route them there.
-In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you set up another provider.
+In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you configure the runner to send model requests to Amazon Bedrock or Google Cloud's Agent Platform.
 To turn off cloud sessions for a Team or Enterprise organization:
 
 1. Sign in to claude.ai as an Owner of your organization.
 1. Open [**Organization settings** > **Claude Code**](https://claude.ai/admin-settings/claude-code).
 1. Turn off cloud sessions, which sets the `allow_remote_sessions` policy to off.
 
-If your organization uses custom roles, also leave the cloud sessions permission out of each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
+If your organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
 The organization setting applies only to the accounts of your organization.
 [{{ site.claude_code }} on the web](https://code.claude.com/docs/en/claude-code-on-the-web) explains cloud sessions.
 
