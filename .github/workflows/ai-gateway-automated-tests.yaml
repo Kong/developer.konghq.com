@@ -51,6 +51,18 @@ jobs:
         with:
           konnect-domain: ${{ env.KONNECT_DOMAIN }}
 
+      - name: Set AI Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
+      - name: Set AI Gateway min version
+        if: ${{ inputs.konnect_ai_gateway_min_version != '' }}
+        env:
+          MIN_VERSION: ${{ inputs.konnect_ai_gateway_min_version }}
+        run: echo "KONNECT_AI_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
       - name: Generate instruction files
         uses: './.github/reusable-steps/generate-instruction-files'
         with:
@@ -62,20 +74,8 @@ jobs:
         with:
           op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
-      - name: Set AI Gateway Image and Tag
-        run: |
-          INPUT_IMAGE="${{ inputs.gateway_image }}"
-          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
-          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
-
       - name: Pre-pull AI Gateway quickstart dependencies
         run: docker pull ghcr.io/jqlang/jq:latest
-
-      - name: Set AI Gateway min version
-        if: ${{ inputs.konnect_ai_gateway_min_version != '' }}
-        env:
-          MIN_VERSION: ${{ inputs.konnect_ai_gateway_min_version }}
-        run: echo "KONNECT_AI_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: tools/automated-tests
