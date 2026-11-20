@@ -94,8 +94,8 @@ columns:
 rows:
   - check: "`install`"
     what: |
-      The `install` check runs once, before the reports.
-      On Windows, only administrators can change a kong-harnesses install under `Program Files`, and the folders above it.
+      The `install` check runs once, before the reports, and only on Windows for an install under `Program Files`.
+      It checks that no account other than an administrator can change the install or the folders above it.
     next: Ask your administrator to install kong-harnesses again with its MSI, or to remove write access for every account that isn't an administrator.
   - check: "`profile`"
     what: The profile is installed, and kong-harnesses can read it.
@@ -178,8 +178,8 @@ rows:
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
     what: |
-      The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
-      When gateway discovery fills the menu, the menu keeps the built-in models, and each gateway model that discovery skips needs its own row.
+      Without gateway discovery, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
+      When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model whose ID contains `claude` or `anthropic`, and each gateway model that discovery skips needs its own row.
     next: |
       Do what the `fix:` line says, when the report has one.
       It's usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which updates the menu.
@@ -188,7 +188,8 @@ rows:
     what: The model that a new {{ site.claude_code }} session starts on, and the model that each role such as a subagent uses, are models that the gateway serves, or that the profile lists.
     next: |
       Do what the `fix:` line says, when the report has one.
-      Pick a gateway model with `/model`, or unset the variable that the `fix:` line names in the shell that starts {{ site.claude_code }}.
+      When the `fix:` line says to pick a model, pick a gateway model with `/model`.
+      When the `fix:` line says to unset a variable, unset it in the shell that starts {{ site.claude_code }}, because that variable overrides the choice in `/model`.
       If the profile sets the model, import the profile again from your administrator, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again.
       When your organization's managed settings set the model, ask your administrator to change them.
   - check: "`anthropic`"
@@ -202,8 +203,10 @@ rows:
       After the cleanup, inspect the settings and remove any leftover values manually.
   - check: "`overrides`"
     what: |
-      For each credential variable that isn't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider that is turned on, such as `CLAUDE_CODE_USE_BEDROCK`, in the shell that starts {{ site.claude_code }}, the `env` block of the settings file sets the same variable, which takes precedence.
-      The `env` block itself doesn't turn on a switch for another provider, or set a credential for the provider mode of the profile.
+      The check reports each variable in the shell that starts {{ site.claude_code }} that overrides the gateway setup.
+      These are credential variables that aren't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and switches for another provider that are turned on, such as `CLAUDE_CODE_USE_BEDROCK`.
+      The check skips a variable that the `env` block of the settings file also sets, because the value in the settings file takes precedence.
+      It also reports a switch for another provider that the `env` block turns on, and a credential for the provider mode of the profile that the `env` block sets.
     next: |
       Do each step that the `fix:` line names.
       It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
@@ -262,6 +265,11 @@ kong-harnesses logout --profile PROFILE_NAME
 ```
 
 If `logout` fails, do what its message says, and run it again.
+`logout` removes only the sign-in that kong-harnesses saved for the profile.
+OpenCode and Hermes Agent sign in through their own plugin, so `logout` refuses `--client opencode` and `--client hermes`, and their sign-ins stay active.
+To sign out of OpenCode, run `opencode auth logout`.
+To sign out of Hermes Agent, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with the entry ID of the credential as `TARGET`.
+For these commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
 After `logout` succeeds, delete the profile:
 
 ```sh
