@@ -260,5 +260,5 @@ This split means changing a model's pricing (for example, updating `input_cost` 
 ## Investigate cost drivers
 
 The cost figure shows how much a model, consumer, or request cost.
-When spend rises unexpectedly, turn on [conversation capture](/observability/conversation-capture/) for the affected traffic.
+When spend rises unexpectedly, and your data planes connect to {{site.konnect_short_name}}, turn on [conversation capture](/observability/conversation-capture/) for the affected traffic.
 Captured prompts and responses show what is behind the cost, such as unusually long prompts or repeated retries.
