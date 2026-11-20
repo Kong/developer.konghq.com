@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class APIPagesGenerator < Generator
-    SOURCE_FILE = '_data/konnect_oas_data.json'
+require_relative '../lib/ordered_generator'
 
-    priority :low
+module Jekyll
+  class APIPagesGenerator < OrderedGenerator
+    SOURCE_FILE = '_data/konnect_oas_data.json'
 
     def generate(site)
       @site = site

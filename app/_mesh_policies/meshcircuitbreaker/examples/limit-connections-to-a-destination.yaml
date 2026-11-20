@@ -1,0 +1,28 @@
+title: 'Cap connections to a destination'
+
+description: 'Use MeshCircuitBreaker connectionLimits so a caller cannot open unbounded connections or queue unbounded requests against one destination.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshCircuitBreaker
+  name: web-to-backend
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          connectionLimits:
+            maxConnections: 2
+            maxPendingRequests: 8
+            maxRequests: 2
+            maxRetries: 2

@@ -1,23 +1,10 @@
 ---
 title: Install {{site.mesh_product_name}}
-description: "Install {{site.mesh_product_name}}, prepare working directories and configuration files, and create a Docker network for the Universal mode demo."
+description: "Prepare the network, the sidecar setup script, and the files the rest of the series uses."
 content_type: how_to
 permalink: /mesh/get-started/universal/install/
 breadcrumbs:
   - /mesh/
-related_resources:
-  - text: "{{site.mesh_product_name}} data plane on Universal"
-    url: /mesh/data-plane-universal/
-  - text: Zone egress
-    url: /mesh/zone-egress/
-  - text: MeshMultiZoneService
-    url: /mesh/meshmultizoneservice/
-  - text: '{{site.mesh_product_name}} resource sizing guidelines'
-    url: '/mesh/resource-sizing-guidelines/'
-  - text: '{{site.mesh_product_name}} validated versions'
-    url: '/mesh/validated-versions/'
-  - text: Mesh on Amazon ECS
-    url: '/mesh/ecs/'
 products:
   - mesh
 works_on:
@@ -26,133 +13,131 @@ tags:
   - get-started
   - universal-mode
   - docker
-min_version:
-  mesh: '2.10'
 series:
-  id: mesh-get-started-universal
+  id: mesh-get-started-universal-3
   position: 1
-
-prereqs:
-  skip_product: true
-  inline: 
-    - title: Docker 
-      content: |
-        This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
-    - title: jq
-      content: |
-        This guide requires [jq](https://jqlang.org/download/) installed on your system.
-
 tldr:
-  q: How do I prepare my environment to run {{site.mesh_product_name}} on Universal?
-  a: Install the {{site.mesh_product_name}} binaries, create a temporary directory for tokens and configuration files, and set up a Docker network for the demo containers.
+  q: What do I need before running {{site.mesh_product_name}} on Universal?
+  a: Create a Docker network the containers share, and write the sidecar setup script, the `Dataplane` template and the transparent proxy config the later steps reuse.
+related_resources:
+  - text: "{{site.mesh_product_name}} on Universal"
+    url: /mesh/universal/
+  - text: "{{site.mesh_product_name}} CLI"
+    url: /mesh/cli/
+  - text: Service meshes
+    url: /mesh/service-mesh/
+  - text: Concepts
+    url: /mesh/concepts/
+tools:
+  - kongctl
+min_version:
+  mesh: '3.0'
 ---
 
-This series walks you through running {{site.mesh_product_name}} in Universal mode using Docker containers. You'll set up and secure a simple demo application to explore how {{site.mesh_product_name}} works. The application consists of two services:
+This series runs {{site.mesh_product_name}} on Universal and configures a two-service mesh with
+mTLS and traffic permissions.
 
-- `demo-app`: A web application that lets you increment a numeric counter.
-- `kv`: A data store that keeps the counter's value.
+The application is the [Kuma counter demo](https://github.com/kumahq/kuma-counter-demo), run as
+two services from the same image:
 
-<!-- vale off -->
-{% mermaid %}
-flowchart LR
-browser(browser)
+- `demo-app`: a web application that increments a counter.
+- `kv`: a key/value store that keeps the counter's value.
 
-subgraph mesh
-edge-gateway
-demo-app(demo-app :5050)
-kv(kv :5050)
-end
-edge-gateway --> demo-app
-demo-app --> kv
-browser --> edge-gateway
-{% endmermaid %}
-<!-- vale on -->
+For more information about Universal, see [{{site.mesh_product_name}} on Universal](/mesh/universal/).
 
-## Install {{site.mesh_product_name}}
+## Create a working directory
 
-1. Run the following command to install the {{site.mesh_product_name}} binaries:
-
-   ```sh
-   curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
-   ```
-
-1. Add the binaries to your system's path:
-
-   ```sh
-   export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
-   ```
-
-1. Run the following command to confirm that {{site.mesh_product_name}} is installed correctly:
-
-   ```sh
-   kumactl version 2>/dev/null
-   ```
-
-   You should see the following output:
-
-   ```
-   Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
-   ```
-   {:.no-copy-code}
-
-## Create a temporary directory
-
-Set up a temporary directory to store resources like data plane tokens, [`Dataplane`](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
-
-{:.warning}
-> If you are using [Colima](https://colima.run/), make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
-
-Create the directory if it doesn't exist:
+The series writes tokens, resources and logs to a directory the containers share:
 
 ```sh
-export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"
-mkdir -p "$KONG_MESH_DEMO_TMP"
+export KONG_MESH_DEMO_DIR="$PWD/kong-mesh-demo"
+mkdir -p "$KONG_MESH_DEMO_DIR"
+chmod 755 "$KONG_MESH_DEMO_DIR"
 ```
 
-## Create a `Dataplane` resource template
+`chmod` lets the unprivileged user that runs `kuma-dp` inside each container read the files.
 
-Create a reusable [`Dataplane`](/mesh/data-plane-proxy/) resource template for services:
+## Create the Docker network
 
-```sh
-echo 'type: Dataplane
-mesh: default
-name: {% raw %}{{ name }}{% endraw %}
-labels:
-  app: {% raw %}{{ name }}{% endraw %}
-networking:
-  address: {% raw %}{{ address }}{% endraw %}
-  inbound:
-    - port: {% raw %}{{ port }}{% endraw %}
-      tags:
-        kuma.io/service: {% raw %}{{ name }}{% endraw %}
-        kuma.io/protocol: http
-  transparentProxying:
-    redirectPortInbound: 15006
-    redirectPortOutbound: 15001' > "$KONG_MESH_DEMO_TMP/dataplane.yaml"
-```
-
-This template simplifies creating `Dataplane` configurations for different services by replacing dynamic values during deployment.
-
-## Create a transparent proxy configuration file
-
-Create a configuration file that identifies the data plane proxy user and enables DNS traffic redirection through the mesh:
-
-```sh
-echo 'kumaDPUser: kong-mesh-data-plane-proxy
-redirect:
-  dns:
-    enabled: true
-verbose: true' > "$KONG_MESH_DEMO_TMP/config-transparent-proxy.yaml"
-```
-
-## Create a Docker network
-
-Set up a separate Docker network for the containers. In this example we'll use IP addresses in the `172.18.78.0/24` range:
+Create a Docker network to allow the control plane and the two workloads to reach each other by address:
 
 ```sh
 docker network create \
-  --subnet 172.18.0.0/16 \
-  --ip-range 172.18.78.0/24 \
+  --subnet 172.18.78.0/24 \
   --gateway 172.18.78.254 \
   kong-mesh-demo
 ```
+
+`--gateway` moves the network's gateway to `172.18.78.254`. Without it, Docker takes
+`172.18.78.1`, the address the control plane runs on.
+
+## Write the sidecar setup script
+
+On Universal the sidecar runs beside the workload, so each workload container needs the
+{{site.mesh_product_name}} binaries: `kuma-dp`, `envoy`, and `kumactl`.
+
+Write the script that later steps will run inside each container:
+
+```sh
+cat > "$KONG_MESH_DEMO_DIR/setup-sidecar.sh" <<'EOF'
+set -e
+apt-get update
+apt-get install --yes curl iptables
+cd /tmp
+curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{page.latest_release.version}} sh -
+mv kong-mesh-*/bin/* /usr/local/bin/
+useradd --uid 5678 --user-group kuma-dp
+EOF
+```
+
+The script performs the following actions:
+* Installs `curl` and `iptables`
+* Downloads the Linux binaries for the container's architecture
+* Creates the `kuma-dp` user (UID `5678`) that the sidecar runs as
+
+## Write the Dataplane template
+
+The `Dataplane` resource describes a proxy. Rather than writing one per workload, write a template:
+
+{% raw %}
+```sh
+cat > "$KONG_MESH_DEMO_DIR/dataplane.yaml" <<'EOF'
+type: Dataplane
+mesh: default
+name: {{ name }}
+labels:
+  kuma.io/workload: {{ name }}
+  app: {{ name }}
+networking:
+  address: {{ address }}
+  inbound:
+    - port: {{ port }}
+      name: main
+      protocol: http
+EOF
+```
+{% endraw %}
+
+`kuma-dp` substitutes each placeholder from a matching `--dataplane-var` flag, so one file can
+serve many workloads.
+
+In this template: 
+* `labels.kuma.io/workload` names the workload. The control plane generates a `MeshService` per distinct value, and builds the proxy's SPIFFE ID from it. Without it, nothing is generated and no policy can target the workload.
+* `labels.app` is used by policies to select the proxy.
+* `networking.inbound[].protocol` sets the port's protocol. Without it, the port is treated as TCP.
+
+## Write the transparent proxy config
+
+Transparent proxying intercepts a workload's traffic, so the workload calls other services by
+name without binding a local port for each one:
+
+```sh
+cat > "$KONG_MESH_DEMO_DIR/transparent-proxy.yaml" <<'EOF'
+kumaDPUser: kuma-dp
+redirect:
+  dns:
+    enabled: true
+EOF
+```
+`kumaDPUser` names the user whose traffic isn't redirected, and
+`redirect.dns.enabled` sends DNS lookups to the sidecar's DNS proxy so mesh hostnames resolve.
