@@ -44,6 +44,7 @@ Replace `PROFILE_NAME` with the name of your installed profile, here and in each
 Replace `CLIENT_NAME` with the name of the agent CLI, such as `claude-code`.
 
 Without `--client`, `doctor` checks every agent CLI that the profile lists, with one report for each.
+Run `doctor` in the shell and the folder where you start the agent CLI, because some checks read the environment and the project settings of {{ site.claude_code }} there.
 `doctor` uses the network to check the gateway, and, unless the profile uses a static key, the identity provider.
 `kong-harnesses status` shows the sign-in and the agent CLI settings without the network.
 
@@ -117,7 +118,8 @@ rows:
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, run `kong-harnesses profile cleanup --client CLIENT_NAME` first.
+      When the settings are inconsistent with what kong-harnesses wrote, and the `fix:` line names `kong-harnesses profile cleanup --client CLIENT_NAME`, run it first.
+      When the settings have two ownership documents, `profile cleanup` refuses them, so remove the leftover values and both documents manually, then activate the profile, as the `fix:` line says.
       If `profile cleanup` reports that the settings no longer match what kong-harnesses installed, inspect them and remove the leftover values manually.
       When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
       For OpenCode, remove the gateway plugin entry that kong-harnesses didn't record from the settings file first, then activate the profile.
@@ -137,9 +139,9 @@ rows:
   - check: "`gateway`"
     what: |
       The `gateway` check tests a direct connection to the gateway.
-      For an `http://` gateway, the check fails when a proxy applies to the gateway.
+      For an `http://` gateway, the check fails when a proxy applies to the gateway, or when `doctor` can't check the proxy settings.
       For an `https://` gateway, the check skips the test when a proxy applies.
-      When `--inference` runs for {{ site.claude_code }}, the check doesn't test the connection, and fails only an `http://` gateway that a proxy applies to.
+      When `--inference` runs for {{ site.claude_code }}, the check skips the direct test, but still fails an `http://` gateway for the same proxy reasons.
       For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
@@ -148,7 +150,7 @@ rows:
       For an IPv6 loopback address, add instead each form of the address, with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line names only that `profile activate` step, run it on its own.
-      When project settings or managed settings of {{ site.claude_code }} set a proxy variable, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
+      When project settings or managed settings of {{ site.claude_code }} set a proxy variable, or `doctor` can't read them, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
       Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
     what: |
@@ -194,7 +196,6 @@ rows:
     what: |
       For each credential variable that isn't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider that is turned on, such as `CLAUDE_CODE_USE_BEDROCK`, in the shell that starts {{ site.claude_code }}, the `env` block of the settings file sets the same variable, which takes precedence.
       The `env` block itself doesn't turn on a switch for another provider, or set a credential for the provider mode of the profile.
-      The check reads the environment that `doctor` runs in, so run `doctor` from the shell that starts {{ site.claude_code }}.
     next: |
       Do each step that the `fix:` line names.
       It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
@@ -240,7 +241,7 @@ To clean up one agent CLI, add `--client`, for example `--client claude-code`.
 `profile cleanup` changes only the values that kong-harnesses still owns.
 If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and its output names each setting or group of settings that holds your edits.
 If `profile cleanup` can't tell which values it owns, it exits with `2`, or with `4` when it changed another agent CLI.
-Inspect the settings, and remove the remaining values manually.
+Do the steps that its message names, for example inspect the settings and remove the leftover values manually.
 If `profile cleanup` changes settings but can't finish the cleanup for one or more agent CLIs, it exits with `4`, also with `--client`.
 Do the step that the message names, then run it again.
 `profile cleanup` doesn't sign you out, and doesn't delete the profile.
