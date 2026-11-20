@@ -150,7 +150,7 @@ Dynamic ordering only changes the `access` phase, so an open circuit rejects req
 
 The plugin has two independent circuits: a [policy failure circuit](#policy-failure-circuit) and a [latency circuit](#latency-circuit).
 
-Use `open_when` to choose which threshold opens each the circuit.
+Use `open_when` to choose which threshold opens each circuit.
 If either circuit is open, the plugin rejects the request.
 Otherwise, the plugin measures the request separately for each circuit, so a single slow request that also fails counts toward both.
 
