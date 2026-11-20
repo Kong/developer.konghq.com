@@ -1,6 +1,6 @@
 ---
 title: "{{site.kong_harnesses}} profiles for administrators"
-description: "Choose a provider mode, create and publish a {{site.kong_harnesses}} profile, see what setup changes on each developer's computer, and make each {{ site.claude_code }} install trust a private certificate authority."
+description: "Choose a provider mode, create and publish a {{site.kong_harnesses}} profile, and see what setup changes on each developer's computer."
 content_type: reference
 layout: reference
 
@@ -31,6 +31,8 @@ related_resources:
     url: /kong-harnesses/setup/
   - text: Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL
     url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
+  - text: kong-harnesses and private certificate authorities
+    url: /kong-harnesses/private-certificate-authorities/
 ---
 
 A {{site.kong_harnesses}} profile names the {{site.ai_gateway}} that developers' agent CLIs call, how developers sign in, and the model that {{ site.claude_code }} starts with.
@@ -87,7 +89,7 @@ Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle e
 
 Create the profile on your own computer with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
 Run it without flags to answer the questions instead.
-`profile create` connects to your identity provider, so your computer must trust its certificate first, see [Private certificate authorities](#private-certificate-authorities).
+`profile create` connects to your identity provider, so your computer must trust its certificate first, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
 
 The identity provider needs a public OIDC client, without a client secret, for the authorization code flow with PKCE (S256) and refresh tokens.
 Register `http://localhost:9876/callback` as a sign-in redirect URI of the client, or register another loopback URI and pass it with `--redirect-uri`.
@@ -159,7 +161,7 @@ rows:
   - placeholder: "`GATEWAY_ORIGIN`"
     value: |
       The `https://` origin of the gateway without a path, such as `https://ai-gateway.example.com`.
-      Developers' computers must trust the gateway certificate.
+      Developers' computers must trust the gateway certificate, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
   - placeholder: "`MODEL_NAME`, `FOUNDRY_DEPLOYMENT_NAME` or `BEDROCK_MODEL_ID`"
     value: The model ID that the profile sets for every {{ site.claude_code }} model role, in the format of the provider mode.
 {% endtable %}
@@ -223,7 +225,6 @@ config:
 ```
 
 With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header.
-`header_auth_schemes` needs {{site.ai_gateway}} 2.4 or later.
 For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
 
 ## Profile hosting
@@ -277,11 +278,11 @@ rows:
 
 To change the profile, publish the new file at the same URL or give developers the new file.
 When the change keeps the profile's security identity, developers run the same `setup` command again.
-The security identity includes the gateway origin, the issuer and its endpoints, the client ID, the redirect URI, the audience, the audience parameter, the scopes and the sign-in kind.
+The security identity includes the gateway origin, the issuer and its endpoints, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence and the sign-in kind.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup`, run `setup` again, and sign in again.
 
-## What setup changes on a developer's computer
+## Changes on a developer's computer
 
 A developer installs the profile with [`kong-harnesses setup`](/kong-harnesses/setup/) and the URL or the file:
 
@@ -295,7 +296,7 @@ kong-harnesses setup ./PROFILE_NAME.json
 
 `setup` runs `profile import`, `login` and `profile activate`, in this order.
 Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
-It skips `login` for an `environment-key` profile, and when the only agent CLIs that it sets up are OpenCode and Hermes Agent, which sign in through their own plugins.
+It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
 Without `--client`, `setup` sets up every installed agent CLI that the profile lists.
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
@@ -320,6 +321,10 @@ rows:
       A command that runs `kong-harnesses credential` for the profile.
       {{ site.claude_code }} runs it to get a short-lived access token, or the static key of a key profile.
       A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains until cleanup.
+  - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` and `env.CLAUDE_CODE_API_KEY_HELPER_TTL_MS`"
+    value: |
+      `1`, and a 5-minute cache for the `apiKeyHelper` result.
+      Discovery has an effect only in the `anthropic` mode.
   - key: "`env.ANTHROPIC_AUTH_TOKEN` and `env.ANTHROPIC_API_KEY`"
     value: Empty, so a key in the shell doesn't replace the sign-in.
   - key: "Model keys, such as `env.ANTHROPIC_MODEL`"
@@ -333,7 +338,7 @@ rows:
   - key: "`hooks`"
     value: |
       Only for a `subscription` profile.
-      A hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway knows which developer sent each request.
+      A hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway can identify the developer of each request.
 {% endtable %}
 
 Each provider mode also writes its own keys:
@@ -346,7 +351,7 @@ columns:
     key: keys
 rows:
   - mode: "`anthropic`"
-    keys: "`env.ANTHROPIC_BASE_URL` set to the gateway origin, and `env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` set to `1`."
+    keys: "`env.ANTHROPIC_BASE_URL` set to the gateway origin."
   - mode: "`foundry`"
     keys: |
       `env.CLAUDE_CODE_USE_FOUNDRY` and `env.CLAUDE_CODE_SKIP_FOUNDRY_AUTH` set to `1`, and `env.ANTHROPIC_FOUNDRY_BASE_URL` set to the gateway origin.
@@ -362,112 +367,3 @@ It refuses a credential that the {{ site.claude_code }} settings file already co
 In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
 [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) restores each value that activation replaced, when the key still has the value that activation wrote.
 A value that the developer changed after activation stays as the developer left it.
-
-## Private certificate authorities
-
-When the gateway, the identity provider or the profile server uses a certificate from a private certificate authority (CA), add the CA to the system trust store of each developer's computer and of your own computer, usually through mobile device management (MDM).
-{{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store and need nothing more.
-The browser that opens for the sign-in must also trust the identity provider's certificate.
-Hermes Agent reads the system trust store, but the sign-in script of its {{site.ai_gateway}} plugin doesn't, so sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
-
-omp and pi don't read the system trust store by default, so set one of these variables in the environment where they start:
-
-{% table %}
-columns:
-  - title: Agent CLI
-    key: client
-  - title: Setting
-    key: setting
-rows:
-  - client: omp
-    setting: "`NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`."
-  - client: pi
-    setting: "`NODE_EXTRA_CA_CERTS` set to the CA file, or, when pi runs on Node.js, `NODE_USE_SYSTEM_CA=1`."
-{% endtable %}
-
-The native installer, the npm package, the Homebrew cask, the WinGet package and the apt, dnf and apk packages of {{ site.claude_code }} install the same native binary.
-That binary trusts the system trust store by default, so each of these installs needs only the CA in the system trust store.
-When a developer set `CLAUDE_CODE_CERT_STORE` without `system`, add `system` back to it.
-An older npm install that runs {{ site.claude_code }} on Node.js ignores the system trust store, so update it or set `NODE_EXTRA_CA_CERTS` for it.
-
-Add the CA certificate, a PEM file, to the system trust store:
-
-{% navtabs "system-trust-store" %}
-{% navtab "macOS" %}
-
-```sh
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain CA_CERTIFICATE_FILE
-```
-
-You can also deploy the certificate with an MDM certificate payload.
-
-{% endnavtab %}
-{% navtab "Windows" %}
-
-Run this command in PowerShell as an administrator:
-
-```powershell
-certutil -addstore -f Root CA_CERTIFICATE_FILE
-```
-
-You can also deploy the certificate with Group Policy or Intune.
-
-{% endnavtab %}
-{% navtab "Debian and Ubuntu" %}
-
-```sh
-sudo cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
-sudo update-ca-certificates
-```
-
-{% endnavtab %}
-{% navtab "Fedora and RHEL" %}
-
-```sh
-sudo cp CA_CERTIFICATE_FILE /etc/pki/ca-trust/source/anchors/
-sudo update-ca-trust
-```
-
-{% endnavtab %}
-{% navtab "Alpine" %}
-
-```sh
-apk add ca-certificates
-cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
-update-ca-certificates
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-Each WSL distribution has its own trust store.
-Install the CA in each distribution with the Linux commands.
-
-When you can't change the system trust store, set the CA for each program instead:
-
-{% table %}
-columns:
-  - title: Program
-    key: program
-  - title: Setting
-    key: setting
-rows:
-  - program: "{{ site.claude_code }}"
-    setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file, in the `env` block of the {{ site.claude_code }} user settings.
-      `profile activate` doesn't set this key and leaves a value that you set in place.
-      When it removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, it restores the value that the key had before that release.
-  - program: Codex
-    setting: "`CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex."
-  - program: OpenCode
-    setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file.
-      When OpenCode runs as a background service, it doesn't read later shell exports, so set the variable for the service with `opencode service set env`.
-  - program: "{{site.kong_harnesses}}"
-    setting: |
-      `SSL_CERT_FILE` set to a file with every CA that {{site.kong_harnesses}} needs, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts each agent CLI, because the agent CLIs run {{site.kong_harnesses}} to get each token.
-      On Linux, the file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
-      On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`, and the file then replaces the system trust store for {{site.kong_harnesses}}.
-{% endtable %}
-
-`profile create` doesn't take a CA bundle.
