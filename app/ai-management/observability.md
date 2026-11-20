@@ -52,6 +52,8 @@ rows:
     use: "Build and share your own dashboards from AI Gateway metrics."
   - page: "[**Explorer**](#explorer)"
     use: "Answer specific questions with custom queries."
+  - page: "[**Alerts**](#alerts)"
+    use: "Get notified about unusual error rate, latency, or traffic."
   - page: "[**Logs**](#logs)"
     use: "Read and search logs."
 {% endtable %}
@@ -231,6 +233,102 @@ features:
     agentic: true
 {% endfeature_table %}
 <!-- vale on -->
+
+## Alerts
+
+An alert rule watches one metric of your AI traffic, such as error rate or latency, for a scope such as a model, route, or provider.
+When the metric breaks the rule, the rule triggers an alert for that scope, for example `Model: gpt-4o`.
+An alert shows **Triggered** while it is active and **Resolved** after it ends.
+
+To open alerts, in the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Alerts**.
+The **Activity** tab shows triggered and resolved alerts. The **Detection rules** tab shows the rules.
+
+### Default detection rules
+
+Every organization starts with the following rules. They are enabled by default:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Rule
+    key: rule
+  - title: Metric
+    key: metric
+  - title: Scope
+    key: scope
+  - title: Severity
+    key: severity
+rows:
+  - rule: "**Error rate spike**"
+    metric: Error rate
+    scope: Model
+    severity: Critical
+  - rule: "**Latency degradation**"
+    metric: p95 request latency
+    scope: Route
+    severity: Warning
+  - rule: "**Time to first token degradation**"
+    metric: Time to first token (TTFT)
+    scope: Provider
+    severity: Warning
+  - rule: "**Time per output token degradation**"
+    metric: Time per output token (TPOT)
+    scope: Provider
+    severity: Warning
+  - rule: "**Traffic flatline**"
+    metric: Request volume
+    scope: Model
+    severity: Critical
+{% endtable %}
+<!-- vale on -->
+
+The default rules start with no notifications set up.
+To get notified, edit a rule and add an email address or a webhook. For more information, see [Alert notifications](#alert-notifications).
+
+### Detection
+
+The default rules use automatic detection: they learn a baseline from your traffic.
+The **Monitoring readiness** of a rule shows **Learning baseline** until the rule has enough traffic history, and then **Baseline ready**.
+
+A rule that you create compares the metric with a threshold that you set, for a duration that you set.
+
+### Create an alert
+
+1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+1. In the Observability sidebar, click **Alerts**.
+1. Click **Create alert**.
+1. In the **Alert name** field, enter `High error rate on gpt-4o`.
+1. From the **Control plane** dropdown menu, select your control plane.
+1. Select **Template**.
+1. From the **Category** dropdown menu, select "Error rate spike".
+1. From the **Threshold** dropdown menu, select "12%".
+1. In the **Notify** section, select the **Email** checkbox.
+1. In the email address field, enter `alerts@example.com`.
+1. Click **Save alert rule**.
+
+The template fills in the metric, the dimensions, and a condition with a severity, a threshold, and a duration. You can change each of them.
+
+To define your own conditions, select **Custom** instead of **Template**.
+Each custom condition uses a data source (**LLM usage** or **Agentic usage**), a metric, dimensions, optional filters, a threshold, and a duration.
+A custom rule can match all of its conditions or any one of them. To save it, click **Save custom rule**.
+
+You can also create an alert from a query in [Explorer](#explorer).
+In Explorer, click **Create alert**. The **New alert** page opens with **Custom** selected, and the first condition uses the data source, metric, and dimension of your query.
+
+### Alert notifications
+
+A rule can notify by email, by webhook, or by both.
+For a webhook, select a saved webhook or click **New webhook**.
+When you create a webhook, you can select its provider.
+To learn about delivery problems, add a failure notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
+
+### Investigate an alert
+
+1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+1. In the Observability sidebar, click **Alerts**.
+1. On the **Activity** tab, click an alert.
+1. In the alert history, click an entry. The event page opens and lists the affected sessions.
+1. Click **Investigate in Sessions**.
 
 ## Logs
 
