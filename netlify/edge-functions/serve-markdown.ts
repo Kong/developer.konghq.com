@@ -116,7 +116,8 @@ export const config: Config = {
     "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.eot",
     "/**/*.json", "/**/*.xml", "/**/*.map", "/**/*.yaml", "/**/*.yml",
     "/**/*.sh", "/**/*.ps1",
-    "/robots.txt", "/assets/*", "/vite/assets/*"
+    "/robots.txt", "/mesh/latest_version", "/mesh/latest_version/*",
+    "/assets/*", "/vite/assets/*"
   ],
   onError: "bypass",
 };

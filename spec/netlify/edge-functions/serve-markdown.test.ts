@@ -454,6 +454,11 @@ describe("serve-markdown config", () => {
     }
   });
 
+  it("excludes the mesh version endpoint the installer reads", () => {
+    assert.ok(excluded.includes("/mesh/latest_version"));
+    assert.ok(excluded.includes("/mesh/latest_version/*"));
+  });
+
   it("does not exclude all .txt files, so /llms.txt runs the function", () => {
     assert.ok(!excluded.includes("/**/*.txt"));
   });
@@ -477,6 +482,8 @@ describe("serve-markdown config", () => {
       "/insomnia/Flights-Service-0.1.0.yaml",
       "/mesh/installer.sh",
       "/mesh/installer.ps1",
+      "/mesh/latest_version",
+      "/mesh/latest_version/",
       "/robots.txt",
       "/sitemap.xml",
       "/feeds/security-advisories.xml",
