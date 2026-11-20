@@ -121,9 +121,21 @@ Your organization delivers the profile to {{ site.claude_code }} through managed
 
 An administrator installed this profile for every user of the computer, so you can't replace or remove it. Sign in to it with `kong-harnesses login`, or ask your administrator to change it.
 
-### "selected profile is invalid" or "uses an unsupported format"
+### "selected profile is invalid"
 
 The installed copy of the profile can't be read. Install the profile again from your administrator's file or URL with `kong-harnesses profile import`.
+
+### "selected profile needs a newer kong-harnesses" or "uses an unsupported format"
+
+The installed profile has a schema version that this release can't read, usually because a newer release installed it. [Update {{site.kong_harnesses}}](/kong-harnesses/), then run the command again. Up to 0.17.1, the message is "selected profile uses an unsupported format; reinstall it with this version", and the fix is the same: update {{site.kong_harnesses}}.
+
+### "selected profile is missing, invalid, or unsupported"
+
+`token`, `credential`, `doctor` and the MCP credential helper print this message when the profile isn't installed, can't be read, or needs a newer release. Run `kong-harnesses profile list` to check that the profile is installed. If it is, install it again with `kong-harnesses profile import`, or update {{site.kong_harnesses}} when a newer release wrote it.
+
+### "the profile installed for every user can be changed by an account that is not an administrator"
+
+An administrator installed the profile for every user of the computer, but its file or folder lets other accounts change it, so {{site.kong_harnesses}} doesn't use it. Ask your administrator to install the profile again.
 
 ### "selected profile still has a saved sign-in"
 
