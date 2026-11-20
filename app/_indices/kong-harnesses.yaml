@@ -38,6 +38,7 @@ groups:
           - path: /kong-harnesses/profile/
           - path: /kong-harnesses/identity-provider/
           - path: /kong-harnesses/identity-provider/providers/
+          - path: /kong-harnesses/identity-provider/checks/
           - path: /kong-harnesses/profile/*/**
       - title: Get Access Tokens
         items:
