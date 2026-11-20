@@ -171,7 +171,7 @@ Set `config.audience_required` to a list that contains the gateway audience, as 
 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
-For example, use `api://default`.
+For example, use an absolute URI such as `https://gateway.example.com/api`.
 For the rules of the value, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
 The `aud` claim of the access token can differ from the `--audience` value.
 
@@ -201,7 +201,7 @@ rows:
 
 {{site.kong_harnesses}} doesn't check the audience of the access token.
 If the identity provider ignores the audience in the request and doesn't set it in another way, its access tokens don't get the gateway audience, and a gateway with `config.audience_required` refuses them.
-{{site.kong_harnesses}} sends the audience only in the authorization request in the browser, not in the code exchange or the renewal request, so check that the access tokens from both of them also have the gateway audience.
+{{site.kong_harnesses}} sends the audience only in the authorization request in the browser, not in the code exchange or the renewal request.
 
 Before you give the profile to developers, check that the gateway accepts access tokens from a sign-in and from a renewal.
 
@@ -213,12 +213,13 @@ Some identity providers omit `none` from the advertised methods for public clien
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, create the production profile with the flag, which skips only the check for `none`.
 
-If an endpoint in the discovery document changes, sign-in fails until you create the profile again.
+When an endpoint that the profile saved changes in the discovery document, sign-in fails until you create the profile again.
 
 ## Access token lifetime
 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, because a renewed access token must still have 360 seconds left when a client gets it.
+A renewal checks the 360 seconds again after it saves the new refresh token, so a lifetime close to 365 seconds can fail when the save is slow.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
@@ -243,4 +244,4 @@ Add `--redirect-uri`, `--scope`, `--audience-parameter`, `--public-client-eviden
 
 If you create a profile again with a different issuer, endpoint, client ID, callback, `--scope` list, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
 While a client still uses the old profile, `profile create` and [`profile import`](/kong-harnesses/profile/import/) refuse a new profile with the same name and one of these changes.
-First, activate another profile in that client with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), or run [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/).
+First, activate another profile in that client with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), or run [`kong-harnesses profile cleanup --client CLIENT`](/kong-harnesses/profile/cleanup/) for that client.
