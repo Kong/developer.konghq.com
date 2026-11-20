@@ -33,10 +33,10 @@ A credential is the actual secret (a token or a key) that the {{site.identity}} 
 
 ## Credential types
 
-The credentials can be personal or shared across the directory. You define this with the `credential_type` field on the provider:
+The credentials can be personal or shared across the directory:
 
-* `user` sets a personal credential, enrolled by each user.
-* `shared` sets a credential shared across the directory, managed by an admin.
+* Personal credentials are created by each user.
+* Shared credentials are shared across the directory and managed by an admin.
 
 The allowed values and default depend on the provider's secret type:
 
@@ -234,36 +234,6 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The request accepts the following body parameters:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Parameter
-    key: param
-  - title: Required
-    key: required
-  - title: Description
-    key: description
-rows:
-  - param: "`template_name`"
-    required: Yes
-    description: |
-      Set to `static_secret` for a provider that authenticates with a pre-issued credential.
-  - param: "`name`"
-    required: Yes
-    description: |
-      Your name for this provider. Use it to tell apart several providers built from the same template.
-  - param: "`credential_type`"
-    required: No
-    description: |
-      Must be `shared` for `static_secret` providers, and defaults to `shared`. A shared credential is released to any authorized principal instead of being enrolled per principal.
-  - param: "`base_url`"
-    required: No
-    description: |
-      Overrides the base URL that the template supplies.
-{% endtable %}
-<!--vale on-->
 
 Store the credential on that provider by sending a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential). {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
