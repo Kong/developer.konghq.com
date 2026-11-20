@@ -27,7 +27,6 @@ jobs:
     timeout-minutes: 5
     outputs:
       branch: ${{ steps.pick.outputs.branch }}
-      slug: ${{ steps.pick.outputs.slug }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -67,7 +66,6 @@ jobs:
             exit 1
           fi
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
-          echo "slug=${branch//\//-}" >> "$GITHUB_OUTPUT"
 
   kong-harnesses-versions:
     name: Fetch kong-harnesses Versions
@@ -196,7 +194,7 @@ jobs:
         with:
           title: Sync kong-harnesses Releases
           commit-message: Sync kong-harnesses Releases
-          branch: sync-kong-harnesses-releases-${{ needs.base.outputs.slug }}
+          branch: sync-kong-harnesses-releases/${{ needs.base.outputs.branch }}
           base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}
