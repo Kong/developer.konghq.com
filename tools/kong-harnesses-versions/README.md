@@ -42,7 +42,7 @@ Run the steps in this order:
    GH_TOKEN=<token> node fetch-changelog.js
    ```
 
-   This writes `app/_includes/kong-harnesses/changelog.md`, which the [changelog page](../../app/kong-harnesses/changelog.md) shows. The repository is internal, so the script removes the links into it, as the Mesh changelog does. It keeps the release-please sections, so the steps an upgrade needs stay under **⚠ BREAKING CHANGES**.
+   This writes `app/_includes/kong-harnesses/changelog.md`, which the [changelog page](../../app/kong-harnesses/changelog.md) shows. The repository is internal, so the script removes the links into it, as the Mesh changelog does. It keeps only the sections for users (**⚠ BREAKING CHANGES**, **Features**, **Bug Fixes** and **Performance**), so the steps an upgrade needs stay under **⚠ BREAKING CHANGES**. It drops the build, CI and docs sections, the fixes to the repository's own tooling (the `ci`, `ksai` and `threat-model` scopes), and a release with nothing left.
 
 Commit the generated `app/_data/tools/kong-harnesses.yml`, `app/_includes/kong-harnesses/help/**` and `app/_includes/kong-harnesses/changelog.md` files with any page changes from pruning.
 

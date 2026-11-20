@@ -5,17 +5,51 @@ import { fileURLToPath, pathToFileURL } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repo = 'Kong/kong-harnesses';
 
+// Readers of the site need what changed for them, not the repository's own build, CI,
+// docs and review work, so only these sections are published.
+const userSections = new Set(['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance']);
+// Scopes of fixes to the repository's own tooling and reviews.
+const internalScopes = new Set(['ci', 'ksai', 'threat-model']);
+
+function userFacingRelease(release) {
+  const [heading, ...sections] = release.split(/^(?=### )/m);
+  const kept = sections.flatMap((section) => {
+    const [title, ...lines] = section.trim().split('\n');
+    if (!userSections.has(title.slice(4).trim())) {
+      return [];
+    }
+    let keep = false;
+    const entries = lines
+      .filter((line) => {
+        if (line.startsWith('* ')) {
+          keep = !internalScopes.has(line.match(/^\* \*\*([^:*]+):\*\*/)?.[1]);
+        }
+        return keep;
+      })
+      .join('\n')
+      .trim();
+    return entries ? [`${title}\n\n${entries}`] : [];
+  });
+  return kept.length ? [heading.trim(), ...kept].join('\n\n') : '';
+}
+
 // The repository is internal, so links into it break for readers of the site.
 // The Mesh changelog drops them the same way (mesh.ignored_links_regex).
 // Vale stays off because the entries are commit subjects full of code names.
 export function publicChangelog(markdown, repoName = repo) {
-  const base = `https://github\\.com/${repoName.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}`;
+  const base = `https://github\\.com/${repoName.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}(?![\\w.-])`;
   const body = markdown
     .replace(/^# Changelog\s*\n/, '')
     .replace(new RegExp(` \\(\\[[^\\]]*\\]\\(${base}/(?:issues|pull|commit)/[^)]*\\)\\)`, 'gi'), '')
     .replace(new RegExp(`\\[([^\\]]*)\\]\\(${base}[^)]*\\)`, 'gi'), '$1')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+    .split(/^(?=## )/m)
+    .map(userFacingRelease)
+    .filter(Boolean)
+    .join('\n\n')
+    .replace(/\n{3,}/g, '\n\n');
+  if (body.includes('{% endraw')) {
+    throw new Error('The changelog contains {% endraw %}, which would end the raw block early.');
+  }
   return `<!--vale off-->\n{% raw %}\n${body}\n{% endraw %}\n<!--vale on-->\n`;
 }
 
