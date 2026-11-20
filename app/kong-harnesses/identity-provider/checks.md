@@ -42,13 +42,17 @@ This page lists the checks that the settings of an identity provider or a profil
 
 ## Profile values
 
+* `--name`: 1 to 63 lowercase letters, digits or `-`, starting with a letter and not ending with `-`.
+  The name can't be `default`, `con`, `prn`, `aux`, `nul`, or `com` or `lpt` followed by a digit from 1 to 9.
+* `display_name` and `description` in a profile file: 1 to 80 and 1 to 240 printable ASCII characters.
 * `--client-id`: 1 to 256 visible ASCII characters.
 * `--audience`: An absolute URI of 1 to 2,048 bytes of visible ASCII characters, without user information or a fragment.
 * `--scope`: 2 to 16 scopes, with `openid` and `offline_access`.
   Each scope has 1 to 128 visible ASCII characters, without `"` or `\`, and the list can't have a scope twice.
-* `--gateway-origin`: A canonical `https` origin, or an `http` origin on a loopback host, such as `http://localhost:8000`.
-  The origin doesn't have a path, query, fragment, user information or default port, and an `http` origin can't use an IPv4-mapped IPv6 address.
+* `--gateway-origin`: An `https` origin that meets the rules in [URLs](#urls), without a path or query, or an `http` origin on a loopback host, such as `http://localhost:8000`.
+  An `http` origin meets the same rules, with port `80` in place of `443`, and can't use an IPv4-mapped IPv6 address.
 * `discovery_url` in a profile file: The issuer URL without a trailing slash, followed by `/.well-known/openid-configuration`.
+  The result must also meet the rules in [URLs](#urls).
 
 ## URLs
 
@@ -72,11 +76,12 @@ The query of `authorization_endpoint` can't have a parameter that {{site.kong_ha
 While the developer signs in, {{site.kong_harnesses}} keeps waiting when a request comes to another path or without the `state` of this sign-in.
 A request to the callback path with that `state` ends the wait, and it must meet these checks:
 
-* It is a `GET` request without a body, with a `Host` header that has the host and port of the callback.
+* It is a `GET` request without a body, with a `Host` header that has the exact host and port of the callback in the profile.
+* Its path is the callback path, without percent encoding.
 * Each of `state`, `code`, `error`, `error_description`, `error_uri`, `iss` and `session_state` occurs at most once, with a value that isn't empty.
 * It has `code` or `error`, but not both.
-  With `error`, the sign-in fails with the error of the identity provider.
-  With `code`, it doesn't have `error_description` or `error_uri`.
+  When it has `error`, the sign-in fails with a fixed message for the `error` code, and {{site.kong_harnesses}} doesn't show the text of the identity provider.
+  When it has `code`, it doesn't have `error_description` or `error_uri`.
 * `code` has 1 to 8,192 visible ASCII characters.
 * When the request has `iss`, the value is the issuer of the profile.
   When the discovery document sets `authorization_response_iss_parameter_supported` to `true`, the request must have `iss`.
@@ -88,10 +93,12 @@ A request to the callback path with that `state` ends the wait, and it must meet
 {{site.kong_harnesses}} reads the discovery document from the issuer URL without a trailing slash, followed by `/.well-known/openid-configuration`.
 It reads the discovery document and the signing keys with one `GET` request each.
 It doesn't follow redirects, and it uses TLS 1.2 or later for all requests to the identity provider.
+The TLS certificate of the identity provider must chain to the system trust store of each developer computer, because the gateway CA bundle of a profile doesn't apply to the identity provider.
+If the identity provider uses a certificate from a private CA, add the CA to that trust store.
 
 A response with a status other than `2xx` fails the request.
 At renewal, when the token endpoint answers with a `4xx` status other than `429` and an `error` member of `invalid_grant`, {{site.kong_harnesses}} also removes the saved sign-in.
-With another status, the renewal fails and the saved sign-in stays.
+When the status is another one, the renewal fails and the saved sign-in stays.
 
 A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
 
@@ -107,11 +114,11 @@ The identity provider must answer within these times:
 * The discovery document and the signing keys: 10 seconds each.
 * The token endpoint at sign-in: 15 seconds.
 * The token endpoint at renewal: 4 seconds.
-  Before {{site.kong_harnesses}} sends the refresh token, it must also open a TLS connection to the token endpoint within 2 seconds.
+  When no proxy applies to the token endpoint, {{site.kong_harnesses}} must also open a TLS connection to it within 2 seconds, before it sends the refresh token.
 
 ## Discovery document
 
-The discovery document must have `issuer`, `authorization_endpoint`, `token_endpoint` and `jwks_uri` as strings, and `issuer` must be the same as the issuer of the profile.
+The discovery document must have `issuer`, `authorization_endpoint`, `token_endpoint` and `jwks_uri` as strings, and `issuer` must match the issuer of the profile character by character, including a trailing slash.
 Each of these URLs, and `revocation_endpoint` when the document lists it, must meet the rules in [URLs](#urls).
 
 * The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
@@ -126,26 +133,32 @@ Each of these URLs, and `revocation_endpoint` when the document lists it, must m
   * `token_endpoint_auth_methods_supported` lists the `none` method, for a public client.
     `--public-client-evidence deployment` skips this check.
 
+At each sign-in, {{site.kong_harnesses}} reads the discovery document again and runs these checks again.
+`authorization_endpoint`, `token_endpoint` and `jwks_uri` must also be the same as the values that `profile create` saved in the profile, and so must `revocation_endpoint` when the profile has one.
+
 {{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
 For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 
 ## Signing keys
 
 The document at `jwks_uri` must have a `keys` array of 1 to 64 keys, and at least one key must be usable.
-{{site.kong_harnesses}} skips a key that it can't use:
-
-* A `kty` string other than `RSA` or `EC`.
-* An `alg` string other than `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`.
-* A `use` string other than `sig`.
-* A `key_ops` array of strings without `verify`.
-
-A key that breaks one of these rules makes the sign-in fail, even when another key in the document can verify the ID token:
+Each key must meet these rules, or the sign-in fails, even when another key in the document can verify the ID token:
 
 * `kty` is a string.
-* `kid`, when the key has one, has 1 to 256 visible ASCII characters, and two usable keys can't have the same `kid`.
-* `use`, when the key has one, is a string, and `key_ops`, when the key has one, is an array of strings.
-* An `RSA` key has a modulus of 2,048 to 8,192 bits, and a public exponent that is an odd number from 3 to 2,147,483,647.
-* An `EC` key has a `crv` string of `P-256`, `P-384` or `P-521`, and its `x` and `y` values are a point on that curve.
+* `kid`, when the key has one, has 1 to 256 visible ASCII characters.
+
+Then {{site.kong_harnesses}} reads the other members of the key in this order, and stops at the first one that makes it skip the key:
+
+1. When `alg` isn't a string, or isn't `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`, it skips the key.
+2. When `use` isn't a string, the sign-in fails.
+   When `use` is a string other than `sig`, it skips the key.
+3. When `key_ops` isn't a nonempty array of unique strings, the sign-in fails.
+   When `key_ops` doesn't have `verify`, it skips the key.
+4. When `kty` is other than `RSA` or `EC`, it skips the key.
+5. When an `RSA` key doesn't have a modulus of 2,048 to 8,192 bits and a public exponent that is an odd number from 3 to 2,147,483,647, the sign-in fails.
+   When an `EC` key doesn't have a `crv` string of `P-256`, `P-384` or `P-521`, with `x` and `y` values that are a point on that curve, the sign-in fails.
+
+Two usable keys can't have the same `kid`.
 
 ## Token responses
 
@@ -165,17 +178,19 @@ At renewal, {{site.kong_harnesses}} ignores an `id_token`.
 
 ## ID token
 
-The ID token from the sign-in must have:
+The ID token from the sign-in must meet these rules:
 
-* At most 32,768 visible ASCII characters, in three parts.
-* An `alg` header that is one of the supported algorithms and that the discovery document lists.
-* Without a `crit` header.
+* It has at most 32,768 visible ASCII characters, in three parts.
+* Its `alg` header is one of the supported algorithms, and the discovery document lists it.
+* It doesn't have a `crit` header.
   A `typ` header, when the token has one, is `JWT`, and a `kid` header, when the token has one, has 1 to 256 visible ASCII characters.
-* A signature from exactly one usable key that matches `alg`, and `kid` when the header has one.
-* `iss` that is the issuer of the profile, and a `sub` of 1 to 255 visible ASCII characters.
-* `aud` that is the client ID, as a string or as an array with only the client ID.
-* `azp` that is the client ID, when the token has one.
-* The `nonce` of the sign-in request.
-* `exp` in the future, without a tolerance for clock difference, and `iat` that isn't after `exp` or more than 1 minute in the future.
+* Exactly one usable key matches the `alg` of the token, and its `kid` when the header has one.
+  So two usable keys for the same algorithm without a `kid` in the header fail the sign-in, even when one of them can verify the token.
+* The signature passes verification with that key.
+* `iss` is the issuer of the profile, and `sub` has 1 to 255 visible ASCII characters.
+* `aud` is the client ID, as a string or as an array with only the client ID.
+* `azp`, when the token has one, is the client ID.
+* `nonce` is the nonce of the sign-in request.
+* `exp` is in the future, without a tolerance for clock difference, and `iat` isn't after `exp` or more than 1 minute in the future.
   Both are JSON numbers with digits only that fit in a signed 64-bit integer, so `1.5` and `1.7e9` fail.
-* An `at_hash` that matches the access token, when the token has one.
+* `at_hash`, when the token has one, matches the access token.
