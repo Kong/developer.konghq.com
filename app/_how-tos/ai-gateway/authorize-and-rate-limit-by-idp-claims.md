@@ -83,7 +83,7 @@ ai_gateway_auth_strategies:
     name: keycloak-oidc
     type: openid-connect
     config:
-      issuer: $ISSUER
+      issuer: !env DECK_ISSUER
       client_id:
         - kong
       client_secret:
@@ -103,7 +103,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: $OPENAI_AUTH_HEADER
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
 {% endentity_examples %}
 <!--vale on-->
 
