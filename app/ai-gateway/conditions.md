@@ -276,7 +276,7 @@ rows:
 
   - field: "`access_token.claims`, `access_token.token`"
     behavior: |
-      When an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) has validated the caller's token, `access_token.claims` holds that token's claims and `access_token.token` holds the raw token.
+      When an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) has validated the caller's token, `access_token.claims` contains that token's claims and `access_token.token` contains the raw token.
       When no token was validated, `access_token.claims` is an empty map and `access_token.token` is `null`.
 
       `access_token.claims` is a map whose inner keys aren't pre-populated, so check for a claim with `has()` before you read it. See [Token claims](#token-claims).
