@@ -44,7 +44,7 @@ prereqs:
         Roll out {{ site.claude_code }} with `kong-harnesses fleet build`, as [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/) describes.
         Keep the record file of that build, `kong-harnesses-fleet-BUILD_ID.json`.
         For a build with `--delivery mdm`, also keep the MDM policy that the computers get now.
-        Run the commands on this page on the computer where you made the build.
+        Run the `fleet build` commands on this page on the computer where you made the earlier build.
         Sign in to the same profile with `kong-harnesses login --profile work`, because `fleet build` reads the gateway's model list with your sign-in.
 
 tldr:
@@ -61,7 +61,7 @@ faqs:
       {{ site.claude_code }} needs its settings before it sends its first request, because the settings name the gateway address and the credential helper.
       {{site.ai_gateway}} can't send settings to a client that doesn't know the gateway yet.
       The [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability) of Anthropic don't apply to a fleet that kong-harnesses sets up, because the fetch needs a direct connection to Anthropic, and the key from the fleet's credential helper doesn't start it.
-      MDM puts the managed settings on each computer before the first session, and a developer can't change them.
+      MDM or your install tool puts the managed settings on each computer before the first session, so a developer can't replace the gateway address or the credential helper in their own settings.
 ---
 
 A fleet build contains the {{ site.claude_code }} settings that every managed computer of your organization gets.
@@ -75,14 +75,19 @@ For a build with `--mcp-servers exclusive`, also pass the `managed-mcp.json` tha
 
 The commands on this page are for macOS.
 On Linux or Windows, use the `--platform` and `--executable` values of the earlier build.
+On Linux, use the file build, because `fleet build` refuses `--delivery mdm` there.
 On Windows, the MDM policy is `Settings.json`.
+For a file build on computers that also get a `managed-settings.json` from your organization, add `--policy POLICY_FILE` with that file, so that `fleet build` checks the combined policy.
+
 Replace each placeholder with the value for your deployment.
-`RECORD_FILE` is the record of the build that the computers have now, and `POLICY_FILE` is the MDM policy that they get now.
+`RECORD_FILE` is the record of the build that the computers have now.
+`POLICY_FILE` is the MDM policy that the computers get now, or their `managed-settings.json` for a file build.
 
 ## Hold the fleet to a range of {{ site.claude_code }} versions
 
 Pick the oldest and the newest {{ site.claude_code }} versions that you tested through your gateway, in the [provider modes that Kong tests](/ai-gateway/ai-clis/#claude-code-provider-modes).
 A {{ site.claude_code }} release from before range support ignores the range, so first install a tested release from the range on every computer.
+Give each version as three numbers, as `claude --version` prints them.
 
 Build new managed settings that hold every computer to that range, from the record of the current build.
 Set `NEW_FOLDER` to a new or empty folder, such as `fleet-macos-mdm-2` for an MDM build on macOS:
@@ -117,16 +122,18 @@ kong-harnesses fleet build --profile work \
 {% endnavtab %}
 {% endnavtabs %}
 
-{{ site.claude_code }} then refuses to start outside the range, with a message that names your organization's range, and its updates skip any version above the newest one.
-The oldest version also stops an update on the stable channel from installing an older version.
+{{ site.claude_code }} then refuses to start outside the range, and tells the developer to install a version that your organization approves.
+The check runs at startup, so a session that is already running continues until the developer restarts it.
+On native and npm installs, background updates and `claude update` skip any version above the newest one, and don't install a version below the oldest one.
+A Homebrew install updates through `brew upgrade`, so hold its version with your install tool.
 
 `fleet build` refuses a range that can't hold a computer to it:
 
 * An oldest version from before the first {{ site.claude_code }} release that reads the range.
 * A newest version from before the first {{ site.claude_code }} release that keeps every session on the gateway.
 * An oldest version later than the newest version.
-* A range that no version can meet together with the range in your current policy.
-* A newest version in your current policy from before the first {{ site.claude_code }} release that keeps every session on the gateway.
+* A range that no version can meet together with the range in the policy that you pass with `--policy`.
+* A newest version in that policy from before the first {{ site.claude_code }} release that keeps every session on the gateway.
 
 Deploy the files in `NEW_FOLDER/root`, and for an MDM build the policy in `NEW_FOLDER/mdm`, the same way as for the first build.
 Keep the record in `NEW_FOLDER` with the policy, because the next build needs it.
@@ -172,21 +179,25 @@ kong-harnesses fleet build --profile work \
 {% endnavtab %}
 {% endnavtabs %}
 
-`fleet build` finds the Claude family, `opus`, `sonnet`, `haiku` or `fable`, in the model ID, and refuses an ID that names more than one family.
-When the ID doesn't name a family, name the family before it, such as `--model sonnet=NEW_MODEL_ID`.
+`fleet build` finds the Claude family, `opus`, `sonnet`, `haiku` or `fable`, in the model ID.
+When the ID names no family or more than one, name the family before it, such as `--model sonnet=NEW_MODEL_ID`.
+Repeat `--model` for each family that you move.
 The new ID replaces the model of that family in every role that used it, such as subagents, in the managed settings and in the profile that the computers install.
 The profile on your computer stays as it is, so repeat `--model` in every later build.
 A build without it gives the computers the earlier model again.
 
-In the Anthropic API mode, build again without `--model`.
-`fleet build` refuses `--model` in this mode, because the gateway's model list fills the model picker, so the picker on each computer lists the new model.
+In the Anthropic API mode, `fleet build` refuses `--model`, because {{ site.claude_code }} reads the gateway's model list on each computer, and `/model` lists each model in it whose ID contains `claude` or `anthropic`.
+Build again without `--model`, so that the managed settings get the gateway's rates for the new model, and a `/model` row for it when its ID contains neither word.
 
 Then finish the move:
 
-1. Deploy the files in `NEW_FOLDER/root`, and for an MDM build the policy in `NEW_FOLDER/mdm`, the same way as for the first build.
+1. Deploy the new build to one managed computer first, the same way as for the first build.
+   On that computer, check with `kong-harnesses doctor` that it names the new build, as in [Validate](#validate).
+   Start a new {{ site.claude_code }} session, choose the new model with `/model` in the Anthropic API mode, and send a prompt.
+   Check that the prompt gets an answer, and that `/status` names the new model.
+1. Deploy the files in `NEW_FOLDER/root`, and for an MDM build the policy in `NEW_FOLDER/mdm`, to the other computers.
    Keep the record in `NEW_FOLDER` with the policy, because the next build needs it.
-1. On one managed computer, start {{ site.claude_code }} and send a prompt to the new model.
-1. When `kong-harnesses doctor` on every computer names the new build, as in [Validate](#validate), ask each developer to restart {{ site.claude_code }}.
+1. When your MDM or install tool reports the new build on every computer, ask each developer to restart {{ site.claude_code }}.
    In the Anthropic API mode, also ask them to choose the new model with `/model`.
 1. Keep the AI Model of the earlier version until every session that used it has ended, and then remove it from {{site.ai_gateway}}.
 
