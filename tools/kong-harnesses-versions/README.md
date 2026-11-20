@@ -26,7 +26,7 @@ Run the steps in this order:
    GH_TOKEN=<token> node fetch-versions.js
    ```
 
-   `GH_TOKEN` needs a token that can read `Kong/kong-harnesses`. Without it the request fails and the script exits with a message naming the token requirement. `gh auth token` can supply the token for a logged-in `gh` session.
+   Set `GH_TOKEN` to a GitHub token. Without it the request fails, and the script exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
 
 3. Update the help text from the installed binary:
 

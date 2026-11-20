@@ -226,7 +226,7 @@ export async function syncReleases({
 
     if (!response.ok) {
       const tokenHint = tokenRequired
-        ? `Set GH_TOKEN to a GitHub token that can read ${repo}.`
+        ? `Set GH_TOKEN to a GitHub token, then run the script again.`
         : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
       throw new Error(
         `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
