@@ -36,6 +36,7 @@ groups:
       - title: Manage Profiles
         items:
           - path: /kong-harnesses/profile/
+          - path: /kong-harnesses/identity-provider/
           - path: /kong-harnesses/profile/*/**
       - title: Get Access Tokens
         items:
