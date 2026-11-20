@@ -315,6 +315,22 @@ rows:
       See [Null handling](#null-handling).
     example: |
       `has(principal.metadata.department) && principal.metadata.department == "finance"`
+  - field: "`principal.groups`"
+    type: "`list<map>`"
+    description: |
+      The groups and teams of the authenticated Principal, including memberships through nested teams. Each entry has an `id` and a `type` (`group` or `team`). Match on the group ID, not the group name.
+      `null` if no Principal is authenticated or the Principal has no groups. Only AI Gateway data planes load groups. On other data planes, the value is `null`.
+      Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
+    example: |
+      `principal.groups != null && principal.groups.exists(g, g.id == "a1b2c3d4-...")`
+  - field: "`principal.type`"
+    type: "`string`"
+    description: |
+      The kind of the authenticated entity: `principal` or `group`. This is not the Kong Identity principal type (`user` or `agent`).
+      `null` if no Principal is authenticated, or if the Principal comes from an older control plane.
+      Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
+    example: |
+      `principal.type == "principal"`
 {% endtable %}
 <!--vale on-->
 
@@ -379,6 +395,8 @@ You can compare these directly using `null`:
 consumer.id != null
 route.tags != null && "internal" in route.tags
 ```
+
+If the Principal has no groups, `principal.groups` is `null`, not an empty list. Test for `null` before you call `exists()` or `size()`.
 
 The `kong.ctx.shared` and `principal.metadata` fields are maps whose inner keys are not pre-populated by {{site.base_gateway}}.
 Accessing a missing key in these maps causes a runtime error.
