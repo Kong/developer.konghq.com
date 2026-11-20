@@ -86,7 +86,8 @@ The model picker shows each model that a role names.
 
 In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.claude_code }} uses the Anthropic format.
 {{ site.claude_code }} names the model that the developer uses in the `model` field of each request, by default the profile's `--model` value.
-Add each model ID that the route must accept to `config.route.model.values` of the AI Model, and set `targets[].name` to the upstream deployment name or model ID.
+Create one AI Model for each model ID that the route must accept, all on the same path, and set `config.route.model` to `body_param: model` with that model ID as the single entry of `values`.
+Set `targets[].name` to the upstream deployment name or model ID.
 For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
 For the `mantle` mode, use a `bedrock` [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
@@ -182,8 +183,9 @@ For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
 When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
-For more options, such as MCP servers that the gateway serves and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
-A `subscription` profile can't name MCP servers that the gateway serves.
+`setup` sends the same test request and doesn't set up an agent CLI whose route doesn't match.
+When a route matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
+For more options, such as gateway MCP servers and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
 ### Sign-in kinds
 

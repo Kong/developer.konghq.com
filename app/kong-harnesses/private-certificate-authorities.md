@@ -36,7 +36,7 @@ When the gateway, the identity provider or the profile server uses a certificate
 
 {:.warning}
 > Add the CA to the system trust store of each developer's computer and of your own computer, for example, through mobile device management (MDM).
-> A CA that you set for one program doesn't apply to the other programs, and the browser that opens for the sign-in must also trust the identity provider's certificate.
+> A CA setting of one program doesn't change the trust of a program that reads another setting, and the browser that opens for the sign-in must also trust the certificate of the identity provider.
 
 ## System trust store installation
 
@@ -98,7 +98,7 @@ Install the CA in each distribution with the Linux commands.
 ## Agent CLIs that need more than the system trust store
 
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
-The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so that script doesn't read the system trust store.
+The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
 omp and pi don't read the system trust store by default, so set one of these variables in the environment where they start:
 
@@ -146,7 +146,10 @@ rows:
       `profile activate` doesn't set this key and leaves a value that you set in place.
       When it removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, it restores the value that the key had before that release.
   - program: Codex
-    setting: "`CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex."
+    setting: |
+      `CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex.
+      Don't export `SSL_CERT_FILE` for Codex, because the file replaces the system trust store for Codex and for every command that Codex runs, such as `git` and `curl`.
+      When the shell must export `SSL_CERT_FILE` for {{site.kong_harnesses}}, use the bundle with the public root CAs and each private CA that the {{site.kong_harnesses}} row names.
   - program: Hermes Agent
     setting: |
       `SSL_CERT_FILE` set to the CA file, in `~/.hermes/.env` or exported in the shell that starts Hermes Agent.
@@ -158,9 +161,12 @@ rows:
       When OpenCode runs as a background service, it doesn't read later shell exports, so set the variable for the service with `opencode service set env`.
   - program: "{{site.kong_harnesses}}"
     setting: |
-      `SSL_CERT_FILE` set to a file with every CA that {{site.kong_harnesses}} needs, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts each agent CLI, because the agent CLIs run {{site.kong_harnesses}} to get each token.
+      `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts {{ site.claude_code }}, Codex, omp or pi, because these agent CLIs run {{site.kong_harnesses}} to get each token.
+      OpenCode and Hermes Agent sign in through their own plugins and don't run {{site.kong_harnesses}} for a token.
       On Linux, the file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
       On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`, and the file then replaces the system trust store for {{site.kong_harnesses}}.
+      A file with only the private CA then breaks the token renewal against a public identity provider or a public profile server.
+      On macOS, create the bundle with `cat /etc/ssl/cert.pem CA_CERTIFICATE_FILE > CA_BUNDLE_FILE`.
 {% endtable %}
 
 `profile create` doesn't take a CA bundle.
