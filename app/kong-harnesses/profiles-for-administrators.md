@@ -79,7 +79,8 @@ A profile from `profile create` names one model, the `--model` value.
 
 In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the AI Model that serves {{ site.claude_code }} uses the Anthropic format.
 For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
-For the `mantle` mode, use a `bedrock` AI Model Provider and an AI Model target with `endpoint_type: mantle`, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/), with the Anthropic format instead of the OpenAI format.
+For the `mantle` mode, use a `bedrock` AI Model Provider, and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
+Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
 
 ## Profile creation
 
@@ -206,7 +207,7 @@ rows:
 
 In the `anthropic` mode, {{ site.claude_code }} sends a static key in both the `Authorization: Bearer` and the `x-api-key` headers.
 In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
-To accept the key in every mode, set the gateway's `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) to read both headers, and to hide the key from the model provider:
+To accept the key in every mode, set the gateway's `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) to read both headers, and to hide the key from the model provider:
 
 ```yaml
 config:
@@ -214,6 +215,10 @@ config:
   header_auth_schemes: [Bearer]
   hide_credentials: true
 ```
+
+With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header.
+`header_auth_schemes` needs {{site.ai_gateway}} 2.4 or later.
+For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
 
 ## Profile hosting
 
