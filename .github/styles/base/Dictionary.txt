@@ -834,6 +834,7 @@ subtrees
 sudo
 Supabase
 superset
+supersedence
 Supersedence
 supports_konnect
 svg

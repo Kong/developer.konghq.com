@@ -36,7 +36,7 @@ Download the files from the kong-harnesses repository at `https://cloudsmith.io/
 
 Check each file before you install it or add it to an MDM tool. The checksum shows that the file is complete. The build provenance shows that the release workflow of kong-harnesses built the file from the release tag.
 
-1. Download `SHA256SUMS.txt` and `kong-harnesses_<tag>.sigstore.json` from the same release, into the folder of the file. `<tag>` is the release version with its initial `v`, for example `v1.2.3`.
+1. Download `SHA256SUMS.txt` and `kong-harnesses_<tag>.sigstore.json` from the same release, into the folder of the file. `<tag>` is the release version with its initial `v`, for example `v1.2.3`. In the commands on this page, `<file>` is the full filename of the downloaded file, with its extension.
 1. Check the checksum of the file. On macOS, run:
 
    ```sh
@@ -58,39 +58,55 @@ Check each file before you install it or add it to an MDM tool. The checksum sho
    gh attestation verify <file> --bundle kong-harnesses_<tag>.sigstore.json --repo Kong/kong-harnesses --signer-workflow Kong/kong-harnesses/.github/workflows/release.yml --source-ref refs/tags/<tag>
    ```
 
+   The command must print that the verification succeeded, and exit with code `0`.
+
 {:.warning}
-> Do not install a file or add it to an MDM tool if a check fails. A file that fails a check is not the file that the release workflow built.
+> Do not install a file or add it to an MDM tool until all checks pass. A file that fails a check might not be the file that the release workflow built.
 
 ## macOS installer package
 
 The installer package installs `kong-harnesses` in `/usr/local/bin` for every user of the Mac, and the license and third-party notices in `/usr/local/share/doc/kong-harnesses`. Kong signs the package with its Developer ID Installer certificate, and Apple notarizes it. The notarization ticket is stapled to the package, so the package installs without network access.
 
 {:.warning}
-> Do not use both Homebrew and the installer package on one Mac. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`. The package keeps the permissions of `/usr/local/bin`, so before you install the package, make sure that only administrators can change this folder.
+> Do not use both Homebrew and the installer package on one Mac. On an Intel Mac, Homebrew installs its own `kong-harnesses` at the same path, `/usr/local/bin/kong-harnesses`. The package keeps the permissions of folders that exist, so before you install the package, make sure that only administrators can change `/usr/local` and `/usr/local/bin`.
+
+To check the permissions, run:
+
+```sh
+ls -ld /usr/local /usr/local/bin
+```
+
+The owner of each folder must be `root`, and only the owner and the `admin` or `wheel` group can have write permission. If a folder doesn't exist, the package creates it, and only administrators can change it.
 
 1. Download the file that ends in `_darwin_arm64.pkg` for Apple silicon, or in `_darwin_amd64.pkg` for an Intel Mac.
 1. Check the package as in [Check a downloaded file](#check-a-downloaded-file).
 1. Check that Kong signed the package:
 
    ```sh
-   pkgutil --check-signature <file>.pkg | grep -F 'Developer ID Installer: Kong Inc. (FX44YY62GV)'
+   pkgutil --check-signature <file> | grep -F 'Developer ID Installer: Kong Inc. (FX44YY62GV)'
    ```
 
    The command must print the certificate line. If it prints nothing, do not install the package.
 1. Check that Apple notarized the package:
 
    ```sh
-   spctl --assess --type install -vv <file>.pkg
+   spctl --assess --type install -vv <file>
    ```
 
    The command must print `accepted` and `source=Notarized Developer ID`. If it prints something else, do not install the package.
 1. Install the package:
 
    ```sh
-   sudo installer -pkg <file>.pkg -target /
+   sudo installer -pkg <file> -target /
    ```
 
-A newer package replaces the installed version. To remove kong-harnesses, delete its files:
+A newer package replaces the installed version. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, check first that the installer package installed it. On a Mac where Homebrew installed kong-harnesses, the command prints an error, so remove it with Homebrew instead:
+
+```sh
+pkgutil --pkg-info com.konghq.kong-harnesses
+```
+
+Then delete the files of the package:
 
 ```sh
 sudo rm -r /usr/local/bin/kong-harnesses /usr/local/share/doc/kong-harnesses
@@ -102,7 +118,7 @@ Then delete the package receipt:
 sudo pkgutil --forget com.konghq.kong-harnesses
 ```
 
-To deploy kong-harnesses with an MDM tool, such as Jamf Pro or Intune, add the installer package to the tool without changes. The package is signed and notarized, and it doesn't contain installer scripts.
+To deploy kong-harnesses with an MDM tool, such as Jamf Pro, add the installer package to the tool without changes. The package is signed and notarized, and it doesn't contain installer scripts. The macOS app (PKG) type of Intune detects an install by the app bundles in the package, and this package installs a command-line tool without an app bundle. Test the detection on one Mac before you deploy the package with Intune.
 
 ## Windows installer
 
@@ -113,49 +129,65 @@ The Windows installer installs kong-harnesses in `C:\Program Files\Kong\kong-har
 1. Open PowerShell as an administrator, and run the installer:
 
    ```powershell
-   (Start-Process msiexec.exe -ArgumentList '/i', '<file>.msi', '/qn' -Wait -PassThru).ExitCode
+   (Start-Process msiexec.exe -ArgumentList '/i', '<file>', '/qn', '/norestart' -Wait -PassThru).ExitCode
    ```
 
-   The command prints `0` when the install is complete. With `/qn`, the installer doesn't show errors, so any other number means that the install failed.
+   The command prints `0` when the install is complete. It prints `3010` when the install is complete and the computer must restart to finish it, so schedule a restart. It prints `1641` when the install is complete and the installer started a restart. With `/qn`, the installer doesn't show errors, so any other number means that the install failed.
 
-A newer installer replaces the installed version, and Windows Installer refuses an older installer. To remove kong-harnesses, run the same command as an administrator with `'/x'` in place of `'/i'`, with the installer that installed it.
+A newer installer replaces the installed version, and Windows Installer refuses an older installer. Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, run the same command as an administrator with `'/x'` in place of `'/i'`, with the installer that installed it.
 
-When kong-harnesses runs from `C:\Program Files\Kong\kong-harnesses`, `kong-harnesses doctor --profile <profile>` checks that only administrators can change that folder and the folders that contain it. An account that can change these folders can replace kong-harnesses with a program that takes the sign-in of each developer. In that case, the check fails and names the fix.
+Make sure that only administrators can change `C:\Program Files\Kong\kong-harnesses` and the folders that contain it. An account that can change these folders can replace kong-harnesses with a program that takes the sign-in of each developer. When kong-harnesses runs from this folder, `kong-harnesses doctor --profile <profile>` checks these permissions. If another account can change them, the check fails and names the fix.
 
 ### Deploy the Windows installer with Intune
 
 Releases don't include an `.intunewin` file, so you wrap the installer yourself. Add one Windows app (Win32) for each processor type:
 
 1. Check the installer as in [Check a downloaded file](#check-a-downloaded-file), and put the installer alone in an empty folder.
-1. Wrap the installer with the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool):
+1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), and open PowerShell in the folder that contains `IntuneWinAppUtil.exe`. Wrap the installer:
 
    ```powershell
-   IntuneWinAppUtil.exe -c <folder> -s <file>.msi -o <output-folder>
+   .\IntuneWinAppUtil.exe -c '<folder>' -s '<folder>\<file>' -o '<output-folder>'
    ```
 
-1. In the Microsoft Intune admin center, add a Windows app (Win32), and upload the `.intunewin` file. Intune reads the installer and fills in the install and uninstall commands. Keep these commands, and keep the install behavior **System**.
-1. Under **Requirements**, select **x64** for the `_windows_amd64.msi` installer, or **ARM64** for the `_windows_arm64.msi` installer, and select the minimum operating system for your computers.
-1. Under **Detection rules**, select **Manually configure detection rules**, and add a rule of type **MSI**. Intune fills in the product code of the installer. Keep it.
-1. Under **Assignments**, assign the app as **Required** to the devices or users that need kong-harnesses.
+   Use full paths. `<output-folder>` must be a folder other than `<folder>`.
 
-For each new release, add a new app in the same way, with the same assignments, because a new app doesn't copy the assignments of the previous app. Under **Supersedence**, select the app of the previous release, and set **Uninstall previous version** to **No**. The new installer upgrades the installed version, so each developer keeps their sign-in and settings.
+1. In the Microsoft Intune admin center, go to **Apps** > **All Apps**, select **Create**, and select the app type **Windows app (Win32)**. Upload the `.intunewin` file. Intune reads the installer and fills in the install and uninstall commands. Keep these commands, and keep the install behavior **System**.
+1. Under **Requirements**, select **x64** for the `_windows_amd64.msi` installer, or **ARM64** for the `_windows_arm64.msi` installer, and set **Minimum operating system** to the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
+1. Under **Detection rules**, select **Manually configure detection rules**, and add a rule of type **MSI**. Intune fills in the product code of the installer. Keep it.
+1. For a new release, under **Supersedence**, select the app of the previous release for the same processor type, and set **Uninstall previous version** to **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
+1. Under **Assignments**, assign the app as **Required** to the devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so give each release the same assignments.
+1. Under **Review + create**, select **Create**.
+
+Add a new app in the same way for each new release. Intune allows at most 10 apps in a supersedence chain, and each release adds one. When all assigned devices run the new release, remove the supersedence of the previous app from the new app, and delete the previous app.
 
 ## Linux packages
 
-On Ubuntu and Red Hat Enterprise Linux, the `.deb` and `.rpm` packages install `kong-harnesses` in `/usr/bin` for every user, and the package manager upgrades and removes it.
+On the Ubuntu and Red Hat Enterprise Linux releases that kong-harnesses supports, the `.deb` and `.rpm` packages install `kong-harnesses` in `/usr/bin` for every user, and the package manager upgrades and removes it.
 
 1. Download the file that ends in `_linux_amd64.deb` or `_linux_arm64.deb` for Ubuntu, or in `_linux_amd64.rpm` or `_linux_arm64.rpm` for Red Hat Enterprise Linux.
 1. Check the package as in [Check a downloaded file](#check-a-downloaded-file).
 1. Install the package:
 
-   * Ubuntu: `sudo apt install ./<file>.deb`
-   * Red Hat Enterprise Linux: `sudo dnf install ./<file>.rpm`
+   * Ubuntu: `sudo apt install ./<file>`
+   * Red Hat Enterprise Linux: `sudo dnf install ./<file>`
 
-To remove kong-harnesses, run `sudo apt remove kong-harnesses` on Ubuntu, or `sudo dnf remove kong-harnesses` on Red Hat Enterprise Linux.
+Before you remove kong-harnesses, ask each developer to [remove their settings](#remove-the-settings-of-a-developer). To remove kong-harnesses, run `sudo apt remove kong-harnesses` on Ubuntu, or `sudo dnf remove kong-harnesses` on Red Hat Enterprise Linux.
 
 ## Check the installation
 
-Check the installed version in a new terminal:
+Open a new terminal, and check that the command runs the installed copy. On macOS or Linux, run:
+
+```sh
+command -v kong-harnesses
+```
+
+In PowerShell, run:
+
+```powershell
+(Get-Command kong-harnesses).Source
+```
+
+The command must print the path of the installed copy: `/usr/local/bin/kong-harnesses` on macOS, `/usr/bin/kong-harnesses` on Linux, or `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe` on Windows. Then check the installed version:
 
 ```sh
 kong-harnesses version
@@ -170,6 +202,8 @@ Removing kong-harnesses doesn't remove the sign-in, the profiles or the coding a
    ```sh
    kong-harnesses logout --profile <profile>
    ```
+
+   OpenCode and Hermes Agent keep their own sign-in. For OpenCode, also run `opencode auth logout`. For Hermes Agent, also run `hermes auth remove kong-ai-gateway 1`.
 
 1. Remove the settings that kong-harnesses added to the coding agents:
 
