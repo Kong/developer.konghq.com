@@ -1,0 +1,14 @@
+checked: 2026-11-20
+modes:
+  - name: Anthropic API
+    switch: None, this is the default mode
+    base_url: "`ANTHROPIC_BASE_URL`"
+  - name: Microsoft Foundry
+    switch: "`CLAUDE_CODE_USE_FOUNDRY`"
+    base_url: "`ANTHROPIC_FOUNDRY_BASE_URL`"
+  - name: Claude Platform on AWS
+    switch: "`CLAUDE_CODE_USE_ANTHROPIC_AWS`"
+    base_url: "`ANTHROPIC_AWS_BASE_URL`"
+  - name: Amazon Bedrock Mantle
+    switch: "`CLAUDE_CODE_USE_MANTLE`"
+    base_url: "`ANTHROPIC_BEDROCK_MANTLE_BASE_URL`"
