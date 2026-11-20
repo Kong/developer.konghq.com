@@ -113,6 +113,8 @@ cleanup:
         ```
 
         `profile delete` asks you to type `quickstart` to confirm.
+    - title: Revoke the key
+      include_content: md/ai-gateway/v2/delete-consumer-credential
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
 ---
@@ -170,20 +172,16 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    extract_body:
      - name: 'api_key'
        variable: CONSUMER_API_KEY
-     - name: 'id'
-       variable: CREDENTIAL_ID
    capture:
      - variable: CONSUMER_API_KEY
        jq: ".api_key"
-     - variable: CREDENTIAL_ID
-       jq: ".id"
    {% endkonnect_api_request %}
    <!--vale on-->
    {% endcapture %}
    {{ developer_credential | indent }}
 
    {:.info}
-   > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it for the sign-in step of this guide, and `CREDENTIAL_ID` keeps the ID that you need to revoke the key.
+   > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide. The command doesn't export the variable, so the programs that you start from this shell don't get the key.
 
 ## Create the AI Model
 
@@ -268,10 +266,17 @@ kong-harnesses profile create --name quickstart --sign-in static-key --gateway-o
 kong-harnesses saves the profile and installs it on this computer. It also sends a test request without the key to the gateway route of each agent CLI that the profile sets up. This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
 
 {:.info}
-> In production, the administrator creates the profile once, with the `https://` origin of the gateway. To give developers the profile as a JSON file, the administrator saves it from the installed profile:
+> In production, the administrator creates the profile once, with the `https://` origin of the gateway. To give developers the profile as a JSON file, the administrator saves it from the installed profile. `setup` accepts only a UTF-8 file without a byte order mark. On macOS and Linux:
 >
 > ```sh
 > kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
+> ```
+>
+> On Windows, in PowerShell:
+>
+> ```powershell
+> $json = (kong-harnesses profile get <profile> -o json | Out-String | ConvertFrom-Json).profile | ConvertTo-Json -Depth 100
+> [IO.File]::WriteAllText("$PWD\<profile>.json", $json)
 > ```
 >
 > The administrator shares the file or puts it at an HTTPS URL. The profile doesn't hold the key, so the administrator sends each developer a key of their own through a password manager or another secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file:
@@ -292,17 +297,31 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 
 ## Save the key and configure {{ site.claude_code }}
 
+Copy the key to the clipboard without showing it. In the shell where you created the key, run the command for your system:
+
+* On macOS: `printf %s "$CONSUMER_API_KEY" | pbcopy`
+* In WSL: `printf %s "$CONSUMER_API_KEY" | clip.exe`
+* On Linux: `printf %s "$CONSUMER_API_KEY" | wl-copy`, or `xclip -selection clipboard` in place of `wl-copy`
+
 Save the key in the profile:
 
 ```sh
 kong-harnesses login --profile quickstart
 ```
 
-`login` asks for the key and doesn't show it as you type. Paste the key from `CONSUMER_API_KEY`. To copy the key without showing it, run one of these commands in the shell where you created the key:
+`login` asks for the key and doesn't show it as you type. Paste the key.
 
-* On macOS: `printf %s "$CONSUMER_API_KEY" | pbcopy`
-* In WSL: `printf %s "$CONSUMER_API_KEY" | clip.exe`
-* On Linux: `printf %s "$CONSUMER_API_KEY" | wl-copy`, or `xclip -selection clipboard` in place of `wl-copy`
+Remove the key from the clipboard and from the shell:
+
+* On macOS: `pbcopy < /dev/null`
+* In WSL: `printf '' | clip.exe`
+* On Linux: `wl-copy --clear`, or `xclip -selection clipboard < /dev/null`
+
+```sh
+unset CONSUMER_API_KEY
+```
+
+If your computer keeps a clipboard history, such as Windows clipboard history, delete the key from it too.
 
 Configure {{ site.claude_code }} to use the profile:
 
@@ -318,7 +337,7 @@ Some {{ site.claude_code }} features need a claude.ai or Anthropic Console accou
 
 The key doesn't expire, so a leaked key works until an administrator revokes it.
 
-* To revoke the key, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential) with a `DELETE` request to `/v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials/$CREDENTIAL_ID`. Don't revoke the key now, because the rest of this guide uses it.
+* To revoke the key, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential). The cleanup steps at the end of this guide show the requests. Don't revoke the key now, because the rest of this guide uses it.
 * To save a new key on this computer, run `kong-harnesses login --profile quickstart --replace`. `login` asks you to type the profile name, removes the saved key, and asks for the new one. A {{ site.claude_code }} session that is already running keeps the old key for up to five minutes.
 * `kong-harnesses logout --profile quickstart` removes the key from this computer only. The key still works at the gateway until an administrator revokes it.
 
