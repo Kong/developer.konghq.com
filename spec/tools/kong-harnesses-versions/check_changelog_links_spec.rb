@@ -65,6 +65,20 @@ RSpec.describe KongHarnessesChangelogLinks do
       end
     end
 
+    it 'names the backtick fix for a value that reads as a mail address' do
+      expect { described_class.check(entry('use go@1.21 now')) }.to raise_error(/`go@1\.21` can go in backticks/)
+    end
+
+    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;'].each do |control|
+      it "refuses the control character #{control.inspect}" do
+        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a control character/)
+      end
+    end
+
+    it 'refuses a control character in an attribute' do
+      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a control character')
+    end
+
     # The spec loads the site plugins, which highlight code blocks with Shiki, so these
     # cases give the HTML that kramdown renders for the sync job.
     it 'accepts a language that the site highlights, and no other class' do

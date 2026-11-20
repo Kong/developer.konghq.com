@@ -34,19 +34,30 @@ module KongHarnessesChangelog
   # as a footnote, math, raw HTML or an HTML comment, rather than guess.
   ELEMENTS = %i[root blank header p text ul ol li strong em codespan codeblock a img br hr
                 blockquote smart_quote typographic_sym entity eob].freeze
+  # The export refuses every control character, so this one can stand for a line break
+  # in code while the writer writes a paragraph.
   LINE_BREAK = "\u0001"
   # Marks for the links of a paragraph, while the export reads the end of an entry: a
   # reference to an issue of the repository, a commit, an issue of any repository, and
-  # any other piece that is not text.
-  MARKS = { issue: "\u0002", commit: "\u0003", closes: "\u0004" }.freeze
-  OTHER = "\u0005"
+  # any other piece that is not text. Text is read as `x`, apart from the characters
+  # that the end of an entry has, so no character of the changelog can act as a mark.
+  MARKS = { issue: 'I', commit: 'C', closes: 'R' }.freeze
+  OTHER = 'O'
+  TEXT = /[^ (),closes\t\n\v\f\r]/
   # The end of an entry as the pinned release-please writes it
   # (googleapis/release-please-action 45996ed1, dist/): the subject's own `(#N)`, which
-  # the subject transform links (index.js:21247 for a commit, index.js:45963 for a
-  # breaking change note), then ` ([abc1234](…/commit/…))` (commit1.hbs:8-9) and
-  # `, closes [#N](…)` for each issue that the commit closes (commit1.hbs:15-28).
-  TAIL = /(?: \(#{MARKS[:issue]}\))?(?: \(#{MARKS[:commit]}\))?(?:, closes(?: [#{MARKS[:issue]}#{MARKS[:closes]}])+)?\z/o
+  # the subject transform links (index.js:21247), then ` ([abc1234](…/commit/…))`
+  # (commit1.hbs:8-9) and `, closes [#N](…)` for each issue that the commit closes
+  # (commit1.hbs:15-28).
+  TAIL = /(?: \(I\))?(?: \(C\))?(?:, closes(?: [IR])+)?\z/
+  # A breaking change note is the text of the commit with only its first `(#N)` linked
+  # (index.js:45963), and no commit or issue after it (template1.hbs:9).
+  NOTE_TAIL = /(?: \(I\))?\z/
   GITHUB = 'https://github.com'
+  # release-please links a user as the subject transform matches one (index.js:21259),
+  # but not a name with a `/`.
+  USER = /[a-z0-9](?:-?[a-z0-9]){0,38}/
+  VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?/
   # The characters that kramdown's typographic symbols show, with a no-break space in the
   # two forms with a space.
   SYMBOLS = { mdash: '—', ndash: '–', hellip: '…', laquo: '«', raquo: '»', laquo_space: "«\u00a0", raquo_space: "\u00a0»" }.freeze
@@ -185,50 +196,77 @@ module KongHarnessesChangelog
     end
   end
 
-  # What a link is, by its text and address as the pinned release-please writes them: an
-  # issue of the repository (`#N`, also a pull request), a commit (its short hash), or an
-  # issue of any repository that the commit closes (`[owner/]repo#N`).
-  def reference(text, address)
-    address = CGI.unescapeHTML(address)
-    if (number = text[/\A#(\d+)\z/, 1])
-      :issue if address == "#{GITHUB}/#{REPO}/issues/#{number}"
-    elsif text.match?(/\A[0-9a-f]{7}\z/)
-      :commit if address.match?(%r{\A#{GITHUB}/#{REPO}/commit/#{text}[0-9a-f]{33}\z})
-    elsif (parts = text.match(%r{\A(?:([\w.-]+)/)?([\w.-]+)#(\d+)\z}))
-      :closes if address == "#{GITHUB}/#{parts[1] || REPO.split('/').first}/#{parts[2]}/issues/#{parts[3]}"
+  # The links that release-please can mean by an address, each with the label that it
+  # gives that link: an issue of the repository (`#N`, also a pull request), a commit
+  # (its short hash), an issue of any repository that the commit closes
+  # (`[owner/]repo#N`, commit1.hbs:18-22), a user (`@name`, index.js:21259) and the
+  # compare view of a release (header1.hbs:1-2). The address must be exactly
+  # https://github.com and a path, with no port, user, query or fragment.
+  def links_of(address)
+    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(address)
+    return [] unless scheme == 'https' && host == 'github.com' && [userinfo, port, registry, opaque, query, fragment].all?(&:nil?)
+
+    owner, repository = REPO.split('/').map { |part| Regexp.escape(part) }
+    case path
+    when %r{\A/#{owner}/#{repository}/commit/([0-9a-f]{40})\z} then [[:commit, Regexp.last_match(1)[0, 7]]]
+    when %r{\A/#{owner}/#{repository}/compare/v#{VERSION}\.\.\.v(#{VERSION})\z} then [[:compare, Regexp.last_match(1)]]
+    when %r{\A/(#{USER})\z} then [[:user, "@#{Regexp.last_match(1)}"]]
+    when %r{\A/(?<other_owner>[\w.-]+)/(?<other>[\w.-]+)/issues/(?<number>\d+)\z}
+      match = Regexp.last_match
+      name = "#{match[:other_owner]}/#{match[:other]}"
+      [([:issue, "##{match[:number]}"] if name == REPO), [:closes, "#{name}##{match[:number]}"],
+       ([:closes, "#{match[:other]}##{match[:number]}"] if match[:other_owner] == REPO.split('/').first)].compact
+    else []
     end
+  rescue URI::InvalidURIError
+    []
+  end
+
+  # What a link of the source is: the kind of the first link that its address can mean
+  # and whose label shows the same text as the link.
+  def link_kind(element, address)
+    links_of(address).find { |_, label| label_text(label) == text_of(element) }
+  end
+
+  # The text that a label shows inside a link.
+  def label_text(label)
+    paragraph = parse("[#{label}](#{GITHUB})").children.first
+    link = paragraph&.children&.first if paragraph&.type == :p && paragraph.children.length == 1
+    link&.type == :a ? text_of(link) : nil
   end
 
   # The marks of the pieces of a paragraph, each as long as the text that it stands for.
+  # A piece is text, a link as its text and address, which the block gives the kind of,
+  # or nil for any other piece.
   def marks_of(pieces)
     pieces.map do |piece|
-      next piece if piece.is_a?(String)
+      next piece.gsub(TEXT, 'x') if piece.is_a?(String)
 
-      piece ? MARKS.fetch(reference(*piece), OTHER) : OTHER
+      (piece && MARKS[yield(*piece)]) || OTHER
     end
   end
 
   # Where the references that release-please writes at the end of an entry start, in
   # the joined marks, or nil when there are none.
-  def tail_start(marks)
+  def tail_start(marks, tail)
     joined = marks.join.rstrip
-    start = joined.index(TAIL)
+    start = joined.index(tail)
     start unless start == joined.length
   end
 
   # Takes off the references that release-please writes at the end of the first
   # paragraph of a list entry. The text before them stays as it is.
-  def without_references(item)
+  def without_references(item, tail)
     paragraph = item.children.find { |child| child.type != :blank }
     return item unless paragraph&.type == :p
 
     pieces = paragraph.children.map do |child|
-      next child.value if child.type == :text
+      next visible_text(child) if %i[text entity smart_quote typographic_sym].include?(child.type)
 
-      [child.children.first.value, child.attr['href'].to_s] if child.type == :a && child.children.map(&:type) == [:text]
+      [child, child.attr['href'].to_s] if child.type == :a
     end
-    marks = marks_of(pieces)
-    start = tail_start(marks) or return item
+    marks = marks_of(pieces) { |link, address| link_kind(link, address)&.first }
+    start = tail_start(marks, tail) or return item
 
     offset = 0
     paragraph.children = paragraph.children.zip(marks).filter_map do |child, mark|
@@ -236,6 +274,9 @@ module KongHarnessesChangelog
       offset += mark.length
       next child if offset <= start
       next if from >= start
+      # Only text can be longer than one character before the end that release-please
+      # writes starts.
+      next child unless child.type == :text
 
       child.value = child.value[0, start - from]
       child unless child.value.empty?
@@ -248,9 +289,7 @@ module KongHarnessesChangelog
   def without_compare_link(heading, version)
     link = heading.children.first
     return heading unless link&.type == :a && link.children.map(&:type) == [:text] && link.children.first.value == version
-
-    tag = 'v\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?'
-    return heading unless CGI.unescapeHTML(link.attr['href'].to_s).match?(%r{\A#{GITHUB}/#{REPO}/compare/#{tag}\.\.\.v#{Regexp.escape(version)}\z})
+    return heading unless links_of(link.attr['href'].to_s).include?([:compare, version])
 
     heading.children[0, 1] = link.children
     heading
@@ -295,16 +334,22 @@ module KongHarnessesChangelog
     !(blocks.map(&:type) == [:p] && blocks.first.children.map(&:type) == [:codespan] && blocks.first.children.first.value == element.value)
   end
 
-  # Checks an element of an entry and its children: the page has no links, so the export
-  # refuses a link or an image that is left after the references at the end of the
-  # entry went, and an address in text. It also refuses code that holds a link, as the
-  # release-please subject transform writes one for each `#N` and `@user`, also in code.
-  # A person then writes the entry again at the source.
+  # Checks an element of an entry and its children: the page has no links, so a link
+  # that release-please writes in running text, to an issue as `#N` or to a user as
+  # `@name`, becomes its label as text. The export refuses any other link or image that
+  # is left after the references at the end of the entry went, and an address in text.
+  # It also refuses code that holds a link, as the release-please subject transform
+  # writes one for each `#N` and `@user`, also in code. A person then writes the entry
+  # again at the source.
   def checked(element, entry)
+    address = element.attr['href'].to_s
     cleaned(element)
     case element.type
     when :a, :img
-      raise "The changelog has a link in #{entry}, and the page shows no links. Only the references that release-please writes at the end of an entry go. Write the entry without the link at the source."
+      kind, label = link_kind(element, address) if element.type == :a
+      return [Kramdown::Element.new(:text, label)] if %i[issue user].include?(kind)
+
+      raise "The changelog has a link in #{entry}, and the page shows no links. Only the references that release-please writes go. Write the entry without the link at the source."
     when :codespan, :codeblock
       raise 'The changelog has code with a line that starts a block, which the export cannot write back safely.' if element.type == :codespan && code_breaks_paragraph?(element)
       raise "The changelog has a link in the code of #{entry}. Write the code without the link at the source." if types_of(parse(element.value)).intersect?(%i[a img])
@@ -314,7 +359,7 @@ module KongHarnessesChangelog
       children = element.children.flat_map { |child| checked(child, entry) }
       element.children = separated(children.flat_map { |child| %i[strong em].include?(child.type) ? trimmed(child) : [child] })
       if %i[p header].include?(element.type) && KongHarnessesChangelogLinks.address?(prose_of(element))
-        raise "The changelog has an address in the text of #{entry}. The page shows no addresses, so write the entry without it at the source."
+        raise "The changelog has an address in the text of #{entry}. The page shows no addresses, so write the entry without it at the source. A value such as `go@1.21` can go in backticks."
       end
       without_loose_breaks(element) if %i[p header strong em].include?(element.type)
       tightened(element) if %i[ul ol].include?(element.type)
@@ -434,8 +479,9 @@ module KongHarnessesChangelog
 
         sources << copy(element)
         # release-please writes its entries in a `*` list.
+        tail = name == BREAKING_CHANGES ? NOTE_TAIL : TAIL
         element.children = element.children.flat_map do |item|
-          checked(element.type == :ul ? without_references(item) : item, name_of(item))
+          checked(element.type == :ul ? without_references(item, tail) : item, name_of(item))
         end
         [tightened(element)]
       else
@@ -458,10 +504,13 @@ module KongHarnessesChangelog
   # the highest published release, stops the sync, so a changelog that lost its sections
   # cannot empty the page. So does a changelog with no entries for users left.
   def export(markdown, published:, highest:)
-    raise 'The changelog contains a control character that the export uses as a mark.' if markdown.match?(/[\u0000-\u0005]/)
+    control = 'The changelog has a control character, which shows nothing on the page. Write the entry without it at the source.'
+    raise control if markdown.match?(KongHarnessesChangelogLinks::CONTROL)
 
     releases = []
     source = parse(markdown)
+    raise control if entities_of(source).match?(KongHarnessesChangelogLinks::CONTROL)
+
     source.children.each do |element|
       level = element.type == :header ? element.options[:level] : nil
       if level == 2
@@ -496,6 +545,12 @@ module KongHarnessesChangelog
     output, = Writer.convert(root, options)
     output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
     written(output, root, original)
+  end
+
+  # The characters of the entities of a tree. A browser shows some of them as other
+  # characters, but kramdown keeps the character itself.
+  def entities_of(element)
+    element.type == :entity ? element.value.char : element.children.map { |child| entities_of(child) }.join
   end
 
   def types_of(element)
@@ -544,7 +599,13 @@ module KongHarnessesChangelog
   # at the end of a `*` list entry taken out. It reads them from the HTML, not from the
   # tree of the export.
   def reading(fragment)
-    fragment.children.select { |node| node.name == 'ul' }.flat_map(&:element_children).each { |item| without_rendered_references(item) }
+    section = nil
+    fragment.children.each do |node|
+      section = node.text.strip if node.name == 'h3'
+      next unless node.name == 'ul'
+
+      node.element_children.each { |item| without_rendered_references(item, section == BREAKING_CHANGES ? NOTE_TAIL : TAIL) }
+    end
     text = +''
     add = ->(value) { value.each_char { |char| text << (char.match?(/\s/) ? ' ' : char) unless char.match?(/\s/) && (text.empty? || text.end_with?(' ')) } }
     walk = lambda do |node|
@@ -561,16 +622,16 @@ module KongHarnessesChangelog
 
   # The first paragraph of a list item is its text up to the first block other than a
   # line break, or its first `p` when the list is loose.
-  def without_rendered_references(item)
+  def without_rendered_references(item, tail)
     first = item.children.find { |node| node.element? || !node.text.strip.empty? }
     run = first&.name == 'p' ? first.children.to_a : item.children.take_while { |node| !(node.element? && BLOCKS.include?(node.name) && node.name != 'br') }
     pieces = run.map do |node|
       next node.text if node.text?
 
-      [node.text, node['href'].to_s] if node.name == 'a' && node.children.length == 1 && node.children.first.text?
+      [node.text, node['href'].to_s] if node.name == 'a'
     end
-    marks = marks_of(pieces)
-    start = tail_start(marks) or return
+    marks = marks_of(pieces) { |text, address| rendered_kind(text, address) }
+    start = tail_start(marks, tail) or return
 
     offset = 0
     run.zip(marks).each do |node, mark|
@@ -579,6 +640,27 @@ module KongHarnessesChangelog
       next if offset <= start
 
       from >= start ? node.remove : node.content = node.text[0, start - from]
+    end
+  end
+
+  # The kind of a reference at the end of an entry, read from the HTML with its own
+  # string compares, apart from the export's reading of the address, so that a mistake
+  # in one of them does not pass the other.
+  def rendered_kind(text, address)
+    site = 'https://github.com/'
+    return unless address.start_with?(site)
+
+    owner, repository, kind, id, *rest = address.delete_prefix(site).split('/', -1)
+    return unless rest.empty? && [owner, repository].all? { |part| part.to_s.match?(/\A[\w.-]+\z/) }
+
+    own = "#{owner}/#{repository}" == REPO
+    if kind == 'commit' && own && id.to_s.match?(/\A[0-9a-f]{40}\z/)
+      :commit if text == id[0, 7]
+    elsif kind == 'issues' && id.to_s.match?(/\A\d+\z/)
+      return :issue if own && text == "##{id}"
+
+      labels = ["#{owner}/#{repository}##{id}", ("#{repository}##{id}" if owner == REPO.split('/').first)].compact
+      :closes if labels.any? { |label| html(parse("[#{label}](#{address})")).text.strip == text }
     end
   end
 

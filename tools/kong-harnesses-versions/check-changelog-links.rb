@@ -12,8 +12,10 @@ require 'yaml'
 # sync when the page would hold anything that a browser could follow. It allows only
 # plain elements with plain attributes, so no form of an address in an attribute can
 # pass. It reads the text of each element as a reader sees it, joined across inline
-# markup such as bold, and refuses any web or mail address outside code. Text in code is
-# not a link, but it still must not name the kong-harnesses repository.
+# markup such as bold, and refuses `//`, `www.`, `mailto:`, `xmpp:` and an `@` between
+# two characters of a name, as in `user@host`, outside code. Text in code is not a link,
+# but it still must not name the kong-harnesses repository. It also refuses a control
+# character, which shows nothing.
 module KongHarnessesChangelogLinks
   module_function
 
@@ -105,6 +107,18 @@ module KongHarnessesChangelogLinks
     normalize(text).match?(ADDRESS)
   end
 
+  # Every control character but a tab and a line break, as the text or an attribute
+  # holds it after the HTML parser read its character references.
+  CONTROL = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/
+
+  def control?(fragment)
+    found = false
+    fragment.traverse do |node|
+      found ||= node.text? ? node.content.match?(CONTROL) : node.element? && node.attribute_nodes.any? { |attribute| attribute.value.match?(CONTROL) }
+    end
+    found
+  end
+
   def problems(markdown)
     html_problems(html(markdown))
   end
@@ -112,8 +126,9 @@ module KongHarnessesChangelogLinks
   # Outside the site build, kramdown renders a code block as plain <pre><code>. The site
   # highlights it with its own template, which adds no address from the changelog text.
   def html_problems(html)
-    found = []
-    Nokogiri::HTML5.fragment(html).traverse do |node|
+    fragment = Nokogiri::HTML5.fragment(html)
+    found = control?(fragment) ? ['a control character'] : []
+    fragment.traverse do |node|
       if node.element?
         allowed = ELEMENTS[node.name]
         if allowed.nil?
@@ -131,7 +146,7 @@ module KongHarnessesChangelogLinks
       next unless node.fragment? || BLOCKS.include?(node.name)
 
       seen = visible(node)
-      found << "the address in #{seen.strip[0, 200].inspect}" if address?(visible(node, code: false))
+      found << "the address in #{seen.strip[0, 200].inspect} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
       found << "the kong-harnesses repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(REPOSITORY)
     end
     found.uniq
