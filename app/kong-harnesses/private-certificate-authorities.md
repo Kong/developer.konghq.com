@@ -30,10 +30,10 @@ related_resources:
 ---
 
 When the gateway, the identity provider or the profile server uses a certificate from a private certificate authority (CA), add the CA to the system trust store of each developer's computer and of your own computer, usually through mobile device management (MDM).
-{{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store and need nothing more.
+{{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store and need nothing more, except for the Hermes Agent sign-in.
 The system trust store is the standard place for a private CA, and every program on the computer trusts a CA there, not only one agent CLI.
 The browser that opens for the sign-in must also trust the identity provider's certificate.
-Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`, because the sign-in script of its {{site.ai_gateway}} plugin doesn't read the system trust store.
+Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`, because the `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, which Hermes Agent uses to read the system trust store.
 
 omp and pi don't read the system trust store by default, so set one of these variables in the environment where they start:
 
@@ -50,7 +50,9 @@ rows:
       With `NODE_EXTRA_CA_CERTS`, omp uses its own CA list and the file instead of the system trust store, so put every private CA that omp needs in the file, such as the CA of a proxy.
       On Debian and Ubuntu, omp also reads `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
   - client: pi
-    setting: "`NODE_EXTRA_CA_CERTS` set to the CA file, or, when pi runs on Node.js, `NODE_USE_SYSTEM_CA=1`."
+    setting: |
+      `NODE_EXTRA_CA_CERTS` set to the CA file, or, when pi runs on Node.js, `NODE_USE_SYSTEM_CA=1`.
+      On Debian and Ubuntu, pi's Bun release archives also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
 {% endtable %}
 
 The native installer, the npm package, the Homebrew cask, the WinGet package and the apt, dnf and apk packages of {{ site.claude_code }} install the same native binary.
@@ -130,7 +132,8 @@ rows:
   - program: Hermes Agent
     setting: |
       `SSL_CERT_FILE` set to the CA file, which Hermes Agent trusts in addition to the system trust store.
-      Sign in with `hermes auth add kong-ai-gateway`, because the sign-in script of the {{site.ai_gateway}} plugin doesn't read the system trust store.
+      The plugin's `scripts/login.py` doesn't use `truststore` and doesn't read `~/.hermes/.env`, so a CA file set there doesn't fix sign-in through that script.
+      Sign in with `hermes auth add kong-ai-gateway` instead.
   - program: OpenCode
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file.
