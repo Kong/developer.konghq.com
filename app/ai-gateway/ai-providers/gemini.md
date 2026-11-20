@@ -242,13 +242,13 @@ The [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions
 * **Native Interactions requests**: {{site.ai_gateway}} [forwards them unchanged](#forward-native-interactions-requests).
 * **OpenAI Responses API requests**: {{site.ai_gateway}} [translates them to Interactions requests](#use-gemini-from-openai-responses-api-clients) and translates the replies back.
 
-In both cases, {{site.ai_gateway}} authenticates to Gemini with the credentials in the AI Model Provider.
+In both cases, {{site.ai_gateway}} authenticates to Gemini with the credentials in the [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 
 ### Forward native Interactions requests
 
-Use passthrough when your clients, such as the Google GenAI SDK, already send Interactions requests.
-{{site.ai_gateway}} forwards the request and response bodies to Gemini without translating them.
-Create an AI Model with the `passthrough` format and a Gemini target:
+Passthrough forwards native Interactions requests to Gemini without translating the request or response body.
+Use it when your clients, such as the [Google GenAI SDK](https://ai.google.dev/gemini-api/docs/libraries), already send Interactions requests.
+Create an [AI Model](/ai-gateway/entities/ai-model/) with the `passthrough` format and a Gemini target:
 
 {% entity_example %}
 type: model
@@ -329,11 +329,12 @@ rows:
 
 ### Use Gemini from OpenAI Responses API clients
 
-{{site.ai_gateway}} translates [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) requests to the Gemini Interactions API and translates the replies back, for both Gemini Standard and Gemini Enterprise.
+{{site.ai_gateway}} translates [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) requests to the Gemini Interactions API and translates the replies back.
+Translation works with both Gemini Standard and Gemini Enterprise targets.
 Use it when your clients, such as OpenAI SDK agents or the OpenAI Codex CLI, already send Responses requests.
 Clients that send native Interactions requests use [passthrough](#forward-native-interactions-requests) instead.
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) with the `openai` format and the `agentic` capability.
+Create an AI Model with the `openai` format and the `agentic` capability.
 The following AI Model accepts Responses requests on `/v1/responses` and sends them to a Gemini target:
 
 {% entity_example %}
@@ -358,7 +359,7 @@ data:
   policies: []
 {% endentity_example %}
 
-Common tasks work as follows:
+The following table shows how to do common tasks with Responses requests:
 
 {% table %}
 columns:
@@ -368,7 +369,7 @@ columns:
     key: how
 rows:
   - task: Continue a conversation
-    how: "Send `previous_response_id`. Gemini keeps the conversation state."
+    how: "Send `previous_response_id` with the ID of an earlier response. Gemini keeps the conversation state."
   - task: Stream the reply
     how: "Set `\"stream\": true`. {{site.ai_gateway}} returns standard Responses events."
   - task: Run a long task in the background
@@ -376,13 +377,13 @@ rows:
   - task: Cancel a running task
     how: "Send `POST /v1/responses/{id}/cancel`. A cancelled stream ends with a `response.completed` event, because the Responses API doesn't have a `response.cancelled` event. Read `status: cancelled` on the response to tell a cancellation from a success."
   - task: Call your own functions
-    how: "Send `function` tools in `tools`. Gemini's calls come back as `function_call` items."
+    how: "Send `function` tools in `tools`. Gemini returns its function calls as `function_call` items."
 {% endtable %}
 
 #### Limitations of Responses translation
 
 * Google stores interactions for 55 days on paid tiers and 1 day on the free tier. {{site.ai_gateway}} doesn't keep conversation history.
-* A request field that doesn't have an Interactions equivalent returns a `400` error that names the field. The exceptions are `user`, `safety_identifier`, `prompt_cache_key`, and `prompt_cache_retention`, which {{site.ai_gateway}} drops.
-* Output that the Responses format can't represent, such as an image in a Deep Research report, is returned in the `x_kong_gemini_content` field of the output item instead of failing the request.
-* `text.verbosity` is accepted but doesn't change Gemini's output.
+* {{site.ai_gateway}} returns a `400` error that names the field when a request includes a field without an Interactions equivalent. It drops `user`, `safety_identifier`, `prompt_cache_key`, and `prompt_cache_retention` instead.
+* {{site.ai_gateway}} returns output that the Responses format can't represent, such as an image in a Deep Research report, in the `x_kong_gemini_content` field of the output item instead of failing the request.
+* {{site.ai_gateway}} accepts `text.verbosity`, but it doesn't change Gemini's output.
 * {{site.ai_gateway}} doesn't translate native Interactions requests to the OpenAI or Anthropic formats.
