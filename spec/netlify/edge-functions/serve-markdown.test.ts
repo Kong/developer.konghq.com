@@ -353,6 +353,72 @@ describe("serve-markdown handler", () => {
     assert.equal(waited.length, 0);
     assert.equal(events.length, 0);
   });
+
+  describe("redirect Location", () => {
+    const redirect = (location: string) =>
+      new Response("moved", {
+        status: 301,
+        headers: { location, "cache-control": "public, max-age=0", "x-custom": "kept" },
+      });
+
+    it("removes the marker from the Location of a marked redirect and keeps the other parameters", async () => {
+      const { result, expected } = await run(
+        "/kongctl/create/foo.md?utm_source=x&_md_rewrite=1",
+        { accept: "text/markdown" },
+        redirect("/kongctl/?utm_source=x&_md_rewrite=1"),
+      );
+
+      assert.notEqual(result, expected);
+      assert.equal(result.status, 301);
+      assert.equal(result.headers.get("location"), "/kongctl/?utm_source=x");
+      assert.equal(result.headers.get("cache-control"), "public, max-age=0");
+      assert.equal(result.headers.get("x-custom"), "kept");
+      assert.equal(await result.text(), "moved");
+    });
+
+    it("removes the whole query when the marker is the only parameter", async () => {
+      const { result } = await run(
+        "/kongctl/create/foo.md?_md_rewrite=1",
+        { accept: "text/markdown" },
+        redirect("/kongctl/?_md_rewrite=1"),
+      );
+
+      assert.equal(result.headers.get("location"), "/kongctl/");
+    });
+
+    it("counts the marked redirect with its own status", async () => {
+      await run(
+        "/kongctl/create/foo.md?utm_source=x&_md_rewrite=1",
+        { accept: "text/markdown" },
+        redirect("/kongctl/?utm_source=x&_md_rewrite=1"),
+      );
+
+      assert.equal(events.length, 1);
+      assert.equal(events[0].sc_status, 301);
+    });
+
+    it("returns the next response itself when the request has no marker", async () => {
+      const { result, expected } = await run(
+        "/kongctl/create/foo.md",
+        { accept: "text/markdown" },
+        redirect("/kongctl/?_md_rewrite=1"),
+      );
+
+      assert.strictEqual(result, expected);
+    });
+
+    for (const status of [200, 304]) {
+      it(`returns the next response itself for a marked ${status}`, async () => {
+        const { result, expected } = await run(
+          "/kongctl.md?_md_rewrite=1",
+          { accept: "text/markdown" },
+          new Response(status === 304 ? null : "page", { status }),
+        );
+
+        assert.strictEqual(result, expected);
+      });
+    }
+  });
 });
 
 describe("serve-markdown config", () => {
