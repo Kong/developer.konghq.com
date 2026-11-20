@@ -1,4 +1,4 @@
-{%- assign support = site.data.ai-gateway.v2.claude-code-provider-modes -%}
+{%- assign provider_modes = site.data.ai-gateway.v2.claude-code-provider-modes -%}
 {% table %}
 columns:
   - title: Provider mode
@@ -8,15 +8,15 @@ columns:
   - title: Gateway URL setting
     key: url
   - title: Cloud sign-in skip switch
-    key: skip_auth
+    key: skip
   - title: Other settings
     key: other
 rows:
-{%- for mode in support.modes %}
+{%- for mode in provider_modes.modes %}
   - mode: "{{ mode.name }}"
     switch: "{{ mode.switch }}"
     url: "{{ mode.url }}"
-    skip_auth: "{{ mode.skip_auth }}"
+    skip: "{{ mode.skip }}"
     other: "{{ mode.other }}"
 {%- endfor %}
 {% endtable %}
