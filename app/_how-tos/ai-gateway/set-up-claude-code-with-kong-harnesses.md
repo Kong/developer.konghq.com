@@ -346,7 +346,7 @@ rows:
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
-A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
+A profile can also turn off Anthropic's usage metrics and feature flags, and the automatic install of Anthropic's plugin marketplace.
 [{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
 [{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off the Claude products that run sessions outside the developer's computer, without the gateway.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.

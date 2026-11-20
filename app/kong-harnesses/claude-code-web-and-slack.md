@@ -63,7 +63,7 @@ The earlier {{ site.claude_code }} in Slack answers only Pro, Max and Ultra acco
 Your organization's Claude settings don't control these personal accounts.
 To block the app, a Slack administrator removes the Claude app and stops new installs.
 Do these steps only when no workspace that they reach is connected to Claude Tag, because Claude Tag uses the same Claude app.
-Removing the app from a connected workspace [deletes that workspace's Claude Tag data](https://claude.com/docs/claude-tag/concepts/data-lifecycle#delete-data-or-request-deletion), and the Enterprise Grid steps change every workspace in the organization.
+Removing the app from a connected workspace [deletes that workspace's Claude Tag data](https://claude.com/docs/claude-tag/concepts/data-lifecycle#delete-data-or-request-deletion), and the Enterprise Grid restriction and uninstall change every workspace in the organization.
 The administrator can use these steps:
 
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace.
@@ -80,7 +80,9 @@ The administrator can use these steps:
   1. Click **Restrict**.
 * On Enterprise Grid, an Org Owner or Org Admin [restricts the Claude app for the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Manage Apps** > **Restrict an app**.
   Restricting the app doesn't remove existing installations, so also remove it from each workspace.
-* On Enterprise Grid, when the Claude app is installed for the whole organization, an Org Owner or Org Admin [uninstalls it from the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Installed Apps**.
+* On Enterprise Grid, when the Claude app is installed for the whole organization and some workspaces keep Claude Tag, an Org Owner or Org Admin [removes it from the other workspaces](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) with **Remove from a workspace** in **Organization settings** > **Integrations** > **Installed Apps**.
+  The app stays in the workspaces that the administrator doesn't select.
+* On Enterprise Grid, when the Claude app is installed for the whole organization and no workspace keeps Claude Tag, an Org Owner or Org Admin [uninstalls it from the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Installed Apps**.
   That removes the app from all workspaces.
 
 [{{ site.claude_code }} in Slack](https://code.claude.com/docs/en/slack) has the details.
