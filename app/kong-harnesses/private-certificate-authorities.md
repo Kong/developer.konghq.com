@@ -25,6 +25,8 @@ breadcrumbs:
 related_resources:
   - text: kong-harnesses profiles for administrators
     url: /kong-harnesses/profiles-for-administrators/
+  - text: Changes that kong-harnesses makes on a developer's computer
+    url: /kong-harnesses/developer-computer-changes/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
 ---

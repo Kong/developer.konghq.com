@@ -1,6 +1,6 @@
 ---
 title: "{{site.kong_harnesses}} profiles for administrators"
-description: "Choose a provider mode, create and publish a {{site.kong_harnesses}} profile, and see what setup changes on each developer's computer."
+description: "Choose a provider mode, and create and publish a {{site.kong_harnesses}} profile for the developers of your organization."
 content_type: reference
 layout: reference
 
@@ -33,11 +33,14 @@ related_resources:
     url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
   - text: kong-harnesses and private certificate authorities
     url: /kong-harnesses/private-certificate-authorities/
+  - text: Changes that kong-harnesses makes on a developer's computer
+    url: /kong-harnesses/developer-computer-changes/
 ---
 
 A {{site.kong_harnesses}} profile names the {{site.ai_gateway}} that developers' agent CLIs call, how developers sign in, and the model that {{ site.claude_code }} starts with.
 A profile doesn't contain secrets, so you create it once and give the same file to every developer.
 Each developer then runs one command, and every computer uses the same gateway and models without editing agent settings files.
+For what `setup` saves and writes on each developer's computer, see [Changes that {{site.kong_harnesses}} makes on a developer's computer](/kong-harnesses/developer-computer-changes/).
 
 ## Provider modes
 
@@ -282,89 +285,3 @@ When the change keeps the profile's security identity, developers run the same `
 The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the profile's gateway CA bundle, if it has one.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup`, run `setup` again, and sign in again.
-
-## Changes on a developer's computer
-
-A developer installs the profile with [`kong-harnesses setup`](/kong-harnesses/setup/) and the URL or the file:
-
-```sh
-kong-harnesses setup PROFILE_URL
-```
-
-```sh
-kong-harnesses setup ./PROFILE_NAME.json
-```
-
-`setup` runs `profile import`, `login` and `profile activate`, in this order.
-Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
-It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
-Without `--client`, `setup` sets up every installed agent CLI that the profile lists.
-Add `--client claude-code` to set up only {{ site.claude_code }}.
-
-With `--auto-approve`, `setup` doesn't ask, and prints the same summary to stderr.
-Use `--auto-approve` only in an onboarding script that your organization owns, because it skips the developer's check of the gateway and the identity provider.
-When a step fails, the developer runs the same command again, and `setup` continues from that step.
-When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` leaves that agent CLI out and names the fix.
-Fix the route or the sign-in, then run `setup` again.
-
-`login` saves the sign-in in the desktop's native vault: only the renewal credential, or the static key.
-`profile activate` writes these keys to the {{ site.claude_code }} user settings, `~/.claude/settings.json`, or `settings.json` in `CLAUDE_CONFIG_DIR` when it's set:
-
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value
-    key: value
-rows:
-  - key: "`apiKeyHelper`"
-    value: |
-      A command that runs `kong-harnesses credential` for the profile.
-      {{ site.claude_code }} runs it to get a short-lived access token, or the static key of a key profile.
-      A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains until cleanup.
-  - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` and `env.CLAUDE_CODE_API_KEY_HELPER_TTL_MS`"
-    value: |
-      `1`, and a 5-minute cache for the `apiKeyHelper` result.
-      Discovery has an effect only in the `anthropic` mode.
-  - key: "`env.ANTHROPIC_AUTH_TOKEN` and `env.ANTHROPIC_API_KEY`"
-    value: Empty, so a key in the shell doesn't replace the sign-in.
-  - key: "Model keys, such as `env.ANTHROPIC_MODEL`"
-    value: The models that the profile names.
-  - key: "Feature switches, such as `env.DISABLE_TELEMETRY`"
-    value: "The {{ site.claude_code }} features that the profile turns off or on."
-  - key: "`env.ANTHROPIC_CUSTOM_HEADERS`"
-    value: |
-      The headers that the profile's `attribution` block names, when the profile has one.
-      For a `subscription` profile, also the `x-kong-id-token` header.
-  - key: "`hooks`"
-    value: |
-      Only for a `subscription` profile.
-      A hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway can identify the developer of each request.
-{% endtable %}
-
-Each provider mode also writes its own keys:
-
-{% table %}
-columns:
-  - title: Mode
-    key: mode
-  - title: Keys
-    key: keys
-rows:
-  - mode: "`anthropic`"
-    keys: "`env.ANTHROPIC_BASE_URL` set to the gateway origin."
-  - mode: "`foundry`"
-    keys: |
-      `env.CLAUDE_CODE_USE_FOUNDRY` and `env.CLAUDE_CODE_SKIP_FOUNDRY_AUTH` set to `1`, and `env.ANTHROPIC_FOUNDRY_BASE_URL` set to the gateway origin.
-      The model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
-  - mode: "`mantle`"
-    keys: |
-      `env.CLAUDE_CODE_USE_MANTLE` and `env.CLAUDE_CODE_SKIP_MANTLE_AUTH` set to `1`, and `env.ANTHROPIC_BEDROCK_MANTLE_BASE_URL` set to the gateway origin.
-      The model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
-{% endtable %}
-
-`profile activate` also writes the settings of each other agent CLI that the profile sets up, see [`profile activate`](/kong-harnesses/profile/activate/).
-It refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
-In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
-[`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) restores each value that activation replaced, when the key still has the value that activation wrote.
-A value that the developer changed after activation stays as the developer left it.
