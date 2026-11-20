@@ -30,7 +30,7 @@ related_resources:
 ---
 
 A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with `ANTHROPIC_BASE_URL`, and that setting moves only the model requests.
-{{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to hosts such as Anthropic, GitHub and Datadog.
+{{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to services such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
@@ -61,7 +61,7 @@ rows:
   - traffic: Feature flags
     destination: "`api.anthropic.com`"
     member: "`feature_flags`"
-    cost: "Features that {{ site.claude_code }} turns on through feature flags are unavailable, such as Remote Control."
+    cost: "Features that {{ site.claude_code }} turns on through feature flags are unavailable, including Remote Control and the other [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching)."
   - traffic: Error reports
     destination: "`browser-intake-us5-datadoghq.com`"
     member: "`error_reports`"
@@ -101,7 +101,7 @@ rows:
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
-When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available.
+When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available, unless the organization turned fast mode off.
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
 The default depends on the model provider and the sign-in.
