@@ -41,6 +41,8 @@ related_resources:
     url: /kong-harnesses/setup/
   - text: "{{ site.claude_code }} traffic outside {{site.ai_gateway}}"
     url: /kong-harnesses/claude-code-outside-traffic/
+  - text: "{{ site.claude_code }} on the web and Claude in Slack"
+    url: /kong-harnesses/claude-code-web-and-slack/
 
 prereqs:
   inline:
@@ -346,6 +348,7 @@ rows:
 
 A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
 [{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
+[{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off the Claude products that run sessions outside the developer's computer, without the gateway.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
 {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync and Remote Control, because they need a claude.ai sign-in or a direct connection to Anthropic.
 The Artifact tool works only in the cases that [Artifact availability](/kong-harnesses/claude-code-outside-traffic/#artifact-availability) lists.

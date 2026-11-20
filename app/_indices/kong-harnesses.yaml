@@ -38,3 +38,4 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/claude-code-outside-traffic/
+          - path: /kong-harnesses/claude-code-web-and-slack/
