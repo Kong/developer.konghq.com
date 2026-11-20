@@ -39,41 +39,53 @@ function userFacingRelease(release) {
 }
 
 // The repository is internal, so links into it break for readers of the site.
-// The Mesh changelog drops them too (mesh.ignored_links_regex).
-const internalUrl = String.raw`https?://(?:www\.)?github\.com/kong/kong-harnesses(?![\w.-])[^\s)>]*`;
-const anyInternalUrl = /github\.com\/kong\/kong-harnesses(?![\w.-])/i;
+// The Mesh changelog drops them too (mesh.ignored_links_regex). The pattern covers the
+// web, API and raw file addresses of the repository.
+const internalUrl = String.raw`https?://(?:(?:www\.)?github\.com|api\.github\.com/repos|raw\.githubusercontent\.com)/kong/kong-harnesses(?![\w.-])[^\s)>]*`;
+const anyInternalUrl = /(?:github\.com|api\.github\.com\/repos|raw\.githubusercontent\.com)\/kong\/kong-harnesses(?![\w.-])/i;
 // The title forms that CommonMark allows after a link address.
 const titleForms = String.raw`"[^"]*"|'[^']*'|\([^)]*\)`;
 const linkTitle = String.raw`(?:\s+(?:${titleForms}))?`;
 // A link whose address a later pass emptied, which the page would show as text.
 const emptiedLink = new RegExp(String.raw`\]\(\s*(?:${titleForms})?\s*\)`);
-// An issue or pull request number or a commit hash means nothing without its link.
-const referenceLabel = /^#?\d+$|^[0-9a-f]{7,40}$/i;
+// Marks where a link was removed, so the cleanup touches only the text next to it.
+const removed = '\u0000';
 
-function linkText(text) {
-  return referenceLabel.test(text) ? '' : text;
+// An issue or pull request number, or the hash of a commit link, means nothing without
+// its link. A word of hex letters, such as "defaced", is a hash only on a commit link.
+function linkText(text, url) {
+  const reference = /^#?\d+$/.test(text) || (/\/commit\//.test(url) && /^[0-9a-f]{7,40}$/i.test(text));
+  return reference ? removed : text;
 }
 
 function withoutInternalLinks(markdown) {
-  const labels = new Set();
+  if (markdown.includes(removed)) {
+    throw new Error('The changelog contains a NUL character.');
+  }
+  const labels = new Map();
   const text = markdown
-    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?${internalUrl}>?.*\n?`, 'gim'), (_, label) => {
-      labels.add(label.toLowerCase());
+    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?(${internalUrl})>?.*\n?`, 'gim'), (_, label, url) => {
+      labels.set(label.toLowerCase(), url);
       return '';
     })
-    .replace(new RegExp(String.raw` ?\(\[[^\]]*\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)\)`, 'gi'), '')
-    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)`, 'gi'), (_, label) => linkText(label))
-    .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, label, reference) =>
-      labels.has((reference || label).toLowerCase()) ? linkText(label) : link,
+    .replace(new RegExp(String.raw`\(\[[^\]]*\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)\)`, 'gi'), removed)
+    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?(${internalUrl})>?${linkTitle}\s*\)`, 'gi'), (_, label, url) =>
+      linkText(label, url),
     )
-    .replace(/\[([^\]]+)\](?![([:])/g, (link, label) => (labels.has(label.toLowerCase()) ? linkText(label) : link))
-    .replace(new RegExp(` ?<${internalUrl}>`, 'gi'), '')
-    .replace(new RegExp(` ?${internalUrl}`, 'gi'), '')
-    .replace(/\( +/g, '(')
-    .replace(/ +\)/g, ')')
-    .replace(/ ?\(\s*\)/g, '')
-    .replace(/(\S) {2,}/g, '$1 ')
-    .replace(/[ \t]+$/gm, '');
+    .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, label, reference) => {
+      const url = labels.get((reference || label).toLowerCase());
+      return url ? linkText(label, url) : link;
+    })
+    .replace(/\[([^\]]+)\](?![([:])/g, (link, label) => {
+      const url = labels.get(label.toLowerCase());
+      return url ? linkText(label, url) : link;
+    })
+    .replace(new RegExp(`<${internalUrl}>`, 'gi'), removed)
+    .replace(new RegExp(internalUrl, 'gi'), removed)
+    // Brackets that held only removed links go, then each mark takes one space with it.
+    .replace(new RegExp(String.raw`\(\s*(?:${removed}\s*)+\)`, 'g'), removed)
+    .replace(new RegExp(`\\(${removed}+ ?`, 'g'), '(')
+    .replace(new RegExp(` ?${removed}+`, 'g'), '');
   if (anyInternalUrl.test(text) || emptiedLink.test(text)) {
     throw new Error('A link into the internal kong-harnesses repository is left, or left broken, in the changelog.');
   }
@@ -91,22 +103,25 @@ function withEscapedTags(markdown) {
 
 // The page prints the result as a Liquid variable, which Jekyll does not parse as a
 // template, so text such as {{ }} or {% endraw %} in a commit subject stays text.
-// With publishedVersion, a release above it is left out: release-please writes its
-// section when the release pull request merges, before the release is published.
-export function publicChangelog(markdown, publishedVersion) {
+//
+// Only text of a published release reaches the site. release-please writes a section
+// when the release pull request merges, before the release job publishes it, and a
+// release candidate can be published before its final release. So a section stays only
+// when its heading names a published release (`published`, the versions without the v),
+// and a release candidate stays only once its final release, `highest` or lower, is
+// out. Text before the first heading goes, and a heading with no version stops the sync.
+export function publicChangelog(markdown, { published, highest }) {
   return withEscapedTags(withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, '')))
     .split(/^(?=## )/m)
     .filter((release) => {
-      if (!publishedVersion || !release.startsWith('## ')) {
-        return true;
+      if (!release.startsWith('## ')) {
+        return false;
       }
-      // A heading with no version, such as "Unreleased", could hold text of a release
-      // that is not out yet, so the sync stops rather than guess.
-      const version = release.match(/^## \[?(\d+\.\d+\.\d+)\b/)?.[1];
+      const version = release.match(/^## \[?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?)(?=[\]\s(]|$)/)?.[1];
       if (!version) {
         throw new Error(`The changelog has a release heading with no version: ${release.split('\n')[0]}`);
       }
-      return compareVersions(version, publishedVersion) <= 0;
+      return published.has(version) && compareVersions(version.split('-')[0], highest) <= 0;
     })
     .map(userFacingRelease)
     .filter(Boolean)
@@ -146,6 +161,12 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
   if (!tag) {
     throw new Error(`${repo} has no published vX.Y.Z release.`);
   }
+  // Every published release, release candidates too, but no draft.
+  const published = new Set(
+    releases
+      .filter((release) => !release.draft && /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?$/.test(release.tag_name))
+      .map((release) => release.tag_name.slice(1)),
+  );
 
   // main, not the tag, so a correction to an earlier entry reaches the page.
   const file = await fetch(`https://api.github.com/repos/${repo}/contents/CHANGELOG.md?ref=main`, {
@@ -156,7 +177,7 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
   }
 
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
-  fs.writeFileSync(outFile, `${JSON.stringify({ markdown: publicChangelog(await file.text(), highest.version) }, null, 2)}\n`, 'utf8');
+  fs.writeFileSync(outFile, `${JSON.stringify({ markdown: publicChangelog(await file.text(), { published, highest: highest.version }) }, null, 2)}\n`, 'utf8');
   return tag;
 }
 
