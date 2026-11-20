@@ -113,6 +113,7 @@ kong-harnesses login --profile work
 ## Choose how the settings reach the computers
 
 {{ site.claude_code }} can get managed settings from several sources on one computer.
+These are the administrator sources.
 By default, it takes most keys from only the highest of these sources that has a policy key.
 It reads [a few keys, such as `env`, from every source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 The sources, from highest to lowest:
@@ -120,6 +121,9 @@ The sources, from highest to lowest:
 1. Remote settings: server-managed settings from the claude.ai admin console, or from a Claude apps gateway.
 1. An MDM policy: the `com.anthropic.claudecode` preference domain on macOS, or the `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode` on Windows.
 1. The managed settings file, `managed-settings.json`, with the files in its `managed-settings.d` folder.
+
+On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
+{{ site.claude_code }} uses that value only when no administrator source is on the computer.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -168,23 +172,33 @@ When the profile doesn't have gateway MCP servers, use `allowlist`, the default,
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
-  The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build, and {{ site.claude_code }} loads no server that a developer, a project or a plugin adds.
+  The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build.
+  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides.
+  It loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist`, the default, locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
-  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
+  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the `skills` folder of the developer's {{ site.claude_code }} settings:
 
   ```sh
   kong-harnesses profile activate work --client claude-code
   ```
 
-* `--mcp-servers any` doesn't add a lock, and leaves MCP servers to each developer.
+* `--mcp-servers any` doesn't add a lock or servers, and leaves MCP servers to each developer.
+  To get the gateway MCP servers, each developer runs `profile activate`, as with `allowlist`.
   A lock that your own managed settings set still applies.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 
-If the computers already have a `managed-mcp.json` and the profile has gateway MCP servers, use `exclusive` with `--mcp-config`.
-{{ site.claude_code }} then loads only the servers in that file, so with `allowlist` or `any` it doesn't load the gateway MCP servers, even after `profile activate`.
+With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP servers, even after `profile activate`, in these cases:
+
+* The computers already have a `managed-mcp.json`.
+  {{ site.claude_code }} then loads only the servers in that file.
+* Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
+* Your own managed settings set `strictKnownMarketplaces` without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+
+In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
+If the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
 
 With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and kong-harnesses tells developers which servers {{ site.claude_code }} doesn't load when a session starts.
 
@@ -369,16 +383,16 @@ With your MDM tool, install the following on each managed computer:
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
-`fleet build` prints the command that packages or copies the files for the platform.
-For example, on macOS, put the files in one package with `pkgbuild`.
+`fleet build` prints the command that packages or copies the files for the platform, with the full path of the `root` folder.
+For example, on macOS, it prints a `pkgbuild` command like this one, which puts the files in one package.
 Replace each placeholder with the value for your deployment:
 
 ```sh
-pkgbuild --root fleet-macos/root --install-location / --ownership recommended --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root fleet-macos/root --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
-With `--ownership recommended`, the macOS package installs the files as root.
+By default, `pkgbuild` sets root as the owner of each file in the package, so the package installs the files as root.
 On Linux, `fleet build` prints a copy command that creates the files as root, and sets each folder that the build writes to mode 755 and each file to mode 644.
 The command doesn't change `/etc`.
 On Windows, the copy command that `fleet build` prints gives the files the access rules of `C:\Program Files`.
@@ -396,16 +410,22 @@ On the first request, kong-harnesses opens the browser.
 Sign in with your identity provider account.
 
 In {{ site.claude_code }}, run `/status`.
-The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` for a file build, which means only the files in `managed-settings.d`, or `(file + drop-ins)` when the computers also have your `managed-settings.json`, or `(plist)` or `(HKLM)` for an MDM build.
-If your organization sets `managedSourcesBehavior` to `merge`, the line lists each source that {{ site.claude_code }} merged and ends with `, merged`.
+The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses:
+
+* `(drop-ins)`: a file build, with only the files in `managed-settings.d`.
+* `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
+* `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
+* A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
+* `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
+  Find their source, and remove them there.
+  A computer can keep a cached copy of them for up to 24 hours after its last fetch.
+
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
-If the line shows `(remote)`, server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
-Find their source, and remove them there.
-A computer can keep a cached copy of them for up to 24 hours after its last fetch.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
-With `allowlist`, the developer must run `profile activate` first.
-If a server is missing, look for a `deniedMcpServers` entry that matches it.
+With `allowlist` or `any`, the developer must run `profile activate` first.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it, such as a `deniedMcpServers` entry or `strictPluginOnlyCustomization`.
+`doctor` also names the setting that blocks a gateway MCP server.
 
 Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 
