@@ -116,12 +116,6 @@ ai_gateway_model_providers:
 
 Create a [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) AI Policy whose counter key and limit both come from the caller's token:
 
-* `expressions.custom_key` keys the counter on the `sub` claim, so each caller gets their own counter without being registered anywhere.
-* `expressions.limit` gives `gold` callers 100 requests per minute and everyone else 5.
-* `config.custom_key` and `config.limit` are the static fallbacks, used for any request whose expression can't be evaluated. Keep the fallback limit low, so a caller with missing claims is restricted rather than unlimited.
-
-`window_size` stays in `config` only, because it isn't expressible.
-
 <!--vale off-->
 {% entity_examples %}
 ai_gateway_policies:
@@ -146,6 +140,12 @@ ai_gateway_policies:
         - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 : 5'
 {% endentity_examples %}
 <!--vale on-->
+
+In this example:
+* `expressions.custom_key`: Keys the counter on the `sub` claim, so each caller gets their own counter without being registered anywhere.
+* `expressions.limit`: Gives `gold` callers 100 requests per minute and everyone else 5.
+* `config.custom_key` and `config.limit`: Static fallbacks, used for any request whose expression can't be evaluated. Keep the fallback limit low, so a caller with missing claims is restricted rather than unlimited.
+* `config.window_size`: Set in `config` only, because `window_size` isn't expressible.
 
 ## Create an AI Model that only gold callers can reach
 
