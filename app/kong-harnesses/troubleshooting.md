@@ -101,7 +101,7 @@ rows:
     next: |
       Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
       If your administrator installed the profile for every user, ask your administrator to install it again.
-      If the lines before the agent CLI reports say that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
+      If the `profile` line says that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
     what: You're signed in to the profile. For a profile that uses a static key, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
     next: |
@@ -117,8 +117,8 @@ rows:
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, inspect them and remove the leftover values manually.
-      To undo only what kong-harnesses changed, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
+      When the settings are inconsistent with what kong-harnesses wrote, run `kong-harnesses profile cleanup --client CLIENT_NAME` first.
+      If `profile cleanup` reports that the settings no longer match what kong-harnesses installed, inspect them and remove the leftover values manually.
       When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
       For OpenCode, remove the gateway plugin entry that kong-harnesses didn't record from the settings file first, then activate the profile.
   - check: "`claude-code`"
@@ -136,8 +136,9 @@ rows:
       If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
   - check: "`gateway`"
     what: |
-      The `gateway` check tests a direct connection to the gateway, and skips that test when a proxy applies.
-      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
+      For an `http://` gateway, the check fails when a proxy applies to the gateway.
+      For an `https://` gateway, the check tests a direct connection, and skips that test when a proxy applies, or when `--inference` runs for {{ site.claude_code }}.
+      Other checks, such as `catalog`, can send their requests through the proxy of an `https://` gateway.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
@@ -190,13 +191,14 @@ rows:
     what: |
       For each credential variable that isn't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and each switch for another provider that is turned on, such as `CLAUDE_CODE_USE_BEDROCK`, in the shell that starts {{ site.claude_code }}, the `env` block of the settings file sets the same variable, which takes precedence.
       The `env` block itself doesn't turn on a switch for another provider, or set a credential for the provider mode of the profile.
+      The check reads the environment that `doctor` runs in, so run `doctor` from the shell that starts {{ site.claude_code }}.
     next: |
       Do each step that the `fix:` line names.
       It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
-      `doctor` doesn't send a request to a server that takes its own OAuth sign-in or a saved key.
+      `doctor` doesn't send a request to a server that takes its own OAuth sign-in or a saved key, or that {{ site.claude_code }} uses through another entry at the same address.
     next: |
       If {{ site.claude_code }} doesn't load a server, do what the `fix:` line says, usually `kong-harnesses profile activate PROFILE_NAME --client claude-code`, which installs the servers.
       For a server that takes a key, run `kong-harnesses login --profile PROFILE_NAME`, which asks for each missing key.
@@ -255,5 +257,6 @@ Do that step, then run `profile delete` again.
 
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
 `profile delete` also refuses while you're signed in.
-`profile delete` asks you to type the profile name to confirm, and `logout` asks too when the profile has a saved sign-in.
+`profile delete` asks you to type the profile name to confirm.
+`logout` asks too when it removes a saved sign-in or key from this computer, which a CI profile that reads its key from the environment doesn't have.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
