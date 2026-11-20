@@ -4,6 +4,7 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/
+          - path: /kong-harnesses/install/
 
   - title: CLI References
     sections:
