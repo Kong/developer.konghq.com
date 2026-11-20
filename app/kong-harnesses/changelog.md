@@ -31,7 +31,7 @@ related_resources:
     url: /changelogs/
 ---
 
-This page lists the changes for users in recent {{site.kong_harnesses}} releases, newest first.
+This page lists the changes for users in recent {{site.kong_harnesses}} releases, newest first. A release with no changes for users, such as one with only build or documentation changes, is not listed.
 
 If a release needs a step when you upgrade, that release lists the step under **⚠ BREAKING CHANGES**. Do these steps after you install the new release, before you use it.
 

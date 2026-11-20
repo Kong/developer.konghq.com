@@ -53,6 +53,9 @@ test('removes every form of link into the internal repository and keeps links to
     ['* see <https://github.com/Kong/kong-harnesses/issues/2>', '* see'],
     ['* see https://github.com/Kong/kong-harnesses/issues/3 first', '* see first'],
     ['* see [the issue][issue]\n\n[issue]: https://github.com/Kong/kong-harnesses/issues/4', '* see the issue'],
+    ['* see [the PR](https://github.com/Kong/kong-harnesses/pull/5 "title") first', '* see the PR first'],
+    ["* see [the PR](https://github.com/Kong/kong-harnesses/pull/6 'title') first", '* see the PR first'],
+    ['* see [the PR](https://github.com/Kong/kong-harnesses/pull/7 (title)) first', '* see the PR first'],
     ['* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)', '* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)'],
   ];
   for (const [entry, expected] of entries) {
@@ -67,6 +70,10 @@ test('refuses a changelog with a link into the internal repository that it canno
   );
 });
 
+test('refuses a changelog with a link that removing an internal URL left broken', () => {
+  assert.throws(() => publicChangelog("## 1.0.0\n\n### Features\n\n* see [the PR]( 'title')\n"), /left broken/);
+});
+
 test('reads the changelog at the highest published release, not the newest one', async () => {
   const requested = [];
   const fetch = async (url) => {
@@ -74,6 +81,7 @@ test('reads the changelog at the highest published release, not the newest one',
     if (url.includes('/releases?')) {
       return Response.json([
         { tag_name: 'v0.16.2', draft: false, prerelease: false },
+        { tag_name: 'v1.0.0-beta', draft: false, prerelease: false },
         { tag_name: 'v0.19.0', draft: true, prerelease: false },
         { tag_name: 'v0.18.0-rc.1', draft: false, prerelease: true },
         { tag_name: 'v0.17.1', draft: false, prerelease: false },

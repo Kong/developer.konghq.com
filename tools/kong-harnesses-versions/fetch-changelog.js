@@ -38,6 +38,10 @@ function userFacingRelease(release) {
 // The Mesh changelog drops them too (mesh.ignored_links_regex).
 const internalUrl = String.raw`https?://(?:www\.)?github\.com/kong/kong-harnesses(?![\w.-])[^\s)>]*`;
 const anyInternalUrl = /github\.com\/kong\/kong-harnesses(?![\w.-])/i;
+// A CommonMark link title: "...", '...' or (...).
+const linkTitle = String.raw`(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?`;
+// A link whose destination a later pass emptied, which the page would show as text.
+const emptiedLink = new RegExp(String.raw`\]\(\s*${linkTitle.slice(3, -2)}?\s*\)`);
 
 function withoutInternalLinks(markdown) {
   const labels = new Set();
@@ -46,8 +50,8 @@ function withoutInternalLinks(markdown) {
       labels.add(label.toLowerCase());
       return '';
     })
-    .replace(new RegExp(String.raw` ?\(\[[^\]]*\]\(<?${internalUrl}>?\)\)`, 'gi'), '')
-    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?${internalUrl}>?(?:\s+"[^"]*")?\s*\)`, 'gi'), '$1')
+    .replace(new RegExp(String.raw` ?\(\[[^\]]*\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)\)`, 'gi'), '')
+    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)`, 'gi'), '$1')
     .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, linkText, label) =>
       labels.has((label || linkText).toLowerCase()) ? linkText : link,
     )
@@ -56,8 +60,8 @@ function withoutInternalLinks(markdown) {
     .replace(new RegExp(` ?${internalUrl}`, 'gi'), '')
     .replace(/ \(\)/g, '')
     .replace(/[ \t]+$/gm, '');
-  if (anyInternalUrl.test(text)) {
-    throw new Error('A link into the internal kong-harnesses repository is left in the changelog.');
+  if (anyInternalUrl.test(text) || emptiedLink.test(text)) {
+    throw new Error('A link into the internal kong-harnesses repository is left, or left broken, in the changelog.');
   }
   return text;
 }
@@ -80,20 +84,30 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
     headers.Authorization = `Bearer ${env.GH_TOKEN}`;
   }
 
-  const list = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=100`, { headers });
-  if (!list.ok) {
-    throw new Error(
-      `GitHub API request for ${repo} releases failed (${list.status} ${list.statusText}). ${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
-    );
+  const releases = [];
+  for (let page = 1; ; page += 1) {
+    const list = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=100&page=${page}`, { headers });
+    if (!list.ok) {
+      throw new Error(
+        `GitHub API request for ${repo} releases failed (${list.status} ${list.statusText}). ${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
+      );
+    }
+    const batch = await list.json();
+    releases.push(...batch);
+    if (batch.length < 100) {
+      break;
+    }
   }
-  // The highest version, not the newest release, as fetch-versions.js picks it, so a
-  // backport published after a newer release does not replace the newer changelog.
-  const tag = (await list.json())
-    .filter((release) => !release.draft && !release.prerelease)
-    .map((release) => release.tag_name)
-    .sort((a, b) => compareVersions(b.replace(/^v/, ''), a.replace(/^v/, '')))[0];
+  // The highest vX.Y.Z release, not the newest or the one marked latest, as the versions
+  // job picks it: anyone who can write to the repository can mark an older release as
+  // the latest, and a backport published after a newer release must not replace it.
+  const [highest] = releases
+    .filter((release) => !release.draft && !release.prerelease && /^v\d+\.\d+\.\d+$/.test(release.tag_name))
+    .map((release) => ({ tag: release.tag_name, version: release.tag_name.slice(1) }))
+    .sort((a, b) => compareVersions(b.version, a.version));
+  const tag = highest?.tag;
   if (!tag) {
-    throw new Error(`${repo} has no published release.`);
+    throw new Error(`${repo} has no published vX.Y.Z release.`);
   }
 
   const file = await fetch(`https://api.github.com/repos/${repo}/contents/CHANGELOG.md?ref=${tag}`, {
