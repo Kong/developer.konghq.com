@@ -215,6 +215,11 @@ jobs:
     needs: base
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # One changelog sync at a time for each base branch, so an older run cannot
+    # replace newer data in its pull request.
+    concurrency:
+      group: sync-kong-harnesses-changelog-${{ needs.base.outputs.branch }}
+      cancel-in-progress: false
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -272,7 +277,7 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Check the changelog for links into kong-harnesses
+      - name: Refuse any link or address on the changelog page
         run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
 
       - name: Create pull request
