@@ -43,7 +43,9 @@ kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 Replace `PROFILE_NAME` with the name of your installed profile, here and in each command on this page.
 Replace `CLIENT_NAME` with the name of the agent CLI, such as `claude-code`.
 
-Without `--client`, `doctor` checks every agent CLI that the profile lists, with one report for each.
+Without `--client`, `doctor` checks each agent CLI that the profile configures and that this kong-harnesses sets up, with one report for each.
+When the profile configures none of them, `doctor` says so before any report and exits with `2`.
+Then ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
 Run `doctor` in the shell and the folder where you start the agent CLI, because some checks read the environment and the project settings of {{ site.claude_code }} there.
 `doctor` uses the network to check the gateway, and, unless the profile uses a static key, the identity provider.
 `kong-harnesses status` shows the sign-in and the agent CLI settings without the network.
@@ -101,6 +103,8 @@ rows:
     what: The profile is installed, and kong-harnesses can read it.
     next: |
       Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
+      If `profile get` says that the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
+      If `doctor` says that the selected profile configures no agent client that this kong-harnesses sets up, ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
       If your administrator installed the profile for every user, ask your administrator to install it again.
       If the `profile` line says that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
@@ -207,6 +211,9 @@ rows:
       These are credential variables that aren't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and switches for another provider that are turned on, such as `CLAUDE_CODE_USE_BEDROCK`.
       The check skips a variable that the `env` block of the settings file also sets, because the value in the settings file takes precedence.
       It also reports a switch for another provider that the `env` block turns on, and a credential for the provider mode of the profile that the `env` block sets.
+      `ANTHROPIC_AUTH_TOKEN` fails, because it replaces the sign-in.
+      For a profile that signs in through an identity provider, `ANTHROPIC_API_KEY` is a warning, because it sends a second credential beside the sign-in.
+      For a profile that uses a static key or your own Claude subscription, both variables fail.
     next: |
       Do each step that the `fix:` line names.
       It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
@@ -265,23 +272,29 @@ kong-harnesses logout --profile PROFILE_NAME
 ```
 
 If `logout` fails, do what its message says, and run it again.
-`logout` removes only the sign-in that kong-harnesses saved for the profile.
+`logout` removes only the sign-in and the keys of gateway MCP servers that kong-harnesses saved for the profile.
 OpenCode and Hermes Agent sign in through their own plugin, so `logout` refuses `--client opencode` and `--client hermes`, and their sign-ins stay active.
 To sign out of OpenCode, run `opencode auth logout`.
 To sign out of Hermes Agent, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with the entry ID of the credential as `TARGET`.
 For these commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
-After `logout` succeeds, delete the profile:
+After `logout` succeeds, or if it says that the profile is invalid, delete the profile:
 
 ```sh
 kong-harnesses profile delete PROFILE_NAME
 ```
 
-While an agent CLI still uses the profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup` command for that agent CLI.
+While an agent CLI still uses a valid profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup` command for that agent CLI.
 Do that step, then run `profile delete` again.
 
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
-`profile delete` also refuses while you're signed in.
+`profile delete` also refuses while you're signed in to a valid profile.
 `profile delete` asks you to type the profile name to confirm.
 `logout` asks too when the profile has a saved sign-in or key on this computer.
 When only gateway MCP keys are left, `logout` removes them without asking.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+
+If `logout` or `profile get` says that the profile is invalid, kong-harnesses can't read it, so you can't sign out first.
+Run `profile delete` without `logout`.
+For an invalid profile, `profile delete` doesn't check the agent CLIs or the sign-in, so it removes the profile even while an agent CLI still uses it.
+Run `kong-harnesses profile cleanup --client CLIENT_NAME` for each agent CLI that still uses the profile.
+When the `Login` field of the output says that a sign-in may remain, import the profile again, then run `kong-harnesses logout --profile PROFILE_NAME`.
