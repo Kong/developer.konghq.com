@@ -64,14 +64,11 @@ const buildEvent = (
 });
 
 export default async (request: Request, context: Context) => {
-  if (request.method !== "GET") {
-    return;
-  }
-
   const startedAt = new Date();
   const url = new URL(request.url);
   const { pathname } = url;
   const acceptHeader = request.headers.get("Accept") || "";
+  const counted = request.method === "GET";
 
   if (acceptHeader.includes("text/markdown") && !isMarkdown(pathname)) {
     if (pathname === "/") {
@@ -80,8 +77,14 @@ export default async (request: Request, context: Context) => {
       url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
     }
 
-    url.search = url.search ? `${url.search}&${REWRITE_MARKER}=1` : `?${REWRITE_MARKER}=1`;
+    if (counted) {
+      url.search = url.search ? `${url.search}&${REWRITE_MARKER}=1` : `?${REWRITE_MARKER}=1`;
+    }
     return url;
+  }
+
+  if (!counted) {
+    return;
   }
 
   const rewritten = url.searchParams.get(REWRITE_MARKER) === "1";

@@ -307,7 +307,25 @@ describe("serve-markdown handler", () => {
       assert.equal(nextCalls.length, 0);
       assert.equal(events.length, 0);
     });
+
+    it(`keeps the markdown rewrite for ${method} without a marker and sends no event`, async () => {
+      const { result, nextCalls } = await run("/kongctl/", { method, accept: "text/markdown" });
+
+      assert.ok(result instanceof URL);
+      assert.equal(result.pathname, "/kongctl.md");
+      assert.equal(result.search, "");
+      assert.equal(nextCalls.length, 0);
+      assert.equal(events.length, 0);
+    });
   }
+
+  it("does not count a HEAD request for a markdown path", async () => {
+    const { result, nextCalls } = await run("/kongctl.md", { method: "HEAD" });
+
+    assert.equal(result, undefined);
+    assert.equal(nextCalls.length, 0);
+    assert.equal(events.length, 0);
+  });
 
   it("returns the next response when registering the event throws", async () => {
     const { context, nextResponse } = setup();
