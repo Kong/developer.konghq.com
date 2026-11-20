@@ -212,6 +212,7 @@ jobs:
 
   kong-harnesses-changelog:
     name: Fetch kong-harnesses Changelog
+    needs: base
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -227,8 +228,15 @@ jobs:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
           private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
           owner: Kong
+          # Read the kong-harnesses changelog, and open the pull request here.
+          repositories: kong-harnesses,developer.konghq.com
+          permission-contents: write
+          permission-pull-requests: write
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.base.outputs.branch }}
+          persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
@@ -245,6 +253,7 @@ jobs:
           title: Sync kong-harnesses Changelog
           commit-message: Sync kong-harnesses Changelog
           branch: sync-kong-harnesses-changelog
+          base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}
           add-paths: |
