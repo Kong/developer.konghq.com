@@ -35,7 +35,7 @@ A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_
 The file is JSON of up to 65536 bytes, saved as UTF-8, or as UTF-16 with a byte-order mark. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see an installed profile, run:
 
 ```sh
-kong-harnesses profile get <name> -o json
+kong-harnesses profile get PROFILE_NAME -o json
 ```
 
 ## Example
@@ -187,7 +187,7 @@ rows:
   - field: "`description`"
     description: "A longer description, 1 to 240 printable ASCII characters."
   - field: "`gateway_origin`"
-    description: "Required. The origin of {{site.ai_gateway}}, without a path. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. An `http://` gateway needs 0.17.1 or later. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`."
+    description: "Required. The origin of {{site.ai_gateway}}, up to 2,048 bytes, without a path or the default port. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. An `http://` gateway needs 0.17.1 or later, and only {{ site.claude_code }}, `omp` and pi use it: Codex, OpenCode and Hermes need `https://`, even for a gateway on this computer. `fleet build` refuses an `http://` gateway. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`. See [Plain HTTP gateways](#plain-http-gateways)."
   - field: "`gateway_ca_bundle`"
     description: "Version 12 and later. PEM certificate authorities for the gateway certificate, up to 32 KB. Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself. From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so. Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes."
   - field: "`sign_in`"
@@ -203,6 +203,17 @@ rows:
 {% endtable %}
 
 Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`. From version 12, these fields go in `clients.claude-code`, and the top level refuses them. A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes.
+
+### Plain HTTP gateways
+
+A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
+
+* `profile activate` doesn't set up Codex, OpenCode or Hermes, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients.
+* When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY`.
+* For {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. It refuses when the managed settings of {{ site.claude_code }} could send the requests through a proxy.
+* `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
+
+The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors).
 
 ## Sign-in fields
 
@@ -225,7 +236,7 @@ rows:
     description: "{{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway. The identity provider fields are required, and `gateway_origin` uses `https://`."
 {% endtable %}
 
-The identity provider fields apply when `sign_in` isn't set or is `subscription`. Each URL uses `https://`.
+The identity provider fields apply when `sign_in` isn't set or is `subscription`. Each URL other than `redirect_uri` uses `https://`, is up to 2,048 bytes, and is in canonical form: without user information, a fragment, a `.` or `..` path segment, or the default port 443. `issuer` can't have a query, and the endpoint URLs can.
 
 {% table %}
 columns:
@@ -247,13 +258,13 @@ rows:
   - field: "`redirect_uri`"
     description: "Where the identity provider sends the browser after sign-in. The default is `http://localhost:9876/callback`. Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port from 1 to 65535. Its path is 2 to 256 characters of letters, digits and `-._~/`, without a `.` or `..` segment, `//`, a query or a fragment. Register the same value with the identity provider."
   - field: "`audience`"
-    description: "Required. The audience that the gateway accepts in a token, as an absolute URI without user information or a fragment."
+    description: "Required. The audience that the gateway accepts in a token, as an absolute URI of up to 2,048 bytes, without user information or a fragment."
   - field: "`audience_parameter`"
     description: "Version 5 and later. How the sign-in request sends the audience: `resource`, the default, `audience`, or `none`."
   - field: "`public_client_evidence`"
-    description: "Version 6 and later. Set to `deployment` when the discovery document doesn't list the `none` token endpoint authentication method, and your deployment shows in another way that the client is public."
+    description: "Version 6 and later. Set to `deployment` when the discovery document doesn't list the `none` token endpoint authentication method, and your deployment shows in another way that the client is public. Like the other identity provider fields, a `static_key` or `environment_key` profile refuses it."
   - field: "`scopes`"
-    description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. Each scope appears once, and is 1 to 128 visible ASCII characters other than `"` and `\`. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
+    description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. Each scope appears once, and is 1 to 128 visible ASCII characters, except double quotes and backslashes. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
   - field: "`max_access_token_lifetime_seconds`"
     description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 360 to 86400. The default is 3600."
 {% endtable %}
@@ -328,6 +339,7 @@ Some blocks have more rules:
 `profile activate` also refuses some agent CLIs for a profile that has fields they can't use:
 
 * Hermes and pi don't take `attribution`.
+* Codex, OpenCode and Hermes don't take an `http://` gateway. See [Plain HTTP gateways](#plain-http-gateways).
 * In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp` and pi, and top-level `models` stops Codex.
 
 ### Claude Code
@@ -359,7 +371,7 @@ rows:
 
 #### Models
 
-`profile activate` writes each alias into the {{ site.claude_code }} settings. Each alias is 1 to 128 bytes of visible ASCII. Versions 2 to 6 take `active`, `sonnet` and `opus`, and require all three. Version 7 adds `haiku` and `max_context_tokens`. From version 12, every role except `max_context_tokens` is required.
+`profile activate` writes each alias into the {{ site.claude_code }} settings. Each alias is 1 to 128 bytes of visible ASCII. Versions 2 to 6 take `active`, `sonnet` and `opus`, and require all three. Version 7 adds the optional `haiku` and `max_context_tokens`. From version 12, every role except `max_context_tokens` is required.
 
 {% table %}
 columns:
@@ -579,7 +591,7 @@ rows:
   - field: "`sign_in`"
     description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
   - field: "`oauth_client_id`, `oauth_callback_port`"
-    description: "For `oauth`. The client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client. The client ID is up to 256 visible ASCII characters, and the port is up to 65535."
+    description: "For `oauth`. The client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client. The client ID is up to 256 visible ASCII characters, and the port is from 1 to 65535."
   - field: "`key_header`"
     description: "For `key`. The header that carries the key, an HTTP token of up to 64 bytes. The default is `apikey`. `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding` and `Connection` are refused."
 {% endtable %}

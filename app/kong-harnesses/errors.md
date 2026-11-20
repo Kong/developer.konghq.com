@@ -31,7 +31,7 @@ related_resources:
     url: /kong-harnesses/profile-file/
 ---
 
-When a command fails, {{site.kong_harnesses}} prints a line that starts with `Error:` to standard error, and says what to do next. For a wrong flag or argument, most commands also print `Run 'kong-harnesses <command> --help' for usage`.
+When a command fails, {{site.kong_harnesses}} prints a line that starts with `Error:` to standard error, and says what to do next. For a wrong flag or argument, most commands also print `Run 'kong-harnesses COMMAND --help' for usage`.
 
 `kong-harnesses doctor` works in another way. It prints its findings, and the `--report` output, to standard output. For each agent CLI, the failed check to fix first gives a code: 2 for a profile or setup problem, 3 for a sign-in problem, and 1 for any other problem. `doctor` exits with the most severe of these codes across the profile and every agent CLI, in the order 2, then 1, then 3. A warning alone exits with 0. To act on the findings, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
@@ -60,7 +60,7 @@ rows:
     action: "Fix what the message names. Running the command again without a change gives the same error."
   - value: "3"
     meaning: "The command needs a sign-in, a new sign-in, or a key that isn't saved yet. When a renewal of the sign-in didn't finish, the next command resumes it."
-    action: "Run `kong-harnesses login --profile <name>`, or set the key that the message names. If the message says that the next call resumes the renewal, run the command again first."
+    action: "Run `kong-harnesses login --profile PROFILE_NAME`, or set the key that the message names. If the message says that the next call resumes the renewal, run the command again first."
   - value: "4"
     meaning: "A partial result. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one. `profile activate --print` can exit with 4 without a change to any file, when it leaves out a client."
     action: "Follow the message, then run the command again."
@@ -79,13 +79,27 @@ The name that you gave with `--profile` or `KONG_HARNESSES_PROFILE` isn't instal
 kong-harnesses profile list
 ```
 
-### "requires a profile, and no installed profile is usable" or "and none is installed"
+The messages about the choice of a profile start with the name of the command, such as `login`, `logout`, `doctor` or `profile activate`.
 
-The command needs a profile, and no installed profile works. Run `kong-harnesses profile list` to see the profiles, then install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+### "requires a profile"
 
-### "profile name is invalid"
+The command needs a profile, and didn't get one. The end of the message tells you what to do:
+
+* "and no installed profile is usable" or "and none is installed": When you don't name a profile, `login`, `logout`, `doctor` and `fleet build` use the default profile, or the only installed profile, and they didn't find one. Run `kong-harnesses profile list` to see the profiles, then install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or name one with `--profile PROFILE_NAME`.
+* "specify one with --profile": `budget refresh` doesn't use a default profile. Name the profile with `--profile PROFILE_NAME`, or with `KONG_HARNESSES_PROFILE`.
+* "requires a profile name": The command takes the profile name as its argument, as in `kong-harnesses profile activate PROFILE_NAME`. Add the name.
+
+### "accepts one profile" or "accepts one profile name"
+
+The command got more than one profile, for example `--profile` twice, or a profile name argument together with `--profile`. Give one profile.
+
+### "profile name is invalid" or "profile name after --profile is invalid"
 
 The profile name that you gave doesn't follow the [rules for `name`](/kong-harnesses/profile-file/#top-level-fields). Check the spelling of the name.
+
+### "KONG_HARNESSES_PROFILE holds an invalid profile name"
+
+You didn't give `--profile`, and `KONG_HARNESSES_PROFILE` is set to a value that can't be a profile name. Set `KONG_HARNESSES_PROFILE` to the name of an installed profile, or name the profile with `--profile PROFILE_NAME`. The flag wins over the variable.
 
 ### "profile import rejected; check the profile document"
 
@@ -103,7 +117,7 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 ### "the profile file is in" an encoding that kong-harnesses can't read
 
-The message names the encoding of the file, such as UTF-32 or UTF-16 without a byte-order mark. Save the file as UTF-8, or as UTF-16 with a byte-order mark. In PowerShell, run `Set-Content -Encoding utf8 <file>`.
+`profile import` reads a file in UTF-8, with or without a byte-order mark, or in UTF-16 with a byte-order mark. The message names what it found instead: "UTF-32", "UTF-16 without a byte-order mark", "UTF-16 with a broken character", "a text encoding that is not UTF-8", or "UTF-8 with a byte-order mark" for a file with two byte-order marks. Open the file in a text editor, save a copy as UTF-8, and import the copy.
 
 ### "OIDC discovery failed; check issuer access and retry"
 
@@ -123,7 +137,7 @@ Another {{site.kong_harnesses}} command, such as a sign-in or a renewal, uses th
 
 ### "still uses this profile, so its security identity cannot change"
 
-The profile that you import changes a [security identity field](/kong-harnesses/profile-file/#security-identity), and an agent CLI still uses the installed profile. Run the command that the message names, `kong-harnesses profile cleanup --client <client>`, or activate another profile in that client. Then import the profile, and activate it again.
+The profile that you import changes a [security identity field](/kong-harnesses/profile-file/#security-identity), and an agent CLI still uses the installed profile. Run the command that the message names, `kong-harnesses profile cleanup --client CLIENT_NAME`, or activate another profile in that client. Then import the profile, and activate it again.
 
 ### "your organization's managed settings run this profile in Claude Code"
 
@@ -151,39 +165,23 @@ An administrator installed the profile for every user of the computer, but its f
 
 ### "selected profile still has a saved sign-in"
 
-`profile delete` refuses a profile that is still signed in. Run `kong-harnesses logout --profile <name>`, then delete the profile.
+`profile delete` refuses a profile that is still signed in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
 
 ### "selected profile is still activated"
 
-`profile delete` refuses a profile that an agent CLI still uses. Run `kong-harnesses profile cleanup --client <client>`, then delete the profile.
+`profile delete` refuses a profile that an agent CLI still uses. Run `kong-harnesses profile cleanup --client CLIENT_NAME`, then delete the profile.
 
 ## Sign-in errors
 
-The errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, are listed with their fixes in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-cant-give-an-access-token). This section lists the other sign-in errors.
-
-### "a usable login already exists"
-
-The profile is already signed in, and `login` keeps that sign-in. To sign in with another account, run `kong-harnesses login --profile <name> --replace`.
+`login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/#when-the-login-or-logout-command-fails) lists them with their fixes. When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out). The errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, are listed with their fixes in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-cant-give-an-access-token). This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
 
 ### "no key for the gateway MCP server"
 
-The message ends with "is saved on this computer". A gateway MCP server in the profile takes a key, and you didn't save one yet. Run `kong-harnesses login --profile <name>`, and enter the key from your administrator when `login` asks for it.
-
-### "the system password store did not save the key of a gateway MCP server"
-
-`login` saved the sign-in, but the system password store refused the key of a gateway MCP server. Unlock the password store if it is locked, then run `kong-harnesses login --profile <name>` again.
-
-### "the sign-in is saved, but a gateway MCP server has no key yet"
-
-You canceled `login` after the sign-in, before you entered the key for a gateway MCP server. Run `kong-harnesses login --profile <name>` again to add the key.
+The message ends with "is saved on this computer". A gateway MCP server in the profile takes a key, and you didn't save one yet. Run `kong-harnesses login --profile PROFILE_NAME`, and enter the key from your administrator when `login` asks for it.
 
 ### "lists no gateway MCP server at the address Claude Code named"
 
-{{ site.claude_code }} asked for a credential for an MCP server that the installed profile doesn't list, usually because the profile changed after activation. Run `kong-harnesses --client claude-code profile activate <name>` again.
-
-### "server sign-out unconfirmed" or "local cleanup incomplete"
-
-`logout` did only part of its work, and exits with 4. Run `kong-harnesses logout --profile <name>` again. When the message says that the server sign-out is unconfirmed, also check the sign-in in your identity provider.
+{{ site.claude_code }} asked for a credential for an MCP server that the installed profile doesn't list, usually because the profile changed after activation. Run `kong-harnesses --client claude-code profile activate PROFILE_NAME` again.
 
 ## Client setup errors
 
@@ -195,9 +193,21 @@ The message says "your Claude settings file". {{ site.claude_code }} would send 
 
 pi has its own saved key for the `kong` provider, and it would send that key in place of your sign-in. Run `pi auth logout kong`, then try again.
 
+### "a proxy is set for the plain-HTTP gateway"
+
+The profile uses an `http://` gateway, and a proxy variable in the shell applies to the gateway host. The proxy could read the credential, so `profile activate` sets up no client. To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-cant-give-an-access-token), then run `profile activate` again.
+
+### "is not configured: it can choose a proxy"
+
+The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It still sets up the other clients. Give these clients a profile with an `https://` gateway.
+
+### "managed settings could send"
+
+The message starts with "your organization's managed settings could send". The profile uses an `http://` gateway, and the managed settings of {{ site.claude_code }} could send its requests through a proxy, because they win over the `NO_PROXY` value that `profile activate` writes. The message names the cause, such as a `NO_PROXY` value that leaves out the gateway host, or a managed settings source that {{site.kong_harnesses}} can't read. Use an `https://` gateway, or ask your administrator to make the change that the message names.
+
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
 
-Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI. Check the settings file of that client. Then run `kong-harnesses profile cleanup --client <client>`, or remove the leftover values manually when the message says so.
+Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI. Check the settings file of that client. Then run `kong-harnesses profile cleanup --client CLIENT_NAME`, or remove the leftover values manually when the message says so.
 
 ### "settings have two ownership documents"
 
@@ -209,11 +219,11 @@ Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI
 
 ### "did not finish for" a list of clients
 
-A command that sets up or cleans up several agent CLIs failed for each client in the list, for different reasons. Run the command again with `--client <client>` for each client to see each reason.
+A command that sets up or cleans up several agent CLIs failed for each client in the list, for different reasons. Run the command again with `--client CLIENT_NAME` for each client to see each reason.
 
 ### "no supported agent client was detected" or "does not configure any detected agent client"
 
-`profile activate` didn't find an agent CLI on this computer that the profile sets up. Install the agent CLI, or name the client with `--client <client>`. Check that the profile has a block for that client in [`clients`](/kong-harnesses/profile-file/#clients).
+`profile activate` didn't find an agent CLI on this computer that the profile sets up. Install the agent CLI, or name the client with `--client CLIENT_NAME`. Check that the profile has a block for that client in [`clients`](/kong-harnesses/profile-file/#clients).
 
 ### "this kong-harnesses runs from a temporary folder"
 
@@ -228,7 +238,7 @@ The command asks you a question, and it runs without a terminal, for example in 
 To see what a command does, run it with a debug log:
 
 ```sh
-kong-harnesses <command> --log-level debug --log-file kong-harnesses.log
+kong-harnesses COMMAND --log-level debug --log-file kong-harnesses.log
 ```
 
 You can also set `KONG_HARNESSES_LOG_LEVEL` and `KONG_HARNESSES_LOG_FILE` in the shell.
