@@ -8,6 +8,7 @@ const event = {
   format: "html",
   user_agent: "curl/8.0",
   status_code: 200,
+  ip: "203.0.113.42",
 };
 
 type FetchCall = { url: string; init: RequestInit };
