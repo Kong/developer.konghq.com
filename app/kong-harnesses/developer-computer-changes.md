@@ -100,8 +100,8 @@ rows:
   - key: "`hooks`"
     value: |
       For a `subscription` profile, a hook on {{ site.claude_code }} session events adds `x-kong-id-token` with a short-lived access token from the identity provider to `env.ANTHROPIC_CUSTOM_HEADERS`, so the gateway can identify the developer of each request.
-      The hook makes the settings file readable by its owner only, because the header holds a token.
-      `profile activate` itself writes no token.
+      The hook makes the settings file readable by its owner only, because the header contains a token.
+      `profile activate` itself doesn't write a token.
       When the gateway or the profile names a model that can't run WebSearch, a `PostToolUse` hook on WebSearch replaces a result without a search with a statement that no search ran.
 {% endtable %}
 
@@ -135,3 +135,4 @@ In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell 
 
 [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) restores each value that activation replaced, when the key still has the value that activation wrote.
 A value that the developer changed after activation stays as the developer left it.
+Cleanup changes only agent CLI settings, and keeps the installed profiles and the saved sign-ins.
