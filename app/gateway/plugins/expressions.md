@@ -320,14 +320,14 @@ rows:
     description: |
       The groups and teams of the authenticated Principal, including memberships through nested teams. Each entry has an `id` and a `type` (`group` or `team`). Match on the group ID, not the group name.
       This shape applies to expressions that the data plane evaluates, such as plugin conditions and ACL rules. [Token Vault](/kong-identity/token-vault/) credential selectors run in {{site.konnect_short_name}} and use their own fields.
-      `null` if no Principal is authenticated or the Principal has no groups. Only AI Gateway data planes load groups. On other data planes, the value is `null`.
+      `null` if no Principal is authenticated or the Principal has no groups.
       Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
     example: |
       `principal.groups != null && principal.groups.exists(g, g.id == "a1b2c3d4-...")`
   - field: "`principal.type`"
     type: "`string`"
     description: |
-      The kind of the authenticated entity: `principal` or `group`. This is not the Kong Identity principal type (`user` or `agent`).
+      The kind of the authenticated entity, as Kong Identity reports it: `principal`, `group`, or `project`. Agents and virtual keys report `principal`. This is not the Kong Identity principal type (`user` or `agent`).
       `null` if no Principal is authenticated, or if the Principal comes from an older control plane.
       Requires AI Gateway 2.3.0. Not available in {{site.base_gateway}} 3.16 or earlier.
     example: |
