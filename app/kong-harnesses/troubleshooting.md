@@ -45,7 +45,7 @@ Without `--client`, `doctor` checks every agent CLI that the profile lists, with
 `kong-harnesses status` shows the sign-in and the agent CLI settings without the network.
 
 Each line of the report starts with a level, `ok`, `warn` or `fail`, and the name of the check.
-The line under a problem starts with `fix:` and names the next step, often with the command for your profile.
+When `doctor` knows the next step for a problem, the line under it starts with `fix:` and names that step, often with the command for your profile.
 The following part of a report shows a failed `overrides` check:
 
 ```
@@ -55,8 +55,8 @@ The following part of a report shows a failed `overrides` check:
 {:.no-copy-code}
 
 `doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
-When it finds a failure, the first failure in the report sets the exit code.
-When `doctor` prints more than one report, or finds a problem with the kong-harnesses install, it exits with the most serious code: `2` takes precedence over `1`, and `1` over `3`:
+In each report, the kind of the first failed check sets the exit code.
+When `doctor` prints more than one report, or finds a problem with the kong-harnesses install, it exits with the most serious of those codes: `2` takes precedence over `1`, and `1` over `3`:
 
 {% table %}
 columns:
@@ -88,19 +88,24 @@ columns:
   - title: Next step
     key: next
 rows:
+  - check: "`install`"
+    what: |
+      The `install` check runs once, before the reports.
+      On Windows, only administrators can change a kong-harnesses install under `Program Files`.
+    next: Ask your administrator to install kong-harnesses again with its MSI, or to remove write access for every account that isn't an administrator.
   - check: "`profile`"
     what: The profile is installed, and kong-harnesses can read it.
     next: |
       Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get <profile>` to inspect one.
       If your administrator installed the profile for every user, ask your administrator to install it again.
-      On Linux, in a container or a CI job, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
+      If the report says that the session has no per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
-    what: You're signed in to the profile. For a profile that uses a static key, a key is saved.
+    what: You're signed in to the profile. For a profile that uses a static key, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
     next: |
       Run `kong-harnesses login --profile <profile>`.
       For OpenCode and Hermes, run the sign-in command that the `fix:` line names.
       For a CI profile that reads its key from the environment, set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator.
-      On Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
+      If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
       For more about the sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
   - check: "`client`"
     what: kong-harnesses set up the agent CLI for this profile, and the agent CLI settings still contain what kong-harnesses wrote.
@@ -130,33 +135,43 @@ rows:
   - check: "`route`"
     what: The gateway has a route for the requests that the agent CLI sends, and accepts your sign-in on that route. `doctor` sends a request with the JSON body `{}` to find out.
     next: |
-      Ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
-      When the check reports that it didn't check the route, do what the `fix:` line says, for example unset a variable or sign in.
+      When the gateway has no route, or refuses the sign-in on it, ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
+      When the check reports that it didn't check the route, do what the `fix:` line says, when the report has one, for example unset a variable or sign in.
       When the `fix:` line says to send a prompt, send one from the agent CLI to test the route.
   - check: "`catalog`"
-    what: The gateway answers `GET /v1/models` with the list of models that it serves. When the profile lists its own models, the `picker` and `model` checks use those models instead.
+    what: |
+      The gateway answers `GET /v1/models` with the list of models that it serves.
+      When the profile lists its own models, `doctor` skips this check, and the `picker` and `model` checks use the models of the profile.
     next: |
       Sign in again if the gateway refuses the request.
       If the gateway answers `404`, or its list doesn't include a model that `/model` can show, ask the gateway operators to serve the model list.
   - check: "`picker`"
     what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves, or the models that the profile lists.
     next: |
-      Run `kong-harnesses profile activate <profile> --client claude-code` again to update the menu.
+      Do what the `fix:` line says, when the report has one.
+      It's usually `kong-harnesses profile activate <profile> --client claude-code` again, which updates the menu.
       When your organization's managed settings set the menu, ask your administrator to change them.
   - check: "`model`"
-    what: The model that a new {{ site.claude_code }} session starts on, and the model that each role such as a subagent uses, are models that the gateway serves.
+    what: The model that a new {{ site.claude_code }} session starts on, and the model that each role such as a subagent uses, are models that the gateway serves, or that the profile lists.
     next: |
+      Do what the `fix:` line says, when the report has one.
       Pick a gateway model with `/model`, or unset the variable that the `fix:` line names in the shell that starts {{ site.claude_code }}.
       If the profile sets the model, import the profile again from your administrator, then run `kong-harnesses profile activate <profile> --client claude-code` again.
       When your organization's managed settings set the model, ask your administrator to change them.
   - check: "`anthropic`"
-    what: The settings that keep {{ site.claude_code }} on the gateway still contain the values that kong-harnesses wrote.
-    next: Run `kong-harnesses profile activate <profile> --client claude-code` again to restore them.
+    what: |
+      The settings that keep {{ site.claude_code }} on the gateway still contain the values that kong-harnesses wrote.
+      A static Anthropic credential in the `env` block of the settings file is a changed value.
+    next: |
+      Do what the `fix:` line says, usually `kong-harnesses profile activate <profile> --client claude-code` again.
+      When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line runs `kong-harnesses profile cleanup` first.
   - check: "`overrides`"
     what: Neither the shell that starts {{ site.claude_code }} nor the `env` block of its settings file sets a credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, or a switch that moves {{ site.claude_code }} off the gateway, such as `CLAUDE_CODE_USE_BEDROCK`.
     next: Unset the variable in the shell that starts {{ site.claude_code }}, or remove it from the `env` block of the settings file that the `fix:` line names.
   - check: "`gateway-mcp`"
-    what: "{{ site.claude_code }} loads the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them."
+    what: |
+      No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
+      `doctor` doesn't send a request to a server that takes its own OAuth sign-in or a saved key.
     next: |
       Run `kong-harnesses profile activate <profile> --client claude-code` to install the servers.
       For a server that takes a key, run `kong-harnesses login --profile <profile>`, which asks for each missing key.
@@ -165,9 +180,6 @@ rows:
   - check: "`inference`"
     what: "With `--inference` only: one small model request through the route of {{ site.claude_code }} gets a complete answer. The request can cost money."
     next: Do what the `fix:` line says. It names the cause, such as a refused sign-in, a missing route or model, or a rate limit.
-  - check: "`install`"
-    what: On Windows, only administrators can change a kong-harnesses install under `Program Files`.
-    next: Ask your administrator to install kong-harnesses again with its MSI, or to remove write access for every account that isn't an administrator.
 {% endtable %}
 
 ## Undo setup
@@ -191,20 +203,20 @@ Without `--client`, `profile cleanup` works on every supported agent CLI.
 To clean up one agent CLI, add `--client`, for example `--client claude-code`.
 
 `profile cleanup` changes only the values that kong-harnesses still owns.
-If you edited a value after kong-harnesses wrote it, `profile cleanup` keeps your edit and reports the settings as inconsistent.
+If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and its report says so.
 When `profile cleanup` cleans up some agent CLIs and then fails on another, it exits with `4`.
 `profile cleanup` doesn't sign you out, and doesn't delete the profile.
 
-To remove one profile from the computer, sign out, clean up each agent CLI that the profile set up, then delete the profile:
+To remove one profile from the computer, sign out and delete the profile:
 
 ```sh
 kong-harnesses logout --profile <profile>
-kong-harnesses profile cleanup --client <client>
 kong-harnesses profile delete <profile>
 ```
 
-`profile cleanup` without `--client` also removes the settings of other profiles.
-If you already ran it, skip that step.
+While an agent CLI still uses the profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup --client` command for that agent CLI.
+Do that step, then run `profile delete` again.
+`profile cleanup` without `--client` also removes the settings that other profiles wrote in every agent CLI.
 
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
 `profile delete` refuses while you're signed in, or while an agent CLI is still set up for the profile.
