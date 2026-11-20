@@ -84,6 +84,8 @@ cleanup:
         `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
         A value that the build replaced gets your earlier value back, if the value of the build still applies.
         A value that you changed after the build stays as you set it.
+        If you set a value after the build, and your value is the same as the value of the build, `fleet remove` takes it out too, because it can't tell the two apart.
+        `fleet remove` lists each value that it takes out or gives back, so check that list before you deploy the policy.
         Deploy that policy in place of the current one.
         If no other settings are left, `fleet remove` tells you to remove the policy instead.
 
@@ -169,6 +171,7 @@ The server-managed settings then rank above the build, and the build's `apiKeyHe
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
 When the profile has gateway MCP servers, `fleet build` needs this flag.
 When the profile doesn't have gateway MCP servers, use `allowlist`, the default, or `any`.
+If the computers already have a `managed-mcp.json`, that file takes exclusive control of MCP servers, so `allowlist` and `any` don't load the gateway MCP servers.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
@@ -193,12 +196,15 @@ When the profile doesn't have gateway MCP servers, use `allowlist`, the default,
 With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP servers, even after `profile activate`, in these cases:
 
 * The computers already have a `managed-mcp.json`.
-  {{ site.claude_code }} then loads only the servers in that file.
+  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, and not the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
-* Your own managed settings set `strictKnownMarketplaces` without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+* Your own managed settings set `strictKnownMarketplaces`, or its newer name `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
 In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
 If the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
+`exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
+For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist`.
+Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and kong-harnesses tells developers which servers {{ site.claude_code }} doesn't load when a session starts.
 
@@ -223,6 +229,10 @@ Replace each placeholder with the value for your deployment:
   If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, replace `--policy POLICY_FILE` with `--no-policy`.
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
   If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy POLICY_FILE` with `--no-policy`.
+
+By default, a session that Claude Desktop, an IDE extension or an Agent SDK app starts drops the settings that its host app passes.
+To keep those settings, add `--host-settings merge`.
+This replaces a `parentSettingsBehavior` that your own managed settings set.
 
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
@@ -364,7 +374,8 @@ You can't create it again.
 
 ## Install on the managed computers
 
-With your MDM tool, install the following on each managed computer:
+With your MDM tool, first install the following on one test computer for each platform.
+After the checks in [Validate](#validate) pass on each test computer, install them on the other managed computers:
 
 1. {{ site.claude_code }}, at a version that Kong supports.
    `fleet build` doesn't install it.
@@ -399,7 +410,7 @@ On Windows, the copy command that `fleet build` prints gives the files the acces
 
 ## Validate
 
-On a managed computer, sign in to the computer as a developer and start {{ site.claude_code }}:
+On each test computer, sign in to the computer as a developer and start {{ site.claude_code }}:
 
 ```sh
 claude
@@ -413,6 +424,8 @@ In {{ site.claude_code }}, run `/status`.
 The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses:
 
 * `(drop-ins)`: a file build, with only the files in `managed-settings.d`.
+* `(file)`: only your `managed-settings.json`.
+  The build didn't reach the computer, so deploy the files under `root`, or the MDM policy, again.
 * `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
@@ -424,8 +437,8 @@ If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
 With `allowlist` or `any`, the developer must run `profile activate` first.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it, such as a `deniedMcpServers` entry or `strictPluginOnlyCustomization`.
-`doctor` also names the setting that blocks a gateway MCP server.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
+The `doctor` check in the next step also names the setting that blocks a gateway MCP server.
 
 Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 
