@@ -29,7 +29,14 @@ related_resources:
     url: /identity/directories/
 ---
 
-A credential is the actual secret (a token or a key) that the {{site.identity}} [Token Vault](/identity/token-vault/) stores for a [provider](/identity/token-vault/#providers). This page covers how Token Vault encrypts, enrolls, releases, and manages credentials.
+A credential is a secret that grants access to a **third-party service**, such as GitHub or Atlassian. {{site.identity}} [Token Vault](/identity/token-vault/) stores it for a [provider](/identity/token-vault/#providers) and releases it to {site.ai_gateway}}, so a principal (a user, an agent, or an application) can call that service without ever seeing the secret.
+
+Token Vault stores the following credentials:
+
+* **OAuth access and refresh tokens**: Issued by a third-party service after a user approves access. For example, the token that lets an agent open pull requests in a user's GitHub account.
+* **Personal access tokens**: A static token generated in a third-party service. For example, a GitHub personal access token that an admin stores for the whole directory.
+
+This page covers how Token Vault encrypts, enrolls, releases, and manages these credentials.
 
 ## Credential types
 
