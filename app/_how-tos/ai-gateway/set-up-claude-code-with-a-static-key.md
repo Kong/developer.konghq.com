@@ -50,13 +50,13 @@ prereqs:
     - title: Shells on Windows
       position: before
       content: |
-        On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
+        On Windows, run the gateway quickstart, the `export` commands, the API requests and `kongctl` in Windows Subsystem for Linux (WSL).
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
     - title: jq
       icon_url: /assets/icons/code.svg
       content: |
         The request that creates the key uses [jq](https://jqlang.org/) to save the key in a variable.
-        Install jq in the shell where you run the `export` commands.
+        Install jq in the shell where you run the API requests.
         On macOS:
 
         ```sh
@@ -154,6 +154,12 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    ```
    {: data-test-step="block"}
 
+1. Remove an older `CONSUMER_API_KEY` from this shell. If the variable was exported before, the shell keeps exporting it, and the programs that you start from this shell get the new key:
+
+   ```sh
+   unset CONSUMER_API_KEY
+   ```
+
 1. Create an API key for the AI Consumer:
 
    {% capture developer_credential %}
@@ -174,7 +180,7 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
        variable: CONSUMER_API_KEY
    capture:
      - variable: CONSUMER_API_KEY
-       jq: ".api_key"
+       command: "jq -er '.api_key | strings'"
    {% endkonnect_api_request %}
    <!--vale on-->
    {% endcapture %}
@@ -182,6 +188,8 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
 
    {:.info}
    > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide. The command doesn't export the variable, so the programs that you start from this shell don't get the key.
+   >
+   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again.
 
 ## Create the AI Model
 
@@ -247,7 +255,7 @@ ai_gateway_models:
             - claude-sonnet-5-5
 {% endentity_examples %}
 
-{{ site.claude_code }} sends the key in the `Authorization: Bearer` header and in the `x-api-key` header. With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header. When `hide_credentials` is `true`, {{site.ai_gateway}} removes that header before it sends the request to Anthropic, and the AI Model Provider sets `x-api-key` to your Anthropic key. Anthropic doesn't get the developer's key.
+{{ site.claude_code }} sends the key in the `Authorization: Bearer` header and in the `x-api-key` header. With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` and a space in the `Authorization` header. A header value without the `Bearer` scheme is used as the key as it is. The strategy checks `Authorization` first, so it finds the key there. When `hide_credentials` is `true`, {{site.ai_gateway}} removes only that header, and the developer's key is still in `x-api-key`. The AI Model Provider then replaces `x-api-key` with your Anthropic key, so Anthropic doesn't get the developer's key.
 
 [`header_auth_schemes`](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) needs {{site.ai_gateway}} 2.4 or later.
 
@@ -272,9 +280,10 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 > kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
 > ```
 >
-> On Windows, in PowerShell:
+> On Windows, in PowerShell 7:
 >
 > ```powershell
+> [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
 > $json = (kong-harnesses profile get <profile> -o json | Out-String | ConvertFrom-Json).profile | ConvertTo-Json -Depth 100
 > [IO.File]::WriteAllText("$PWD\<profile>.json", $json)
 > ```

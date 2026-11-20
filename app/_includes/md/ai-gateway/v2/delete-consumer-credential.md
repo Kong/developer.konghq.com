@@ -7,7 +7,7 @@ status_code: 200
 method: GET
 capture:
   - variable: CREDENTIAL_ID
-    jq: '.data[] | select(.name == \"developer-key\") | .id'
+    command: "jq -er '.data[] | select(.name == \"developer-key\") | .id'"
 section: cleanup
 {% endkonnect_api_request %}
 <!--vale on-->

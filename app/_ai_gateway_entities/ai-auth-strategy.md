@@ -203,7 +203,7 @@ rows:
     description: "Strip the key from the request before forwarding upstream."
   - option: "`header_auth_schemes` {% new_in 2.4 %}"
     default: "None"
-    description: "Accept a header value only when it starts with one of these schemes, such as `Bearer`, followed by a space. The rest of the value is the key. Applies to headers only. For example, set `config.key_names: [Authorization]` and `config.header_auth_schemes: [Bearer]` to read the key from `Authorization: Bearer <key>`."
+    description: "When a header value starts with one of these schemes, such as `Bearer`, followed by a space, the rest of the value is the key. The scheme match ignores case. A header value without one of these schemes is used as it is. Applies to headers only. For example, set `config.key_names: [Authorization]` and `config.header_auth_schemes: [Bearer]` to read the key from `Authorization: Bearer <key>`."
 {% endtable %}
 
 ### OIDC token authentication
