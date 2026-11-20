@@ -31,6 +31,17 @@ const refererDomain = (referer: string | null) => {
   }
 };
 
+const withoutMarker = (location: string) => {
+  const [beforeHash, ...hash] = location.split("#");
+  const [path, ...query] = beforeHash.split("?");
+  const kept = query
+    .join("?")
+    .split("&")
+    .filter((pair) => pair !== "" && pair.split("=")[0] !== REWRITE_MARKER)
+    .join("&");
+  return `${path}${kept ? `?${kept}` : ""}${hash.length ? `#${hash.join("#")}` : ""}`;
+};
+
 const buildEvent = (
   request: Request,
   context: Context,
@@ -82,6 +93,13 @@ export default async (request: Request, context: Context) => {
     );
   } catch {
     // analytics must never affect the served page
+  }
+
+  const location = response.headers.get("location");
+  if (rewritten && location?.includes(REWRITE_MARKER)) {
+    const redirect = new Response(response.body, response);
+    redirect.headers.set("location", withoutMarker(location));
+    return redirect;
   }
 
   return response;
