@@ -1,6 +1,7 @@
 You need an [Okta developer organization](https://developer.okta.com/signup/) and an admin account in it.
 {{site.kong_harnesses}} signs developers in to an Okta app with the authorization code flow and PKCE.
 The sign-in fails if Okta doesn't issue a refresh token, because {{site.kong_harnesses}} uses it to renew the access token.
+For the settings that every identity provider needs, see [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
 
 Complete the following steps in the Okta Admin Console.
 
@@ -29,7 +30,7 @@ This guide uses the Okta `default` authorization server with the audience `api:/
    {{site.kong_harnesses}} requests these scopes, and Okta issues a refresh token only when the request includes `offline_access` and the app has the **Refresh Token** grant type.
 1. On the **Access Policies** tab, find the first rule that matches the `kong-harnesses` app, your user, the **Authorization Code** grant type and these scopes.
    Okta checks policies in their order on this tab, and rules in their order in each policy.
-1. Check that the access token lifetime of that rule is between 6 minutes and 1 hour, because {{site.kong_harnesses}} refuses other lifetimes by default.
+1. Check that the access token lifetime of that rule is from 7 to 60 minutes, because {{site.kong_harnesses}} refuses other lifetimes by default.
 
 If no rule matches, or the lifetime of the first matching rule is outside this range, add a policy for the app:
 
