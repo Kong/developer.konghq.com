@@ -14,5 +14,3 @@ rows:
     url: "{{ mode.url }}"
 {%- endfor %}
 {% endtable %}
-
-Kong last updated this list on {{ support.updated | date: "%B %-d, %Y" }}.
