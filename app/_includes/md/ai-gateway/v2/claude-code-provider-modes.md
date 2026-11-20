@@ -15,4 +15,4 @@ rows:
 {%- endfor %}
 {% endtable %}
 
-Kong last updated this list on {{ support.checked | date: "%B %-d, %Y" }}.
+Kong last updated this list on {{ support.updated | date: "%B %-d, %Y" }}.
