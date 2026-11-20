@@ -481,6 +481,7 @@ kumactl
 kustomization
 kustomizations
 kustomize
+KWallet
 keystores
 kv
 Lakera

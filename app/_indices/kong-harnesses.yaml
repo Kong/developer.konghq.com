@@ -12,6 +12,7 @@ groups:
           - path: /kong-harnesses/setup/
       - title: Sign In and Out
         items:
+          - path: /kong-harnesses/sign-in/
           - path: /kong-harnesses/login/
           - path: /kong-harnesses/logout/
       - title: Manage Profiles
