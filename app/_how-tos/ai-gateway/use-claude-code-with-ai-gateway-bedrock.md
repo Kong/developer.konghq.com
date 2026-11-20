@@ -12,6 +12,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
   - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
     url: /ai-gateway/identify-ai-consumers-with-kong-identity/
+  - text: Set up {{ site.claude_code }} with kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an AWS Bedrock model
 
@@ -61,6 +63,20 @@ tags:
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} against an AWS Bedrock model?
   a: Create an AI Provider entity to store your AWS credentials, create an AI Policy that strips fields Claude CLI sends that Bedrock rejects, create an AI Model entity with an Anthropic-compatible format that routes to Bedrock through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+
+faqs:
+  - q: How do I set up {{ site.claude_code }} for my developers?
+    a: |
+      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create`, and give developers the profile file or an HTTPS URL to it.
+      The AI Model in this guide accepts the Anthropic format, so keep the default `anthropic` provider in the profile, also when the target runs on Bedrock.
+      Before you give developers the profile, add `"request_shape": {"experimental_betas": false}` to its `clients.claude-code` block, so {{ site.claude_code }} doesn't send the experimental beta fields that Bedrock rejects.
+      Each developer runs `kong-harnesses setup <profile-url>`, which signs them in and writes the gateway address and a credential helper to their own {{ site.claude_code }} settings.
+      For the steps with Okta, see [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
+  - q: Can a repository's settings point {{ site.claude_code }} at the gateway?
+    a: |
+      Not on a first run.
+      A new {{ site.claude_code }} install asks for an Anthropic login method before it uses the `env` values in the repository's `.claude/settings.json`, and it applies most of those values only after the developer trusts the folder.
+      `kong-harnesses setup` writes the gateway settings to the developer's user settings, so {{ site.claude_code }} uses the gateway from the first session.
 
 ---
 

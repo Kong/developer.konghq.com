@@ -8,6 +8,8 @@ related_resources:
     url: /ai-gateway/
   - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
     url: /ai-gateway/identify-ai-consumers-with-kong-identity/
+  - text: Set up {{ site.claude_code }} with kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
@@ -39,6 +41,18 @@ tags:
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
   a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+
+faqs:
+  - q: How do I set up {{ site.claude_code }} for my developers?
+    a: |
+      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create`, and give developers the profile file or an HTTPS URL to it.
+      Each developer runs `kong-harnesses setup <profile-url>`, which signs them in and writes the gateway address and a credential helper to their own {{ site.claude_code }} settings.
+      For the steps with Okta, see [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
+  - q: Can a repository's settings point {{ site.claude_code }} at the gateway?
+    a: |
+      Not on a first run.
+      A new {{ site.claude_code }} install asks for an Anthropic login method before it uses the `env` values in the repository's `.claude/settings.json`, and it applies most of those values only after the developer trusts the folder.
+      `kong-harnesses setup` writes the gateway settings to the developer's user settings, so {{ site.claude_code }} uses the gateway from the first session.
 
 ---
 
