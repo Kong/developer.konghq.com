@@ -45,8 +45,9 @@ tldr:
 faqs:
   - q: How do I set up {{ site.claude_code }} for my developers?
     a: |
-      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create`, and give developers the profile file or an HTTPS URL to it.
-      Each developer runs `kong-harnesses setup <profile-url>`, which signs them in and writes the gateway address and a credential helper to their own {{ site.claude_code }} settings.
+      Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create`.
+      Save the profile as a file with `kong-harnesses profile get <profile> -o json | jq .profile > <profile>.json`, and give developers the file or an HTTPS URL to it.
+      Each developer runs `kong-harnesses setup <profile-url> --client claude-code`, which signs them in and writes the gateway address and a credential helper to their own {{ site.claude_code }} settings.
       For the steps with Okta, see [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
   - q: Can a repository's settings point {{ site.claude_code }} at the gateway?
     a: |
