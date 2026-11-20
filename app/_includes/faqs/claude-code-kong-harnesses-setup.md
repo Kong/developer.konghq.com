@@ -3,7 +3,8 @@
 How do I set up {{ site.claude_code }} for my developers?
 {% elsif include.section == "answer" %}
 
-Protect the AI Model with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create --model {{ include.model }}`.
+Protect the AI Model with an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and create a [kong-harnesses](/kong-harnesses/) profile for the gateway with `kong-harnesses profile create --model {{ include.model }}`.
+At the sign-in question, choose **Sign in through an identity provider**, or leave out `--sign-in` when you pass flags.
 The command asks for the details of your identity provider and gateway, or takes them as flags.
 The setup guide linked below shows these values.
 {%- if include.provider == "bedrock" %}
