@@ -58,6 +58,10 @@ module KongHarnessesChangelog
   # A version as release-please reads one (index.js:59193), with a prerelease and a build
   # part made of the characters that semver allows.
   VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
+  # The tag of a final release, as STABLE_TAG in tools/lib/tool-versions.js, the
+  # versions job and scripts/install-release.sh in Kong/kong-harnesses read it, so the
+  # page and the release data name the same latest release. Change them together.
+  STABLE_TAG = /\Av(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\z/
   # The characters that kramdown's typographic symbols show, with a no-break space in the
   # two forms with a space.
   SYMBOLS = { mdash: '—', ndash: '–', hellip: '…', laquo: '«', raquo: '»', laquo_space: "«\u00a0", raquo_space: "\u00a0»" }.freeze
@@ -114,10 +118,15 @@ module KongHarnessesChangelog
     # and `>>` as dashes, an ellipsis and a quote mark. Kramdown's writer escapes none of
     # them. The table parser of the site does not see an escaped backtick as text, so it
     # can pair it with the backtick of a code span and split a line at a `|` in the code.
+    # The parser reads a `&` before text such as `#8212;` as a character reference, so
+    # a `&` in text is never before one, but the label of a link that went can be.
     def convert_text(el, opts)
       result = super
       return result if opts[:raw_text]
 
+      siblings = @stack.last.children
+      after = siblings.drop(siblings.index { |sibling| sibling.equal?(el) } + 1).take_while { |sibling| sibling.type == :text }.map(&:value).join
+      result = "#{result.delete_suffix('&')}&amp;" if result.end_with?('&') && after.match?(/\A#?[0-9A-Za-z]+;/)
       result.gsub(/\\(.)/m) { ::Regexp.last_match(1) == '`' ? '&#96;' : ::Regexp.last_match(0) }
             .gsub(/[<~]|([->.])(?=\1)|(?<=([->.]))\2/) { |char| "\\#{char}" }
     end
@@ -293,15 +302,32 @@ module KongHarnessesChangelog
     item
   end
 
-  # A release heading as release-please writes it links its version to the compare view
-  # (header1.hbs:1-2). The version stays as text.
-  def without_compare_link(heading, version)
+  # The source text of the typographic symbols that a version can hold.
+  VERSION_SYMBOLS = { ndash: '--', mdash: '---', hellip: '...' }.freeze
+
+  # A release heading shows its version as its tag writes it, not with the dashes that
+  # kramdown makes of `--`. release-please links the version to the compare view
+  # (header1.hbs:1-2), and that link goes.
+  def with_source_version(heading, version)
     link = heading.children.first
     address = link&.attr.to_h['href'].to_s
-    return heading unless link&.type == :a && link.attr.keys == ['href'] && link.options[:ial].nil? && link.options[:source] == "[#{version}](#{address})"
-    return heading unless links_of(address).include?([:compare, version])
+    if link&.type == :a && link.attr.keys == ['href'] && link.options[:ial].nil? && link.options[:source] == "[#{version}](#{address})"
+      heading.children[0, 1] = [Kramdown::Element.new(:text, version)] if links_of(address).include?([:compare, version])
+      return heading
+    end
 
-    heading.children[0, 1] = link.children
+    # A heading with no link, as release-please writes the first release.
+    source = +''
+    taken = heading.children.take_while do |child|
+      piece = child.type == :text ? child.value : VERSION_SYMBOLS[child.value] if %i[text typographic_sym].include?(child.type)
+      next false if piece.nil? || source.length >= version.length
+
+      source << piece
+    end
+    return heading unless source.start_with?(version)
+
+    rest = source.delete_prefix(version)
+    heading.children[0, taken.length] = [Kramdown::Element.new(:text, version), *(Kramdown::Element.new(:text, rest) unless rest.empty?)]
     heading
   end
 
@@ -362,7 +388,7 @@ module KongHarnessesChangelog
 
       raise "The changelog has a link in #{entry}, and the page shows no links. Only the references that release-please writes go. Write the entry without the link at the source."
     when :codespan, :codeblock
-      element.value = without_issue_links(element.value) if element.type == :codespan
+      element.value = without_subject_links(element.value) if element.type == :codespan
       raise 'The changelog has code with a line that starts a block, which the export cannot write back safely.' if element.type == :codespan && code_breaks_paragraph?(element)
       raise "The changelog has a link in the code of #{entry}. Write the code without the link at the source." if types_of(parse(element.value)).intersect?(%i[a img])
       # The writer writes nothing for a code block of only white space.
@@ -382,12 +408,15 @@ module KongHarnessesChangelog
     [element]
   end
 
-  # The issue links that the release-please subject transform writes in code
-  # (index.js:21247), each with the number of its issue as its label.
-  def without_issue_links(code)
-    code.gsub(%r{\[#(\d+)\]\(https://github\.com/#{Regexp.escape(REPO)}/issues/(\d+)\)}) do
+  # The links that the release-please subject transform writes in code, to an issue
+  # (index.js:21247) and to a user (index.js:21259), each with its own number or name as
+  # its label.
+  def without_subject_links(code)
+    code.gsub(%r{\[#(\d+)\]\(https://github\.com/#{Regexp.escape(REPO)}/issues/(\d+)\)|\[@(#{USER})\]\(https://github\.com/(#{USER})\)}) do
       match = Regexp.last_match
-      match[1] == match[2] ? "##{match[1]}" : match[0]
+      if match[1] then match[1] == match[2] ? "##{match[1]}" : match[0]
+      else match[3] == match[4] ? "@#{match[3]}" : match[0]
+      end
     end
   end
 
@@ -551,8 +580,6 @@ module KongHarnessesChangelog
     [[*checked(title, name.inspect), *kept], sources]
   end
 
-  # A final release has no prerelease part. Build metadata does not change that
-  # (semver 2.0.0).
   def prerelease?(version)
     version.match?(/\A\d+\.\d+\.\d+-/)
   end
@@ -564,17 +591,17 @@ module KongHarnessesChangelog
   # Only text of a published release reaches the site. release-please writes a section
   # when the release pull request merges, before the release job publishes it, and a
   # prerelease can be published before its final release, or for a final release that
-  # never comes. So a section stays only when its heading names a published release
-  # (`published`, the versions without the v), and a prerelease stays only once a final
-  # release of the same X.Y.Z is published. The prerelease's section stays after that,
+  # never comes. So a section stays only when its heading names a final release
+  # (`finals`, a STABLE_TAG release that is not a draft and not marked as a prerelease,
+  # without the v), or a prerelease (`published`, any release that is not a draft) once
+  # a final release of the same X.Y.Z is out. The prerelease's section stays after that,
   # because release-please takes the version in its manifest, the prerelease, as the
   # last release, so the final section lists only the commits after it. The export
   # writes each release that it leaves out, and why, to `log`. Text before the first
-  # heading goes. A heading with no version, or no final release heading for the X.Y.Z
-  # of `highest`, the highest published final release, stops the sync, so a changelog
-  # that lost its sections cannot empty the page. So does a changelog with no entries
-  # for users left.
-  def export(markdown, published:, highest:, log: $stderr)
+  # heading goes. A heading with no version, or no heading for `highest`, the highest
+  # final release, stops the sync, so a changelog that lost its sections cannot empty
+  # the page. So does a changelog with no entries for users left.
+  def export(markdown, published:, highest:, finals: published.select { |version| "v#{version}".match?(STABLE_TAG) }, log: $stderr)
     releases = []
     # The lines as kramdown counts them, which also ends a line at a lone CR.
     lines = markdown.scan(/[^\r\n]*(?:\r\n?|\n)|[^\r\n]+\z/)
@@ -598,13 +625,14 @@ module KongHarnessesChangelog
       raw[/\A\[?(#{VERSION})(?=[\]\s(]|\z)/, 1] ||
         raise("The changelog has a release heading with no version: #{raw}")
     end
-    raise "The changelog has no section for #{highest}, the highest published release." unless versions.any? { |version| !prerelease?(version) && core(version) == core(highest) }
+    raise "The changelog has no section for #{highest}, the highest final release." unless finals.include?(highest) && versions.include?(highest)
 
-    finals = published.reject { |version| prerelease?(version) }.map { |version| core(version) }
     root = Kramdown::Element.new(:root, nil, nil, source.options.slice(:encoding))
     original = Kramdown::Element.new(:root, nil, nil, source.options.slice(:encoding))
     releases.zip(versions).each do |release, version|
-      reason = if !published.include?(version) then 'is not published'
+      reason = if finals.include?(version) then nil
+               elsif !published.include?(version) then 'is not published'
+               elsif !prerelease?(version) then 'is not a final release'
                elsif !finals.include?(core(version)) then "is a prerelease, and no final #{core(version)} release is published"
                end
       sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines) }
@@ -613,13 +641,13 @@ module KongHarnessesChangelog
 
       raw_checked(release[:heading], lines, name_of(release[:heading]))
       original.children.concat([copy(release[:heading])], *sections.map(&:last))
-      root.children.concat(checked(without_compare_link(release[:heading], version), name_of(release[:heading])), *sections.map(&:first))
+      root.children.concat(checked(with_source_version(release[:heading], version), name_of(release[:heading])), *sections.map(&:first))
     end
     raise 'The changelog has no entries for users in its published releases.' if root.children.empty?
 
     output, = Writer.convert(root, options)
     output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
-    written(output, root, original)
+    written(output, root, original, lines)
   end
 
   def types_of(element)
@@ -634,8 +662,17 @@ module KongHarnessesChangelog
 
   BLOCKS = %w[p li ul ol h1 h2 h3 h4 h5 h6 blockquote pre hr br].freeze
 
+  # Kramdown's HTML converter as the sync job loads it. The site and its specs also load
+  # app/_plugins/kramdown_external_links.rb, which gives a link `target` and `rel` and
+  # writes them into the tree.
+  class Html < Kramdown::Converter::Html
+    def convert_a(element, indent)
+      respond_to?(:orig_convert_a, true) ? orig_convert_a(element, indent) : super
+    end
+  end
+
   def html(tree)
-    Nokogiri::HTML5.fragment(Kramdown::Converter::Html.convert(tree, options).first)
+    Nokogiri::HTML5.fragment(Html.convert(tree, options).first)
   end
 
   # The page as a reader sees it: each element with its attributes, and its text with
@@ -668,6 +705,11 @@ module KongHarnessesChangelog
   # at the end of a `*` list entry taken out. It reads them from the HTML, not from the
   # tree of the export.
   def reading(fragment)
+    # A release heading shows its version as its tag writes it, so `--` in the version
+    # reads the same as the dash that kramdown makes of it in the source.
+    fragment.css('h2').each do |heading|
+      heading.content = heading.text.sub(/\A[0-9A-Za-z.+\-–—…]+/) { |version| version.gsub('—', '---').gsub('–', '--').gsub('…', '...') }
+    end
     section = nil
     fragment.children.each do |node|
       section = node.text.strip if node.name == 'h3'
@@ -678,7 +720,7 @@ module KongHarnessesChangelog
     text = +''
     add = ->(value) { value.each_char { |char| text << (char.match?(/\s/) ? ' ' : char) unless char.match?(/\s/) && (text.empty? || text.end_with?(' ')) } }
     walk = lambda do |node|
-      next add.call(code_without_issue_links(node.text)) if node.text? && node.parent&.name == 'code' && node.parent.parent&.name != 'pre'
+      next add.call(code_without_subject_links(node.text)) if node.text? && node.parent&.name == 'code' && node.parent.parent&.name != 'pre'
       next add.call(node.text) if node.text?
       next add.call(node['alt'].to_s) if node.name == 'img'
 
@@ -718,18 +760,20 @@ module KongHarnessesChangelog
     end
   end
 
-  # The text of a code span with each `[#N](…/issues/N)` of the repository as `#N`, read
-  # with its own string compares, apart from `without_issue_links`.
-  def code_without_issue_links(code)
-    prefix = "](https://github.com/#{REPO}/issues/"
-    code.split('[#', -1).each_with_index.map do |part, index|
-      next part if index.zero?
+  # The text of a code span with each `[#N](…/issues/N)` of the repository as `#N` and
+  # each `[@name](https://github.com/name)` as `@name`, read with its own string
+  # compares, apart from `without_subject_links`.
+  def code_without_subject_links(code)
+    [['[#', "](https://github.com/#{REPO}/issues/", /\A\d+\z/], ['[@', '](https://github.com/', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, prefix, label)|
+      text.split(open, -1).each_with_index.map do |part, index|
+        next part if index.zero?
 
-      number, rest = part.split(prefix, 2)
-      next "[##{part}" unless rest && number.match?(/\A\d+\z/) && rest.start_with?("#{number})")
+        name, rest = part.split(prefix, 2)
+        next "#{open}#{part}" unless rest && name.match?(label) && rest.start_with?("#{name})")
 
-      "##{number}#{rest.delete_prefix("#{number})")}"
-    end.join
+        "#{open[1]}#{name}#{rest.delete_prefix("#{name})")}"
+      end.join
+    end
   end
 
   # The kind of a reference at the end of an entry, read from the HTML with its own
@@ -737,9 +781,8 @@ module KongHarnessesChangelog
   # in one of them does not pass the other.
   def rendered_kind(link, address)
     site = 'https://github.com/'
-    # The site adds `target` and `rel` to a link. A title or an attribute list is no
-    # reference.
-    return unless address.start_with?(site) && (link.attributes.keys - %w[href target rel]).empty?
+    # A title or an attribute list is no reference.
+    return unless address.start_with?(site) && link.attributes.keys == ['href']
 
     owner, repository, kind, id, *rest = address.delete_prefix(site).split('/', -1)
     return unless rest.empty? && [owner, repository].all? { |part| part.to_s.match?(/\A[\w.-]+\z/) && !part.match?(/\A\.\.?\z/) }
@@ -761,17 +804,13 @@ module KongHarnessesChangelog
   # tree unless a reader sees the same text in it as in the source, with only the
   # references at the end of an entry taken out, which it reads from a second rendering
   # of the source. It also refuses a code block that lost its language.
-  def written(output, tree, source = nil)
+  def written(output, tree, source = nil, lines = [])
     reread, = Kramdown::Parser::GFM.parse(output, options)
     raise 'The export would write a link back, so it refuses the changelog.' if types_of(reread).intersect?(%i[a img])
     raise 'The export would change what a reader sees, so it refuses the changelog.' unless page(html(reread)) == page(html(tree))
     return output unless source
 
-    # The HTML parser reads a character reference in a link, which release-please never
-    # writes, so Check B reads the HTML that kramdown writes for each link.
-    if Kramdown::Converter::Html.convert(source, options).first.scan(%r{<a\b.*?</a>}m).any? { |link| link.include?('&') }
-      raise 'The changelog has a character reference in a link, so the export refuses it.'
-    end
+    raise 'The changelog has a link that release-please does not write so, and the export refuses it.' if unwritten_link?(source, lines)
 
     before = reading(html(source))
     after = reading(html(tree))
@@ -782,6 +821,28 @@ module KongHarnessesChangelog
     raise 'The export would change the language of a code block, so it refuses the changelog.' unless code_languages(html(source)).map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') } == code_languages(html(tree))
 
     output
+  end
+
+  # A reference link, a link in angle brackets, an escaped label or a character
+  # reference in a label or an address gives the same HTML as `[label](address)`, the form that
+  # release-please writes. So each link of an element must have that form in the source
+  # lines of the element, apart from the same text in code. `lines` are the lines of the
+  # source, with their line ends.
+  def unwritten_link?(source, lines)
+    source.children.flat_map { |element| %i[ul ol].include?(element.type) ? element.children.map { |item| [item, element.type] } : [[element]] }.any? do |element, list|
+      from = element.options[:location] or next false
+      raw = lines[(from - 1)...element.options.fetch(:last_line)].join
+      root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
+      root.children << (list ? Kramdown::Element.new(list).tap { |parent| parent.children << element } : element)
+      fragment = html(root)
+      code = fragment.css('code').map(&:text)
+      fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
+        # A label that release-please writes has no `\` or `&`.
+        form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)/
+        written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
+        written.call(raw) - code.sum(&written) < links.length
+      end
+    end
   end
 
   def code_languages(fragment)
@@ -803,14 +864,15 @@ module KongHarnessesChangelog
     end
     # The highest final release, not the newest or the one marked latest: an older
     # release can be marked as the latest by hand, and a backport published after a newer
-    # release must not replace it. A final release can have build metadata.
-    highest = releases.reject { |release| release['draft'] || release['prerelease'] }
-                      .map { |release| release['tag_name'] }
-                      .grep(/\Av\d+\.\d+\.\d+(?:\+[0-9A-Za-z.-]+)?\z/)
-                      .max_by { |tag| Gem::Version.new(core(tag.delete_prefix('v'))) }
-    raise "#{REPO} has no published final release." unless highest
+    # release must not replace it.
+    finals = releases.reject { |release| release['draft'] || release['prerelease'] }
+                     .map { |release| release['tag_name'] }
+                     .grep(STABLE_TAG)
+                     .map { |tag| tag.delete_prefix('v') }
+    highest = finals.max_by { |version| Gem::Version.new(version) }
+    raise "#{REPO} has no published vX.Y.Z release." unless highest
 
-    # Every published release, release candidates too, but no draft.
+    # Every published release, prereleases too, but no draft.
     published = releases.reject { |release| release['draft'] }
                         .map { |release| release['tag_name'] }
                         .grep(/\Av#{VERSION}\z/)
@@ -819,7 +881,7 @@ module KongHarnessesChangelog
     status, changelog = get.call("/repos/#{REPO}/contents/CHANGELOG.md?ref=main", 'application/vnd.github.raw')
     raise "GitHub API request for #{REPO} CHANGELOG.md on main failed (#{status})." unless status == 200
 
-    [highest, export(changelog.force_encoding('UTF-8'), published: published, highest: highest.delete_prefix('v'))]
+    ["v#{highest}", export(changelog.force_encoding('UTF-8'), published: published, finals: finals, highest: highest)]
   end
 
   def github(token)

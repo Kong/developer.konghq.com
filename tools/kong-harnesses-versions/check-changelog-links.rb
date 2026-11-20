@@ -90,7 +90,8 @@ module KongHarnessesChangelogLinks
   # Undoes what a browser undoes before it follows an address: character references,
   # percent-encoding (until nothing changes, so a double encoding cannot hide a name),
   # full-width forms, the dots that host names accept in place of ".", backslashes,
-  # tabs and line breaks, the characters that show nothing by default and letter case.
+  # tabs and line breaks, the characters that show nothing by default, the format
+  # characters, such as U+FFF9 or U+13430, and letter case.
   def normalize(text)
     value = text
     loop do
@@ -100,7 +101,7 @@ module KongHarnessesChangelogLinks
       value = decoded
     end
     value.unicode_normalize(:nfkc).tr("。．｡", '...').tr('\\', '/')
-         .delete("\t\n\r").gsub(/\p{Default_Ignorable_Code_Point}/, '').downcase
+         .delete("\t\n\r").gsub(/[\p{Default_Ignorable_Code_Point}\p{Cf}]/, '').downcase
   end
 
   # GFM links a web address with `//` or `www.`, a `mailto:` or `xmpp:` address and a mail
@@ -112,18 +113,21 @@ module KongHarnessesChangelogLinks
     normalize(text).match?(ADDRESS)
   end
 
-  # Every control character but a tab and a line break, the characters that change the
-  # order of text, as in a Trojan Source attack, and the noncharacters, as the text or an
-  # attribute holds them after the HTML parser read its character references. A zero
-  # width space changes no order, and normalize takes it out before the address check.
-  HIDDEN = /[[\p{Cc}&&[^\t\n]]\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069\p{Noncharacter_Code_Point}]/
-  # A tag character shows nothing outside the flag of a region, which is a black flag,
-  # tag characters and a cancel tag.
+  # Every control character but a tab and a line break, every format character, such as
+  # the characters that change the order of text, as in a Trojan Source attack, and the
+  # noncharacters, as the text or an attribute holds them after the HTML parser read its
+  # character references. A soft hyphen, the zero width characters, the word joiner and
+  # U+FEFF change no order and show at most a hyphen, and normalize takes them out
+  # before the address check. Tag characters have their own rule.
+  HIDDEN = /[[\p{Cc}&&[^\t\n]][\p{Cf}&&[^\u00ad\u200b-\u200d\u2060\ufeff\u{e0000}-\u{e007f}]]\p{Noncharacter_Code_Point}]/
+  # A tag character shows nothing outside the flag of a subdivision. Unicode recommends
+  # only the flags of England, Scotland and Wales, each a black flag, the tag characters
+  # of its code and a cancel tag, so any other run of tag characters is hidden text.
   TAG = /[\u{e0000}-\u{e007f}]/
-  FLAG = /\u{1f3f4}[\u{e0020}-\u{e007e}]+\u{e007f}/
+  FLAGS = Regexp.union(%w[gbeng gbsct gbwls].map { |code| "\u{1f3f4}#{code.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}" })
 
   def hidden_text?(text)
-    text.match?(HIDDEN) || text.gsub(FLAG, '').match?(TAG)
+    text.match?(HIDDEN) || text.gsub(FLAGS, '').match?(TAG)
   end
 
   def hidden?(fragment)
