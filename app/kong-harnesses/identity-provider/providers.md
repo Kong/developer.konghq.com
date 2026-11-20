@@ -38,15 +38,15 @@ They come from the documentation of each identity provider, and they aren't test
 
 * Issuer: Use `https://YOUR_AUTH0_DOMAIN/`, with the trailing slash.
 * Client: Create a **Native** application, which Auth0 registers as a public application with the token endpoint authentication method **None**, as [Confidential and Public Applications](https://auth0.com/docs/get-started/applications/confidential-and-public-applications) describes.
-  The discovery document of Auth0 lists the `S256` and `plain` PKCE methods, and {{site.kong_harnesses}} always sends `S256`.
 * Consent: Auth0 can show a confirmation prompt for a loopback callback, such as `localhost` or `127.0.0.1`, even when **Allow Skipping User Consent** is on in the API.
+  It shows the prompt only when no other screen, such as MFA, came first, as [Measures Against Application Impersonation](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation) describes.
 * Offline access: Turn on **Allow Offline Access** in the API of the gateway.
   To use rotating refresh tokens, turn on **Allow Refresh Token Rotation** under **Refresh Token Rotation** in the settings of the native application.
   Keep **Rotation Overlap Period** at 0, because Auth0 doesn't detect the reuse of a refresh token during that period, as [Configure Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/configure-refresh-token-rotation) describes.
 * Audience: Register the gateway as an API, with an identifier that is an absolute URI, such as `https://gateway.example.com/api`.
   Set `--audience` to the identifier of the API, and set `--audience-parameter audience`.
 * Access token lifetime: Auth0 issues access tokens for 24 hours by default.
-  Set `--max-token-lifetime-seconds 86400`, or reduce the token lifetime of the API to at most 3600 seconds.
+  Set `--max-token-lifetime-seconds 86400`, or set the token lifetime of the API from 365 to 3600 seconds.
 
 ## Keycloak
 
@@ -71,9 +71,10 @@ They come from the documentation of each identity provider, and they aren't test
 * Issuer: Use the issuer of your tenant, `https://login.microsoftonline.com/TENANT_ID/v2.0`, not `common`, `organizations` or `consumers`.
 * Client: Under **Authentication**, set **Allow public client flows** to **Yes**, and don't add a client secret, as [Configure desktop apps that call web APIs](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-configuration) describes.
   The discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
-  Entra ID accepts the `plain` and `S256` PKCE methods, as [the authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow) describes, and {{site.kong_harnesses}} always sends `S256`.
+  Entra ID also accepts the `plain` PKCE method, as [the authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow) describes.
 * Callback: Register the callback under **Mobile and desktop applications**.
   Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
+  So register one `localhost` callback for each path, not one for each port, because Entra ID picks one of several that differ only by port, as [localhost exceptions](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url#localhost-exceptions) describes.
   The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
   To register a `127.0.0.1` callback, add it to `publicClient.redirectUris` in the [application manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest#publicclient-attribute), keep every redirect URI that is already there, and include the port that the profile uses:
 
@@ -84,6 +85,8 @@ They come from the documentation of each identity provider, and they aren't test
     ]
   }
   ```
+
+  The older [Azure AD Graph format](https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest) of the manifest names this attribute `replyUrlsWithType`.
 
 * Audience: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
   Give the client the delegated permission of the gateway API, and grant admin consent if the tenant or the API scope needs it.
@@ -104,6 +107,8 @@ They come from the documentation of each identity provider, and they aren't test
   Select **Disallow the Plain PKCE Code Challenge Method** in the [authorization server settings](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/help_authorizationserversettingstasklet_oauthauthorizationserversettingsstate.html).
   The discovery document can leave out `none` in `token_endpoint_auth_methods_supported`, as in the example of the [OpenID Provider configuration](https://docs.pingidentity.com/pingfederate/13.1/developers_reference_guide/pf_openid_provider_config_endpoint.html).
   If it does, add `none` to the discovery template, or test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
+* ID token: Configure an OpenID Connect policy in **Applications > OAuth > OpenID Connect Policy Management**, as the prerequisites of [Create an OAuth or OpenID Connect application in PingFederate](https://docs.pingidentity.com/solution-guides/customer_use_cases/htg_oidc_app_setup_pf.html) list.
+  In the **Policy** list of the client, select that policy, or keep the default policy if it applies.
 * Audience: Keep `--audience-parameter resource`, and create a JWT access token management instance for the gateway.
   Sign its access tokens with an asymmetric key, and set its **Type Header Value** to `at+jwt`.
   Add the `--audience` value to its **Resource URIs**, and set its **Audience Claim Value** to the `--audience` value.

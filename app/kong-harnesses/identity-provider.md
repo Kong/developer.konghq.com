@@ -32,6 +32,8 @@ related_resources:
     url: /ai-gateway/entities/ai-auth-strategy/
   - text: Identity provider settings for kong-harnesses
     url: /kong-harnesses/identity-provider/providers/
+  - text: Identity provider checks in kong-harnesses
+    url: /kong-harnesses/identity-provider/checks/
 ---
 
 {{site.kong_harnesses}} signs a developer in to your OpenID Connect (OIDC) identity provider in the browser, with the authorization code flow and PKCE.
@@ -78,7 +80,7 @@ rows:
       A client that requires DPoP or another token type fails.
     flag: "None"
   - setting: PKCE
-    value: "Required, with the `S256` method."
+    value: "Required, with the `S256` method, which {{site.kong_harnesses}} always sends."
     flag: "None"
   - setting: ID token signature
     value: |
@@ -170,8 +172,8 @@ Set `config.audience_required` to a list that contains the gateway audience, as 
 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
-The value must be an absolute URI, such as `api://default`.
-The `aud` claim can be a different value.
+The value must be an absolute URI, such as `api://default`, without user information or a fragment.
+The `aud` claim of the access token can differ from the `--audience` value.
 
 Set `--audience-parameter` to match how your identity provider reads the audience from the sign-in request:
 
@@ -206,25 +208,24 @@ Before you give the profile to developers, check that the gateway accepts access
 ## Discovery document
 
 {{site.kong_harnesses}} reads the OIDC discovery document of the identity provider when you create the profile.
-The issuer URL must be a canonical `https` URL without a query, with the same rules as the endpoint URLs in the following list, and match the `issuer` value in the discovery document character by character, including a trailing slash.
+The issuer URL must match the `issuer` value in the discovery document character by character, including a trailing slash.
+For the URL, response and token checks, see [Identity provider checks](/kong-harnesses/identity-provider/checks/).
 
 [`profile create`](/kong-harnesses/profile/create/) refuses a discovery document that doesn't meet these rules:
 
 * The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
   `grant_types_supported`, `token_endpoint_auth_methods_supported` and `code_challenge_methods_supported` follow the same rule when the document lists them.
-* A canonical `https` URL in `authorization_endpoint`, `token_endpoint` and `jwks_uri`, and also in `revocation_endpoint` when the document lists it.
-  A canonical URL has at most 2,048 bytes of visible ASCII characters without `\`, and a lowercase host.
-  It doesn't have the port `443`, a port with a zero at the start, user information, a fragment or a `.` or `..` path segment.
-  Its percent encoding uses uppercase hexadecimal digits, and it doesn't encode a letter, a digit, `-`, `.`, `_`, `~`, `\` or a control character.
-* No parameter that {{site.kong_harnesses}} sets in the query of `authorization_endpoint`: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`.
-* The `code` response type in `response_types_supported`.
-* At least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512` in `id_token_signing_alg_values_supported`.
+* The issuer, `authorization_endpoint`, `token_endpoint` and `jwks_uri`, and also `revocation_endpoint` when the document lists it, are canonical `https` URLs.
+  The issuer can't have a query, and the query of `authorization_endpoint` can't have a parameter that {{site.kong_harnesses}} sets.
+  See [URLs](/kong-harnesses/identity-provider/checks/#urls).
+* `response_types_supported` lists the `code` response type.
+* `id_token_signing_alg_values_supported` lists at least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`.
   Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists.
-* When the discovery document lists `authorization_response_iss_parameter_supported`, it must be `true` or `false`.
-* When the discovery document lists one of these fields, the field must have the value that {{site.kong_harnesses}} needs:
-  * The `S256` PKCE method in `code_challenge_methods_supported`.
-  * The `authorization_code` and `refresh_token` grant types in `grant_types_supported`.
-  * The `none` method, for a public client, in `token_endpoint_auth_methods_supported`.
+* When the discovery document lists `authorization_response_iss_parameter_supported`, it is `true` or `false`.
+* When the discovery document lists one of these fields, the field has the value that {{site.kong_harnesses}} needs:
+  * `code_challenge_methods_supported` lists the `S256` PKCE method.
+  * `grant_types_supported` lists the `authorization_code` and `refresh_token` grant types.
+  * `token_endpoint_auth_methods_supported` lists the `none` method, for a public client.
 
 {{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
 For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
@@ -232,7 +233,6 @@ For example, without `code_challenge_methods_supported`, check that the token en
 Some identity providers omit `none` from the advertised methods for public clients.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, create the production profile with the flag, which skips only the check for `none`.
-Developers who already signed in must then run [`kong-harnesses login`](/kong-harnesses/login/) again.
 
 Each sign-in in the browser runs the same checks again.
 The sign-in also fails when an endpoint that `profile create` saved in the profile differs from the current discovery document.
@@ -248,7 +248,6 @@ If the identity provider sets the lifetime in whole minutes, use at least 7 minu
 
 If your identity provider issues longer access tokens, find the longest access token lifetime in its policy, and set `--max-token-lifetime-seconds` to that value, from 365 to 86400 seconds.
 If the policy allows more than 86400 seconds, reduce it to 86400 seconds.
-After a change to this value, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
 
 ## Create the profile
 
@@ -265,3 +264,5 @@ kong-harnesses profile create \
 ```
 
 Add `--redirect-uri`, `--scope`, `--audience-parameter`, `--public-client-evidence` or `--max-token-lifetime-seconds` when your identity provider needs them.
+
+If you create a profile again with a different issuer, endpoint, client ID, callback, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
