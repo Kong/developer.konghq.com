@@ -205,7 +205,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
 1. In the **Install behavior** section, select **System**.
 1. Click **Next**.
-1. On the **Requirements** page, in the **Check operating system architecture** section, select **Yes. Specify the systems the app can be installed on**.
+1. On the **Requirements** page, in the **Check operating system architecture** section, select **Yes. Specify the systems the app can be installed on.**
 1. Select the **Install on x64 system** checkbox for the `_windows_amd64.msi` installer, or the **Install on ARM64 system** checkbox for the `_windows_arm64.msi` installer. Make sure that no other architecture checkbox is selected, because the two installers replace each other.
 1. From the **Minimum operating system** dropdown menu, select the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
 1. Click **Next**.
@@ -219,7 +219,7 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
    1. Click **Add**.
    1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
    1. Click **Select**.
-   1. Set **Uninstall previous version** to **No**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
+   1. Disable **Uninstall previous version**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
 1. Click **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
 1. Select the groups of devices or users that need kong-harnesses. A new app doesn't copy the assignments of the previous app, so select the same groups for each release.
