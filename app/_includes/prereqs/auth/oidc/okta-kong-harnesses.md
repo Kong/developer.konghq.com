@@ -30,7 +30,7 @@ This guide uses the Okta `default` authorization server with the audience `api:/
    {{site.kong_harnesses}} requests these scopes, and Okta issues a refresh token only when the request includes `offline_access` and the app has the **Refresh Token** grant type.
 1. On the **Access Policies** tab, find the first rule that matches the `kong-harnesses` app, your user, the **Authorization Code** grant type and these scopes.
    Okta checks policies in their order on this tab, and rules in their order in each policy.
-1. Check that the access token lifetime of that rule is between 6 minutes and 1 hour, because {{site.kong_harnesses}} refuses other lifetimes by default.
+1. Check that the access token lifetime of that rule is more than 6 minutes and at most 1 hour, because {{site.kong_harnesses}} refuses other lifetimes by default.
 
 If no rule matches, or the lifetime of the first matching rule is outside this range, add a policy for the app:
 
