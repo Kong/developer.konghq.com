@@ -137,6 +137,7 @@ This is a file build.
 {{ site.claude_code }} merges that file over your own `managed-settings.json`.
 The keys that the build doesn't set stay as your file sets them, lists combine, and a single value of the build replaces your value.
 A value in your file that the build doesn't set, such as `forceLoginMethod`, or a list entry, such as one in `allowedProviders`, can still send {{ site.claude_code }} around the gateway.
+So `fleet build` refuses such a value in the `managed-settings.json` that you pass with `--policy`, but it doesn't check your other files in `managed-settings.d`.
 The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in your `managed-settings.json`.
 A file build needs `--policy` or `--no-policy`.
 If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
@@ -150,11 +151,11 @@ A file whose name sorts after `kong-harnesses.json` in alphabetical order must n
 A file whose name sorts before `kong-harnesses.json` loses each value that the build sets, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
 No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
-Also make sure that no file adds an `allowedProviders` entry, because lists combine from every file.
+Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod` either, because the build doesn't set it, so a value of it in any file applies.
 
 By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
-So those computers need an MDM build, because the credential helper and the hooks of a file build don't apply there.
+The credential helper and the hooks of a file build don't apply there.
 {{ site.claude_code }} still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
@@ -169,6 +170,7 @@ On Windows, the policy is a JSON file with exactly the text of the `Settings` re
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies the file and the MDM policy together.
 Then also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
 A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies each key that the MDM policy leaves unset, such as `model`.
+A [restriction allowlist](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior), such as `allowedProviders`, still comes whole from the highest source that sets one, so there the list of the build applies.
 Remove each value that conflicts with the build, and each list entry or key that you don't want on the computers.
 Login keys, such as `forceLoginMethod`, still come only from the highest MDM policy or file with a policy key.
 Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
@@ -222,7 +224,8 @@ For a value that only the computers have, such as a `managed-mcp.json`, check th
 In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
 If the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
 `exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
-For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`.
+For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`, so that {{ site.claude_code }} on Windows loads the gateway MCP servers.
+{{ site.claude_code }} in WSL doesn't load them in any mode.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and when a session starts, kong-harnesses names each server that the developer added and that {{ site.claude_code }} doesn't load.
@@ -265,6 +268,7 @@ If your `--policy` sets `wslInheritsWindowsSettings` to `true`, `fleet build` re
 This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 If interop is off, the credential helper tells the developer to turn it on.
 This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
+With `allowlist` or `any`, {{ site.claude_code }} in WSL doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the {{ site.claude_code }} settings in the developer's Windows home folder.
 With this option, `fleet build` also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
 The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
@@ -336,7 +340,7 @@ kong-harnesses fleet build --profile work --platform windows --delivery mdm --ex
 `fleet build` writes the files that each computer needs under `root` in the output folder, at the path that each file takes on the computer.
 An MDM build also writes the policy with your keys and its own settings under `mdm` in the output folder.
 On macOS, the policy is `com.anthropic.claudecode.plist`, for a Custom Settings payload.
-On Windows, the policy is `Settings.json`, with the line that goes in the `Settings` registry value.
+On Windows, the policy is `Settings.json`, which holds the whole settings object on one line, the text for the `Settings` registry value.
 `fleet build` prints what the settings hold and how to install them.
 
 ## Check what the build holds
@@ -368,7 +372,9 @@ rows:
     servers: "`C:\\Program Files\\ClaudeCode\\managed-mcp.json`"
 {% endtable %}
 
-The managed settings, in the file or in the MDM policy, hold what `kong-harnesses profile activate` writes for one developer, for every account on the computer:
+The managed settings, in the file or in the MDM policy, hold what `kong-harnesses profile activate` writes for one developer, for every account on the computer.
+With `allowlist` or `any`, the gateway MCP servers are the exception, because each developer adds them with `profile activate`.
+The managed settings hold:
 
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
   The settings don't hold a credential.
@@ -445,7 +451,7 @@ If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on t
 
 Check the build on each test computer before the first prompt, so that you know that the build is in effect before a prompt goes to a model.
 The checks themselves, such as `doctor`, can still send requests to the gateway, but none of them sends a prompt.
-For a Windows build with `--wsl inherit`, also do these checks in {{ site.claude_code }} in each WSL distribution that developers use, because a check on Windows doesn't test Windows interop or the CA in the distribution.
+For a Windows build with `--wsl inherit`, do the checks on Windows first, and then the WSL checks at the end of this section.
 
 Sign in to the test computer as a developer.
 If you built with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers, first add those servers as the developer:
@@ -483,10 +489,7 @@ The labels:
   For an MDM build, this label means that the MDM policy didn't reach the computer, so read the `Skipped sources` line.
 * `(file)`: only your `managed-settings.json`.
   The build didn't reach the computer.
-  For a file build, check that the drop-in is at the path in [Check what the build holds](#check-what-the-build-holds).
-  For an MDM build, read the `Skipped sources` line, and look at the MDM policy on the computer.
-  The policy must hold the settings of the build, not only control keys such as `managedSourcesBehavior`, because {{ site.claude_code }} skips a policy without a policy key.
-  Then deploy the build again.
+  Do the same checks as for a missing `Enterprise managed settings` line, and for an MDM build, also read the `Skipped sources` line.
 * `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
   For a file build, this label means that an MDM policy ranks above the drop-in, and {{ site.claude_code }} ignores most keys of the drop-in.
@@ -514,6 +517,17 @@ Sign in with the developer's identity provider account.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in the MDM policy that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
+
+For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
+A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
+Start `claude` in the distribution, and run `/status` before you send a prompt.
+Make sure that the `Setting sources` line shows `Enterprise managed settings`.
+If it doesn't, make sure that you built with `--wsl inherit`, and deploy the build again.
+Then send a short prompt, such as `Say hello`.
+The credential helper runs kong-harnesses on Windows through interop, so the session uses the developer's Windows sign-in.
+If interop is off, the credential helper tells the developer to turn it on.
+A certificate error means that the distribution doesn't trust the CA of the gateway certificate.
+{{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
 Do these checks before you install on the other managed computers.
 
