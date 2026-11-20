@@ -51,7 +51,7 @@ Access management features define:
 * Which limits apply to them.
 * How your organization is structured.
 
-Callers are either [users](#users) or [agents](#agents). You can apply rules to each caller individually, or in bulk using [groups](#groups).
+Callers are [users](#users) or [agents](#agents). A [group](#groups) can hold a [virtual key](#virtual-keys). You can apply rules to each caller individually, or in bulk using groups.
 
 ## Users
 
@@ -240,7 +240,7 @@ For example, an organization with one Anthropic API key can generate a virtual k
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder, a user or an [agent](#agents). The spend limits set on a user apply to that user's traffic.
+* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder, a user, an [agent](#agents), or a [group](#groups). The spend limits set on a user apply to that user's traffic.
 
 The gateway treats whoever holds the key as the caller.
 
