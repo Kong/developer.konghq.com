@@ -251,7 +251,7 @@ ai_gateway_models:
 
 {{ site.claude_code }} sends the key in the `Authorization: Bearer` header and in the `x-api-key` header. With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header. When `hide_credentials` is `true`, {{site.ai_gateway}} removes that header before it sends the request to Anthropic, and the AI Model Provider sets `x-api-key` to your Anthropic key. Anthropic doesn't get the developer's key.
 
-The AI Auth Strategy schema doesn't list `header_auth_schemes`. The strategy passes extra `config` properties to the [`key-auth` plugin](/plugins/key-auth/reference/), and the plugin reads `header_auth_schemes` in {{site.ai_gateway}} 2.4 and later.
+[`header_auth_schemes`](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) needs {{site.ai_gateway}} 2.4 or later.
 
 ## Create the kong-harnesses profile
 

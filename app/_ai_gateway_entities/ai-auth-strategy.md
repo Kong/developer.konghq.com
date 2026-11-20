@@ -201,6 +201,9 @@ rows:
   - option: "`hide_credentials`"
     default: "`true`"
     description: "Strip the key from the request before forwarding upstream."
+  - option: "`header_auth_schemes` {% new_in 2.4 %}"
+    default: "None"
+    description: "Accept a header value only when it starts with one of these schemes, such as `Bearer`, followed by a space. The rest of the value is the key. Applies to headers only. For example, set `config.key_names: [Authorization]` and `config.header_auth_schemes: [Bearer]` to read the key from `Authorization: Bearer <key>`."
 {% endtable %}
 
 ### OIDC token authentication
