@@ -710,6 +710,7 @@ Rekor
 Reloader
 remediation
 remediations
+reparse
 repo
 repos
 reportingComponent

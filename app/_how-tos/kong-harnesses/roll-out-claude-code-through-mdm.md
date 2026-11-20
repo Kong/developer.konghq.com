@@ -97,7 +97,8 @@ cleanup:
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
-Developers don't install, import or edit anything, unless you [leave the gateway MCP servers to each developer](#choose-the-mcp-servers).
+Developers don't install, import or edit anything, unless you build with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers.
+Then each developer runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one managed computer.
@@ -105,7 +106,7 @@ In this guide, you choose how the settings reach the computers and which MCP ser
 ## Sign in on your own computer
 
 When the Claude provider of the profile is the Anthropic API, `fleet build` reads the model list of the gateway with your own sign-in, and refuses to build when it can't read the list.
-For another Claude provider, such as Amazon Bedrock, it uses the models of the profile.
+For another Claude provider, such as Amazon Bedrock, it uses only the models of the profile, and doesn't read the model list of the gateway.
 Sign in to the profile first with [`kong-harnesses login`](/kong-harnesses/login/):
 
 ```sh
@@ -230,7 +231,7 @@ Replace each placeholder with the value for your deployment:
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
   If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy POLICY_FILE` with `--no-policy`.
 
-By default, a session that Claude Desktop, an IDE extension or an Agent SDK app starts drops the settings that its host app passes.
+Unless your own managed settings set `parentSettingsBehavior` to `merge`, a session that Claude Desktop, an IDE extension or an Agent SDK app starts drops the settings that its host app passes.
 To keep those settings, add `--host-settings merge`.
 This replaces a `parentSettingsBehavior` that your own managed settings set.
 
@@ -347,9 +348,13 @@ The managed settings, in the file or in the MDM policy, hold what `kong-harnesse
 
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
   The settings don't hold a credential.
+* Hooks that run kong-harnesses at the path of `--executable`.
+  One hook tells developers which MCP servers {{ site.claude_code }} doesn't load when a session starts.
+  When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
-  For a model ID that doesn't name its family, add the family, such as `--model opus=MODEL_ID`.
+  Each `--model` replaces the model of only the family that it names, and the other families keep the models of the profile.
+  For a model ID that doesn't name exactly one Claude family, add the family, such as `--model opus=MODEL_ID`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
   A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
   Another new model needs a new build.
@@ -364,7 +369,7 @@ The managed settings, in the file or in the MDM policy, hold what `kong-harnesse
 
 The profile becomes a machine-wide profile on each computer.
 kong-harnesses uses it before a developer's own profile with the same name, and developers can't change it.
-kong-harnesses uses the file only when no account but an administrator can change the file and its folders.
+kong-harnesses uses the file only when its owner and the accounts that can write to it, and to its folders, follow the rule for the platform in [Install on the managed computers](#install-on-the-managed-computers).
 Otherwise, it refuses the profile, because another account could send every developer's sign-in to an identity provider that it controls.
 
 `fleet build` also writes a record file, `kong-harnesses-fleet-BUILD_ID.json`, in the output folder, outside `root`.
@@ -391,7 +396,8 @@ After the checks in [Validate](#validate) pass on each test computer, install th
    The build doesn't install a CA.
 1. The files under `root` in the output folder, with their paths, as an administrator.
    On macOS and Linux, root must own each file and every folder above it, and no group or other account can write to them.
-   On Windows, only SYSTEM, Administrators or TrustedInstaller can own or write to each file and every folder up to `C:\Program Files`, and no link can be on the path.
+   On Windows, only SYSTEM, Administrators or TrustedInstaller can own or write to each file and every folder up to `C:\Program Files`, and no reparse point can be on the path.
+   A reparse point, such as a symbolic link or a junction, sends the path to another place.
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
@@ -400,7 +406,7 @@ For example, on macOS, it prints a `pkgbuild` command like this one, which puts 
 Replace each placeholder with the value for your deployment, and `/PATH/TO` with the folder where you ran `fleet build`:
 
 ```sh
-pkgbuild --root /PATH/TO/fleet-macos/root --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root '/PATH/TO/fleet-macos/root' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
@@ -428,7 +434,8 @@ The `Setting sources` line shows `Enterprise managed settings` with the source t
 * `(file)`: only your `managed-settings.json`.
   The build didn't reach the computer.
   For a file build, check that the drop-in is at the path in [Check what the build holds](#check-what-the-build-holds).
-  For an MDM build, check that the MDM policy reached the computer and has the settings of the build.
+  For an MDM build, read the `Skipped sources` line, and look at the MDM policy on the computer.
+  The policy must hold the settings of the build, not only control keys such as `managedSourcesBehavior`, because {{ site.claude_code }} skips a policy without a policy key.
   Then deploy the build again.
 * `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
@@ -436,6 +443,11 @@ The `Setting sources` line shows `Enterprise managed settings` with the source t
 * `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Find their source, and remove them there.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
+* `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
+  No administrator source reached the computer, so the build isn't in effect.
+  Deploy the build again.
+* `(helper)`: a `policyHelper` in the MDM policy or the managed settings file computes the settings, and they replace the build.
+  Remove the `policyHelper`.
 
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 
