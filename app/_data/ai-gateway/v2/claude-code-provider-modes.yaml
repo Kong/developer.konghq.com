@@ -1,7 +1,7 @@
-checked: 2026-11-20
+updated: 2026-11-20
 modes:
   - name: Anthropic API
-    switch: None, this is the default mode
+    switch: None (default)
     url: "`ANTHROPIC_BASE_URL`"
   - name: Microsoft Foundry
     switch: "`CLAUDE_CODE_USE_FOUNDRY`"
