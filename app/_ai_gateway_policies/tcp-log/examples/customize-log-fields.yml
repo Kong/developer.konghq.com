@@ -1,0 +1,43 @@
+description: Configure the TCP Log policy to remove a field from each log entry and add a field from a request header.
+
+extended_description: |
+  Configure the TCP Log policy to remove the `route` field from each log entry and add a field from a request header.
+  Each key in `custom_fields_by_lua` is a field name, and each value is a Lua snippet that returns the field's value.
+  A dot in a key creates a nested field.
+  A backslash before the dot keeps it in a flat field name.
+  The Lua code runs in a sandbox, and this example works with the default `untrusted_lua` setting of `strict`.
+
+title: Customize log fields with Lua
+
+weight: 700
+
+requirements:
+  - A TCP server that accepts connections from {{site.ai_gateway}}, such as a log collector.
+
+variables:
+  tcp_host:
+    description: The host name or IP address of the TCP server.
+    value: $TCP_LOG_HOST
+
+name: tcp-log-custom-fields
+display_name: Customize log fields with Lua
+type: tcp-log
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+
+config:
+  host: ${tcp_host}
+  port: 9000
+  custom_fields_by_lua:
+    route: "return nil"
+    header: "return kong.request.get_header('h1')"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
