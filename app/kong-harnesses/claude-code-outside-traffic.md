@@ -29,7 +29,7 @@ related_resources:
     url: /kong-harnesses/doctor/
 ---
 
-A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Microsoft Foundry and Amazon Bedrock Mantle provider modes.
+A {{site.kong_harnesses}} profile points {{ site.claude_code }} at [{{site.ai_gateway}}](/ai-gateway/) with a base URL setting: `ANTHROPIC_BASE_URL`, or `ANTHROPIC_FOUNDRY_BASE_URL` or `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` in the Azure AI Foundry and Amazon Bedrock Mantle provider modes.
 Only the requests that go to that base URL, such as the model requests, pass through the gateway.
 {{ site.claude_code }} also sends usage metrics, update checks, feature flag lookups and more straight to services such as Anthropic, GitHub and Datadog.
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
@@ -108,7 +108,7 @@ When the proxy can't let it through, set `CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK=1
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
 The default depends on the model provider and the sign-in.
-For example, {{ site.claude_code }} doesn't send usage metrics or error reports by default on Microsoft Foundry.
+For example, {{ site.claude_code }} doesn't send usage metrics or error reports by default on Azure AI Foundry.
 To be sure that the traffic stays off, set each member to `false`.
 
 `cost_warnings` doesn't change which hosts {{ site.claude_code }} contacts.
@@ -211,7 +211,7 @@ To stop developers from turning the settings back on, set them in [managed setti
 Managed settings take precedence over the user settings file that `profile activate` writes.
 A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
-Activation writes the gateway base URL to the user settings file, with the provider switch in the Microsoft Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
+Activation writes the gateway base URL to the user settings file, with the provider switch in the Azure AI Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
 A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
