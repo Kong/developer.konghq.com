@@ -69,8 +69,10 @@ To block the app, a Slack administrator removes the Claude app and stops new ins
 
 To see which workspaces are connected, an Owner of your Claude organization opens **Connected workspaces** in [**Claude's access** > **Channels** > **Slack**](https://claude.ai/admin-settings/claude-tag/channels/slack).
 An **Enterprise Grid** row with the status **Active** connects every workspace in that Grid, also the workspaces that no one paired on their own.
-That list shows only the pairings of your own Claude organization, and a workspace can be paired with [another Claude organization](https://claude.com/docs/claude-tag/admins/workspaces#pair-another-workspace).
-Before you remove the app from a workspace, check with the Owners of the other Claude organizations in your company that none of them connected it.
+That list shows only the pairings of your own Claude organization, and a workspace or a whole Enterprise Grid can be paired with [another Claude organization](https://claude.com/docs/claude-tag/admins/workspaces#pair-another-workspace).
+An uninstall from an Enterprise Grid organization [removes the app from all its workspaces](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization).
+Before a removal, check each workspace that it reaches.
+Ask the Owners of the other Claude organizations in your company whether they paired one of those workspaces, or the whole Enterprise Grid.
 
 The administrator can use these steps:
 
