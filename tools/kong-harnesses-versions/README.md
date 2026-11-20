@@ -36,7 +36,7 @@ Run the steps in this order:
 
    This regenerates `app/_includes/kong-harnesses/help/**` from scratch, then prunes reference pages under `app/kong-harnesses/` whose help includes no longer exist.
 
-4. Update the changelog from `CHANGELOG.md` at the latest release tag:
+4. Update the changelog from `CHANGELOG.md` at the highest published release, which `fetch-versions.js` also marks as the latest:
 
    ```sh
    GH_TOKEN=<token> node fetch-changelog.js

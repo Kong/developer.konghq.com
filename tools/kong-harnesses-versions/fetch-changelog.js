@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { compareVersions } from '../lib/tool-versions.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repo = 'Kong/kong-harnesses';
@@ -79,13 +80,21 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
     headers.Authorization = `Bearer ${env.GH_TOKEN}`;
   }
 
-  const latest = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, { headers });
-  if (!latest.ok) {
+  const list = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=100`, { headers });
+  if (!list.ok) {
     throw new Error(
-      `GitHub API request for the latest ${repo} release failed (${latest.status} ${latest.statusText}). ${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
+      `GitHub API request for ${repo} releases failed (${list.status} ${list.statusText}). ${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
     );
   }
-  const { tag_name: tag } = await latest.json();
+  // The highest version, not the newest release, as fetch-versions.js picks it, so a
+  // backport published after a newer release does not replace the newer changelog.
+  const tag = (await list.json())
+    .filter((release) => !release.draft && !release.prerelease)
+    .map((release) => release.tag_name)
+    .sort((a, b) => compareVersions(b.replace(/^v/, ''), a.replace(/^v/, '')))[0];
+  if (!tag) {
+    throw new Error(`${repo} has no published release.`);
+  }
 
   const file = await fetch(`https://api.github.com/repos/${repo}/contents/CHANGELOG.md?ref=${tag}`, {
     headers: { ...headers, Accept: 'application/vnd.github.raw' },

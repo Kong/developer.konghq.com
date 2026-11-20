@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { publicChangelog } from '../fetch-changelog.js';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { publicChangelog, syncChangelog } from '../fetch-changelog.js';
 
 const releasePleaseChangelog = `# Changelog
 
@@ -62,4 +65,25 @@ test('refuses a changelog with a link into the internal repository that it canno
     () => publicChangelog('## 1.0.0\n\n### Features\n\n* see `github.com/Kong/kong-harnesses`\n'),
     /internal kong-harnesses repository/,
   );
+});
+
+test('reads the changelog at the highest published release, not the newest one', async () => {
+  const requested = [];
+  const fetch = async (url) => {
+    requested.push(url);
+    if (url.includes('/releases?')) {
+      return Response.json([
+        { tag_name: 'v0.16.2', draft: false, prerelease: false },
+        { tag_name: 'v0.19.0', draft: true, prerelease: false },
+        { tag_name: 'v0.18.0-rc.1', draft: false, prerelease: true },
+        { tag_name: 'v0.17.1', draft: false, prerelease: false },
+      ]);
+    }
+    return new Response('## 0.17.1\n\n### Features\n\n* add\n');
+  };
+  const outFile = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'changelog-')), 'changelog.json');
+
+  assert.equal(await syncChangelog({ outFile, fetch, env: {} }), 'v0.17.1');
+  assert.match(requested[1], /CHANGELOG\.md\?ref=v0\.17\.1$/);
+  assert.deepEqual(JSON.parse(fs.readFileSync(outFile, 'utf8')), { markdown: '## 0.17.1\n\n### Features\n\n* add\n' });
 });
