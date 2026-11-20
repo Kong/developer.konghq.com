@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node --test",
     "extract-help": "node extract-help.js",
-    "fetch-versions": "node fetch-versions.js"
+    "fetch-versions": "node fetch-versions.js",
+    "fetch-changelog": "node fetch-changelog.js"
   },
   "keywords": [],
   "author": "",
