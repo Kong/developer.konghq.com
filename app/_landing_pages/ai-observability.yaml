@@ -36,6 +36,7 @@ rows:
               * See which models, providers, and MCP servers handle the most traffic.
               * Break down LLM traffic by AI Consumer.
               * Build custom queries and dashboards from LLM and agentic usage data.
+              * Get alerts about unusual error rates, latency, or traffic for a model, route, or provider.
               * Read control plane logs and Dedicated Cloud Gateway logs.
       - blocks:
           - type: image
@@ -98,6 +99,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Alerts
+              description: |
+                Know when error rates, latency, or traffic leave their usual range. Five detection rules are on from the start.
+              icon: /assets/icons/warning.svg
+              cta:
+                text: Set up alerts
+                url: /ai-management/observability/#alerts
+      - blocks:
+          - type: card
+            config:
               title: Dashboards
               description: |
                 Build and share your own dashboards from {{site.ai_gateway}} metrics, or start from an AI traffic template.
@@ -130,7 +141,7 @@ rows:
             config:
               title: Cost
               description: |
-                See what each request costs. To track spend, budgets, and alerts across users, groups, models, and teams, use {{site.ai_cost_management}}.
+                See what each request costs. To track spend, budgets, and budget alerts across users, groups, models, and teams, use {{site.ai_cost_management}}.
               icon: /assets/icons/money.svg
               cta:
                 text: Track AI spend
@@ -233,6 +244,14 @@ rows:
               a: |
                 The Logs page shows control plane logs and the runtime logs of Dedicated Cloud Gateways.
                 For a self-managed data plane, read the logs on the host. See [{{site.ai_gateway}} logs](/ai-gateway/ai-logs/).
+            - q: Do I need to set up alerts?
+              a: |
+                No. Five [detection rules](/ai-management/observability/#default-detection-rules) are on by default and trigger alerts on the **Alerts** page.
+                To get notified, add an email address or a webhook to a rule.
+            - q: How are AI observability alerts different from budget alerts?
+              a: |
+                AI observability alerts watch the health of AI traffic, such as error rate and latency.
+                [Budget alerts](/ai-cost-management/budgets/) in {{site.ai_cost_management}} watch spend against a budget.
             - q: How long is AI observability data kept?
               a: |
                 The metrics that Overview, Dashboards, and Explorer show are kept for one year.
