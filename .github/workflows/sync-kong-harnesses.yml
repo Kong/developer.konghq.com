@@ -209,3 +209,81 @@ jobs:
             app/_includes/kong-harnesses/help/**
             app/kong-harnesses/**
             app/_data/tools/kong-harnesses.yml
+
+  kong-harnesses-changelog:
+    name: Fetch kong-harnesses Changelog
+    needs: base
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # One changelog sync at a time for each base branch, so an older run cannot
+    # replace newer data in its pull request.
+    concurrency:
+      group: sync-kong-harnesses-changelog-${{ needs.base.outputs.branch }}
+      cancel-in-progress: false
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token for the releases
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: releases-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: kong-harnesses
+          permission-contents: read
+
+      - name: Create GitHub App Token for the pull request
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: pr-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: developer.konghq.com
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.base.outputs.branch }}
+          persist-credentials: false
+
+      - name: Check that the branch has the sync scripts
+        env:
+          BRANCH: ${{ needs.base.outputs.branch }}
+        run: |
+          if [ ! -f tools/kong-harnesses-versions/sync-changelog.rb ] || [ ! -f tools/kong-harnesses-versions/check-changelog-links.rb ]; then
+            echo "::error::Branch $BRANCH has no changelog sync scripts in tools/kong-harnesses-versions, so its changelog can't be synced yet"
+            exit 1
+          fi
+
+      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Fetch changelog
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+        run: bundle exec ruby tools/kong-harnesses-versions/sync-changelog.rb
+
+      # Renders the changelog with the site's Markdown converter and refuses any link
+      # or address that is left on the page.
+      - name: Refuse any link or address on the changelog page
+        run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          title: Sync kong-harnesses Changelog
+          commit-message: Sync kong-harnesses Changelog
+          branch: sync-kong-harnesses/changelog/${{ needs.base.outputs.branch }}
+          base: ${{ needs.base.outputs.branch }}
+          labels: skip-changelog,review:general
+          token: ${{ steps.pr-token.outputs.token }}
+          add-paths: |
+            app/_data/kong-harnesses/changelog.json
