@@ -1181,7 +1181,7 @@ data:
     client_id:
       - my-client-id
     client_secret:
-      - my-client-secret
+      - !secret {source: !env 'CLIENT_SECRET'}
     client_auth:
       - client_secret_post
     auth_methods:
