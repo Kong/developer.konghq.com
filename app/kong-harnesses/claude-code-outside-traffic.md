@@ -78,7 +78,7 @@ rows:
     member: "`connectors`"
     cost: "{{ site.claude_code }} doesn't load the MCP connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
-    destination: "Anthropic, and optionally a GitHub issue on `github.com`. Without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
+    destination: "Anthropic, and optionally a GitHub issue on `github.com`. On a third-party provider or without Anthropic credentials, {{ site.claude_code }} writes the report to a local file instead."
     member: "`bug_command` and `feedback_command`"
     cost: "Developers can't send a conversation to Anthropic. Each member turns off all of these commands."
   - traffic: Feedback survey
@@ -89,10 +89,14 @@ rows:
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. Developers can add it with `/plugin marketplace add`."
+  - traffic: Artifacts
+    destination: "`claude.ai` and `*.frame.claudeusercontent.com`"
+    member: "None. Set `enableArtifact: false` in {{ site.claude_code }} settings."
+    cost: "Claude can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com` and `api.anthropic.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Remote Control, the fast mode availability check and the pull request and merge request status badges also turn off. Run `claude update` to install a newer release."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check and the pull request and merge request status badges also turn off. Run `claude update` to install a newer release."
 {% endtable %}
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
@@ -124,7 +128,7 @@ Then the update cutoff still applies, but {{ site.claude_code }} fetches the rel
 
 ## Traffic that stays
 
-When every member in the table is `false`, a {{ site.claude_code }} session contacts these hosts:
+When every kind of traffic in the table is off, a {{ site.claude_code }} session contacts these hosts:
 
 * The {{site.ai_gateway}} host
 * Your identity provider, for the sign-in
@@ -133,8 +137,11 @@ When every member in the table is `false`, a {{ site.claude_code }} session cont
 * The OpenTelemetry collector, when the profile sends telemetry to one
 * The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds
 * `storage.googleapis.com`, for the plugin metadata that `/plugin` shows
+* `registry.npmjs.org`, for npm and bun installs of {{ site.claude_code }}, npm-source plugins and MCP servers that `npx` starts
+* `bridge.claudeusercontent.com`, for the Claude in Chrome extension
+* `*-review.googlesource.com`, for Gerrit change lookups in a Claude desktop app session on a `googlesource.com` checkout
 
-[Network access requirements](https://code.claude.com/docs/en/network-config#network-access-requirements) in the {{ site.claude_code }} documentation lists every host that {{ site.claude_code }} can contact.
+{{ site.claude_code }} can add hosts in a new release, so check [Network access requirements](https://code.claude.com/docs/en/network-config#network-access-requirements) in the {{ site.claude_code }} documentation for the current list.
 
 ## Turn off the outside traffic
 
@@ -188,7 +195,7 @@ If a developer changes or removes one of these settings later, the `anthropic` c
 
 Each profile member writes one or more {{ site.claude_code }} settings.
 To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
-The environment variables go in the `env` key, and `skipWebFetchPreflight` is a top-level key.
+The environment variables go in the `env` key, and `skipWebFetchPreflight` and `enableArtifact` are top-level keys.
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
@@ -221,6 +228,8 @@ rows:
     setting: "`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`"
   - member: "`official_marketplace_autoinstall`"
     setting: "`CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`"
+  - member: None, for artifacts
+    setting: "`enableArtifact: false`, or `CLAUDE_CODE_DISABLE_ARTIFACT=1`"
   - member: "`auto_updates`"
     setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` when the profile doesn't turn on a feature that it turns off"
 {% endtable %}
@@ -228,13 +237,13 @@ rows:
 ## {{ site.claude_code }} on the web and in Slack
 
 {{ site.claude_code }} on the web, Claude Tag and the earlier {{ site.claude_code }} in Slack run sessions outside the developer's computer.
-Those sessions don't use the {{site.kong_harnesses}} profile, so their model requests go to Anthropic and not through the gateway.
+Those sessions don't use the {{site.kong_harnesses}} profile, and their model requests don't go through its gateway.
 If all model traffic must pass through the gateway, turn off each of these products.
 
 ### {{ site.claude_code }} on the web
 
 {{ site.claude_code }} on the web runs cloud sessions on Anthropic's infrastructure, or in your organization's [self-hosted environment](https://code.claude.com/docs/en/self-hosted-environments) when you route them there.
-In a self-hosted environment, model inference uses the Anthropic API by default, and the conversation goes to `api.anthropic.com`.
+In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you set up another provider.
 To turn off cloud sessions for a Team or Enterprise organization:
 
 1. Sign in to claude.ai as an Owner of your organization.
