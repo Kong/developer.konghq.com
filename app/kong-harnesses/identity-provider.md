@@ -114,7 +114,7 @@ rows:
 
 The callback is the address on the developer's computer that the browser returns to after the sign-in.
 {{site.kong_harnesses}} listens on that address while the developer signs in with [`kong-harnesses login`](/kong-harnesses/login/) or [`kong-harnesses setup`](/kong-harnesses/setup/), so the developer must open the sign-in page in a browser on the same computer.
-The developer must finish the whole sign-in in the browser, with MFA and consent, within 2 minutes after {{site.kong_harnesses}} opens the sign-in page or shows its URL.
+{{site.kong_harnesses}} waits up to 2 minutes for the browser callback, so the developer must finish the steps in the browser within that time.
 At each sign-in in the browser, {{site.kong_harnesses}} sends `prompt=consent` to ask for the consent screen, but the identity provider can skip it.
 For the checks on the callback request, see [Callback](/kong-harnesses/identity-provider/checks/#callback).
 
@@ -221,7 +221,8 @@ After the test passes, create the production profile with the flag, which skips 
 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, because a renewed access token must still have 360 seconds left when a client gets it.
-The 5 extra seconds are the longest time that a renewal can take from the token response to the client, and {{site.kong_harnesses}} checks the 360 seconds again at that point.
+The 365-second minimum includes a 5-second margin.
+After {{site.kong_harnesses}} saves the new refresh token at renewal, the access token must still have at least 360 seconds left.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
