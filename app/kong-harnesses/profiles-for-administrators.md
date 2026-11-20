@@ -81,7 +81,7 @@ For a model with another ID, `profile activate` adds a model picker entry from t
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
 A profile from `profile create` names one model, the `--model` value, for every {{ site.claude_code }} model role.
-To offer more than one model, export the profile as in [Profile hosting](#profile-hosting), set some roles in `clients.claude-code.models` to other model IDs, such as `opus` and `haiku`, and host the edited file.
+To offer more than one model, export the profile as in [Profile hosting](#profile-hosting), set some roles in `clients.claude-code.models`, such as `opus` and `haiku`, to other model IDs, and host the edited file.
 The model picker shows each model that a role names.
 
 In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.claude_code }} uses the Anthropic format.
