@@ -1,6 +1,7 @@
 You need an [Okta developer organization](https://developer.okta.com/signup/) and an admin account in it.
 {{site.kong_harnesses}} signs developers in to an Okta app with the authorization code flow and PKCE.
 The sign-in fails if Okta doesn't issue a refresh token, because {{site.kong_harnesses}} uses it to renew the access token.
+For the settings that every identity provider needs, see [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
 
 Complete the following steps in the Okta Admin Console.
 
