@@ -276,7 +276,7 @@ When the allowlist is enabled, {{site.konnect_short_name}} rejects any request f
 
 Unlike the [IP allowlist](#specify-ip-addresses-that-can-connect-to-konnect), which applies only to the `.api.` domain and doesn't apply to data planes, the VPCE ID allowlist applies to all connections to your organization through PrivateLink. 
 This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic.
-If you enable both IP and VPCE allowlists, a request is allowed only if it comes from an allowed IP address and from an allowed VPC endpoint. As this can be overly restrictive, we recommend using only one type of allowlist.
+You cannot enable both IP and VPCE allowlists.
 
 Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
 
