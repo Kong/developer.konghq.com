@@ -35,7 +35,7 @@ When the gateway, the identity provider or the profile server uses a certificate
 {{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store.
 
 {:.warning}
-> Add the CA to the system trust store of each developer's computer and of your own computer, usually through mobile device management (MDM).
+> Add the CA to the system trust store of each developer's computer and of your own computer, for example, through mobile device management (MDM).
 > A CA that you set for one program doesn't apply to the other programs, and the browser that opens for the sign-in must also trust the identity provider's certificate.
 
 ## System trust store installation
@@ -112,7 +112,7 @@ rows:
   - client: omp
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`.
-      With `NODE_EXTRA_CA_CERTS`, omp uses its own CA list and the file instead of the system trust store, so put every private CA that omp needs in the file, such as the CA of a proxy.
+      When `NODE_EXTRA_CA_CERTS` is set, omp uses its own CA list and the file instead of the system trust store, so put every private CA that omp needs in the file, such as the CA of a proxy.
       On Debian and Ubuntu, omp also reads `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
   - client: pi
     setting: |
