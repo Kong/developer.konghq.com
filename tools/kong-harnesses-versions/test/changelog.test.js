@@ -56,6 +56,8 @@ test('removes every form of link into the internal repository and keeps links to
     ['* see [the PR](https://github.com/Kong/kong-harnesses/pull/5 "title") first', '* see the PR first'],
     ["* see [the PR](https://github.com/Kong/kong-harnesses/pull/6 'title') first", '* see the PR first'],
     ['* see [the PR](https://github.com/Kong/kong-harnesses/pull/7 (title)) first', '* see the PR first'],
+    ['* fix (closes [#12](https://github.com/Kong/kong-harnesses/issues/12)) now', '* fix (closes) now'],
+    ['* fix, see [c0ffee1](https://github.com/Kong/kong-harnesses/commit/c0ffee1) and [the guide](https://github.com/Kong/kong-harnesses/blob/main/docs/a.md)', '* fix, see and the guide'],
     ['* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)', '* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)'],
   ];
   for (const [entry, expected] of entries) {
@@ -74,7 +76,7 @@ test('refuses a changelog with a link that removing an internal URL left broken'
   assert.throws(() => publicChangelog("## 1.0.0\n\n### Features\n\n* see [the PR]( 'title')\n"), /left broken/);
 });
 
-test('reads the changelog at the highest published release, not the newest one', async () => {
+test('reads the changelog on main up to the highest published release, not the newest one', async () => {
   const requested = [];
   const fetch = async (url) => {
     requested.push(url);
@@ -87,11 +89,25 @@ test('reads the changelog at the highest published release, not the newest one',
         { tag_name: 'v0.17.1', draft: false, prerelease: false },
       ]);
     }
-    return new Response('## 0.17.1\n\n### Features\n\n* add\n');
+    return new Response('## [0.18.0](x) (2026-12-01)\n\n### Features\n\n* not out yet\n\n## 0.17.1\n\n### Features\n\n* add\n');
   };
   const outFile = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'changelog-')), 'changelog.json');
 
   assert.equal(await syncChangelog({ outFile, fetch, env: {} }), 'v0.17.1');
-  assert.match(requested[1], /CHANGELOG\.md\?ref=v0\.17\.1$/);
+  assert.match(requested[1], /CHANGELOG\.md\?ref=main$/);
   assert.deepEqual(JSON.parse(fs.readFileSync(outFile, 'utf8')), { markdown: '## 0.17.1\n\n### Features\n\n* add\n' });
+});
+
+test('keeps an upgrade step whatever its scope', () => {
+  assert.equal(
+    publicChangelog('## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n\n### Bug Fixes\n\n* **deps:** update Go\n'),
+    '## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n',
+  );
+});
+
+test('escapes an HTML-like placeholder outside code spans, so Kramdown shows it', () => {
+  assert.equal(
+    publicChangelog('## 1.0.0\n\n### Features\n\n* run profile get <profile>, `profile get <profile>` or see <https://example.com>\n'),
+    '## 1.0.0\n\n### Features\n\n* run profile get &lt;profile>, `profile get <profile>` or see <https://example.com>\n',
+  );
 });
