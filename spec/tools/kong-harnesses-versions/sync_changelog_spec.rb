@@ -107,9 +107,31 @@ RSpec.describe KongHarnessesChangelog do
     ['* \\![foo](https://example.com) next', '* !foo next'],
     ["* ```\n  [x](https://example.com)", '* \\`\\`\\` x'],
     ['* accept values with a | delimiter', '* accept values with a \\| delimiter'],
+    # An entity stays an entity, so it cannot start a table, emphasis or a code span.
+    ['* **cli:** use &#124; between values', '* **cli:** use &#124; between values'],
+    ['* use &#42;literal&#42; now', '* use &#42;literal&#42; now'],
+    ['* use &#96;literal&#96; now', '* use &#96;literal&#96; now'],
+    ['* use &#42;a&#42; and &#126;&#126;c&#126;&#126;', '* use &#42;a&#42; and &#126;&#126;c&#126;&#126;'],
+    ['* use \\~~b\\~~', '* use \\~\\~b\\~\\~'],
+    # After a hard line break, every line of a paragraph can start a block.
+    ["* **cli:** old flag removed.\\\n  \\## 9.9.9 (2026-01-01)", "* **cli:** old flag removed.  \n  \\## 9.9.9 (2026-01-01)"],
+    ["* a\\\n  \\# b", "* a  \n  \\# b"],
+    ["* a\\\n  \\> b", "* a  \n  \\> b"],
+    ["* a\\\n  1\\. b", "* a  \n  1\\. b"],
+    ["* a\\\n  \\- b", "* a  \n  \\- b"],
+    ["* Before\\\n  \\-\\-\\-", "* Before  \n  \\---"],
+    ["* Before\\\n  \\=\\=\\=", "* Before  \n  \\==="],
+    # Kramdown's writer gives a rule as `* * *`, which after a list marker is a rule alone.
+    ['* ___', '* ___'],
+    # Two backslashes at the end of a line are a line break.
+    ['* in C:\\\\', '* in C:&#92;'],
+    # An address goes as a reader sees it, also when bold or an entity splits it.
+    ['* see https://exa**mple**.com/a', '* see'],
+    ['* see https://example.com/?x=1&amp;y=2 next', '* see next'],
+    ['* see **[https://example.com](https://example.com)** now', '* see now'],
     ['* run profile get <profile> or `profile get <profile>`', '* run profile get \\<profile> or `profile get <profile>`'],
     ['* run profile get \\<profile>', '* run profile get \\<profile>'],
-    ['* x ` <b> https://example.com/a ` y', '* x \\` \\<b> \\` y'],
+    ['* x ` <profile> https://example.com/a ` y', '* x \\` \\<profile> \\` y'],
     ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a \\` x \\`\\` d'],
     # Code spans as kramdown pairs them, also across the lines of a paragraph.
     ['* ``<a>``` x', '* `<a>`\\` x'],
@@ -129,7 +151,9 @@ RSpec.describe KongHarnessesChangelog do
       "* ~~~sh\n  echo 'https://example.com/docs'\n  ~~~",
       "* or:\n\n      [mode]: automatic\n\n      ## not a heading <b>",
       "* entry\n\n      code\n  [x](https://example.com)\n  https://example.com",
-      "* run this:\n  ```sh\n  kong-harnesses login\n  ```"
+      "* run this:\n  ```sh\n  kong-harnesses login\n  ```",
+      "* run:\n\n  ```sh\n  a\n\n  b\n  ```",
+      "* run:\n\n  ```sh\n  a\n    \n  b\n  ```"
     ].each do |entry|
       expect(code(exported(section(entry)))).to eq(code(section(entry)))
     end
@@ -138,6 +162,9 @@ RSpec.describe KongHarnessesChangelog do
   it 'refuses what it cannot write back safely' do
     expect { exported(section("* see [^1] now\n\n[^1]: a note")) }.to raise_error(/footnote/)
     expect { exported(section('<div>x</div>')) }.to raise_error(/raw HTML/)
+    ['* a <!-- note --> b', '* a <del>x</del> b', '* a <b>x</b> b', '* a ~~x~~ b'].each do |entry|
+      expect { exported(section(entry)) }.to raise_error(/raw HTML or a strikethrough/)
+    end
     expect { exported(section("* a\u0000b")) }.to raise_error(/NUL/)
   end
 
@@ -188,31 +215,76 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
-  # Random entries from pieces of Markdown that earlier reviews found hard, with a fixed
-  # seed. The page that the export writes must have no link or address, and the text of
-  # every piece of code must stay as the site's parser reads it in the source.
-  it 'keeps code and leaves no link for random entries' do
-    # The addresses are on another host, because the repository's address in code stops
-    # the sync by design, and a piece can land in code.
-    pieces = ['[x](https://example.com/pull/1)', '[#2](https://github.com/Kong/kong-harnesses/issues/2)',
-              '`a <b> https://example.com/c`', '``d`e``', '`', '<profile>', '|', '\\[', '\\`', '\\!', '[', ']', '(', ')',
-              '**', '_', '~~', '~~~', '```', '    ', "\n", "\n\n", '> ', '* ', '1. ', '# ', 'https://example.com/z',
-              '<https://example.com/q>', '![i](https://example.com/i.png)', '[r]', "\n[r]: https://example.com/pull/3\n",
-              'word', ' ', "it's", '"q"', '--', '&amp;', '{: .x}', ':', '-']
-    random = Random.new(20_261_120)
-    300.times do
-      source = section("* #{Array.new(random.rand(1..12)) { pieces.sample(random: random) }.join}")
-      page = begin
-        exported(source)
-      rescue RuntimeError
-        next
-      end
-      source_code = described_class.code_of(described_class.parse(source)).map do |value|
-        described_class::PRESET_LINKS.reduce(value) { |text, link| text.gsub(link, '\1') }
-      end
+  # Pieces of Markdown that are hard to write back. The addresses are on another host,
+  # because the repository's address in code stops the sync by design, and a piece can
+  # land in code.
+  pieces = ['[x](https://example.com/pull/1)', '[#2](https://github.com/Kong/kong-harnesses/issues/2)',
+            '`a <b> https://example.com/c`', '``d`e``', '`', '<profile>', '|', '[', ']', '(', ')',
+            '**', '_', '~~', '~~~', '```', '    ', "\n", "\n\n", '> ', '* ', '1. ', '# ', 'https://example.com/z',
+            '<https://example.com/q>', '![i](https://example.com/i.png)', '[r]', "\n[r]: https://example.com/pull/3\n",
+            'word', ' ', "it's", '"q"', '--', '&amp;', '{: .x}', ':', '-',
+            'https://exa**mple**.com/a', 'https://example.com/?x=1&amp;y=2', '**[https://example.com](https://example.com)**',
+            '<!-- note -->', '<del>x</del>', '<b>', '</b>'] +
+           # Every ASCII punctuation character as an entity, and every character that the
+           # GFM parser escapes with a backslash. A slash and a backslash are left out,
+           # because the check refuses two of them in a row, as a browser reads `\\` as `//`.
+           '!"#$%&\'()*+,-.:;<=>?@[]^_`{|}~'.chars.map { |char| "&##{char.ord};" } +
+           '.*_+`<>()[]{}#!:|"\'$=-~'.chars.map { |char| "\\#{char}" } +
+           # Hard line breaks, and block markers after them.
+           ["\\\n  ", "  \n  ", "\\\n  \\## 9.9.9", "\\\n  \\# b", "\\\n  \\> b", "\\\n  1\\. b", "\\\n  \\- b",
+            "\\\n  \\-\\-\\-", "\\\n  \\=\\=\\="]
 
-      expect(KongHarnessesChangelogLinks.problems(page)).to be_empty, "#{source.inspect} gave #{page.inspect}"
-      expect(code(page)).to eq(source_code), "#{source.inspect} gave #{page.inspect}"
+  # The page that the export writes must have no link or address, and the text of every
+  # piece of code must stay as the site's parser reads it in the source.
+  def expect_safe(source, page)
+    source_code = described_class.code_of(described_class.parse(source)).map do |value|
+      described_class::PRESET_LINKS.reduce(value) { |text, link| text.gsub(link, '\1') }
     end
+    expect(KongHarnessesChangelogLinks.problems(page)).to be_empty, "#{source.inspect} gave #{page.inspect}"
+    expect(code(page)).to eq(source_code), "#{source.inspect} gave #{page.inspect}"
+  end
+
+  # Random entries from the pieces, with a fixed seed. The export may refuse an entry
+  # that it cannot write back, such as raw HTML, but its self-check must never find
+  # that the writer got an entry wrong.
+  it 'keeps code and leaves no link for random entries' do
+    random = Random.new(20_261_120)
+    refused = Hash.new(0)
+    1000.times do
+      source = section("* #{Array.new(random.rand(1..12)) { pieces.sample(random: random) }.join}")
+      begin
+        expect_safe(source, exported(source))
+      rescue RuntimeError => e
+        raise if e.message.include?('The export would')
+
+        refused[e.message] += 1
+      end
+    end
+    expect(refused.values.sum).to be < 400, refused.inspect
+  end
+
+  # Entries in the shape that release-please writes, with a subject made of the pieces
+  # that can be on one line of a commit subject. The export must keep every one.
+  it 'keeps every random release-please entry' do
+    subject_pieces = pieces.reject { |piece| piece.include?("\n") || piece.match?(/<(?:!--|\/?(?:del|b)>)/) || piece == '~~' }
+    random = Random.new(20_261_121)
+    300.times do |index|
+      subject = Array.new(random.rand(1..8)) { subject_pieces.sample(random: random) }.join
+      hash = format('%07x', random.rand(16**7))
+      source = section("* **#{%w[cli profile relay].sample(random: random)}:** word #{subject} " \
+                       "([##{index}](https://github.com/Kong/kong-harnesses/issues/#{index})) " \
+                       "([#{hash}](https://github.com/Kong/kong-harnesses/commit/#{hash}))")
+      expect_safe(source, exported(source))
+    end
+  end
+
+  # The writer is not built for the GFM parser, so the self-check reads what it wrote
+  # with the site's parser and refuses what a reader would see differently.
+  it 'refuses what the writer gets wrong' do
+    allow_any_instance_of(described_class::Writer).to receive(:convert_entity) { |_writer, element, _opts| element.value.char } # rubocop:disable RSpec/AnyInstance
+    expect { exported(section('* **cli:** use &#124; between values')) }.to raise_error(/would change what a reader sees/)
+    tree = described_class.parse("* **x** y\n")
+    tree.children.first.children.first.children.first.children.first.children.clear
+    expect { described_class.written("* **** y\n", tree) }.to raise_error(/would change what a reader sees/)
   end
 end

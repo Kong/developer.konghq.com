@@ -37,6 +37,6 @@ If a release needs a step when you upgrade, that release lists the step under **
 
 A release can also change what `setup`, `profile activate` and `relay activate` write to a client's settings. The settings stay as the earlier release wrote them until you activate the profile again. `kong-harnesses status` reports these settings as `Set up by an earlier release or profile` and names `profile activate`, the command that applies the change. For a profile that you imported with `relay import`, `kong-harnesses relay status` reports them and names `relay activate`.
 
-If your organization's managed settings set up Claude Code, `status` names no command for such a change. The administrator builds the managed settings again with `fleet build`, with the choices of the earlier build, and delivers the new build, and the release lists that step under **⚠ BREAKING CHANGES**.
+If your organization's managed settings set up Claude Code, `status` names no command for such a change. The administrator runs the earlier `fleet build` command again, with `--record <file>` and the record of that build, and delivers the new build, and the release lists that step under **⚠ BREAKING CHANGES**.
 
 {{ site.data.kong-harnesses.changelog.markdown }}

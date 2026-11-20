@@ -25,7 +25,7 @@ module KongHarnessesChangelogLinks
   ELEMENTS = {
     'h1' => HEADING, 'h2' => HEADING, 'h3' => HEADING, 'h4' => HEADING, 'h5' => HEADING, 'h6' => HEADING,
     'p' => {}, 'ul' => {}, 'ol' => {}, 'li' => {}, 'strong' => {}, 'em' => {}, 'pre' => {},
-    'blockquote' => {}, 'br' => {}, 'hr' => {}, 'del' => {},
+    'blockquote' => {}, 'br' => {}, 'hr' => {},
     # The language of a fenced code block, such as ```sh in an upgrade step.
     'code' => { 'class' => /\Alanguage-[\w+-]+\z/ }
   }.freeze

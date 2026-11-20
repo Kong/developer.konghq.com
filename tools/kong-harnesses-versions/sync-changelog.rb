@@ -25,12 +25,14 @@ module KongHarnessesChangelog
   BREAKING_CHANGES = '⚠ BREAKING CHANGES'
   # Scopes of changes to the repository's own tooling, reviews and dependency pins.
   # docs/release.md in Kong/kong-harnesses names the same list; change both together.
-  INTERNAL_SCOPES = %w[ci deps ksai threat-model].freeze
+  TOOLING_SCOPES = %w[ci deps ksai threat-model].freeze
 
   # The elements that the export knows how to write back. It refuses any other, such
-  # as a footnote, math or raw HTML, rather than guess. A `del` is GFM strikethrough.
+  # as a footnote, math, raw HTML or an HTML comment, rather than guess.
   ELEMENTS = %i[root blank header p text ul ol li strong em codespan codeblock a img br hr
-                blockquote smart_quote typographic_sym entity xml_comment eob html_element].freeze
+                blockquote smart_quote typographic_sym entity eob].freeze
+  # The elements of a block that hold text, which an address can run across.
+  INLINE = %i[strong em a].freeze
 
   REMOVED = "\u0000"
   LINE_BREAK = "\u0001"
@@ -43,27 +45,75 @@ module KongHarnessesChangelog
   ].freeze
 
   # The site's parser, but a line with a `|` in an entry is text, not a table, and a
-  # `<name>` in an entry is text, not HTML. The writer escapes both, so the site also
-  # shows them as text.
+  # placeholder such as `<profile>` is text, not HTML. The writer escapes both, so the
+  # site also shows them as text. An HTML comment or a tag that HTML knows, such as
+  # `<del>`, is still read as HTML, so the export refuses it rather than show it.
   class Parser < Kramdown::Parser::GFM
     def initialize(source, options)
       super
       @block_parsers.delete(:table)
-      @span_parsers.delete(:span_html)
+    end
+
+    def parse_span_html
+      tag = [HTML_TAG_RE, HTML_TAG_CLOSE_RE].filter_map { |pattern| @src[1] if @src.check(pattern) }.first
+      html = [HTML_COMMENT_RE, HTML_INSTRUCTION_RE, HTML_CDATA_RE].any? { |pattern| @src.match?(pattern) } ||
+             (tag && HTML_ELEMENT[tag.downcase])
+      html ? super : add_text(@src.getch)
     end
   end
 
   # Kramdown's writer, which also escapes `<`, because the site reads `<name>` as HTML.
   class Writer < Kramdown::Converter::Kramdown
-    def convert_text(el, opts)
-      result = super
-      opts[:raw_text] ? result : result.gsub('<', '\<')
+    # Kramdown's writer escapes a block marker only on the first line of a paragraph,
+    # and a `=` or `-` line on the second line with a control character. After a hard
+    # line break, any line of a paragraph can start a block.
+    LINE_START = /\A( {0,3})(?:(#|>|[+-](?=\s|\z))|([=-])(?=[=\-\s]*\z))/
+    # An entity stays as it was written. Kramdown's writer gives its character, which
+    # can then start a table, emphasis or a code span, as `&#124;` would.
+    def convert_entity(el, opts)
+      el.options[:original] || super
     end
 
-    # The writer escapes a `:` at the start of any line of a paragraph, also in a code
-    # span, so a line break in a code span is held as a mark until the paragraph is done.
+    # The GFM parser also reads `~~` as strikethrough, which kramdown's writer does not
+    # escape.
+    def convert_text(el, opts)
+      result = super
+      opts[:raw_text] ? result : result.gsub(/[<~]/) { |char| "\\#{char}" }
+    end
+
+    # A line break in a code span is held as a mark until the paragraph is done, so only
+    # the lines of the paragraph get their start escaped.
     def convert_p(el, opts)
-      super.gsub(LINE_BREAK, "\n")
+      lines = inner(el, opts).strip.split("\n").map do |line|
+        line.sub(LINE_START) { "#{::Regexp.last_match(1)}\\#{::Regexp.last_match(2) || ::Regexp.last_match(3)}" }
+            .sub(/\A( {0,3})(\d+)\.(?=\s|\z)/, '\1\2\\.')
+            .sub(/\A( {0,3}):/, '\1\\:')
+      end
+      # Two backslashes at the end of a line are a line break.
+      "#{lines.map { |line| line.sub(/\\\\\z/, '&#92;') }.join("\n")}\n".gsub(LINE_BREAK, "\n")
+    end
+
+    # Kramdown's writer ends a list in a list item with no blank line, so a block after
+    # it in the item would go on in its last item.
+    def convert(el, opts = { indent: 0 })
+      result = super
+      return result unless %i[ul ol].include?(el.type) && @stack.last&.type == :li
+
+      later = @stack.last.children.drop(opts[:index].to_i + 1)
+      later.any? { |sibling| sibling.type != :blank } ? "#{result}\n" : result
+    end
+
+    # Kramdown's writer indents every line of a list item, but kramdown does not take
+    # that indent off a line of only white space, such as one in a code block.
+    def convert_li(el, opts)
+      width = @stack.last.type == :ul ? @list_indent : 4
+      super.gsub(/^ {#{width}}(?=[ \t]*$)/, '')
+    end
+
+    # Kramdown's writer gives `* * *`, which after a list marker is a rule, not a list
+    # item that holds one.
+    def convert_hr(_el, _opts)
+      "___\n"
     end
 
     def convert_header(el, opts)
@@ -116,8 +166,8 @@ module KongHarnessesChangelog
   # the language of a code block, so no attribute list reaches the page. Gives the
   # attributes that the element had.
   def cleaned(element)
+    raise 'The changelog has raw HTML or a strikethrough, which the export cannot write back safely.' if %i[html_element xml_comment xml_pi].include?(element.type)
     raise "The changelog has #{element.type}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
-    raise 'The changelog has raw HTML, which the export cannot write back safely.' if element.type == :html_element && element.value != 'del'
 
     attributes = element.attr.dup
     element.attr.clear unless element.type == :codeblock && attributes.keys == ['class'] && attributes['class'].match?(/\Alanguage-[\w+-]+\z/)
@@ -134,8 +184,6 @@ module KongHarnessesChangelog
       element.value = PRESET_LINKS.reduce(element.value) { |value, link| value.gsub(link, '\1') }
       return [element]
     end
-    return [] if element.type == :xml_comment
-
     children = element.children.flat_map { |child| without_links(child) }
     case element.type
     when :a
@@ -148,7 +196,10 @@ module KongHarnessesChangelog
       [Kramdown::Element.new(:text, attributes.fetch('alt', '').to_s)]
     else
       element.children = separated(joined(children))
-      [element]
+      without_addresses(element) if %i[p header].include?(element.type)
+      # A heading, paragraph or block quote with nothing left shows nothing, and the
+      # writer cannot write an empty one.
+      %i[header p blockquote].include?(element.type) && element.children.all? { |child| child.type == :blank } ? [] : [element]
     end
   end
 
@@ -165,8 +216,6 @@ module KongHarnessesChangelog
     end
   end
 
-  # Joins neighbor text nodes, removes bare addresses, and drops brackets that held only
-  # removed links. Each removed link takes one space with it.
   def joined(children)
     children.each_with_object([]) do |child, list|
       if child.type == :text && list.last&.type == :text
@@ -174,14 +223,106 @@ module KongHarnessesChangelog
       else
         list << (child.type == :text ? Kramdown::Element.new(:text, child.value.dup) : child)
       end
-    end.each do |child|
+    end
+  end
+
+  # The pieces of a block's text, in order, that an address can run across: text,
+  # entities and typographic symbols, also inside bold and emphasis. Code and line
+  # breaks end a run.
+  def runs(element, list = [[]])
+    element.children.each do |child|
+      case child.type
+      when :text, :entity, :smart_quote, :typographic_sym then list.last << child
+      when *INLINE then runs(child, list)
+      else list << []
+      end
+    end
+    list
+  end
+
+  def source_text(piece)
+    case piece.type
+    when :text then piece.value
+    when :entity then piece.options[:original] || piece.value.char
+    when :smart_quote then piece.value.to_s.include?('dquo') ? '"' : "'"
+    else Writer::TYPOGRAPHIC_SYMS[piece.value]
+    end
+  end
+
+  # Removes every bare address from a block, as a reader sees it across bold, emphasis
+  # and entities, drops the brackets that held only removed links, and drops bold or
+  # emphasis that is then empty. Each removed link takes one space with it.
+  def without_addresses(block)
+    runs(block).each do |run|
+      offset = 0
+      spans = run.map { |piece| [piece, offset, offset += source_text(piece).length] }
+      addresses = run.map { |piece| source_text(piece) }.join.to_enum(:scan, WEB_ADDRESS).map { Regexp.last_match.offset(0) }
+      spans.each do |piece, from, to|
+        covered = addresses.select { |start, stop| start < to && stop > from }
+        next if covered.empty?
+
+        text = source_text(piece)
+        kept = covered.reverse.reduce(text) do |value, (start, stop)|
+          mark = start >= from ? REMOVED : ''
+          value[0...[start - from, 0].max] + mark + value[[stop - from, text.length].min..]
+        end
+        piece.type = :text
+        piece.value = kept
+        piece.options.clear
+      end
+    end
+    tidied(block)
+    # The writer drops a line break at the start or the end of a block.
+    block.children.shift while block.children.first&.type == :br
+    block.children.pop while block.children.last&.type == :br
+  end
+
+  def tidied(element)
+    element.children.each { |child| tidied(child) if INLINE.include?(child.type) }
+    element.children = joined(element.children).each do |child|
       next unless child.type == :text
 
-      child.value = child.value.gsub(WEB_ADDRESS, REMOVED)
-                         .gsub(/\(\s*(?:#{REMOVED}\s*)+\)/, REMOVED)
+      child.value = child.value.gsub(/\(\s*(?:#{REMOVED}\s*)+\)/, REMOVED)
                          .gsub(/\(#{REMOVED}+ ?/, '(')
                          .gsub(/ ?#{REMOVED}+/, '')
     end
+    element.children = element.children.reject do |child|
+      (child.type == :text && child.value.empty?) || (INLINE.include?(child.type) && child.children.empty?)
+    end
+    children = joined(element.children.flat_map { |child| INLINE.include?(child.type) ? trimmed(child) : [child] })
+    # White space next to a line break does not show, and the writer gives two line
+    # breaks in a row as the end of the paragraph, so the export keeps only one.
+    children = children.reject.with_index do |child, index|
+      near = [index.zero? ? nil : children[index - 1], children[index + 1]]
+      child.type == :text && child.value.strip.empty? && near.any? { |piece| piece.nil? || piece.type == :br }
+    end
+    element.children = children.each_with_object([]) do |child, list|
+      list << child unless child.type == :br && list.last&.type == :br
+    end
+  end
+
+  # Bold or emphasis cannot start or end with white space or a line break, so those go
+  # before or after it.
+  def trimmed(element)
+    before = edges(element.children, :first, :shift, :lstrip, /\A\s/)
+    after = edges(element.children, :last, :pop, :rstrip, /\s\z/).reverse
+    [*before, *(element.children.empty? ? [] : [element]), *after]
+  end
+
+  def edges(children, edge, take, strip, space)
+    moved = []
+    while (piece = children.public_send(edge))
+      if piece.type == :br
+        moved << children.public_send(take)
+      elsif piece.type == :text && piece.value.match?(space)
+        moved << Kramdown::Element.new(:text, ' ')
+        piece.value = piece.value.public_send(strip)
+        children.public_send(take) if piece.value.empty?
+      else
+        break
+      end
+    end
+    moved
   end
 
   def entry_text_empty?(element)
@@ -204,7 +345,7 @@ module KongHarnessesChangelog
       if %i[ul ol].include?(element.type)
         cleaned(element)
         # An upgrade step stays whatever its scope, because a user must still do it.
-        element.children = element.children.reject { |item| name != BREAKING_CHANGES && INTERNAL_SCOPES.include?(scope(item)) }
+        element.children = element.children.reject { |item| name != BREAKING_CHANGES && TOOLING_SCOPES.include?(scope(item)) }
         element.children = element.children.flat_map { |item| without_links(item) }.reject { |item| entry_text_empty?(item) }
         element.children.empty? ? [] : [element]
       else
@@ -258,9 +399,7 @@ module KongHarnessesChangelog
     raise 'The changelog has no entries for users in its published releases.' if root.children.empty?
 
     output, = Writer.convert(root, options)
-    # Kramdown does not take the indent of a list item off a blank line in a code block,
-    # so the blank lines that the writer indents would add spaces to the code.
-    output = "#{output.gsub(/^[ \t]+$/, '').sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
+    output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
     written(output, root)
   end
 
@@ -274,12 +413,49 @@ module KongHarnessesChangelog
     element.children.flat_map { |child| code_of(child) }
   end
 
+  # What a reader sees of a tree: each element with its type, and the text that it shows.
+  # An entity, a smart quote and a typographic symbol count as their text, and white
+  # space counts as one space, as the page shows it.
+  def shape(element)
+    case element.type
+    when :blank, :eob then nil
+    when :text then element.value
+    when :entity then element.value.char
+    # The direction of a smart quote follows the text next to it.
+    when :smart_quote then element.value.to_s.include?('dquo') ? '"' : "'"
+    when :typographic_sym then Writer::TYPOGRAPHIC_SYMS[element.value]
+    when :codespan then [:codespan, element.value]
+    when :codeblock then [:codeblock, element.value.chomp, element.attr['class']]
+    else
+      children = shapes(element.children)
+      # An empty paragraph shows nothing, and the writer leaves it out.
+      [element.type, element.options[:level], *children] unless element.type == :p && children.empty?
+    end
+  end
+
+  def shapes(children)
+    list = children.filter_map { |child| shape(child) }.chunk_while { |a, b| a.is_a?(String) && b.is_a?(String) }
+                   .map { |run| run.first.is_a?(String) ? run.join.gsub(/\s+/, ' ') : run.first }
+    list[0] = list[0].lstrip if list.first.is_a?(String)
+    list[-1] = list[-1].rstrip if list.last.is_a?(String)
+    # White space next to a line break does not show.
+    list.each_with_index do |item, index|
+      next unless item.is_a?(Array) && item.first == :br
+
+      list[index - 1] = list[index - 1].rstrip if index.positive? && list[index - 1].is_a?(String)
+      list[index + 1] = list[index + 1].lstrip if list[index + 1].is_a?(String)
+    end
+    list.reject { |item| item == '' }
+  end
+
   # The writer is not built for the GFM parser, so the export reads its own output again
-  # and refuses it when a link is left or the text of any code changed.
+  # with the parser and options of the site, tables and HTML too, and refuses it unless a
+  # reader sees the same blocks, elements and text as in the tree that it wrote. So no
+  # link, table, emphasis or code span can appear, and no code can change.
   def written(output, tree)
-    reread = parse(output)
+    reread, = Kramdown::Parser::GFM.parse(output, options)
     raise 'The export would write a link back, so it refuses the changelog.' if types_of(reread).intersect?(%i[a img])
-    raise 'The export would change the text of code, so it refuses the changelog.' unless code_of(reread) == code_of(tree)
+    raise 'The export would change what a reader sees, so it refuses the changelog.' unless shape(reread) == shape(tree)
 
     output
   end
