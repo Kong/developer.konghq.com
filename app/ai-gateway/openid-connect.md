@@ -1200,8 +1200,8 @@ data:
     cache_tokens_salt: entra-obo-auth-cache-salt
 {% endentity_example %}
 
-If the `iss` claim of the caller's token doesn't match an entry in [`config.token_exchange.subject_token_issuers`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-subject-token-issuers), no exchange is performed. {{site.ai_gateway}} forwards the original token unchanged and doesn't return an error.
-This is a common cause of a `401` from the upstream with this configuration.
+The exchange only runs when the caller's token matches an entry in [`config.token_exchange.subject_token_issuers`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-subject-token-issuers). When the token's issuer matches an entry but that entry's `conditions` don't match, {{site.ai_gateway}} doesn't exchange it and forwards the original token unchanged, which the upstream can reject with a `401`.
+A token from an issuer that doesn't match an entry and isn't the auth strategy's own `issuer` fails verification at {{site.ai_gateway}}, which returns the `401` itself.
 
 To map AI Consumers and AI Consumer Groups from the claims of the caller's original token instead of the exchanged token, set [`config.token_exchange.map_identities_from`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-map-identities-from) to `subject_token`.
 
