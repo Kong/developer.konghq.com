@@ -116,6 +116,90 @@ This matters even when every caller shares one IdP.
 If several AI Models reference the same OpenID Connect AI Auth Strategy, every caller with a valid token from that IdP passes authentication on all of them.
 `access.acls` is what actually segments access to a specific AI Model, AI Agent, or AI MCP Server.
 
+### Actors
+
+Actors are the entities acting on behalf of the authenticated subject, such as an AI agent calling for a user.
+Without them, principal mapping resolves one identity per request, read from `config.principals.principal_claim` (`sub` by default), and that single result is what conditions, ACLs, and logs see.
+
+An agentic request involves more than one identity.
+The **subject** is the person the work is being done for.
+The **actor** is the agent or workload doing it.
+When a chain of workloads is involved, there's more than one actor.
+
+For example, Dana asks a support assistant to summarize a customer's open tickets.
+The assistant delegates the lookup to a retrieval agent, and the retrieval agent is what calls {{site.ai_gateway}}.
+
+A token issued through [token exchange](#token-exchange) records this chain in its `act` claim, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693):
+
+```json
+{
+  "sub": "dana",
+  "act": {
+    "sub": "retrieval-agent",
+    "act": {
+      "sub": "support-assistant"
+    }
+  }
+}
+```
+
+`sub` is the subject, `dana`.
+The **outermost `act` is the closest caller**: `retrieval-agent` is what presented the token.
+Each level of nesting is one step earlier in the chain, so `support-assistant` is what called `retrieval-agent`.
+
+Without actor resolution, {{site.ai_gateway}} reads `sub` and discards the rest, so an agent acting for a user is indistinguishable from the user acting alone.
+A rule can't distinguish them.
+Setting `config.principals.actors` resolves the other entities in the request as {{site.identity}} [Principals](/identity/principals/) too.
+
+This configuration is helpful for the following use cases:
+* Allow an MCP tool only when the caller is in the `engineering` group *and* the agent making the call is one the security team approved.
+* Raise a rate limit only when a premium user is calling through the premium client.
+
+#### Where actors come from
+
+Each actor source names a place in the request to look.
+Configure one or more in `config.principals.actors.sources`:
+
+* The client ID the strategy selected for the request.
+* A named claim, such as `azp` or `appid`.
+* The `act` chain, read from the outermost `act` inward.
+
+Not every identity provider emits an `act` claim.
+Check what your provider puts in an exchanged token before you configure the `act` chain as a source.
+The order of the sources is the order of the actors.
+There's no built-in rule for a token that includes both `azp` and an `act` chain, because which of the two is the closer caller depends on the identity provider.
+
+{:.warning}
+> The client ID source resolves to a fixed value: every request through that AI Auth Strategy produces the same actor.
+> It identifies which client the strategy is configured for, not which entity sent the request.
+
+Each resolved actor is a full Principal, with its own metadata and groups, looked up in {{site.identity}} the same way the subject is.
+Register the actor Principals in {{site.identity}} before you turn the feature on, under whichever identity the source produces.
+An `act.sub` value matches at any depth of the chain.
+
+#### How actors behave at runtime
+
+Actors are off by default, and they're additive: turning them on doesn't change how the subject is resolved.
+
+Actors never map to an AI Consumer or AI Consumer Group, even when `config.principals.match_consumer` is set.
+Only the subject does.
+
+Actors are also optional on each request.
+A token without an `act` claim, or a configured claim that isn't present, doesn't produce an actor and doesn't fail the request.
+Authentication maps the actors that exist; it's the authorization rule that decides whether a request needs one.
+A rule that requires an actor has to say so.
+
+An actor lookup fails if {{site.identity}} doesn't have a Principal for the resolved identity, or if a configured claim holds a value that can't be an identifier, such as an object or a boolean.
+A failed actor lookup follows `config.principals.error_on_miss`, the same setting that governs the subject.
+When it's `false`, {{site.ai_gateway}} keeps the actors resolved so far and stops, so a later source can't be resolved into the position of the one that failed.
+
+If the subject lookup itself fails and `error_on_miss` is `false`, {{site.ai_gateway}} doesn't resolve any actors.
+
+Actor lookups use the same cache as subject lookups, so a change to a Principal in {{site.identity}} takes effect only after its cached entry expires.
+We recommend a short TTL for any Principal whose metadata is used in access rules, so a change takes effect sooner.
+
+To use actors in a rule, see [`actors`](/ai-gateway/conditions/#context-fields) in the AI Policy conditions reference.
+
 ## Discovery cache
 
 When you configure `config.issuer` in the OIDC Auth Strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata.
@@ -1272,6 +1356,29 @@ The OpenID Connect AI Auth Strategy passes its `config` object to {{site.base_ga
 * [Protected resource metadata](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata) (`config.protected_resource_metadata`)
 * [Subject token signature verification](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) for [token exchange](#token-exchange) (`config.token_exchange.subject_token_issuers[].verify_signature`)
 * [Actor tokens](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) for token exchange (`config.token_exchange.request.actor_token`)
+
+<!--vale off-->
+{% comment %}
+TODO (actors, AI Gateway 2.4): is the actor token limitation above still true?
+
+`config.token_exchange.request.actor_token` is present in the AI Gateway OIDC
+schema (app/_schemas/ai-gateway/policies/OpenidConnect.json) with four
+properties: source (config|header|none, default none), header_name,
+static_token, and type. The schema JSON carries everything passed through to
+the plugin, so its presence there isn't proof the AI Auth Strategy honors it.
+Confirm with the AI Gateway team or against the RC.
+
+If it IS supported: remove this bullet, but don't just uncomment the Actor
+tokens block further up this page. That block documents only actor_token and
+actor_token.type and predates the other three properties, including source
+defaulting to none, which means the feature is off unless it's set.
+
+Either way, add one sentence connecting the two directions of RFC 8693: an
+actor token is this strategy sending an actor identity outbound in an exchange
+request, while the Actors section is this strategy reading an inbound act
+claim. Readers who find one will look for the other.
+{% endcomment %}
+<!--vale on-->
 
 ## Schema
 
