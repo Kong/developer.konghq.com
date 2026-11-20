@@ -37,8 +37,8 @@ related_resources:
 A renewal checks the token response.
 For the client settings, the scopes and the access token lifetime, see [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
 
-This page lists the checks that the settings of an identity provider or a profile can break.
-{{site.kong_harnesses}} also refuses a response that breaks the encoding rules of [OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749), [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html), [JWS](https://www.rfc-editor.org/rfc/rfc7515), [JWK](https://www.rfc-editor.org/rfc/rfc7517), [JWA](https://www.rfc-editor.org/rfc/rfc7518) or [JWT](https://www.rfc-editor.org/rfc/rfc7519), such as a value that isn't in Base64url, and a response with more than 16,384 bytes of headers or a body that it can't read completely.
+{{site.kong_harnesses}} also refuses a response that breaks the encoding rules of [OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749), [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html), [JWS](https://www.rfc-editor.org/rfc/rfc7515), [JWK](https://www.rfc-editor.org/rfc/rfc7517), [JWA](https://www.rfc-editor.org/rfc/rfc7518) or [JWT](https://www.rfc-editor.org/rfc/rfc7519), such as a value that isn't in Base64url.
+It also refuses a response with more than 16,384 bytes of headers, or a body that it can't read completely.
 
 ## Profile values
 
@@ -90,15 +90,15 @@ A request to the callback path with that `state` ends the wait, and it must meet
 
 ## HTTP responses
 
-{{site.kong_harnesses}} reads the discovery document from the issuer URL without a trailing slash, followed by `/.well-known/openid-configuration`.
+{{site.kong_harnesses}} reads the discovery document from `discovery_url`.
 It reads the discovery document and the signing keys with one `GET` request each.
 It doesn't follow redirects, and it uses TLS 1.2 or later for all requests to the identity provider.
 The TLS certificate of the identity provider must chain to the system trust store of each developer computer, because the gateway CA bundle of a profile doesn't apply to the identity provider.
 If the identity provider uses a certificate from a private CA, add the CA to that trust store.
 
 A response with a status other than `2xx` fails the request.
-At renewal, when the token endpoint answers with a `4xx` status other than `429` and an `error` member of `invalid_grant`, {{site.kong_harnesses}} also removes the saved sign-in.
-When the status is another one, the renewal fails and the saved sign-in stays.
+At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved sign-in.
+For other error responses, the renewal fails and the saved sign-in stays.
 
 A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
 
@@ -142,6 +142,7 @@ For example, without `code_challenge_methods_supported`, check that the token en
 ## Signing keys
 
 The document at `jwks_uri` must have a `keys` array of 1 to 64 keys, and at least one key must be usable.
+A key can leave out `alg`, `use` and `key_ops`.
 Each key must meet these rules, or the sign-in fails, even when another key in the document can verify the ID token:
 
 * `kty` is a string.
@@ -149,10 +150,10 @@ Each key must meet these rules, or the sign-in fails, even when another key in t
 
 Then {{site.kong_harnesses}} reads the other members of the key in this order, and stops at the first one that makes it skip the key:
 
-1. When `alg` isn't a string, or isn't `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`, it skips the key.
-2. When `use` isn't a string, the sign-in fails.
+1. When the key has `alg` with a value that isn't a string, or that isn't `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`, it skips the key.
+2. When the key has `use` with a value that isn't a string, the sign-in fails.
    When `use` is a string other than `sig`, it skips the key.
-3. When `key_ops` isn't a nonempty array of unique strings, the sign-in fails.
+3. When the key has `key_ops` with a value that isn't a nonempty array of unique strings, the sign-in fails.
    When `key_ops` doesn't have `verify`, it skips the key.
 4. When `kty` is other than `RSA` or `EC`, it skips the key.
 5. When an `RSA` key doesn't have a modulus of 2,048 to 8,192 bits and a public exponent that is an odd number from 3 to 2,147,483,647, the sign-in fails.
@@ -185,6 +186,7 @@ The ID token from the sign-in must meet these rules:
 * It doesn't have a `crit` header.
   A `typ` header, when the token has one, is `JWT`, and a `kid` header, when the token has one, has 1 to 256 visible ASCII characters.
 * Exactly one usable key matches the `alg` of the token, and its `kid` when the header has one.
+  An `RS` or `PS` algorithm needs an `RSA` key, and `ES256`, `ES384` and `ES512` need an `EC` key on `P-256`, `P-384` and `P-521`.
   So two usable keys for the same algorithm without a `kid` in the header fail the sign-in, even when one of them can verify the token.
 * The signature passes verification with that key.
 * `iss` is the issuer of the profile, and `sub` has 1 to 255 visible ASCII characters.

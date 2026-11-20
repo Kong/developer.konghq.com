@@ -74,7 +74,6 @@ They come from the documentation of each identity provider, and they aren't test
 * Issuer: Use the issuer of your tenant, `https://login.microsoftonline.com/TENANT_ID/v2.0`, not `common`, `organizations` or `consumers`.
 * Client: Under **Authentication**, set **Allow public client flows** to **Yes**, and don't add a client secret, as [Configure desktop apps that call web APIs](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-configuration) describes.
   The discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
-  Entra ID also accepts the `plain` PKCE method, as [the authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow) describes.
 * Callback: Register the callback under **Mobile and desktop applications**.
   Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
   So register one `localhost` callback for each path, not one for each port, because Entra ID picks one of several that differ only by port, as [localhost exceptions](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url#localhost-exceptions) describes.
@@ -100,7 +99,8 @@ They come from the documentation of each identity provider, and they aren't test
   A v2.0 access token has the application ID of the gateway API, a GUID, in `aud`, and a v1.0 access token can have the application ID or the Application ID URI.
   Put the value that your tokens have in `config.audience_required`.
 * Access token lifetime: Entra ID issues access tokens for 60 to 90 minutes by default, as [Configurable token lifetimes](https://learn.microsoft.com/en-us/entra/identity-platform/configurable-token-lifetimes#access-tokens) describes.
-  Set `--max-token-lifetime-seconds 5400`.
+  For these default lifetimes, set `--max-token-lifetime-seconds 5400`.
+  If a token lifetime policy applies to the gateway API, set the value to the longest access token lifetime of that policy.
 
 ## PingFederate
 
