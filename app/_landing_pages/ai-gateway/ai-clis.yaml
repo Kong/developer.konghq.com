@@ -104,6 +104,14 @@ rows:
             description: Use Claude Code with a Claude subscription and company-paid models
             cta:
               url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with kong-harnesses
+            icon: /assets/icons/third-party/claude.svg
+            description: Use Claude Code with kong-harnesses and an Okta sign-in
+            cta:
+              url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - header:
       type: h2
       text: "Codex CLI"
