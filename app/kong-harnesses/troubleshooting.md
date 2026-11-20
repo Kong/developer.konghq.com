@@ -154,7 +154,8 @@ rows:
       For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line names only that `profile activate` step, run it on its own.
       When project settings or managed settings of {{ site.claude_code }} set a proxy variable, or `doctor` can't read them, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
-      The same applies when a settings file sets one proxy variable twice with different letter case, or sets a proxy variable to a value that isn't a string.
+      The same applies when a settings file sets a proxy variable to a value that isn't a string or that contains a NUL character.
+      On Windows, it also applies when a settings file sets one proxy variable twice, with different letter case and different values.
       Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
     what: |
@@ -171,11 +172,14 @@ rows:
       When the provider mode of the profile takes model IDs from the profile, `catalog` reports `ok` without a request, and the `picker` and `model` checks use the models of the profile.
     next: |
       Do what the `fix:` line says.
-      When the check says that the gateway needs a sign-in, sign in first, then run `doctor` again.
+      When the check says that the gateway needs a sign-in, sign in as the `fix:` line says, then run `doctor` again.
+      For a profile that uses your Claude subscription, `doctor` can't send that sign-in, so start {{ site.claude_code }}, which reads the model list with your subscription sign-in.
       When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
-    what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists, or gateway discovery adds those models next to the built-in models.
+    what: |
+      The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
+      When gateway discovery fills the menu, the menu keeps the built-in models, and each gateway model that discovery skips needs its own row.
     next: |
       Do what the `fix:` line says, when the report has one.
       It's usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which updates the menu.
@@ -243,7 +247,8 @@ To clean up one agent CLI, add `--client`, for example `--client claude-code`.
    ```
 
 `profile cleanup` changes only the values that kong-harnesses still owns.
-If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is, and its output names each setting or group of settings that holds your edits.
+If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is.
+After a cleanup that succeeds, its output names each setting or group of settings that holds your edits.
 If `profile cleanup` can't tell which values it owns, it exits with `2`, or with `4` when it changed another agent CLI.
 Do the steps that its message names, for example inspect the settings and remove the leftover values manually.
 If `profile cleanup` changes settings but can't finish the cleanup for one or more agent CLIs, it exits with `4`, also with `--client`.
