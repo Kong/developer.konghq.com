@@ -269,7 +269,7 @@ rows:
     behavior: |
       Return `null` when the request isn't authenticated.
       For an authenticated AI Consumer that belongs to AI Consumer Groups, return the names and IDs of those groups.
-  - field: "`principal.id`, `principal.metadata`"
+  - field: "`principal.id`, `principal.display_name`, `principal.metadata`"
     behavior: |
       When the request is authenticated through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with {{site.identity}} [Principal](/identity/principals/) mapping (`config.principals`), `principal.id` is the Principal's ID and `principal.metadata` is its metadata map.
       In all other cases, both fields are `null`.
@@ -280,6 +280,16 @@ rows:
       When no token was validated, `access_token.claims` is an empty map and `access_token.token` is `null`.
 
       `access_token.claims` is a map whose inner keys aren't pre-populated, so check for a claim with `has()` before you read it. See [Token claims](#token-claims).
+      When the request is authenticated through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with {{site.identity}} [Principal](/identity/principals/) mapping (`config.principals`), `principal.id` is the Principal's ID, `principal.display_name` is its display name, and `principal.metadata` is its metadata map.
+      In all other cases, all three fields are `null`.
+  - field: "`actors`"
+    behavior: |
+      The entities acting on behalf of the Principal, such as an AI agent, in call order.
+      `actors[0]` is the entity that made the request.
+      Each entry is a map with `id`, `display_name`, `type`, `metadata`, and `groups` keys, the same shape as the `principal.*` fields.
+      `actors` is `null` when nothing is acting on the Principal's behalf, including every request without a Principal.
+      This is only populated when the AI Auth Strategy sets `config.principals.actors`.
+      See [Actors](/ai-gateway/openid-connect/#actors).
   - field: "`kong.ctx.shared`"
     behavior: |
       Always a map. Accessing a missing key causes a runtime error.
@@ -288,7 +298,8 @@ rows:
 <!--vale on-->
 
 {:.info}
-> The `consumer.*`, `consumer_group.*`, `principal.*`, and `access_token.*` fields are populated only after an authentication step has identified the caller.
+> `access_token.token` is the caller's raw bearer token. Don't write it into a log, a header, or any other field that leaves {{site.ai_gateway}}.
+> The `consumer.*`, `consumer_group.*`, `principal.*`, `actors`, and `access_token.*` fields are populated only after an authentication step has identified the caller.
 
 #### Token claims
 
@@ -314,8 +325,40 @@ Keep the following in mind when you read claims:
 * A numeric claim such as `exp` can be an integer or a double.
 * {{site.ai_gateway}} exposes a token's claims because it validated that token. If you turn off signature verification on the AI Auth Strategy, the claims are still exposed, but nothing has checked that the token is genuine.
 
-{:.warning}
-> `access_token.token` is the caller's raw bearer token. Don't write it into a log, a header, or any other field that leaves {{site.ai_gateway}}.
+#### Write a condition that uses actors
+
+In an AI Policy condition, you can test whether the request has an actor at all:
+
+```sh
+actors != null
+```
+
+The condition runs the AI Policy only for requests where something is acting on behalf of the Principal, such as an AI agent, and skips it for a user calling directly.
+
+To write a rule about a *particular* actor, use a CEL-based ACL on the [AI Model](/ai-gateway/entities/ai-model/) or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) instead.
+AI Policy conditions can't index lists or call `exists()`, so they can't reach the attributes of an individual actor.
+See [Differences from {{site.base_gateway}} plugin conditions](#differences-from-kong-gateway-plugin-conditions).
+
+<!--vale off-->
+{% comment %}
+TODO (actors, AI Gateway 2.4): confirm against the RC which CEL surfaces accept
+list indexing and exists() with `actors`.
+
+AI Policy conditions reject default(), size(), exists(), all(), and list
+indexing. That restriction is already documented in "Differences from Kong
+Gateway plugin conditions" on this page, and is why the example here is limited
+to `actors != null`.
+
+CEL-based ACLs (access.acls.allow_when / deny_when) may not carry the same
+restriction: the merged ACL schema tests in Kong/kong-ee#24739 accept both
+`actors.exists(a, a.metadata.kind == "agent")` and
+`default(actors[0].metadata.tier == 3, false)`. If ACLs do accept them, the
+worked two-party example belongs in _includes/md/ai-gateway/v2/cel-acls.md and
+should be linked from here. If they don't, say so explicitly on both pages,
+because the ERD and both PRDs lead with an exists() example that would then
+never work in AI Gateway.
+{% endcomment %}
+<!--vale on-->
 
 #### Fields to avoid
 
@@ -337,6 +380,7 @@ The following fields return `null` when a value isn't set:
 * `net.tls.sni`
 * `consumer.*`, `consumer_group.*`, `principal.*`
 * `access_token.token`
+* `actors`
 
 Compare these fields directly with `null`:
 
