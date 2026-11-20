@@ -74,10 +74,11 @@ cleanup:
         kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json
         ```
 
-        For an MDM build with `--mcp-servers exclusive`, pass all the flags:
+        For an MDM build with `--mcp-servers exclusive`, pass all the flags.
+        Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy com.anthropic.claudecode.plist --mcp-config managed-mcp.json --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy POLICY_FILE --mcp-config MCP_CONFIG_FILE --output-dir fleet-macos-removed
         ```
 
         `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -100,8 +101,8 @@ In this guide, you choose how the settings reach the computers and which MCP ser
 
 ## Sign in on your own computer
 
-In the Anthropic API mode, `fleet build` reads the model list of the gateway with your own sign-in, and stops when it can't read the list.
-In another provider mode, it uses the models of the profile.
+When the Claude provider of the profile is the Anthropic API, `fleet build` reads the model list of the gateway with your own sign-in, and refuses to build when it can't read the list.
+For another Claude provider, such as Amazon Bedrock, it uses the models of the profile.
 Sign in to the profile first:
 
 ```sh
@@ -167,6 +168,7 @@ When the profile has no gateway MCP servers, use `allowlist`, the default, or `a
   To get the gateway MCP servers, each developer runs `kong-harnesses profile activate work --client claude-code`.
 * `--mcp-servers any` adds no lock and leaves MCP servers to each developer.
   A lock that your own managed settings set still applies.
+  This mode takes no `--mcp-url` or `--mcp-command`.
 
 If the computers already have a `managed-mcp.json` and the profile has gateway MCP servers, use `exclusive` with `--mcp-config`.
 {{ site.claude_code }} then loads only the servers in that file, so with `allowlist` or `any` it doesn't load the gateway MCP servers, even after `profile activate`.
@@ -185,9 +187,19 @@ This guide uses one folder for each build.
 Replace each placeholder with the value for your deployment:
 
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
-* For a file build, replace `managed-settings.json` with the path of your copy, or replace `--policy managed-settings.json` with `--NO_POLICY_FLAG`.
-* For an MDM build, replace the policy file with the path of your current policy.
+  With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
+* For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
+  If the computers have no `managed-settings.json`, replace `--policy POLICY_FILE` with `--NO_POLICY_FLAG`.
+* For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
   If the computers get no {{ site.claude_code }} policy now, leave out `--policy`.
+
+The Windows examples set up {{ site.claude_code }} on Windows itself.
+By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
+To give it the same settings, add `--wsl inherit`.
+This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
+It also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` that sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
+A gateway certificate from a private CA also needs that CA in each WSL distribution.
+The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
 
 ### File build
 
@@ -199,7 +211,7 @@ kong-harnesses fleet build \
   --profile work \
   --platform macos \
   --executable /usr/local/bin/kong-harnesses \
-  --policy managed-settings.json \
+  --policy POLICY_FILE \
   --mcp-servers MCP_MODE \
   --output-dir fleet-macos
 ```
@@ -212,7 +224,7 @@ kong-harnesses fleet build \
   --profile work \
   --platform linux \
   --executable /usr/bin/kong-harnesses \
-  --policy managed-settings.json \
+  --policy POLICY_FILE \
   --mcp-servers MCP_MODE \
   --output-dir fleet-linux
 ```
@@ -221,7 +233,7 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy managed-settings.json --mcp-servers MCP_MODE --output-dir fleet-windows
+kong-harnesses fleet build --profile work --platform windows --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy POLICY_FILE --mcp-servers MCP_MODE --output-dir fleet-windows
 ```
 
 {% endnavtab %}
@@ -238,7 +250,7 @@ kong-harnesses fleet build \
   --platform macos \
   --delivery mdm \
   --executable /usr/local/bin/kong-harnesses \
-  --policy com.anthropic.claudecode.plist \
+  --policy POLICY_FILE \
   --mcp-servers MCP_MODE \
   --output-dir fleet-macos-mdm
 ```
@@ -247,7 +259,7 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --delivery mdm --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy Settings.json --mcp-servers MCP_MODE --output-dir fleet-windows-mdm
+kong-harnesses fleet build --profile work --platform windows --delivery mdm --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy POLICY_FILE --mcp-servers MCP_MODE --output-dir fleet-windows-mdm
 ```
 
 {% endnavtab %}
@@ -293,14 +305,14 @@ The managed settings, in the file or in the MDM policy, hold what `kong-harnesse
 * The credential helper, `kong-harnesses credential --profile work`, at the path of `--executable`.
   The settings hold no credential.
 * The models of the gateway.
-  In the Anthropic API mode, {{ site.claude_code }} also asks the gateway for its model list.
+  When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
   A model that the gateway adds later shows in `/model` with no new build when its ID contains `claude` or `anthropic`.
   Another new model needs a new build.
-  In another provider mode, the models come from the profile, or from `--model`.
+  For another Claude provider, the models come from the profile, or from `--model`.
 * The gateway prices of the models for `/cost`, when the gateway or the profile states them.
 * The {{ site.claude_code }} features that the profile turns off behind the gateway.
 * A lock to the gateway.
-  {{ site.claude_code }} refuses every provider but the gateway, and ignores another provider mode, a credential or custom headers that a developer sets in the shell or in their own settings.
+  {{ site.claude_code }} refuses every provider but the gateway, and ignores another Claude provider, a credential or custom headers that a developer sets in the shell or in their own settings.
   A session that Claude Desktop starts is the exception, because {{ site.claude_code }} then takes environment variables from the environment that Claude Desktop builds.
 * With `--mcp-servers allowlist`, the lock on MCP servers that [Choose the MCP servers](#choose-the-mcp-servers) describes.
 * A build ID in `env.KONG_HARNESSES_FLEET_BUILD`, so a support report from a developer names the build that their computer has.
@@ -325,8 +337,9 @@ With your MDM tool, install the following on each managed computer:
    To install it, see [Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup).
    An older {{ site.claude_code }} doesn't refuse every other provider.
    To find the supported versions and hold the fleet to them, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
-1. The kong-harnesses package, at the path of `--executable`.
-   To install kong-harnesses, see the [kong-harnesses page](/kong-harnesses/).
+1. The kong-harnesses package for the platform, at the path of `--executable`: the macOS installer package at `/usr/local/bin/kong-harnesses`, the Linux `.deb` or `.rpm` package at `/usr/bin/kong-harnesses`, or the Windows installer at `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
+   To install them, and to deploy the Windows installer with Intune, see [Install kong-harnesses for every user of a computer](/kong-harnesses/install/).
+   A Homebrew install isn't at these paths, and isn't for managed computers.
 1. The CA of the gateway in the system trust store, if the gateway certificate comes from a private CA.
    The build installs no CA.
 1. The files under `root` in the output folder, with their paths, as an administrator.
@@ -361,6 +374,7 @@ Sign in with your identity provider account.
 
 In {{ site.claude_code }}, run `/status`.
 The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` for a file build, or `(file + drop-ins)` when the computers also have your `managed-settings.json`, or `(plist)` or `(HKLM)` for an MDM build.
+If your organization sets `managedSourcesBehavior` to `merge`, the line lists each source that {{ site.claude_code }} merged and ends with `, merged`.
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 If the line shows `(remote)`, the server-managed settings from the claude.ai admin console rank above the build.
 Remove them from the admin console.
