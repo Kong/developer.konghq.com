@@ -41,28 +41,28 @@ When a command fails, {{site.kong_harnesses}} prints one line that starts with `
 {% table %}
 columns:
   - title: Code
-    key: exit_code
+    key: value
   - title: Meaning
     key: meaning
   - title: What to do
     key: action
 rows:
-  - exit_code: "0"
+  - value: "0"
     meaning: "The command succeeded."
     action: "Nothing."
-  - exit_code: "1"
+  - value: "1"
     meaning: "A temporary failure, such as a network error or a locked password store."
     action: "Follow the message, then run the command again."
-  - exit_code: "2"
+  - value: "2"
     meaning: "A wrong flag or argument, or a problem in the profile, the client settings or this computer."
     action: "Fix what the message names. Running the command again without a change gives the same error."
-  - exit_code: "3"
+  - value: "3"
     meaning: "The command needs a new sign-in."
     action: "Run `kong-harnesses login --profile <name>`, or set the key that the message names."
-  - exit_code: "4"
+  - value: "4"
     meaning: "A command that removes something did only part of its work, for example `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider."
     action: "Follow the message, then run the command again."
-  - exit_code: "130"
+  - value: "130"
     meaning: "You cancelled the command, for example with Ctrl+C."
     action: "Run the command again when you are ready."
 {% endtable %}
