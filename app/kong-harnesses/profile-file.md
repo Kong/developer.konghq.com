@@ -30,9 +30,9 @@ related_resources:
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 ---
 
-A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI. It holds no secrets, so an administrator can share one file with every developer. [`kong-harnesses profile create`](/kong-harnesses/profile/create/) writes a profile for you, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) installs one from a file or an HTTPS URL.
+A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI. A profile doesn't contain secrets, so an administrator can share one file with every developer. [`kong-harnesses profile create`](/kong-harnesses/profile/create/) writes a profile for you, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) installs one from a file or an HTTPS URL.
 
-The file is JSON of up to 64 KB, and {{site.kong_harnesses}} refuses a field that it doesn't know. To see an installed profile, run:
+The file is JSON of up to 65536 bytes. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see an installed profile, run:
 
 ```sh
 kong-harnesses profile get <name> -o json
@@ -94,7 +94,9 @@ This profile signs developers in with an identity provider and sets up {{ site.c
 
 ## Schema versions
 
-`schema_version` says which fields the profile can use. Each {{site.kong_harnesses}} release reads every schema version up to its own newest one, and refuses a profile with a newer version. `profile create` writes the newest version that its release reads, so an older release can't import that profile. To give one profile to developers on different releases, use the oldest version that has the fields you need.
+`schema_version` says which fields the profile can use. Each {{site.kong_harnesses}} release reads every schema version up to its own newest one, and refuses a profile with a newer version. `profile create` writes the newest version that its release reads, so an older release can't import that profile.
+
+To give one profile to developers on different releases, find the oldest release that they use. Then set the lowest schema version that has every field you need, and check in the following table that this release reads it.
 
 {% table %}
 columns:
@@ -139,7 +141,7 @@ rows:
     adds: "`pricing`."
     release: "0.5.0 and later"
   - version: "12"
-    adds: "`routes`, `clients`, `gateway_ca_bundle`, `sign_in` and `mcp_servers`. The {{ site.claude_code }} settings move from the top level into `clients.claude-code`, and every {{ site.claude_code }} model role is required."
+    adds: "`routes`, `clients`, `gateway_ca_bundle`, `sign_in` and `mcp_servers`. The {{ site.claude_code }} settings move from the top level into `clients.claude-code`. `models` adds the `default`, `fable`, `subagent`, `background_classifier` and `auto_mode` roles, and every role except `max_context_tokens` is required."
     release: "0.6.0 and later"
   - version: "13"
     adds: "The `codex`, `opencode` and `omp` client blocks."
@@ -157,7 +159,7 @@ rows:
     adds: "`sign_in` set to `environment_key`."
     release: "0.16.0 and later"
   - version: "18"
-    adds: "`auto_mode_gateway_check`, and a change to what `auto_updates: false` writes."
+    adds: "`auto_mode_gateway_check`, and new rules for what `auto_updates: false` and `feature_flags` write. See [Claude Code choices](#claude-code-choices)."
     release: "0.18.0 and later"
 {% endtable %}
 
@@ -179,15 +181,15 @@ rows:
   - field: "`schema_version`"
     description: "Required. The schema version of the document. See [Schema versions](#schema-versions)."
   - field: "`name`"
-    description: "Required. The name that commands take with `--profile`. 1 to 63 characters: lowercase letters, digits and hyphens. It starts with a letter, and ends with a letter or a digit."
+    description: "Required. The name that commands take with `--profile`. 1 to 63 bytes of lowercase letters, digits and hyphens. It starts with a letter, and ends with a letter or a digit. `default`, `con`, `prn`, `aux`, `nul`, `com1` to `com9` and `lpt1` to `lpt9` are reserved."
   - field: "`display_name`"
-    description: "A name for people to read. Up to 80 characters."
+    description: "A name for people to read, 1 to 80 printable ASCII characters."
   - field: "`description`"
-    description: "A longer description. Up to 240 characters."
+    description: "A longer description, 1 to 240 printable ASCII characters."
   - field: "`gateway_origin`"
-    description: "Required. The origin of {{site.ai_gateway}}, with no path. It uses `https://`. Only a gateway on this computer, on `localhost`, `127.0.0.1` or `[::1]`, can use `http://`."
+    description: "Required. The origin of {{site.ai_gateway}}, without a path. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`."
   - field: "`gateway_ca_bundle`"
-    description: "Version 12 and later. The PEM text of the certificate authorities that sign the gateway certificate, for a gateway with a private certificate authority."
+    description: "Version 12 and later. PEM certificate authorities for the gateway certificate, up to 32 KB. Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself. From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so. Add the certificate authority to the system trust store of each computer instead."
   - field: "`sign_in`"
     description: "Version 12 and later. How developers get a credential. See [Sign-in fields](#sign-in-fields)."
   - field: "`routes`"
@@ -200,7 +202,7 @@ rows:
     description: "Version 3 and later. Headers that tell the gateway who a request belongs to. See [Attribution](#attribution)."
 {% endtable %}
 
-Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`. From version 12, these fields are refused at the top level and go in `clients.claude-code`.
+Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`. From version 12, these fields go in `clients.claude-code`, and the top level refuses them. A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes.
 
 ## Sign-in fields
 
@@ -216,14 +218,14 @@ rows:
   - value: "Not set"
     description: "Developers sign in with your OpenID Connect identity provider through `kong-harnesses login`. The identity provider fields are required."
   - value: "`static_key`"
-    description: "Each developer saves a key from you with `kong-harnesses login`. The profile has no identity provider fields."
+    description: "Each developer saves a key from you with `kong-harnesses login`. The profile can't have identity provider fields."
   - value: "`environment_key`"
-    description: "Version 17 and later. Each command reads the key from `KONG_HARNESSES_STATIC_KEY`, for example in a CI job. The profile has no identity provider fields."
+    description: "Version 17 and later. Each command reads the key from `KONG_HARNESSES_STATIC_KEY`, for example in a CI job. The profile can't have identity provider fields."
   - value: "`subscription`"
-    description: "{{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway. The identity provider fields are required."
+    description: "{{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway. The identity provider fields are required, and `gateway_origin` uses `https://`."
 {% endtable %}
 
-The identity provider fields:
+The identity provider fields apply when `sign_in` isn't set or is `subscription`. Each URL uses `https://`.
 
 {% table %}
 columns:
@@ -235,17 +237,17 @@ rows:
   - field: "`issuer`"
     description: "Required. The issuer URL of the identity provider."
   - field: "`discovery_url`"
-    description: "Required. The issuer URL followed by `/.well-known/openid-configuration`."
+    description: "Required. The issuer URL without a trailing `/`, followed by `/.well-known/openid-configuration`."
   - field: "`authorization_endpoint`, `token_endpoint`, `jwks_uri`"
     description: "Required. The endpoints from the discovery document."
   - field: "`revocation_endpoint`"
     description: "Version 4 and later. The endpoint that `logout` uses to revoke the sign-in."
   - field: "`client_id`"
-    description: "Required. The ID of the public client that you registered for {{site.kong_harnesses}}."
+    description: "Required. The ID of the public client that you registered for {{site.kong_harnesses}}, 1 to 256 visible ASCII characters."
   - field: "`redirect_uri`"
-    description: "Where the identity provider sends the browser after sign-in. The default is `http://localhost:9876/callback`. Another value must use `http://` on `localhost`, `127.0.0.1` or `[::1]` with a port."
+    description: "Where the identity provider sends the browser after sign-in. The default is `http://localhost:9876/callback`. Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port. Its path is 2 to 256 characters of letters, digits and `-._~/`, without a query or a fragment. Register the same value with the identity provider."
   - field: "`audience`"
-    description: "Required. The audience that the gateway accepts in a token."
+    description: "Required. The audience that the gateway accepts in a token, as an absolute URI without user information or a fragment."
   - field: "`audience_parameter`"
     description: "Version 5 and later. How the sign-in request sends the audience: `resource`, the default, `audience`, or `none`."
   - field: "`public_client_evidence`"
@@ -253,12 +255,18 @@ rows:
   - field: "`scopes`"
     description: "Required. The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them. `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`."
   - field: "`max_access_token_lifetime_seconds`"
-    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 360 to 86400. The default is 3600. A changed value needs a new `login`."
+    description: "The longest access token lifetime that {{site.kong_harnesses}} accepts, from 360 to 86400. The default is 3600."
 {% endtable %}
+
+### Security identity
+
+These fields make up the security identity of a profile: `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
+
+A saved sign-in belongs to one security identity. When you import a profile that changes one of these fields, each developer runs `kong-harnesses login` again. `profile import` refuses the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then import the profile and activate it again. A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
 ## Routes
 
-`routes` maps a route name to the protocol that the gateway serves on it. A profile has up to 16 routes, and each client block names one of them in its `route` field.
+`routes` maps a route name to the protocol that the gateway serves on it. A profile has 1 to 16 routes. Each route name is 1 to 64 bytes of visible ASCII, and each client block names one route in its `route` field.
 
 {% table %}
 columns:
@@ -270,11 +278,11 @@ rows:
   - field: "`protocol`"
     description: "Required. `anthropic-messages` for the Anthropic API, `foundry-messages` for Microsoft Foundry, `bedrock-mantle-messages` for Amazon Bedrock Mantle, `openai-responses` for Codex, or `gateway-plugin` for OpenCode."
   - field: "`tool_reference`"
-    description: "Only for the Anthropic API protocols. `true` when the route serves the tool references that {{ site.claude_code }} tool search sends."
+    description: "Required for the three Anthropic API protocols, and refused for the others. `true` when the route serves the tool references that {{ site.claude_code }} tool search sends."
   - field: "`advisor`"
-    description: "Only for the Anthropic API protocols. `true` when the route serves the {{ site.claude_code }} advisor tool."
+    description: "Required for the three Anthropic API protocols, and refused for the others. `true` when the route serves the {{ site.claude_code }} advisor tool."
   - field: "`artifact`"
-    description: "Only for the Anthropic API protocols. Kept so that older profiles still import. It has no effect."
+    description: "Required for the three Anthropic API protocols, and refused for the others. Activation ignores it. It stays so that older profiles still import."
 {% endtable %}
 
 ## Clients
@@ -310,7 +318,12 @@ rows:
     protocol: "`anthropic-messages`"
 {% endtable %}
 
-The `hermes` block also needs `model`, the gateway model that Hermes uses. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`. A profile with an `opencode` block doesn't use `static_key` or `environment_key`. A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route. `profile activate` doesn't set up pi for a profile with `attribution`.
+Some blocks have more rules:
+
+* The `hermes` block also needs `model`, the gateway model that Hermes starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
+* A profile with an `opencode` block can't use `static_key` or `environment_key`.
+* A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
+* `profile activate` doesn't set up pi for a profile with `attribution`, or for a version 3 to 11 profile with `telemetry`.
 
 ### Claude Code
 
@@ -341,7 +354,7 @@ rows:
 
 #### Models
 
-`profile activate` writes each alias into the {{ site.claude_code }} settings. Each alias is 1 to 128 characters. From version 12, every role except `max_context_tokens` is required.
+`profile activate` writes each alias into the {{ site.claude_code }} settings. Each alias is 1 to 128 bytes of visible ASCII. Versions 2 to 6 take `active`, `sonnet` and `opus`, and require all three. Version 7 adds `haiku` and `max_context_tokens`. From version 12, every role except `max_context_tokens` is required.
 
 {% table %}
 columns:
@@ -374,7 +387,14 @@ rows:
 
 #### Claude Code choices
 
-From version 14, each choice is optional, and a choice that the profile leaves out changes nothing. Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
+Each choice is `true` or `false`. From version 14, each choice is optional, and a choice that the profile leaves out changes nothing. Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices. For a profile before version 14, `profile activate` sets each choice from `anthropic_telemetry` to `webfetch_preflight` to `false`, as the releases before 0.9.0 did.
+
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile import` refuses a profile that turns on a feature and also turns off a setting that it needs:
+
+* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`.
+* `feature_flags: true` can't go with `anthropic_telemetry: false`.
+* From version 18, `feedback_survey: true` can't go with `anthropic_telemetry: false`.
+* `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
 
 {% table %}
 columns:
@@ -386,17 +406,17 @@ columns:
     key: on
 rows:
   - choice: "`auto_updates`"
-    off: "Writes `DISABLE_AUTOUPDATER=1`. From version 18, it also writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, unless another choice turns on a feature that this setting turns off."
+    off: "Writes `DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. From version 18, it writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`."
     on: "Writes nothing."
   - choice: "`tool_search`"
     off: "Writes `ENABLE_TOOL_SEARCH=false`."
-    on: "Writes `ENABLE_TOOL_SEARCH=true`. The route needs `tool_reference: true`."
+    on: "Writes `ENABLE_TOOL_SEARCH=true`. The route needs `tool_reference: true`. When `request_shape` sets `experimental_betas: false`, tool search stays off."
   - choice: "`advisor`"
     off: "Writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`."
     on: "Leaves the advisor tool on. The route needs `advisor: true`."
   - choice: "`artifact`"
-    off: "No effect."
-    on: "No effect. The route needs `artifact: true`."
+    off: "Writes nothing."
+    on: "Writes nothing. The route needs `artifact: true`."
   - choice: "`hint_headers`"
     off: "Writes `CLAUDE_CODE_GATEWAY_HINT_HEADERS=0`."
     on: "Writes `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1`."
@@ -404,8 +424,8 @@ rows:
     off: "Writes `DISABLE_TELEMETRY=1`."
     on: "Leaves `DISABLE_TELEMETRY` blank."
   - choice: "`feature_flags`"
-    off: "Writes `DISABLE_GROWTHBOOK=1`, and from version 18 also `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`."
-    on: "Leaves these settings blank."
+    off: "Writes `DISABLE_GROWTHBOOK=1`. From version 18, it also writes `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`."
+    on: "Leaves `DISABLE_GROWTHBOOK` blank. From version 18, it also leaves `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` blank."
   - choice: "`error_reports`"
     off: "Writes `DISABLE_ERROR_REPORTING=1`."
     on: "Leaves `DISABLE_ERROR_REPORTING` blank."
@@ -417,7 +437,7 @@ rows:
     on: "Writes `ENABLE_CLAUDEAI_MCP_SERVERS=true`."
   - choice: "`fast_mode`"
     off: "Writes `CLAUDE_CODE_DISABLE_FAST_MODE=1`."
-    on: "Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank, and writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`."
+    on: "Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank. From release 0.18.0, it also writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`, for each schema version."
   - choice: "`bug_command`"
     off: "Writes `DISABLE_BUG_COMMAND=1`."
     on: "Leaves `DISABLE_BUG_COMMAND` blank."
@@ -434,9 +454,11 @@ rows:
     off: "Writes `skipWebFetchPreflight: true`."
     on: "Writes `skipWebFetchPreflight: false`."
   - choice: "`auto_mode_gateway_check`"
-    off: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=1`. You can't combine it with `experimental_betas: false` in `request_shape`."
-    on: "Version 18 and later. Auto mode runs its check through the gateway."
+    off: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=1`, so auto mode asks the model API for its verdict. A model that isn't Claude doesn't give one, so auto mode then asks about or denies each checked action. You can't combine it with `experimental_betas: false` in `request_shape`."
+    on: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway."
 {% endtable %}
+
+When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its own default, which loads every tool at the start behind a gateway.
 
 #### Request shape
 
@@ -452,7 +474,7 @@ rows:
   - field: "`experimental_betas`"
     description: "`false` writes `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` and `ENABLE_TOOL_SEARCH=false`."
   - field: "`betas`"
-    description: "A list of beta names that activation writes to `ANTHROPIC_BETAS`."
+    description: "A list of beta names that activation writes to `ANTHROPIC_BETAS`. 1 to 16 names, each unique and 1 to 64 characters of lowercase letters, digits and hyphens. A name starts and ends with a letter or a digit."
   - field: "`thinking`"
     description: "`false` writes `CLAUDE_CODE_DISABLE_THINKING=1` and `MAX_THINKING_TOKENS=0`."
   - field: "`interleaved_thinking`"
@@ -462,14 +484,14 @@ rows:
   - field: "`nonstreaming_fallback`"
     description: "`false` writes `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1`."
   - field: "`extra_body`"
-    description: "A JSON object that activation writes to `CLAUDE_CODE_EXTRA_BODY`."
+    description: "A JSON object with at least one field, that activation writes to `CLAUDE_CODE_EXTRA_BODY`. Without spaces between the tokens, it is up to 4096 bytes of printable ASCII, and each key appears once."
   - field: "`artifact`"
-    description: "Kept so that older profiles still import. It has no effect."
+    description: "Only in the top-level `request_shape` of versions 8 to 11. Activation ignores it. It stays so that older profiles still import."
 {% endtable %}
 
 #### Model metadata
 
-`model_metadata` maps a gateway model ID to how the {{ site.claude_code }} `/model` picker describes it. A value here wins over the value from the gateway model list.
+`model_metadata` maps a gateway model ID to how the {{ site.claude_code }} `/model` picker describes it. It has 1 to 64 entries. Each model ID is 1 to 128 bytes, and each entry sets at least one field. A value here takes precedence over the value from the gateway model list.
 
 {% table %}
 columns:
@@ -479,18 +501,18 @@ columns:
     key: description
 rows:
   - field: "`behaves_as`"
-    description: "The Claude model ID that the gateway model acts like."
+    description: "The Claude model ID that the gateway model acts like. It starts with `claude-`."
   - field: "`max_input_tokens`"
-    description: "The largest input that the model accepts, in tokens."
+    description: "The largest input that the model accepts, from 8192 to 10000000 tokens."
   - field: "`max_tokens`"
-    description: "The largest output that the model writes, in tokens."
+    description: "The largest output that the model writes, from 4096 to 10000000 tokens."
   - field: "`web_search`"
     description: "Whether the model serves the web search tool."
 {% endtable %}
 
 #### Pricing
 
-`pricing` sets the prices that {{ site.claude_code }} uses to show the cost of a session:
+`pricing` sets the prices that {{ site.claude_code }} uses to show the cost of a session. The block sets `multiplier`, `models` or both.
 
 {% table %}
 columns:
@@ -500,9 +522,9 @@ columns:
     key: description
 rows:
   - field: "`multiplier`"
-    description: "A number above 0 and up to 10 that each price is multiplied by, both the prices here and the prices from the gateway model list."
+    description: "A number above 0 and up to 10 that each price is multiplied by, both the prices here and the prices from the gateway model list. The default is 1."
   - field: "`models`"
-    description: "Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens. A price here wins over the price from the gateway model list."
+    description: "Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens. Each model sets all four prices, from 0 to 10000. A price here takes precedence over the price from the gateway model list."
 {% endtable %}
 
 #### Telemetry
@@ -517,22 +539,24 @@ columns:
     key: description
 rows:
   - field: "`endpoint`"
-    description: "Required. The URL of the collector."
+    description: "Required. The URL of the collector, up to 512 characters, without user information, a query or a fragment. It uses `https://`, or `http://` for a collector on this computer."
   - field: "`protocol`"
     description: "`http/protobuf`, the default, `http/json`, or `grpc`."
   - field: "`resource_attributes`"
-    description: "Up to 8 names and values that {{ site.claude_code }} adds to each data point, each up to 64 characters."
+    description: "1 to 8 names and values that {{ site.claude_code }} adds to each data point. A name is 1 to 64 characters of letters, digits, `.`, `_` and `-`. A value is 1 to 64 visible ASCII characters, without `,` or `=`."
 {% endtable %}
 
 ## Attribution
 
-`attribution` declares headers that the agent CLIs send with each request, so that the gateway can group the spend. It has one field, `headers`, which maps a header name to its value, with up to 8 headers. Each value is up to 128 characters. A header that carries a credential, such as `Authorization`, is refused. The gateway reads a header named `Ai-Cost-<name>` as a cost tag.
+`attribution` declares headers that the agent CLIs send with each request, so that the gateway can group the spend. It has one field, `headers`, which maps a header name to its value, with 1 to 8 headers. The gateway reads a header named `Ai-Cost-<name>` as a cost tag.
 
-A `caller` field from an older profile is ignored, so that the profile still imports.
+A header name is an HTTP token of up to 64 bytes, and appears once. A value is 1 to 128 printable ASCII characters. These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent` and `X-Api-Key`.
+
+{{site.kong_harnesses}} ignores a `caller` field from an older profile, so that the profile still imports.
 
 ## MCP servers
 
-`mcp_servers` maps a server name to an MCP server that the gateway serves to {{ site.claude_code }}. A profile has up to 32 servers, and each name is up to 32 characters.
+`mcp_servers` maps a server name to an MCP server that the gateway serves to {{ site.claude_code }}. A profile has 1 to 32 servers. Each name is 1 to 32 characters of letters, digits, `-` and `_`.
 
 {% table %}
 columns:
@@ -542,13 +566,19 @@ columns:
     key: description
 rows:
   - field: "`path`"
-    description: "Required. The path of the server on the gateway origin, up to 256 characters."
+    description: "Required. The path of the server on the gateway origin, 2 to 256 characters. It starts with `/` and doesn't end with `/`. Each segment uses letters, digits and `-._~`, and isn't `.` or `..`. Each server has its own path."
   - field: "`sign_in`"
     description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
   - field: "`oauth_client_id`, `oauth_callback_port`"
-    description: "For `oauth`. The client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client."
+    description: "For `oauth`. The client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client. The client ID is up to 256 visible ASCII characters, and the port is up to 65535."
   - field: "`key_header`"
-    description: "For `key`. The header that carries the key. The default is `apikey`."
+    description: "For `key`. The header that carries the key, an HTTP token of up to 64 bytes. The default is `apikey`. `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding` and `Connection` are refused."
 {% endtable %}
 
-A `static_key` profile lists only `oauth` and `key` servers. An `environment_key` profile lists no `key` servers, and a `subscription` profile lists no servers.
+Each sign-in setting has its own rules:
+
+* A `static_key` profile lists only `oauth` and `key` servers.
+* An `environment_key` profile lists only `oauth` servers.
+* A `subscription` profile can't list servers.
+* A profile with an `http://` gateway can't list `oauth` servers.
+* Two `key` servers can't have names that differ only in case.
