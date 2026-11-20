@@ -2325,92 +2325,92 @@ providers:
       provider_specific: []
       statistics_logging: []
 
-  - name: BytePlus ModelArk
-    url_patterns:
-      - 'https://ark.{region}.bytepluses.com/api/v3/{capability_path}'
-    min_version: '2.4'
-    capabilities:
-      generate:
-        supported: true
-        streaming: true
-        upstream_path: '`/api/v3/chat/completions`'
-        model_example: 'seed-1-6-250615'
-        min_version: '2.4'
-        note:
-          content: "Also supports the OpenAI Responses API and Messages. Set the target `name` to a ModelArk model ID or an inference endpoint ID, for example `ep-20250101000000-abcde`."
-      completions:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      embeddings:
-        supported: true
-        streaming: false
-        upstream_path: '`/api/v3/embeddings`'
-        model_example: 'doubao-embedding-text-240715'
-        min_version: '2.4'
-      files:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      batches:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      skills:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      audio_speech:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      audio_transcription:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      audio_translation:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      image:
-        supported: true
-        streaming: false
-        upstream_path: '`/api/v3/images/generations`'
-        model_example: 'seedream-4-0-250828'
-        min_version: '2.4'
-      video:
-        supported: true
-        streaming: false
-        upstream_path: '`/api/v3/contents/generations/tasks`'
-        model_example: 'seedance-1-0-pro-250528'
-        min_version: '2.4'
-      realtime:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      rerank:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-      decisions:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
-    limitations:
-      provider_specific: []
-      statistics_logging: []
+#   - name: BytePlus ModelArk
+#     url_patterns:
+#       - 'https://ark.{region}.bytepluses.com/api/v3/{capability_path}'
+#     min_version: '2.4'
+#     capabilities:
+#       generate:
+#         supported: true
+#         streaming: true
+#         upstream_path: '`/api/v3/chat/completions`'
+#         model_example: 'seed-1-6-250615'
+#         min_version: '2.4'
+#         note:
+#           content: "Also supports the OpenAI Responses API and Messages. Set the target `name` to a ModelArk model ID or an inference endpoint ID, for example `ep-20250101000000-abcde`."
+#       completions:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       embeddings:
+#         supported: true
+#         streaming: false
+#         upstream_path: '`/api/v3/embeddings`'
+#         model_example: 'doubao-embedding-text-240715'
+#         min_version: '2.4'
+#       files:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       batches:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       skills:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       agentic:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       audio_speech:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       audio_transcription:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       audio_translation:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       image:
+#         supported: true
+#         streaming: false
+#         upstream_path: '`/api/v3/images/generations`'
+#         model_example: 'seedream-4-0-250828'
+#         min_version: '2.4'
+#       video:
+#         supported: true
+#         streaming: false
+#         upstream_path: '`/api/v3/contents/generations/tasks`'
+#         model_example: 'seedance-1-0-pro-250528'
+#         min_version: '2.4'
+#       realtime:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       rerank:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#       decisions:
+#         supported: false
+#         streaming: false
+#         model_example: ''
+#         min_version: ''
+#     limitations:
+#       provider_specific: []
+#       statistics_logging: []

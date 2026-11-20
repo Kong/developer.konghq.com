@@ -1,4 +1,5 @@
 ---
+published: false
 title: "BytePlus ModelArk provider"
 layout: reference
 content_type: reference
