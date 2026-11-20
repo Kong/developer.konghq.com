@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { publicChangelog, syncChangelog } from '../fetch-changelog.js';
 
-function exported(markdown, published = ['0.17.1', '1.0.0']) {
+function exported(markdown, published = ['1.0.0']) {
   return publicChangelog(markdown, { published: new Set(published), highest: published.at(-1) });
 }
 
@@ -41,7 +41,7 @@ const releasePleaseChangelog = `# Changelog
 
 test('publishes only the user-facing sections and entries, without links into the internal repository', () => {
   assert.equal(
-    exported(releasePleaseChangelog),
+    exported(releasePleaseChangelog, ['0.17.1']),
     '## 0.17.1 (2026-11-19)\n\n' +
       '### ⚠ BREAKING CHANGES\n\n' +
       '* **profile:** run login again after the upgrade\n\n' +
@@ -65,6 +65,9 @@ test('removes every form of link into the internal repository and keeps links to
     ['* see [defaced](https://github.com/Kong/kong-harnesses/pull/1)', '* see defaced'],
     ['* see https://api.github.com/repos/Kong/kong-harnesses/releases first', '* see first'],
     ['* see https://raw.githubusercontent.com/Kong/kong-harnesses/main/README.md first', '* see first'],
+    ['* see [the PR](https://github.com:443/Kong/kong-harnesses/pull/8) first', '* see the PR first'],
+    ['* see [the PR](https://GitHub.com/Kong/kong%2Dharnesses/pull/9) first', '* see the PR first'],
+    ['* see [the PR](//github.com/Kong/kong-harnesses/pull/10) first', '* see the PR first'],
     ['* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)', '* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)'],
   ];
   for (const [entry, expected] of entries) {
@@ -77,6 +80,10 @@ test('refuses a changelog with a link into the internal repository that it canno
     () => exported('## 1.0.0\n\n### Features\n\n* see `github.com/Kong/kong-harnesses`\n'),
     /internal kong-harnesses repository/,
   );
+});
+
+test('refuses a changelog with a link address that it cannot parse', () => {
+  assert.throws(() => exported('## 1.0.0\n\n### Features\n\n* see [the PR](http://[github.com/Kong/kong-harnesses) first\n'), /not a valid URL/);
 });
 
 test('refuses a changelog with a link that removing an internal URL left broken', () => {
@@ -122,16 +129,32 @@ test('escapes an HTML-like placeholder outside code spans, so Kramdown shows it'
 test('publishes only the sections of published releases', () => {
   const changelog =
     'preamble\n\n' +
-    '## 0.19.0\n\n### Features\n\n* draft\n\n' +
+    '## 0.19.0\n\n### Features\n\n* later\n\n' +
     '## 0.18.0-rc.2\n\n### Features\n\n* not out\n\n' +
     '## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n\n' +
     '## 0.17.1\n\n### Features\n\n* add\n';
   assert.equal(exported(changelog, ['0.18.0-rc.1', '0.17.1']), '## 0.17.1\n\n### Features\n\n* add\n');
+  // 0.18.0 never shipped, so its candidate stays out even below a later release.
   assert.equal(
-    exported(changelog, ['0.18.0-rc.1', '0.17.1', '0.18.0']),
-    '## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n\n## 0.17.1\n\n### Features\n\n* add\n',
+    exported(changelog, ['0.18.0-rc.1', '0.17.1', '0.19.0']),
+    '## 0.19.0\n\n### Features\n\n* later\n\n## 0.17.1\n\n### Features\n\n* add\n',
+  );
+  assert.equal(
+    exported('## 0.18.0\n\n### Features\n\n* final\n\n## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n', ['0.18.0-rc.1', '0.18.0']),
+    '## 0.18.0\n\n### Features\n\n* final\n\n## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n',
   );
   assert.throws(() => exported('## Unreleased\n\n### Features\n\n* secret\n'), /no version/);
+});
+
+test('refuses a changelog with no section for the highest published release', () => {
+  assert.throws(() => exported('# Changelog\n'), /no section for 1\.0\.0/);
+  assert.throws(() => exported('## 0.17.1\n\n### Features\n\n* add\n', ['0.17.1', '0.18.0']), /no section for 0\.18\.0/);
+});
+
+test('leaves out a release with no section for users, and refuses a changelog with nothing left', () => {
+  const changelog = '## 1.0.0\n\n### Documentation\n\n* explain\n\n## 0.9.0\n\n### Features\n\n* add\n';
+  assert.equal(exported(changelog, ['0.9.0', '1.0.0']), '## 0.9.0\n\n### Features\n\n* add\n');
+  assert.throws(() => exported('## 1.0.0\n\n### Documentation\n\n* explain\n'), /no entries for users/);
 });
 
 test('keeps the spaces of an entry when it removes a link', () => {

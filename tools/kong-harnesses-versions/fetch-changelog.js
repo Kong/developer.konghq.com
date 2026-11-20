@@ -39,9 +39,17 @@ function userFacingRelease(release) {
 }
 
 // The repository is internal, so links into it break for readers of the site.
-// The Mesh changelog drops them too (mesh.ignored_links_regex). The pattern covers the
-// web, API and raw file addresses of the repository.
-const internalUrl = String.raw`https?://(?:(?:www\.)?github\.com|api\.github\.com/repos|raw\.githubusercontent\.com)/kong/kong-harnesses(?![\w.-])[^\s)>]*`;
+// The Mesh changelog drops them too (mesh.ignored_links_regex).
+const repositoryPaths = new Map([
+  ['github.com', '/kong/kong-harnesses'],
+  ['www.github.com', '/kong/kong-harnesses'],
+  ['api.github.com', '/repos/kong/kong-harnesses'],
+  ['raw.githubusercontent.com', '/kong/kong-harnesses'],
+]);
+// A link address as Markdown writes it, with or without a scheme. Each one is parsed
+// before it is judged, so a port, letter case or percent-encoding cannot hide it.
+const address = String.raw`(?:https?:)?//[^\s)>]*`;
+// A last check of the plain text, for an address that is not a link, as in a code span.
 const anyInternalUrl = /(?:github\.com|api\.github\.com\/repos|raw\.githubusercontent\.com)\/kong\/kong-harnesses(?![\w.-])/i;
 // The title forms that CommonMark allows after a link address.
 const titleForms = String.raw`"[^"]*"|'[^']*'|\([^)]*\)`;
@@ -50,12 +58,45 @@ const linkTitle = String.raw`(?:\s+(?:${titleForms}))?`;
 const emptiedLink = new RegExp(String.raw`\]\(\s*(?:${titleForms})?\s*\)`);
 // Marks where a link was removed, so the cleanup touches only the text next to it.
 const removed = '\u0000';
+// A relative address resolves against the page, as a reader's browser does.
+const page = 'https://developer.konghq.com/kong-harnesses/changelog/';
+
+// The path in the repository that the address names, such as "/commit/c0ffee1", or
+// null for an address outside it. An address that cannot be parsed stops the sync,
+// because the check cannot tell where it leads.
+function repositoryPath(link) {
+  let url;
+  let path;
+  try {
+    url = new URL(link, page);
+    path = decodeURIComponent(url.pathname).toLowerCase();
+  } catch {
+    throw new Error(`The changelog has a link address that is not a valid URL: ${link}`);
+  }
+  const prefix = repositoryPaths.get(url.hostname.replace(/\.$/, ''));
+  if (!prefix || !path.startsWith(prefix) || /^[\w.-]/.test(path.slice(prefix.length))) {
+    return null;
+  }
+  return path.slice(prefix.length);
+}
 
 // An issue or pull request number, or the hash of a commit link, means nothing without
 // its link. A word of hex letters, such as "defaced", is a hash only on a commit link.
-function linkText(text, url) {
-  const reference = /^#?\d+$/.test(text) || (/\/commit\//.test(url) && /^[0-9a-f]{7,40}$/i.test(text));
+function linkText(text, path) {
+  const reference = /^#?\d+$/.test(text) || (/^\/commits?\//.test(path) && /^[0-9a-f]{7,40}$/i.test(text));
   return reference ? removed : text;
+}
+
+function assertNoInternalLinks(text) {
+  const addresses = [
+    ...[...text.matchAll(/\]\(\s*<?([^\s)>]*)/g)].map((match) => match[1]),
+    ...[...text.matchAll(/^ {0,3}\[[^\]]+\]:[ \t]*<?([^\s>]+)/gm)].map((match) => match[1]),
+    ...[...text.matchAll(/<([a-z][a-z0-9+.-]*:[^\s>]*)>/gi)].map((match) => match[1]),
+    ...[...text.matchAll(/(?:https?:)?\/\/[^\s)>\/][^\s)>]*/gi)].map((match) => match[0]),
+  ];
+  if (anyInternalUrl.test(text) || emptiedLink.test(text) || addresses.some((link) => repositoryPath(link) !== null)) {
+    throw new Error('A link into the internal kong-harnesses repository is left, or left broken, in the changelog.');
+  }
 }
 
 function withoutInternalLinks(markdown) {
@@ -64,31 +105,36 @@ function withoutInternalLinks(markdown) {
   }
   const labels = new Map();
   const text = markdown
-    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?(${internalUrl})>?.*\n?`, 'gim'), (_, label, url) => {
-      labels.set(label.toLowerCase(), url);
+    .replace(new RegExp(String.raw`^ {0,3}\[([^\]]+)\]:[ \t]*<?(${address})>?.*\n?`, 'gim'), (definition, label, link) => {
+      const path = repositoryPath(link);
+      if (path === null) {
+        return definition;
+      }
+      labels.set(label.toLowerCase(), path);
       return '';
     })
-    .replace(new RegExp(String.raw`\(\[[^\]]*\]\(\s*<?${internalUrl}>?${linkTitle}\s*\)\)`, 'gi'), removed)
-    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?(${internalUrl})>?${linkTitle}\s*\)`, 'gi'), (_, label, url) =>
-      linkText(label, url),
+    .replace(new RegExp(String.raw`\(\[[^\]]*\]\(\s*<?(${address})>?${linkTitle}\s*\)\)`, 'gi'), (link, url) =>
+      repositoryPath(url) === null ? link : removed,
     )
+    .replace(new RegExp(String.raw`\[([^\]]*)\]\(\s*<?(${address})>?${linkTitle}\s*\)`, 'gi'), (link, label, url) => {
+      const path = repositoryPath(url);
+      return path === null ? link : linkText(label, path);
+    })
     .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, label, reference) => {
-      const url = labels.get((reference || label).toLowerCase());
-      return url ? linkText(label, url) : link;
+      const path = labels.get((reference || label).toLowerCase());
+      return path === undefined ? link : linkText(label, path);
     })
     .replace(/\[([^\]]+)\](?![([:])/g, (link, label) => {
-      const url = labels.get(label.toLowerCase());
-      return url ? linkText(label, url) : link;
+      const path = labels.get(label.toLowerCase());
+      return path === undefined ? link : linkText(label, path);
     })
-    .replace(new RegExp(`<${internalUrl}>`, 'gi'), removed)
-    .replace(new RegExp(internalUrl, 'gi'), removed)
+    .replace(/<(https?:\/\/[^\s>]*)>/gi, (link, url) => (repositoryPath(url) === null ? link : removed))
+    .replace(/https?:\/\/[^\s)>]*/gi, (url) => (repositoryPath(url) === null ? url : removed))
     // Brackets that held only removed links go, then each mark takes one space with it.
     .replace(new RegExp(String.raw`\(\s*(?:${removed}\s*)+\)`, 'g'), removed)
     .replace(new RegExp(`\\(${removed}+ ?`, 'g'), '(')
     .replace(new RegExp(` ?${removed}+`, 'g'), '');
-  if (anyInternalUrl.test(text) || emptiedLink.test(text)) {
-    throw new Error('A link into the internal kong-harnesses repository is left, or left broken, in the changelog.');
-  }
+  assertNoInternalLinks(text);
   return text;
 }
 
@@ -106,12 +152,18 @@ function withEscapedTags(markdown) {
 //
 // Only text of a published release reaches the site. release-please writes a section
 // when the release pull request merges, before the release job publishes it, and a
-// release candidate can be published before its final release. So a section stays only
-// when its heading names a published release (`published`, the versions without the v),
-// and a release candidate stays only once its final release, `highest` or lower, is
-// out. Text before the first heading goes, and a heading with no version stops the sync.
+// release candidate can be published before its final release, or for a final release
+// that never comes. So a section stays only when its heading names a published release
+// (`published`, the versions without the v), and a release candidate stays only once
+// the final release of the same version is published. The candidate's section stays
+// after that, because release-please takes the version in its manifest, the candidate,
+// as the last release, so the final section lists only the commits after it. Text
+// before the first heading goes. A heading with no version, or no heading for `highest`, the highest published
+// release, stops the sync, so a changelog that lost its sections cannot empty the page.
+// So does a changelog with no entries for users left.
 export function publicChangelog(markdown, { published, highest }) {
-  return withEscapedTags(withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, '')))
+  const versions = new Set();
+  const releases = withEscapedTags(withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, '')))
     .split(/^(?=## )/m)
     .filter((release) => {
       if (!release.startsWith('## ')) {
@@ -121,13 +173,17 @@ export function publicChangelog(markdown, { published, highest }) {
       if (!version) {
         throw new Error(`The changelog has a release heading with no version: ${release.split('\n')[0]}`);
       }
-      return published.has(version) && compareVersions(version.split('-')[0], highest) <= 0;
-    })
-    .map(userFacingRelease)
-    .filter(Boolean)
-    .join('\n\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .concat('\n');
+      versions.add(version);
+      return published.has(version) && published.has(version.split('-')[0]);
+    });
+  if (!versions.has(highest)) {
+    throw new Error(`The changelog has no section for ${highest}, the highest published release.`);
+  }
+  const kept = releases.map(userFacingRelease).filter(Boolean);
+  if (!kept.length) {
+    throw new Error('The changelog has no entries for users in its published releases.');
+  }
+  return kept.join('\n\n').replace(/\n{3,}/g, '\n\n').concat('\n');
 }
 
 export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = process.env }) {
