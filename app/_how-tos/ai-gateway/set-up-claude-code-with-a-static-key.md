@@ -53,8 +53,23 @@ prereqs:
         On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
     - title: jq
-      include_content: md/ai-gateway/v2/prereqs/jq
       icon_url: /assets/icons/code.svg
+      content: |
+        The request that creates the key uses [jq](https://jqlang.org/) to save the key in a variable.
+        Install jq in the shell where you run the `export` commands.
+        On macOS:
+
+        ```sh
+        brew install jq
+        ```
+
+        On Debian and Ubuntu, and in WSL on Windows:
+
+        ```sh
+        sudo apt-get install jq
+        ```
+
+        For other installation methods, see the [jq download page](https://jqlang.org/download/).
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
