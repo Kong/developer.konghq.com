@@ -191,7 +191,7 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
-> omp and pi also work with an `http://` gateway on this computer.
+> The omp and pi agent CLIs also work with an `http://` gateway on this computer.
 > Codex, OpenCode and Hermes need an `https://` gateway.
 > They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.
 
@@ -201,11 +201,13 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 
 If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
 A proxy that carries a request to an `http://` gateway can read your access token.
-When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client, and they stop with an error that names `NO_PROXY`.
+When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client.
+They stop with an error that names `NO_PROXY`.
 `doctor` also fails.
-Run the kong-harnesses and `claude` commands of this guide in the same shell, because the variables exist only there.
-Before you start `claude` in a new shell, set the variables again, or add them to your shell profile.
-Without them, kong-harnesses gives {{ site.claude_code }} no access token.
+
+Run the kong-harnesses and `claude` commands of this guide in the same shell, because the `NO_PROXY` setting exists only there.
+Before you start `claude` in a new shell, set it again, or add it to your shell profile.
+Without it, kong-harnesses doesn't give {{ site.claude_code }} an access token.
 
 The following commands add `127.0.0.1` and `localhost` to `NO_PROXY` and keep the hosts that are already in the list.
 Separate the entries in `NO_PROXY` with commas.
@@ -293,7 +295,7 @@ kong-harnesses profile activate quickstart --client claude-code
 `profile activate` sends a test request with your sign-in to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
 It shows each problem that it finds with a fix.
 Fix the problems and run the same command again.
-If `profile activate` asks to install the gateway prices for `/cost`, you can say no, because the install needs administrator rights.
+If `profile activate` asks to install the gateway prices for `/cost`, you can decline, because the install needs administrator rights.
 
 ## Features that change behind the gateway
 
@@ -341,7 +343,7 @@ rows:
 {% endtable %}
 
 A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
-The profile and the gateway route decide whether the advisor and tool search are on.
+The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
 {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
 
 ## Validate
@@ -364,7 +366,7 @@ The request can cost money: the prompt is "Reply with OK." and the answer is at 
 kong-harnesses doctor --profile quickstart --client claude-code --inference
 ```
 
-Start a session as usual:
+Start a {{ site.claude_code }} session:
 
 ```sh
 claude
