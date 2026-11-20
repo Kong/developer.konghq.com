@@ -93,7 +93,7 @@ cleanup:
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
-Developers don't install, import or edit anything, unless you leave the gateway MCP servers to each developer.
+Developers don't install, import or edit anything, unless you [leave the gateway MCP servers to each developer](#choose-the-mcp-servers).
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one managed computer.
@@ -113,7 +113,7 @@ kong-harnesses login --profile work
 {{ site.claude_code }} can get managed settings from several sources on one computer.
 By default, it uses only the highest of these sources:
 
-1. Server-managed settings from the claude.ai admin console.
+1. Remote settings: server-managed settings from the claude.ai admin console, or from a Claude apps gateway.
 1. An MDM policy: the `com.anthropic.claudecode` preference domain on macOS, or the `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode` on Windows.
 1. The managed settings file, `managed-settings.json`, with the files in its `managed-settings.d` folder.
 
@@ -126,19 +126,20 @@ The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in
 For a file build, always pass a copy of the `managed-settings.json` that the computers have with `--policy`.
 The build then refuses a value that would stop {{ site.claude_code }} from reaching the gateway, and keeps your headers in its value.
 
-{{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
-`--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d` that sorts after `kong-harnesses.json`.
-Such a file must not set a key that the build sets, such as `apiKeyHelper`, a variable in `env`, or a provider list.
-
 When the profile sets attribution headers, a file build needs `--policy`.
 If the computers have no `managed-settings.json`, pass `--NO_POLICY_FLAG` in its place.
+
+{{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
+`--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
+A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a key that the build sets, such as `apiKeyHelper` or a variable in `env`.
+Also make sure that no file adds an `allowedProviders` entry or sets a key such as `forceLoginMethod`, because lists combine from every file and such a key applies from any file.
 
 On a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} ignores the file, apart from a few keys such as `env`.
 For those computers, build with `--delivery mdm`.
 This is an MDM build.
 Pass the policy that the computers get now with `--policy`.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
-On Windows, the policy is a JSON file with the text of the `Settings` registry value.
+On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 Linux has no MDM policy, so on Linux the settings always go in a file.
 
 `fleet build` refuses a policy that would stop {{ site.claude_code }} from reaching the gateway, and names the value.
@@ -153,9 +154,11 @@ The server-managed settings then rank above the build, and the credential helper
 ## Choose the MCP servers
 
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
-When the profile has gateway MCP servers, `fleet build` needs this flag:
+When the profile has gateway MCP servers, `fleet build` needs this flag.
+When the profile has no gateway MCP servers, use `allowlist`, the default, or `any`.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
+  It needs a profile with at least one gateway MCP server.
   The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build, and {{ site.claude_code }} loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   This mode takes no `--mcp-url` or `--mcp-command`.
@@ -164,6 +167,9 @@ When the profile has gateway MCP servers, `fleet build` needs this flag:
   To get the gateway MCP servers, each developer runs `kong-harnesses profile activate work --client claude-code`.
 * `--mcp-servers any` adds no lock and leaves MCP servers to each developer.
   A lock that your own managed settings set still applies.
+
+If the computers already have a `managed-mcp.json` and the profile has gateway MCP servers, use `exclusive` with `--mcp-config`.
+{{ site.claude_code }} then loads only the servers in that file, so with `allowlist` or `any` it doesn't load the gateway MCP servers, even after `profile activate`.
 
 With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and kong-harnesses tells developers which servers {{ site.claude_code }} doesn't load when a session starts.
 
@@ -178,7 +184,7 @@ This guide uses one folder for each build.
 
 Replace each placeholder with the value for your deployment:
 
-* Replace `MCP_MODE` with `exclusive`, `allowlist` or `any`.
+* Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
 * For a file build, replace `managed-settings.json` with the path of your copy, or replace `--policy managed-settings.json` with `--NO_POLICY_FLAG`.
 * For an MDM build, replace the policy file with the path of your current policy.
   If the computers get no {{ site.claude_code }} policy now, leave out `--policy`.
@@ -307,7 +313,8 @@ Otherwise, it refuses the profile, because another account could send every deve
 `fleet build` also writes a record file, `kong-harnesses-fleet-BUILD_ID.json`, in the output folder, outside `root`.
 `BUILD_ID` is the build ID that `fleet build` prints.
 Keep the record with your policy.
-You need it to update the build and to remove it, and you can't create it again.
+You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`.
+You can't create it again.
 
 ## Install on the managed computers
 
@@ -356,7 +363,8 @@ In {{ site.claude_code }}, run `/status`.
 The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` for a file build, or `(file + drop-ins)` when the computers also have your `managed-settings.json`, or `(plist)` or `(HKLM)` for an MDM build.
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 If the line shows `(remote)`, the server-managed settings from the claude.ai admin console rank above the build.
-Remove them from the admin console, or have the developer run `/logout` and start {{ site.claude_code }} again.
+Remove them from the admin console.
+A computer can keep a cached copy of them for up to 24 hours after its last fetch.
 
 Run `kong-harnesses doctor` to check the setup:
 
