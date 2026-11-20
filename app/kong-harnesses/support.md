@@ -51,9 +51,15 @@ Replace `work` with your profile name.
 
 Add `--inference` to test the {{ site.claude_code }} route with a model request. The request can cost money. If the selected profile doesn't configure {{ site.claude_code }}, `doctor` refuses `--inference` and doesn't write the report.
 
-The report holds the `doctor` findings for each agent CLI, and names the kong-harnesses release, the operating system and the CPU architecture. For {{ site.claude_code }}, it also lists the settings and shell variables that {{ site.claude_code }} acts on, and names the {{ site.claude_code }} release when it can read it. For each other agent CLI, it names the configuration file that `doctor` finds, and whether that file exists.
+The report holds the `doctor` findings for each agent CLI that `doctor` checks. It names the kong-harnesses release, the operating system and the CPU architecture. For {{ site.claude_code }}, it lists the settings from the local settings files that `doctor` can read, and the shell variables that set the route, model, trust and credential of {{ site.claude_code }}. It also names the {{ site.claude_code }} release when `doctor` can read it. The report doesn't include the settings that {{ site.claude_code }} gets from a server. For each other agent CLI, the report names the configuration file that `doctor` finds, and whether that file exists.
 
-The report shows a value only when the value can't hold a credential: an empty value, a switch value such as `1` or `false`, and a value that names a route, a model, a trust file or a limit. It replaces each other value with `<redacted>`, also the values of hooks, the status line and custom headers, because a command or a header can carry a token. It shows a gateway or proxy URL as its scheme, host and port only, and adds `/<redacted>` when the URL has a path after the host. Check the report for sensitive data before you send it.
+The report replaces each value that can hold a credential with `<redacted>`:
+
+* Of the top-level settings, the report shows `model`, `availableModels`, `modelPicker`, `modelOverrides`, `skipWebFetchPreflight` and `autoUpdates`. It shows `apiKeyHelper` only when the value is the command that kong-harnesses wrote. It redacts every other setting, such as hooks and the status line, because a command can carry a token.
+* For an environment variable in the `env` settings or in the shell, the report shows an empty value and a switch value, such as `1`, `true` or `off`. It shows the value of a variable that names a route, a model, a trust file or a limit, such as `ANTHROPIC_BASE_URL` or `ANTHROPIC_MODEL`. It redacts every other value, such as custom headers and credential variables.
+* For a variable that holds a gateway URL or a proxy, the report shows only the scheme, the host and the port. It adds `/<redacted>` only if the URL has a path other than the root. It redacts a value that doesn't look like a host.
+
+Check the report for sensitive data before you send it.
 
 Open a ticket on the [Kong Support portal](https://support.konghq.com/support/s/), describe what you did and what happened, and attach `report.json`.
 
