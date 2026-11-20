@@ -94,7 +94,7 @@ prereqs:
         On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
 
 tldr:
-  q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with a key and no identity provider?
+  q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with a key and without an identity provider?
   a: |
     Create an AI Consumer with an API key, and protect an AI Model with a `key-auth` AI Auth Strategy.
     Create a kong-harnesses profile with `kong-harnesses profile create --sign-in static-key`.
@@ -117,7 +117,7 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 ---
 
-Use a static key when your organization has no identity provider, or when you run a gateway of your own. An administrator creates the key in {{site.ai_gateway}}. [kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
+Use a static key when your organization doesn't use an identity provider, or when you run a gateway of your own. An administrator creates the key in {{site.ai_gateway}}. [kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
 
 The key doesn't expire. It works until an administrator revokes it in {{site.ai_gateway}}.
 
@@ -255,7 +255,7 @@ The AI Auth Strategy schema doesn't list `header_auth_schemes`. The strategy pas
 
 ## Create the kong-harnesses profile
 
-A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It holds no secrets. A static-key profile names no identity provider, so it needs only a name, the gateway origin and the model.
+A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It doesn't hold secrets. A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
 
 The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane. kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address. If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, first add `127.0.0.1` to `NO_PROXY`, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/#create-the-kong-harnesses-profile) shows. A proxy that carries a request to an `http://` gateway can read the key, so `profile activate` doesn't configure a client when a proxy applies to the gateway host. The `NO_PROXY` setting exists only in the shell where you set it. Before you start `claude` in a new shell, set it again, or add it to your shell profile. Without it, kong-harnesses doesn't give {{ site.claude_code }} the key.
 
@@ -274,7 +274,7 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 > kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
 > ```
 >
-> The administrator shares the file or puts it at an HTTPS URL. The profile holds no key, so the administrator sends each developer a key of their own through a password manager or another secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file:
+> The administrator shares the file or puts it at an HTTPS URL. The profile doesn't hold the key, so the administrator sends each developer a key of their own through a password manager or another secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file:
 >
 > ```sh
 > kong-harnesses setup <profile>.json --client claude-code
@@ -282,7 +282,7 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 >
 > `setup` installs the profile, asks for the key, and configures {{ site.claude_code }} in one run.
 >
-> A developer who has only the key can run `setup` with no profile:
+> A developer who has only the key can run `setup` without a profile:
 >
 > ```sh
 > kong-harnesses setup --client claude-code
@@ -330,7 +330,7 @@ Run `kong-harnesses doctor` to check the setup:
 kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
-`doctor` checks the saved key, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. A static-key profile has no identity provider, so `doctor` skips the issuer check. It shows a fix for each problem it finds, and it doesn't change any settings.
+`doctor` checks the saved key, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. A static-key profile doesn't use an identity provider, so `doctor` skips the issuer check. It shows a fix for each problem it finds, and it doesn't change any settings.
 
 To also send one model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 

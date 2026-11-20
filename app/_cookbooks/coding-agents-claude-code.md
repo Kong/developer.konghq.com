@@ -190,7 +190,7 @@ ai_gateway_consumers:
 
 **`credentials[].api_key`**: The AI Consumer's key. The field is write-only, so it takes a `!secret` reference rather than a plain string.
 
-**Bearer tokens instead of `x-api-key`**: If you set `ANTHROPIC_AUTH_TOKEN` instead of `ANTHROPIC_API_KEY`, Claude Code sends the key as `Authorization: Bearer <key>`. Key Auth doesn't strip a `Bearer` prefix, so that setup also needs a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the token into a header listed in `key_names`. The [Claude Desktop recipe](/cookbooks/coding-agents-claude-desktop/) shows that pattern.
+**Bearer tokens instead of `x-api-key`**: If you set `ANTHROPIC_AUTH_TOKEN` instead of `ANTHROPIC_API_KEY`, Claude Code sends the key as `Authorization: Bearer <key>`. Before {{site.ai_gateway}} 2.4, Key Auth doesn't strip a `Bearer` prefix, so that setup also needs a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the token into a header listed in `key_names`. The [Claude Desktop recipe](/cookbooks/coding-agents-claude-desktop/) shows that pattern. In {{site.ai_gateway}} 2.4 and later, add `Authorization` to `key_names` and set `header_auth_schemes: [Bearer]`, as [Set up {{ site.claude_code }} with a static key and kong-harnesses](/ai-gateway/set-up-claude-code-with-a-static-key/) shows.
 
 **Scaling AI Consumers**: Add one AI Consumer per developer, each with its own credential. The recipe defines one AI Consumer for demonstration.
 
