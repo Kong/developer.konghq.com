@@ -39,13 +39,13 @@ They come from the documentation of each identity provider, and they aren't test
 * Issuer: Use `https://YOUR_AUTH0_DOMAIN/`, with the trailing slash.
 * Client: Create a **Native** application, which Auth0 registers as a public application with the token endpoint authentication method **None**, as [Confidential and Public Applications](https://auth0.com/docs/get-started/applications/confidential-and-public-applications) describes.
 * Consent: Auth0 can show a confirmation prompt for a loopback callback, such as `localhost` or `127.0.0.1`, even when **Allow Skipping User Consent** is on in the API.
-  It shows the prompt only when no other screen, such as MFA, came first, as [Measures Against Application Impersonation](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation) describes.
-* Offline access: Turn on **Allow Offline Access** in the API of the gateway.
+  It shows the prompt only when the user didn't see another screen, such as MFA, before it, as [Measures Against Application Impersonation](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation) describes.
+* Offline access: Turn on **Allow Offline Access** in the API of the gateway, as [API Settings](https://auth0.com/docs/get-started/apis/api-settings) describes.
   To use rotating refresh tokens, turn on **Allow Refresh Token Rotation** under **Refresh Token Rotation** in the settings of the native application.
   Keep **Rotation Overlap Period** at 0, because Auth0 doesn't detect the reuse of a refresh token during that period, as [Configure Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/configure-refresh-token-rotation) describes.
 * Audience: Register the gateway as an API, with an identifier that is an absolute URI, such as `https://gateway.example.com/api`.
   Set `--audience` to the identifier of the API, and set `--audience-parameter audience`.
-* Access token lifetime: Auth0 issues access tokens for 24 hours by default.
+* Access token lifetime: Auth0 issues access tokens for 24 hours by default, as [Token Settings](https://auth0.com/docs/get-started/apis/api-settings#token-settings) describes.
   Set `--max-token-lifetime-seconds 86400`, or set the token lifetime of the API from 365 to 3600 seconds.
 
 ## Keycloak
@@ -58,13 +58,13 @@ They come from the documentation of each identity provider, and they aren't test
 * Consent: Keycloak shows the consent screen only when consent is on for the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
-* Refresh token rotation: If you turn on **Revoke Refresh Token**, keep **Refresh Token Max Reuse** at 0, because a higher value lets a replayed refresh token stay usable after rotation.
+* Refresh token rotation: If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
+  This setting is the number of times that a client can use a refresh token again, so a higher value lets a copied refresh token stay usable.
 * Audience: Keycloak ignores the `resource` parameter by default, so set `--audience-parameter none`.
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
   If you use a shared client scope, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
-* Access token lifetime: Keycloak issues access tokens for 5 minutes by default, which is too short.
-  Raise the access token lifespan of the realm or the client to at least 7 minutes.
+* Access token lifetime: Set the **Access Token Lifespan** of the realm, or of the client, to at least 7 minutes, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
 
 ## Microsoft Entra ID
 
@@ -89,13 +89,14 @@ They come from the documentation of each identity provider, and they aren't test
   The older [Azure AD Graph format](https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest) of the manifest names this attribute `replyUrlsWithType`.
 
 * Audience: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
-  Give the client the delegated permission of the gateway API, and grant admin consent if the tenant or the API scope needs it.
+  In the client, select **API permissions** > **Add a permission** > **My APIs**, select the gateway API, and add its delegated permission, as [Configure app permissions for a web API](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-permissions-to-access-your-web-api) describes.
+  Grant admin consent if the tenant or the API scope needs it.
   Give the full URI of the API scope, such as `api://API_ID/access_as_user`, with its own `--scope` flag, as [Gateway audience](/kong-harnesses/identity-provider/#gateway-audience) describes.
 * Token version: Set `api.requestedAccessTokenVersion` to `2` in the [manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest) of the gateway API to get v2.0 access tokens.
   When `api.requestedAccessTokenVersion` is `null` or `1`, Entra ID issues v1.0 access tokens.
   A v2.0 access token has the application ID of the gateway API, a GUID, in `aud`, and a v1.0 access token can have the application ID or the Application ID URI.
   Put the value that your tokens have in `config.audience_required`.
-* Access token lifetime: Entra ID issues access tokens for 60 to 90 minutes by default.
+* Access token lifetime: Entra ID issues access tokens for 60 to 90 minutes by default, as [Configurable token lifetimes](https://learn.microsoft.com/en-us/entra/identity-platform/configurable-token-lifetimes#access-tokens) describes.
   Set `--max-token-lifetime-seconds 5400`.
 
 ## PingFederate
