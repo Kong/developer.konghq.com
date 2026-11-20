@@ -97,8 +97,16 @@ export function publicChangelog(markdown, publishedVersion) {
   return withEscapedTags(withoutInternalLinks(markdown.replace(/^# Changelog\s*\n/, '')))
     .split(/^(?=## )/m)
     .filter((release) => {
+      if (!publishedVersion || !release.startsWith('## ')) {
+        return true;
+      }
+      // A heading with no version, such as "Unreleased", could hold text of a release
+      // that is not out yet, so the sync stops rather than guess.
       const version = release.match(/^## \[?(\d+\.\d+\.\d+)\b/)?.[1];
-      return !publishedVersion || !version || compareVersions(version, publishedVersion) <= 0;
+      if (!version) {
+        throw new Error(`The changelog has a release heading with no version: ${release.split('\n')[0]}`);
+      }
+      return compareVersions(version, publishedVersion) <= 0;
     })
     .map(userFacingRelease)
     .filter(Boolean)

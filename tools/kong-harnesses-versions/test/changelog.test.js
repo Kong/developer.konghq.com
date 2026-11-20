@@ -111,3 +111,14 @@ test('escapes an HTML-like placeholder outside code spans, so Kramdown shows it'
     '## 1.0.0\n\n### Features\n\n* run profile get &lt;profile>, `profile get <profile>` or see <https://example.com>\n',
   );
 });
+
+test('stops at a release heading with no version, so text of an unpublished release cannot leak', () => {
+  assert.throws(() => publicChangelog('## Unreleased\n\n### Features\n\n* secret\n', '0.17.1'), /no version/);
+});
+
+test('leaves out a release candidate of a version above the published one', () => {
+  assert.equal(
+    publicChangelog('## [0.18.0-rc.1](x)\n\n### Features\n\n* soon\n\n## 0.17.1\n\n### Features\n\n* add\n', '0.17.1'),
+    '## 0.17.1\n\n### Features\n\n* add\n',
+  );
+});
