@@ -59,7 +59,7 @@ rows:
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
-    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in. The {{ site.claude_code }} documentation names no host for the plugin sync."
+    destination: "`api.anthropic.com`, and `claude.ai` for the skill sync of a claude.ai sign-in. The {{ site.claude_code }} documentation doesn't name a host for the plugin sync."
     member: "`feature_flags`"
     cost: "The [features that need feature-flag fetching](https://code.claude.com/docs/en/env-vars#features-that-need-feature-flag-fetching) are unavailable, such as the advisor tool, Code Mode, MCP tasks, Claude-drafted feedback, and the sync of the skills and plugins of a claude.ai account."
   - traffic: Error reports
@@ -77,7 +77,7 @@ rows:
   - traffic: claude.ai connectors
     destination: "`mcp-proxy.anthropic.com`"
     member: "`connectors`"
-    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. With a gateway key, the connectors never load, even when `connectors` is `true`. When the profile uses the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
+    cost: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in. When the profile uses a gateway key, the connectors never load, even when `connectors` is `true`. When the profile uses the developers' own Claude subscriptions, `false` stops {{ site.claude_code }} from loading the connectors of the claude.ai account. Add the MCP servers you need with `claude mcp add`."
   - traffic: "`/feedback`, `/bug`, `/share` and Claude-drafted feedback"
     destination: "Anthropic, which stores the report in Google Cloud Storage, and optionally `github.com` for a GitHub issue"
     member: "`bug_command` and `feedback_command`"
@@ -93,11 +93,11 @@ rows:
   - traffic: Artifacts
     destination: "`api.anthropic.com` for the publish requests and the organization policy, and `*.frame.claudeusercontent.com` for the artifact reads. The developer's browser opens the published page on `claude.ai`."
     member: "None. The `artifact` member writes nothing, but `auto_updates` set to `false` turns artifacts off through the nonessential traffic switch (`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`), until activation writes that switch blank."
-    cost: "Developers can't publish session output as a web page on claude.ai, and {{ site.claude_code }} can't read the files of an artifact. Artifacts need a Pro, Max, Ultra, Team or Enterprise plan, a claude.ai sign-in and the Anthropic API provider mode, so they work only with a profile that uses the developers' own Claude subscriptions, which always uses that mode. Without feature flags, Claude can't read artifact comments or another organization's public artifact. They are also unavailable when the organization has customer-managed encryption keys, HIPAA or zero data retention turned on. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
+    cost: "Developers can't publish session output as a web page on claude.ai, and {{ site.claude_code }} can't read the files of an artifact. Artifacts need a Pro, Max, Ultra, Team or Enterprise plan, a claude.ai sign-in and the Anthropic API provider mode, so they work only with a profile that uses the developers' own Claude subscriptions, which always uses that mode. When feature flags are off, Claude can't read artifact comments or another organization's public artifact. They are also unavailable when the organization has customer-managed encryption keys, HIPAA or zero data retention turned on. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts). On Enterprise plans with role-based access control, you can also remove the **Artifacts** permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles)."
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`, and the marketplace hosts that plugin updates download from, such as `github.com` and `registry.npmjs.org`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Before a `name@marketplace` plugin install, it doesn't refresh that marketplace, so the install uses the cached catalog. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
@@ -143,7 +143,7 @@ Then `auto_updates` set to `false` turns off only the automatic updates of {{ si
 A member set to `false` keeps its own traffic off, and a gateway key still stops the fast mode availability check.
 `FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while `auto_updates` is `false`.
 The sync of the plugins of a claude.ai account doesn't depend on `auto_updates`.
-With a claude.ai sign-in and feature flags on, {{ site.claude_code }} downloads new and updated plugins at each start.
+When the developer signs in to claude.ai and feature flags are on, {{ site.claude_code }} downloads new and updated plugins at each start.
 Set `feature_flags` to `false`, or set `syncClaudeAiPlugins` to `false`, to stop that sync.
 The background runs of plugin `command` sources, which can install dependencies, also start again, because only the nonessential traffic switch stops them.
 
@@ -154,7 +154,7 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 * The {{site.ai_gateway}} host
 * Your identity provider, for the sign-in, when the profile signs in through one. A profile with a key from the administrator doesn't use one.
 * `claude.ai`, `claude.com` and `platform.claude.com`, when the profile uses the developers' own Claude subscriptions, because {{ site.claude_code }} signs in to claude.ai itself. Organizations that use single sign-on also need `sso.claude.com`.
-* `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy
+* `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy and for the [connectivity check](https://code.claude.com/docs/en/errors#unable-to-connect-to-anthropic-services) of the first start. That check also needs `platform.claude.com`, and {{ site.claude_code }} exits when it can't reach either host. When the profile uses a gateway key, {{ site.claude_code }} has a key at its first start and skips the check.
 * `code.claude.com` and `claude.com`, for the documentation lookups of the built-in `claude-code-guide` agent and for pre-approved WebFetch requests
 * The OpenTelemetry collector, when the profile sends telemetry to one
 * The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds, such as a marketplace that {{ site.claude_code }} clones from `github.com`
@@ -174,14 +174,14 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`. For that value, activation doesn't write an update setting, so the {{ site.claude_code }} update settings stay in effect.
+* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`. For that value, activation writes neither `DISABLE_AUTOUPDATER` nor the nonessential traffic switch, so all of the automatic updates row stays on where its own conditions apply, unless the developer's own {{ site.claude_code }} settings turn it off.
 * `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
 Activation then writes the nonessential traffic switch blank, so {{ site.claude_code }} sends the other nonessential traffic again, as [Members that depend on each other](#members-that-depend-on-each-other) explains.
 
 To keep a feature on, set its member to `true` in the profile file.
-The members other than `auto_updates` need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
+The members in the table other than `auto_updates` and `artifact` need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
 The following part of a profile file keeps the WebFetch domain check on, and keeps the other traffic off:
 
 ```json
@@ -205,11 +205,13 @@ The following part of a profile file keeps the WebFetch domain check on, and kee
 }
 ```
 
-After you change the file, install it again and activate it:
+After you change the file, import it again:
 
 ```sh
 kong-harnesses profile import <profile-file>
 ```
+
+Activate the imported profile, so that {{ site.claude_code }} gets the changed settings:
 
 ```sh
 kong-harnesses profile activate <profile-name> --client claude-code
@@ -220,7 +222,7 @@ If a developer changes or removes one of these settings later, the `anthropic` c
 
 ### In {{ site.claude_code }} settings
 
-Each profile member writes one or more {{ site.claude_code }} settings.
+The following table gives the {{ site.claude_code }} settings that each profile member writes, and the settings that turn off artifacts, which no member writes.
 To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
 The environment variables go in the `env` key, and `skipWebFetchPreflight`, `enableArtifact` and `disableClaudeAiConnectors` are top-level keys.
 
@@ -231,7 +233,7 @@ A managed `env` value [takes precedence](https://code.claude.com/docs/en/env-var
 A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 Server-managed settings need a direct connection to `api.anthropic.com`.
 Activation writes the gateway base URL to the user settings file, with the provider switch in the Azure AI Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
-With a gateway key, {{ site.claude_code }} gets its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
+When the profile uses a gateway key, {{ site.claude_code }} gets its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
 columns:
@@ -289,7 +291,7 @@ The organization setting applies only to the accounts of your organization.
 ### Claude Tag
 
 Claude Tag is the Claude app in Slack for Team and Enterprise organizations.
-To turn off Claude Tag for the whole organization, open the [Claude Tag admin settings](https://claude.ai/admin-settings/claude-tag) as an Owner and turn off **Enable Claude Tag in Slack**.
+To turn off Claude Tag for the whole organization, open the [Claude Tag admin settings](https://claude.ai/admin-settings/claude-tag) as an Owner and disable **Enable Claude Tag in Slack**.
 The switch also turns off direct messages to Claude.
 
 ### {{ site.claude_code }} in Slack
@@ -299,7 +301,9 @@ Your organization's Claude settings don't control these personal accounts.
 To block the app, a Slack administrator removes the Claude app and stops new installs:
 
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace. Every user in that workspace loses access at once.
-* A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) by checking **Only allow pre-approved apps** and clicking **Save**, and restricts the Claude app, so that members can't install it again.
+* A Workspace Owner [turns on app approval](https://slack.com/help/articles/222386767-Manage-app-approval-for-your-workspace) and restricts the Claude app, so that members can't install it again. To turn on app approval in the app management settings:
+  1. Select the **Only allow pre-approved apps** checkbox.
+  1. Click **Save**.
 * On Enterprise Grid, an Org Owner or Org Admin [restricts the Claude app for the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Manage Apps** > **Restrict an app**. Restricting the app doesn't remove existing installations, so also remove it from each workspace.
 * On Enterprise Grid, when the Claude app is installed for the whole organization, an Org Owner or Org Admin [uninstalls it from the organization](https://slack.com/help/articles/360000281563-Manage-apps-in-an-Enterprise-organization) in **Organization settings** > **Integrations** > **Installed Apps**. That removes the app from all workspaces.
 

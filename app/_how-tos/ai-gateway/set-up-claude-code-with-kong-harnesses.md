@@ -319,7 +319,7 @@ columns:
     key: recover
 rows:
   - feature: claude.ai connectors
-    why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. With the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
+    why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. When the profile uses the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
     why: It bills at a higher rate, and it needs fast mode access on the Anthropic organization behind the gateway.
@@ -362,8 +362,8 @@ It shows a fix for each problem it finds.
 It doesn't change any settings.
 Fix each failure and run it again until no check fails.
 
-To also send one model request, add `--inference`.
-The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+The model request of `--inference` can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+To also send one model request, add `--inference`:
 
 ```sh
 kong-harnesses doctor --profile quickstart --client claude-code --inference
