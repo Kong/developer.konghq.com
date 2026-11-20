@@ -55,7 +55,9 @@ Add `--client claude-code` to set up only {{ site.claude_code }}.
 With `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
 The sign-in step still opens the browser, or asks for the static key.
 Use `--auto-approve` only in an onboarding script that your organization owns, because it skips the developer's check of the gateway and the identity provider.
-When a step fails, the developer runs the same command again, and `setup` continues from that step.
+When a step fails, `setup` stops and names the step.
+Fix the reported error, then run the same `setup` command again.
+A step that is already done changes nothing: a sign-in that works stays, and an agent CLI that is already set up stays as it is.
 When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` names the fix.
 Without `--client`, `setup` leaves that agent CLI out and sets up the others.
 With `--client`, `setup` stops.
@@ -93,10 +95,12 @@ rows:
   - key: "`env.ANTHROPIC_CUSTOM_HEADERS`"
     value: |
       The headers that the profile's `attribution` block names, when the profile has one.
-      For a `subscription` profile, also the `x-kong-id-token` header.
+      For a `subscription` profile, the session hook in the `hooks` row adds the `x-kong-id-token` header.
   - key: "`hooks`"
     value: |
-      For a `subscription` profile, a hook on {{ site.claude_code }} session events writes a short-lived access token from the identity provider to the `x-kong-id-token` header, so the gateway can identify the developer of each request.
+      For a `subscription` profile, a hook on {{ site.claude_code }} session events adds `x-kong-id-token` with a short-lived access token from the identity provider to `env.ANTHROPIC_CUSTOM_HEADERS`, so the gateway can identify the developer of each request.
+      The hook makes the settings file readable by its owner only, because the header holds a token.
+      `profile activate` itself writes no token.
       When the gateway or the profile names a model that can't run WebSearch, a `PostToolUse` hook on WebSearch replaces a result without a search with a statement that no search ran.
 {% endtable %}
 

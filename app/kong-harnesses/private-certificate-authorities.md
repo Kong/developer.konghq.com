@@ -125,6 +125,7 @@ The native installer, the npm package, the Homebrew cask, the WinGet package and
 That binary trusts the system trust store by default, so each of these installs needs only the CA in the system trust store.
 When `CLAUDE_CODE_CERT_STORE` is set without `system`, add `system` to it.
 An older npm install that runs {{ site.claude_code }} on Node.js reads the system trust store only on Node.js 22.15 or later, so update it to the native binary or set `NODE_EXTRA_CA_CERTS` for it.
+For these limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
 
 ## CA settings per program
 

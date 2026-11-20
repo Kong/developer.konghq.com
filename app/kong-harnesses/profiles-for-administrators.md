@@ -76,7 +76,7 @@ rows:
 
 Use the `anthropic` mode unless the gateway serves Claude only through Microsoft Foundry or Amazon Bedrock Mantle and you want {{ site.claude_code }} to use that cloud's model IDs.
 The `anthropic` mode is the only mode that sets up other agent CLIs, and the only mode in which {{ site.claude_code }} reads the model list from the gateway.
-When the gateway lists a new model whose ID contains `claude` or `anthropic` in a successful `GET /v1/models` response, the model shows up in the next {{ site.claude_code }} session without a new `setup`.
+When the gateway lists a new model whose ID contains `claude` or `anthropic`, in any letter case, in a successful `GET /v1/models` response, the model appears in the model picker of the next {{ site.claude_code }} session without a new `setup`.
 For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
