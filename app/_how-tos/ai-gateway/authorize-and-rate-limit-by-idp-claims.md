@@ -33,7 +33,9 @@ tldr:
   a: |
     Attach an OpenID Connect [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) on an AI Model so {{site.ai_gateway}} validates each caller's token, then read that token's claims in CEL with `access_token.claims`.
     Use those claims in a [CEL-based ACL](/ai-gateway/entities/ai-model/#cel-based-acls) on the [AI Model](/ai-gateway/entities/ai-model/) to decide who may reach it.
-    Also add the claims in a [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) AI Policy to give each caller their own counter and a limit that matches their entitlement.
+    
+    Then, add the claims in a [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) AI Policy to give each caller their own counter and a limit that matches their entitlement.
+    
     Because every decision comes from the token, {{site.ai_gateway}} doesn't need an AI Consumer or a Principal for each caller.
 
 prereqs:

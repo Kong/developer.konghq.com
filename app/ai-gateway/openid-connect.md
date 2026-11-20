@@ -124,10 +124,10 @@ If several AI Models reference the same OpenID Connect AI Auth Strategy, every c
 ### Use token claims in CEL
 
 After {{site.ai_gateway}} has validated a caller's token, a CEL expression can read that token's claims through `access_token.claims`.
-This is for teams whose IdP already records what each caller is entitled to, such as their tier, team, or roles. 
+This is useful for teams whose IdP already records what each caller is entitled to, such as their tier, team, or roles. 
 The expression reads those claims directly, so you don't have to create an AI Consumer or a Principal for every caller.
 
-You can use the claims in three places:
+You can use the claims in any of the following places:
 
 * An AI Policy's `condition`, to run or skip that AI Policy per request. See [AI Policy conditions](/ai-gateway/conditions/#token-claims).
 * A [CEL-based ACL](/ai-gateway/entities/ai-model/#cel-based-acls) on an AI Model, AI Agent, or AI MCP Server, to allow or deny the request itself.
