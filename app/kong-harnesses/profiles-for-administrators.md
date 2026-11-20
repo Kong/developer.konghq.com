@@ -224,7 +224,7 @@ rows:
 
 In the `anthropic` mode, {{ site.claude_code }} sends a static key in both the `Authorization: Bearer` and the `x-api-key` headers.
 In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
-To accept the key in every mode, set the gateway's `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) to read both headers, and to hide the key from the model provider:
+To accept the key in every mode, give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) that reads both headers and hides the key from the model provider:
 
 ```yaml
 config:

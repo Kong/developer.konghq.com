@@ -81,6 +81,8 @@ sudo update-ca-trust
 {% endnavtab %}
 {% navtab "Alpine" %}
 
+Run these commands as root:
+
 ```sh
 apk add ca-certificates
 cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
