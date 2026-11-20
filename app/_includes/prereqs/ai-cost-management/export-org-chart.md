@@ -1,4 +1,5 @@
-If you're running in production and want to use a real org chart, export your org chart from your Human Resource Information System (HRIS) into a CSV file. If you don't have one or are testing the functionality, the tutorial provides a sample CSV file to demo the org chart capability.
+In production, export your org chart from your human resources information system (HRIS) as a CSV file.
+If you are testing or don't have an HRIS, skip this prerequisite. The guide provides a sample CSV file.
 
 Choose your HRIS and follow the export instructions:
 
@@ -8,12 +9,12 @@ Choose your HRIS and follow the export instructions:
 Create an **Advanced** custom report on the **All Workers** data source (primary business object: Worker).
 Use **Employee ID** as the key.
 
-1. Add the following fields to the report. For each one, set **Column Heading Override** and **Column Heading Override XML Alias** to the Konnect name:
+1. Add the following fields to the report. For each one, set **Column Heading Override** and **Column Heading Override XML Alias** to the {{site.konnect_short_name}} column name:
 
 {% capture workday_fields %}
 {% table %}
 columns:
-  - title: Konnect column
+  - title: {{site.konnect_short_name}} column
     key: konnect
   - title: Workday field
     key: field
@@ -68,7 +69,7 @@ rows:
 
 * **A supervisory organization with two managers**: Workday puts both IDs in one cell, which {{site.konnect_short_name}} rejects with `must be a single manager`. Use a calculated field (**Extract Single Instance**) to pick one manager.
 * **Vacant managers**: When an organization's manager position is vacant, its workers export with no manager. Assign an interim manager, or use a calculated field that falls back to the manager of the superior organization.
-* **No ready-made Manager ID field**: Some tenants don't have a manager ID field. If yours doesn't, create a calculated field that returns the Employee ID of the worker's manager.
+* **No ready-made Manager ID field**: Some tenants don't include one. If yours doesn't, create a calculated field that returns the Employee ID of the worker's manager.
 
 {% endnavtab %}
 {% navtab "SAP SuccessFactors" %}
@@ -81,7 +82,7 @@ To use Person ID External instead, map each manager's User ID to it before you e
 {% capture sap_fields %}
 {% table %}
 columns:
-  - title: Konnect column
+  - title: {{site.konnect_short_name}} column
     key: konnect
   - title: Employee Central field
     key: field
@@ -117,15 +118,15 @@ rows:
    Leave **Include inactive users in the data** cleared in the scope filter, and run the report as an admin with access to the whole population.
 
 1. Choose **Preview Query > Export** and set **File Type** to CSV. The download is a zip file.
-   Unzip it and rename the headers to the Konnect names, or add calculated columns that already have those names.
+   Unzip it and rename the headers to the {{site.konnect_short_name}} column names, or add calculated columns that already have those names.
    To automate the export, use **Action > New Schedule**. Choose **Data Source in Story** and CSV, and deliver the file to SFTP.
 
-   For small orgs, the OData v2 API returns the same data from `EmpJob` (`userId`, `managerId`, `costCenter`) and `User` (`email`). Effective-dated queries default to today.
+   For small organizations, the OData v2 API returns the same data from `EmpJob` (`userId`, `managerId`, `costCenter`) and `User` (`email`). Effective-dated queries default to today.
 
 **Watch out for:**
 
-* **`NO_MANAGER` at the top**: The top person often has the literal value `NO_MANAGER` instead of an empty value. Clear that cell before you upload, or {{site.konnect_short_name}} reports "does not match a row in the file".
-* **Multiple employments and global assignments**: These give one person several User IDs and rows. Keep the primary employment only.
+* **`NO_MANAGER` at the top**: The top person often has the literal value `NO_MANAGER` instead of an empty value. Clear that cell before you upload, or {{site.konnect_short_name}} reports `does not match a row in the file`.
+* **Multiple employments and global assignments**: These give one person several User IDs and rows. Keep only the primary employment.
 * **Matrix and custom managers**: Those relationships are stored in Job Relationships. Don't join that table, or people appear once for each relationship.
 * **Inactive supervisors**: A person's Supervisor can still be someone who has left. Update those people in Employee Central before you export.
 * **Tenant differences**: Field labels in Query Designer depend on your Employee Central configuration. Check whether your export uses calculated column names as headers. Also check whether your release can deliver scheduled Story exports to SFTP, because older releases only offered offline delivery.
@@ -140,7 +141,7 @@ Oracle recommends **HCM Extracts** for bulk exports. Use **Person Number** as th
 {% capture oracle_fields %}
 {% table %}
 columns:
-  - title: Konnect column
+  - title: {{site.konnect_short_name}} column
     key: konnect
   - title: Oracle attribute
     key: attribute
@@ -173,12 +174,12 @@ rows:
    Choose one of the following options:
 
    * **HCM Extract (recommended):** Create an HCM Extract with one record per worker and the attributes in the table.
-     Set **Output Type** to CSV, which doesn't need a BI Publisher template, and name the attributes with the Konnect column names.
+     Set **Output Type** to CSV, which doesn't need a BI Publisher template, and name the attributes with the {{site.konnect_short_name}} column names.
      Schedule it with delivery to SFTP or WebCenter Content.
 
      An OTBI analysis on **Workforce Management - Worker Assignment Real Time** also works for a one-off export. That subject area returns current assignments only.
 
-   * **REST API (small orgs only):** `publicWorkers` returns active workers as of today. Oracle advises against REST for bulk pulls, so use it only for small orgs.
+   * **REST API (small organizations only):** `publicWorkers` returns active workers. Oracle advises against REST for bulk pulls, so use it only for small organizations.
 
      ```sh
      GET /hcmRestApi/resources/11.13.18.05/publicWorkers
@@ -187,8 +188,8 @@ rows:
      REST-Framework-Version: 4
      ```
 
-1. Filter to one row per current worker. Keep the worker's overall primary assignment (`PrimaryFlag = true`). The REST request already applies this filter.
-   `PrimaryAssignmentFlag` marks the primary assignment within only one work relationship, so it can still return two rows for one person.
+1. Keep only the worker's overall primary assignment (`PrimaryFlag = true`) so that each worker has one row. The REST request already applies this filter.
+   Don't use `PrimaryAssignmentFlag` for this. It marks the primary assignment within only one work relationship, so it can still return two rows for one person.
 
    Keep only the `LINE_MANAGER` manager type. A worker has one line manager at a time but can also have project or HR managers.
    In a REST response, filter the managers to `LINE_MANAGER` in your script.
@@ -197,7 +198,7 @@ rows:
 
 **Watch out for:**
 
-* **Several people without a line manager**: Real tenants often have more than one. Assign line managers to everyone except the top person.
+* **Several people without a line manager**: Many tenants have more than one. Assign line managers to everyone except the top person.
 * **A stale manager hierarchy in OTBI**: OTBI's manager folders depend on the **Refresh Manager Hierarchy** process. Run it before the export, or use HCM Extracts.
 * **Departments and cost centers are separate**: Departments map to cost centers in different ways in each tenant. Send whichever one your finance team uses for budgets.
 * **Tenant differences**: Oracle doesn't document which OTBI column holds the line manager's Person Number, so prefer HCM Extracts or REST for that field. Check how your extract names the header row, and test the `q` filter on the child resource before you depend on it.
@@ -213,7 +214,7 @@ ADP stores the reporting line on each position, so take the manager from the pri
 {% capture adp_fields %}
 {% table %}
 columns:
-  - title: Konnect column
+  - title: {{site.konnect_short_name}} column
     key: konnect
   - title: Report field
     key: field
@@ -246,7 +247,7 @@ rows:
 1. Filter on **Position Status** to include Active and Leave.
    Keep only primary positions, because people with several positions appear once for each position.
 
-1. Choose **Save + Run** and export to CSV. Rename the headers to the Konnect names, and delete the **Report Totals** row if ADP adds one.
+1. Choose **Save + Run** and export to CSV. Rename the headers to the {{site.konnect_short_name}} column names, and delete the **Report Totals** row if ADP adds one.
    To automate the export, use **Schedule To Run**. SFTP delivery needs ADP's Automatic Export Service.
 
    The Workers API (`GET https://api.adp.com/hr/v2/workers`) returns the same fields.
