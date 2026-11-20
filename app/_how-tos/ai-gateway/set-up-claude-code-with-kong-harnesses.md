@@ -326,7 +326,7 @@ rows:
     recover: "Ask your administrator to set `fast_mode` to `true` in the profile. Fast mode works only on the providers that the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements) list."
   - feature: "`/bug`, `/feedback` and the feedback survey"
     why: They send your conversation or your ratings to Anthropic.
-    recover: Ask your administrator to turn them on in the profile.
+    recover: "Ask your administrator to set `bug_command` and `feedback_command` to `true` in the profile, because each one turns off both commands. For the feedback survey, the administrator sets `feedback_survey` and `anthropic_telemetry` to `true`."
   - feature: Cost warnings
     why: They report Anthropic API spend, and a gateway session has none.
     recover: Nothing to do.
@@ -334,8 +334,8 @@ rows:
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
     recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
   - feature: Automatic updates
-    why: The update check and other background requests go outside the gateway, to Anthropic, GitHub and Homebrew. The setting also turns off automatic plugin updates. It turns off release notes and pull request status badges too, unless the profile turns on a feature such as telemetry.
-    recover: "Run `claude update` when you want a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. You can also ask your administrator to keep automatic updates on in the profile."
+    why: The update check and other background requests go outside the gateway, to Anthropic, GitHub and Homebrew. The setting also turns off automatic plugin updates, unless `FORCE_AUTOUPDATE_PLUGINS=1` is set. It turns off release notes and pull request status badges too, unless the profile turns on a feature such as telemetry.
+    recover: "Run `claude update` when you want a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. To keep plugin updates on, set `FORCE_AUTOUPDATE_PLUGINS=1` in your {{ site.claude_code }} settings. You can also ask your administrator to keep automatic updates on in the profile."
   - feature: WebFetch domain check
     why: "{{ site.claude_code }} asks `api.anthropic.com` whether it may fetch each domain."
     recover: "WebFetch still works, without Anthropic's list of blocked domains. To limit the domains, add `WebFetch(domain:...)` permission rules."
@@ -347,7 +347,7 @@ rows:
 A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
 [{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
-{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
+{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync and Remote Control, because they need a claude.ai sign-in or a direct connection to Anthropic. The Artifact tool works only in the cases that the artifacts row of [{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/#traffic-that-goes-outside-the-gateway) lists.
 
 ## Validate
 
