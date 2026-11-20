@@ -57,7 +57,7 @@ prereqs:
     - title: OIDC provider
       include_content: prereqs/auth/oidc/keycloak-client-credentials-ai-gateway-org-chart
       icon_url: /assets/icons/keycloak.svg
-    - title: Export org chart from your HRIS
+    - title: (optional) Export org chart from your HRIS
       include_content: prereqs/ai-cost-management/export-org-chart
       icon_url: /assets/icons/organization.svg
   konnect:

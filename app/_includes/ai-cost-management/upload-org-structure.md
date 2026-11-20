@@ -2,15 +2,19 @@
 Upload an org chart if you want spend to roll up to a cost center, user, or team.
 If you skip this step, the principal is still created and the usage event still gets a subject, just without that reporting data.
 
-In production, you'll export this file from your HR system (HRIS).
-The file must be in CSV format and a maximum of 10 MB.
+The org structure file must be in CSV format and a maximum of 10 MB.
+Choose whether to use an export from your HR system (HRIS) or a sample file:
 
-For this example, we'll create a small CSV file directly, then upload it with `kongctl import`.
+{% navtabs "org-structure" %}
+{% navtab "Use export from existing HRIS" %}
 
-{:.info}
-> The `kongctl import` command is available starting in kongctl 1.27.0.
+Use the file you exported in the Export org chart from your HRIS prerequisite.
+Save it as `org-structure.csv` in your current directory, or replace `org-structure.csv` with the path to your file in the import command.
 
-Create a file named `org-structure.csv`:
+{% endnavtab %}
+{% navtab "Use sample CSV file" %}
+
+Create a small sample file named `org-structure.csv`:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -28,6 +32,12 @@ expected:
 render_output: false
 {% endvalidation %}
 <!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+{:.info}
+> The `kongctl import` command is available starting in kongctl 1.27.0.
 
 Apply the CSV to the default {{site.identity}} directory:
 
