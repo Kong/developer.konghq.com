@@ -12,6 +12,8 @@ section: cleanup
 {% endkonnect_api_request %}
 <!--vale on-->
 
+If `CREDENTIAL_ID` is empty after this command, the key is already deleted, so skip the next request.
+
 Then delete the key:
 
 <!--vale off-->

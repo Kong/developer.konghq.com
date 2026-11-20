@@ -189,7 +189,7 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    {:.info}
    > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide. The command doesn't export the variable, so the programs that you start from this shell don't get the key.
    >
-   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again.
+   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again. If the error is `409`, a key named `developer-key` already exists. Revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
 
 ## Create the AI Model
 
@@ -280,7 +280,7 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 > kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
 > ```
 >
-> On Windows, in PowerShell 7:
+> On Windows, in PowerShell 7. Windows comes with Windows PowerShell 5.1 only, so install PowerShell 7 with `winget install Microsoft.PowerShell` first, and start it with `pwsh`:
 >
 > ```powershell
 > [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
