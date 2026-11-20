@@ -256,27 +256,23 @@ jobs:
         env:
           BRANCH: ${{ needs.base.outputs.branch }}
         run: |
-          if [ ! -f tools/kong-harnesses-versions/fetch-changelog.js ] || [ ! -f tools/kong-harnesses-versions/check-changelog-links.rb ]; then
+          if [ ! -f tools/kong-harnesses-versions/sync-changelog.rb ] || [ ! -f tools/kong-harnesses-versions/check-changelog-links.rb ]; then
             echo "::error::Branch $BRANCH has no changelog sync scripts in tools/kong-harnesses-versions, so its changelog can't be synced yet"
             exit 1
           fi
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "26"
-
-      - name: Fetch changelog
-        env:
-          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
-        run: node tools/kong-harnesses-versions/fetch-changelog.js
-
-      # Renders the changelog with the site's Markdown converter and refuses any link
-      # or address that is left on the page.
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Fetch changelog
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+        run: bundle exec ruby tools/kong-harnesses-versions/sync-changelog.rb
+
+      # Renders the changelog with the site's Markdown converter and refuses any link
+      # or address that is left on the page.
       - name: Refuse any link or address on the changelog page
         run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
 
