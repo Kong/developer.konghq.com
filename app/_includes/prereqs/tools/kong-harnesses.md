@@ -5,7 +5,7 @@ kong-harnesses
 {% capture details_content %}
 This tutorial uses [kong-harnesses](/kong-harnesses/) to sign in developers and configure their coding agents.
 
-Install kong-harnesses from the first release after 0.17.0.
+Install kong-harnesses 0.17.1 or later.
 Earlier releases accept only an `https://` gateway origin.
 
 {:.info}
