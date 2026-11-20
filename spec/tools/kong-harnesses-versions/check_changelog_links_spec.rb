@@ -36,6 +36,11 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['the repository split by bold', 'see github.com/**Kong**/kong-harnesses'],
       ['the repository split by a code span', 'see `github.com`/Kong/kong-harnesses'],
       ['an address split by bold', 'see https:**//**example.com'],
+      ['a www address', 'see www.example.org now'],
+      ['a mail address', 'mail me@example.org now'],
+      ['a mail address with no dot', 'mail me@localhost now'],
+      ['a mailto address', 'write to mailto:me now'],
+      ['an xmpp address', 'chat on xmpp:me now'],
       ['a strikethrough', 'a ~~gone~~ word']
     ].each do |name, text|
       it "refuses #{name}" do
@@ -50,7 +55,10 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['the host and the path in separate paragraphs', "see github.com\n\n  then Kong/kong-harnesses"],
       ['an address in a code span', 'run `curl https://example.com/a`'],
       ['the product name in text', 'run kong-harnesses login once after the upgrade'],
-      ['an entry in parentheses', 'use the value from (the migration guide).']
+      ['an entry in parentheses', 'use the value from (the migration guide).'],
+      ['a user name', 'thanks to @bob for the report'],
+      ['a scoped package name', 'bump @types/node'],
+      ['a mail address in a code span', 'run `git config user.email me@example.org`']
     ].each do |name, text|
       it "accepts #{name}" do
         expect { described_class.check(entry(text)) }.not_to raise_error
@@ -66,19 +74,24 @@ RSpec.describe KongHarnessesChangelogLinks do
       expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
     end
 
-    it 'reads every language of the Shiki plugin and refuses an entry that it cannot read' do
+    it 'reads every language of the Shiki plugin and refuses an entry or a form that it cannot read' do
       shiki = <<~JS
         langs: [
           "yaml", 'fish',
           "json"
         ],
         const languageMap = { bash: "fish", 'sh': 'fish',
-            console: "fish" };
+            console: "fish", cef: "text" };
+        const language = languageMap[lang] || lang;
       JS
-      expect(described_class.languages_in(shiki)).to eq(Set['yaml', 'fish', 'json', 'bash', 'sh', 'console', 'text'])
+      expect(described_class.languages_in(shiki)).to eq(Set['yaml', 'fish', 'json', 'bash', 'sh', 'console', 'cef', 'text'])
       expect { described_class.languages_in(shiki.sub('"json"', '"json" // the API')) }.to raise_error(/cannot read: "json" \/\/ the API/)
       expect { described_class.languages_in(shiki.sub('console: "fish"', 'console: fishLanguage')) }.to raise_error(/cannot read: console: fishLanguage/)
-      expect { described_class.languages_in('langs: []') }.to raise_error(/empty list|no list/)
+      # A map value that Shiki does not load would stop the site build.
+      expect { described_class.languages_in(shiki.sub('cef: "text"', 'cef: "zig"')) }.to raise_error(/cannot read: cef: "zig"/)
+      expect { described_class.languages_in(shiki.sub("\"json\"\n]", '"json"].concat(["go"])')) }.to raise_error(/no list|cannot read/)
+      expect { described_class.languages_in("#{shiki}other: { langs: [\"c\"] },") }.to raise_error(/more than one list/)
+      expect { described_class.languages_in('langs: [],') }.to raise_error(/empty list|no list/)
       expect(described_class.languages).to include('yaml', 'go', 'bash', 'text')
     end
 

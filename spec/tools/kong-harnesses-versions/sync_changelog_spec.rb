@@ -25,6 +25,9 @@ RSpec.describe KongHarnessesChangelog do
     Nokogiri::HTML5.fragment(KongHarnessesChangelogLinks.html(markdown)).css('code').map { |node| node.text.chomp }
   end
 
+  issue = 'https://github.com/Kong/kong-harnesses/issues/1'
+  commit = "https://github.com/Kong/kong-harnesses/commit/abc1234#{'0' * 33}"
+
   release_please_changelog = <<~MARKDOWN
     # Changelog
 
@@ -41,7 +44,7 @@ RSpec.describe KongHarnessesChangelog do
     * **profile:** accept plain http for a gateway on loopback ([#417](https://github.com/Kong/kong-harnesses/issues/417)) ([802a984](https://github.com/Kong/kong-harnesses/commit/802a9848c49528cc52bb72365b6100ea68e30183))
     * **ksai:** let autofix change the Go module files
     * **deps:** update Go
-    * **docs:** follow the [Claude Code settings](https://code.claude.com/docs/en/settings) {{ unchanged }} {% endraw %}
+    * **docs:** follow the Claude Code settings {{ unchanged }} {% endraw %} ([#418](https://github.com/Kong/kong-harnesses/issues/418)) ([43de8e5](https://github.com/Kong/kong-harnesses/commit/43de8e59a1b2c3d4e5f60718293a4b5c6d7e8f90))
 
 
     ### Documentation
@@ -71,36 +74,22 @@ RSpec.describe KongHarnessesChangelog do
     MARKDOWN
   end
 
-  # Each case gives the source entry and the entry that the page gets. Links go and keep
-  # their text, and the text of code stays as it is.
+  # Each case gives the source entry and the entry that the page gets. Only the
+  # references that release-please writes at the end of an entry go, and the text of
+  # code stays as it is.
   [
-    ['* fix([#1](https://github.com/kong/kong-harnesses/pull/1))', '* fix'],
-    ['* see <https://github.com/Kong/kong-harnesses/issues/2>', '* see'],
-    ["* see [the issue][issue]\n\n[issue]: https://github.com/Kong/kong-harnesses/issues/4", '* see the issue'],
-    ['* see [the PR](https://github.com/Kong/kong-harnesses/pull/5 "title") first', '* see the PR first'],
-    ["* see [the PR](<https://github.com/Kong/kong-harnesses/pull/7\t>) first", '* see the PR first'],
-    ['* fix (closes [#12](https://github.com/Kong/kong-harnesses/issues/12)) now', '* fix (closes) now'],
-    ['* fix, see [c0ffee1](https://github.com/Kong/kong-harnesses/commit/c0ffee1) and [the guide](https://github.com/Kong/kong-harnesses/blob/main/docs/a.md)', '* fix, see and the guide'],
-    ['* see [defaced](https://github.com/Kong/kong-harnesses/pull/1)', '* see defaced'],
-    ['* see [x](https://github&#46;com/Kong/kong&#45;harnesses) first', '* see x first'],
-    ['* use the value from ([the migration guide](https://github.com/Kong/kong-harnesses/blob/main/docs/m.md)).', '* use the value from (the migration guide).'],
-    ['* see ![the diagram](https://raw.githubusercontent.com/Kong/kong-harnesses/main/a.png)', '* see the diagram'],
-    ["* see ![alt][img]\n\n[img]: https://github.com/Kong/kong-harnesses/a.png", '* see alt'],
-    ["* see [x][r]\n\n    [r]: https://github.com/Kong/kong-harnesses", '* see x'],
-    ['* released in [2026](https://example.com/release-year)', '* released in 2026'],
-    ['* [![badge](https://img.example/x.svg)](https://example.com/evil) entry', '* badge entry'],
-    ['* see [a [b] c](https://example.com/x) d', '* see a \\[b\\] c d'],
-    ["* see [the\n  guide](https://example.com/g) now", '* see the guide now'],
-    ['* use [`profile activate`](/reference/) now', '* use `profile activate` now'],
-    ["* use [`profile activate`][] now\n\n[`Profile activate`]: /reference/", '* use `profile activate` now'],
-    ["* use [`profile activate`] now\n\n[`profile activate`]: /reference/", '* use `profile activate` now'],
-    ["* run `printf 'a  b'`  twice ([#1](https://github.com/Kong/kong-harnesses/pull/1))", "* run `printf 'a  b'` twice"],
-    # The release-please preset links an issue number even in a code span.
-    ['* run `foo [#123](https://github.com/Kong/kong-harnesses/issues/123)` now', '* run `foo #123` now'],
+    ["* **cli:** fix x ([#1](#{issue})) ([abc1234](#{commit}))", '* **cli:** fix x'],
+    ["* **cli:** fix x ([abc1234](#{commit})), closes [#1](#{issue}) [#2](https://github.com/Kong/kong-harnesses/issues/2)", '* **cli:** fix x'],
+    ["* fix x ([abc1234](#{commit})), closes [Kong/other#3](https://github.com/Kong/other/issues/3) [other#4](https://github.com/Kong/other/issues/4)", '* fix x'],
+    # A breaking change note has its own `(#N)` and no commit link.
+    ["* **profile:** run login again ([#1](#{issue}))", '* **profile:** run login again'],
+    ["* **cli:** ([#1](#{issue}))", '* **cli:**'],
+    ["* run `printf 'a  b'`  twice ([#1](#{issue}))", "* run `printf 'a  b'` twice"],
+    ["* <profile> now works ([#1](#{issue}))", '* \\<profile> now works'],
+    ["* **cli:** fix x ([abc1234](#{commit}))\n\n  more text", "* **cli:** fix x\n\n  more text"],
+    ["* **cli:** fix x ([abc1234](#{commit}))\n  * nested", "* **cli:** fix x\n  * nested"],
     # Text that only looks like Markdown stays text, so the writer escapes it.
     ['* literal \\[mode](optional)', '* literal \\[mode\\](optional)'],
-    ['* \\![foo](https://example.com) next', '* !foo next'],
-    ["* ```\n  [x](https://example.com)", '* &#96;&#96;&#96; x'],
     ['* accept values with a | delimiter', '* accept values with a \\| delimiter'],
     # An entity stays an entity, so it cannot start a table, emphasis or a code span.
     ['* **cli:** use &#124; between values', '* **cli:** use &#124; between values'],
@@ -118,24 +107,18 @@ RSpec.describe KongHarnessesChangelog do
     ["* Before\\\n  \\-\\-\\-", "* Before  \n  \\-\\-\\-"],
     ["* use a\\-\\-b, a\\.\\.\\.b and a\\>\\>b", "* use a\\-\\-b, a\\.\\.\\.b and a\\>\\>b"],
     ["* Before\\\n  \\=\\=\\=", "* Before  \n  \\==="],
+    # Bold or emphasis cannot start with a line break, so the line break goes before it.
+    ["* a _\\\n  b_ c", "* a   \n  *b* c"],
+    ["* a **\\\n  b** c", "* a   \n  **b** c"],
+    # Two line breaks in a row end a paragraph, also in emphasis, so one goes.
+    ["* a _b\\\n  \\\n  c_ d", "* a *b  \n  c* d"],
     # Kramdown's writer gives a rule as `* * *`, which after a list marker is a rule alone.
     ['* ___', '* ___'],
     # Two backslashes at the end of a line are a line break.
     ['* in C:\\\\', '* in C:&#92;'],
-    ['* see **[https://example.com](https://example.com)** now', '* see now'],
-    # A link whose text is its own web or mail address goes, but a link to a file keeps
-    # its text. Quotes and brackets that held only a removed link go with it.
-    ['* see [docs/release.md](docs/release.md) now', '* see docs/release.md now'],
-    ['* see [CHANGELOG.md](CHANGELOG.md)', '* see CHANGELOG.md'],
-    ['* see "<https://example.com/a>" word', '* see word'],
-    ["* see <profile>'<https://example.com/a>'.", '* see \\<profile>.'],
-    ["* x\"q\"'<https://example.com/y>'\"q\" y", '* x”q”“q” y'],
-    ['* see <https://example.com/a>. Then', '* see. Then'],
-    ['* mail <mailto:a@example.com> or [b@example.com](mailto:b@example.com) now', '* mail or now'],
     ['* run profile get <profile> or `profile get <profile>`', '* run profile get \\<profile> or `profile get <profile>`'],
     ['* run profile get \\<profile>', '* run profile get \\<profile>'],
     # A placeholder at the start of a line is text too.
-    ['* <profile> now works ([#1](https://github.com/Kong/kong-harnesses/issues/1))', '* \\<profile> now works'],
     ["* run it\n  <name> at the start", '* run it \\<name> at the start'],
     ["* run it\\\n  <name> at the start", "* run it  \n  \\<name> at the start"],
     # A quote mark, a dash and an entity show as they did, and an entity is text.
@@ -147,6 +130,8 @@ RSpec.describe KongHarnessesChangelog do
     ['* Prepend y << x.', "* Prepend y «\u00a0x."],
     # A paragraph after a reference definition stays a paragraph of its own.
     ["* a\n  {: .x}\n  [r]: https://example.com/pull/3\n  b", "* a\n\n  b"],
+    # The last entry after a loose one reads back as loose.
+    ["* \n[r]: https://example.com/x\nb\\\n  c\n* d", "* b  \n   c\n\n* d"],
     # Kramdown shows an ordered list from 1 whatever its first number.
     ["3. a\n4. b", "1.  a\n2.  b"],
     # The site's highlighter knows sh, but not rust.
@@ -157,33 +142,32 @@ RSpec.describe KongHarnessesChangelog do
     ["* run:\n\n  ~~~&#58;\n  code\n  ~~~", "* run:\n\n      code\n  {: .language-text}"],
     # A code block of only white space shows nothing and goes.
     ["* a\n\n  ```sh\n  ```", '* a'],
-    # Two lists of the same kind with only an empty list between them become one.
-    ["* a\n\n3. \n\n* b", "* a\n* b"],
+    # An empty entry stays, also between two lists.
+    ["* a\n\n3. \n\n* b", "* a\n\n1.  \n\n* b"],
+    ["1. a\n\n3. \n\n5. b", "1.  a\n\n2.  \n3.  b"],
     # A line of code that starts with a number reads back as code.
     ["* the value `1.2\n  2.1.3` here", "* the value `1.2\n  2.1.3` here"],
-    ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a &#96; x &#96;&#96; d'],
     # Code spans as kramdown pairs them, also across the lines of a paragraph.
     ['* ``<a>``` x', '* `<a>`&#96; x'],
-    # Two code spans with nothing between them become one, as no Markdown can write them.
-    ['* a ``x```y` b', '* a `xy` b'],
+    ['* a ``x```y` b', '* a `x``y` b'],
     # The site's table parser pairs an escaped backtick with the one of a code span.
     ['* \\`a `x|y` b', '* &#96;a `x|y` b'],
     ["* run `curl\n  https://example.com/x` now", "* run `curl\n  https://example.com/x` now"],
     ['* a \\\\` https://example.com/x ` end', '* a \\\\``  https://example.com/x  `` end'],
-    ["* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url [docs](http://h/x)",
-     "* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url [docs](http://h/x)"]
+    ["* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url http://h/x",
+     "* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url http://h/x"]
   ].each do |entry, expected|
     it "exports #{entry.inspect}" do
       expect(exported(section(entry))).to eq(section(expected))
     end
   end
 
-  # Only the parser can say where an address in text ends, and it gives no node for one,
-  # so the export refuses such an entry and names it rather than guess.
+  # The site's parser gives no node for an address in text, and only a guess could say
+  # where it ends, so the export refuses such an entry and names it.
   [
     '* see https://github.com/Kong/kong-harnesses/issues/3 first',
-    '* see <HTTPS://GitHub.com/Kong/kong-harnesses/issues/2> now',
     '* see (https://example.com/foo) ok',
+    '* see <HTTPS://GitHub.com/Kong/kong-harnesses/issues/2> now',
     '* see https://exa**mple**.com/a',
     '* literal \\[foo](https://example.com) next',
     '* x ` <profile> https://example.com/a ` y',
@@ -193,30 +177,87 @@ RSpec.describe KongHarnessesChangelog do
     *%w[&#9; &#10; &#11; &#12; &#13; &#32;].map { |entity| "* see https://example.com/a#{entity}word now" },
     "* go https://example.com/a\u00a0word",
     "* see 'https://example.com/a' word",
-    '* fix https://example.com/a’s crash'
+    '* fix https://example.com/a’s crash',
+    '* see www.example.org now',
+    '* mail me@example.org now',
+    '* write to mailto:me@example.org now'
   ].each do |entry|
     it "refuses the address in #{entry.inspect}" do
       expect { exported(section(entry)) }.to raise_error(/an address in the text of "/)
     end
   end
 
-  # A removed link right before a word would take what it held out of the sentence.
+  # Any other link, in a sentence, between quotes, next to code, alone in an entry, in a
+  # heading or with another address, is refused, and the entry is named.
   [
-    "* fix [#1](https://github.com/Kong/kong-harnesses/issues/1)'s crash",
+    "* fix [#1](#{issue})'s crash",
     '* see <https://example.com/a>word',
-    "* see <https://example.com/a>'s page"
+    "* a \"q,\" [#1](#{issue}) \"r\" b",
+    "* a 'q' [#1](#{issue}) 'r' b",
+    "* \"a\" [#1](#{issue}) \"b\"",
+    "* a \"q,\" <https://example.com/x> \"r\" b",
+    "* see \"[#1](#{issue})\"",
+    "* see \" [#1](#{issue}) \"x",
+    "* say \"done.\" [#1](#{issue}) \"next\"",
+    "* accept \"`--foo`\" [#1](#{issue}) \"`--bar`\"",
+    "* rename `--foo`[#1](#{issue})`--bar`",
+    "* fix word[#1](#{issue})`code`",
+    "* fix `code`[#1](#{issue})word",
+    "* `copy`[#1](#{issue})`file`",
+    "* [#1](#{issue})",
+    "1. First\n2. [#1](#{issue})\n3. Second",
+    "* fix ([#1](#{issue}), [#2](#{issue}))",
+    "* fix (#1) ([#2](#{issue})) ([abc1234](#{commit}))",
+    "* fix x ([#2](#{issue})) ([abc1234](#{commit}))",
+    "* fix x ([abc1234](https://github.com/Kong/kong-harnesses/commit/abc1235#{'0' * 33}))",
+    "* fix x ([abc1234](#{commit})) now",
+    "* fix x [abc1234](#{commit})",
+    "* fix x ([abc1234](#{commit})) closes [#1](#{issue})",
+    "* fix x ([abc1234](#{commit})), closes [Kong/other#3](https://example.com/Kong/other/issues/3)",
+    "* fix x ([`#1`](#{issue}))",
+    "* fix x **([abc1234](#{commit}))**",
+    "* fix x\n  * nested ([#1](#{issue}))",
+    "> fix x ([#1](#{issue}))",
+    "* see [docs/release.md](docs/release.md) now",
+    '* see [2024](https://example.org) now',
+    '* see [defaced](https://github.com/Kong/kong-harnesses/pull/1)',
+    '* **a:** [mailto:help@example.org](https://example.org/help)',
+    '* **a:** [https://example.org/?a=1&amp;b=2](https://example.org/?a=1&amp;b=2)',
+    '* see ![the diagram](https://example.com/a.png)',
+    "* see [x][r]\n\n[r]: https://example.com/x"
   ].each do |entry|
-    it "refuses the removed link in #{entry.inspect}" do
-      expect { exported(section(entry)) }.to raise_error(/a link right before a word in "/)
+    it "refuses the link in #{entry.inspect}" do
+      expect { exported(section(entry)) }.to raise_error(/has a link in "/)
     end
+  end
+
+  # The release-please subject transform links `#N` and `@user` also in code, so code
+  # with a link is refused too.
+  [
+    "* run `foo [#123](#{issue})` now",
+    "* see `\\[#1](#{issue}) then [#1](#{issue})` now",
+    "* see `[@bob](https://github.com/bob)` now",
+    "* run:\n\n  ```sh\n  see [x](https://example.com/x)\n  ```"
+  ].each do |entry|
+    it "refuses the link in the code of #{entry.inspect}" do
+      expect { exported(section(entry)) }.to raise_error(/a link in the code of "/)
+    end
+  end
+
+  it 'refuses a link in a heading other than the compare link of the release' do
+    expect { exported("## [1.0.0](https://example.com/compare/v0.9.0...v1.0.0)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
+    expect { exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.1)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
+    expect { exported("## [1.0.0 now](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0 now"/)
+    expect(exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0-rc.1...v1.0.0) (2026-01-01)\n\n### Features\n\n* add\n"))
+      .to eq("## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n")
   end
 
   it 'changes no text inside a code block' do
     [
-      "* set it:\n\n  ```toml\n  [mode]: automatic\n  see [x](https://example.com/x) and <profile>\n\n\n\n### Documentation\n* **ci:** [#1]\n  ```",
+      "* set it:\n\n  ```toml\n  [mode]: automatic\n  see [x] and <profile>\n\n\n\n### Documentation\n* **ci:** [#1]\n  ```",
       "* ~~~sh\n  echo 'https://example.com/docs'\n  ~~~",
       "* or:\n\n      [mode]: automatic\n\n      ## not a heading <b>",
-      "* entry\n\n      code\n  [x](https://example.com)\n  https://example.com",
+      "* entry\n\n      code\n  https://example.com",
       "* run this:\n  ```sh\n  kong-harnesses login\n  ```",
       "* run:\n\n  ```sh\n  a\n\n  b\n  ```",
       "* run:\n\n  ```sh\n  a\n    \n  b\n  ```"
@@ -232,7 +273,8 @@ RSpec.describe KongHarnessesChangelog do
       expect { exported(section(entry)) }.to raise_error(/raw HTML or a strikethrough/)
     end
     expect { exported(section("* a `x\n  <profile>` y")) }.to raise_error(/code with a line that starts a block/)
-    expect { exported(section("* a\u0000b")) }.to raise_error(/NUL/)
+    expect { exported(section("* a\u0000b")) }.to raise_error(/control character/)
+    expect { exported(section("* a\u0005b")) }.to raise_error(/control character/)
   end
 
   it 'leaves out the repository tooling scopes, also with a nested scope, but keeps an upgrade step' do
@@ -242,18 +284,18 @@ RSpec.describe KongHarnessesChangelog do
       .to eq("## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n")
   end
 
-  it 'drops an entry that held only a reference, and a section with no entry left' do
-    expect(exported("## 1.0.0\n\n### Features\n\n* [#12](https://github.com/Kong/kong-harnesses/issues/12)\n* add\n\n### Bug Fixes\n\n* [#13](https://github.com/Kong/kong-harnesses/issues/13)\n"))
+  it 'drops a section with no entry left' do
+    expect(exported("## 1.0.0\n\n### Features\n\n* add\n\n### Bug Fixes\n\n* **ci:** retry\n"))
       .to eq("## 1.0.0\n\n### Features\n\n* add\n")
   end
 
   it 'publishes only the sections of published releases' do
     changelog = "preamble\n\n## 0.19.0\n\n### Features\n\n* later\n\n## 0.18.0-rc.2\n\n### Features\n\n* not out\n\n" \
-                "## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n\n## 0.17.1\n\n### Features\n\n* add\n"
+                "## [0.18.0-rc.1](https://github.com/Kong/kong-harnesses/compare/v0.17.1...v0.18.0-rc.1)\n\n### Features\n\n* candidate\n\n## 0.17.1\n\n### Features\n\n* add\n"
     expect(exported(changelog, %w[0.18.0-rc.1 0.17.1])).to eq("## 0.17.1\n\n### Features\n\n* add\n")
     # 0.18.0 never shipped, so its candidate stays out even below a later release.
     expect(exported(changelog, %w[0.18.0-rc.1 0.17.1 0.19.0])).to eq("## 0.19.0\n\n### Features\n\n* later\n\n## 0.17.1\n\n### Features\n\n* add\n")
-    expect(exported("## 0.18.0\n\n### Features\n\n* final\n\n## [0.18.0-rc.1](x)\n\n### Features\n\n* candidate\n", %w[0.18.0-rc.1 0.18.0]))
+    expect(exported("## 0.18.0\n\n### Features\n\n* final\n\n## [0.18.0-rc.1](https://github.com/Kong/kong-harnesses/compare/v0.17.1...v0.18.0-rc.1)\n\n### Features\n\n* candidate\n", %w[0.18.0-rc.1 0.18.0]))
       .to eq("## 0.18.0\n\n### Features\n\n* final\n\n## 0.18.0-rc.1\n\n### Features\n\n* candidate\n")
     expect { exported("## Unreleased\n\n### Features\n\n* secret\n") }.to raise_error(/no version/)
   end
@@ -284,18 +326,14 @@ RSpec.describe KongHarnessesChangelog do
 
   # Pieces of Markdown that are hard to write back. The addresses are on another host,
   # because the repository's address in code stops the sync by design, and a piece can
-  # land in code.
-  pieces = ['[x](https://example.com/pull/1)', '[#2](https://github.com/Kong/kong-harnesses/issues/2)',
+  # land in code. A link or an address is refused unless it is a reference at the end
+  # of an entry, so only a few pieces have one.
+  pieces = ['[x](https://example.com/pull/1)', '<https://example.com/q>',
             '`a <b> https://example.com/c`', '``d`e``', '`', '<profile>', '|', '[', ']', '(', ')',
-            '**', '_', '~~', '~~~', '```', '    ', "\n", "\n\n", '> ', '* ', '1. ', '# ', 'https://example.com/z',
-            '<https://example.com/q>', '![i](https://example.com/i.png)', '[r]', "\n[r]: https://example.com/pull/3\n",
-            'word', ' ', "it's", '"q"', '--', '&amp;', '{: .x}', ':', '-',
-            '**[https://example.com](https://example.com)**',
-            '<!-- note -->', '<del>x</del>', '<b>', '</b>',
-            # Links next to quotes, and list starts. An address in text is refused, so the
-            # table above has those cases.
-            "'<https://example.com/y>'", '"[#4](https://github.com/Kong/kong-harnesses/issues/4)"',
-            "\n3. ", "\n<name> "] +
+            '**', '_', '~~', '~~~', '```', '    ', "\n", "\n\n", '> ', '* ', '1. ', '# ',
+            '[r]', "\n[r]: https://example.com/pull/3\n",
+            'word', ' ', "it's", '"q"', "'q'", '--', '&amp;', '{: .x}', ':', '-', ',', 'closes', '#1', 'abc1234',
+            '<!-- note -->', '<del>x</del>', '<b>', '</b>', "\n3. ", "\n<name> "] +
            # Every ASCII punctuation character as an entity, and every character that the
            # GFM parser escapes with a backslash. A slash and a backslash are left out,
            # because the check refuses two of them in a row, as a browser reads `\\` as `//`.
@@ -305,52 +343,58 @@ RSpec.describe KongHarnessesChangelog do
            ["\\\n  ", "  \n  ", "\\\n  \\## 9.9.9", "\\\n  \\# b", "\\\n  \\> b", "\\\n  1\\. b", "\\\n  \\- b",
             "\\\n  \\-\\-\\-", "\\\n  \\=\\=\\="]
 
+  # The references that release-please writes at the end of an entry, in each of their
+  # forms: the subject's own `(#N)`, the commit, and the issues that the commit closes.
+  def references(random, index)
+    hash = format('%07x', random.rand(16**7))
+    closes = Array.new(random.rand(0..3)) do |number|
+      random.rand(2).zero? ? "[##{number}](https://github.com/Kong/kong-harnesses/issues/#{number})" : "[Kong/other##{number}](https://github.com/Kong/other/issues/#{number})"
+    end
+    [(" ([##{index}](https://github.com/Kong/kong-harnesses/issues/#{index}))" if random.rand(2).zero?),
+     (" ([#{hash}](https://github.com/Kong/kong-harnesses/commit/#{hash}#{'0' * 33}))" if random.rand(4).positive?),
+     (", closes #{closes.join(' ')}" unless closes.empty?)].join
+  end
+
   # The page that the export writes must have no link or address, and the text of every
   # piece of code must stay as the site's parser reads it in the source.
   def expect_safe(source, page)
-    source_code = described_class.code_of(described_class.parse(source)).map do |value|
-      described_class::PRESET_LINKS.reduce(value) { |text, link| text.gsub(link, '\1') }
-    end
     expect(KongHarnessesChangelogLinks.problems(page)).to be_empty, "#{source.inspect} gave #{page.inspect}"
-    # Two code spans with nothing between them become one.
-    expect(code(page).join).to eq(source_code.join), "#{source.inspect} gave #{page.inspect}"
+    expect(code(page)).to eq(described_class.code_of(described_class.parse(source))), "#{source.inspect} gave #{page.inspect}"
   end
 
-  # Random entries from the pieces, with a fixed seed. The export may refuse an entry
-  # that it cannot write back, such as raw HTML, but its self-check must never find
-  # that the writer got an entry wrong.
+  # Random entries from the pieces, half of them with references at the end, with a
+  # fixed seed. The export may refuse an entry that it cannot write back, such as raw
+  # HTML or a link in a sentence, but its self-check must never find that the writer got
+  # an entry wrong.
   it 'keeps code and leaves no link for random entries' do
     random = Random.new(20_261_120)
     refused = Hash.new(0)
-    1000.times do
-      source = section("* #{Array.new(random.rand(1..12)) { pieces.sample(random: random) }.join}")
+    1000.times do |index|
+      entry = Array.new(random.rand(1..12)) { pieces.sample(random: random) }.join
+      source = section("* #{entry}#{references(random, index) if random.rand(2).zero?}")
       begin
         expect_safe(source, exported(source))
       rescue RuntimeError => e
         raise if e.message.include?('The export would')
 
-        refused[e.message] += 1
+        refused[e.message[/\A[^"]*/]] += 1
       end
     end
-    expect(refused.values.sum).to be < 400, refused.inspect
+    expect(refused.values.sum).to be < 500, refused.inspect
   end
 
   # Entries in the shape that release-please writes, with a subject made of the pieces
-  # that can be on one line of a commit subject. The export must keep every one.
+  # that can be on one line of a commit subject, and references at the end in each form.
+  # The export must keep every one.
   it 'keeps every random release-please entry' do
-    # release-please writes links, not an address in text, and the export refuses both
-    # that and a link in quotes right before a word.
     subject_pieces = pieces.reject do |piece|
-      piece.include?("\n") || piece.match?(/<(?:!--|\/?(?:del|b)>)/) || piece == '~~' || piece.match?(/\A(?:<?https:|['"])/)
+      piece.include?("\n") || piece.match?(/<(?:!--|\/?(?:del|b)>)/) || piece == '~~' || piece.match?(/https:/)
     end
     random = Random.new(20_261_121)
     300.times do |index|
       # The words of a subject, apart as in a commit subject. The fuzz test above glues them.
       subject = Array.new(random.rand(1..8)) { subject_pieces.sample(random: random) }.join(' ')
-      hash = format('%07x', random.rand(16**7))
-      source = section("* **#{%w[cli profile relay].sample(random: random)}:** word #{subject} " \
-                       "([##{index}](https://github.com/Kong/kong-harnesses/issues/#{index})) " \
-                       "([#{hash}](https://github.com/Kong/kong-harnesses/commit/#{hash}))")
+      source = section("* **#{%w[cli profile relay].sample(random: random)}:** word #{subject}#{references(random, index)}")
       expect_safe(source, exported(source))
     end
   end
@@ -367,14 +411,13 @@ RSpec.describe KongHarnessesChangelog do
     expect { described_class.written("    koha up\n", described_class.parse("    koha up\n"), source) }.to raise_error(/language of a code block/)
   end
 
-  # The check reads the text from a second rendering, so it does not share the rules of
-  # the export: only a whole link that is a reference or its own address, and the
-  # brackets and quotes next to it, can go.
-  it 'refuses a page that leaves out or joins words of the source' do
-    source = described_class.parse("* see [https://example.com/a](https://example.com/a) and [the docs](https://example.com/d) \"b\"\n")
-    ["* see the docs “b”\n", "* seeand the docs “b”\n", "* see and “b”\n", "* see and the docs b\n"].each do |page|
-      expect { described_class.written(page, described_class.parse(page), source) }.to raise_error(/leave out text/), page
+  # The check reads the text from a second rendering of the source and lets only the
+  # references at the end of an entry go.
+  it 'refuses a page that changes the text of the source' do
+    source = described_class.parse("* **a:** see [2024](https://example.org) \"b\" ([#1](#{issue})) ([abc1234](#{commit}))\n")
+    ["* **a:** see “b”\n", "* **a:** see2024 “b”\n", "* **a:** see 2024 b\n", "* **a:** see 2024 “b” (#1)\n", "* **a:** see 2024\n"].each do |page|
+      expect { described_class.written(page, described_class.parse(page), source) }.to raise_error(/change the text that a reader sees near "/), page
     end
-    expect(described_class.written("* see and the docs “b”\n", described_class.parse("* see and the docs “b”\n"), source)).to eq("* see and the docs “b”\n")
+    expect(described_class.written("* **a:** see 2024 “b”\n", described_class.parse("* **a:** see 2024 “b”\n"), source)).to eq("* **a:** see 2024 “b”\n")
   end
 end
