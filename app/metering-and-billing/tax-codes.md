@@ -95,9 +95,124 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-To view your default and user-created tax codes, navigate to **Metering & Billing** > **Settings** and click the **Tax Codes** tab.
+## View tax codes
 
-To apply tax codes other than the default, navigate to the rate card on any plan, add-on, or customer subscription, and expand the advanced settings for the pricing model. 
+To view your default and user-created tax codes, use the following:
+
+{% navtabs "view-tax-codes" %}
+{% navtab "UI" %}
+
+Navigate to **Metering & Billing** > **Settings** and click the **Tax Codes** tab.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+List the tax codes in your organization, both system-managed and user-created:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/tax-codes
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Get the current organization defaults. The response contains the IDs of the invoicing and credit grant tax codes:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/defaults/tax-codes
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+## Apply a tax code
+
+To apply tax codes other than the default, set a tax code on the rate card of any plan, add-on, or customer subscription:
+
+{% navtabs "apply-tax-code" %}
+{% navtab "UI" %}
+
+Navigate to the rate card on any plan, add-on, or customer subscription, and expand the advanced settings for the pricing model.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Set `tax_config` on the rate card, where `behavior` is `inclusive` or `exclusive` and `code.id` is the ID of your tax code.
+
+To apply a tax code to a plan rate card, include `tax_config` in the rate card when you create the plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Standard
+  key: standard
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: Main
+      key: main
+      rate_cards:
+        - name: API requests
+          key: api_requests
+          feature:
+            id: YOUR_FEATURE_ID
+          billing_cadence: P1M
+          price:
+            type: unit
+            amount: "1"
+          tax_config:
+            behavior: exclusive
+            code:
+              id: YOUR_TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_FEATURE_ID` with the ID of the feature and `YOUR_TAX_CODE_ID` with the ID of the tax code.
+
+To apply a tax code to a rate card on a running subscription, edit the subscription by removing the rate card from its phase and adding it back with a different `tax_config`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions/YOUR_SUBSCRIPTION_ID/edit
+method: POST
+status_code: 200
+body:
+  timing: immediate
+  customizations:
+    - type: remove_item
+      phase_key: main
+      item_key: api_requests
+    - type: add_item
+      phase_key: main
+      rate_card:
+        name: API requests
+        key: api_requests
+        feature:
+          id: YOUR_FEATURE_ID
+        billing_cadence: P1M
+        price:
+          type: unit
+          amount: "1"
+        tax_config:
+          behavior: inclusive
+          code:
+            id: YOUR_TAX_CODE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_SUBSCRIPTION_ID` with the ID of the subscription, and use the same feature and tax code IDs as in the previous request.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 For a complete tutorial, see [Create and apply {{site.metering_and_billing}} tax codes](/how-to/configure-metering-and-billing-tax-codes/).
 
 ## Fallback chain

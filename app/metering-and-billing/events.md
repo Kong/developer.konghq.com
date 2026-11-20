@@ -63,7 +63,7 @@ To ingest events into {{site.metering_and_billing}}, send them to the {{site.kon
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'
@@ -140,7 +140,7 @@ For example, when sending the following event:
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'
@@ -172,7 +172,7 @@ When sending a second event (with a different `id` and `duration_seconds` value)
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'

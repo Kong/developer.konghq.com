@@ -113,10 +113,29 @@ Cost calculations use the price that was effective at the time of usage.
 
 To view the LLM cost database in {{site.konnect_short_name}}, do the following:
 
+{% navtabs "browse-cost-db" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, expand **Metering & Billing**.
 1. Click **Cost Analytics**.
 1. Click the **LLM Cost** tab.
 1. Browse or search by provider name or model name.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `GET` request to the `/openmeter/llm-cost/prices` endpoint. Use the `filter[provider][eq]` and `filter[model_id][eq]` query parameters to narrow the results:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/llm-cost/prices?filter[provider][eq]=openai
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 The table shows each model's input and output token pricing, the price source, and the effective date.
 
@@ -128,6 +147,9 @@ A common use cases for overrides is when you've a negotiated rate with a provide
 
 To create a price override, do the following:
 
+{% navtabs "price-override" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, expand **Metering & Billing**.
 1. Click **Cost Analytics**.
 1. Click the **LLM Cost** tab.
@@ -136,6 +158,45 @@ To create a price override, do the following:
 1. Click **Save**.
 
 To view and manage existing overrides, click the **Show Overrides** on the LLM Cost page. You can delete an override to revert to the system price.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/llm-cost/overrides` endpoint. Set the per-token prices as decimal strings. `input_per_token` and `output_per_token` are required. You can also set `cache_read_per_token`, `cache_write_per_token`, and `reasoning_per_token`.
+
+An override is unique per provider, model, and currency. If an override already exists for the same combination, the request updates it.
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/llm-cost/overrides
+method: POST
+status_code: 201
+body:
+  provider: openai
+  model_id: gpt-4o
+  currency: USD
+  effective_from: "2026-01-01T00:00:00Z"
+  pricing:
+    input_per_token: "0.0000020"
+    output_per_token: "0.0000080"
+capture:
+  - variable: OVERRIDE_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To list existing overrides, send a `GET` request to `/openmeter/llm-cost/overrides`. To revert to the system price, send a `DELETE` request to `/openmeter/llm-cost/overrides/$OVERRIDE_ID`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/llm-cost/overrides/$OVERRIDE_ID
+method: DELETE
+status_code: 204
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Cost analytics queries
 

@@ -583,7 +583,7 @@ For simple usage-based pricing, you can achieve the same result by creating a ti
 
 ## Set up a pricing model
 
-Set up a pricing model for a rate card through the {{site.konnect_short_name}} UI.
+Set up a pricing model for a rate card through the {{site.konnect_short_name}} UI or the API.
 
 ### Prerequisites 
 To set up a pricing model, you must have:
@@ -591,7 +591,12 @@ To set up a pricing model, you must have:
 * [A plan](/metering-and-billing/product-catalog/#plans)
 
 ### Steps
+
 To set up a pricing model on a rate card:
+
+{% navtabs "pricing-model" %}
+{% navtab "UI" %}
+
 1. Navigate to **Metering and Billing** > **Product Catalog**.
 1. Click the **Plans** tab. 
 1. Select a plan and click **Add Rate Card**.
@@ -612,3 +617,59 @@ To set up a pricing model on a rate card:
 1. Set the [entitlement](/metering-and-billing/entitlements/).
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Set the `price` object on the rate card when you create a plan. The `price.type` field selects the pricing model:
+
+* `free`: [Free](#free)
+* `flat`: [Flat fee](#flat-fee)
+* `unit`: [Usage based](#usage-based)
+* `graduated`: [Graduated tiered pricing](#graduated-pricing)
+* `volume`: [Volume tiered pricing](#volume-pricing)
+
+All amounts are strings. By default, the rate card uses the currency of the plan. For prepaid credits, add `settlement_mode: credit_only` to the plan.
+
+The following request creates a plan with a usage-based rate card, and captures the plan's ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+method: POST
+status_code: 201
+body:
+  name: Standard
+  key: standard
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: Main
+      key: main
+      rate_cards:
+        - name: API requests
+          key: api_requests
+          feature:
+            id: YOUR_FEATURE_ID
+          billing_cadence: P1M
+          price:
+            type: unit
+            amount: "1"
+capture:
+  - variable: PLAN_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_FEATURE_ID` with the ID of the feature. The rate card `key` must match the key of its feature. Publish the plan to make it available for subscriptions:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}

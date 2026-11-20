@@ -142,10 +142,45 @@ Grant amounts must be positive, so you can't offset a grant with a negative gran
 If a grant was issued for the wrong amount, void it and issue a new grant for the correct amount.
 For example, if a grant of 100 USD was issued but should have been 80 USD:
 
+{% navtabs "void-grant" %}
+{% navtab "UI" %}
+
 1. In the customer's **Credits** tab, open the actions menu of the grant's `funded` movement in **Transaction History** and click **Void**.
 1. Confirm in the **Void Grant** dialog.
    The unused remainder of the grant is forfeited and recorded as a `voided` movement.
 1. Grant 80 USD of credits.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+1. Void the grant. The unused remainder of the grant is forfeited and recorded as a `voided` movement.
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/credits/grants/YOUR_GRANT_ID/void
+   method: POST
+   status_code: 200
+   {% endkonnect_api_request %}
+   <!--vale on-->
+
+   Replace `YOUR_CUSTOMER_ID` with the ID of the customer, and `YOUR_GRANT_ID` with the ID of the grant, which is the `charge_id` label on the grant's `funded` movement.
+1. Create a new grant for 80 USD of credits:
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/credits/grants
+   method: POST
+   status_code: 201
+   body:
+     name: Corrected grant
+     funding_method: none
+     currency: USD
+     amount: "80"
+   {% endkonnect_api_request %}
+   <!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 Keep the following in mind when you void a grant:
 

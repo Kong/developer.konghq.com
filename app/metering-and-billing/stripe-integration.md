@@ -123,6 +123,9 @@ For more information, see the [Stripe Tax](https://docs.stripe.com/tax) document
 
 Before you install the Stripe integration in {{site.metering_and_billing}}, copy and save your Stripe API key from your dashboard.
 
+{% navtabs "install-stripe" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
 1. Click **Stripe**.
@@ -139,6 +142,34 @@ Before you install the Stripe integration in {{site.metering_and_billing}}, copy
 1. Do one of the following:
    * To set this as the default billing profile, click **Start Billing**.
    * To not set this as the default billing profile, disable **Set this as the new default billing profile** and click **Keep Current Default Profile**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/app-catalog/install` endpoint with the `stripe` app type. Setting `create_billing_profile` to `true` creates a billing profile that references the Stripe app, and sets it as the default billing profile if the current default is a Sandbox app. The request captures the new app's ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/app-catalog/install
+status_code: 201
+method: POST
+body:
+  type: stripe
+  name: Stripe
+  api_key: YOUR_STRIPE_SECRET_KEY
+  create_billing_profile: true
+capture:
+  - variable: STRIPE_APP_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_STRIPE_SECRET_KEY` with your Stripe API key (secret key).
+
+To choose between automatic collection and sending invoices, or to configure tax collection, update the billing profile with a `PUT` request to the [`/openmeter/profiles/{id}` endpoint](/api/konnect/metering-and-billing/v3/#/operations/update-billing-profile).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## Configure Stripe customers in {{site.metering_and_billing}}
@@ -164,12 +195,69 @@ To connect an existing Stripe customer to an {{site.metering_and_billing}} custo
    You can find the payment method by navigating to the customer in Stripe, clicking the action menu next to the payment method, and clicking **Copy ID**.
 1. Click **Save**.
 
-You can also configure the Stripe settings for a customer in {{site.metering_and_billing}} by sending a PUT request to the [`/openmeter/customers/{customerId}/billing` endpoint](/api/konnect/metering-and-billing/v3/#/operations/upsert-customer). 
+To do the same with the API, create the customer, then link the Stripe customer by sending a `PUT` request to the [`/openmeter/customers/{customerId}/billing/app-data` endpoint](/api/konnect/metering-and-billing/v3/#/operations/update-customer-billing-app-data).
+
+First, create the customer and capture its ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+status_code: 201
+method: POST
+body:
+  name: Stripe
+  key: stripe-customer
+  currency: USD
+  primary_email: billing@example.com
+  usage_attribution:
+    subject_keys:
+      - stripe-customer
+capture:
+  - variable: CUSTOMER_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then set the Stripe customer ID and the default payment method ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/$CUSTOMER_ID/billing/app-data
+status_code: 200
+method: PUT
+body:
+  stripe:
+    customer_id: cus_U12Ixxxxxx
+    default_payment_method_id: pm_1T30Kp4bZcDnpr9o3eBRrh7B
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace the example Stripe customer ID and payment method ID with the values from Stripe.
 {% endnavtab %}
 {% navtab "Non-existing customer (checkout session)" %}
-{{site.metering_and_billing}} provides an API to create a customer and generate a [Stripe Checkout](https://stripe.com/payments/checkout) link to collect payment details. When a customer completes the checkout form and provides their payment method, {{site.metering_and_billing}} will automatically set the Stripe customer ID and the payment method to the default payment method for the {{site.metering_and_billing}} customer. To do this, {{site.metering_and_billing}} listens to the `setup_intent.succeeded` event via webhooks. This webhook is setup automatically when the {{site.metering_and_billing}} Stripe app is installed.
+{{site.metering_and_billing}} provides an API to generate a [Stripe Checkout](https://stripe.com/payments/checkout) link to collect payment details for a customer. When a customer completes the checkout form and provides their payment method, {{site.metering_and_billing}} will automatically set the Stripe customer ID and the payment method to the default payment method for the {{site.metering_and_billing}} customer. To do this, {{site.metering_and_billing}} listens to the `setup_intent.succeeded` event via webhooks. This webhook is setup automatically when the {{site.metering_and_billing}} Stripe app is installed.
 
-Generate a Stripe Checkout URL to the payment form by send a POST request to the [`/openmeter/customers/{customerId}/billing/stripe/checkout-sessions` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-customer-stripe-checkout-session):
+First, create the customer and capture its ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+status_code: 201
+method: POST
+body:
+  name: ACME, Inc.
+  key: acme-inc
+  currency: USD
+  usage_attribution:
+    subject_keys:
+      - subject-123
+capture:
+  - variable: CUSTOMER_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then generate a Stripe Checkout URL to the payment form by sending a POST request to the [`/openmeter/customers/{customerId}/billing/stripe/checkout-sessions` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-customer-stripe-checkout-session):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/customers/$CUSTOMER_ID/billing/stripe/checkout-sessions
@@ -180,14 +268,6 @@ body:
   stripe_options:
     success_url: https://example.com/success
     cancel_url: https://example.com/cancel
-  customer:
-    name: ACME, Inc.
-    currency: USD
-    usageAttribution:
-      subjectKeys:
-        - subject-123
-  options:
-    mode: setup
 {% endkonnect_api_request %}
 <!--vale on-->
   
@@ -224,6 +304,6 @@ method: POST
 region: us
 body:
   stripe_options:
-    returnURL: https://your-app.com/portal
+    return_url: https://your-app.com/portal
 {% endkonnect_api_request %}
 <!--vale on-->

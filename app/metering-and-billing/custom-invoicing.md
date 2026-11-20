@@ -139,6 +139,9 @@ During issuing synchronization, your integration can:
 
 ## Install the Custom Invoicing app in {{site.metering_and_billing}}
 
+{% navtabs "install-custom-invoicing" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
 1. Click **Apps**.
@@ -159,3 +162,31 @@ During issuing synchronization, your integration can:
 1. Do one of the following:
    * To set this as the default billing profile, click **Set as Default Profile**.
    * To limit the app to specific customers, disable **Set this as the new default billing profile**, click **Keep Current Default Profile**, and then configure [customer overrides](/metering-and-billing/billing-invoicing/#customer-billing-profile-overrides).
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/app-catalog/install` endpoint with the `external_invoicing` app type. Setting `create_billing_profile` to `true` creates a billing profile that references the app. The request captures the new app's ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/app-catalog/install
+status_code: 201
+method: POST
+body:
+  type: external_invoicing
+  name: Custom Invoicing
+  create_billing_profile: true
+capture:
+  - variable: APP_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To limit the app to specific customers, assign the new billing profile with [customer overrides](/metering-and-billing/billing-invoicing/#customer-billing-profile-overrides).
+
+{:.info}
+> The install request doesn't configure the synchronization hooks or invoice notifications. To send invoice events to your integration, [create a notification channel](/metering-and-billing/notifications/#create-a-channel) and attach it to a rule in the {{site.konnect_short_name}} UI.
+
+{% endnavtab %}
+{% endnavtabs %}

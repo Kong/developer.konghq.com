@@ -44,6 +44,9 @@ prereqs:
 
 cleanup:
   inline:
+    - title: Clean up {{site.metering_and_billing}} entities
+      include_content: cleanup/metering-and-billing-entities
+      icon_url: /assets/icons/money.svg
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
@@ -77,8 +80,6 @@ faqs:
   - q: I previously enabled metering using the **Enable Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
     a: |
       {% include faqs/metering-and-billing-legacy-ingestion.md %}
-
-automated_tests: false
 ---
 
 This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
@@ -128,13 +129,16 @@ flowchart TB
 
 Before you configure {{site.metering_and_billing}}, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in {{site.metering_and_billing}} and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
+The plugin identifies the customer from the request's Consumer and sends the subject key `consumer:<consumer-id>` with each event. To keep that subject key predictable, this guide sets an explicit `id` on the Consumer so you can reference it when you create the customer.
+
 You're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 <!--vale off-->
 {% entity_examples %}
 entities:
   consumers:
-    - username: kong-air
+    - id: a3d1f5e2-1b2c-4d3e-9f80-000000000001
+      username: kong-air
       keyauth_credentials:
         - key: air-key
 {% endentity_examples %}
@@ -162,7 +166,7 @@ entities:
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
-Create a meter to count API requests:
+Create a meter to count API requests. The request captures the new meter's ID so you can reference it when you create the feature and query usage:
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -179,6 +183,9 @@ body:
     request_method: $.request_method
     route_name: $.route_name
     service_name: $.service_name
+capture:
+  - variable: METER_ID
+    jq: .id
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -217,17 +224,29 @@ Features are customer-facing, and show up on the invoice for paid plans. Feature
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click **Create Feature**.
-1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "API requests".
-1. Click **Add group by filter**.
-   The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
-1. From the **Group by** dropdown menu, select "service_name".
-1. From the **Operator** dropdown menu, select "Equals".
-1. In the **Value** dropdown menu, enter "example-service".
-1. Click **Save**.
+The meter filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs. The request captures the new feature's ID so you can reference it when you create the plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+status_code: 201
+method: POST
+body:
+  name: example-service
+  key: example_service
+  meter:
+    id: $METER_ID
+    filters:
+      service_name:
+        eq: example-service
+capture:
+  - variable: FEATURE_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> To create a feature in the {{site.konnect_short_name}} UI instead, see [Features](/metering-and-billing/product-catalog/#features).
 
 ## Create a Premium plan
 
@@ -235,58 +254,128 @@ Plans are the core building blocks of your product catalog. They are a collectio
 
 A rate card describes price and usage limits or access control for a feature or item. Rate cards are made up of the associated feature, price, and optional usage limits or access control for the feature, called entitlements.
 
-In this section, you'll create a Premium plan that grants paying customers access to the `example-service` at a rate of 5,000 requests per month:
+In this section, you'll create a Premium plan that charges customers 1 USD for each request to the `example-service`, billed monthly:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click the **Plans** tab.
-1. Click **Create Plan**.
-1. In the **Name** field, enter `Premium`.
-1. In the **Billing cadence** dropdown menu, select "1 month".
-1. Click **Save**.
-1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "example-service".
-1. Click **Next Step**.
-1. From the **Pricing model** dropdown menu, select "Usage based".
-1. In the **Price per unit** field, enter `1`.
-1. Click **Next Step**.
-1. Click **Save Rate Card**.
-1. Click **Publish Plan**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+status_code: 201
+method: POST
+body:
+  name: Premium
+  key: premium
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: Main
+      key: main
+      rate_cards:
+        - name: example-service
+          key: example_service
+          feature:
+            id: $FEATURE_ID
+          billing_cadence: P1M
+          price:
+            type: unit
+            amount: "1"
+capture:
+  - variable: PLAN_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Publish the plan so you can subscribe customers to it:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> To create a plan in the {{site.konnect_short_name}} UI instead, see [Plans](/metering-and-billing/product-catalog/#plans).
 
 ## Start a subscription
 
-Customers are the entities who pay for the consumption. In many cases, it's equal to your Consumer. Here you are going to create a customer and map our Consumer to it.
+Customers are the entities who pay for the consumption. In many cases, it's equal to your Consumer. Here you are going to create a customer and map your Consumer to it by setting the customer's usage attribution subject key to `consumer:` followed by the Consumer ID:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. In the **Name** field, enter `Kong Air`.
-1. In the **Key** field, enter `kong-air`.
-1. In the **Include usage from** dropdown, select "kong-air" from the **Gateway Consumers** group.
-1. Click **Save**.
-1. Click the **Subscriptions** tab.
-1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select "Premium".
-1. Click **Next Step**.
-1. Click **Start Subscription**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+status_code: 201
+method: POST
+body:
+  name: Kong Air
+  key: kong-air
+  currency: USD
+  usage_attribution:
+    subject_keys:
+      - consumer:a3d1f5e2-1b2c-4d3e-9f80-000000000001
+capture:
+  - variable: CUSTOMER_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
 
-<!--Note: Want to delete a customer? Cancel their subscription first and then you can delete them.-->
+{:.info}
+> To do this in the {{site.konnect_short_name}} UI instead, select the Consumer from the **Gateway Consumers** group of the **Include usage from** dropdown when you create the customer.
+
+Now subscribe the customer to the Premium plan. The subscription becomes active as soon as you create it:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+status_code: 201
+method: POST
+body:
+  customer:
+    key: kong-air
+  plan:
+    key: premium
+capture:
+  - variable: SUBSCRIPTION_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+<!--Note: Want to delete a customer? Cancel their subscription first. If the customer has usage, cancelling creates an invoice, so delete that invoice (or mark it uncollectible) before you delete the customer.-->
 
 ## Validate
 
-You can run the following command to test the that the Kong Air Consumer is invoiced correctly:
+Send six requests as the Kong Air Consumer to generate usage:
 
 <!--vale off-->
-```sh
-for _ in {1..6}; do
-  curl  -i $KONNECT_PROXY_URL/anything \
-       -H "apikey:air-key"
-  echo
-done
-```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey: air-key'
+status_code: 200
+count: 6
+{% endvalidation %}
 <!--vale on-->
 
-This will generate six requests. Now, check the invoice that was created in {{site.metering_and_billing}}:
+Events are ingested asynchronously, so they can take a few seconds to show up. Query the meter to check that {{site.metering_and_billing}} recorded the six requests for `example-service`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters/$METER_ID/query
+method: POST
+status_code: 200
+sleep: 10
+body:
+  filters:
+    dimensions:
+      service_name:
+        eq: example-service
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The `data` array in the response should show a value of `6`.
+
+### Preview the invoice in the UI (optional)
+
+You can also check the invoice that {{site.metering_and_billing}} generates for the customer:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.

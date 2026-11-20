@@ -170,6 +170,9 @@ pipeline:
 
 To start measuring Kubernetes pod execution time, create a meter in {{site.konnect_short_name}}:
 
+{% navtabs "k8s-meter" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. Click **New generic meter**.
 1. Configure the meter with the following settings:
@@ -178,6 +181,31 @@ To start measuring Kubernetes pod execution time, create a meter in {{site.konne
     * **Value Property**: `$.duration_seconds`
     * **Aggregation**: `SUM`
     * **Group By**: `pod_name`, `pod_namespace`
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/meters` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+method: POST
+status_code: 201
+body:
+  name: Pod execution time
+  key: pod_execution_time
+  event_type: kube-pod-exec-time
+  aggregation: sum
+  value_property: $.duration_seconds
+  dimensions:
+    pod_name: $.pod_name
+    pod_namespace: $.pod_namespace
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Configuration
 

@@ -220,6 +220,43 @@ rows:
     description: Optional. The filter for a subset of usage in the meter.
 {% endtable %}
 
+### Create a feature
+
+{% navtabs "create-feature" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
+1. Click **Create Feature**.
+1. In the **Name** field, enter a name for the feature.
+1. Optional: From the **Meter** dropdown menu, select the meter that tracks usage of the feature.
+1. Optional: Click **Add group by filter** to track only a subset of the meter's usage.
+1. Click **Save**.
+{% endnavtab %}
+{% navtab "API" %}
+Send a `POST` request to the `/v3/openmeter/features` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+status_code: 201
+method: POST
+body:
+  name: API Requests
+  key: api_requests
+  meter:
+    id: YOUR_METER_ID
+    filters:
+      service_name:
+        eq: example-service
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_METER_ID` with the ID of the meter you want to associate with the feature. The `filters` field is optional, and it corresponds to **Meter Group Filters**.
+
+For a complete tutorial, see [Get started with {{site.metering_and_billing}}](/metering-and-billing/get-started/).
+{% endnavtab %}
+{% endnavtabs %}
+
 ## Plans
 
 Plans are a core component of the Product Catalog. Plans define the pricing and entitlements your customers receive in {{site.konnect_short_name}} {{site.metering_and_billing}}. They act as reusable templates that describe what a customer gets and how they are charged. Each plan can include multiple phases, prices, and entitlements, and can be versioned. 
@@ -373,6 +410,73 @@ A currency override has the following rules:
 * You can't override a rate card that already inherits a custom currency.
 * The override must differ from the currency it replaces.
 * A rate card with a currency override must define a price.
+
+### Create a plan
+
+{% navtabs "create-plan" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
+1. Click the **Plans** tab.
+1. Click **Create Plan**.
+1. In the **Name** field, enter a name for the plan.
+1. From the **Billing cadence** dropdown menu, select a billing cadence.
+1. Click **Save**.
+1. Click **Add Rate Card**.
+1. From the **Feature** dropdown menu, select a feature.
+1. Click **Next Step**.
+1. From the **Pricing model** dropdown menu, select a pricing model and enter the price.
+1. Click **Next Step**.
+1. Optional: Select an entitlement.
+1. Click **Save Rate Card**.
+1. Click **Publish Plan**.
+{% endnavtab %}
+{% navtab "API" %}
+Send a `POST` request to the `/v3/openmeter/plans` endpoint. The rate card `key` must match the key of its feature:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+status_code: 201
+method: POST
+body:
+  name: Premium
+  key: premium
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: Main
+      key: main
+      rate_cards:
+        - name: API Requests
+          key: api_requests
+          feature:
+            id: YOUR_FEATURE_ID
+          billing_cadence: P1M
+          price:
+            type: unit
+            amount: "1"
+capture:
+  - variable: PLAN_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_FEATURE_ID` with the ID of the feature that the rate card prices.
+
+Then publish the plan so you can subscribe customers to it:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+For a complete tutorial, see [Get started with {{site.metering_and_billing}}](/metering-and-billing/get-started/).
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Plan versions
 

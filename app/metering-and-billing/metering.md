@@ -266,6 +266,8 @@ For a complete tutorial, see [Monetize LLM traffic in {{site.konnect_short_name}
 1. Configure the meter information as needed.
 1. Send a CloudEvent to start collecting meter usage.
 
+To create a generic meter with the API instead, send a `POST` request to the [`/openmeter/meters` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-meter). For request bodies, see [Example meter use cases](#example-meter-use-cases).
+
 For a complete tutorial, see [Get started with {{site.metering_and_billing}} generic meters](/how-to/get-started-with-metering-and-billing-generic-meters/).
 
 {% endnavtab %}

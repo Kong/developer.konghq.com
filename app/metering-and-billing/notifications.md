@@ -80,6 +80,9 @@ Use webhook channels to:
 
 To create a webhook channel in {{site.konnect_short_name}}:
 
+{% navtabs "create-channel" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Settings**.
 1. Click the **Notifications** tab.
@@ -88,6 +91,33 @@ To create a webhook channel in {{site.konnect_short_name}}:
 1. In the **URL** field, enter the webhook URL to deliver notifications to.
 1. (Optional) Add custom HTTP headers if your endpoint requires authentication.
 1. Click **Save**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/notification/channels` endpoint. The request captures the new channel's ID so you can reference it later:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/notification/channels
+status_code: 201
+method: POST
+body:
+  name: Usage alerts
+  type: webhook
+  url: https://example.com/webhooks/usage-alerts
+  custom_headers:
+    Authorization: Bearer YOUR_WEBHOOK_SECRET
+capture:
+  - variable: CHANNEL_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `https://example.com/webhooks/usage-alerts` with the webhook URL to deliver notifications to. The `custom_headers` field is optional. Remove it if your endpoint doesn't require authentication.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Verify webhook requests
 

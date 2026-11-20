@@ -86,7 +86,19 @@ Use externally funded credits when the credits are paid for outside {{site.meter
 
 The grant records the credits in {{site.metering_and_billing}}.
 Your integration is responsible for updating {{site.metering_and_billing}} when the external payment state changes.
-To do this, send a `POST` request to `/openmeter/customers/{customerId}/credits/grants/{creditGrantId}/settlement/external` with a `status` of `pending`, `authorized`, or `settled`.
+To do this, send a `POST` request to the grant's `settlement/external` endpoint with a `status` of `pending`, `authorized`, or `settled`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/credits/grants/YOUR_GRANT_ID/settlement/external
+method: POST
+status_code: 200
+body:
+  status: settled
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_CUSTOMER_ID` with the ID of the customer and `YOUR_GRANT_ID` with the ID of the grant.
 
 ## Priority
 
@@ -221,3 +233,43 @@ Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges t
 The grant itself also has a `tax_config` field.
 Provide it for `invoice` and `external` grants so the purchase is classified correctly.
 If you omit it, the default credit grant tax code applies, or the global default tax code if that isn't set.
+
+## Create a grant
+
+To create a grant, send a `POST` request to the customer's `credits/grants` endpoint.
+The following example creates a promotional grant of 100 USD with a priority of 5:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/credits/grants
+method: POST
+status_code: 201
+body:
+  name: Welcome credits
+  funding_method: none
+  currency: USD
+  amount: "100"
+  priority: 5
+capture:
+  - variable: GRANT_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_CUSTOMER_ID` with the ID of the customer.
+
+## Void a grant
+
+To forfeit the unused remainder of an active grant, send a `POST` request to the grant's `void` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/credits/grants/YOUR_GRANT_ID/void
+method: POST
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_CUSTOMER_ID` with the ID of the customer and `YOUR_GRANT_ID` with the ID of the grant.
+
+For the conditions that apply to voiding, see [Corrections](/metering-and-billing/credits/transaction-history/#corrections).

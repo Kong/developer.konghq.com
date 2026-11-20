@@ -42,7 +42,33 @@ Subscriptions follow a billing cycle determined by their related [rate card](/me
 * The subscription start date, either the creation date or a specified future date.
 * The first day of the month, with usage prorated for the partial initial period.
 
+{% navtabs "add-subscription" %}
+{% navtab "UI" %}
+
 To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+To add a subscription to a customer, send a `POST` request to the `/openmeter/subscriptions` endpoint with the customer key and the key of a published plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+status_code: 201
+body:
+  customer:
+    key: YOUR-CUSTOMER-KEY
+  plan:
+    key: YOUR-PLAN-KEY
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To start the subscription immediately, add `timing: immediate` to the request body.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 Active customer subscriptions can be enhanced with [add-ons](/metering-and-billing/add-ons/), which allow you to make changes to a customer's entitlements without changing the plan directly.
 
@@ -69,6 +95,9 @@ Changing a plan switches a customer to a completely different plan. This is equi
 
 To change a customer's plan:
 
+{% navtabs "change-plan" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to change.
@@ -82,13 +111,38 @@ To change a customer's plan:
   
 1. Click **Save Changes**.
 
+{% endnavtab %}
+{% navtab "API" %}
 
+Send a `POST` request to the `/openmeter/subscriptions/{subscriptionId}/change` endpoint with the customer, the new plan, and when the change takes effect. Set `timing` to `next_billing_cycle` for downgrades, or `immediate` for upgrades:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions/YOUR_SUBSCRIPTION_ID/change
+method: POST
+status_code: 200
+body:
+  customer:
+    key: YOUR-CUSTOMER-KEY
+  plan:
+    key: YOUR-NEW-PLAN-KEY
+  timing: next_billing_cycle
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_SUBSCRIPTION_ID` with the ID of the subscription.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Cancel a subscription
 
 Canceling a subscription ends it and stops future invoices from being generated. You can cancel immediately or at the end of the current billing period.
 
 To cancel a subscription:
+
+{% navtabs "cancel-subscription" %}
+{% navtab "UI" %}
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -99,6 +153,26 @@ To cancel a subscription:
    * **At the end of the billing period**: Select for downgrades to avoid disrupting the customer's current service period. 
    * **Immediately**: Select for upgrades so the customer gets access to the new plan right away.
 1. Click **Save Changes**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/subscriptions/{subscriptionId}/cancel` endpoint. Set `timing` to `immediate` or `next_billing_cycle`. You can also pass an RFC 3339 datetime:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions/YOUR_SUBSCRIPTION_ID/cancel
+method: POST
+status_code: 200
+body:
+  timing: next_billing_cycle
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_SUBSCRIPTION_ID` with the ID of the subscription.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Plan migration
 
@@ -115,6 +189,9 @@ You can migrate customers selectively, migrating enterprise customers first and 
 
 To migrate a subscription to a new plan version:
 
+{% navtabs "migrate-subscription" %}
+{% navtab "UI" %}
+
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to migrate.
@@ -124,3 +201,23 @@ To migrate a subscription to a new plan version:
 1. Click **Next**.
 1. Choose when the migration should be effective: **At the end of the billing period** or **Immediately**.
 1. Click **Save**.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/openmeter/subscriptions/{subscriptionId}/migrate` endpoint. Set `timing` to `immediate` or `next_billing_cycle`. Omit `target_version` to migrate to the latest version of the plan, or set it to a specific later version:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions/YOUR_SUBSCRIPTION_ID/migrate
+method: POST
+status_code: 200
+body:
+  timing: next_billing_cycle
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_SUBSCRIPTION_ID` with the ID of the subscription.
+
+{% endnavtab %}
+{% endnavtabs %}

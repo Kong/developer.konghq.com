@@ -99,7 +99,33 @@ By default, customers are pinned to the default billing profile. Customer overri
 This is useful when you have different billing needs for different customers. 
 For example, you might want some customers to be billed via Stripe and others via bank transfer.
 
-Configure customer overrides by navigating to **{{site.metering_and_billing}}** > [**Billing**](https://cloud.konghq.com/metering-billing/customers), click a customer, then navigate to the **Billing Profile** section of the customer settings.
+To configure a customer override:
+
+{% navtabs "customer-billing-profile-override" %}
+{% navtab "UI" %}
+
+Navigate to **{{site.metering_and_billing}}** > [**Billing**](https://cloud.konghq.com/metering-billing/customers), click a customer, then navigate to the **Billing Profile** section of the customer settings.
+
+{% endnavtab %}
+{% navtab "API" %}
+
+Send a `PUT` request to the `/openmeter/customers/{customerId}/billing/profile` endpoint with the ID of the billing profile to assign to the customer:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers/YOUR_CUSTOMER_ID/billing/profile
+status_code: 200
+method: PUT
+body:
+  billing_profile:
+    id: YOUR_BILLING_PROFILE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `YOUR_CUSTOMER_ID` with the ID of the customer and `YOUR_BILLING_PROFILE_ID` with the ID of the billing profile.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 Customer overrides can be useful for the following use cases:
 

@@ -21,9 +21,8 @@ tags:
 prereqs:
   skip_product: true
   inline:
-    - title: "{{site.konnect_short_name}} roles"
-      content: |
-        You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
+    - title: "{{site.konnect_short_name}} access token"
+      include_content: prereqs/metering-and-billing-konnect-token
       icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
@@ -35,7 +34,7 @@ cleanup:
 tldr:
   q: How can I meter and bill AI agent runs in {{site.konnect_short_name}}?
   a: |
-    To meter AI agent runs in {{site.konnect_short_name}}, create a generic meter with the **Count agent runs** template and `COUNT` aggregation to count agent run events per billing period. Then define a feature and plan to invoice customers based on their usage. Create a customer that includes usage from a subject and assign the customer to your plan. Finally, send events with the subject associated with the customer to generate an invoice.
+    To meter AI agent runs in {{site.konnect_short_name}}, create a generic meter with `COUNT` aggregation to count agent run events per billing period. Then define a feature and plan to invoice customers based on their usage. Create a customer that includes usage from a subject and assign the customer to your plan. Finally, send events with the subject associated with the customer to generate an invoice.
 
 related_resources:
   - text: Product Catalog reference
@@ -74,34 +73,30 @@ In this guide, you'll:
 ## Create a meter
 
 In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) track and record the consumption of a resource or service over time.
-For billing per agent run, you'll use the built-in **Count agent runs** template, which pre-configures a `COUNT` meter that increments once per `agent_run` event and groups results by `agent_name`.
+For billing per agent run, you'll create a `COUNT` meter that increments once per `agent_run` event and groups results by `agent_name`.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. Click **Create Meter**.
-1. Click the **Templates** dropdown menu.
-1. Select **Count agent runs**.
-1. Click **Save**.
-
-The template creates a meter with the following configuration:
+The request captures the new meter's ID so you can reference it when you create the feature:
 
 <!--vale off-->
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Value
-    key: value
-rows:
-  - field: Key
-    value: "`agent_runs_total`"
-  - field: Event type filter
-    value: "`agent_run`"
-  - field: Aggregation
-    value: "`COUNT`"
-  - field: Labels to group by
-    value: "`agent_name`"
-{% endtable %}
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+status_code: 201
+method: POST
+body:
+  name: Count agent runs
+  key: agent_runs_total
+  event_type: agent_run
+  aggregation: count
+  dimensions:
+    agent_name: $.agent_name
+capture:
+  - variable: METER_ID
+    jq: .id
+{% endkonnect_api_request %}
 <!--vale on-->
+
+{:.info}
+> To create a meter in the {{site.konnect_short_name}} UI instead, see [Create a meter](/metering-and-billing/metering/#create-a-meter). The **Count agent runs** template creates the same meter.
 
 ## Create a feature
 
@@ -109,12 +104,23 @@ Meters collect raw usage data, but [features](/metering-and-billing/product-cata
 Without a feature, usage is tracked but not invoiced. 
 Now that you're metering agent runs, you need to associate that meter with a feature.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click **Create Feature**.
-1. In the **Name** field, enter `Agent Runs`.
-1. From the **Meter** dropdown menu, select "Count Agent Runs".
-1. Click **Save**.
+The request captures the new feature's ID so you can reference it when you create the plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/features
+status_code: 201
+method: POST
+body:
+  name: Agent Runs
+  key: agent_runs
+  meter:
+    id: $METER_ID
+capture:
+  - variable: FEATURE_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Create a plan and rate card
 
@@ -125,49 +131,86 @@ Plans can be assigned to customers by starting a subscription.
 A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
 Rate cards are made up of the associated feature, price, and optional entitlements.
 
-In this section, you'll create an Premium Plan plan that charges customers $1 per agent run per month:
+In this section, you'll create a Premium Plan plan that charges customers $1 per agent run per month. The rate card has a boolean entitlement, which grants access to the feature without a usage limit:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
-1. Click the **Plans** tab.
-1. Click **Create Plan**.
-1. In the **Name** field, enter `Premium Plan`.
-1. In the **Currency** field, keep the default `USD`.
-1. From the **Billing cadence** dropdown menu, select "1 month".
-1. Click **Save**.
-1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "Agent Runs".
-1. Click **Next Step**.
-1. From the **Pricing model** dropdown menu, select "Usage based".
-1. In the **Price per unit** field, enter `1`.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans
+status_code: 201
+method: POST
+body:
+  name: Premium Plan
+  key: premium_plan
+  currency: USD
+  billing_cadence: P1M
+  phases:
+    - name: Main
+      key: main
+      rate_cards:
+        - name: Agent Runs
+          key: agent_runs
+          feature:
+            id: $FEATURE_ID
+          billing_cadence: P1M
+          price:
+            type: unit
+            amount: "1"
+          entitlement:
+            type: boolean
+capture:
+  - variable: PLAN_ID
+    jq: .id
+{% endkonnect_api_request %}
+<!--vale on-->
 
-   {:.info}
-   > We're using $1 here to make it easy to see invoice amount changes in the customer invoice.
-   > Change this price in a production instance to match your own pricing model.
-1. Click **Next Step**.
-1. Select **Boolean**.
-1. Click **Save Rate Card**.
-1. Click **Publish Plan**.
-1. Click **Publish**.
+{:.info}
+> We're using $1 here to make it easy to see invoice amount changes in the customer invoice.
+> Change this price in a production instance to match your own pricing model.
+
+Publish the plan so you can subscribe customers to it:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/plans/$PLAN_ID/publish
+method: POST
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Start a subscription
 
 [Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/subscriptions/) them to the Premium Plan plan.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Create Customer**.
-1. In the **Name** field, enter `Acme Inc`.
-1. In the **Key** field, enter `acme-inc`.
+The `usage_attribution.subject_keys` value links incoming usage events to this customer. Events with `"subject": "acme-inc"` are attributed to Acme Inc.
 
-   This value links incoming usage events to this customer. 
-   Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
-1. Click **Save**.
-1. Click the **Subscription** tab.
-1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select `Premium Plan`.
-1. Click **Next Step**.
-1. Click **Start Subscription**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/customers
+status_code: 201
+method: POST
+body:
+  name: Acme Inc
+  key: acme-inc
+  currency: USD
+  usage_attribution:
+    subject_keys:
+      - acme-inc
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Subscribe the customer to the Premium Plan plan:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+status_code: 201
+method: POST
+body:
+  customer:
+    key: acme-inc
+  plan:
+    key: premium_plan
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate
 
@@ -187,7 +230,7 @@ Each event represents one agent run. The meter counts every event, so three even
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'
@@ -211,7 +254,7 @@ body:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'
@@ -235,7 +278,7 @@ body:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
-status_code: 200
+status_code: 202
 method: POST
 headers:
   - 'Content-Type: application/cloudevents+json'
@@ -254,7 +297,25 @@ body:
 {% endcapture %}
 {{ run3 | indent: 3 }}
 
-Now check the invoice:
+Events are ingested asynchronously, so they can take a few seconds to show up. Query the meter to check that {{site.metering_and_billing}} recorded the three runs, grouped by agent:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters/$METER_ID/query
+method: POST
+status_code: 200
+sleep: 10
+body:
+  group_by_dimensions:
+    - agent_name
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The response shows a value of `2` for `summarizer` and `1` for `translator`.
+
+### Preview the invoice in the UI (optional)
+
+You can also check the invoice that {{site.metering_and_billing}} generates for the customer:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
