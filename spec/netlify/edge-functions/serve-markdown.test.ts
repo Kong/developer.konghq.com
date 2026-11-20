@@ -10,7 +10,8 @@ type NextCall = unknown[];
 const setup = (nextResponse: Response = new Response("page", { status: 200 })) => {
   const waited: Promise<unknown>[] = [];
   const nextCalls: NextCall[] = [];
-  const context = {
+  const context: Record<string, any> = {
+    ip: "203.0.113.42",
     waitUntil: (promise: Promise<unknown>) => {
       waited.push(promise);
     },
@@ -71,7 +72,20 @@ describe("serve-markdown handler", () => {
     assert.equal(events[0].path, "/kongctl/");
     assert.equal(events[0].user_agent, "test-agent");
     assert.equal(events[0].status_code, 200);
-    assert.deepEqual(Object.keys(events[0]).sort(), ["format", "path", "status_code", "user_agent"]);
+    assert.equal(events[0].ip, "203.0.113.42");
+    assert.deepEqual(Object.keys(events[0]).sort(), ["format", "ip", "path", "status_code", "user_agent"]);
+  });
+
+  it("sends an empty ip when the platform gives none", async () => {
+    const { context, waited } = setup();
+    context.ip = undefined;
+    const request = new Request(`${ORIGIN}/kongctl/`, { headers: { "user-agent": "test-agent" } });
+
+    await (handler as any)(request, context);
+    await Promise.all(waited);
+
+    assert.equal(events.length, 1);
+    assert.equal(events[0].ip, "");
   });
 
   it("rewrites an Accept markdown request and sends no event in run 1", async () => {

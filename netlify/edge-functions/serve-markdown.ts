@@ -42,6 +42,7 @@ export default async (request: Request, context: Context) => {
         format: isMarkdown(pathname) ? "markdown" : "html",
         user_agent: request.headers.get("User-Agent") || "",
         status_code: response.status,
+        ip: context.ip || "",
       }),
     );
   } catch {
