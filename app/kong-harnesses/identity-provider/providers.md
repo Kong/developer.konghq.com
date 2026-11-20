@@ -32,7 +32,7 @@ related_resources:
 ---
 
 These settings add to the client settings in [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
-They come from the documentation of each identity provider, and they aren't tested with {{site.kong_harnesses}}.
+{{site.kong_harnesses}} isn't tested with these identity providers, so test the settings in a non-production deployment first.
 
 ## Auth0
 
@@ -58,12 +58,16 @@ They come from the documentation of each identity provider, and they aren't test
 * Consent: Keycloak shows the consent screen only when consent is on for the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
-* Scopes: The token response names each default client scope of the client that has **Include in token scope** on, such as `profile` and `email`, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
-  Request each of these scopes with `--scope`, or turn off **Include in token scope** in the client scope, because the response can't name a scope that the profile doesn't request.
-* Refresh token rotation: If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
+* Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes, and the response can't name a scope that the profile doesn't request.
+  The profile requests `openid`, `profile`, `email` and `offline_access` by default, so keep **Include in token scope** on in the `profile` and `email` client scopes.
+  In each other default client scope of the client, turn off **Include in token scope**.
+  Add a `--scope` flag only for a scope that you want the profile to request.
+* Refresh token rotation: You can keep **Revoke Refresh Token** off, and {{site.kong_harnesses}} then uses the same refresh token again.
+  If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
   This setting is the number of times that a client can use a refresh token again, so a higher value lets a copied refresh token stay usable.
-* Audience: Keycloak ignores the `resource` parameter by default, so set `--audience-parameter none`.
+* Audience: Set `--audience-parameter none` for the Audience mapper setup below.
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
+  Keep **Add to ID token** off in the mapper, as it is by default, because the `aud` of the ID token must be only the client ID, as [Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded) describes.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
   If you use a shared client scope, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
 * Access token lifetime: Set the **Access Token Lifespan** of the realm, or of the client, from 7 to 60 minutes, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
@@ -78,6 +82,7 @@ They come from the documentation of each identity provider, and they aren't test
   Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
   So register one `localhost` callback for each path, not one for each port, because Entra ID picks one of several that differ only by port, as [localhost exceptions](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url#localhost-exceptions) describes.
   The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
+  Entra ID matches the port of a `127.0.0.1` callback exactly, so each port needs its own registration.
   To register a `127.0.0.1` callback, add it to `publicClient.redirectUris` in the [application manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest#publicclient-attribute), keep every redirect URI that is already there, and include the port that the profile uses:
 
   ```json

@@ -114,7 +114,7 @@ rows:
 
 The callback is the address on the developer's computer that the browser returns to after the sign-in.
 {{site.kong_harnesses}} listens on that address while the developer signs in with [`kong-harnesses login`](/kong-harnesses/login/) or [`kong-harnesses setup`](/kong-harnesses/setup/), so the developer must open the sign-in page in a browser on the same computer.
-The developer must finish the sign-in in the browser within 2 minutes.
+The developer must finish the whole sign-in in the browser, with MFA and consent, within 2 minutes after {{site.kong_harnesses}} opens the sign-in page or shows its URL.
 At each sign-in in the browser, {{site.kong_harnesses}} sends `prompt=consent` to ask for the consent screen, but the identity provider can skip it.
 For the checks on the callback request, see [Callback](/kong-harnesses/identity-provider/checks/#callback).
 
@@ -136,7 +136,7 @@ The value must:
 For a `localhost` callback, {{site.kong_harnesses}} listens on `127.0.0.1`, and also on `[::1]` when the computer has it.
 Two sign-ins on the same computer conflict when they need the same address and port, even with different paths.
 For example, a `localhost` callback and a `127.0.0.1` callback on the same port conflict.
-A second sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
+When another program, such as another sign-in, listens on the callback address and port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
 On Windows, a port that Windows reserved gives the same error.
 To list the reserved ports, run `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp`.
 To let several profiles sign in at the same time, give each profile a different port.
@@ -149,13 +149,17 @@ Give the client the refresh token grant type and the `offline_access` scope.
 When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag.
 For the rules of the list, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
 
-When the token response has a `scope` value, it can't be empty, and each scope in it must match a different scope that the profile requests.
-A returned scope matches a requested scope when it is the same, when it is the same after {{site.kong_harnesses}} decodes its percent escapes, or when it is the last path segment of exactly one requested URI scope, such as `access_as_user` for `api://API_ID/access_as_user`.
+When the token response has a `scope` value, it can't be empty, and each scope in it must match a different allowed scope.
+At sign-in, the allowed scopes are the scopes that the profile requests.
+At renewal, they are the last accepted list.
+After the sign-in, that list is the requested scopes that the sign-in response matched, or the scopes of the profile when the response doesn't list scopes.
+After each renewal that lists scopes, it is the scopes that the renewal response matched, and a renewal response without `scope` keeps the list.
+
+{{site.kong_harnesses}} first looks for an allowed scope that is the same as the returned scope.
+Then it looks for one that is the same after it decodes the percent escapes of the returned scope.
+Then it looks for exactly one allowed scope that is a URI with a scheme and a host, and with the returned scope as its last path segment, such as `api://API_ID/access_as_user` for `access_as_user`.
+
 The response must also keep each scope that the profile requests, other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
-These rules also apply at renewal, where each listed scope must also match a scope in the last accepted list.
-At first, that list is the requested scopes that the sign-in response matched, or the scopes of the profile when the response doesn't list scopes.
-After each renewal that lists scopes, it is the requested scopes that the renewal response matched.
-A renewal response without `scope` keeps the last accepted list.
 A response with a `scope` value that breaks these rules fails the sign-in or the renewal.
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
@@ -213,13 +217,11 @@ Some identity providers omit `none` from the advertised methods for public clien
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, create the production profile with the flag, which skips only the check for `none`.
 
-When an endpoint that the profile saved changes in the discovery document, sign-in fails until you create the profile again.
-
 ## Access token lifetime
 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, because a renewed access token must still have 360 seconds left when a client gets it.
-A renewal checks the 360 seconds again after it saves the new refresh token, so a lifetime close to 365 seconds can fail when the save is slow.
+The 5 extra seconds are the longest time that a renewal can take from the token response to the client, and {{site.kong_harnesses}} checks the 360 seconds again at that point.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
