@@ -1,6 +1,6 @@
 ---
 title: kong-harnesses support
-description: Learn which kong-harnesses release Kong supports, and how to report a problem with a support report that doesn't hold a credential.
+description: Check which kong-harnesses release you run, keep it up to date, and report a problem to Kong Support with a doctor report.
 
 content_type: reference
 layout: reference
@@ -25,17 +25,17 @@ related_resources:
     url: /gateway/vulnerabilities/
 ---
 
-## Supported releases
+## kong-harnesses versions
 
-Kong supports the latest release of kong-harnesses. When a new release is out, it replaces the earlier ones, and Kong fixes problems only in new releases.
+Kong fixes problems in new releases of kong-harnesses. We recommend keeping kong-harnesses up to date.
 
-We recommend keeping kong-harnesses up to date. Print the release that you run:
+Print the release that you run:
 
 ```sh
 kong-harnesses version
 ```
 
-To update, use the same tool that you used to [install kong-harnesses](/kong-harnesses/).
+To update, install the new release the same way that you [installed kong-harnesses](/kong-harnesses/).
 
 ## Report a problem
 
@@ -47,10 +47,10 @@ When a session still fails after you apply the fixes that [`doctor`](/kong-harne
 kong-harnesses doctor --profile <profile> --report > report.json
 ```
 
-To include a real model request through the {{ site.claude_code }} route, add `--inference`.
+To include a real model request, add `--inference`. kong-harnesses sends the request on the {{ site.claude_code }} route, so the profile must set up {{ site.claude_code }}. The request costs the same as any other model request.
 
-The report names the kong-harnesses release and the operating system, and the {{ site.claude_code }} release when the report covers {{ site.claude_code }}. It also lists the settings that each agent CLI acts on. The report doesn't hold an access token, a sign-in or a key: kong-harnesses replaces each value that can hold a credential with `<redacted>`, and it shows each URL as its scheme, host and port only. Read the report before you send it.
+The report names the kong-harnesses release and the operating system. For {{ site.claude_code }}, it also names the {{ site.claude_code }} release and lists the settings and shell variables that {{ site.claude_code }} acts on. For each other agent CLI, it names the configuration file and whether that file exists. The report doesn't hold an access token, a refresh token or a key: kong-harnesses replaces each value that can hold a credential with `<redacted>`, and it shows each URL as its scheme, host and port only. Read the report before you send it.
 
-Open a ticket on the [Kong Support website](https://support.konghq.com/support/s/), describe what you did and what happened, and attach `report.json`.
+Open a ticket on the [Kong Support portal](https://support.konghq.com/support/s/), describe what you did and what happened, and attach `report.json`.
 
 To report a security problem, follow the [Kong vulnerability patching process](/gateway/vulnerabilities/#reporting-vulnerabilities-in-kong-code).
