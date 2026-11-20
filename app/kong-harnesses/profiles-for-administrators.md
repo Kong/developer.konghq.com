@@ -89,7 +89,7 @@ Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle e
 
 Create the profile on your own computer with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
 Run it without flags to answer the questions instead.
-`profile create` connects to your identity provider, so your computer must trust its certificate first, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
+For the default or the `subscription` sign-in, `profile create` connects to your identity provider, so your computer must trust its certificate first, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
 
 The identity provider needs a public OIDC client, without a client secret, for the authorization code flow with PKCE (S256) and refresh tokens.
 Register `http://localhost:9876/callback` as a sign-in redirect URI of the client, or register another loopback URI and pass it with `--redirect-uri`.
@@ -170,6 +170,7 @@ rows:
 Use the value that your identity provider reads.
 
 With these flags, `profile create` reads the endpoints of your identity provider from its OIDC discovery document, saves the profile, and installs it on your computer.
+For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
 When the gateway answers that no route matches, `profile create` warns that the agent CLI may not be able to use the gateway, and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
@@ -278,7 +279,7 @@ rows:
 
 To change the profile, publish the new file at the same URL or give developers the new file.
 When the change keeps the profile's security identity, developers run the same `setup` command again.
-The security identity includes the gateway origin, the issuer and its endpoints, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence and the sign-in kind.
+The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the profile's gateway CA bundle, if it has one.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup`, run `setup` again, and sign in again.
 
