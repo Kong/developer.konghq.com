@@ -174,7 +174,7 @@ For that reason, {{site.kong_harnesses}} refuses a profile that turns on a featu
 * `feature_flags` set to `true` while `anthropic_telemetry` is `false`.
 * In a schema 18 profile, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
 * `bug_command` and `feedback_command` set to different values.
-  In a schema 18 profile, also one of the two set while the profile leaves out the other.
+  In a schema 18 profile, {{site.kong_harnesses}} also refuses a profile that sets only one of these members.
 * In a profile of an earlier schema, a member set to `true` for a feature that the nonessential traffic switch turns off, while `auto_updates` is `false`.
   For `artifact`, [Earlier schemas](#earlier-schemas) says when an installed profile stays valid.
 
@@ -299,6 +299,7 @@ The following table gives the {{ site.claude_code }} settings that each profile 
 To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
 {{ site.claude_code }} reads `DISABLE_GROWTHBOOK` from v2.1.124, and its newer name `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` from v2.1.319.
 To turn off feature flags by hand on a computer that runs {{ site.claude_code }} v2.1.318 or earlier, use `DISABLE_GROWTHBOOK`, as the [environment variables reference](https://code.claude.com/docs/en/env-vars#variables) explains.
+Otherwise, use `CLAUDE_CODE_DISABLE_FEATURE_FLAGS`.
 The environment variables go in the `env` key, and `skipWebFetchPreflight`, `enableArtifact` and `disableClaudeAiConnectors` are top-level keys.
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
