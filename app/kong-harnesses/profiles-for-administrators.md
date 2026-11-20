@@ -229,7 +229,8 @@ config:
   hide_credentials: true
 ```
 
-With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` in the `Authorization` header.
+When a header value starts with one of the `header_auth_schemes`, such as `Bearer`, followed by a space, the rest of the value is the key.
+A header value without a scheme is used as it is.
 For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
 
 ## Profile hosting
