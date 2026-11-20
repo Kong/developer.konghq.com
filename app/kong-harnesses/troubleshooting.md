@@ -112,7 +112,9 @@ rows:
     next: |
       Do what the `fix:` line says.
       For an agent CLI that the profile lists, `kong-harnesses profile activate <profile> --client <client>` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, check the settings file, or remove what kong-harnesses owns in that agent CLI with `kong-harnesses profile cleanup --client <client>`.
+      When the settings are inconsistent with what kong-harnesses wrote, remove what kong-harnesses owns in that agent CLI with `kong-harnesses profile cleanup --client <client>`.
+      When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
+      For OpenCode, remove the gateway plugin entry that kong-harnesses didn't record from the settings file first, then activate the profile.
   - check: "`claude-code`"
     what: The installed {{ site.claude_code }} is a release that kong-harnesses supports.
     next: Update {{ site.claude_code }}. The `fix:` line names the oldest release that works.
@@ -128,13 +130,16 @@ rows:
       If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
   - check: "`gateway`"
     what: |
-      kong-harnesses connects to the gateway.
-      When a proxy applies to the gateway, `doctor` doesn't test the connection.
+      The `gateway` check tests a direct connection to the gateway, and skips that test when a proxy applies.
+      Other checks, such as `catalog`, send their requests through the proxy.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
-      For an `http://` gateway on this computer, add the exact gateway host to `NO_PROXY`, and to `no_proxy` if you set that variable too, or use an `https://` gateway.
-      For a gateway on an IPv6 address, use an `https://` gateway.
+      When a proxy applies to an `http://` gateway on this computer, run `kong-harnesses profile activate <profile> --client claude-code` again for {{ site.claude_code }}.
+      When project settings or managed settings of {{ site.claude_code }} set a proxy variable, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
+      For another agent CLI, add the gateway host to `NO_PROXY` and `no_proxy` where the agent CLI starts.
+      For an `http://` gateway on an IPv6 loopback address, add each form of the address, such as `[::1]:8000,[::1],::1`.
+      You can also use an `https://` gateway.
   - check: "`route`"
     what: |
       The gateway has a route for the requests that the agent CLI sends.
@@ -149,8 +154,8 @@ rows:
       The gateway answers `GET /v1/models` with the list of models that it serves.
       When the provider mode of the profile takes model IDs from the profile, `catalog` reports `ok` without a request, and the `picker` and `model` checks use the models of the profile.
     next: |
-      When the gateway refuses the request, do what the `fix:` line says to get access to the model list again, for example sign in again.
-      If the gateway answers `404` or something other than a model list, or its list doesn't include a model that `/model` can show, ask the gateway operators to serve the model list.
+      When the check says that the gateway needs a sign-in, or refuses the request, do what the `fix:` line says, for example sign in again.
+      If the gateway answers `404` or something other than a model list, or its list doesn't include a model that `/model` can show, ask the gateway operators to correct the model list.
   - check: "`picker`"
     what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves, or the models that the profile lists.
     next: |
@@ -169,9 +174,9 @@ rows:
       The settings that keep {{ site.claude_code }} on the gateway still contain the values that kong-harnesses wrote.
       A static Anthropic credential in the `env` block of the settings file is a changed value.
     next: |
-      Do what the `fix:` line says, usually `kong-harnesses profile activate <profile> --client claude-code` again.
+      Remove a static Anthropic credential from the `env` block first, because `profile activate` refuses a credential there.
+      Then do what the `fix:` line says, usually `kong-harnesses profile activate <profile> --client claude-code` again.
       When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line names `kong-harnesses profile cleanup` first.
-      Remove a static Anthropic credential from the `env` block before you activate again, because `profile activate` refuses a credential there.
   - check: "`overrides`"
     what: |
       The shell that starts {{ site.claude_code }} doesn't set a credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, that the settings file doesn't override.
@@ -218,15 +223,22 @@ To clean up one agent CLI, add `--client`, for example `--client claude-code`.
 
 `profile cleanup` changes only the values that kong-harnesses still owns.
 If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is.
-If your edits leave kong-harnesses unable to tell which values it owns, `profile cleanup` exits with `2`, and you remove the remaining values by hand.
-When `profile cleanup` doesn't finish, for example when it cleans up some agent CLIs and then fails on another, it exits with `4`.
-Run it again.
+If `profile cleanup` can't tell which values it owns, it exits with `2`.
+Inspect the settings, and remove the remaining values manually.
+If `profile cleanup` changes the settings of some agent CLIs but doesn't finish for every agent CLI, it exits with `4`.
+Do the step that the message names, then run it again.
 `profile cleanup` doesn't sign you out, and doesn't delete the profile.
 
-To remove one profile from the computer, sign out and delete the profile:
+To remove one profile from the computer, sign out first:
 
 ```sh
 kong-harnesses logout --profile <profile>
+```
+
+If `logout` fails, do what its message says, and run it again.
+After `logout` succeeds, delete the profile:
+
+```sh
 kong-harnesses profile delete <profile>
 ```
 
