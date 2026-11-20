@@ -52,7 +52,7 @@ tldr:
   a: |
     Run `kong-harnesses fleet build` again with `--record` set to the record of the current build, with `--policy` set to the current MDM policy for an MDM build, and with every other flag of the earlier build that you keep.
     Add `--claude-code-minimum` and `--claude-code-maximum` to hold the computers to a version range.
-    In a provider mode other than the Anthropic API, add `--model` to move the computers to a new model.
+    Add `--model` to move the computers to a new model.
     Keep the earlier model on {{site.ai_gateway}} until every session uses the new model.
 
 faqs:
@@ -81,6 +81,7 @@ For a file build on computers that also get a `managed-settings.json` from your 
 
 Replace each placeholder with the value for your deployment.
 `RECORD_FILE` is the record of the build that the computers have now.
+For each platform, use its current build record to make a new build, and use a separate output folder for each build.
 `POLICY_FILE` is the MDM policy that the computers get now, or their `managed-settings.json` for a file build.
 
 ## Hold the fleet to a range of {{ site.claude_code }} versions
@@ -126,13 +127,14 @@ kong-harnesses fleet build --profile work \
 The check runs at startup, so a session that is already running continues until the developer restarts it.
 On native and npm installs, background updates and `claude update` skip any version above the newest one, and don't install a version below the oldest one.
 A Homebrew install updates through `brew upgrade`, so hold its version with your install tool.
+The desktop app updates its own copy of {{ site.claude_code }}, so [turn off its updates](https://code.claude.com/docs/en/desktop#device-management-policies) through your MDM to keep its Code tab inside the range.
 
 `fleet build` refuses a range that can't hold a computer to it:
 
 * An oldest version from before the first {{ site.claude_code }} release that reads the range.
 * A newest version from before the first {{ site.claude_code }} release that keeps every session on the gateway.
 * An oldest version later than the newest version.
-* A range that no version can meet together with the range in the policy that you pass with `--policy`.
+* A range that conflicts with the range in the policy that you pass with `--policy`.
 * A newest version in that policy from before the first {{ site.claude_code }} release that keeps every session on the gateway.
 
 Deploy the files in `NEW_FOLDER/root`, and for an MDM build the policy in `NEW_FOLDER/mdm`, the same way as for the first build.
@@ -145,7 +147,8 @@ A session fails when {{site.ai_gateway}} doesn't serve its model, so the gateway
 Add the new model version to {{site.ai_gateway}} as an [AI Model](/ai-gateway/entities/ai-model/), and keep the AI Model of the earlier version.
 
 Build new managed settings from the record of the build that the computers have now, into a new or empty `NEW_FOLDER`.
-In a provider mode other than the Anthropic API, name the new model ID with `--model`, and repeat the other flags of the earlier build, such as the version range:
+{% comment %}Depends on fleet build --model in the Anthropic API mode. Check the flag before this page merges.{% endcomment %}
+Name the new model ID with `--model`, and repeat the other flags of the earlier build, such as the version range:
 
 {% navtabs "fleet-model" %}
 {% navtab "File build" %}
@@ -180,26 +183,26 @@ kong-harnesses fleet build --profile work \
 {% endnavtabs %}
 
 `fleet build` finds the Claude family, `opus`, `sonnet`, `haiku` or `fable`, in the model ID.
-When the ID names no family or more than one, name the family before it, such as `--model sonnet=NEW_MODEL_ID`.
+When the ID doesn't name a family, or names more than one, name the family before it, such as `--model sonnet=NEW_MODEL_ID`.
 Repeat `--model` for each family that you move.
 The new ID replaces the model of that family in every role that used it, such as subagents, in the managed settings and in the profile that the computers install.
 The profile on your computer stays as it is, so repeat `--model` in every later build.
 A build without it gives the computers the earlier model again.
 
-In the Anthropic API mode, `fleet build` refuses `--model`, because {{ site.claude_code }} reads the gateway's model list on each computer, and `/model` lists each model in it whose ID contains `claude` or `anthropic`.
-Build again without `--model`, so that the managed settings get the gateway's rates for the new model, and a `/model` row for it when its ID contains neither word.
+The managed settings include the rates of the new model when the profile or the gateway gives a complete set of them.
 
 Then finish the move:
 
-1. Deploy the new build to one managed computer first, the same way as for the first build.
+1. Deploy each new build to one managed computer on its platform before you deploy it to the other computers, the same way as for the first build.
    On that computer, check with `kong-harnesses doctor` that it names the new build, as in [Validate](#validate).
-   Start a new {{ site.claude_code }} session, choose the new model with `/model` in the Anthropic API mode, and send a prompt.
-   Check that the prompt gets an answer, and that `/status` names the new model.
+   Start a new {{ site.claude_code }} session, choose the new model with `/model`, and send a prompt.
+   Check that {{ site.claude_code }} gives an answer, and that `/status` shows the new model ID.
 1. Deploy the files in `NEW_FOLDER/root`, and for an MDM build the policy in `NEW_FOLDER/mdm`, to the other computers.
    Keep the record in `NEW_FOLDER` with the policy, because the next build needs it.
 1. When your MDM or install tool reports the new build on every computer, ask each developer to restart {{ site.claude_code }}.
-   In the Anthropic API mode, also ask them to choose the new model with `/model`.
-1. Keep the AI Model of the earlier version until every session that used it has ended, and then remove it from {{site.ai_gateway}}.
+1. Keep the AI Model of the earlier version until every active session uses the new model or has ended.
+   A saved session that you resume keeps the model that it was saved on, so before you remove the earlier AI Model, tell the developers to resume such a session with `claude --resume --model NEW_MODEL_ID`.
+   Then remove the AI Model of the earlier version from {{site.ai_gateway}}.
 
 ## Validate
 
