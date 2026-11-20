@@ -266,7 +266,7 @@ jobs:
         run: node tools/kong-harnesses-versions/fetch-changelog.js
 
       # Renders the changelog with the site's Markdown converter and refuses any link
-      # or text that still leads into the internal repository.
+      # or address that is left on the page.
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: .ruby-version
@@ -280,7 +280,7 @@ jobs:
         with:
           title: Sync kong-harnesses Changelog
           commit-message: Sync kong-harnesses Changelog
-          branch: sync-kong-harnesses-changelog/${{ needs.base.outputs.branch }}
+          branch: sync-kong-harnesses/changelog/${{ needs.base.outputs.branch }}
           base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}

@@ -9,36 +9,41 @@ RSpec.describe KongHarnessesChangelogLinks do
 
   describe '.check' do
     [
-      ['a character reference in the host and name', '[x](https://github&#46;com/Kong/kong&#45;harnesses)'],
-      ['raw HTML with character references', '<a href="https://github&#x2e;com/Kong/kong-harnesses/pull/1">x</a>'],
-      ['a tab inside the address', "[x](<https://github.com/Kong/kong-\tharnesses>)"],
-      ['a .git suffix', 'clone https://github.com/Kong/kong-harnesses.git'],
-      ['repeated slashes', '[x](https://github.com//Kong//kong-harnesses)'],
-      ['a git+https address', '[x](git+https://github.com/Kong/kong-harnesses)'],
-      ['an scp-like git address', 'clone git@github.com:Kong/kong-harnesses.git'],
-      ['an ssh address', 'clone ssh://git@github.com/Kong/kong-harnesses'],
+      ['a link to any address', '[x](https://example.com/a)'],
+      ['a link after unequal backtick runs', 'a ` [x](https://github.com/Kong/./kong-harnesses) `` d'],
+      ['a link with a ../ segment', '[x](https://github.com/Kong/../Kong/kong-harnesses)'],
+      ['a link to a renamed repository', '[x](https://github.com/Kong/agent-auth-cli)'],
+      ['a link to another GitHub host', '[x](https://github.dev/Kong/kong-harnesses)'],
+      ['an image', 'a ` <img src="https://github.com/Kong/kong-harnesses/a.png"> `` d'],
+      ['a link from an indented definition', "see [x][r]\n\n    [r]: //github.com/Kong/./kong-harnesses"],
+      ['a link from a definition in a block quote', "see [x][r]\n\n> [r]: //github.com/Kong/./kong-harnesses"],
+      ['a link with character references', '[x](https://github&#46;com/Kong/kong&#45;harnesses)'],
+      ['raw HTML with an address', '<a href="https://github&#x2e;com/Kong/kong-harnesses/pull/1">x</a>'],
+      ['a meta refresh', '<meta http-equiv="refresh" content="0; url=https://github.com/Kong/kong-harnesses">'],
+      ['an SVG link', '<svg><a xlink:href="https://github.com/Kong/kong-harnesses"><text>x</text></a></svg>'],
+      ['an attribute list on a span', '*x*{: title="x" data-x="https://github.com/Kong/kong-harnesses"}'],
       ['an autolink in capitals', '<HTTPS://GITHUB.COM/KONG/KONG-HARNESSES>'],
-      ['a port', '[x](https://github.com:443/Kong/kong-harnesses/pull/1)'],
-      ['percent-encoding in the name', '[x](https://github.com/Kong/kong%2Dharnesses)'],
-      ['percent-encoding in the host', '[x](https://github%2Ecom/Kong/kong-harnesses)'],
-      ['double percent-encoding', '[x](https://github.com/Kong/kong%252Dharnesses)'],
-      ['a full-width dot in the host', '[x](https://github．com/Kong/kong-harnesses)'],
-      ['backslashes', '[x](https:\\\\github.com\\Kong\\kong-harnesses)'],
-      ['an invisible character in the host', "[x](https://git​hub.com/Kong/kong-harnesses)"],
-      ['the API address', 'see https://api.github.com/repos/Kong/kong-harnesses/releases'],
-      ['the raw file address', '![x](https://raw.githubusercontent.com/Kong/kong-harnesses/main/a.png)'],
-      ['an address in a code span', 'see `github.com/Kong/kong-harnesses`'],
-      ['an address at the end of a sentence', 'see github.com/Kong/kong-harnesses.']
+      ['a scheme-relative address in text', 'see //github.com/Kong/kong-harnesses/x now'],
+      ['an ssh address in text', 'accept ssh://user@host targets'],
+      ['an scp-like git address', 'clone git@github.com:Kong/kong-harnesses.git'],
+      ['a full-width dot in the host', 'see github．com/Kong/kong-harnesses'],
+      ['percent-encoding in the name', 'see github.com/Kong/kong%252Dharnesses'],
+      ['an invisible character in the host', "see git​hub.com/Kong/kong-harnesses"],
+      ['the repository in a code span', 'run `go install github.com/Kong/kong-harnesses/cmd/x`'],
+      ['the repository at the end of a sentence', 'see github.com/Kong/kong-harnesses.'],
+      ['an HTML comment', '<!-- note -->']
     ].each do |name, text|
       it "refuses #{name}" do
-        expect { described_class.check(entry(text)) }.to raise_error(/internal kong-harnesses repository/)
+        expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
       end
     end
 
     [
-      ['another host that ends with the same name', 'see https://notgithub.com/Kong/kong-harnesses/help'],
-      ['a host that starts with the same name', 'see https://github.com.example.com/Kong/kong-harnesses'],
-      ['another repository with a longer name', '[x](https://github.com/Kong/kong-harnesses-plugin)'],
+      ['another host that ends with the same name', 'see `notgithub.com/Kong/kong-harnesses/help`'],
+      ['a host that starts with the same name', 'see `github.com.example.com/Kong/kong-harnesses`'],
+      ['another repository with a longer name', 'see `github.com/Kong/kong-harnesses-plugin`'],
+      ['the host and the path in separate paragraphs', "see github.com\n\n  then Kong/kong-harnesses"],
+      ['an address in a code span', 'run `curl https://example.com/a`'],
       ['the product name in text', 'run kong-harnesses login once after the upgrade'],
       ['an entry in parentheses', 'use the value from (the migration guide).']
     ].each do |name, text|

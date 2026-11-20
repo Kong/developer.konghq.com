@@ -7,18 +7,27 @@ require 'nokogiri'
 require 'yaml'
 
 # fetch-changelog.js removes every link from the kong-harnesses changelog, because the
-# repository is internal. This check does not trust that: it renders the result with
-# the site's own Markdown converter, reads the HTML with a real parser, and stops the
-# sync when any attribute or text still names the repository in a form that a browser
-# or git would follow.
+# page has none. This check does not trust that: it renders the result with the site's
+# own Markdown converter, reads the HTML with a real parser, and stops the sync when the
+# page would hold anything that a browser could follow. It allows only plain elements
+# with plain attributes, so no form of an address in an attribute can pass, and no `//`
+# in text outside a code span. Text in a code span is not a link, but it still must not
+# name the kong-harnesses repository.
 module KongHarnessesChangelogLinks
   module_function
 
   ROOT = File.expand_path('../..', __dir__)
   DATA_FILE = File.join(ROOT, 'app/_data/kong-harnesses/changelog.json')
 
-  # The hosts that serve the repository. A host matches only as a whole name, so
-  # notgithub.com or github.com.example.com does not.
+  HEADING = %w[id].freeze
+  ELEMENTS = {
+    'h1' => HEADING, 'h2' => HEADING, 'h3' => HEADING, 'h4' => HEADING, 'h5' => HEADING, 'h6' => HEADING,
+    'p' => [], 'ul' => [], 'ol' => [], 'li' => [], 'strong' => [], 'em' => [], 'code' => [], 'pre' => [],
+    'blockquote' => [], 'br' => [], 'hr' => [], 'del' => []
+  }.freeze
+
+  # The hosts that serve the repository, matched only as a whole name, so notgithub.com
+  # or github.com.example.com does not match.
   HOSTS = %w[github.com www.github.com api.github.com raw.githubusercontent.com codeload.github.com].freeze
   REPOSITORY = /
     (?<![a-z0-9.\-])(?:#{HOSTS.map { |host| Regexp.escape(host) }.join('|')})\.?
@@ -47,32 +56,42 @@ module KongHarnessesChangelogLinks
          .delete("\t\n\r­​‌‍⁠﻿").downcase
   end
 
-  def texts(markdown)
-    document = Nokogiri::HTML5.fragment(html(markdown))
-    values = [markdown]
-    document.traverse do |node|
-      values << node.content if node.text? || node.cdata? || node.comment?
-      values.concat(node.attribute_nodes.map(&:value)) if node.element?
+  def problems(markdown)
+    found = []
+    Nokogiri::HTML5.fragment(html(markdown)).traverse do |node|
+      if node.element?
+        allowed = ELEMENTS[node.name]
+        if allowed.nil?
+          found << "the element <#{node.name}>"
+        else
+          node.attribute_nodes.each do |attribute|
+            found << "the attribute #{attribute.name} on <#{node.name}>" unless allowed.include?(attribute.name)
+          end
+        end
+      elsif node.text?
+        text = normalize(node.content)
+        in_code = node.ancestors.any? { |parent| parent.name == 'code' }
+        found << "the address in #{node.content[0, 200].inspect}" if !in_code && text.include?('//')
+        found << "the kong-harnesses repository in #{node.content[0, 200].inspect}" if text.match?(REPOSITORY)
+      elsif !node.fragment?
+        found << "a #{node.class.name.split('::').last} node"
+      end
     end
-    values
-  end
-
-  def internal_references(markdown)
-    texts(markdown).select { |text| normalize(text).match?(REPOSITORY) }.uniq
+    found.uniq
   end
 
   def check(markdown)
-    found = internal_references(markdown)
+    found = problems(markdown)
     return if found.empty?
 
-    raise "The changelog still leads into the internal kong-harnesses repository: #{found.map { |text| text[0, 200].inspect }.join(', ')}"
+    raise "The changelog page would hold a link or an address: #{found.join(', ')}"
   end
 end
 
 if $PROGRAM_NAME == __FILE__
   begin
     KongHarnessesChangelogLinks.check(JSON.parse(File.read(ARGV.fetch(0, KongHarnessesChangelogLinks::DATA_FILE))).fetch('markdown'))
-    puts 'The kong-harnesses changelog has no links into the internal repository.'
+    puts 'The kong-harnesses changelog page holds no links or addresses.'
   rescue StandardError => e
     warn "Error: #{e.message}"
     exit 1

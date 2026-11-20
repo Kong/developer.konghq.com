@@ -14,7 +14,93 @@ const breakingChanges = '⚠ BREAKING CHANGES';
 // docs/release.md in Kong/kong-harnesses names the same list; change both together.
 const internalScopes = new Set(['ci', 'deps', 'ksai', 'threat-model']);
 
-function userFacingRelease(release) {
+// The page has no links: every link goes and keeps only its text, so no list of the
+// forms an address can take is needed. The Mesh changelog drops its source links too
+// (mesh.ignored_links_regex). check-changelog-links.rb then renders the result as the
+// site does and stops the sync on any link or address that is left, so this step only
+// has to be right for the changelog that release-please writes.
+const removed = '\u0000';
+const linkTitle = String.raw`(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?`;
+const inlineLink = new RegExp(
+  String.raw`(!?)\[([^\]]*)\]\(\s*(<[^>\n]*>|[^()\s]*(?:\([^()\s]*\)[^()\s]*)*)${linkTitle}\s*\)`,
+  'g',
+);
+// A link definition, also inside a list item or a block quote.
+const definition = /^[ \t>]*(?:(?:[*+-]|\d+[.)])[ \t]+)?\[([^\]]+)\]:[ \t]*(\S*).*(?:\n|$)/gm;
+// An http or https address. A closing parenthesis ends it unless the address opened one.
+const webAddress = /<https?:\/\/[^\s<>]*>|\bhttps?:\/\/[^\s<>()]*(?:\([^\s<>()]*\)[^\s<>()]*)*/gi;
+
+// Splits a line into prose and code spans, as kramdown pairs them: a run of backticks
+// opens a span only when a later run of the same length closes it, and otherwise it is
+// plain text. The odd items are the code spans.
+function splitCode(line) {
+  const parts = [];
+  const runs = /(?<!\\)`+/g;
+  let start = 0;
+  let match;
+  while ((match = runs.exec(line))) {
+    const closer = new RegExp(`(?<!\`)${match[0]}(?!\`)`, 'g');
+    closer.lastIndex = runs.lastIndex;
+    if (closer.exec(line)) {
+      parts.push(line.slice(start, match.index), line.slice(match.index, closer.lastIndex));
+      start = closer.lastIndex;
+      runs.lastIndex = closer.lastIndex;
+    }
+  }
+  parts.push(line.slice(start));
+  return parts;
+}
+
+// An issue or pull request number, or the hash of a commit link, means nothing without
+// its link. A word of hex letters, such as "defaced", is a hash only on a commit link,
+// and a number such as a year is a reference only on an issue or pull request link.
+function linkText(text, address) {
+  const reference =
+    /^#\d+$/.test(text) ||
+    (/\/(?:issues|pull)\/\d+/i.test(address) && /^\d+$/.test(text)) ||
+    (/\/commits?\//i.test(address) && /^[0-9a-f]{7,40}$/i.test(text));
+  return reference ? removed : text;
+}
+
+function withoutLinks(prose, labels) {
+  const reference = (link, image, text, label) => {
+    const address = labels.get(label.toLowerCase());
+    if (address === undefined) {
+      return link;
+    }
+    return image ? text : linkText(text, address);
+  };
+  return prose
+    .replace(inlineLink, (_, image, text, address) => (image ? text : linkText(text, address)))
+    .replace(/(!?)\[([^\]]*)\]\[([^\]]*)\]/g, (link, image, text, label) => reference(link, image, text, label || text))
+    .replace(/(!?)\[([^\]]+)\](?![([:])/g, (link, image, text) => reference(link, image, text, text))
+    .replace(webAddress, removed);
+}
+
+// Kramdown reads <name> outside a code span as an HTML tag and shows nothing, so a
+// subject such as "profile get <profile>" keeps its placeholder only when escaped.
+function publicLine(line, labels) {
+  return splitCode(line)
+    .map((part, index) => (index % 2 ? part : withoutLinks(part, labels).replace(/</g, '&lt;')))
+    .join('')
+    // Brackets that held only removed links go, then each mark takes one space with it.
+    .replace(new RegExp(String.raw`\(\s*(?:${removed}\s*)+\)`, 'g'), removed)
+    .replace(new RegExp(`\\(${removed}+ ?`, 'g'), '(')
+    .replace(new RegExp(` ?${removed}+`, 'g'), '');
+}
+
+function publicText(text, labels) {
+  return text
+    .replace(definition, '')
+    .split('\n')
+    .map((line) => publicLine(line, labels))
+    // An entry that held only a removed reference goes.
+    .filter((line) => !/^\s*(?:[*+-]|\d+[.)])\s*$/.test(line))
+    .join('\n')
+    .trim();
+}
+
+function userFacingRelease(release, labels) {
   const [heading, ...sections] = release.split(/^(?=### )/m);
   const kept = sections.flatMap((section) => {
     const [title, ...lines] = section.trim().split('\n');
@@ -24,74 +110,20 @@ function userFacingRelease(release) {
     }
     // An upgrade step stays whatever its scope, because a user must still do it.
     let keep = true;
-    const entries = lines
-      .filter((line) => {
-        if (line.startsWith('* ') && name !== breakingChanges) {
-          keep = !internalScopes.has(line.match(/^\* \*\*([^:*]+):\*\*/)?.[1]);
-        }
-        return keep;
-      })
-      .join('\n')
-      .trim();
+    const entries = publicText(
+      lines
+        .filter((line) => {
+          if (line.startsWith('* ') && name !== breakingChanges) {
+            keep = !internalScopes.has(line.match(/^\* \*\*([^:*(]+)(?:\([^)]*\))?:\*\*/)?.[1]);
+          }
+          return keep;
+        })
+        .join('\n'),
+      labels,
+    );
     return entries ? [`${title}\n\n${entries}`] : [];
   });
-  return kept.length ? [heading.trim(), ...kept].join('\n\n') : '';
-}
-
-// The repository is internal, so links into it break for readers of the site, and the
-// changelog has no other links. So every link goes and keeps only its text, which needs
-// no list of the forms an address into the repository can take. The Mesh changelog
-// drops such links too (mesh.ignored_links_regex). check-changelog-links.rb then renders
-// the result as the site does and stops the sync if anything still leads there.
-const removed = '\u0000';
-const linkTitle = String.raw`(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?`;
-const inlineLink = new RegExp(
-  String.raw`(!?)\[([^\]]*)\]\(\s*(<[^>\n]*>|[^()\s]*(?:\([^()\s]*\)[^()\s]*)*)${linkTitle}\s*\)`,
-  'g',
-);
-const definition = /^ {0,3}\[([^\]]+)\]:[ \t]*(\S*).*(?:\n|$)/gm;
-
-// An issue or pull request number, or the hash of a commit link, means nothing without
-// its link. A word of hex letters, such as "defaced", is a hash only on a commit link.
-function linkText(text, address) {
-  const reference = /^#?\d+$/.test(text) || (/\/commits?\//i.test(address) && /^[0-9a-f]{7,40}$/i.test(text));
-  return reference ? removed : text;
-}
-
-function withoutLinks(markdown, labels) {
-  return markdown
-    .split(/(`+[^`]*`+)/)
-    .map((part, index) =>
-      index % 2
-        ? part
-        : part
-            .replace(definition, '')
-            .replace(inlineLink, (_, image, text, address) => (image ? text : linkText(text, address)))
-            .replace(/\[([^\]]*)\]\[([^\]]*)\]/g, (link, text, label) => {
-              const address = labels.get((label || text).toLowerCase());
-              return address === undefined ? link : linkText(text, address);
-            })
-            .replace(/\[([^\]]+)\](?![([:])/g, (link, text) => {
-              const address = labels.get(text.toLowerCase());
-              return address === undefined ? link : linkText(text, address);
-            })
-            .replace(/<[a-z][a-z0-9+.-]*:[^\s<>]*>/gi, removed)
-            .replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s<>]*/gi, removed),
-    )
-    .join('')
-    // Brackets that held only removed links go, then each mark takes one space with it.
-    .replace(new RegExp(String.raw`\(\s*(?:${removed}\s*)+\)`, 'g'), removed)
-    .replace(new RegExp(`\\(${removed}+ ?`, 'g'), '(')
-    .replace(new RegExp(` ?${removed}+`, 'g'), '');
-}
-
-// Kramdown reads <name> outside a code span as an HTML tag and shows nothing, so a
-// subject such as "profile get <profile>" keeps its placeholder only when escaped.
-function withEscapedTags(markdown) {
-  return markdown
-    .split(/(`+[^`]*`+)/)
-    .map((part, index) => (index % 2 ? part : part.replace(/</g, '&lt;')))
-    .join('');
+  return kept.length ? [publicText(heading, labels), ...kept].join('\n\n') : '';
 }
 
 // The page prints the result as a Liquid variable, which Jekyll does not parse as a
@@ -130,7 +162,7 @@ export function publicChangelog(markdown, { published, highest }) {
       versions.add(version);
       return published.has(version) && published.has(version.split('-')[0]);
     })
-    .map(userFacingRelease)
+    .map((release) => userFacingRelease(release, labels))
     .filter(Boolean);
   if (!versions.has(highest)) {
     throw new Error(`The changelog has no section for ${highest}, the highest published release.`);
@@ -138,10 +170,7 @@ export function publicChangelog(markdown, { published, highest }) {
   if (!kept.length) {
     throw new Error('The changelog has no entries for users in its published releases.');
   }
-  return withEscapedTags(withoutLinks(kept.join('\n\n'), labels))
-    .replace(/\n{3,}/g, '\n\n')
-    .trimEnd()
-    .concat('\n');
+  return kept.join('\n\n').replace(/\n{3,}/g, '\n\n').trimEnd().concat('\n');
 }
 
 export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = process.env }) {
@@ -155,7 +184,7 @@ export async function syncChangelog({ outFile, fetch = globalThis.fetch, env = p
     const list = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=100&page=${page}`, { headers });
     if (!list.ok) {
       throw new Error(
-        `GitHub API request for ${repo} releases failed (${list.status} ${list.statusText}). ${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`,
+        `GitHub API request for ${repo} releases failed (${list.status} ${list.statusText}). Set GH_TOKEN to a GitHub token with read access to ${repo}.`,
       );
     }
     const batch = await list.json();

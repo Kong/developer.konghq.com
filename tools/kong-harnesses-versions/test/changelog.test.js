@@ -70,11 +70,42 @@ test('removes every link and keeps its text, except a reference number or commit
     ['* use the value from ([the migration guide](https://github.com/Kong/kong-harnesses/blob/main/docs/m.md)).', '* use the value from (the migration guide).'],
     ['* see ![the diagram](https://raw.githubusercontent.com/Kong/kong-harnesses/main/a.png)', '* see the diagram'],
     ['* see [the plugin](https://github.com/Kong/kong-harnesses-plugin)', '* see the plugin'],
-    ['* see ssh://git@github.com/Kong/kong-harnesses.git first', '* see first'],
+    // Only http and https addresses go. Any other address stays for the rendered check to refuse.
+    ['* accept ssh://user@host targets', '* accept ssh://user@host targets'],
+    ['* see (https://example.com/foo) ok', '* see ok'],
+    ['* see https://example.com/a_(b) ok', '* see ok'],
+    ['* released in [2026](https://example.com/release-year)', '* released in 2026'],
+    ['* see ![alt][img]\n\n[img]: https://github.com/Kong/kong-harnesses/a.png', '* see alt'],
+    ['* see [x][r]\n\n    [r]: https://github.com/Kong/kong-harnesses', '* see x'],
+    ['* see [x][r]\n\n> [r]: https://github.com/Kong/kong-harnesses', '* see x'],
+    ['* a ` [x](https://github.com/Kong/./kong-harnesses) `` d', '* a ` x `` d'],
   ];
   for (const [entry, expected] of entries) {
     assert.equal(exported(`## 1.0.0\n\n### Features\n\n${entry}\n`), `## 1.0.0\n\n### Features\n\n${expected}\n`);
   }
+});
+
+test('pairs code spans as kramdown does and leaves their text as it is', () => {
+  assert.equal(
+    exported('## 1.0.0\n\n### Features\n\n* run `` a ` <path> `` and see <path>\n'),
+    '## 1.0.0\n\n### Features\n\n* run `` a ` <path> `` and see &lt;path>\n',
+  );
+});
+
+test('drops an entry that held only a reference, and a section with no entry left', () => {
+  assert.equal(
+    exported(
+      '## 1.0.0\n\n### Features\n\n* [#12](https://github.com/Kong/kong-harnesses/issues/12)\n* add\n\n### Bug Fixes\n\n* [#13](https://github.com/Kong/kong-harnesses/issues/13)\n',
+    ),
+    '## 1.0.0\n\n### Features\n\n* add\n',
+  );
+});
+
+test('leaves out the repository tooling scopes, also with a nested scope', () => {
+  assert.equal(
+    exported('## 1.0.0\n\n### Bug Fixes\n\n* **deps(actions):** bump\n* **ci(release):** retry\n* **cli(help):** fix\n'),
+    '## 1.0.0\n\n### Bug Fixes\n\n* **cli(help):** fix\n',
+  );
 });
 
 test('leaves a code span as it is, for the rendered check to judge', () => {
