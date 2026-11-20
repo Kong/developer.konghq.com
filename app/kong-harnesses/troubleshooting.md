@@ -41,7 +41,7 @@ kong-harnesses doctor --profile <profile> --client claude-code
 ```
 
 Without `--client`, `doctor` checks every agent CLI that the profile lists, with one report for each.
-`doctor` uses the network: it connects to the gateway, and to the identity provider unless the profile uses a static key.
+`doctor` uses the network to check the gateway, and, unless the profile uses a static key, the identity provider.
 `kong-harnesses status` shows the sign-in and the agent CLI settings without the network.
 
 Each line of the report starts with a level, `ok`, `warn` or `fail`, and the name of the check.
@@ -127,19 +127,22 @@ rows:
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
   - check: "`gateway`"
-    what: kong-harnesses connects to the gateway.
+    what: |
+      kong-harnesses connects to the gateway.
+      When a proxy applies to the gateway, `doctor` doesn't test the connection.
     next: |
       Check the network, the VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
-      For an `http://` gateway on this computer, add the gateway host to `NO_PROXY`, or use an `https://` gateway.
+      For an `http://` gateway on this computer, add the exact gateway host to `NO_PROXY`, and to `no_proxy` if you set that variable too, or use an `https://` gateway.
+      For a gateway on an IPv6 address, use an `https://` gateway.
   - check: "`route`"
     what: |
       The gateway has a route for the requests that the agent CLI sends.
       `doctor` sends a request with the JSON body `{}` to check for the route.
       When it sends your credential, it also checks that the gateway accepts the credential on that route.
     next: |
-      When the gateway doesn't have a route, or refuses the sign-in on it, ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
-      When the check reports that it didn't check the route, do what the `fix:` line says, when the report has one, for example unset a variable or sign in.
+      When the check fails because the gateway doesn't have a route, or refuses the sign-in on it, ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
+      When the check reports a warning with a `fix:` line, do what it says before you contact the operators, for example sign in, unset a variable, or make the managed settings readable.
       When the `fix:` line says to send a prompt, send one from the agent CLI to test the route.
   - check: "`catalog`"
     what: |
@@ -147,7 +150,7 @@ rows:
       When the provider mode of the profile takes model IDs from the profile, `catalog` reports `ok` without a request, and the `picker` and `model` checks use the models of the profile.
     next: |
       When the gateway refuses the request, do what the `fix:` line says to get access to the model list again, for example sign in again.
-      If the gateway answers `404`, or its list doesn't include a model that `/model` can show, ask the gateway operators to serve the model list.
+      If the gateway answers `404` or something other than a model list, or its list doesn't include a model that `/model` can show, ask the gateway operators to serve the model list.
   - check: "`picker`"
     what: The `/model` menu of {{ site.claude_code }} offers only models that the gateway serves, or the models that the profile lists.
     next: |
@@ -173,7 +176,9 @@ rows:
     what: |
       The shell that starts {{ site.claude_code }} doesn't set a credential variable, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, that the settings file doesn't override.
       Neither the shell nor the `env` block of the settings file turns on a switch for another provider, such as `CLAUDE_CODE_USE_BEDROCK`, or sets a credential of another provider mode.
-    next: Unset the variable in the shell that starts {{ site.claude_code }}, or remove it from the `env` block of the settings file that the `fix:` line names.
+    next: |
+      Do each step that the `fix:` line names.
+      It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
@@ -213,7 +218,9 @@ To clean up one agent CLI, add `--client`, for example `--client claude-code`.
 
 `profile cleanup` changes only the values that kong-harnesses still owns.
 If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is.
-When `profile cleanup` cleans up some agent CLIs and then fails on another, it exits with `4`.
+If your edits leave kong-harnesses unable to tell which values it owns, `profile cleanup` exits with `2`, and you remove the remaining values by hand.
+When `profile cleanup` doesn't finish, for example when it cleans up some agent CLIs and then fails on another, it exits with `4`.
+Run it again.
 `profile cleanup` doesn't sign you out, and doesn't delete the profile.
 
 To remove one profile from the computer, sign out and delete the profile:
@@ -223,11 +230,11 @@ kong-harnesses logout --profile <profile>
 kong-harnesses profile delete <profile>
 ```
 
-While an agent CLI still uses the profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup --client` command for that agent CLI.
+While an agent CLI still uses the profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup` command for that agent CLI.
 Do that step, then run `profile delete` again.
 `profile cleanup` without `--client` also removes the settings that other profiles wrote in every agent CLI.
 
 `profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
-`profile delete` refuses while you're signed in, or while an agent CLI is still set up for the profile.
+`profile delete` also refuses while you're signed in.
 It asks you to type the profile name to confirm.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
