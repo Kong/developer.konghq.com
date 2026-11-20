@@ -319,14 +319,14 @@ columns:
     key: recover
 rows:
   - feature: claude.ai connectors
-    why: The gateway sign-in replaces the claude.ai sign-in, so connectors cannot load.
+    why: Connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway.
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
-    why: It works only with the Anthropic API directly, and its check calls `api.anthropic.com`.
-    recover: "Nothing to do: Fast mode cannot work behind the gateway."
+    why: It bills at a higher rate, and it needs fast mode access on the Anthropic organization behind the gateway.
+    recover: "Ask your administrator to set `fast_mode` to `true` in the profile. Fast mode works only on the providers that the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements) list."
   - feature: "`/bug`, `/feedback` and the feedback survey"
     why: They send your conversation or your ratings to Anthropic.
-    recover: Ask your administrator to keep them and automatic updates on in the profile.
+    recover: Ask your administrator to turn them on in the profile.
   - feature: Cost warnings
     why: They report Anthropic API spend, and a gateway session has none.
     recover: Nothing to do.
@@ -334,7 +334,7 @@ rows:
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
     recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
   - feature: Automatic updates
-    why: The update check and other background requests go outside the gateway, to Anthropic and GitHub. The same setting turns off release notes, network requests from plugins, cloud sessions and pull request status badges.
+    why: The update check and other background requests go outside the gateway, to Anthropic and GitHub. The same setting turns off release notes, Remote Control and pull request status badges.
     recover: "Run `claude update` when you want a newer release, or ask your administrator to keep automatic updates on in the profile."
   - feature: WebFetch domain check
     why: "{{ site.claude_code }} asks `api.anthropic.com` whether it may fetch each domain."

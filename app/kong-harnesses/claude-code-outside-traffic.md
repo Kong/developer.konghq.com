@@ -34,7 +34,7 @@ A {{site.kong_harnesses}} profile sends the {{ site.claude_code }} model request
 Those requests don't pass through the gateway, so the gateway can't log, limit or block them.
 
 If your network policy says that all {{ site.claude_code }} traffic must pass through the gateway, keep every feature in the following tables off.
-`kong-harnesses profile create` writes that profile for you.
+`kong-harnesses profile create` writes that profile for you, unless you turn on Anthropic telemetry when it asks.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -105,16 +105,22 @@ To be sure that the traffic stays off, set each member to `false`.
 
 ### Members that depend on each other
 
-`auto_updates` set to `false` turns off all nonessential {{ site.claude_code }} traffic.
-That one switch also turns off usage metrics, feature flags, error reports, `/bug`, `/feedback` and the feedback survey.
-The usage metrics switch also turns off feature flags, error reports and the feedback survey.
-For that reason, {{site.kong_harnesses}} refuses a profile that turns on one of these features while another member turns it off:
+Some {{ site.claude_code }} switches turn off more than one feature:
 
-* `anthropic_telemetry` set to `true` while `auto_updates` is `false`.
-* `feature_flags`, `error_reports` or `feedback_survey` set to `true` while `auto_updates` or `anthropic_telemetry` is `false`.
-* `bug_command` or `feedback_command` set to `true` while `auto_updates` or the other command member is `false`.
+* The usage metrics switch also turns off feature flags, error reports and the feedback survey.
+* The `/bug` and `/feedback` switches each turn off all of the feedback commands.
+* The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, the feedback commands and the feedback survey.
+
+For that reason, {{site.kong_harnesses}} refuses a profile that turns on a feature while another member turns it off:
+
+* `feature_flags`, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
+* `bug_command` or `feedback_command` set to `true` while the other command member is `false`.
 
 A member that the profile leaves out never causes a conflict.
+
+`auto_updates` set to `false` doesn't cause a conflict.
+When the profile turns on one of the features that the nonessential traffic switch turns off, activation leaves that switch out and keeps the feature on.
+Then the update cutoff still applies, but {{ site.claude_code }} fetches the release notes and the list of Anthropic's MCP servers again.
 
 ## Traffic that stays
 
@@ -135,11 +141,13 @@ You can turn off each kind of outside traffic in the profile, or in {{ site.clau
 
 ### In the profile
 
-`kong-harnesses profile create` sets every member in the table to `false`.
-`--auto-updates on` keeps automatic updates on.
+`kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
+
+* `--auto-updates on` keeps automatic updates on.
+* `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 To keep a feature on, set its member to `true` in the profile file.
-The members need `schema_version` 14 or later.
+The members need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
 The following part of a profile file keeps the WebFetch domain check on, and keeps the other traffic off:
 
 ```json
@@ -192,7 +200,7 @@ rows:
   - member: "`anthropic_telemetry`"
     setting: "`DISABLE_TELEMETRY=1`"
   - member: "`feature_flags`"
-    setting: "`DISABLE_GROWTHBOOK=1`. Newer {{ site.claude_code }} releases also read `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`, which replaces it."
+    setting: "`CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1` and `DISABLE_GROWTHBOOK=1`, its earlier name"
   - member: "`error_reports`"
     setting: "`DISABLE_ERROR_REPORTING=1`"
   - member: "`fast_mode`"
@@ -210,7 +218,7 @@ rows:
   - member: "`official_marketplace_autoinstall`"
     setting: "`CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`"
   - member: "`auto_updates`"
-    setting: "`DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`"
+    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` when the profile doesn't turn on a feature that it turns off"
 {% endtable %}
 
 ## {{ site.claude_code }} on the web and in Slack
