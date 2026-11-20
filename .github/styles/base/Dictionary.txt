@@ -31,6 +31,7 @@ apikey
 APIm
 APIOps
 apis
+apk
 apiVersion
 appendPolicies
 AppRole
@@ -229,6 +230,7 @@ digitalocean
 discovery_support
 distroless
 dlp
+dnf
 DN
 dns
 dockerfile
@@ -398,6 +400,7 @@ inlineString
 inso
 Instana
 instrumentations
+Intune
 invalidation
 invalidations
 involvedObject
@@ -606,6 +609,7 @@ oidc
 okta
 Okta's
 ollama
+omp
 onboard
 onboarding
 onwards

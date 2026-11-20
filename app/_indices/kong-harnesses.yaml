@@ -4,7 +4,7 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/
-          - path: /kong-harnesses/publish-a-profile/
+          - path: /kong-harnesses/profiles-for-administrators/
 
   - title: CLI References
     sections:
