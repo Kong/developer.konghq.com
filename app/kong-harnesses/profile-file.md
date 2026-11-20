@@ -94,7 +94,7 @@ This profile signs developers in with an identity provider and sets up {{ site.c
 
 ## Schema versions
 
-`schema_version` says which fields the profile can use. Each {{site.kong_harnesses}} release reads every schema version up to its own newest one, and refuses a profile with a newer version. `profile create` writes the newest version that its release reads, so an older release can't import that profile.
+`schema_version` says which fields the profile can use. Each {{site.kong_harnesses}} release reads every schema version up to its own newest one, and refuses a profile with a newer version. From 0.6.0, `profile create` writes the newest version that its release reads, so an older release can't import that profile. Earlier releases wrote the lowest version that the profile needed.
 
 To give one profile to developers on different releases, find the oldest release that they use. Then set the lowest schema version that has every field you need, and check in the following table that this release reads it.
 
@@ -187,7 +187,7 @@ rows:
   - field: "`description`"
     description: "A longer description, 1 to 240 printable ASCII characters."
   - field: "`gateway_origin`"
-    description: "Required. The origin of {{site.ai_gateway}}, up to 2,048 bytes, without a path or the default port. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. An `http://` gateway needs 0.17.1 or later, and only {{ site.claude_code }}, `omp` and pi use it: Codex, OpenCode and Hermes need `https://`, even for a gateway on this computer. `fleet build` refuses an `http://` gateway. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`. See [Plain HTTP gateways](#plain-http-gateways)."
+    description: "Required. The origin of {{site.ai_gateway}}, up to 2,048 bytes, without a path or the default port. It uses `https://`. A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address. An `http://` gateway needs 0.17.1 or later, and only {{ site.claude_code }}, `omp` and pi use it: Codex, OpenCode and Hermes Agent need `https://`, even for a gateway on this computer. `fleet build` refuses an `http://` gateway. A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`. See [Plain HTTP gateways](#plain-http-gateways)."
   - field: "`gateway_ca_bundle`"
     description: "Version 12 and later. PEM certificate authorities for the gateway certificate, up to 32 KB. Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself. From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so. Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes."
   - field: "`sign_in`"
@@ -202,15 +202,15 @@ rows:
     description: "Version 3 and later. Headers that tell the gateway who a request belongs to. See [Attribution](#attribution)."
 {% endtable %}
 
-Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`. From version 12, these fields go in `clients.claude-code`, and the top level refuses them. A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes.
+Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`. From version 12, these fields go in `clients.claude-code`, and the top level refuses them. A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes Agent.
 
 ### Plain HTTP gateways
 
 A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` doesn't set up Codex, OpenCode or Hermes, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients.
-* When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY`.
-* For {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. It refuses when the managed settings of {{ site.claude_code }} could send the requests through a proxy.
+* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients when their checks pass.
+* When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY` in the shell that starts the agent CLI, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the message names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently.
+* From 0.18.0, for {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. A proxy variable or `NO_PROXY` value in the project settings of {{ site.claude_code }} wins over these values, and `profile activate` refuses when the managed settings could send the requests through a proxy. For these cases, see the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check).
 * `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
 
 The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors).
@@ -331,15 +331,15 @@ rows:
 
 Some blocks have more rules:
 
-* The `hermes` block also needs `model`, the gateway model that Hermes starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
+* The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes. A profile with a `hermes` block signs in with an identity provider, sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
 * A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
 * A profile named `constructor` or `prototype` can't set up OpenCode.
 
 `profile activate` also refuses some agent CLIs for a profile that has fields they can't use:
 
-* Hermes and pi don't take `attribution`.
-* Codex, OpenCode and Hermes don't take an `http://` gateway. See [Plain HTTP gateways](#plain-http-gateways).
+* Hermes Agent and pi don't take `attribution`.
+* Codex, OpenCode and Hermes Agent don't take an `http://` gateway. See [Plain HTTP gateways](#plain-http-gateways).
 * In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp` and pi, and top-level `models` stops Codex.
 
 ### Claude Code
@@ -591,7 +591,7 @@ rows:
   - field: "`sign_in`"
     description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
   - field: "`oauth_client_id`, `oauth_callback_port`"
-    description: "For `oauth`. The client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client. The client ID is up to 256 visible ASCII characters, and the port is from 1 to 65535."
+    description: "For `oauth`, and refused for other servers. Both are optional. Set them to the client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client. The client ID is up to 256 visible ASCII characters. The port is from 0 to 65535, and `0` is the same as no port: `profile activate` then writes no callback port."
   - field: "`key_header`"
     description: "For `key`. The header that carries the key, an HTTP token of up to 64 bytes. The default is `apikey`. `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding` and `Connection` are refused."
 {% endtable %}

@@ -62,7 +62,7 @@ rows:
     meaning: "The command needs a sign-in, a new sign-in, or a key that isn't saved yet. When a renewal of the sign-in didn't finish, the next command resumes it."
     action: "Run `kong-harnesses login --profile PROFILE_NAME`, or set the key that the message names. If the message says that the next call resumes the renewal, run the command again first."
   - value: "4"
-    meaning: "A partial result. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one. `profile activate --print` can exit with 4 without a change to any file, when it leaves out a client."
+    meaning: "A partial result. For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one. `profile activate --dry-run` can exit with 4 without a change to any file, when it leaves out a client."
     action: "Follow the message, then run the command again."
   - value: "130"
     meaning: "You canceled the command, for example with Ctrl+C. The message says what the command changed, if anything."
@@ -79,19 +79,19 @@ The name that you gave with `--profile` or `KONG_HARNESSES_PROFILE` isn't instal
 kong-harnesses profile list
 ```
 
-The messages about the choice of a profile start with the name of the command, such as `login`, `logout`, `doctor` or `profile activate`.
+Most of the messages about the choice of a profile start with the name of the command, such as `login`, `logout`, `doctor` or `profile activate`.
 
 ### "requires a profile"
 
 The command needs a profile, and didn't get one. The end of the message tells you what to do:
 
 * "and no installed profile is usable" or "and none is installed": When you don't name a profile, `login`, `logout`, `doctor` and `fleet build` use the default profile, or the only installed profile, and they didn't find one. Run `kong-harnesses profile list` to see the profiles, then install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or name one with `--profile PROFILE_NAME`.
-* "specify one with --profile": `budget refresh` doesn't use a default profile. Name the profile with `--profile PROFILE_NAME`, or with `KONG_HARNESSES_PROFILE`.
+* "specify one with --profile <name> or KONG_HARNESSES_PROFILE": `token`, `credential`, `statusline`, the MCP header helper that {{ site.claude_code }} runs, and `budget refresh` don't use a default profile. Name the profile with `--profile PROFILE_NAME`, or with `KONG_HARNESSES_PROFILE`.
 * "requires a profile name": The command takes the profile name as its argument, as in `kong-harnesses profile activate PROFILE_NAME`. Add the name.
 
 ### "accepts one profile" or "accepts one profile name"
 
-The command got more than one profile, for example `--profile` twice, or a profile name argument together with `--profile`. Give one profile.
+The command got more than one profile, for example `--profile` twice, or a profile name argument together with `--profile`. A command that takes `--profile PROFILE_NAME`, such as `login`, also prints it when you give the profile name as an argument, as in `kong-harnesses login PROFILE_NAME`. Give one profile, in the form that the command takes.
 
 ### "profile name is invalid" or "profile name after --profile is invalid"
 
@@ -141,7 +141,11 @@ The profile that you import changes a [security identity field](/kong-harnesses/
 
 ### "your organization's managed settings run this profile in Claude Code"
 
-Your organization delivers the profile to {{ site.claude_code }} through managed settings, so you can't change its security identity or delete it on your computer. Ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
+Your organization delivers the profile to {{ site.claude_code }} through managed settings, so `profile import` can't change its security identity on your computer. Ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
+
+### "your organization's managed settings run the selected profile"
+
+Your organization delivers the profile to {{ site.claude_code }} through managed settings, so `profile delete` can't remove it, and `profile cleanup` can't take it out of {{ site.claude_code }}. Ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
 
 ### "your administrator installed a profile with this name for every user"
 
@@ -163,6 +167,10 @@ The installed profile has a schema version that this release can't read, usually
 
 An administrator installed the profile for every user of the computer, but its file or folder lets other accounts change it, so {{site.kong_harnesses}} doesn't use it. Ask your administrator to install the profile again.
 
+### "selected profile configures no supported agent client"
+
+`status` without `--client` reports on each agent CLI that the profile lists, and the profile doesn't list one that this release supports. Install or select an agent CLI that the profile lists, or use a profile that configures your agent CLI. Check the blocks in [`clients`](/kong-harnesses/profile-file/#clients).
+
 ### "selected profile still has a saved sign-in"
 
 `profile delete` refuses a profile that is still signed in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
@@ -173,7 +181,7 @@ An administrator installed the profile for every user of the computer, but its f
 
 ## Sign-in errors
 
-`login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/#when-the-login-or-logout-command-fails) lists them with their fixes. When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out). The errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, are listed with their fixes in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-cant-give-an-access-token). This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
+`login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/#when-the-login-or-logout-command-fails) lists them with their fixes. When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out). The errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, are listed with their fixes in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token). This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
 
 ### "no key for the gateway MCP server"
 
@@ -195,11 +203,11 @@ pi has its own saved key for the `kong` provider, and it would send that key in 
 
 ### "a proxy is set for the plain-HTTP gateway"
 
-The profile uses an `http://` gateway, and a proxy variable in the shell applies to the gateway host. The proxy could read the credential, so `profile activate` sets up no client. To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-cant-give-an-access-token), then run `profile activate` again.
+The profile uses an `http://` gateway, and a proxy variable in the shell applies to the gateway host. The proxy could read the credential, so `profile activate` sets up no client. To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token), then run `profile activate` again.
 
 ### "is not configured: it can choose a proxy"
 
-The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It still sets up the other clients. Give these clients a profile with an `https://` gateway.
+The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`. Codex, OpenCode and Hermes Agent pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway, even on this computer. It sets up the other clients only when all of their checks pass. When one of them fails, `profile activate` changes no client settings. Give these clients a profile with an `https://` gateway.
 
 ### "managed settings could send"
 
@@ -219,7 +227,7 @@ Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI
 
 ### "did not finish for" a list of clients
 
-A command that sets up or cleans up several agent CLIs failed for each client in the list, for different reasons. Run the command again with `--client CLIENT_NAME` for each client to see each reason.
+`status`, `profile activate` or `profile cleanup` worked on several agent CLIs, and failed for each client in the list, for different reasons. Run the command again with `--client CLIENT_NAME` for each client to see each reason.
 
 ### "no supported agent client was detected" or "does not configure any detected agent client"
 
