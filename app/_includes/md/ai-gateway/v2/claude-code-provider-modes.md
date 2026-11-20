@@ -6,12 +6,12 @@ columns:
   - title: Mode switch
     key: switch
   - title: Gateway URL setting
-    key: base_url
+    key: url
 rows:
 {%- for mode in support.modes %}
   - mode: "{{ mode.name }}"
     switch: "{{ mode.switch }}"
-    base_url: "{{ mode.base_url }}"
+    url: "{{ mode.url }}"
 {%- endfor %}
 {% endtable %}
 
