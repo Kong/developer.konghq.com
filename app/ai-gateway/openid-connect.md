@@ -1056,9 +1056,6 @@ The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) i
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server.
 This is particularly useful in complex environments like microservices or cross-domain federations.
 
-{:.info}
-> **Note**: Only access tokens can be exchanged with the OIDC auth strategy. Token exchange isn't supported on AI MCP Servers that set `access.metadata`.
-
 #### Why use token exchange?
 
 Token exchange can be used in several critical use cases:
