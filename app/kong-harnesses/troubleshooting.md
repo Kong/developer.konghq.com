@@ -48,7 +48,7 @@ When the profile doesn't configure any of them, `doctor` says so before any repo
 Then ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
 Run `doctor` in the shell and the folder where you start the agent CLI, because some checks read the environment and the project settings of {{ site.claude_code }} there.
 `doctor` uses the network to check the gateway, and, unless the profile uses a static key, the identity provider.
-`kong-harnesses status` shows the sign-in and the agent CLI settings without the network.
+To check the sign-in and the agent CLI setup of a profile without the network, run `kong-harnesses status --profile PROFILE_NAME`.
 
 Each line of the report starts with a level, `ok`, `warn` or `fail`, and the name of the check.
 When `doctor` knows the next step for a problem, the line under it starts with `fix:` and names that step, often with the command for your profile.
@@ -103,7 +103,8 @@ rows:
     what: The profile is installed, and kong-harnesses can read it.
     next: |
       Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
-      If `profile get` says that the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
+      If `doctor` or `profile get` says that the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
+      If `profile get` says that the profile needs a newer kong-harnesses, update kong-harnesses, then run `doctor` again.
       If `doctor` says that the selected profile doesn't configure an agent CLI that this kong-harnesses build sets up, ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
       If your administrator installed the profile for every user, ask your administrator to install it again.
       If the `profile` line says that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
@@ -116,8 +117,8 @@ rows:
       When the `fix:` line names the sign-in command of the agent CLI, run that command.
       For a CI profile that reads its key from the environment, set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator, because `login` refuses that profile.
       If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
-      If `login` refuses because the `max_access_token_lifetime_seconds` of the profile is below the shortest token lifetime that sign-in accepts, run `kong-harnesses status --profile PROFILE_NAME` to see the step.
-      Ask your administrator to raise the value to at least 365 seconds, then import the corrected profile.
+      If the `login` check, `login` or `status` says that the `max_access_token_lifetime_seconds` of the profile is below the shortest token lifetime that sign-in accepts, ask your administrator to raise the value to at least 365 seconds, then import the corrected profile.
+      The `login` check then fails even when you're signed in, because the next renewal of the sign-in fails.
       For more about the sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
   - check: "`client`"
     what: kong-harnesses, or the managed settings of your organization, set up the agent CLI for this profile, and the agent CLI settings still contain what that setup wrote.
@@ -296,7 +297,7 @@ Do that step, then run `profile delete` again.
 When only gateway MCP keys are left, `logout` removes them without asking.
 For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
 
-If `logout` or `profile get` says that the profile is invalid, kong-harnesses can't read it, so you can't sign out first.
+If `doctor`, `logout`, `profile get` or `profile list` says that the profile is invalid, kong-harnesses can't read it, so you can't sign out first.
 Run `profile delete` without `logout`.
 For an invalid profile, `profile delete` doesn't refuse while an agent CLI uses the profile or while a sign-in remains, so it can remove the profile in both cases.
 When a sign-in can remain, `profile delete` warns about it before it asks you to confirm, and again in the `Login` field of its output.
