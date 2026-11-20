@@ -72,16 +72,6 @@ prereqs:
         Run `claude --version` to check the install.
         If the terminal can't find `claude`, do the `PATH` step that the installer prints.
         On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
-    - title: kong-harnesses version
-      content: |
-        This guide needs kong-harnesses from the first release after 0.17.0.
-        Earlier releases accept only an `https://` gateway origin.
-        The quickstart serves `http://localhost:8000`.
-        Run `kong-harnesses version` to check your version.
-    - title: A supported computer
-      content: |
-        kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64.
-        Set it up on the desktop you work on, not in WSL, a container or an SSH session.
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
