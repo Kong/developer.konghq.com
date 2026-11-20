@@ -67,7 +67,7 @@ cleanup:
         * When policy keys or your own MCP servers are left, pass a new or empty folder with `--output-dir`.
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
-        Replace each placeholder with the value for your deployment.
+        Replace each placeholder with the value for your deployment, and keep the quotes around each path.
         For a file build without `--mcp-servers exclusive`, `fleet remove` lists the files to delete from each managed computer:
 
         ```sh
@@ -77,14 +77,14 @@ cleanup:
         For a file build with `--mcp-servers exclusive`, replace `MCP_CONFIG_FILE` with a copy of the `managed-mcp.json` that the computers have now, and pass an output folder for your own servers that are left:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json --mcp-config MCP_CONFIG_FILE --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
         ```
 
         For an MDM build with `--mcp-servers exclusive`, pass all the flags.
         Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy POLICY_FILE --mcp-config MCP_CONFIG_FILE --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
         ```
 
         When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -137,7 +137,7 @@ The sources, from highest to lowest:
 
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
 {{ site.claude_code }} uses that value only when no administrator source is on the computer, and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
-In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy or the Windows managed settings file sets `wslInheritsWindowsSettings` to `true`, and the `HKCU` value also sets it.
+In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`, and the `HKCU` value also sets it.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -236,7 +236,9 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 {{ site.claude_code }} in WSL doesn't load them in any mode.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
-With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers, projects and plugins add.
+With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
+A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check), such as the servers that `managedMcpServers` provides and built-in servers such as Claude in Chrome.
+With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 When a session starts, kong-harnesses names each server in the user, local or project settings that {{ site.claude_code }} doesn't load, but not the servers of a plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
@@ -252,14 +254,14 @@ The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
 Each build needs its own output folder, and the folder must be new or empty.
 This guide uses one folder for each build.
 
-Replace each placeholder with the value for your deployment:
+Replace each placeholder with the value for your deployment, and keep the quotes around each path, so that a path with spaces works:
 
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
-  If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, replace `--policy POLICY_FILE` with `--no-policy`.
+  If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
-  If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy POLICY_FILE` with `--no-policy`.
+  If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 
 Claude Desktop, an IDE extension or an Agent SDK app can start {{ site.claude_code }} and pass settings of its own, the host settings.
 When the computer has managed settings, {{ site.claude_code }} ignores the host settings by default.
@@ -294,7 +296,7 @@ kong-harnesses fleet build \
   --profile work \
   --platform macos \
   --executable /usr/local/bin/kong-harnesses \
-  --policy POLICY_FILE \
+  --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
   --output-dir fleet-macos
 ```
@@ -307,7 +309,7 @@ kong-harnesses fleet build \
   --profile work \
   --platform linux \
   --executable /usr/bin/kong-harnesses \
-  --policy POLICY_FILE \
+  --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
   --output-dir fleet-linux
 ```
@@ -316,7 +318,7 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy POLICY_FILE --mcp-servers MCP_MODE --output-dir fleet-windows
+kong-harnesses fleet build --profile work --platform windows --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows
 ```
 
 {% endnavtab %}
@@ -333,7 +335,7 @@ kong-harnesses fleet build \
   --platform macos \
   --delivery mdm \
   --executable /usr/local/bin/kong-harnesses \
-  --policy POLICY_FILE \
+  --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
   --output-dir fleet-macos-mdm
 ```
@@ -342,7 +344,7 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --delivery mdm --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy POLICY_FILE --mcp-servers MCP_MODE --output-dir fleet-windows-mdm
+kong-harnesses fleet build --profile work --platform windows --delivery mdm --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows-mdm
 ```
 
 {% endnavtab %}
@@ -392,7 +394,7 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names each MCP server that the developer added and that {{ site.claude_code }} doesn't load.
+  When a session starts, one hook names each MCP server in the user, local or project settings that {{ site.claude_code }} doesn't load.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
@@ -491,7 +493,12 @@ claude
 ```
 
 The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} selected, or with the sources that it merged.
-Other files in `managed-settings.d` and other policies give the same labels, so only the build ID from `doctor` confirms the fleet build.
+Other files in `managed-settings.d` and other policies give the same labels, so the label alone doesn't confirm the fleet build.
+The build ID alone shows only the settings that `doctor` finds, not the source that {{ site.claude_code }} selected.
+So check both: the build ID from `doctor`, and a label that can carry the build.
+For a file build, that is `(drop-ins)` or `(file + drop-ins)`.
+For an MDM build, that is `(plist)` or `(HKLM)`, or a list that starts with one of them and ends with `, merged`.
+Together, the two checks confirm that the build is on the computer and that {{ site.claude_code }} applies its source.
 If the line doesn't show `Enterprise managed settings`, no managed source delivers a policy key, so the build isn't in effect.
 Check that each file of the build is at its path in [Check what the build holds](#check-what-the-build-holds).
 For an MDM build, also check that the policy holds the settings of the build, not only control keys such as `managedSourcesBehavior`.
@@ -509,6 +516,7 @@ The labels:
   Build with `--delivery mdm` for those computers.
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
 * `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
+  Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the highest source.
   Find their source, and remove them there.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 * `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
@@ -524,7 +532,7 @@ The labels:
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 To list the entries that {{ site.claude_code }} dropped from the managed settings, also run `claude doctor`.
 
-When the build ID and the source are correct, send a short prompt, such as `Say hello`.
+When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 On the first request, kong-harnesses opens the browser.
 Sign in with the developer's identity provider account.
 
@@ -534,11 +542,11 @@ If a server is missing, look for the settings in [Choose the MCP servers](#choos
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
 Start `claude` in the distribution, and run `/status` before you send a prompt.
-Make sure that the `Setting sources` line shows `Enterprise managed settings`.
+Make sure that the `Setting sources` line shows `Enterprise managed settings` with a label that can carry the build, as on Windows.
+`doctor` doesn't run in WSL, so there the label and the test prompt are the only checks.
 If it doesn't, make sure that you built with `--wsl inherit`, and deploy the build again.
 Then send a short prompt, such as `Say hello`.
 The credential helper runs kong-harnesses on Windows through interop, so the session uses the developer's Windows sign-in.
-If interop is off, the credential helper tells the developer to turn it on.
 A certificate error means that the distribution doesn't trust the CA of the gateway certificate.
 {{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
