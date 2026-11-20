@@ -182,7 +182,8 @@ For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
 When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
-For more options, such as MCP servers that the gateway serves, except in a `subscription` profile, and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
+For more options, such as MCP servers that the gateway serves and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
+A `subscription` profile can't name MCP servers that the gateway serves.
 
 ### Sign-in kinds
 
@@ -209,7 +210,8 @@ rows:
       The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
       Leave out `--issuer`, `--client-id` and `--audience`.
       Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
-      On Linux, when `XDG_RUNTIME_DIR` isn't set, create a private directory with `mktemp -d` and set `XDG_RUNTIME_DIR` to it before you run {{site.kong_harnesses}}.
+      On Linux, {{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
+      A desktop sign-in sets the variable, but most CI containers don't, so when it isn't set, create a private directory with `mktemp -d` and set `XDG_RUNTIME_DIR` to it before you run {{site.kong_harnesses}}.
     limits: The profile doesn't set up OpenCode or Hermes Agent.
   - kind: "`subscription`"
     use: |

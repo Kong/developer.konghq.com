@@ -81,7 +81,8 @@ rows:
     value: |
       A command that runs `kong-harnesses credential` for the profile.
       {{ site.claude_code }} runs it to get a short-lived access token, or the static key of a key profile.
-      A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains until cleanup.
+      A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains.
+      `profile cleanup` restores the removed value.
   - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` and `env.CLAUDE_CODE_API_KEY_HELPER_TTL_MS`"
     value: |
       `1`, and a 5-minute cache for the `apiKeyHelper` result.
