@@ -36,7 +36,7 @@ Those requests don't pass through the gateway, so the gateway can't log, limit o
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
 It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
-`kong-harnesses profile create` writes that profile for you, unless you turn on automatic updates or telemetry to Anthropic, with a flag or in the questions that the command asks.
+`kong-harnesses profile create` writes a profile that sets every member in the table to `false`, unless you turn on automatic updates or telemetry to Anthropic with a flag or in its questions.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -56,7 +56,7 @@ columns:
     key: cost
 rows:
   - traffic: Usage metrics
-    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only in the Anthropic API provider mode"
+    destination: "`api.anthropic.com`, and `http-intake.logs.us5.datadoghq.com` only when {{ site.claude_code }} uses the Anthropic API directly"
     member: "`anthropic_telemetry`"
     cost: Anthropic doesn't get latency, reliability and usage data from your sessions.
   - traffic: Feature flags
@@ -90,13 +90,13 @@ rows:
   - traffic: Official plugin marketplace install
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
-    cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration for good, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
+    cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. {{ site.claude_code }} skips the registration permanently, even when the member is set to `true` later. Developers can add the marketplace with `claude plugin marketplace add anthropics/claude-plugins-official`."
   - traffic: Artifacts
     destination: "`api.anthropic.com` for the publish requests and the organization policy, `*.frame.claudeusercontent.com` for the artifact reads, and `claude.ai`, which serves the published page"
-    member: "None. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
+    member: "None. The `artifact` member writes nothing."
     cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
-    destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
+    destination: "`downloads.claude.ai`, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
     cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Artifacts, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
 {% endtable %}
@@ -133,10 +133,11 @@ For that reason, {{site.kong_harnesses}} refuses a profile that turns on a featu
 A member that the profile leaves out never causes a conflict.
 
 In a schema 18 profile, `auto_updates` set to `false` doesn't cause a conflict.
-When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
+When the profile turns on usage metrics, feature flags, error reports, a feedback command or the feedback survey, activation writes the nonessential traffic switch blank.
 A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
 Then `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces, and {{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, unless its own member keeps it off.
 `FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while automatic updates are off.
+The background runs of plugin `command` sources, which can install dependencies, also start again, because only the nonessential traffic switch stops them.
 
 ## Traffic that stays
 
@@ -165,8 +166,11 @@ To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} set
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on`, or the automatic updates choice in the questions, keeps automatic updates on.
-* `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports. It removes only the profile restriction, so the provider and account conditions in the table still apply.
+* `--auto-updates on`, or the automatic updates choice in the questions, writes no update setting, so the {{ site.claude_code }} update settings stay in effect.
+* `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
+
+The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
+Activation then writes the nonessential traffic switch blank, so {{ site.claude_code }} sends the other nonessential traffic again, as [Members that depend on each other](#members-that-depend-on-each-other) explains.
 
 To keep a feature on, set its member to `true` in the profile file.
 The members need `schema_version` 14 or later, and the behavior on this page needs schema 18, which `profile create` writes.
@@ -174,6 +178,7 @@ The following part of a profile file keeps the WebFetch domain check on, and kee
 
 ```json
 {
+  "schema_version": 18,
   "clients": {
     "claude-code": {
       "auto_updates": false,
