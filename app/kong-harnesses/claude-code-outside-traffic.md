@@ -21,7 +21,7 @@ breadcrumbs:
   - /kong-harnesses/
 
 related_resources:
-  - text: Set up {{ site.claude_code }} with kong-harnesses
+  - text: "Set up {{ site.claude_code }} with {{site.kong_harnesses}}"
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - text: "{{site.kong_harnesses}} profile"
     url: /kong-harnesses/profile/
@@ -35,7 +35,7 @@ Those requests don't pass through the gateway, so the gateway can't log, limit o
 
 When every feature in the following table is off, {{ site.claude_code }} sends the least traffic outside the gateway.
 It still contacts the hosts in [Traffic that stays](#traffic-that-stays), such as your identity provider, so allow those hosts in your network policy.
-`kong-harnesses profile create` writes that profile for you, unless you pass `--auto-updates on` or `--anthropic-telemetry on`, or answer yes to the telemetry question.
+`kong-harnesses profile create` writes that profile for you, unless you turn on automatic updates or telemetry to Anthropic, with a flag or in the questions that the command asks.
 Turn a feature back on only when your policy allows the host that the feature contacts.
 
 ## Traffic that goes outside the gateway
@@ -97,7 +97,7 @@ rows:
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com` and `*-review.googlesource.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes and the list of Anthropic's MCP servers. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the Gerrit change lookups of a Claude desktop app Code tab session also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, turns off, `auto_updates` set to `false` turns off only automatic updates."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the Gerrit change lookups of a Claude desktop app Code tab session also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, turns off, `auto_updates` set to `false` turns off only automatic updates."
 {% endtable %}
 
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
@@ -129,7 +129,7 @@ A member that the profile leaves out never causes a conflict.
 `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
 {{ site.claude_code }} reads a blank switch as off, so the feature stays on, even when the developer's shell exports the switch.
-Then `auto_updates` set to `false` turns off only automatic updates, and the other traffic in the automatic updates row of the table comes back.
+Then `auto_updates` set to `false` turns off only automatic updates, and the other traffic in the automatic updates row of the table comes back, unless its own member keeps it off.
 
 ## Traffic that stays
 
@@ -138,7 +138,7 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 * The {{site.ai_gateway}} host
 * Your identity provider, for the sign-in
 * `claude.ai`, `claude.com` and `platform.claude.com`, when the profile uses the developers' own Claude subscriptions, because {{ site.claude_code }} signs in to claude.ai itself. Organizations that use single sign-on also need `sso.claude.com`.
-* `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy and server-managed settings
+* `api.anthropic.com`, when the profile uses the developers' own Claude subscriptions, for the organization policy
 * `code.claude.com` and `claude.com`, for the documentation lookups of the built-in `claude-code-guide` agent and for pre-approved WebFetch requests
 * The OpenTelemetry collector, when the profile sends telemetry to one
 * The sites that WebFetch opens, and the MCP servers, plugins and marketplaces that a developer adds
@@ -157,7 +157,7 @@ You can turn off each kind of outside traffic in the profile, or in {{ site.clau
 
 `kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
 
-* `--auto-updates on` keeps automatic updates on.
+* `--auto-updates on`, or the automatic updates choice in the questions, keeps automatic updates on.
 * `--anthropic-telemetry on`, or a yes to the telemetry question, turns on usage metrics, feature flags and error reports.
 
 To keep a feature on, set its member to `true` in the profile file.
@@ -205,10 +205,10 @@ The environment variables go in the `env` key, and `skipWebFetchPreflight` and `
 
 To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
-A gateway sign-in doesn't get server-managed settings.
-{{site.kong_harnesses}} gives {{ site.claude_code }} the gateway sign-in through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch of [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
-A profile that uses the developers' own Claude subscriptions doesn't use `apiKeyHelper`, so a Team or Enterprise sign-in still gets them.
-{{ site.claude_code }} also skips the fetch when the shell exports a custom `ANTHROPIC_BASE_URL`.
+No {{site.kong_harnesses}} profile gets [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
+Server-managed settings need a direct connection to `api.anthropic.com`.
+Activation sets `ANTHROPIC_BASE_URL` to the gateway in the user settings file, and {{ site.claude_code }} reads that value before it decides to fetch the settings.
+A gateway sign-in also gives {{ site.claude_code }} its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
 
 {% table %}
 columns:
