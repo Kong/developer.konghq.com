@@ -238,6 +238,12 @@ describe("serve-markdown config", () => {
     }
 
     for (const path of [
+      "/logo.css",
+      "/entrypoints/app.js",
+      "/images/icon.png",
+      "/images/icon.svg",
+      "/fonts/font.woff",
+      "/vite/assets/index.json",
       "/manifests/kic/echo-service.yaml",
       "/insomnia/Flights-Service-0.1.0.yaml",
       "/mesh/installer.sh",
