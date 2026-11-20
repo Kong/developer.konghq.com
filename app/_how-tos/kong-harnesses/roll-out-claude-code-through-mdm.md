@@ -60,19 +60,24 @@ cleanup:
   inline:
     - title: Remove the fleet build
       content: |
-        Run `fleet remove` with the record file of the build.
-        Replace each placeholder with the value for your deployment.
+        Run `fleet remove` with the record file of the build, and add the flags that the build needs:
 
+        * For an MDM build, pass the policy that the computers get now with `--policy`.
+        * For a build with `--mcp-servers exclusive`, pass the `managed-mcp.json` that the computers have now with `--mcp-config`.
+        * When policy keys or your own MCP servers are left, pass a new or empty folder with `--output-dir`.
+          `fleet remove` writes what is left there, and asks for the flag when it needs it.
+
+        Replace each placeholder with the value for your deployment.
         For a file build, `fleet remove` lists the files to delete from each managed computer:
 
         ```sh
         kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json
         ```
 
-        For an MDM build, also pass the policy that the computers get now with `--policy`, and a new or empty folder with `--output-dir`:
+        For an MDM build with `--mcp-servers exclusive`, pass all the flags:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy com.anthropic.claudecode.plist --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy com.anthropic.claudecode.plist --mcp-config managed-mcp.json --output-dir fleet-macos-removed
         ```
 
         `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -80,13 +85,7 @@ cleanup:
         Deploy that policy in place of the current one.
         If no other settings are left, `fleet remove` tells you to remove the policy instead.
 
-        For a build with `--mcp-servers exclusive`, also pass the `managed-mcp.json` that the computers have now with `--mcp-config`, and a new or empty folder with `--output-dir`:
-
-        ```sh
-        kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json --mcp-config managed-mcp.json --output-dir fleet-macos-removed
-        ```
-
-        When your own servers are left in the file, `fleet remove` writes it under `root` in the output folder.
+        When your own servers are left in `managed-mcp.json`, `fleet remove` writes the file under `root` in the output folder.
         Install that `managed-mcp.json` in place of the one that the computers have.
         When no server is left, `fleet remove` lists `managed-mcp.json` among the files to delete.
 
@@ -126,6 +125,11 @@ A value in your file that the build doesn't set, such as `forceLoginMethod`, or 
 The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in your `managed-settings.json`.
 For a file build, always pass a copy of the `managed-settings.json` that the computers have with `--policy`.
 The build then refuses a value that would stop {{ site.claude_code }} from reaching the gateway, and keeps your headers in its value.
+
+{{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
+`--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d` that sorts after `kong-harnesses.json`.
+Such a file must not set a key that the build sets, such as `apiKeyHelper`, a variable in `env`, or a provider list.
+
 When the profile sets attribution headers, a file build needs `--policy`.
 If the computers have no `managed-settings.json`, pass `--NO_POLICY_FLAG` in its place.
 
@@ -141,7 +145,10 @@ Linux has no MDM policy, so on Linux the settings always go in a file.
 It lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console, move it into your MDM policy or your `managed-settings.json`.
-In this rollout, {{ site.claude_code }} doesn't fetch the server-managed settings, because its credential comes from the credential helper and its requests go through the gateway.
+Then remove it from the admin console.
+A key from the credential helper doesn't start the fetch of server-managed settings.
+But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
+The server-managed settings then rank above the build, and the credential helper isn't in effect.
 
 ## Choose the MCP servers
 
@@ -149,7 +156,7 @@ In this rollout, {{ site.claude_code }} doesn't fetch the server-managed setting
 When the profile has gateway MCP servers, `fleet build` needs this flag:
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
-  The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build, and {{ site.claude_code }} loads only the servers in that file.
+  The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build, and {{ site.claude_code }} loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   This mode takes no `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist`, the default, locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
@@ -319,7 +326,7 @@ With your MDM tool, install the following on each managed computer:
    On macOS and Linux, root must own each file and every folder above it, and no group or other account can write to them.
    On Windows, only SYSTEM, Administrators or TrustedInstaller can own or write to each file and every folder up to `C:\Program Files`, and no link can be on the path.
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
-   If the computers have the managed settings file of an earlier file build, delete it, because {{ site.claude_code }} still merges its `env`.
+   If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
 `fleet build` prints the command that packages or copies the files for the platform.
 For example, on macOS, put the files in one package with `pkgbuild`.
@@ -331,6 +338,7 @@ pkgbuild --root fleet-macos/root --identifier PACKAGE_IDENTIFIER --version PACKA
 
 The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
 A macOS package installs the files as root.
+On Linux, `fleet build` prints a `sudo cp -R` command, which creates the files as root.
 
 ## Validate
 
@@ -340,12 +348,15 @@ On a managed computer, sign in to the computer as a developer and start {{ site.
 claude
 ```
 
+Send a short prompt, such as `Say hello`.
 On the first request, kong-harnesses opens the browser.
 Sign in with your identity provider account.
 
 In {{ site.claude_code }}, run `/status`.
-The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` or `(file + drop-ins)` for a file build, or `(plist)` or `(HKLM)` for an MDM build.
+The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses: `(drop-ins)` for a file build, or `(file + drop-ins)` when the computers also have your `managed-settings.json`, or `(plist)` or `(HKLM)` for an MDM build.
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
+If the line shows `(remote)`, the server-managed settings from the claude.ai admin console rank above the build.
+Remove them from the admin console, or have the developer run `/logout` and start {{ site.claude_code }} again.
 
 Run `kong-harnesses doctor` to check the setup:
 
