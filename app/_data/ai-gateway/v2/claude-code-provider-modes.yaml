@@ -13,7 +13,7 @@ modes:
     switch: "`CLAUDE_CODE_USE_ANTHROPIC_AWS=1`"
     url: "`ANTHROPIC_AWS_BASE_URL`"
     skip: "`CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH=1`"
-    other: "`ANTHROPIC_AWS_WORKSPACE_ID`, set to your workspace ID"
+    other: "`ANTHROPIC_AWS_WORKSPACE_ID`"
   - name: Amazon Bedrock Mantle
     switch: "`CLAUDE_CODE_USE_MANTLE=1`"
     url: "`ANTHROPIC_BEDROCK_MANTLE_BASE_URL`"
