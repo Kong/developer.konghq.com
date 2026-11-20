@@ -127,16 +127,16 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong tests new Claude Code releases through {{site.ai_gateway}} in the provider modes that [kong-harnesses](/kong-harnesses/) sets up. When a tested release fails in a mode, Kong lists it here with what breaks and how to avoid it.
+                    Kong tests each new Claude Code release on the latest channel through {{site.ai_gateway}} in the Anthropic API, Microsoft Foundry and Amazon Bedrock Mantle provider modes that [kong-harnesses](/kong-harnesses/) sets up. When a tested release fails in one of these modes, Kong lists it here with what breaks and how to avoid it.
 
                     Kong knows of no tested Claude Code release that fails in a provider mode.
 
                     To keep Claude Code on a release that works:
 
                     - Keep auto-updates off. A kong-harnesses profile turns them off, unless your administrator created it with `kong-harnesses profile create --auto-updates on`. Run `claude update` when you want a newer release.
-                    - To go back to an earlier release, run `claude install <version>`. This installs the native build, also when you installed Claude Code with npm or Homebrew.
+                    - To go back to an earlier release, run `claude install <version>` with a release that worked in your mode, then check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew.
                     - To get new releases later, run `claude install stable`. The stable channel gets releases later than the latest channel and skips releases with major regressions.
-                    - If you don't use kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/settings), such as `~/.claude/settings.json`.
+                    - If you don't use kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`.
   - header:
       type: h3
       text: "Claude Code provider modes"
