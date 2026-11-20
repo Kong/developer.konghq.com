@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'stringio'
 require 'tmpdir'
 require_relative '../../../tools/kong-harnesses-versions/sync-changelog'
 require_relative '../../../tools/kong-harnesses-versions/check-changelog-links'
@@ -13,8 +14,8 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
-  def exported(markdown, published = ['1.0.0'])
-    described_class.export(markdown, published: published, highest: published.last)
+  def exported(markdown, published = ['1.0.0'], log: StringIO.new)
+    described_class.export(markdown, published: published, highest: published.last, log: log)
   end
 
   def section(body, title = 'Features')
@@ -167,6 +168,10 @@ RSpec.describe KongHarnessesChangelog do
     ['* \\`a `x|y` b', '* &#96;a `x|y` b'],
     ["* run `curl\n  https://example.com/x` now", "* run `curl\n  https://example.com/x` now"],
     ['* a \\\\` https://example.com/x ` end', '* a \\\\``  https://example.com/x  `` end'],
+    # The release-please subject transform links `#N` also in code, here for the subject
+    # "fix: show an em dash `&#8212;` in a template" (googleapis/release-please-action
+    # 45996ed1), so the code gets its `#N` back.
+    ["* show an em dash `&[#8212](https://github.com/Kong/kong-harnesses/issues/8212);` in a template ([abc1234](#{commit}))", '* show an em dash `&#8212;` in a template'],
     ["* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url http://h/x",
      "* **cli:** run this after the upgrade:\n\n>     kong-harnesses profile get <profile> --url http://h/x"]
   ].each do |entry, expected|
@@ -193,7 +198,12 @@ RSpec.describe KongHarnessesChangelog do
     '* fix https://example.com/a’s crash',
     '* see www.example.org now',
     '* mail me@example.org now',
-    '* write to mailto:me@example.org now'
+    '* write to mailto:me@example.org now',
+    # A character that shows nothing by default does not split an address.
+    "* see https:/\u2061/evil.example",
+    "* mail bob\u180e@evil.example",
+    "* see www\ufe0f.example.com",
+    "* see www\u00ad.example.com"
   ].each do |entry|
     it "refuses the address in #{entry.inspect}" do
       expect { exported(section(entry)) }.to raise_error(/an address in the text of "/)
@@ -257,7 +267,21 @@ RSpec.describe KongHarnessesChangelog do
     '* **a:** [mailto:help@example.org](https://example.org/help)',
     '* **a:** [https://example.org/?a=1&amp;b=2](https://example.org/?a=1&amp;b=2)',
     '* see ![the diagram](https://example.com/a.png)',
-    "* see [x][r]\n\n[r]: https://example.com/x"
+    "* see [x][r]\n\n[r]: https://example.com/x",
+    # Only the form that release-please writes is a reference: no title, attribute list,
+    # reference link or angle brackets, which would lose the title or the definition.
+    "* fix x ([#1](#{issue} \"t\"))",
+    "* fix x ([#1](#{issue}){: .x})",
+    "* fix x ([#1][r])\n\n[r]: #{issue}",
+    "* fix x ([#1][])\n\n[#1]: #{issue}",
+    "* fix x ([#1](<#{issue}>))",
+    "* fix [#1](#{issue} 't') now",
+    "* fix [#1][r] now\n\n[r]: #{issue}",
+    "* fix x ([abc1234](<#{commit}>))",
+    # A browser resolves a `.` or `..` segment to another path.
+    "* fix x ([abc1234](#{commit})), closes [./kong-harnesses#4](https://github.com/./kong-harnesses/issues/4)",
+    "* fix x ([abc1234](#{commit})), closes [../x#4](https://github.com/../x/issues/4)",
+    '* fix x ([#1](https://github.com/Kong/./kong-harnesses/issues/1))'
   ].each do |entry|
     it "refuses the link in #{entry.inspect}" do
       expect { exported(section(entry)) }.to raise_error(/has a link in "/)
@@ -268,8 +292,9 @@ RSpec.describe KongHarnessesChangelog do
   # with a link is refused too.
   [
     "* run `foo [#123](#{issue})` now",
-    "* see `\\[#1](#{issue}) then [#1](#{issue})` now",
     '* see `[@bob](https://github.com/bob)` now',
+    '* run `[#1](https://github.com/Kong/kong-harnesses/issues/2)` now',
+    '* run `[#1](https://github.com/Kong/other/issues/1)` now',
     "* run:\n\n  ```sh\n  see [x](https://example.com/x)\n  ```"
   ].each do |entry|
     it "refuses the link in the code of #{entry.inspect}" do
@@ -285,6 +310,8 @@ RSpec.describe KongHarnessesChangelog do
       expect { exported("## [1.0.0](#{base}/compare/v0.9.0...v1.0.0)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
     end
     expect { exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0?x)\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
+    expect { exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0 \"t\")\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
+    expect { exported("## [1.0.0][c]\n\n[c]: https://github.com/Kong/kong-harnesses/compare/v0.9.0...v1.0.0\n\n### Features\n\n* add\n") }.to raise_error(/has a link in "1.0.0"/)
     expect(exported("## [1.0.0](https://github.com/Kong/kong-harnesses/compare/v0.9.0-rc.1...v1.0.0) (2026-01-01)\n\n### Features\n\n* add\n"))
       .to eq("## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n")
     # Each tag form that release-please can write, with prerelease and build parts.
@@ -322,14 +349,35 @@ RSpec.describe KongHarnessesChangelog do
   # text around it, raw or as a character reference, and Check B must not read one as a
   # mark. The refusal names the entry.
   ["\u0000", "\u0001", "\u0005", "\u007f", "\u0085", '&#0;', '&#1;', '&#x2;', '&#11;', '&#13;', '&#x7f;', '&#127;',
-   "\u202e", "\u2066", '&#x202a;', '&#8297;', "\u200f", '&#xfffe;', "\u{10ffff}"].each do |control|
+   "\u202e", "\u2066", '&#x202a;', '&#8297;', "\u200f", '&#xfffe;', "\u{10ffff}", "\u{e0041}\u{e0042}", '&#xE0041;', "\u{e0020}",
+   # Kramdown reads a CR as a line end and drops white space at the end of a paragraph,
+   # so the export reads the source lines as they came.
+   "\r", "\r\n", "\v"].each do |control|
     it "refuses the hidden character #{control.inspect}" do
-      expect { exported(section("* fix it (#{control}) now")) }.to raise_error(/a control, bidirectional or noncharacter code point in "fix it/)
+      expect { exported(section("* fix it (#{control}) now")) }.to raise_error(/a hidden code point in "fix it/)
     end
   end
 
+  it 'refuses a hidden character at the end of an entry, after its references' do
+    ["\v", "\u0085", "\r", "\f"].each do |control|
+      expect { exported(section("* fix it ([#1](#{issue}))#{control}")) }.to raise_error(/a hidden code point in "fix it/), control.inspect
+    end
+    expect { exported("## 1.0.0\r\n\r\n### Features\r\n\r\n* add\r\n") }.to raise_error(/a hidden code point in "add"/)
+    expect { exported("## 1.0.0\v\n\n### Features\n\n* add\n") }.to raise_error(/a hidden code point in "1.0.0"/)
+    expect { exported("## 1.0.0\n\n### Features\v\n\n* add\n") }.to raise_error(/a hidden code point in "Features"/)
+    expect { exported(section("text\v\n\n* add")) }.to raise_error(/a hidden code point in "text"/)
+    # A release that the page leaves out cannot stop the sync.
+    expect(exported("## 2.0.0\n\n### Features\n\n* a\r b\n\n## 1.0.0\n\n### Features\n\n* add\n\n### Documentation\n\n* c\v\n"))
+      .to eq("## 1.0.0\n\n### Features\n\n* add\n")
+  end
+
+  it 'keeps the flag of a region' do
+    flag = "\u{1f3f4}\u{e0067}\u{e0062}\u{e0073}\u{e0063}\u{e0074}\u{e007f}"
+    expect(exported(section("* show #{flag} now"))).to eq(section("* show #{flag} now"))
+  end
+
   it 'refuses a character reference to no character and names the entry' do
-    ['&#xd800;', '&#xdfff;', '&#x110000;'].each do |reference|
+    ['&#xd800;', '&#xdfff;', '&#x110000;', '&#99999999999999999999;', '&#2147483648;'].each do |reference|
       expect { exported(section("* fix it (#{reference}) now")) }.to raise_error(/a character reference to no character in "fix it/), reference
     end
   end
@@ -384,6 +432,38 @@ RSpec.describe KongHarnessesChangelog do
     expect { exported("## Unreleased\n\n### Features\n\n* secret\n") }.to raise_error(/no version/)
   end
 
+  # What googleapis/release-please-action 45996ed1 writes for "feat: build it" as
+  # v1.2.3+build.2, "feat: try it" as v1.2.3-rc.1, and "fix: tag it" as v1.2.3-rc--1.
+  generated = "## [1.2.3+build.2](https://github.com/Kong/kong-harnesses/compare/v1.2.3-rc.1...v1.2.3+build.2) (2026-11-20)\n\n\n### Features\n\n" \
+              "* build it ([abc1234](#{commit}))\n\n" \
+              "## [1.2.3-rc.1](https://github.com/Kong/kong-harnesses/compare/v1.2.2...v1.2.3-rc.1) (2026-11-20)\n\n\n### Features\n\n" \
+              "* try it ([abc1234](#{commit}))\n\n## 1.2.2\n\n### Features\n\n* add\n"
+
+  it 'counts a release with build metadata as a final release' do
+    expect(exported(generated, %w[1.2.2 1.2.3-rc.1 1.2.3+build.2]))
+      .to eq("## 1.2.3+build.2 (2026-11-20)\n\n### Features\n\n* build it\n\n## 1.2.3-rc.1 (2026-11-20)\n\n### Features\n\n* try it\n\n## 1.2.2\n\n### Features\n\n* add\n")
+    expect(exported(generated.sub(/## \[1\.2\.3-rc.*?(?=## 1\.2\.2)/m, ''), %w[1.2.3+build.2])).to eq("## 1.2.3+build.2 (2026-11-20)\n\n### Features\n\n* build it\n")
+    # The highest release is found by its X.Y.Z, so a tag without the build part names
+    # the same release.
+    expect(exported("## 1.2.3+build.2\n\n### Features\n\n* add\n", %w[1.2.3+build.2 1.2.3])).to eq("## 1.2.3+build.2\n\n### Features\n\n* add\n")
+  end
+
+  it 'reads the version of a heading from the source, not as kramdown shows `--`' do
+    changelog = "## [1.2.3-rc--1](https://github.com/Kong/kong-harnesses/compare/v1.2.2...v1.2.3-rc--1) (2026-11-20)\n\n\n### Bug Fixes\n\n" \
+                "* tag it ([abc1234](#{commit}))\n\n## 1.2.3\n\n### Bug Fixes\n\n* final\n"
+    expect(exported(changelog, %w[1.2.3-rc--1 1.2.3])).to eq("## 1.2.3-rc–1 (2026-11-20)\n\n### Bug Fixes\n\n* tag it\n\n## 1.2.3\n\n### Bug Fixes\n\n* final\n")
+  end
+
+  it 'says which releases it leaves out, and why' do
+    changelog = "## 1.3.0\n\n### Features\n\n* later\n\n#{generated}\n## 1.2.1\n\n### Documentation\n\n* explain\n"
+    expect { exported(changelog, %w[1.2.1 1.2.2 1.2.3-rc.1], log: $stderr) }.to output(<<~LOG).to_stderr
+      Left out the changelog section for 1.3.0, which is not published.
+      Left out the changelog section for 1.2.3+build.2, which is not published.
+      Left out the changelog section for 1.2.3-rc.1, which is a prerelease, and no final 1.2.3 release is published.
+      Left out the changelog section for 1.2.1, which has no entries for users.
+    LOG
+  end
+
   it 'refuses a changelog with no section for the highest release or with nothing left' do
     expect { exported("# Changelog\n") }.to raise_error(/no section for 1\.0\.0/)
     expect { exported("## 0.17.1\n\n### Features\n\n* add\n", %w[0.17.1 0.18.0]) }.to raise_error(/no section for 0\.18\.0/)
@@ -396,7 +476,8 @@ RSpec.describe KongHarnessesChangelog do
       requested << path
       next [200, '## [0.18.0](x) (2026-12-01)\n\n### Features\n\n* not out yet\n\n## 0.17.1\n\n### Features\n\n* add\n'.gsub('\n', "\n")] unless path.include?('/releases?')
 
-      releases = [%w[v0.16.2 false false], %w[v1.0.0-beta false false], %w[v0.19.0 true false], %w[v0.18.0-rc.1 false true], %w[v0.17.1 false false]]
+      releases = [%w[v0.16.2 false false], %w[v1.0.0-beta false false], %w[v0.19.0 true false], %w[v0.18.0-rc.1 false true], %w[v0.17.1 false false],
+                  %w[v0.17.1+b.2 false false], %w[v0.17.2+b.1 false true]]
       [200, JSON.generate(releases.map { |tag, draft, prerelease| { tag_name: tag, draft: draft == 'true', prerelease: prerelease == 'true' } })]
     end
     Dir.mktmpdir do |dir|
@@ -406,6 +487,15 @@ RSpec.describe KongHarnessesChangelog do
       expect(requested.last).to end_with('CHANGELOG.md?ref=main')
       expect(JSON.parse(File.read(out_file))).to eq('markdown' => "## 0.17.1\n\n### Features\n\n* add\n")
     end
+  end
+
+  it 'reads a final release with build metadata as the highest release' do
+    get = lambda do |path, _accept|
+      next [200, +"## 0.17.2+b.1\n\n### Features\n\n* add\n"] unless path.include?('/releases?')
+
+      [200, JSON.generate([{ tag_name: 'v0.17.2+b.1', draft: false, prerelease: false }, { tag_name: 'v0.17.1', draft: false, prerelease: false }])]
+    end
+    expect(described_class.fetch(get)).to eq(['v0.17.2+b.1', "## 0.17.2+b.1\n\n### Features\n\n* add\n"])
   end
 
   # Pieces of Markdown that are hard to write back. The addresses are on another host,
@@ -442,10 +532,12 @@ RSpec.describe KongHarnessesChangelog do
   end
 
   # The page that the export writes must have no link or address, and the text of every
-  # piece of code must stay as the site's parser reads it in the source.
+  # piece of code must stay as the site's parser reads it in the source, with the issue
+  # links of the subject transform as `#N`.
   def expect_safe(source, page)
     expect(KongHarnessesChangelogLinks.problems(page)).to be_empty, "#{source.inspect} gave #{page.inspect}"
-    expect(code(page)).to eq(described_class.code_of(described_class.parse(source))), "#{source.inspect} gave #{page.inspect}"
+    expected = described_class.code_of(described_class.parse(source)).map { |text| described_class.code_without_issue_links(text) }
+    expect(code(page)).to eq(expected), "#{source.inspect} gave #{page.inspect}"
   end
 
   # Random entries from the pieces, half of them with references at the end, with a
@@ -512,7 +604,10 @@ RSpec.describe KongHarnessesChangelog do
       fake = described_class.parse("* **a:** see ([#1](#{address}))\n")
       expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), fake) }.to raise_error(/change the text that a reader sees near "/), address
     end
-    ["([abc9999](#{commit}))", "([abc1234](#{commit})), closes [octo/x#4](https://github.com/octo/y/issues/4)"].each do |tail|
+    # A title, an attribute list or a `.` or `..` segment is no reference to Check B either.
+    ["([abc9999](#{commit}))", "([abc1234](#{commit})), closes [octo/x#4](https://github.com/octo/y/issues/4)", "([#1](#{issue} \"t\"))",
+     "([#1](#{issue}){: .x})", "([abc1234](#{commit})), closes [./x#4](https://github.com/./x/issues/4)",
+     "([abc1234](#{commit})), closes [../x#4](https://github.com/../x/issues/4)"].each do |tail|
       fake = described_class.parse("* **a:** see #{tail}\n")
       expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), fake) }.to raise_error(/change the text that a reader sees near "/), tail
     end

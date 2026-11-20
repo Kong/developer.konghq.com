@@ -14,9 +14,9 @@ require 'yaml'
 # pass. It reads the text of each element as a reader sees it, joined across inline
 # markup such as bold, and refuses `//`, `www.`, `mailto:`, `xmpp:` and an `@` between
 # two characters of a name, as in `user@host`, outside code. Text in code is not a link,
-# but it still must not name the kong-harnesses repository. It also refuses a control,
-# bidirectional or noncharacter code point, which shows nothing or changes the order of
-# the text around it.
+# but it still must not name the kong-harnesses repository, also with a `.` or `..`
+# segment in a GitHub address. It also refuses a hidden code point, which shows nothing
+# or changes the order of the text around it.
 module KongHarnessesChangelogLinks
   module_function
 
@@ -42,6 +42,10 @@ module KongHarnessesChangelogLinks
     (?::\d*)?[\/:]+(?:repos\/+)?kong\/+kong-harnesses(?:\.git)?
     (?![a-z0-9_\-]|\.[a-z0-9_\-])
   /x
+  # A `.` or `..` segment in an address of those hosts, which a browser resolves to
+  # another path, so the address can name the repository in a form that the pattern
+  # above does not match.
+  DOT_SEGMENT = %r{(?<![a-z0-9.-])(?:#{HOSTS.map { |host| Regexp.escape(host) }.join('|')})\.?(?::\d*)?[/:]\S*?(?<=[/:])\.{1,2}(?=[/?#]|\s|\z)}
 
   # The languages that the site's Shiki highlighter loads or maps to one, and text.
   # Shiki stops the site build on any other language of a code block.
@@ -86,7 +90,7 @@ module KongHarnessesChangelogLinks
   # Undoes what a browser undoes before it follows an address: character references,
   # percent-encoding (until nothing changes, so a double encoding cannot hide a name),
   # full-width forms, the dots that host names accept in place of ".", backslashes,
-  # tabs and line breaks, invisible characters and letter case.
+  # tabs and line breaks, the characters that show nothing by default and letter case.
   def normalize(text)
     value = text
     loop do
@@ -96,7 +100,7 @@ module KongHarnessesChangelogLinks
       value = decoded
     end
     value.unicode_normalize(:nfkc).tr("。．｡", '...').tr('\\', '/')
-         .delete("\t\n\r­​‌‍⁠﻿").downcase
+         .delete("\t\n\r").gsub(/\p{Default_Ignorable_Code_Point}/, '').downcase
   end
 
   # GFM links a web address with `//` or `www.`, a `mailto:` or `xmpp:` address and a mail
@@ -113,11 +117,19 @@ module KongHarnessesChangelogLinks
   # attribute holds them after the HTML parser read its character references. A zero
   # width space changes no order, and normalize takes it out before the address check.
   HIDDEN = /[[\p{Cc}&&[^\t\n]]\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069\p{Noncharacter_Code_Point}]/
+  # A tag character shows nothing outside the flag of a region, which is a black flag,
+  # tag characters and a cancel tag.
+  TAG = /[\u{e0000}-\u{e007f}]/
+  FLAG = /\u{1f3f4}[\u{e0020}-\u{e007e}]+\u{e007f}/
+
+  def hidden_text?(text)
+    text.match?(HIDDEN) || text.gsub(FLAG, '').match?(TAG)
+  end
 
   def hidden?(fragment)
     found = false
     fragment.traverse do |node|
-      found ||= node.text? ? node.content.match?(HIDDEN) : node.element? && node.attribute_nodes.any? { |attribute| attribute.value.match?(HIDDEN) }
+      found ||= node.text? ? hidden_text?(node.content) : node.element? && node.attribute_nodes.any? { |attribute| hidden_text?(attribute.value) }
     end
     found
   end
@@ -130,7 +142,7 @@ module KongHarnessesChangelogLinks
   # highlights it with its own template, which adds no address from the changelog text.
   def html_problems(html)
     fragment = Nokogiri::HTML5.fragment(html)
-    found = hidden?(fragment) ? ['a control, bidirectional or noncharacter code point'] : []
+    found = hidden?(fragment) ? ['a hidden code point'] : []
     fragment.traverse do |node|
       if node.element?
         allowed = ELEMENTS[node.name]
@@ -151,6 +163,7 @@ module KongHarnessesChangelogLinks
       seen = visible(node)
       found << "the address in #{seen.strip[0, 200].inspect} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
       found << "the kong-harnesses repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(REPOSITORY)
+      found << "a dot segment in a GitHub address in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(DOT_SEGMENT)
     end
     found.uniq
   end

@@ -41,7 +41,15 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a mail address with no dot', 'mail me@localhost now'],
       ['a mailto address', 'write to mailto:me now'],
       ['an xmpp address', 'chat on xmpp:me now'],
-      ['a strikethrough', 'a ~~gone~~ word']
+      ['a strikethrough', 'a ~~gone~~ word'],
+      # Each character that shows nothing by default goes before the checks read the text.
+      ['a tag character in a host', "see www\u{e0020}.example.com"],
+      ['a function application in a scheme', "see https:/\u2061/evil.example"],
+      ['a vowel separator in a mail address', "mail bob\u180e@evil.example"],
+      ['a grapheme joiner in the repository', "run `github.com/Kong\u034f/kong-harnesses`"],
+      ['a variation selector in a host', "see www\ufe0f.example.com"],
+      ['a . segment in the repository', 'run `github.com/Kong/./kong-harnesses`'],
+      ['a .. segment in a GitHub address', 'run `github.com/x/../Kong/kong-harnesses`']
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
@@ -58,7 +66,9 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['an entry in parentheses', 'use the value from (the migration guide).'],
       ['a user name', 'thanks to @bob for the report'],
       ['a scoped package name', 'bump @types/node'],
-      ['a mail address in a code span', 'run `git config user.email me@example.org`']
+      ['a mail address in a code span', 'run `git config user.email me@example.org`'],
+      ['dots in a GitHub address that are no segment', 'see `github.com/a/b/compare/v1...v2`'],
+      ['the flag of a region', "go to \u{1f3f4}\u{e0067}\u{e0062}\u{e0073}\u{e0063}\u{e0074}\u{e007f} now"]
     ].each do |name, text|
       it "accepts #{name}" do
         expect { described_class.check(entry(text)) }.not_to raise_error
@@ -69,14 +79,15 @@ RSpec.describe KongHarnessesChangelogLinks do
       expect { described_class.check(entry('use go@1.21 now')) }.to raise_error(/`go@1\.21` can go in backticks/)
     end
 
-    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;', "\u202e", '&#x2066;', '&#xfffe;'].each do |control|
+    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;', "\u202e", '&#x2066;', '&#xfffe;', "\u{e0041}\u{e0042}", '&#xE0041;',
+     "\u{e0067}\u{e007f}"].each do |control|
       it "refuses the hidden character #{control.inspect}" do
-        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a control, bidirectional or noncharacter code point/)
+        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a hidden code point/)
       end
     end
 
     it 'refuses a control character in an attribute' do
-      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a control, bidirectional or noncharacter code point')
+      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a hidden code point')
     end
 
     # The spec loads the site plugins, which highlight code blocks with Shiki, so these
