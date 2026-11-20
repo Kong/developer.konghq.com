@@ -100,7 +100,7 @@ Install the CA in each distribution with the Linux commands.
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
-omp and pi don't read the system trust store by default, so set one of these variables in the environment where they start:
+omp and pi use their own CA list by default, except on Debian and Ubuntu as the table says, so set one of these variables in the environment where they start:
 
 {% table %}
 columns:
@@ -116,7 +116,7 @@ rows:
       On Debian and Ubuntu, omp also reads `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
   - client: pi
     setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file, or, when pi runs on Node.js, `NODE_USE_SYSTEM_CA=1`.
+      `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`, which pi on Node.js and pi's Bun release archives both read.
       If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
       On Debian and Ubuntu, pi's Bun release archives also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
 {% endtable %}
@@ -144,7 +144,7 @@ rows:
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, in the `env` block of the {{ site.claude_code }} user settings.
       `profile activate` doesn't set this key and leaves a value that you set in place.
-      When it removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, it restores the value that the key had before that release.
+      When it removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, it restores the values that `NODE_EXTRA_CA_CERTS` and `CLAUDE_CODE_CERT_STORE` had before that release, and keeps a value that you changed after it.
   - program: Codex
     setting: |
       `CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex.
@@ -152,7 +152,8 @@ rows:
       When the shell must export `SSL_CERT_FILE` for {{site.kong_harnesses}}, use the bundle with the public root CAs and each private CA that the {{site.kong_harnesses}} row names.
   - program: Hermes Agent
     setting: |
-      `SSL_CERT_FILE` set to the CA file, in `~/.hermes/.env` or exported in the shell that starts Hermes Agent.
+      `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, in `~/.hermes/.env` or exported in the shell that starts Hermes Agent.
+      Hermes Agent passes the variable to the commands that it runs, such as `curl` and `pip`, and the file replaces their CA list, so a file with only the private CA breaks their public TLS connections.
       Hermes Agent trusts the file in addition to the system trust store.
       The plugin's `scripts/login.py` doesn't read `~/.hermes/.env`, so sign in with `hermes auth add kong-ai-gateway`.
   - program: OpenCode
