@@ -145,10 +145,9 @@ rows:
 
                     To keep Claude Code on a release that works:
 
-                    - Keep auto-updates off. A [kong-harnesses](/kong-harnesses/) profile turns them off, unless your administrator created it with `kong-harnesses profile create --auto-updates on`. Run `claude update` when you want a newer release.
-                    - To go back to an earlier release, run `claude install <version>` with a release that worked in your mode, then check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew.
-                    - To get new releases later, run `claude install stable`. The stable channel gets releases later than the latest channel and skips releases with major regressions.
-                    - If you don't use kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`.
+                    - Keep auto-updates off. [kong-harnesses](/kong-harnesses/) turns them off, unless your profile keeps them on. Without kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`. To check, run `claude doctor`: the `Auto-updates` line shows `disabled`. Run `claude update` when you want a newer release.
+                    - To go back to an earlier release, run `claude install <version>` with a release that worked in your mode, then check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew. With auto-updates on, Claude Code moves to a newer release again.
+                    - To get new releases later, add `"autoUpdatesChannel": "stable"` to your Claude Code settings, or run `claude install stable`. Auto-updates and `claude update` then follow the stable channel, which gets releases later than the latest channel and skips releases with major regressions.
   - header:
       type: h2
       text: "Codex CLI"
