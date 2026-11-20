@@ -134,20 +134,18 @@ rows:
       text: "Known issues with Claude Code releases"
     columns:
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Kong tests each new Claude Code release in the [provider modes above](#claude-code-provider-modes). When a tested release fails in one of these modes, Kong lists it here with what breaks and how to avoid it.
+          - type: text
+            config: |
+              Kong tests the newest Claude Code release that it finds on the latest channel, in the [provider modes above](#claude-code-provider-modes). When a tested release fails in one of these modes, Kong lists it here with what breaks and how to avoid it.
 
-                    Kong knows of no tested Claude Code release that fails in one of these modes.
+              Kong knows of no tested Claude Code release that fails in one of these modes.
 
-                    To keep Claude Code on a release that works:
+              To keep Claude Code on a release that works:
 
-                    - Keep auto-updates off. [kong-harnesses](/kong-harnesses/) turns them off, unless your profile keeps them on. Without kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`. To check, run `claude doctor`: the `Auto-updates` line shows `disabled`. Run `claude update` when you want a newer release.
-                    - To go back to an earlier release, run `claude install <version>` with a release that worked in your mode, then check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew. With auto-updates on, Claude Code moves to a newer release again.
-                    - To get new releases later, add `"autoUpdatesChannel": "stable"` to your Claude Code settings, or run `claude install stable`. Auto-updates and `claude update` then follow the stable channel, which gets releases later than the latest channel and skips releases with major regressions.
+              - Keep auto-updates off. [kong-harnesses](/kong-harnesses/) turns them off, unless your profile turns them on or leaves the setting out. In those cases, or without kong-harnesses, add `"DISABLE_AUTOUPDATER": "1"` to the `env` block of your [Claude Code settings](https://code.claude.com/docs/en/setup#disable-auto-updates), such as `~/.claude/settings.json`. On a native or npm install, run `claude doctor` to check it: the `Auto-updates` line starts with `disabled`. A Homebrew install doesn't auto-update, unless you set `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`.
+              - To get a newer release, run `claude update`. On a Homebrew install, run `brew upgrade claude-code` or `brew upgrade claude-code@latest`, for the cask that you installed. For other package managers, see [Update Claude Code](https://code.claude.com/docs/en/setup#update-claude-code).
+              - To go back to an earlier release, turn auto-updates off first, because an auto-update can replace the release that you install. Then run `claude install <version>` with a release that worked in your mode, and check it with `claude --version`. This installs the native build, also when you installed Claude Code with npm or Homebrew. If `claude --version` still shows the old release, the npm or Homebrew install comes first on your `PATH`. Remove it, as [Check for conflicting installations](https://code.claude.com/docs/en/troubleshoot-install#check-for-conflicting-installations) shows.
+              - To get new releases later, follow the stable channel. It gets releases later than the latest channel and skips releases with major regressions. On a native install, add `"autoUpdatesChannel": "stable"` to your Claude Code settings, or run `claude install stable`. Auto-updates and `claude update` then follow the stable channel. On Homebrew, install the `claude-code` cask, which follows the stable channel, not `claude-code@latest`. For other package managers, see [Configure release channel](https://code.claude.com/docs/en/setup#configure-release-channel).
   - header:
       type: h2
       text: "Codex CLI"
