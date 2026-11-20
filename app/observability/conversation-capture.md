@@ -41,8 +41,9 @@ related_resources:
 
 <!-- TODO confirm before publishing:
 - Release: confirm 2.5 versus 2.4. Jira AG-2227 is tagged aigw-2.4.0, but the gateway team said payload export won't make 2.4 (affects `min_version` and `published: false`).
-- `sampling_rate` is intentionally not documented: the ERD says it stays hidden from users for now (default 0.01). Add it if the spec exposes it publicly.
-- `max_payload_size` (ERD default 1,000,000 bytes, configurable) isn't documented until the spec confirms the field and its upper bound.
+- `sampling_rate` is intentionally not documented: the ERD says it stays hidden from users for now, but the kong-ee schema (PR 23705) defaults it to 1 (range 0 to 1). Confirm with the PM whether it is public, then document it.
+- `max_payload_size_bytes` default (2,000,000 in PR 23705) differs from the ERD (1,000,000). Confirm the final default and upper bound against the Konnect spec.
+- Trace export isn't in kong-ee PR 23705 (access logs only, "Milestone 1"). Re-add traces content when a PR ships it.
 - Whether payload capture gets its own toggle or a per-exporter `export_ai_payloads` switch (PRD AG-2227) is still open.
 - Agent debugging, prompt review, and audit use cases (not in the PRD).
 - Settings endpoints are public (marked internal and unstable in the spec).
@@ -114,16 +115,16 @@ Use conversation capture when you need the prompts and responses behind LLM traf
 Use the OpenTelemetry policy when you need to send telemetry to your own collector.
 
 Enabling conversation capture doesn't change the output of the OpenTelemetry policy, and an active Debugger session doesn't block it.
-If you enable both capture and the OpenTelemetry policy, each produces its own spans for the same request.
+If you enable both capture and the OpenTelemetry policy, each exports its own access log for the same request.
 
 ## What is captured
 
-Conversation capture exports two kinds of data from the data plane:
+Conversation capture exports access logs from the data plane: the same access log data that the OpenTelemetry policy exports, in OTLP format.
+When payload capture is on, prompts and responses are included in the access log.
+See the [spans attributes reference](/ai-gateway/llm-open-telemetry/) for the Gen AI attributes.
 
-- **Access logs:** the same access log data that the OpenTelemetry policy exports. When payload capture is on, prompts and responses are included in the access log.
-- **Traces:** spans that follow the Gen AI OpenTelemetry semantic conventions. See the [spans attributes reference](/ai-gateway/llm-open-telemetry/). Payloads aren't duplicated into trace attributes, because they are already in the access log.
-
-The data plane exports this data over mutual TLS (mTLS), reusing the certificate it already uses to connect to {{site.konnect_short_name}}.
+The data plane exports this data to the {{site.konnect_short_name}} telemetry endpoint (`cluster_telemetry_endpoint`) over mutual TLS (mTLS), reusing the certificate it already uses to connect to {{site.konnect_short_name}}.
+Requests that the gateway handles internally aren't exported.
 
 ## Capture controls
 
@@ -137,26 +138,31 @@ columns:
   - title: What it controls
     key: controls
 rows:
-  - setting: "`observability.traces`"
-    controls: "Whether traces are recorded."
-  - setting: "`observability.access_logs`"
-    controls: "Whether access logs are recorded."
-  - setting: "`observability.payload_capture`"
+  - setting: "`observability.access_logs.enabled`"
+    controls: "Whether access logs are exported."
+  - setting: "`observability.access_logs.compression_enabled`"
+    controls: "Whether exported access logs are gzip-compressed. Defaults to `true`."
+  - setting: "`observability.payload_capture.enabled`"
+    controls: "Whether exported access logs keep the request and response bodies."
+  - setting: "`observability.payload_capture.sampling_rule`"
+    controls: "A CEL expression that limits payload capture to matching requests."
+  - setting: "`observability.payload_capture.max_payload_size_bytes`"
     controls: |
-      Whether request payloads are captured.
-      Use `sampling_rule` to limit capture to matching requests.
+      The maximum size of a captured body, in bytes. Defaults to 2,000,000.
+      A larger body isn't exported.
 {% endtable %}
 
-Trace export and access log export are independent.
-For example, you can export access logs without traces, or the reverse.
+Payloads are part of the access log, so payload capture has an effect only when access log export is on.
 
 ### Payload capture
 
 Payload capture controls whether prompts and responses are included in what's exported.
 It's off by default, because payloads can be large and can contain sensitive data.
 
-Payload capture adds to the payload logging you configure on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
-{{site.ai_gateway}} captures a payload when the entity that serves the request logs payloads, or when payload capture is enabled and the request matches the sampling rule.
+Payloads only exist in the access log when the [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) that serves the request logs payloads.
+Payload capture then decides whether they are exported.
+{{site.ai_gateway}} exports a payload only when payload capture is enabled and the request matches the sampling rule, if you set one.
+A body larger than `max_payload_size_bytes` is left out of the export, not truncated.
 
 Unlike payload capture in Debugger sessions, conversation capture doesn't require a Data Processing Addendum or an organization-level entitlement.
 Because payloads can contain sensitive data, review your own data handling requirements before you turn it on.
@@ -165,11 +171,13 @@ Because payloads can contain sensitive data, review your own data handling requi
 
 To limit payload capture to the requests you care about, set a sampling rule.
 A sampling rule is a [Common Expression Language (CEL)](/ai-gateway/conditions/) boolean expression of up to 1,024 characters.
-It uses the same variables as the `allow_when` and `deny_when` access rules.
+The expression reads access log attributes by their full names, for example `kong.auth.consumer.username`.
+An attribute that is missing from the request is null, and a rule that fails to evaluate counts as no match.
 Only requests that match the rule have their payloads captured.
 If you enable payload capture without a sampling rule, {{site.ai_gateway}} captures every request.
+If the rule is invalid, {{site.ai_gateway}} captures no payloads.
 
-For example, the rule `consumer.username == 'support-bot'` captures conversations only for the `support-bot` consumer.
+For example, the rule `kong.auth.consumer.username == 'support-bot'` captures conversations only for the `support-bot` consumer.
 
 ## PII scrubbing
 
@@ -207,12 +215,12 @@ body:
       enabled: true
     payload_capture:
       enabled: true
-      sampling_rule: "consumer.username == 'support-bot'"
+      sampling_rule: "kong.auth.consumer.username == 'support-bot'"
 {% endkonnect_api_request %}
 <!--vale on-->
 
 A `PATCH` request replaces each top-level property you send in full, and keeps the properties you omit.
-In this request, `observability` is the top-level property, so any `traces` settings you stored earlier are replaced by their defaults.
+In this request, `observability` is the top-level property, so any other `observability` settings you stored earlier are replaced by their defaults.
 To unset a property, set it to `null`.
 
 By default, a `GET` request to the same endpoint returns only the settings you have set.
