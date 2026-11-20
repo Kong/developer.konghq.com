@@ -38,13 +38,13 @@ kong-harnesses login --profile <profile>
 
 For a profile that signs in through an identity provider, kong-harnesses opens your browser at the sign-in page of the identity provider. The terminal also prints the sign-in URL, so you can open the URL yourself if the browser doesn't open. Open it in a browser on the same computer, because the browser sends the sign-in result to a callback address on this computer. To print the URL without opening a browser, add `--no-browser`.
 
-When the profile already has a usable sign-in, `login` keeps it. It can still ask for the keys of gateway MCP servers that the profile names.
+When the profile already has a usable sign-in, `login` keeps it, and asks for and saves any missing keys of the gateway MCP servers that the profile names.
 
 For a profile that uses a key from your administrator, `login` asks for the key and doesn't show it as you type.
 
 A profile for a CI job reads its key from `KONG_HARNESSES_STATIC_KEY` each time the agent CLI asks for one. kong-harnesses doesn't save this key, and `login` refuses the profile. Set the variable in the environment where the agent CLI starts.
 
-You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you. Run `login` first for a profile that uses your own Claude subscription, and for an agent CLI that gets its token from [`token`](/kong-harnesses/token/), such as the `codex`, `omp` and `pi` clients, because kong-harnesses doesn't open the browser for them.
+You don't have to run `login` before you start {{ site.claude_code }} with a profile that signs in through an identity provider. When {{ site.claude_code }} asks for its first access token and the profile doesn't have a sign-in yet, kong-harnesses opens the browser for you. Run `login` first for a profile that uses your own Claude subscription, and for an agent CLI that gets its token from [`token`](/kong-harnesses/token/), such as the `codex`, `omp` and `pi` clients, because `token` doesn't open a browser.
 
 ## Check the sign-in
 
@@ -93,7 +93,7 @@ kong-harnesses login --profile <profile> --replace
 
 For a profile that uses a key from your administrator, `login --replace` saves a new key.
 
-When the saved sign-in can't be used, a plain `login` finds the problem and asks you to type the profile name to confirm. kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in. The identity provider can keep the old authorization active.
+When the saved sign-in can't be used, a plain `login` detects that the saved sign-in can't be used and asks you to type the profile name to confirm. kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in. The identity provider can keep the old authorization active.
 
 ## Sign out
 
@@ -130,7 +130,7 @@ rows:
     cause: kong-harnesses can't reach the identity provider.
     fix: "Check your network or VPN, or run `kong-harnesses doctor --profile <profile>`."
   - message: "`no browser opened to sign in`"
-    cause: kong-harnesses couldn't open a browser for the first sign-in, and the sign-in URL that it printed wasn't opened in time.
+    cause: kong-harnesses couldn't open a browser for the first sign-in, and no sign-in result arrived at the callback address.
     fix: "Run `kong-harnesses login --profile <profile>` in a terminal. The terminal prints the sign-in URL."
   - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
     cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
@@ -205,7 +205,7 @@ rows:
     cause: kong-harnesses couldn't prepare or complete the output of the token.
     fix: Start the agent CLI again, then try again.
   - message: "`fresh login is required`"
-    cause: "`token` doesn't sign in, and the profile doesn't have a usable sign-in: it has no sign-in yet, the sign-in expired, or the identity provider revoked it. `token` also prints this line when it gets a token that it can't give out."
+    cause: "`token` doesn't open a browser, so it can't start a new sign-in, and the saved sign-in can't be renewed: the identity provider rejected it during renewal, or the sign-in is missing or expired. `token` also prints this line when the token that it got isn't a valid bearer token."
     fix: "Run `kong-harnesses login --profile <profile>`."
   - message: "`credential operation could not complete` or `token operation could not complete`"
     cause: kong-harnesses stopped for a reason that it can't name.
