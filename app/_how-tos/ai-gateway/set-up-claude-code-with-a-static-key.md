@@ -70,6 +70,20 @@ prereqs:
         ```
 
         For other installation methods, see the [jq download page](https://jqlang.org/download/).
+    - title: Clipboard tool on Linux
+      icon_url: /assets/icons/code.svg
+      content: |
+        On Linux, this guide copies the key with `wl-copy` from wl-clipboard on Wayland, or with `xclip` on X11.
+        macOS and WSL already have a clipboard command.
+        On Debian and Ubuntu, install the one for your desktop:
+
+        ```sh
+        sudo apt-get install wl-clipboard
+        ```
+
+        ```sh
+        sudo apt-get install xclip
+        ```
     - title: Anthropic
       icon_url: /assets/icons/anthropic.svg
       include_content: md/ai-gateway/v2/prereqs/anthropic
@@ -189,7 +203,7 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    {:.info}
    > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide. The command doesn't export the variable, so the programs that you start from this shell don't get the key.
    >
-   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again. If the error is `409`, a key named `developer-key` already exists. Revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
+   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again. If the error is `409`, a key named `developer-key` already exists. The API returns a key only when it creates it, so if you lose the key, revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
 
 ## Create the AI Model
 
@@ -306,7 +320,12 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 
 ## Save the key and configure {{ site.claude_code }}
 
-Copy the key to the clipboard without showing it. In the shell where you created the key, run the command for your system:
+Copy the key to the clipboard without showing it. First, turn off clipboard sync, which can send the key to your other devices:
+
+* On Windows, turn off **Clipboard history** and **Clipboard history across your devices** in **Settings** > **System** > **Clipboard**.
+* On macOS, Universal Clipboard sends the clipboard to your other Apple devices. Turn off Handoff in **System Settings** > **General** > **AirDrop & Handoff**.
+
+In the shell where you created the key, run the command for your system:
 
 * On macOS: `printf %s "$CONSUMER_API_KEY" | pbcopy`
 * In WSL: `printf %s "$CONSUMER_API_KEY" | clip.exe`
@@ -330,7 +349,7 @@ Remove the key from the clipboard and from the shell:
 unset CONSUMER_API_KEY
 ```
 
-If your computer keeps a clipboard history, such as Windows clipboard history, delete the key from it too.
+If your computer keeps a clipboard history, delete the key from it too. You can turn clipboard sync on again now.
 
 Configure {{ site.claude_code }} to use the profile:
 
