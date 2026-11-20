@@ -172,7 +172,7 @@ The server-managed settings then rank above the build, and the build's `apiKeyHe
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
 When the profile has gateway MCP servers, `fleet build` needs this flag.
 When the profile doesn't have gateway MCP servers, use `allowlist`, the default, or `any`.
-If the computers already have a `managed-mcp.json`, that file takes exclusive control of MCP servers, so `allowlist` and `any` don't load the gateway MCP servers.
+When the profile has gateway MCP servers, also check the cases below the list, such as a `managed-mcp.json` on the computers, where only `exclusive` loads them.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
@@ -201,10 +201,13 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or its newer name `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
+When the policy that you pass with `--policy` sets one of these values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
+For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
+
 In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
 If the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
 `exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
-For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist`.
+For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `exclusive` or `allowlist`, {{ site.claude_code }} stops loading the other servers that developers added, and kong-harnesses tells developers which servers {{ site.claude_code }} doesn't load when a session starts.
@@ -231,9 +234,11 @@ Replace each placeholder with the value for your deployment:
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
   If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy POLICY_FILE` with `--no-policy`.
 
-Unless your own managed settings set `parentSettingsBehavior` to `merge`, a session that Claude Desktop, an IDE extension or an Agent SDK app starts drops the settings that its host app passes.
-To keep those settings, add `--host-settings merge`.
-This replaces a `parentSettingsBehavior` that your own managed settings set.
+Claude Desktop, an IDE extension or an Agent SDK app can start {{ site.claude_code }} and pass settings of its own, the host settings.
+When the computer has managed settings, {{ site.claude_code }} ignores the host settings by default.
+To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), add `--host-settings merge`, which sets `parentSettingsBehavior` to `merge` and replaces the value that your own policy sets.
+{{ site.claude_code }} reads this key only from the highest managed source on the computer, so the build must be that source.
+{{ site.claude_code }} then keeps only the host settings that restrict what Claude can do, and the permission allow rules and sandbox allowlists of the host, unless your own managed settings set the `allowManaged*Only` locks.
 
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
@@ -428,9 +433,13 @@ On the first request, kong-harnesses opens the browser.
 Sign in with your identity provider account.
 
 In {{ site.claude_code }}, run `/status`.
-The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses:
+The `Setting sources` line shows `Enterprise managed settings` with the source that {{ site.claude_code }} uses.
+If the line doesn't show `Enterprise managed settings`, no managed source reached the computer.
+Then check the paths in [Check what the build holds](#check-what-the-build-holds), and deploy the build again.
+The labels:
 
 * `(drop-ins)`: a file build, with only the files in `managed-settings.d`.
+  For an MDM build, this label means that the MDM policy didn't reach the computer, so read the `Skipped sources` line.
 * `(file)`: only your `managed-settings.json`.
   The build didn't reach the computer.
   For a file build, check that the drop-in is at the path in [Check what the build holds](#check-what-the-build-holds).
@@ -439,6 +448,8 @@ The `Setting sources` line shows `Enterprise managed settings` with the source t
   Then deploy the build again.
 * `(file + drop-ins)`: a file build on computers that also have your `managed-settings.json`.
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
+  For a file build, this label means that an MDM policy ranks above the drop-in, and {{ site.claude_code }} ignores the drop-in.
+  Build with `--delivery mdm` for those computers.
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
 * `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Find their source, and remove them there.
@@ -462,9 +473,9 @@ Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 kong-harnesses doctor --profile work --client claude-code
 ```
 
+`doctor` shows a fix for each problem that it finds.
 `doctor` says that the managed settings of your organization set up the profile, and names the build ID.
 `/status` names only the source, and other policies can use the same source, so make sure that the build ID is the one that `fleet build` printed for this platform.
 Do this before you install on the other managed computers.
-It shows a fix for each problem that it finds.
 
 To keep the fleet on supported {{ site.claude_code }} versions or to move it to a new model, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
