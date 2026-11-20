@@ -50,7 +50,8 @@ They come from the documentation of each identity provider, and they aren't test
 
 ## Keycloak
 
-* Issuer: Use the URL of the realm, `https://KEYCLOAK_HOST/realms/REALM_NAME`.
+* Issuer: Use the `issuer` value from the discovery document of the realm, such as `https://KEYCLOAK_HOST/realms/REALM_NAME`.
+  If your deployment has a [context path](https://www.keycloak.org/server/reverseproxy#_different_context_path_on_reverse_proxy), such as `/auth`, the issuer includes it.
 * Client: Create an OpenID Connect client with **Client authentication** off, which makes it a public client, and with **Standard Flow** on.
   Set its **PKCE method** to `S256`, as the [Server Administration Guide](https://www.keycloak.org/docs/latest/server_admin/index.html) describes.
   By default, the discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
@@ -68,13 +69,13 @@ They come from the documentation of each identity provider, and they aren't test
 ## Microsoft Entra ID
 
 * Issuer: Use the issuer of your tenant, `https://login.microsoftonline.com/TENANT_ID/v2.0`, not `common`, `organizations` or `consumers`.
-* Client: Under **Authentication**, set **Allow public client flows** to **Yes**, and don't add a client secret, as [Desktop app that calls web APIs: App registration](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-registration) describes.
+* Client: Under **Authentication**, set **Allow public client flows** to **Yes**, and don't add a client secret, as [Configure desktop apps that call web APIs](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-configuration) describes.
   The discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
   Entra ID accepts the `plain` and `S256` PKCE methods, as [the authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow) describes, and {{site.kong_harnesses}} always sends `S256`.
 * Callback: Register the callback under **Mobile and desktop applications**.
-  Entra ID ignores the port only for a `localhost` callback, as [Callback](/kong-harnesses/identity-provider/#callback) describes, and doesn't accept `[::1]`.
+  Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
   The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
-  To register a `127.0.0.1` callback, add it to `publicClient.redirectUris` in the application manifest, keep every redirect URI that is already there, and include the port that the profile uses:
+  To register a `127.0.0.1` callback, add it to `publicClient.redirectUris` in the [application manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest#publicclient-attribute), keep every redirect URI that is already there, and include the port that the profile uses:
 
   ```json
   "publicClient": {
@@ -86,7 +87,7 @@ They come from the documentation of each identity provider, and they aren't test
 
 * Audience: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
   Give the client the delegated permission of the gateway API, and grant admin consent if the tenant or the API scope needs it.
-  Give the full URI of the API scope with its own `--scope` flag, together with `--scope openid`, `--scope offline_access` and each other scope that you need, because your list replaces the defaults.
+  Give the full URI of the API scope, such as `api://API_ID/access_as_user`, with its own `--scope` flag, as [Gateway audience](/kong-harnesses/identity-provider/#gateway-audience) describes.
 * Token version: Set `api.requestedAccessTokenVersion` to `2` in the [manifest](https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest) of the gateway API to get v2.0 access tokens.
   When `api.requestedAccessTokenVersion` is `null` or `1`, Entra ID issues v1.0 access tokens.
   A v2.0 access token has the application ID of the gateway API, a GUID, in `aud`, and a v1.0 access token can have the application ID or the Application ID URI.
@@ -96,12 +97,16 @@ They come from the documentation of each identity provider, and they aren't test
 
 ## PingFederate
 
+* Issuer: Use the `issuer` value from the [OpenID Provider configuration](https://docs.pingidentity.com/pingfederate/13.1/developers_reference_guide/pf_openid_provider_config_endpoint.html) of PingFederate, which is the base URL of the deployment, such as `https://PINGFEDERATE_HOST`.
+  Include the port when it isn't 443, such as `https://PINGFEDERATE_HOST:9031`.
 * Client: Create an OAuth client with **Client Authentication** set to **None**, and select only the **Authorization Code** and **Refresh Token** grant types.
   Select **Require Proof Key for Code Exchange (PKCE)** in the client, as [Configuring OAuth clients](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_oauth_clients.html) describes.
   Select **Disallow the Plain PKCE Code Challenge Method** in the [authorization server settings](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/help_authorizationserversettingstasklet_oauthauthorizationserversettingsstate.html).
+  The discovery document can leave out `none` in `token_endpoint_auth_methods_supported`, as in the example of the [OpenID Provider configuration](https://docs.pingidentity.com/pingfederate/13.1/developers_reference_guide/pf_openid_provider_config_endpoint.html).
+  If it does, add `none` to the discovery template, or test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
 * Audience: Keep `--audience-parameter resource`, and create a JWT access token management instance for the gateway.
   Sign its access tokens with an asymmetric key, and set its **Type Header Value** to `at+jwt`.
   Add the `--audience` value to its **Resource URIs**, and set its **Audience Claim Value** to the `--audience` value.
-  Select the instance in the OpenID Connect policy of the client and as the **Default Access Token Manager** of the client, because the code exchange and the renewal request don't send `resource`.
+  Select the instance as the **Default Access Token Manager** of the client, as [Configuring OAuth clients](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_oauth_clients.html) describes, because the code exchange and the renewal request don't send `resource`.
 * Access token lifetime: The JWT access token management instance sets the lifetime in whole minutes, and it issues access tokens for 120 minutes by default, as [Configuring an access token management instance](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_access_token_management_instance.html) describes.
   Set its **Token Lifetime** from 7 to 60 minutes, or keep 120 minutes and set `--max-token-lifetime-seconds 7200`.

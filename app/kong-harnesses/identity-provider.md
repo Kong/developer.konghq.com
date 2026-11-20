@@ -45,7 +45,7 @@ Other OIDC identity providers need the same kinds of settings.
 
 ## Client settings
 
-Register the client with these settings, and set the matching flag when you create the profile.
+Register the client with these settings, and set the matching profile flags.
 
 {% table %}
 columns:
@@ -136,7 +136,7 @@ The value must:
 For a `localhost` callback, {{site.kong_harnesses}} listens on `127.0.0.1`, and also on `[::1]` when the computer has it.
 Two sign-ins on the same computer conflict when they need the same address and port, even with different paths.
 For example, a `localhost` callback and a `127.0.0.1` callback on the same port conflict.
-A second sign-in stops with an `AUTH_TEMPORARY` error that says that another program on this computer is using the sign-in callback address.
+A second sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
 On Windows, a port that Windows reserved gives the same error.
 To list the reserved ports, run `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp`.
 To let several profiles sign in at the same time, give each profile a different port.
@@ -150,7 +150,7 @@ When you set `--scope`, your list replaces the defaults, so give each scope that
 [`profile create`](/kong-harnesses/profile/create/) refuses a list without `openid` or `offline_access`.
 
 When the token response has a `scope` value, it can't be empty, and each scope in it must match a different scope that the profile requests.
-A scope matches when it is the same, differs only in percent encoding, or is the last path segment of exactly one requested URI scope, such as `access_as_user` for `api://API_ID/access_as_user`.
+A returned scope matches a requested scope when it is the same, when it is the same after {{site.kong_harnesses}} decodes its percent escapes, or when it is the last path segment of exactly one requested URI scope, such as `access_as_user` for `api://API_ID/access_as_user`.
 The response must also keep each scope that the profile requests, other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
 These rules also apply at renewal, where each listed scope must also match a scope in the last accepted list.
 At first, that list is the requested scopes that the sign-in response matched, or the scopes of the profile when the response doesn't list scopes.
@@ -161,12 +161,11 @@ A response with a `scope` value that breaks these rules fails the sign-in or the
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
 When the identity provider refuses a refresh token with `invalid_grant`, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
 
-For how `logout` uses the `revocation_endpoint` of the discovery document, see [`kong-harnesses logout`](/kong-harnesses/logout/).
+For the revocation at sign-out, see [`kong-harnesses logout`](/kong-harnesses/logout/).
 
 ## Gateway audience
 
-The gateway checks the audience of an access token when the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) sets `config.audience_required`.
-For this setting, see [Authorization](/ai-gateway/openid-connect/#authorization).
+The gateway checks the audience of an access token when the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) sets [`config.audience_required`](/ai-gateway/openid-connect/#authorization).
 Set `config.audience_required` to a list that contains the gateway audience, as the identity provider puts it in the claim that `config.audience_claim` selects, `aud` by default.
 
 Set `--audience` in the profile to the gateway audience.
@@ -214,11 +213,12 @@ The issuer URL must be a canonical `https` URL without a query, with the same ru
 * The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
   `grant_types_supported`, `token_endpoint_auth_methods_supported` and `code_challenge_methods_supported` follow the same rule when the document lists them.
 * A canonical `https` URL in `authorization_endpoint`, `token_endpoint` and `jwks_uri`, and also in `revocation_endpoint` when the document lists it.
-  A canonical URL has a lowercase host, and it doesn't have the port `443`, user information, a fragment or a `.` or `..` path segment.
+  A canonical URL has at most 2,048 bytes of visible ASCII characters without `\`, and a lowercase host.
+  It doesn't have the port `443`, a port with a zero at the start, user information, a fragment or a `.` or `..` path segment.
   Its percent encoding uses uppercase hexadecimal digits, and it doesn't encode a letter, a digit, `-`, `.`, `_`, `~`, `\` or a control character.
+* No parameter that {{site.kong_harnesses}} sets in the query of `authorization_endpoint`: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`.
 * The `code` response type in `response_types_supported`.
 * At least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512` in `id_token_signing_alg_values_supported`.
-  {{site.kong_harnesses}} doesn't accept other algorithms, such as `HS256` or `EdDSA`.
   Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists.
 * When the discovery document lists `authorization_response_iss_parameter_supported`, it must be `true` or `false`.
 * When the discovery document lists one of these fields, the field must have the value that {{site.kong_harnesses}} needs:
@@ -227,16 +227,15 @@ The issuer URL must be a canonical `https` URL without a query, with the same ru
   * The `none` method, for a public client, in `token_endpoint_auth_methods_supported`.
 
 {{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
-For example, if the discovery document leaves out `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
+For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 
 Some identity providers omit `none` from the advertised methods for public clients.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
-After the test passes, add the flag, which skips only the check for `none`, to the production profile.
-Developers must then run [`kong-harnesses login`](/kong-harnesses/login/) again.
+After the test passes, create the production profile with the flag, which skips only the check for `none`.
+Developers who already signed in must then run [`kong-harnesses login`](/kong-harnesses/login/) again.
 
 Each sign-in in the browser runs the same checks again.
-The sign-in also fails when the query of `authorization_endpoint` has a parameter that {{site.kong_harnesses}} sets: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`.
-It also fails when an endpoint that `profile create` saved in the profile differs from the current discovery document.
+The sign-in also fails when an endpoint that `profile create` saved in the profile differs from the current discovery document.
 The revocation endpoint counts only when the profile has one.
 If an endpoint changes and the new discovery document passes the checks, create the profile again.
 
@@ -249,7 +248,7 @@ If the identity provider sets the lifetime in whole minutes, use at least 7 minu
 
 If your identity provider issues longer access tokens, find the longest access token lifetime in its policy, and set `--max-token-lifetime-seconds` to that value, from 365 to 86400 seconds.
 If the policy allows more than 86400 seconds, reduce it to 86400 seconds.
-After a change to this value, developers must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+After a change to this value, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
 
 ## Create the profile
 
