@@ -39,6 +39,10 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: "{{ site.claude_code }} traffic outside {{site.ai_gateway}}"
+    url: /kong-harnesses/claude-code-outside-traffic/
+  - text: "{{ site.claude_code }} on the web and Claude in Slack"
+    url: /kong-harnesses/claude-code-web-and-slack/
 
 prereqs:
   inline:
@@ -317,14 +321,14 @@ columns:
     key: recover
 rows:
   - feature: claude.ai connectors
-    why: The gateway sign-in replaces the claude.ai sign-in, so connectors cannot load.
+    why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. When the profile uses the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
     recover: "Add the MCP servers you need with `claude mcp add`."
   - feature: Fast mode
-    why: It works only with the Anthropic API directly, and its check calls `api.anthropic.com`.
-    recover: "Nothing to do: Fast mode cannot work behind the gateway."
+    why: "`profile create` turns it off, because fast mode costs more per token on the API and draws on usage credits on a subscription. It also needs fast mode access on the Anthropic organization behind the gateway."
+    recover: "Ask your administrator to set `fast_mode` to `true` in the profile. Fast mode works only on the providers that the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements) list."
   - feature: "`/bug`, `/feedback` and the feedback survey"
     why: They send your conversation or your ratings to Anthropic.
-    recover: Ask your administrator to keep them and automatic updates on in the profile.
+    recover: "Ask your administrator to set `bug_command` and `feedback_command` to `true` in the profile, because each one turns off both commands. For the feedback survey, the administrator sets `feedback_survey` and `anthropic_telemetry` to `true`."
   - feature: Cost warnings
     why: They report Anthropic API spend, and a gateway session has none.
     recover: Nothing to do.
@@ -332,8 +336,8 @@ rows:
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
     recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
   - feature: Automatic updates
-    why: The update check and other background requests go outside the gateway, to Anthropic and GitHub. The same setting turns off release notes, network requests from plugins, cloud sessions and pull request status badges.
-    recover: "Run `claude update` when you want a newer release, or ask your administrator to keep automatic updates on in the profile."
+    why: The update check and other background requests go outside the gateway, to Anthropic, GitHub and Homebrew. The setting also turns off automatic plugin updates, unless `FORCE_AUTOUPDATE_PLUGINS=1` is set. It turns off release notes and pull request status badges too, unless the profile turns on a feature such as telemetry.
+    recover: "Run `claude update` when you want a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. To keep plugin updates on, set `FORCE_AUTOUPDATE_PLUGINS=1` in your {{ site.claude_code }} settings. You can also ask your administrator to keep automatic updates on in the profile."
   - feature: WebFetch domain check
     why: "{{ site.claude_code }} asks `api.anthropic.com` whether it may fetch each domain."
     recover: "WebFetch still works, without Anthropic's list of blocked domains. To limit the domains, add `WebFetch(domain:...)` permission rules."
@@ -342,9 +346,12 @@ rows:
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
-A profile can also turn off Anthropic's usage metrics, error reports and feature flags, and the automatic install of Anthropic's plugin marketplace.
+A profile can also turn off Anthropic's usage metrics and feature flags, and the automatic install of Anthropic's plugin marketplace.
+[{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
+[{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off the Claude products that run sessions outside the developer's computer, without the gateway.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
-{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync, Remote Control and the Artifact tool, because they need a claude.ai sign-in or a direct connection to Anthropic.
+{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync and Remote Control, because they need a claude.ai sign-in or a direct connection to Anthropic.
+The Artifact tool works only in the cases that [Artifact availability](/kong-harnesses/claude-code-outside-traffic/#artifact-availability) lists.
 
 ## Validate
 
@@ -359,8 +366,8 @@ It shows a fix for each problem it finds.
 It doesn't change any settings.
 Fix each failure and run it again until no check fails.
 
-To also send one model request, add `--inference`.
-The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+The model request of `--inference` can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+To also send one model request, add `--inference`:
 
 ```sh
 kong-harnesses doctor --profile quickstart --client claude-code --inference
