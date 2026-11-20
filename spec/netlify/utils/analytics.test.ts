@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, it, mock } from "node:test";
 import assert from "node:assert/strict";
 
-import { sendEvent } from "../../../netlify/utils/analytics.ts";
+import { sendEvent, type AnalyticsEvent } from "../../../netlify/utils/analytics.ts";
 
-const event = {
+const event: AnalyticsEvent = {
   path: "/kongctl/",
   format: "html",
   user_agent: "curl/8.0",
