@@ -35,9 +35,10 @@ If all model traffic must pass through the gateway, turn off each of these produ
 
 {{ site.claude_code }} on the web runs cloud sessions on Anthropic's infrastructure, or in your organization's [self-hosted environment](https://code.claude.com/docs/en/self-hosted-environments) when you route them there.
 In a self-hosted environment, the conversation still goes to `api.anthropic.com`, and model inference uses the Anthropic API unless you configure the runner to send model requests to Amazon Bedrock or Google Vertex AI.
-A developer who signs in with a claude.ai account can also start cloud sessions from the terminal, for example with `claude --cloud`, and those sessions don't use the gateway either.
+A developer who signs in with a claude.ai account can also start cloud sessions from the terminal, for example with `claude --cloud "<task>"`, and those sessions don't use the gateway either.
 `--cloud` isn't available when {{ site.claude_code }} uses a third-party provider mode, such as Amazon Bedrock.
 A profile in the Anthropic API provider mode doesn't count as a third-party provider for this check, so a developer who signs in with `claude auth login` can still use `--cloud`.
+When the session also has another credential, {{ site.claude_code }} can check the cloud session policy of that credential's organization, as [Cloud sessions use your claude.ai login](https://code.claude.com/docs/en/errors#cloud-sessions-use-your-claude-ai-login) explains.
 The organization setting in the following steps turns these sessions off too.
 To turn off cloud sessions for a Team or Enterprise organization:
 
@@ -46,7 +47,7 @@ To turn off cloud sessions for a Team or Enterprise organization:
 1. Turn off cloud sessions, which sets the `allow_remote_sessions` policy to off.
 
 If your organization uses custom roles, you can also remove the cloud sessions permission from each role in [**Organization settings** > **Roles**](https://claude.ai/admin-settings/roles).
-That permission controls only the sessions on Anthropic's infrastructure, not the sessions in a self-hosted environment.
+The cloud sessions permission controls only the sessions on Anthropic's infrastructure, not the sessions in a self-hosted environment.
 The organization setting applies only to the accounts of your organization.
 [{{ site.claude_code }} on the web](https://code.claude.com/docs/en/claude-code-on-the-web) explains cloud sessions.
 
@@ -60,7 +61,10 @@ The switch also turns off direct messages to Claude.
 
 The earlier {{ site.claude_code }} in Slack answers only Pro, Max and Ultra accounts, in a Slack workspace that no organization connected to Claude Tag.
 Your organization's Claude settings don't control these personal accounts.
-To block the app, a Slack administrator removes the Claude app and stops new installs:
+To block the app, a Slack administrator removes the Claude app and stops new installs.
+Do these steps only when no workspace that they reach is connected to Claude Tag, because Claude Tag uses the same Claude app.
+Removing the app from a connected workspace [deletes that workspace's Claude Tag data](https://claude.com/docs/claude-tag/concepts/data-lifecycle#delete-data-or-request-deletion), and the Enterprise Grid steps change every workspace in the organization.
+The administrator can use these steps:
 
 * A Workspace Owner or app manager [removes the Claude app](https://slack.com/help/articles/360003125231-Remove-apps-and-custom-integrations-from-your-workspace) from the workspace.
   Every user in that workspace loses access at once.
