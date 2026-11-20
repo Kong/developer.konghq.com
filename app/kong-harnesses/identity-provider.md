@@ -221,7 +221,7 @@ After the test passes, create the production profile with the flag, which skips 
 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, which is 360 seconds plus a 5-second margin for the renewal.
-After {{site.kong_harnesses}} saves the new refresh token at renewal, the access token must still have at least 360 seconds left when a client gets it.
+After {{site.kong_harnesses}} saves the renewed sign-in, the access token must still have at least 360 seconds left when a client gets it.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
