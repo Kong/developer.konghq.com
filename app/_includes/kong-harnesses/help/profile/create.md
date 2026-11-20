@@ -35,7 +35,7 @@ Flags:
       --audience-parameter resource          how the sign-in request sends the audience: resource, audience or none (default resource)
       --auto-updates on|off                  Claude Code auto-updates: on|off, on when given alone (default off)
       --client-id id                         OIDC client id (a public client, with no secret)
-      --gateway-origin origin                HTTPS address of the gateway (its origin)
+      --gateway-origin origin                HTTPS address of the gateway (its origin), or http:// on localhost
   -h, --help                                 help for create
       --issuer url                           OIDC issuer url
       --max-token-lifetime-seconds seconds   longest token lifetime to accept, in seconds, from 360 to 86400 (default 3600)
@@ -50,7 +50,7 @@ Flags:
       --public-client-evidence deployment    why the OIDC client may have no secret: deployment
       --redirect-uri url                     local redirect url that the sign-in returns to (default http://localhost:9876/callback)
       --scope scope                          OIDC scope to request; repeat for each, at most 16 (default openid profile email offline_access)
-      --sign-in kind                         kind of sign-in when not only an identity provider: static-key, a key from the administrator, with no identity provider; or environment-key, the same key read from KONG_HARNESSES_STATIC_KEY on every call, for a CI job
+      --sign-in kind                         kind of sign-in when not only an identity provider: static-key, a key from the administrator, with no identity provider; or environment-key, the same key read from KONG_HARNESSES_STATIC_KEY on every call, for a CI job; or subscription, each developer's own Claude subscription, with --issuer, --client-id and --audience too
       --tool-reference on|off                Claude Code tool references: on|off, on when given alone (default on)
 
 Global Flags:

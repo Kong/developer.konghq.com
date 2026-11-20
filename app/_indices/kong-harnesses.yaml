@@ -18,6 +18,7 @@ groups:
         items:
           - path: /kong-harnesses/profile/
           - path: /kong-harnesses/profile/*/**
+          - path: /kong-harnesses/profile-file/
       - title: Get Access Tokens
         items:
           - path: /kong-harnesses/credential/
@@ -33,3 +34,4 @@ groups:
       - title: Diagnose Problems
         items:
           - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/errors/
