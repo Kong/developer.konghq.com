@@ -113,6 +113,18 @@ rows:
             cta:
               url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - header:
+      type: h3
+      text: "Claude Code provider modes"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              A provider mode decides which API format Claude Code uses and which settings point it at {{site.ai_gateway}}. Kong tests each new Claude Code release in the following modes, through the {{site.ai_gateway}} configuration of [the Anthropic guide](/ai-gateway/use-claude-code-with-ai-gateway-anthropic/), to a stand-in model provider. Kong tests each release when it reaches the latest channel of Claude Code, before it reaches the stable channel.
+
+              In each mode, Claude Code runs a session with a tool call and a subagent. The test also checks that {{site.ai_gateway}} sends each header and value that the [Claude Code gateway guide](https://code.claude.com/docs/en/llm-gateway-protocol) lists as forwarded unchanged.
+
+              {% include md/ai-gateway/v2/claude-code-provider-modes.md %}
+  - header:
       type: h2
       text: "Codex CLI"
       description: "Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management."
