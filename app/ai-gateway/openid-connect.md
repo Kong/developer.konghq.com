@@ -1158,6 +1158,56 @@ ai_gateway_auth_strategies:
       cache_tokens_salt: token-exchange-auth-cache-salt
 {% endentity_examples %}
 
+#### Microsoft Entra ID On-Behalf-Of flow
+
+When an upstream MCP server or API is registered as its own Entra ID application, it only accepts tokens issued for its own audience. The token the caller presents to {{site.ai_gateway}} was issued for {{site.ai_gateway}}, so forwarding it unchanged returns a `401` from the upstream. Authenticating to the upstream with a shared service credential avoids the `401`, but it removes the end user's identity from the request, so the upstream can't apply per-user authorization.
+
+Entra ID's On-Behalf-Of flow exchanges the caller's token for one scoped to the upstream application, preserving the end user's identity. It uses the JWT Bearer grant ([RFC 7523](https://www.rfc-editor.org/rfc/rfc7523)), so set [`config.token_exchange.grant_type`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-grant-type) to `jwt_bearer` and [`config.token_exchange.provider`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-provider) to `microsoft`.
+{{site.ai_gateway}} then sends the caller's token as the assertion in the exchange request, along with `requested_token_use=on_behalf_of`.
+
+The following example exchanges a caller's Entra ID token for one scoped to an upstream MCP server registered as the Entra application `mcp-server-app-id`:
+
+{% entity_example %}
+type: auth-strategy
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: Entra OBO Auth
+  name: entra-obo-auth
+  type: openid-connect
+  config:
+    issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
+    client_id:
+      - my-client-id
+    client_secret:
+      - my-client-secret
+    client_auth:
+      - client_secret_post
+    auth_methods:
+      - bearer
+    token_exchange:
+      grant_type: jwt_bearer
+      provider: microsoft
+      subject_token_issuers:
+        - issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
+          conditions:
+            missing_scopes:
+              - api://mcp-server-app-id/.default
+      request:
+        scopes:
+          - api://mcp-server-app-id/.default
+    cache_tokens_salt: entra-obo-auth-cache-salt
+{% endentity_example %}
+
+If the `iss` claim of the caller's token doesn't match an entry in [`config.token_exchange.subject_token_issuers`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-subject-token-issuers), no exchange is performed. {{site.ai_gateway}} forwards the original token unchanged and doesn't return an error.
+This is a common cause of a `401` from the upstream with this configuration.
+
+To map AI Consumers and AI Consumer Groups from the claims of the caller's original token instead of the exchanged token, set [`config.token_exchange.map_identities_from`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-map-identities-from) to `subject_token`.
+
+{:.info}
+> **Note**: As with the other token exchange flows, the On-Behalf-Of flow isn't supported on AI MCP Servers that set `access.metadata`, because those generate an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) configuration instead of a plain auth-strategy check.
+
 {% comment %}
 NOT SUPPORTED CURRENTLY
 #### Subject token signature verification
