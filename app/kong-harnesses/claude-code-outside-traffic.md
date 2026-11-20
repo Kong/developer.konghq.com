@@ -41,7 +41,7 @@ Turn a feature back on only when your policy allows the host that the feature co
 ## Traffic that goes outside the gateway
 
 Each row in the following table is one kind of {{ site.claude_code }} traffic that goes straight to its destination.
-The profile member is a member of `clients.claude-code` in the profile.
+The profile member is a key of `clients.claude-code` in the profile file.
 
 {% table %}
 columns:
@@ -91,16 +91,16 @@ rows:
     member: "`official_marketplace_autoinstall`"
     cost: "{{ site.claude_code }} doesn't add Anthropic's plugin marketplace. Developers can add it with `/plugin marketplace add`."
   - traffic: Artifacts
-    destination: "`claude.ai`, `*.frame.claudeusercontent.com`, and `api.anthropic.com` for the organization policy"
+    destination: "`claude.ai`, `*.frame.claudeusercontent.com`, and `api.anthropic.com` for the publish requests and the organization policy"
     member: "None yet. The `artifact` member writes nothing, so set `enableArtifact: false` in {{ site.claude_code }} settings."
     cost: "Developers can't publish session output as a web page on claude.ai. Artifacts need a claude.ai sign-in, so they work only with a profile that uses the developers' own Claude subscriptions. On Team and Enterprise plans, an Owner can also turn off artifacts for the organization in [**Organization settings** > **Artifacts**](https://claude.ai/admin-settings/artifacts)."
   - traffic: Automatic updates and other nonessential traffic
-    destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com` and `*-review.googlesource.com`"
+    destination: "`downloads.claude.ai`, `formulae.brew.sh`, `raw.githubusercontent.com`, `api.anthropic.com`, `*-review.googlesource.com`, and the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the Gerrit change lookups of a Claude desktop app Code tab session also turn off. Run `claude update` to install a newer release. When the profile turns on a feature that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, turns off, `auto_updates` set to `false` turns off only automatic updates."
+    cost: "{{ site.claude_code }} doesn't check for updates or fetch the release notes. Artifacts, Remote Control, the fast mode availability check, the pull request and merge request status badges and the code review lookups that a Claude desktop app Code tab session sends to `*-review.googlesource.com` also turn off. Run `claude update` to install a newer release. [Members that depend on each other](#members-that-depend-on-each-other) tells when only automatic updates turn off."
 {% endtable %}
 
-{{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
+{{ site.claude_code }} skips the fast mode availability check with a gateway key, and when `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, the nonessential traffic switch, is on.
 When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped or failed check as available.
 
 A member that the profile leaves out keeps the {{ site.claude_code }} default, because activation doesn't write a setting for it.
@@ -128,7 +128,7 @@ A member that the profile leaves out never causes a conflict.
 
 `auto_updates` set to `false` doesn't cause a conflict.
 When the profile turns on one of the features that the nonessential traffic switch turns off, activation writes that switch blank.
-{{ site.claude_code }} reads a blank switch as off, so the feature stays on, even when the developer's shell exports the switch.
+A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
 Then `auto_updates` set to `false` turns off only automatic updates, and the other traffic in the automatic updates row of the table comes back, unless its own member keeps it off.
 
 ## Traffic that stays
@@ -151,7 +151,8 @@ When every kind of traffic in the table is off, a {{ site.claude_code }} session
 
 ## Turn off the outside traffic
 
-You can turn off each kind of outside traffic in the profile, or in {{ site.claude_code }} settings directly.
+Set a profile member to `false` where the table lists one, or set the {{ site.claude_code }} settings directly.
+To turn off artifacts, set `enableArtifact: false` in {{ site.claude_code }} settings.
 
 ### In the profile
 
