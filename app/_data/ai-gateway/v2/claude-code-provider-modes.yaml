@@ -4,11 +4,11 @@ modes:
     switch: None (default)
     url: "`ANTHROPIC_BASE_URL`"
   - name: Microsoft Foundry
-    switch: "`CLAUDE_CODE_USE_FOUNDRY`"
+    switch: "`CLAUDE_CODE_USE_FOUNDRY=1`"
     url: "`ANTHROPIC_FOUNDRY_BASE_URL`"
   - name: Claude Platform on AWS
-    switch: "`CLAUDE_CODE_USE_ANTHROPIC_AWS`"
+    switch: "`CLAUDE_CODE_USE_ANTHROPIC_AWS=1`"
     url: "`ANTHROPIC_AWS_BASE_URL`"
   - name: Amazon Bedrock Mantle
-    switch: "`CLAUDE_CODE_USE_MANTLE`"
+    switch: "`CLAUDE_CODE_USE_MANTLE=1`"
     url: "`ANTHROPIC_BEDROCK_MANTLE_BASE_URL`"
