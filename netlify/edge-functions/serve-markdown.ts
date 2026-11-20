@@ -55,7 +55,8 @@ export const config: Config = {
     "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg",
     "/**/*.gif", "/**/*.svg", "/**/*.ico", "/**/*.webp",
     "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.eot",
-    "/**/*.json", "/**/*.xml", "/**/*.map", "/**/*.txt"
+    "/**/*.json", "/**/*.xml", "/**/*.map",
+    "/robots.txt", "/assets/*", "/vite/assets/*"
   ],
   onError: "bypass",
 };
