@@ -25,9 +25,10 @@ tags:
   - authorization
   - kong-identity
   - openid-connect
-
 tools:
   - konnect-api
+
+automated_tests: false
 
 tldr:
   q: How do I stop an approved user's unapproved agent from calling a destructive MCP tool?
@@ -40,6 +41,9 @@ prereqs:
   inline:
     - title: Petstore API
       include_content: prereqs/third-party/swagger-petstore
+    - title: Keycloak with a user and agent clients
+      include_content: prereqs/auth/oidc/keycloak-delegated-agents
+      icon_url: /assets/icons/keycloak.svg
     - title: "{{site.identity}} directory"
       include_content: prereqs/kong-identity-directory
       icon_url: /assets/icons/identity.svg
@@ -48,6 +52,9 @@ cleanup:
   inline:
     - title: Stop Petstore API
       include_content: cleanup/third-party/swagger-petstore
+    - title: Destroy the Keycloak container
+      include_content: cleanup/third-party/keycloak
+      icon_url: /assets/icons/keycloak.svg
     - title: Clean up {{site.identity}} resources
       include_content: md/identity/delete_directory
       icon_url: /assets/icons/identity.svg
@@ -79,7 +86,7 @@ In this guide you'll make a destructive MCP tool require two things at once:
 * The request is made for a user in the `engineering` group.
 * The request is made by an agent your security team marked as approved.
 
-Every other tool stays available to anyone in `engineering`, with or without an agent.
+Every other tool stays available to anyone in `engineering`.
 
 You'll create three principals: a user, an approved agent, and an unapproved one.
 The AI Auth Strategy resolves the user from the token's `sub` claim and the agent from its `azp` claim, and a per-tool CEL-based ACL checks both.
@@ -308,9 +315,7 @@ capture:
 ## Create the AI Auth Strategy
 
 The AI Auth Strategy is what makes the agent visible to the ACL.
-
-`config.principals.enabled` resolves the subject from `sub`, as principal mapping always has.
-`config.principals.actors` adds the second lookup: one source, reading the `azp` claim, resolved against the same directory.
+It resolves the user from the token, and then resolves the agent as a second identity in the same directory.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -325,6 +330,9 @@ body:
   type: openid-connect
   config:
     issuer: $ISSUER
+    using_pseudo_issuer: true
+    jwks_endpoint: $JWKS_ENDPOINT
+    token_endpoint: $TOKEN_ENDPOINT
     client_id:
       - $CLIENT_ID
     client_secret:
@@ -345,16 +353,18 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+In this example:
+* `config.principals.enabled`: Resolves the subject from `sub`, as principal mapping always has.
+* `config.principals.actors`: Adds the second lookup. It has one source, which reads the `azp` claim and resolves it against the same directory.
+* `config.using_pseudo_issuer`, `config.jwks_endpoint`, and `config.token_endpoint`: Needed here because Keycloak runs in Docker in this tutorial. The data plane validates the `iss` claim against `config.issuer` but fetches keys over the Docker network, so the two addresses differ. Against a reachable identity provider, set `config.issuer` alone and let discovery find the endpoints.
+
 {:.info}
 > When `error_on_miss` is `true`, {{site.ai_gateway}} rejects a request whose `azp` value doesn't match a principal with a `401`, instead of allowing it through without an actor.
 > Keep it on while you set this up: an unregistered agent then fails visibly, instead of a rule that stops matching for no apparent reason.
 
 ## Create the AI MCP Server
 
-Convert the Petstore API into MCP tools, and gate `delete-pet` on both identities.
-
-The default ACL allows anyone in `engineering`, so the read tools behave the way they would without actors.
-The per-tool ACL on `delete-pet` replaces that default rather than adding to it, so it has to state the group requirement again alongside the agent requirement:
+Convert the Petstore API into MCP tools, and gate `delete-pet` on both identities:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -415,17 +425,103 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+In this example:
+* `access.acls.allow_when`: The default ACL for the AI MCP Server. It allows anyone in `engineering`, so the read tools behave the way they would without actors.
+* `tools[].access.acls.allow_when` on `delete-pet`: Replaces the default ACL for that tool rather than adding to it, so it states the group requirement again alongside the agent requirement.
+
 The rule matches an agent by its approval metadata rather than by its position in the list.
 An actor's position depends on which sources resolved an identity, so a rule written against `actors[0]` can start evaluating a different entity than you intended.
 See [Write a condition that uses actors](/ai-gateway/conditions/#write-a-condition-that-uses-actors).
 
 ## Validate
 
-Validate the rule with the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli), passing a bearer token from your identity provider in the `Authorization` header.
+Validate the rule with the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli), passing a bearer token in the `Authorization` header.
 Each token's `sub` identifies the user and its `azp` identifies the agent's client.
 
 An ACL denial is enforced on the route, before the request is dispatched as an MCP RPC, so {{site.ai_gateway}} returns a plain `HTTP 403 Forbidden` response rather than a JSON-RPC error object.
 The MCP Inspector CLI reports that as a transport error and exits with a non-zero status.
+
+### Get a token for each agent
+
+Each token is issued through Keycloak's direct access grant, for the same user, to a different client.
+The user's password proves who the request is made for, and the client credentials identify the agent making it.
+
+1. Get a token for the user through the approved agent:
+   <!--vale off-->
+{% validation request-check %}
+konnect_url: $KEYCLOAK_URL
+url: /realms/master/protocol/openid-connect/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: password
+  client_id: $APPROVED_AGENT_CLIENT_ID
+  client_secret: $APPROVED_AGENT_CLIENT_SECRET
+  username: dana
+  password: $USER_PASSWORD
+extract_body:
+  - name: "access_token"
+    variable: TOKEN_USER_VIA_APPROVED_AGENT
+capture:
+  - variable: TOKEN_USER_VIA_APPROVED_AGENT
+    jq: ".access_token"
+status_code: 200
+indent: 3
+{% endvalidation %}
+   <!--vale on-->
+
+1. Get a token for the same user through the unapproved agent:
+   <!--vale off-->
+{% validation request-check %}
+konnect_url: $KEYCLOAK_URL
+url: /realms/master/protocol/openid-connect/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: password
+  client_id: $UNAPPROVED_AGENT_CLIENT_ID
+  client_secret: $UNAPPROVED_AGENT_CLIENT_SECRET
+  username: dana
+  password: $USER_PASSWORD
+extract_body:
+  - name: "access_token"
+    variable: TOKEN_USER_VIA_UNAPPROVED_AGENT
+capture:
+  - variable: TOKEN_USER_VIA_UNAPPROVED_AGENT
+    jq: ".access_token"
+status_code: 200
+indent: 3
+{% endvalidation %}
+   <!--vale on-->
+
+1. Get a token for the same user through the agent that was never registered as a principal:
+   <!--vale off-->
+{% validation request-check %}
+konnect_url: $KEYCLOAK_URL
+url: /realms/master/protocol/openid-connect/token
+method: POST
+headers:
+  - 'Content-Type: application/x-www-form-urlencoded'
+form_url_encoded_data:
+  grant_type: password
+  client_id: $UNREGISTERED_AGENT_CLIENT_ID
+  client_secret: $UNREGISTERED_AGENT_CLIENT_SECRET
+  username: dana
+  password: $USER_PASSWORD
+extract_body:
+  - name: "access_token"
+    variable: TOKEN_USER_VIA_UNREGISTERED_AGENT
+capture:
+  - variable: TOKEN_USER_VIA_UNREGISTERED_AGENT
+    jq: ".access_token"
+status_code: 200
+indent: 3
+{% endvalidation %}
+   <!--vale on-->
+
+All three tokens carry the same `sub`. Only `azp` differs.
 
 ### The approved agent can delete
 
@@ -473,9 +569,10 @@ render_output: false
 The call is rejected with `HTTP 403 Forbidden`.
 A group check on the user alone can't catch this case.
 
-### The user calling directly is also rejected
+### An agent nobody registered is rejected earlier
 
-A token without an `azp` claim doesn't produce an actor, so `actors` is `null` and the rule fails:
+The third token's `azp` is a client that has no principal in {{site.identity}}, so the actor lookup finds nothing.
+Because the AI Auth Strategy sets `error_on_miss: true`, that fails at authentication rather than at the ACL:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -485,11 +582,12 @@ command: |
     --transport http --method tools/call \
     --tool-name delete-pet \
     --tool-arg path_petId=10 \
-    --header "Authorization: Bearer $TOKEN_USER_DIRECT"
+    --header "Authorization: Bearer $TOKEN_USER_VIA_UNREGISTERED_AGENT"
 expected:
   return_code: 1
 render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-The call is rejected with `HTTP 403 Forbidden`.
+The call is rejected with `HTTP 401 Unauthorized`, not `403`.
+This is the difference the `error_on_miss` setting makes: an agent you haven't registered is turned away by name, instead of silently producing no actor and failing a rule you'd then have to debug.
