@@ -96,7 +96,7 @@ cleanup:
         [`profile cleanup`](/kong-harnesses/profile/cleanup/) changes only the developer's own {{ site.claude_code }} settings, so it works before or after you delete the files of the build, but it needs kong-harnesses on the computer.
 
         Then, as an administrator, remove the package or script that installs the files of the build from each assignment in your MDM tool, so that the tool doesn't install the files again after you delete them.
-        For an Intune macOS app (PKG), remove the groups from its Required assignment, because Intune has no Uninstall assignment for that app type.
+        For an Intune macOS app (PKG), remove the groups from its Required and its Available assignments, because Intune has no Uninstall assignment for that app type.
 
         Next, run `kong-harnesses fleet remove` with the record file of the build, and add the flags that the removal needs:
 
@@ -106,29 +106,30 @@ cleanup:
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
         Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
+        Replace `BUILD_RECORD` with the path of the record file, `kong-harnesses-fleet-BUILD_ID.json`, that `fleet build` wrote in the output folder of that build.
         For a file build without `--mcp-servers exclusive`, `fleet remove` prints the path of each file to delete from the managed computers:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json
+        kong-harnesses fleet remove --record 'BUILD_RECORD'
         ```
 
         For a file build with `--mcp-servers exclusive`, replace `MCP_CONFIG_FILE` with a copy of the `managed-mcp.json` that the computers have now, and pass an output folder for your own servers that are left:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
         ```
 
         For an MDM build without `--mcp-servers exclusive`, replace `POLICY_FILE` with the policy that the computers get now, and pass an output folder for the keys of your own policy that are left:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy 'POLICY_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-macos-removed
         ```
 
         For an MDM build with `--mcp-servers exclusive`, pass all the flags.
         Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
         ```sh
-        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
         ```
 
         When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -251,7 +252,7 @@ On Windows, the policy is a JSON file with exactly the text of the `Settings` re
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies your managed settings file and the MDM policy of the build together.
 {{ site.claude_code }} reads `managedSourcesBehavior` only from the highest source that has it or a policy key, so for an MDM build, the policy that you pass with `--policy` must set it.
 If only your `managed-settings.json` sets it, put it in a policy file, and pass that file with `--policy` in place of `--no-policy`.
-On computers with an MDM policy, a file build doesn't work with `merge` either, because {{ site.claude_code }} reads `apiKeyHelper` only from the highest source.
+On computers whose MDM policy sets a policy key to a value other than empty objects, a file build doesn't work with `merge` either, because {{ site.claude_code }} reads `apiKeyHelper` only from that policy.
 With `merge`, also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
 A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies each key that the MDM policy leaves unset, such as `model`.
 A [restriction allowlist](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior), such as `allowedProviders`, still comes whole from the highest source that sets one, so there the list of the build applies.
@@ -334,8 +335,8 @@ Among the servers that [skip the allowlist check](https://code.claude.com/docs/e
 
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 
-In every mode, when a session starts or resumes, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
-`kong-harnesses doctor` also names each one.
+In every mode, when a session starts or resumes, a hook of the build names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
+`kong-harnesses doctor` also names each one, and each gateway MCP server that a setting blocks, but neither names the other servers of a plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -351,6 +352,7 @@ The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
 On Windows, the path must start with a drive letter, such as `C:\`, and use backslashes, so `fleet build` refuses a path with `/` or a network path.
 It also must not have `"`, `%`, `!` or a control character, because the helper commands of the build can't carry them.
 On macOS and Linux, it must not have a line break or a NUL, and for a macOS MDM build, no control character.
+On every platform, the path must be in UTF-8.
 Each build needs its own output folder, and the folder must be new or empty.
 This guide uses one folder for each build.
 
@@ -738,7 +740,7 @@ If one of them does, remove the key or set it to `false`.
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
 If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
 {{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
-So then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
+Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
 `kong-harnesses doctor` names each key server without a saved key.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
