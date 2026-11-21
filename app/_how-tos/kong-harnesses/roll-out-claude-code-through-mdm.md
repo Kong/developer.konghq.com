@@ -179,7 +179,7 @@ The sources, from highest to lowest:
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
 {{ site.claude_code }} uses that value only when [no administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents), and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
 In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`.
-The `HKCU` value must also set it, and the two conditions for Windows must also hold.
+The `HKCU` value must also set it to `true`, and the two conditions for Windows must also hold.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -203,7 +203,7 @@ Move such headers into your `managed-settings.json`, and pass a copy of it with 
 No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod` or `forceLoginGatewayUrl` either, because the build sets neither, so a value of either key in any file applies.
-For a Windows build without `--wsl inherit`, no file may set `wslInheritsWindowsSettings` to `true`, because {{ site.claude_code }} in WSL then reads the build, whose commands only Windows runs.
+For a Windows build without `--wsl inherit`, each file must leave out `wslInheritsWindowsSettings` or set it to `false`, because any other value turns on the Windows chain, and {{ site.claude_code }} in WSL then reads the build, whose commands only Windows runs.
 
 By default, on a computer whose {{ site.claude_code }} MDM policy sets a [policy key](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources) to a value other than empty objects, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 So the credential helper and the hooks of a file build don't apply there, and those computers need an MDM build.
@@ -351,9 +351,9 @@ To give it the same settings, add `--wsl inherit`.
 `fleet build` doesn't install it, and the Windows install of {{ site.claude_code }} doesn't put it in WSL.
 To install it, see [Install in WSL](https://code.claude.com/docs/en/setup#install-in-wsl), and to find the supported versions, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 `fleet build` checks `wslInheritsWindowsSettings` only in the policy that you pass with `--policy`.
-If that policy sets it to `true`, `fleet build` refuses a Windows build without `--wsl inherit`, so add the option or set the key to `false` in the policy.
+If that policy sets it to a value other than `false`, `fleet build` refuses a Windows build without `--wsl inherit`, so add the option or set the key to `false` in the policy.
 `fleet build` can't see the computers, so it doesn't check the `HKLM` policy, `managed-settings.json` or the files in `managed-settings.d` there, unless you pass one of them with `--policy`.
-If one of them sets `wslInheritsWindowsSettings` to `true`, {{ site.claude_code }} in WSL reads the build, and the credential helper and the hooks of a build without `--wsl inherit` don't run there.
+If one of them sets `wslInheritsWindowsSettings` to a value other than `false`, {{ site.claude_code }} in WSL reads the build, and the credential helper and the hooks of a build without `--wsl inherit` don't run there.
 For those computers, add `--wsl inherit`, or set the key to `false` there.
 For a new MDM build of computers that already have an MDM build, which you pass with `--record`, `fleet build` first takes the settings of the earlier build out of the policy, and checks only the value that is left.
 `--wsl inherit` needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
@@ -479,6 +479,8 @@ The managed settings hold:
   It names up to 10 of them for each cause, with a count of the rest.
   It doesn't name the servers of a plugin.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
+  If the managed settings that {{ site.claude_code }} applies set [`disableAllHooks`](https://code.claude.com/docs/en/settings-reference#disableallhooks) to `true`, such as from your `--policy` or from a file in `managed-settings.d`, {{ site.claude_code }} turns off both hooks.
+  Then no session names the MCP servers that it doesn't load, and no model learns that a WebSearch didn't run, but the credential helper still works.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
   Each `--model` replaces the model of the family that it names, and of each role, such as subagents, that used the earlier model of that family.
@@ -664,6 +666,8 @@ When the build ID and the label are both correct, send a short prompt, such as `
 On the first request, kong-harnesses opens the browser.
 Sign in with the developer's identity provider account.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
+The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
+If one of them does, remove the key or set it to `false`.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
 If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
@@ -683,9 +687,9 @@ A certificate error means that the distribution doesn't trust the CA of the gate
 {{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
 For a Windows build without `--wsl inherit`, make sure on each Windows computer that no administrator source turns on WSL inheritance.
-The `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode`, `C:\Program Files\ClaudeCode\managed-settings.json` and each file in `C:\Program Files\ClaudeCode\managed-settings.d` must not set `wslInheritsWindowsSettings` to `true`.
+The `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode`, `C:\Program Files\ClaudeCode\managed-settings.json` and each file in `C:\Program Files\ClaudeCode\managed-settings.d` must each leave out `wslInheritsWindowsSettings` or set it to `false`, because any other value turns on the Windows chain.
 {{ site.claude_code }} [reads `wslInheritsWindowsSettings`](https://code.claude.com/docs/en/settings-reference#wslinheritswindowssettings) only from these sources, and the `HKCU` value doesn't turn it on by itself.
-If one of them does, build again with `--wsl inherit`, or set the key to `false` there.
+If one of them sets another value, build again with `--wsl inherit`, or set the key to `false` there.
 
 Do these checks before you install on the other managed computers.
 
