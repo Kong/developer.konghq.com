@@ -339,14 +339,19 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build.
   {{ site.claude_code }} then loads only the servers in that file and other servers that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that Claude Desktop delivers.
   It loads no server that a developer, a project or a plugin adds.
-  On a workstation, {{ site.claude_code }} [exits at startup](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) when a session gets servers through `claude --mcp-config` or uses `--strict-mcp-config` while a `managed-mcp.json` is on the computer.
+  On a workstation, {{ site.claude_code }} [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) when a session gets servers through `claude --mcp-config` or uses `--strict-mcp-config` while a `managed-mcp.json` that {{ site.claude_code }} can read and parse is on the computer.
   So before you deploy the build, remove these options from the commands that start {{ site.claude_code }}, such as scripts, aliases and the settings of an IDE or a host app.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   `fleet build` refuses a server in that file with the name of a gateway MCP server of the profile, so rename your server first.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead, so that `fleet build` takes the server of that build out.
   It still refuses the server when its definition changed after that build.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
-* `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
+* `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide and the servers that the managed `allowedMcpServers` list allows.
+  The build adds to that list the gateway MCP servers of the profile and the servers that you list with `--mcp-url` or `--mcp-command`.
+  While the lock is on, {{ site.claude_code }} [takes that list from the highest administrator source that sets one](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
+  So the list of the build replaces the list of a lower administrator source, such as your `managed-settings.json` and `managed-settings.d` for an MDM build.
+  And a higher source with its own list, such as an MDM policy for a file build, replaces the list of the build, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
+  So put each entry that the computers need in the policy that you pass with `--policy`, or list it with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
   To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows, or the `skills` folder in the folder that `CLAUDE_CONFIG_DIR` names:
 
@@ -365,7 +370,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 
 * The computers already have a `managed-mcp.json`.
   {{ site.claude_code }} then loads only the servers in that file and the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json), such as the servers that `managedMcpServers` provides, as with `exclusive`.
-  It doesn't load the servers of the plugin that `profile activate` adds, and it exits at startup on `claude --mcp-config` or `--strict-mcp-config`, as with `exclusive`.
+  It doesn't load the servers of the plugin that `profile activate` adds.
+  When {{ site.claude_code }} can read and parse the file, it also [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) on `claude --mcp-config` or `--strict-mcp-config`, as with `exclusive`.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`.
   {{ site.claude_code }} [ignores each entry that isn't one of these kinds](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), such as a name that it doesn't know or a number.
   So a list with one of these kinds blocks the plugin, also when it has other entries, and a list with none of them doesn't.
@@ -380,7 +386,9 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   {{ site.claude_code }} [enforces a value that it can't read as an empty list](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), drops each entry that it can't read and keeps the others, and reads a `null` in a managed source as an empty list.
   [`claude doctor`](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) names a value or an entry that {{ site.claude_code }} can't read, but not a `null`.
   {{ site.claude_code }} [combines the allowlists of every settings scope](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated), unless `allowManagedMcpServersOnly` is `true`, which keeps only the managed list.
-  So the gateway MCP servers then load only when another list that {{ site.claude_code }} combines allows them, and a `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
+  So with an empty managed list, the gateway MCP servers load only when another list that {{ site.claude_code }} combines allows them.
+  When {{ site.claude_code }} drops an entry, they also load when a kept entry of the same list allows them.
+  A `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 * When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
@@ -390,8 +398,9 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
   For the other two settings, use `exclusive`, or make sure that {{ site.claude_code }} doesn't merge the host settings: leave out `--host-settings merge`, and remove a `parentSettingsBehavior` of `merge` from your managed settings or set it to `first-wins`.
   With `any`, an `allowedMcpServers` list of the host also applies when no `allowedMcpServers` list of your managed settings is in force, so it must allow the addresses of the gateway MCP servers.
-  [Without the MCP lock](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), {{ site.claude_code }} reads `allowedMcpServers` from the managed source that it applies, and [combines that list with the lists of the user, project and local settings](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
-  While an administrator source sets `allowManagedMcpServersOnly` to `true`, it is the list of the highest administrator source that sets one, and the list of the host applies only when no administrator source sets one.
+  [Without the MCP lock](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), {{ site.claude_code }} reads `allowedMcpServers` from the managed source that it applies, and [combines that list with the lists of every other settings scope](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated): the user, project and local settings, and the `--settings` value of the session.
+  While an administrator source sets `allowManagedMcpServersOnly` to `true`, {{ site.claude_code }} ignores the lists of those other scopes, and uses the list of the highest administrator source that sets one.
+  The list of the host then applies only when no administrator source sets one.
   When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
 
 When the policy that you pass with `--policy` has one of these plugin or marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers:
@@ -443,10 +452,10 @@ The hook and `doctor` read the settings in the same way, so both have these limi
 
 * They read the `deniedMcpServers` list of only one administrator source, while {{ site.claude_code }} [applies the entries of every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 * When a `managed-mcp.json` is in place, such as for an `exclusive` build, they don't check `deniedMcpServers`, as [Validate](#validate) says.
-* When one entry of an `allowedMcpServers` or `deniedMcpServers` list can't be read, they skip the whole list.
-  {{ site.claude_code }} [drops only that entry and enforces the rest](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
-* They don't name the other servers of a plugin.
-
+* When one entry of an `allowedMcpServers` list can't be read, they read that list as one with no entries, so they can name a server that the rest of the list allows.
+* When one entry of a `deniedMcpServers` list can't be read, they skip that list.
+  For both lists, {{ site.claude_code }} [drops only that entry and enforces the rest](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
+* The hook names no server of a plugin, and `doctor` names only the gateway MCP servers of the plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -890,6 +899,9 @@ The labels:
   For a file build, this label means that an MDM policy ranks above the drop-in, and {{ site.claude_code }} ignores most keys of the drop-in.
   Build with `--delivery mdm` for those computers.
 * A list that ends with `, merged`, such as `(plist + file, merged)`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
+  For a file build, a merged list that starts with `plist` or `HKLM` means that an MDM policy ranks above the drop-in.
+  When that policy sets a policy key to a value other than empty objects, {{ site.claude_code }} reads `apiKeyHelper` only from that policy, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
+  Then the credential helper of the build isn't in effect, so build with `--delivery mdm` for those computers.
 * `(remote)`, or a merged list that starts with `remote`, such as `(remote + file, merged)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the managed source that it takes most keys from.
   Stop this computer from fetching them, such as by removing a claude.ai login of your organization, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
