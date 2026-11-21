@@ -151,7 +151,8 @@ A file build needs `--policy` or `--no-policy`.
 If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
 The build then keeps your headers in its value.
 If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, pass `--no-policy`.
-For a file build, `--policy` takes your `managed-settings.json`, and `fleet build` refuses an MDM policy there that sets a policy key, because that policy ranks above the drop-in.
+For a file build, `--policy` takes only the `managed-settings.json` of the computers, and `fleet build` refuses every property list there, also a binary one.
+For an MDM policy, build with `--delivery mdm` instead.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
@@ -162,15 +163,16 @@ No file, in any order, may set `policyHelper`, because the settings that a polic
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod` or `forceLoginGatewayUrl` either, because the build sets neither, so a value of either key in any file applies.
 
-By default, on a computer whose {{ site.claude_code }} MDM policy sets a policy key, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
+By default, on a computer whose {{ site.claude_code }} MDM policy sets a policy key to a value other than empty objects, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 So the credential helper and the hooks of a file build don't apply there, and those computers need an MDM build.
 An MDM policy that sets only the control keys, `managedSourcesBehavior` and `wslInheritsWindowsSettings`, doesn't count.
+A value that {{ site.claude_code }} reads as unset, such as `null`, sets no key.
 {{ site.claude_code }} still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
 So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build.
 If that list doesn't allow the addresses of the gateway MCP servers, {{ site.claude_code }} doesn't load them.
-For every computer whose MDM policy sets a policy key, build with `--delivery mdm`.
+For every computer whose MDM policy sets a policy key to a value other than empty objects, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
 If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-policy`.
@@ -250,7 +252,8 @@ Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
 A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check), such as the servers that `managedMcpServers` provides and built-in servers such as Claude in Chrome.
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
-When a session starts, kong-harnesses names each server in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load, but not the servers of a plugin.
+When a session starts, kong-harnesses names up to 10 of the servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest, but not the servers of a plugin.
+`kong-harnesses doctor` names each one.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -260,7 +263,7 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 Run `fleet build` once for each platform of your managed computers.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
-The install command that each build prints names the copy of the build with a placeholder, which [Install on the managed computers](#install-on-the-managed-computers) describes.
+Each install command that a build prints runs with the copy of the build as the current folder, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the path where the kong-harnesses package installs the binary on the managed computers.
 The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
 Each build needs its own output folder, and the folder must be new or empty.
@@ -278,7 +281,7 @@ Replace each placeholder with the value for your deployment, and keep the quotes
 Claude Desktop, an IDE extension or an Agent SDK app can start {{ site.claude_code }} and pass settings of its own, the host settings.
 When the computer has managed settings, {{ site.claude_code }} ignores the host settings by default.
 To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), add `--host-settings merge`, which sets `parentSettingsBehavior` to `merge` and replaces the value that your own policy sets.
-{{ site.claude_code }} reads this key only from the highest managed source on the computer that sets a policy key, so the build must be that source.
+{{ site.claude_code }} reads this key only from the managed source that it takes most keys from, so the build must be that source.
 {{ site.claude_code }} then keeps only the host settings that restrict what Claude can do, with two exceptions.
 The permission allow rules of the host still apply, unless your own managed settings set `allowManagedPermissionRulesOnly`.
 The sandbox allowlists of the host still apply, unless your own managed settings set `sandbox.network.allowManagedDomainsOnly` for domains and `sandbox.filesystem.allowManagedReadPathsOnly` for read paths.
@@ -408,7 +411,7 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names each MCP server in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
+  When a session starts, one hook names up to 10 of the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
@@ -465,28 +468,33 @@ After the checks in [Validate](#validate) pass on each test computer, install th
    On Windows, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the line in `Settings.json`, in place of the JSON that the value holds.
    If the computers don't get a policy yet, set the value through Group Policy, Intune or your own tool.
    Computers that already get a {{ site.claude_code }} policy need a build with `--policy`.
-   If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
+   If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still reads its `env` and its MCP server lock.
 
 `fleet build` prints the command that packages or copies the files for the platform.
-The command can run on a computer other than the one that runs `fleet build`, so it names the copy of the build with a placeholder.
-On macOS, copy the whole output folder of the build to the Mac that builds the package, and replace `BUILD_FOLDER` there with the path of that copy.
-Copy it with a tool that keeps the file modes, such as `ditto` or `rsync -a`.
+The command runs with the copy of the build as the current folder, so it can run on a computer other than the one that runs `fleet build`.
+On macOS, copy the whole output folder of the build to the Mac that builds the package with a tool that keeps the file modes, such as `ditto` or `rsync -a`.
+Then run the command there, with that copy as the current folder.
 The command sets the modes of the files and the preinstall script again, so a copy that lost them still gives a correct package, and then `pkgbuild` puts the files and the preinstall script in one package.
-Replace each placeholder with the value for your deployment, and keep the quotes that the command shows.
+Replace `PACKAGE_IDENTIFIER` and `PACKAGE_VERSION` with the values for your package.
 `fleet build` prints this command:
 
 ```sh
-find 'BUILD_FOLDER/root' 'BUILD_FOLDER/scripts' -type d -exec chmod 755 {} + && find 'BUILD_FOLDER/root' -type f -exec chmod 644 {} + && chmod 755 'BUILD_FOLDER/scripts/preinstall' && pkgbuild --root 'BUILD_FOLDER/root' --scripts 'BUILD_FOLDER/scripts' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+find root scripts -type d -exec chmod 755 {} + && find root -type f -exec chmod 644 {} + && chmod 755 scripts/preinstall && pkgbuild --root root --scripts scripts --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
-Then install `kong-harnesses-fleet.pkg` on each computer.
-On Linux and Windows, copy the `root` folder from the output folder to each computer, replace `ROOT_FOLDER` with the path of that copy, and run the copy command there as an administrator, in PowerShell on Windows.
+Then install the `kong-harnesses-fleet.pkg` that the command writes there on each computer.
+On Linux and Windows, copy the `root` folder from the output folder to each computer.
+Run the copy command there as an administrator, in PowerShell on Windows, with that copy as the current folder.
+On Linux, the copy command needs `getfacl`, from the `acl` package.
 
 Before the install writes a file, it checks each file and folder of the build that is already on the computer.
 It also checks the folders above the files, such as `/etc` on Linux, `/Library` on macOS and `C:\Program Files` on Windows.
-If an entry is a link or a hard link, has an owner other than root, or other accounts can write to it, the install stops before it writes any file.
-On Windows, the owner must be Administrators, SYSTEM, TrustedInstaller, CREATOR OWNER or the account that runs the command.
-The message starts with `Not installed:` and names the entry.
+On macOS and Linux, the install stops before it writes any file when an entry is a link, has another hard link, has an owner other than root, or its group or other accounts can write to it.
+On Linux, it also stops for an entry with ACL entries beyond its mode bits, and for a name with a control character in the copy.
+On macOS, it also stops for an ACL entry that lets an account other than root change the entry, also an inherited one.
+On Windows, it stops for a link or another hard link, and when the owner of an entry, or an account that can change it, isn't Administrators, SYSTEM, TrustedInstaller or CREATOR OWNER.
+The account that runs the command doesn't count as one of them.
+The message starts with `Not installed:`, and then names the path and the condition, such as `has another owner`.
 Remove or fix that entry, and then run the install again.
 
 On macOS and Linux, after the install, root owns each file and folder of the build, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
