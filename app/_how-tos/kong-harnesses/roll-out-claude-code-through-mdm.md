@@ -348,17 +348,20 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide and the servers that the managed `allowedMcpServers` list allows.
   The build adds to that list the gateway MCP servers of the profile and the servers that you list with `--mcp-url` or `--mcp-command`.
+  These flags take no `${...}` reference, as [Build the managed settings](#build-the-managed-settings) describes.
   While the lock is on, {{ site.claude_code }} [takes that list from the highest administrator source that sets one](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
   For an MDM build, the list of the build replaces the list in your `managed-settings.json` and in `managed-settings.d`.
   Put each entry that those computers need in the policy that you pass with `--policy`, or list it with `--mcp-url` or `--mcp-command`.
-  For a file build, the drop-in of the build and your `managed-settings.json` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
-  Put each entry that those computers need in the `managed-settings.json` that they have, deploy that file, and pass the same file with `--policy`, or list the entry with `--mcp-url` or `--mcp-command`.
+  For a file build, the drop-in of the build, your `managed-settings.json` and the other files in `managed-settings.d` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
+  Put each entry that those computers need in the `managed-settings.json` that they have or in a file in `managed-settings.d`, or list it with `--mcp-url` or `--mcp-command`.
+  When you change `managed-settings.json`, pass the updated file with `--policy`, and deploy it with the drop-in of the build.
   A higher source with its own list replaces the list of the build.
-  For a file build on computers with such an MDM policy, build with `--delivery mdm` for those computers.
+  For a file build on computers with such an MDM policy, build with `--delivery mdm`.
   For server-managed settings with such a list, stop the computers from fetching them, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
+
   The build lists each gateway MCP server and each `--mcp-url` server as a `serverUrl` entry, and each `--mcp-command` server as a `serverCommand` entry.
-  When the list has a `serverUrl` entry, a `serverName` entry [no longer matches a remote server](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated), and when it has a `serverCommand` entry, a `serverName` entry no longer matches a stdio server.
-  So replace each `serverName` entry of your list with a `serverUrl` entry or `--mcp-url` for a remote server, and with a `serverCommand` entry or `--mcp-command` for a stdio server.
+  When the list has a `serverUrl` entry, a `serverName` entry [no longer matches a remote server](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated), so replace each `serverName` entry for a remote server with a `serverUrl` entry or `--mcp-url`.
+  When the list has a `serverCommand` entry, a `serverName` entry no longer matches a stdio server, so replace each `serverName` entry for a stdio server with a `serverCommand` entry or `--mcp-command`.
   `allowlist` doesn't add servers.
   To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows, or the `skills` folder in the folder that `CLAUDE_CONFIG_DIR` names:
 
@@ -498,6 +501,8 @@ Replace each placeholder with the value for your deployment, and keep the quotes
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
   With `allowlist`, to let developers add servers of their own, also add `--mcp-url` with the URL pattern of each remote server, or `--mcp-command` with the command of each local server as a JSON array of strings.
+  `fleet build` refuses a `${...}` reference in these flags, because the environment of each developer would fill it in and choose what the entry allows.
+  Write the value out instead.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
   If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
