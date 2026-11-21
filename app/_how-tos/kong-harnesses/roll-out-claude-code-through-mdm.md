@@ -160,7 +160,7 @@ cleanup:
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
 With `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer also runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
 Developers don't install, import or edit anything else.
-Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
+Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request without a saved sign-in to the profile, and kong-harnesses renews the sign-in by itself.
 For a profile with key servers, the gateway MCP servers that take a fixed key, each developer also runs `kong-harnesses login --profile work` once, and types the key of each key server.
 For a gateway MCP server with its own sign-in, each developer signs in to it once from `/mcp` in {{ site.claude_code }}.
 
@@ -317,6 +317,9 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   {{ site.claude_code }} then loads only the servers in that file and other servers that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that Claude Desktop delivers.
   It loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
+  `fleet build` refuses a server in that file with the name of a gateway MCP server of the profile, so rename your server first.
+  If an earlier fleet build wrote that server, pass the record of that build with `--record` instead, so that `fleet build` takes the server of that build out.
+  It still refuses the server when its definition changed after that build.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
@@ -349,7 +352,7 @@ For a value that only the computers have, such as a `managed-mcp.json`, check th
 
 In the cases of a `managed-mcp.json` and of the plugin and marketplace settings, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
 Then, if the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
-For a `managedMcpServers` entry at the URL of a gateway MCP server, `exclusive` helps only when the entry has the name of that gateway MCP server, because [the entry in `managed-mcp.json` takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) when both have a name.
+For a `managedMcpServers` entry at the URL of a gateway MCP server, `exclusive` helps only when the entry has the name of that gateway MCP server, because [the entry in `managed-mcp.json` takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) when the two entries have the same name.
 For an entry with another name, {{ site.claude_code }} loads both entries, so remove that entry from your policy, or change its URL.
 `exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
 For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`, so that {{ site.claude_code }} on Windows loads the gateway MCP servers.
@@ -575,7 +578,7 @@ The managed settings hold:
   Another new model needs a new build.
   With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` set to `true` in [`modelPicker`](https://code.claude.com/docs/en/settings-reference#modelpicker), {{ site.claude_code }} hides the discovered models from `/model`.
   By default, [a model ID entry](https://code.claude.com/docs/en/settings-reference#availablemodelsmatch) of `availableModels` also allows each later model ID that extends it, and a family alias such as `opus` allows the whole family.
-  But [an entry for a specific model of a family](https://code.claude.com/docs/en/model-config#merge-behavior), such as `claude-opus-5`, turns off the alias of that family, so the list then allows only the models that the specific entries match.
+  But [an entry for a specific model of a family](https://code.claude.com/docs/en/model-config#merge-behavior), such as `claude-opus-5`, turns off the alias of that family, so for that family the list allows only the models that the specific entries match.
   A later model that `availableModels` doesn't allow needs a change to that list.
   While `replaceBuiltInOptions` is `true`, each new model needs a row in `modelPicker.options`, and an `availableModels` list must also allow it.
   For an MDM build, each of these changes also needs a new build with the changed `--policy`.
@@ -730,7 +733,9 @@ It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from t
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, so a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` then doesn't show this line.
 Make sure that the build ID is the one that `fleet build` printed for the group of this computer.
 `doctor` reports each problem that it finds, gives a fix when one is available, and names the setting that blocks a gateway MCP server.
-Before the first request, it also says that the developer isn't signed in yet, which is expected.
+When the account has no saved sign-in to the profile, `doctor` also says that it isn't signed in and that the first request signs in through the browser, which is expected.
+With a saved sign-in, it says that the account is signed in and usable without a browser.
+To test the browser sign-in, use a test account with no saved sign-in to the profile.
 
 Start {{ site.claude_code }}, and run `/status` before you send a prompt:
 
@@ -784,9 +789,10 @@ If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 To list the [entries that {{ site.claude_code }} dropped](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) from the managed settings because they are invalid, also run `claude doctor`, which names the source and the field of each one.
 
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
-On the first request, kong-harnesses opens the browser.
+When `doctor` said that the account isn't signed in, kong-harnesses opens the browser on the first request.
 On Linux, this needs a desktop session with Secret Service, as the supported computers in the prerequisites describe.
 Sign in with the developer's identity provider account.
+With a saved sign-in, the request runs without the browser.
 If the sign-in fails, run `kong-harnesses doctor --profile work --client claude-code`, and follow the failure that it names.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
