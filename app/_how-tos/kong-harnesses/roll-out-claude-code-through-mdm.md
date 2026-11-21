@@ -573,7 +573,8 @@ For those paths, sign the package with your installer identity:
 productsign --sign 'INSTALLER_IDENTITY' kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
 ```
 
-For Microsoft Intune, add the package as a macOS app (PKG), which takes an unsigned package and a package that installs files outside `/Applications`.
+For Microsoft Intune, add the package as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), which takes an unsigned package and a package that installs files outside `/Applications`.
+Intune uses the app bundle IDs of the Included apps list to detect the installation, and this package installs no app, so Intune may not report it as installed.
 An Intune macOS line-of-business app doesn't fit, because Intune reports its install only for apps in the `Applications` folder, and this package has none.
 Then install the package on each computer: the signed copy, or the unsigned `kong-harnesses-fleet.pkg` only for a path that takes it.
 
