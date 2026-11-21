@@ -105,8 +105,8 @@ cleanup:
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
-Developers don't install, import or edit anything, unless you build with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers.
-Then each developer runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
+You build the managed settings, and your MDM tool deploys them, so developers don't install, import or edit anything.
+Only for a build with `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one computer for each platform before the rest of the fleet.
@@ -188,7 +188,8 @@ It lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
 Then remove it from its source.
-An API key that the build's `apiKeyHelper` returns doesn't start the fetch of server-managed settings.
+Server-managed settings reach a session only when it signs in with one of the credentials that [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability) lists, such as a Team or Enterprise claude.ai login, an OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` or an API key that is set directly.
+The key that the build's `apiKeyHelper` returns is none of them, so it doesn't start the fetch of server-managed settings.
 But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
 The server-managed settings then rank above the build, and the build's `apiKeyHelper` isn't in effect.
 
@@ -413,6 +414,7 @@ The managed settings hold:
 * A lock to the gateway.
   {{ site.claude_code }} refuses every provider but the gateway, and ignores another Claude provider, a credential or custom headers that a developer sets in the shell or in their own settings.
   A session that Claude Desktop starts is the exception, because {{ site.claude_code }} then takes environment variables from the environment that Claude Desktop builds.
+  For the settings that such an app passes, see `--host-settings merge` in [Build the managed settings](#build-the-managed-settings).
 * With `--mcp-servers allowlist`, the lock on MCP servers that [Choose the MCP servers](#choose-the-mcp-servers) describes.
 * A build ID in `env.KONG_HARNESSES_FLEET_BUILD`, so a support report from a developer names the build that their computer has.
 
@@ -448,16 +450,22 @@ After the checks in [Validate](#validate) pass on each test computer, install th
    On Windows, only SYSTEM, Administrators or TrustedInstaller can own or write to each file and every folder up to `C:\Program Files`, and no reparse point can be on the path.
    A reparse point, such as a symbolic link or a junction, sends the path to another place.
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
+   On macOS, upload `com.anthropic.claudecode.plist` to your MDM tool in place of your Custom Settings payload for the `com.anthropic.claudecode` preference domain.
+   If the computers don't get a {{ site.claude_code }} policy yet, upload it as a Custom Settings payload for that domain, or add its keys to the {{ site.claude_code }} payload that you deploy.
+   On Windows, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the line in `Settings.json`, in place of the JSON that the value holds.
+   If the computers don't get a policy yet, set the value through Group Policy, Intune or your own tool, or add the keys of the line to the JSON that the value holds.
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
 `fleet build` prints the command that packages or copies the files for the platform.
 The command can run on a computer other than the one that runs `fleet build`, so it names the copy of the build with a placeholder.
 On macOS, copy the whole output folder of the build to the Mac that builds the package, and replace `BUILD_FOLDER` there with the path of that copy.
-The command is a `pkgbuild` command like this one, which puts the files and a preinstall script in one package.
+Copy it with a tool that keeps the file modes, such as `ditto` or `rsync -a`.
+The command is like this one.
+It sets the modes of the files and the preinstall script again, so a copy that lost them still gives a correct package, and then `pkgbuild` puts the files and the preinstall script in one package.
 Replace each placeholder with the value for your deployment, and keep the quotes that the example shows:
 
 ```sh
-pkgbuild --root 'BUILD_FOLDER/root' --scripts 'BUILD_FOLDER/scripts' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+find 'BUILD_FOLDER/root' 'BUILD_FOLDER/scripts' -type d -exec chmod 755 {} + && find 'BUILD_FOLDER/root' -type f -exec chmod 644 {} + && chmod 755 'BUILD_FOLDER/scripts/preinstall' && pkgbuild --root 'BUILD_FOLDER/root' --scripts 'BUILD_FOLDER/scripts' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 Then install `kong-harnesses-fleet.pkg` on each computer.
@@ -466,7 +474,7 @@ On Linux and Windows, copy the `root` folder from the output folder to each comp
 Before the install writes a file, it checks each file and folder of the build that is already on the computer.
 On macOS, the preinstall script also checks each folder above the files.
 If an entry is a link or a hard link, has an owner other than root, or other accounts can write to it, the install stops before it writes any file.
-On Windows, the owner must be Administrators, SYSTEM or TrustedInstaller.
+On Windows, the owner must be Administrators, SYSTEM, TrustedInstaller, CREATOR OWNER or the account that runs the command.
 The message starts with `Not installed:` and names the entry.
 Remove or fix that entry, and then run the install again.
 
@@ -474,7 +482,8 @@ After the install, root owns each file and folder of the build on macOS and Linu
 On macOS, `pkgbuild` sets root as the owner by default, and the package keeps the modes of the build.
 On Linux, the copy command sets the owner and the modes after the copy, and doesn't change the top folder, such as `/etc`.
 On Windows, the copy command gives each file and folder of the build to Administrators, with the access rules that it inherits from the folder that holds it.
-If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on the computer with its own rules, the files get those rules, so make sure that each folder on the path follows the rule in the install step.
+If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on the computer with its own rules, the copy command replaces them with the rules that the folder inherits from `C:\Program Files`.
+So make sure that `C:\Program Files` follows the rule in the install step.
 
 ## Validate
 
@@ -551,7 +560,7 @@ On the first request, kong-harnesses opens the browser.
 Sign in with the developer's identity provider account.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in the MDM policy that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
 
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
