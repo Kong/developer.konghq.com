@@ -443,6 +443,8 @@ The hook and `doctor` read the settings in the same way, so both have these limi
 
 * They read the `deniedMcpServers` list of only one administrator source, while {{ site.claude_code }} [applies the entries of every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 * When a `managed-mcp.json` is in place, such as for an `exclusive` build, they don't check `deniedMcpServers`, as [Validate](#validate) says.
+* When one entry of an `allowedMcpServers` or `deniedMcpServers` list can't be read, they skip the whole list.
+  {{ site.claude_code }} [drops only that entry and enforces the rest](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 * They don't name the other servers of a plugin.
 
 
