@@ -355,6 +355,8 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   For a file build, the drop-in of the build, your `managed-settings.json` and the other files in `managed-settings.d` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
   Put each entry that those computers need in the `managed-settings.json` that they have or in a file in `managed-settings.d`, or list it with `--mcp-url` or `--mcp-command`.
   When you change `managed-settings.json`, pass the updated file with `--policy`, and deploy it with the drop-in of the build.
+  Write the URLs and commands of these entries out, without a `${...}` reference, because `fleet build` checks only its flags for one.
+  {{ site.claude_code }} [fills in such a reference from the shell that starts it](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand), so the developer would choose what the entry allows.
   A higher source with its own list replaces the list of the build.
   For a file build on computers with such an MDM policy, build with `--delivery mdm`.
   For server-managed settings with such a list, stop the computers from fetching them, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
@@ -399,6 +401,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   So with an empty managed list, the gateway MCP servers load only when another list that {{ site.claude_code }} combines allows them.
   When {{ site.claude_code }} drops an entry, they also load when a kept entry of the same list allows them.
   A `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
+  For an MDM build with `allowlist`, this case applies only to a source above the build, such as server-managed settings.
+  The build replaces such a value in the policy that you pass with `--policy` with its own list, and its list replaces the list of a lower source.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 * When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
@@ -501,6 +505,9 @@ Replace each placeholder with the value for your deployment, and keep the quotes
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
   With `allowlist`, to let developers add servers of their own, also add `--mcp-url` with the URL pattern of each remote server, or `--mcp-command` with the command of each local server as a JSON array of strings.
+  Repeat the flag for each server.
+  Give `--mcp-command` the command with all its arguments, because {{ site.claude_code }} matches each argument exactly.
+  Quote each value, so that the shell keeps a `*` in a URL pattern and the JSON quotes of a command, such as `--mcp-url 'https://MCP_HOST/*'` and `--mcp-command '["npx","-y","PACKAGE"]'`.
   `fleet build` refuses a `${...}` reference in these flags, because the environment of each developer would fill it in and choose what the entry allows.
   Write the value out instead.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
@@ -684,7 +691,7 @@ The managed settings hold:
   The other families and their roles keep the models of the profile.
   For a model ID that doesn't name exactly one Claude family, add the family, such as `--model opus=MODEL_ID`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
-  A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
+  A model that the gateway adds later then shows in `/model` without a new build when its ID [contains `claude` or `anthropic` in any letter case](https://code.claude.com/docs/en/llm-gateway-protocol#request-and-response).
   {{ site.claude_code }} [fetches the list again at each startup](https://code.claude.com/docs/en/llm-gateway-protocol#picker-entries-and-caching), so a developer restarts {{ site.claude_code }} to see the new model.
   Another new model needs a new build.
   With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` set to `true` in [`modelPicker`](https://code.claude.com/docs/en/settings-reference#modelpicker), {{ site.claude_code }} hides the discovered models from `/model`.
@@ -972,6 +979,7 @@ If a server is missing, look for these settings in [Choose the MCP servers](#cho
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, or a `blockedMarketplaces` list with one.
 * A `strictPluginOnlyCustomization` value other than `null` that is neither a Boolean nor a list, or a `strictKnownMarketplaces` or `allowedMarketplaces` value other than `null` that {{ site.claude_code }} can't read, which `claude doctor` names.
 * An `allowedMcpServers` of `null`, or a value that {{ site.claude_code }} can't read, which `claude doctor` names, when no other list that {{ site.claude_code }} combines allows the gateway addresses.
+  For an MDM build with `allowlist`, only such a value in a source above the build counts.
 * A `managedMcpServers` entry at the URL of a gateway MCP server.
 * One of these settings from a host app, when {{ site.claude_code }} merges the host settings.
 
