@@ -42,6 +42,10 @@ prereqs:
         This guide uses [kong-harnesses](/kong-harnesses/) to build the managed settings.
         On the computer where you build the managed settings, install a kong-harnesses release that includes `fleet build` and `fleet remove`.
 
+        {:.info}
+        > **Supported computers:** kong-harnesses runs on macOS, on Windows 11, and on Linux desktops with Secret Service, such as Ubuntu 26.04, 24.04 and 22.04, and Red Hat Enterprise Linux 9, on amd64 and arm64.
+        > Set it up on the desktop you work on, not in WSL, a container or an SSH session.
+
         {% navtabs "install-kong-harnesses" %}
         {% navtab "macOS" %}
         {% include tools/kong-harnesses/install/osx.md %}
@@ -55,6 +59,7 @@ prereqs:
         {% endnavtabs %}
 
         To check that your release includes the fleet commands, run `kong-harnesses fleet build --help`.
+        If the shell can't find `kong-harnesses`, open a new terminal.
     - title: A kong-harnesses profile
       content: |
         Create a kong-harnesses profile that signs developers in through your identity provider, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/) shows.
@@ -322,7 +327,8 @@ Run `fleet build` once for each platform of your managed computers.
 Each install command that a build prints runs from a copy of the build's files: the whole output folder on macOS, or its `root` folder on Linux and Windows, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the absolute path where the kong-harnesses package installs the binary on the managed computers.
 The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
-On Windows, the path must not have `"`, `%`, `!` or a control character, because the helper commands of the build can't carry them.
+On Windows, the path must start with a drive letter, such as `C:\`, and use backslashes, so `fleet build` refuses a path with `/` or a network path.
+It also must not have `"`, `%`, `!` or a control character, because the helper commands of the build can't carry them.
 On macOS and Linux, it must not have a line break or a NUL, and for a macOS MDM build, no control character.
 Each build needs its own output folder, and the folder must be new or empty.
 This guide uses one folder for each build.
@@ -364,8 +370,10 @@ If interop is off, the credential helper tells the developer to turn it on.
 {{ site.claude_code }} in WSL gets the managed settings and the route to the gateway.
 But with `allowlist` or `any`, it doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the {{ site.claude_code }} settings in the developer's Windows home folder.
 For a profile with gateway MCP servers, the WSL line in the result of `fleet build` names the servers that {{ site.claude_code }} in WSL doesn't get.
-With `--wsl inherit`, the `--executable` path must also start with a drive letter, such as `C:\`, and use backslashes, so `fleet build` refuses a path with `/` or `'`.
-It also refuses a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
+With `--wsl inherit`, `fleet build` also refuses an `--executable` path with `'`.
+It also refuses a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`, because {{ site.claude_code }} in WSL can't read a Windows path of a certificate file.
+`fleet build` checks only the `--policy` file for these variables, but {{ site.claude_code }} reads `env` from [every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
+So also make sure that the `HKLM` policy, `managed-settings.json` and the files in `managed-settings.d` on the computers don't set them in `env`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
 The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
 
@@ -554,6 +562,15 @@ find root scripts -type d -exec chmod 755 {} + && find root -type f -exec chmod 
 ```
 
 Then install, on each computer, the `kong-harnesses-fleet.pkg` that the command writes in that folder.
+The command doesn't sign the package, and most MDM delivery paths need a signed one.
+[Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify.
+A Microsoft Intune macOS line-of-business app needs a Developer ID Installer signature, and a Jamf Pro PreStage enrollment package needs a certificate that the Mac trusts at enrollment.
+For those paths, sign the package with your installer identity, and deploy the signed copy:
+
+```sh
+productsign --sign 'INSTALLER_IDENTITY' kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
+```
+
 On Linux and Windows, copy the `root` folder from the output folder to each computer.
 Run the copy command there as an administrator, from inside the copied `root` folder.
 On Windows, run it in Windows PowerShell.
@@ -668,8 +685,10 @@ To list the [entries that {{ site.claude_code }} dropped](https://code.claude.co
 
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 On the first request, kong-harnesses opens the browser.
+On Linux, this needs a desktop session with Secret Service, as the supported computers in the prerequisites describe.
 Sign in with the developer's identity provider account.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
+To confirm the route, open the LLM usage view of [{{site.observability}} Explorer](/observability/explorer/), and find a request with the model of the session at the time of the prompt.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
 If one of them does, remove the key or set it to `false`.
 
@@ -687,7 +706,9 @@ Make sure that the `Setting sources` line shows `Enterprise managed settings` wi
 If it doesn't, make sure that you built with `--wsl inherit`, and deploy the build again.
 Then send a short prompt, such as `Say hello`.
 The credential helper runs kong-harnesses on Windows through interop, so the session uses the developer's Windows sign-in.
-A certificate error means that the distribution doesn't trust the CA of the gateway certificate.
+A certificate error means that the distribution doesn't trust the CA of the gateway certificate, or that {{ site.claude_code }} can't read a certificate file.
+To find the cause, start [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) in the distribution.
+If {{ site.claude_code }} can't read a certificate file, the debug log shows a `Failed to read` or `Failed to load` line with the reason.
 {{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
 For a Windows build without `--wsl inherit`, make sure on each Windows computer that no administrator source turns on WSL inheritance.
