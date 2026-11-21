@@ -67,7 +67,7 @@ cleanup:
         * When policy keys or your own MCP servers are left, pass a new or empty folder with `--output-dir`.
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
-        Replace each placeholder with the value for your deployment, and keep the quotes around each path.
+        Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
         For a file build without `--mcp-servers exclusive`, `fleet remove` lists the files to delete from each managed computer:
 
         ```sh
@@ -137,7 +137,7 @@ The sources, from highest to lowest:
 
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
 {{ site.claude_code }} uses that value only when no administrator source is on the computer, and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
-In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`, and the `HKCU` value also sets it.
+In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`, the `HKCU` value also sets it, and the two conditions for Windows also hold.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -249,13 +249,13 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 Run `fleet build` once for each platform of your managed computers.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
-The install command that each build prints names its `root` folder with a placeholder, which [Install on the managed computers](#install-on-the-managed-computers) describes.
+The install command that each build prints names the copy of the build with a placeholder, which [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the path where the kong-harnesses package installs the binary on the managed computers.
 The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
 Each build needs its own output folder, and the folder must be new or empty.
 This guide uses one folder for each build.
 
-Replace each placeholder with the value for your deployment, and keep the quotes around each path, so that a path with spaces works:
+Replace each placeholder with the value for your deployment, and keep the quotes that the examples show, so that a path with spaces works:
 
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
@@ -353,6 +353,7 @@ kong-harnesses fleet build --profile work --platform windows --delivery mdm --ex
 {% endnavtabs %}
 
 `fleet build` writes the files that each computer needs under `root` in the output folder, at the path that each file takes on the computer.
+A macOS build also writes the preinstall script of the package under `scripts` in the output folder.
 An MDM build also writes the policy with your keys and its own settings under `mdm` in the output folder.
 On macOS, the policy is `com.anthropic.claudecode.plist`, for a Custom Settings payload.
 On Windows, the policy is `Settings.json`.
@@ -450,23 +451,29 @@ After the checks in [Validate](#validate) pass on each test computer, install th
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
 `fleet build` prints the command that packages or copies the files for the platform.
-The command can run on another computer than `fleet build`, so it names the copy of `root` with the `ROOT_FOLDER` placeholder.
-Copy the `root` folder from the output folder to the computer that runs the command, and replace `ROOT_FOLDER` there with the path of that copy.
-On macOS, that is the Mac that builds the package, and the command is a `pkgbuild` command like this one, which puts the files in one package.
-Replace each placeholder with the value for your deployment, and keep the quotes:
+The command can run on a computer other than the one that runs `fleet build`, so it names the copy of the build with a placeholder.
+On macOS, copy the whole output folder of the build to the Mac that builds the package, and replace `BUILD_FOLDER` there with the path of that copy.
+The command is a `pkgbuild` command like this one, which puts the files and a preinstall script in one package.
+Replace each placeholder with the value for your deployment, and keep the quotes that the example shows:
 
 ```sh
-pkgbuild --root 'ROOT_FOLDER' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
+pkgbuild --root 'BUILD_FOLDER/root' --scripts 'BUILD_FOLDER/scripts' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 Then install `kong-harnesses-fleet.pkg` on each computer.
+On Linux and Windows, copy the `root` folder from the output folder to each computer, replace `ROOT_FOLDER` with the path of that copy, and run the copy command there as an administrator.
 
-The build sets every folder to mode 755 and every file to mode 644, so each account on the computer can read them.
-By default, `pkgbuild` sets root as the owner of each file in the package, so the package installs the files as root.
-On Linux and Windows, copy `root` to each computer, and run the copy command there as an administrator.
-On Linux, `fleet build` prints a copy command that creates the files as root, and sets each folder that the build writes to mode 755 and each file to mode 644.
-The command doesn't change `/etc`.
-On Windows, the PowerShell copy command that `fleet build` prints gives each file the access rules of the folder that holds it.
+Before the install writes a file, it checks each file and folder of the build that is already on the computer.
+On macOS, the preinstall script also checks each folder above the files.
+If an entry is a link or a hard link, has an owner other than root, or other accounts can write to it, the install stops before it writes any file.
+On Windows, the owner must be Administrators, SYSTEM or TrustedInstaller.
+The message starts with `Not installed:` and names the entry.
+Remove or fix that entry, and then run the install again.
+
+After the install, root owns each file and folder of the build on macOS and Linux, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
+On macOS, `pkgbuild` sets root as the owner by default, and the package keeps the modes of the build.
+On Linux, the copy command sets the owner and the modes after the copy, and doesn't change the top folder, such as `/etc`.
+On Windows, the copy command gives each file and folder of the build to Administrators, with the access rules that it inherits from the folder that holds it.
 If a folder of the build, such as `C:\Program Files\ClaudeCode`, is already on the computer with its own rules, the files get those rules, so make sure that each folder on the path follows the rule in the install step.
 
 ## Validate
@@ -522,7 +529,7 @@ The labels:
   For a file build, this label means that an MDM policy ranks above the drop-in, and {{ site.claude_code }} ignores most keys of the drop-in.
   Build with `--delivery mdm` for those computers.
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
-* `(remote)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
+* `(remote)`, or a merged list that starts with `remote`, such as `(remote + file, merged)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the highest source.
   Find their source, and remove them there.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.

@@ -653,6 +653,7 @@ PostgreSQL
 PowerShell
 preferred_name
 premade
+preinstall
 prepend
 prepended
 prepending
