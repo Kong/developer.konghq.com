@@ -87,13 +87,16 @@ cleanup:
   inline:
     - title: Remove the fleet build
       content: |
-        For a build with `--mcp-servers allowlist` or `any`, first ask each developer who ran `profile activate` to remove the settings that it added, before you remove kong-harnesses from the computers.
-        `profile cleanup` takes no profile name, and removes the setup of the profile that {{ site.claude_code }} uses now, so the developer runs it only when [`kong-harnesses status`](/kong-harnesses/status/) shows {{ site.claude_code }} in the `Used by` line of the `work` profile:
+        For a build with `--mcp-servers allowlist` or `any`, first ask each developer who ran `profile activate` to remove the settings that it added, before you remove kong-harnesses from the computers:
 
         ```sh
         kong-harnesses profile cleanup --client claude-code
         ```
 
+        `profile cleanup` takes no profile name, and removes the {{ site.claude_code }} setup of the profile that the developer's own settings use, also when that profile isn't `work`.
+        That setup stops working when you remove kong-harnesses, so the developer runs `profile cleanup` in every case.
+        To see the changes first, the developer adds `--dry-run`.
+        While the build is on the computer, `kong-harnesses status` shows {{ site.claude_code }} under the `work` profile, whatever the developer activated, so it doesn't show which setup `profile cleanup` removes.
         [`profile cleanup`](/kong-harnesses/profile/cleanup/) changes only the developer's own {{ site.claude_code }} settings, so it works before or after you delete the files of the build, but it needs kong-harnesses on the computer.
 
         Then, as an administrator, remove the package or script that installs the files of the build from each assignment in your MDM tool, so that the tool doesn't install the files again after you delete them.
@@ -263,8 +266,23 @@ Remove each value that conflicts with the build, and each list entry or key that
 Login keys, such as `forceLoginMethod` and `forceLoginGatewayUrl`, still come only from the highest MDM policy or file with a policy key.
 Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 
-`fleet build` refuses a policy that sets `forceLoginMethod`, `forceLoginGatewayUrl`, `policyHelper` or `policyHelpers`, an `allowedProviders` entry other than the gateway, or an `env` value that isn't text, and names the value.
-It also refuses a version range that is empty, or a `requiredMaximumVersion` below the version that the lock to the gateway needs.
+`fleet build` refuses a policy with a value that changes how {{ site.claude_code }} reaches the gateway, and names each key that causes it:
+
+* `forceLoginMethod` or `forceLoginGatewayUrl`, which lock the sign-in.
+* An `allowedProviders` entry other than the gateway.
+* `policyHelper` or `policyHelpers`, because {{ site.claude_code }} then reads only the policy that the helper gives.
+* An `env` value that isn't text, because {{ site.claude_code }} drops it.
+* In `env.ANTHROPIC_CUSTOM_HEADERS`, a header that sets `Authorization`, `Proxy-Authorization`, `X-Api-Key` or `Host`, a header that the attribution of the profile sets to another value, or a line that isn't a `Name: Value` header.
+* A version range that is empty, or a `requiredMaximumVersion` below the first {{ site.claude_code }} release that refuses every provider but the gateway.
+
+It also refuses a policy that it can't read, or that {{ site.claude_code }} would read in another way:
+
+* A file larger than 1 MiB, or a file that isn't a JSON object or a property list dictionary.
+* A binary property list, or a property list for a platform other than macOS or for a file build.
+* A key that is set twice in one block, a number that {{ site.claude_code }} reads as another value, or a date or data value.
+* For an MDM build, a value that the MDM policy doesn't read back as it is, such as a control character.
+
+For WSL and for the gateway MCP servers, [Build the managed settings](#build-the-managed-settings) and [Choose the MCP servers](#choose-the-mcp-servers) name the other values that `fleet build` refuses.
 It doesn't check the models, so make sure that your policy allows each model of the build: no [`deniedModels`](https://code.claude.com/docs/en/model-config#block-specific-models-or-versions) entry can block one, and an `availableModels` list must allow each one.
 It lists each of your values that it changes.
 
@@ -331,8 +349,8 @@ For a value that only the computers have, such as a `managed-mcp.json`, check th
 
 In the cases of a `managed-mcp.json` and of the plugin and marketplace settings, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
 Then, if the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
-For a `managedMcpServers` entry at the URL of a gateway MCP server, `exclusive` doesn't help, because [provided servers load](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) together with the servers of `managed-mcp.json`.
-Remove that entry from your policy, or change its URL.
+For a `managedMcpServers` entry at the URL of a gateway MCP server, `exclusive` helps only when the entry has the name of that gateway MCP server, because [the entry in `managed-mcp.json` takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) when both have a name.
+For an entry with another name, {{ site.claude_code }} loads both entries, so remove that entry from your policy, or change its URL.
 `exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
 For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`, so that {{ site.claude_code }} on Windows loads the gateway MCP servers.
 {{ site.claude_code }} in WSL doesn't load them in any mode.
@@ -396,7 +414,7 @@ The sandbox allowlists of the host still apply, unless your own managed settings
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
 To give it the same settings, add `--wsl inherit`.
-{{ site.claude_code }} in each WSL distribution is a separate Linux install, and it must be at a version that Kong supports.
+{{ site.claude_code }} in each WSL distribution is a separate Linux install, and it must be at a version that Kong supports, that reads [`allowedProviders`](https://code.claude.com/docs/en/settings-reference#allowedproviders) and that reads [`wslInheritsWindowsSettings`](https://code.claude.com/docs/en/settings-reference#wslinheritswindowssettings).
 `fleet build` doesn't install it, and the Windows install of {{ site.claude_code }} doesn't put it in WSL.
 To install it, see [Install in WSL](https://code.claude.com/docs/en/setup#install-in-wsl), and to find the supported versions, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 `fleet build` checks `wslInheritsWindowsSettings` only in the policy that you pass with `--policy`.
@@ -557,6 +575,7 @@ The managed settings hold:
   Another new model needs a new build.
   With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` set to `true` in [`modelPicker`](https://code.claude.com/docs/en/settings-reference#modelpicker), {{ site.claude_code }} hides the discovered models from `/model`.
   By default, [a model ID entry](https://code.claude.com/docs/en/settings-reference#availablemodelsmatch) of `availableModels` also allows each later model ID that extends it, and a family alias such as `opus` allows the whole family.
+  But [an entry for a specific model of a family](https://code.claude.com/docs/en/model-config#merge-behavior), such as `claude-opus-5`, turns off the alias of that family, so the list then allows only the models that the specific entries match.
   A later model that `availableModels` doesn't allow needs a change to that list.
   While `replaceBuiltInOptions` is `true`, each new model needs a row in `modelPicker.options`, and an `availableModels` list must also allow it.
   For an MDM build, each of these changes also needs a new build with the changed `--policy`.
@@ -566,7 +585,7 @@ The managed settings hold:
 * The gateway prices of the models for `/cost`, when the gateway or the profile states them.
 * The {{ site.claude_code }} features that the profile turns off behind the gateway.
 * A lock to the gateway.
-  {{ site.claude_code }} refuses every provider but the gateway, and ignores another Claude provider, a credential or custom headers that a developer sets in the shell or in their own settings.
+  A {{ site.claude_code }} release that reads [`allowedProviders`](https://code.claude.com/docs/en/settings-reference#allowedproviders) refuses every provider but the gateway, and ignores another Claude provider, a credential or custom headers that a developer sets in the shell or in their own settings.
   A session that Claude Desktop starts is the exception, because {{ site.claude_code }} then takes environment variables from the environment that Claude Desktop builds.
   For the settings that such an app passes, see `--host-settings merge` in [Build the managed settings](#build-the-managed-settings).
 * With `--mcp-servers allowlist`, the lock on MCP servers that [Choose the MCP servers](#choose-the-mcp-servers) describes.
@@ -588,14 +607,14 @@ You can't create it again.
 With your MDM tool, first install the following on one test computer of each group that gets its own build.
 After the checks in [Validate](#validate) pass on the test computer of a group, install them on the other computers of that group:
 
-1. {{ site.claude_code }}, at a version that Kong supports.
+1. {{ site.claude_code }}, at a version that Kong supports and that reads [`allowedProviders`](https://code.claude.com/docs/en/settings-reference#allowedproviders).
    `fleet build` doesn't install it.
    To install it, see [Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup).
    The native installer puts {{ site.claude_code }} in the home folder of the account that runs it, such as `~/.local/bin/claude`, or `%USERPROFILE%\.local\bin\claude.exe` on Windows.
    So an install that your MDM tool runs as root or SYSTEM doesn't give the developer a `claude` command.
    Run the native installer in each developer's account, such as with a script that your MDM tool runs as the signed-in user.
    On Linux, you can also install {{ site.claude_code }} on the local disk from the [`apt`, `dnf` or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
-   An older {{ site.claude_code }} doesn't refuse every other provider.
+   An earlier release ignores `allowedProviders`, so it doesn't refuse another provider.
    To find the supported versions and hold the fleet to them, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 1. The kong-harnesses package for the platform, at the path of `--executable`: the macOS installer package at `/usr/local/bin/kong-harnesses`, the Linux `.deb` or `.rpm` package at `/usr/bin/kong-harnesses`, or the Windows installer at `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
    To install them, and to deploy the Windows installer with Intune, see [Install kong-harnesses for every user of a computer](/kong-harnesses/install/).
@@ -781,6 +800,7 @@ If a key server isn't connected, run `kong-harnesses login --profile work`, and 
 {{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
 Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
 `kong-harnesses doctor` names each key server without a saved key, unless {{ site.claude_code }} reaches it through another entry at the same address.
+`doctor` looks for missing keys only when it finds no blocked or missing gateway MCP server, so fix those problems first, and then run `kong-harnesses doctor` again.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, or a `managedMcpServers` entry at the URL of a gateway MCP server.
 
