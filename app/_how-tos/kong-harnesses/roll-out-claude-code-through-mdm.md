@@ -355,8 +355,9 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   For a file build, the drop-in of the build, your `managed-settings.json` and the other files in `managed-settings.d` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
   Put each entry that those computers need in the `managed-settings.json` that they have or in a file in `managed-settings.d`, or list it with `--mcp-url` or `--mcp-command`.
   When you change `managed-settings.json`, pass the updated file with `--policy`, and deploy it with the drop-in of the build.
-  Write the URLs and commands of these entries out, without a `${...}` reference, because `fleet build` checks only its flags for one.
-  {{ site.claude_code }} [fills in such a reference from the shell that starts it](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand), so the developer would choose what the entry allows.
+  Write out the URL or command of every `allowedMcpServers` entry in your `--policy` file and in your managed settings files, without a `${...}` reference, because `fleet build` checks only its flags for one.
+  {{ site.claude_code }} [expands such a reference](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) from the environment that it started with, plus the `env` values of the managed settings, so the entry still depends on the shell that starts {{ site.claude_code }}.
+  It ignores an entry when the expansion would change the scheme, host or path scope of a URL entry.
   A higher source with its own list replaces the list of the build.
   For a file build on computers with such an MDM policy, build with `--delivery mdm`.
   For server-managed settings with such a list, stop the computers from fetching them, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
@@ -507,8 +508,12 @@ Replace each placeholder with the value for your deployment, and keep the quotes
   With `allowlist`, to let developers add servers of their own, also add `--mcp-url` with the URL pattern of each remote server, or `--mcp-command` with the command of each local server as a JSON array of strings.
   Repeat the flag for each server.
   Give `--mcp-command` the command with all its arguments, because {{ site.claude_code }} matches each argument exactly.
+  `--mcp-url` takes a URL with the `http`, `https` or `*` scheme and only visible ASCII characters, so write a host name with other characters in its `xn--` form, the ASCII form of an international domain name.
   Quote each value, so that the shell keeps a `*` in a URL pattern and the JSON quotes of a command, such as `--mcp-url 'https://MCP_HOST/*'` and `--mcp-command '["npx","-y","PACKAGE"]'`.
-  `fleet build` refuses a `${...}` reference in these flags, because the environment of each developer would fill it in and choose what the entry allows.
+  On Windows, use this form in PowerShell 7.3 or later.
+  Windows PowerShell 5.1 [removes the double quotes inside a value](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters) that it passes to a program.
+  So in Windows PowerShell 5.1, put a backslash before each double quote inside the value, such as `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`.
+  `fleet build` refuses a `${...}` reference in these flags, because {{ site.claude_code }} would [expand it](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) on each computer from the environment that it started with.
   Write the value out instead.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
   If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
@@ -691,7 +696,7 @@ The managed settings hold:
   The other families and their roles keep the models of the profile.
   For a model ID that doesn't name exactly one Claude family, add the family, such as `--model opus=MODEL_ID`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
-  A model that the gateway adds later then shows in `/model` without a new build when its ID [contains `claude` or `anthropic` in any letter case](https://code.claude.com/docs/en/llm-gateway-protocol#request-and-response).
+  A model that the gateway adds later then [can appear in `/model`](https://code.claude.com/docs/en/llm-gateway-protocol#picker-entries-and-caching) without a new build when its ID [contains `claude` or `anthropic` in any letter case](https://code.claude.com/docs/en/llm-gateway-protocol#request-and-response).
   {{ site.claude_code }} [fetches the list again at each startup](https://code.claude.com/docs/en/llm-gateway-protocol#picker-entries-and-caching), so a developer restarts {{ site.claude_code }} to see the new model.
   Another new model needs a new build.
   With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` set to `true` in [`modelPicker`](https://code.claude.com/docs/en/settings-reference#modelpicker), {{ site.claude_code }} hides the discovered models from `/model`.
