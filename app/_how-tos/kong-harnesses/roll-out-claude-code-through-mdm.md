@@ -79,7 +79,7 @@ tldr:
   a: |
     When the Claude provider of the profile is the Anthropic API, sign in to the profile first.
     Then run `kong-harnesses fleet build` for each platform.
-    Deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes through your MDM tool.
+    With your MDM tool, deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes.
     Each developer then signs in as themselves on their first {{ site.claude_code }} request, and once more for each gateway MCP server that takes a key or its own sign-in.
 
 cleanup:
@@ -94,7 +94,10 @@ cleanup:
 
         [`profile cleanup`](/kong-harnesses/profile/cleanup/) changes only the developer's own {{ site.claude_code }} settings, so it works before or after you delete the files of the build, but it needs kong-harnesses on the computer.
 
-        Then run `kong-harnesses fleet remove` with the record file of the build, and add the flags that the removal needs:
+        Then, as an administrator, remove the package or script that installs the files of the build from each assignment in your MDM tool, so that the tool doesn't install the files again after you delete them.
+        For an Intune macOS app (PKG), remove the groups from its Required assignment, because Intune has no Uninstall assignment for that app type.
+
+        Next, run `kong-harnesses fleet remove` with the record file of the build, and add the flags that the removal needs:
 
         * For an MDM build, pass the policy that the computers get now with `--policy`.
         * For a build with `--mcp-servers exclusive`, pass the `managed-mcp.json` that the computers have now with `--mcp-config`.
@@ -226,6 +229,9 @@ For every computer whose MDM policy sets a policy key to a value other than empt
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
 If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-policy`.
+The build sets `ANTHROPIC_CUSTOM_HEADERS` in the policy, and {{ site.claude_code }} [takes each `env` variable](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source) from the highest administrator source that sets it.
+So the value of the build replaces the one in your `managed-settings.json` and in `managed-settings.d`.
+The build keeps only the headers of the policy that you pass with `--policy`, so put each header that the computers need in that policy.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 
@@ -264,7 +270,7 @@ The remote settings then rank above the build, and the build's `apiKeyHelper` is
 Without this flag, `fleet build` uses `allowlist`, but only for a profile without gateway MCP servers.
 For a profile with gateway MCP servers, `fleet build` refuses the build until you choose a mode with this flag.
 For a profile without gateway MCP servers, use `allowlist` or `any`.
-When the profile has gateway MCP servers, a `managed-mcp.json` on the computers or some of your own managed settings can leave `exclusive` as the only mode that loads them.
+When the profile has gateway MCP servers, a `managed-mcp.json` on the computers or some of your own managed settings can make `exclusive` the only mode that loads them.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
@@ -289,7 +295,8 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
 With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP servers, even after `profile activate`, in these cases:
 
 * The computers already have a `managed-mcp.json`.
-  {{ site.claude_code }} then loads only the servers in that file, as with `exclusive`, and not the servers of the plugin that `profile activate` adds.
+  {{ site.claude_code }} then loads only the servers in that file and the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json), such as the servers that `managedMcpServers` provides, as with `exclusive`.
+  It doesn't load the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
@@ -313,8 +320,9 @@ Among the servers that [skip the allowlist check](https://code.claude.com/docs/e
 * The in-process `type: "sdk"` servers of an Agent SDK app.
 
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
-When a session starts, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
-`kong-harnesses doctor` names each one.
+
+In both modes, when a session starts or resumes, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
+`kong-harnesses doctor` also names each one.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -486,7 +494,7 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
+  When a session starts or resumes, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
   It names up to 10 of them for each cause, with a count of the rest.
   It doesn't name the servers of a plugin.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
@@ -500,6 +508,8 @@ The managed settings hold:
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
   A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
   Another new model needs a new build.
+  With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` in `modelPicker`, {{ site.claude_code }} hides the discovered models from `/model`.
+  A model that the gateway adds later then needs a change to that key, and for an MDM build, also a new build with the changed `--policy`.
   For another Claude provider, `/model` shows only the models of the build.
 * The gateway prices of the models for `/cost`, when the gateway or the profile states them.
 * The {{ site.claude_code }} features that the profile turns off behind the gateway.
