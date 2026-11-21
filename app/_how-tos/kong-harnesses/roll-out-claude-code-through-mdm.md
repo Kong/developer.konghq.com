@@ -77,7 +77,7 @@ prereqs:
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
         To check the route of the test request in the Events debugger, you need [access to the usage events](/ai-cost-management/analytics-and-debugging/#how-the-views-relate) of the test user, or a person with that access.
         An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as that section says.
-        The linked setup guide uses an `openid-connect` strategy without `principals.enabled`, so the subject of the event is `oidc/<sub>`, where `<sub>` is the `sub` claim of the test user, with no principal.
+        The linked setup guide uses an `openid-connect` strategy without `principals.enabled`, so the subject of the event is `oidc/SUB`, where `SUB` is the `sub` claim of the test user, with no principal.
         Then an Org Admin finds the event by that subject and the time of the prompt.
         A Team Manager or the test user sees it only when the strategy [attributes the usage to a principal](/ai-cost-management/attribution/#set-up-subject-attribution).
         The [roles of AI Management](/ai-management/roles-and-permissions/#roles) say how a user gets each role.
@@ -167,10 +167,10 @@ cleanup:
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
 With `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer also runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
-Apart from these steps, developers don't install or import anything, but some of them must fix their own settings, as [Choose the MCP servers](#choose-the-mcp-servers) and [Validate](#validate) describe.
 Each developer without a saved sign-in to the profile signs in as themselves, in the browser, the first time that {{ site.claude_code }} needs the credential, and kong-harnesses renews the sign-in by itself.
 For a profile with key servers, the gateway MCP servers that take a fixed key, each developer also runs `kong-harnesses login --profile work` once, and types the key of each key server.
 For a gateway MCP server with its own sign-in, each developer signs in to it once from `/mcp` in {{ site.claude_code }}.
+Apart from these steps, developers don't install or import anything, but some of them must fix their own settings, as [Choose the MCP servers](#choose-the-mcp-servers) and [Validate](#validate) describe.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, and build the managed settings for each group of computers.
 Then you check what they hold, and test each build on one computer of its group before the other computers of that group.
@@ -344,7 +344,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
-  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows:
+  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows, or the `skills` folder in the folder that `CLAUDE_CONFIG_DIR` names:
 
   ```sh
   kong-harnesses profile activate work --client claude-code
@@ -366,6 +366,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   {{ site.claude_code }} [ignores each entry that isn't one of these kinds](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), such as a name that it doesn't know or a number.
   So a list with one of these kinds blocks the plugin, also when it has other entries, and a list with none of them doesn't.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+  When one file sets both spellings, {{ site.claude_code }} [uses `strictKnownMarketplaces` and ignores `allowedMarketplaces`](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases).
+  So each case on this page for `allowedMarketplaces` applies only to a file without `strictKnownMarketplaces`.
 * Your own managed settings set `strictPluginOnlyCustomization` to a value other than `null` that is neither a Boolean nor a list, or set `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value other than `null` that {{ site.claude_code }} can't read.
   {{ site.claude_code }} reads a `null` as unset.
   {{ site.claude_code }} [reads such a value as the strictest one](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed): `strictPluginOnlyCustomization` as `true`, and each list as an empty list.
@@ -388,10 +390,13 @@ When the policy that you pass with `--policy` has one of these plugin or marketp
 
 * `strictPluginOnlyCustomization` set to `true`, or to a list of one or more entries, each of them text or `null`, also names that {{ site.claude_code }} doesn't know.
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, in which each entry is `null` or an object whose `source` is text, `null` or missing, also an empty list or `null`.
+  `fleet build` checks both keys, also in a policy that sets both, where {{ site.claude_code }} ignores `allowedMarketplaces`.
 * A `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, in which each other entry is `null` or an object whose `source` is text, `null` or missing.
 
 `fleet build` doesn't refuse one of these lists when an entry has another type, such as `["mcp", 1]`, `[{"source": "skills-dir"}, 1]` or `[{"source": 1}]`.
 {{ site.claude_code }} [drops or ignores only that entry](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), so such a list can still block the plugin.
+`fleet build` also reads a `source` key with other letter case, such as in `[{"Source": "skills-dir"}]`, as a `{"source": "skills-dir"}` entry, but {{ site.claude_code }} doesn't.
+So `fleet build` passes such a `strictKnownMarketplaces` or `allowedMarketplaces` list, which blocks the plugin, and refuses such a `blockedMarketplaces` list, which blocks nothing.
 `fleet build` also doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the earlier list of cases describes.
 {{ site.claude_code }} reads a `null` as unset, so to pass the check, remove a marketplace key with `null` from your policy.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server either, so check your policy for these values yourself.
@@ -671,7 +676,8 @@ Otherwise, it refuses the profile, because another account could send every deve
 Keep the record with your policy.
 You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
 The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries of the gateway MCP servers that the build wrote, but not your own servers.
-`fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same flags and the same kong-harnesses release.
+`fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same build choices and the same kong-harnesses release.
+The build choices are the flags that set what the build writes, such as `--platform`, `--delivery`, `--executable` and the version, model, MCP, WSL and host settings flags, but not `--output-dir`.
 When the Claude provider of the profile is the Anthropic API, the record also holds the models and prices that `fleet build` takes from the gateway, so a change of the gateway's models or prices can change the record.
 So keep a backup copy of the record.
 
@@ -881,9 +887,9 @@ To list the [entries that {{ site.claude_code }} dropped](https://code.claude.co
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
-With the strategy of the linked setup guide, set the [**User**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) filter to `oidc/<sub>`, and replace `<sub>` with the `sub` claim of the test user.
+With the strategy of the linked setup guide, set the [**User**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) filter to `oidc/SUB`, and replace `SUB` with the `sub` claim of the test user.
 The Events debugger shows the event only to a person whose role covers that subject, as the prerequisites say.
-If you filter by model, use the model ID that the provider reports, because the `model` filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
+If you filter by model, use the model ID that the provider reports, because the **Model** filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
 Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
 If one of them does, remove the key or set it to `false`.
