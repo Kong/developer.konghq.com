@@ -106,7 +106,7 @@ cleanup:
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
         Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
-        Replace `BUILD_RECORD` with the path of the record file, `kong-harnesses-fleet-BUILD_ID.json`, that `fleet build` wrote in the output folder of that build.
+        Replace `BUILD_RECORD` with the path of the record file, `kong-harnesses-fleet-BUILD_ID.json`, that `fleet build` printed for that build.
         For a file build without `--mcp-servers exclusive`, `fleet remove` prints the path of each file to delete from the managed computers:
 
         ```sh
@@ -116,20 +116,20 @@ cleanup:
         For a file build with `--mcp-servers exclusive`, replace `MCP_CONFIG_FILE` with a copy of the `managed-mcp.json` that the computers have now, and pass an output folder for your own servers that are left:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed
         ```
 
         For an MDM build without `--mcp-servers exclusive`, replace `POLICY_FILE` with the policy that the computers get now, and pass an output folder for the keys of your own policy that are left:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-removed
         ```
 
         For an MDM build with `--mcp-servers exclusive`, pass all the flags.
         Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed
         ```
 
         When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -165,6 +165,7 @@ In this guide, you choose how the settings reach the computers and which MCP ser
 
 When the Claude provider of the profile is the Anthropic API, `fleet build` reads the model list of the gateway, with your own sign-in to the profile when there is one.
 So the computer where you run `fleet build` must reach the gateway.
+If the gateway certificate comes from a private CA, that computer also needs the CA in its system trust store, because kong-harnesses trusts the gateway through that store.
 If the gateway asks for a sign-in and you aren't signed in, `fleet build` refuses to build and names `kong-harnesses login`.
 It also refuses when the gateway refuses the sign-in or can't send the list, and when the gateway lists no model that `/model` can show.
 For that provider, sign in to the profile first with [`kong-harnesses login`](/kong-harnesses/login/):
@@ -344,7 +345,8 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 ## Build the managed settings
 
-Run `fleet build` once for each platform of your managed computers.
+Run `fleet build` once for each group of managed computers with the same platform, the same delivery, and the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
+The build takes the headers from the `--policy` that you pass, and an MDM build also takes all the keys of that policy, so a build for another group gives the computers the wrong values.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
 Each install command that a build prints runs from a copy of the build's files: the whole output folder on macOS, or its `root` folder on Linux and Windows, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the absolute path where the kong-harnesses package installs the binary on the managed computers.
@@ -432,7 +434,13 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows
+kong-harnesses fleet build `
+  --profile work `
+  --platform windows `
+  --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
+  --policy 'POLICY_FILE' `
+  --mcp-servers MCP_MODE `
+  --output-dir fleet-windows
 ```
 
 {% endnavtab %}
@@ -458,7 +466,14 @@ kong-harnesses fleet build \
 {% navtab "Windows" %}
 
 ```powershell
-kong-harnesses fleet build --profile work --platform windows --delivery mdm --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows-mdm
+kong-harnesses fleet build `
+  --profile work `
+  --platform windows `
+  --delivery mdm `
+  --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
+  --policy 'POLICY_FILE' `
+  --mcp-servers MCP_MODE `
+  --output-dir fleet-windows-mdm
 ```
 
 {% endnavtab %}
@@ -524,9 +539,11 @@ The managed settings hold:
   A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
   {{ site.claude_code }} [fetches the list again at each startup](https://code.claude.com/docs/en/llm-gateway-protocol#picker-entries-and-caching), so a developer restarts {{ site.claude_code }} to see the new model.
   Another new model needs a new build.
-  With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` in `modelPicker`, {{ site.claude_code }} hides the discovered models from `/model`.
+  With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` set to `true` in [`modelPicker`](https://code.claude.com/docs/en/settings-reference#modelpicker), {{ site.claude_code }} hides the discovered models from `/model`.
   By default, [a model ID entry](https://code.claude.com/docs/en/settings-reference#availablemodelsmatch) of `availableModels` also allows each later model ID that extends it, and a family alias such as `opus` allows the whole family.
-  A later model that `availableModels` doesn't allow, or any new model while `replaceBuiltInOptions` is set, needs a change to that key, and for an MDM build, also a new build with the changed `--policy`.
+  A later model that `availableModels` doesn't allow needs a change to that list.
+  While `replaceBuiltInOptions` is `true`, each new model needs a row in `modelPicker.options`, and an `availableModels` list must also allow it.
+  For an MDM build, each of these changes also needs a new build with the changed `--policy`.
   When the profile or the gateway has a model whose ID discovery skips, the build writes its own `modelPicker`, which replaces the whole `modelPicker` of your `--policy`, also its `replaceBuiltInOptions`.
   `fleet build` then names `modelPicker` among the values that it changes, so check the `modelPicker` in the output before you deploy the build.
   For another Claude provider, `/model` shows only the models of the build.
