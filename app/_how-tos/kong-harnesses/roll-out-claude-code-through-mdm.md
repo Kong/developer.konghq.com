@@ -141,7 +141,7 @@ For another Claude provider, such as Amazon Bedrock, `fleet build` uses only the
 
 {{ site.claude_code }} can get managed settings from several sources on one computer.
 These are the administrator sources.
-By default, it takes most keys from only the highest of these sources that has a policy key.
+By default, it takes most keys from only the highest of these sources that sets a policy key to a value other than empty objects.
 It reads [a few keys, such as `env`, from every source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 The sources, from highest to lowest:
 
@@ -186,12 +186,14 @@ One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
 So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build.
 If that list doesn't allow the addresses of the gateway MCP servers, {{ site.claude_code }} doesn't load them.
+
 For every computer whose MDM policy sets a policy key to a value other than empty objects, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
 If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-policy`.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
+
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies your managed settings file and the MDM policy of the build together.
 A file build still doesn't work there, because {{ site.claude_code }} reads `apiKeyHelper` only from the highest source, also with `merge`.
 Then also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
@@ -270,7 +272,7 @@ With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp
 When a session starts, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 `kong-harnesses doctor` names each one.
 
-In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
+In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
 Make sure that your own managed settings don't deny a gateway MCP server.
 
@@ -315,13 +317,13 @@ If that policy sets it to `true`, `fleet build` refuses a Windows build without 
 If one of them sets `wslInheritsWindowsSettings` to `true`, {{ site.claude_code }} in WSL reads the build, and the credential helper and the hooks of a build without `--wsl inherit` don't run there.
 For those computers, add `--wsl inherit`, or set the key to `false` there.
 For a new MDM build of computers that already have an MDM build, which you pass with `--record`, `fleet build` first takes the settings of the earlier build out of the policy, and checks only the value that is left.
-This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
+`--wsl inherit` needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
 If interop is off, the credential helper tells the developer to turn it on.
-This option doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
+`--wsl inherit` doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
 {{ site.claude_code }} in WSL gets the managed settings and the route to the gateway.
 But with `allowlist` or `any`, it doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the {{ site.claude_code }} settings in the developer's Windows home folder.
 For a profile with gateway MCP servers, the WSL line in the result of `fleet build` names the servers that {{ site.claude_code }} in WSL doesn't get.
-With this option, `fleet build` also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
+With `--wsl inherit`, `fleet build` also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
 The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
 
@@ -434,7 +436,9 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names up to 10 of the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest, but not the servers of a plugin.
+  When a session starts, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
+  It names up to 10 of them for each cause, with a count of the rest.
+  It doesn't name the servers of a plugin.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
