@@ -225,7 +225,7 @@ For an MDM policy, build with `--delivery mdm` instead.
 
 {{ site.claude_code }} merges `managed-settings.json` first, and then the files in `managed-settings.d` in alphabetical order, by [these rules](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams):
 
-* A later single value replaces the earlier one, such as `apiKeyHelper`.
+* A later single value, such as `apiKeyHelper`, replaces the earlier one.
   Blocks, such as `env`, merge key by key, so a later variable in `env` replaces the earlier one.
 * A later `fallbackModel` or `modelPicker` replaces the earlier one whole.
 * A later entry in `extraKnownMarketplaces` or `managedMcpServers` replaces the earlier entry with the same name whole.
@@ -256,6 +256,7 @@ If that list doesn't allow the addresses of the gateway MCP servers, {{ site.cla
 
 For every computer whose MDM policy sets a policy key to a value other than empty objects, build with `--delivery mdm`.
 This is an MDM build.
+Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
 If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-policy`.
 The build sets `ANTHROPIC_CUSTOM_HEADERS` in the policy, and {{ site.claude_code }} [takes each `env` variable](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source) from the highest administrator source that sets it.
@@ -277,14 +278,13 @@ A lower source [adds its list entries](https://code.claude.com/docs/en/managed-s
 A [restriction allowlist](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior), such as `allowedProviders`, still comes whole from the highest source that sets one, so there the list of the build applies.
 Remove each value that conflicts with the build, and each list entry or key that you don't want on the computers.
 Login keys, such as `forceLoginMethod` and `forceLoginGatewayUrl`, still come only from the highest MDM policy or file with a policy key.
-Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 
 `fleet build` refuses a policy with a value that changes how {{ site.claude_code }} reaches the gateway, and names each key that causes it:
 
-* `forceLoginMethod` or `forceLoginGatewayUrl`, which lock the sign-in.
+* `forceLoginMethod` or `forceLoginGatewayUrl` set to a value other than `null`, which locks the sign-in.
 * A text `allowedProviders` entry other than `customEndpoint`, the provider of the gateway, which is the only text entry that `fleet build` accepts.
   An entry that isn't text passes, because {{ site.claude_code }} drops it.
-* `policyHelper` or `policyHelpers`, because {{ site.claude_code }} then reads only the policy that the helper gives.
+* `policyHelper` or `policyHelpers` set to a value other than `null`, because {{ site.claude_code }} then reads only the policy that the helper gives.
 * An `env` value other than text or `null`, for a variable that the build doesn't set, because {{ site.claude_code }} drops it.
 * In `env.ANTHROPIC_CUSTOM_HEADERS`, a header that sets `Authorization`, `Proxy-Authorization`, `X-Api-Key` or `Host`, a header that the attribution of the profile sets to another value, or a line that isn't a `Name: Value` header.
 * A version range that is empty, such as a `--claude-code-minimum` later than the `requiredMaximumVersion` of your policy.
@@ -321,7 +321,7 @@ In both cases, make sure that no session on the managed computers fetches the re
 
 The build itself puts a session in none of these cases.
 The key that the build's `apiKeyHelper` returns isn't one of those credentials.
-A `/login` sign-in to a gateway needs `forceLoginMethod` and `forceLoginGatewayUrl` in your managed settings, and `fleet build` refuses either key in your policy.
+A `/login` sign-in to a gateway needs `forceLoginMethod` and `forceLoginGatewayUrl` in your managed settings, and `fleet build` refuses either key in your policy when it has a value other than `null`.
 The gateway of the profile is a {{ site.ai_gateway_name }}, not a Claude apps gateway.
 But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
 The remote settings then rank above the build, and the build's `apiKeyHelper` isn't in effect.
@@ -513,9 +513,9 @@ Replace each placeholder with the value for your deployment, and keep the quotes
   Repeat the flag for each server.
   Give `--mcp-command` the command with all its arguments, because {{ site.claude_code }} matches each argument exactly.
   `--mcp-url` takes a URL with the `http`, `https` or `*` scheme and only visible ASCII characters in the whole URL.
-  So write a host name with other characters in its `xn--` form, the ASCII form of an international domain name, and percent-encode other characters in the path.
+  So write a host name with other characters in its `xn--` form, the ASCII form of an international domain name, and percent-encode other characters in the rest of the URL.
   Quote each value, so that the shell keeps a `*` in a URL pattern and the JSON quotes of a command, such as `--mcp-url 'https://MCP_HOST/*'` and `--mcp-command '["npx","-y","PACKAGE"]'`.
-  On Windows, use this form in PowerShell 7.3 or later.
+  On Windows, use this form in PowerShell 7.3 or later, with `$PSNativeCommandArgumentPassing` at its default `Windows` value or at `Standard`.
   Windows PowerShell 5.1 [removes the double quotes inside a value](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters) that it passes to a program.
   So in Windows PowerShell 5.1, for a value with no backslash right before a double quote, put a backslash before each double quote inside the value, such as `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`.
   For a value with a backslash right before a double quote, such as an escaped quote in a JSON string, use PowerShell 7.3 or later.
@@ -981,7 +981,7 @@ Its header helper doesn't open the browser, and it waits only a few seconds for 
 `kong-harnesses doctor` names each key server without a saved key, unless {{ site.claude_code }} reaches it through another entry at the same address.
 `doctor` looks for missing keys only when it finds no blocked or missing gateway MCP server, so fix those problems first, and then run `kong-harnesses doctor` again.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
-If a server is missing, look for these settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it:
+If a server is missing, look for these causes in [Choose the MCP servers](#choose-the-mcp-servers):
 
 * A `managed-mcp.json`.
 * A `deniedMcpServers` entry.
@@ -1019,7 +1019,5 @@ The `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode`, `C:\Program File
 {{ site.claude_code }} [leaves the Windows chain off](https://code.claude.com/docs/en/settings-reference#wslinheritswindowssettings) only for no key, `null`, `false` or `"false"`, and any other value turns it on.
 {{ site.claude_code }} reads the key only from these sources, and the `HKCU` value doesn't turn the chain on by itself.
 If one of them sets another value, build again with `--wsl inherit`, or set the key to `false` there.
-
-Do these checks before you install on the other managed computers.
 
 To keep the fleet on supported {{ site.claude_code }} versions or to move it to a new model, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
