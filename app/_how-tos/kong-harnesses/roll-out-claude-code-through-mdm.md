@@ -72,13 +72,13 @@ prereqs:
       content: |
         You need a mobile device management (MDM) tool that installs packages and a configuration profile or policy on the managed computers, such as Jamf Pro on macOS or Microsoft Intune on Windows.
         On Linux, you can use your configuration management tool.
-        You also need administrator rights on one managed computer for each platform that you deploy to, to test the result.
+        You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
   a: |
     When the Claude provider of the profile is the Anthropic API, sign in to the profile first.
-    Then run `kong-harnesses fleet build` for each platform.
+    Then run `kong-harnesses fleet build` for each group of computers that needs its own build.
     With your MDM tool, deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes.
     Each developer then signs in as themselves on their first {{ site.claude_code }} request.
     For the gateway MCP servers that take a key, the developer runs `kong-harnesses login --profile work` once and types each key, and signs in to each server with its own sign-in from `/mcp`.
@@ -107,6 +107,7 @@ cleanup:
 
         Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
         Replace `BUILD_RECORD` with the path of the record file, `kong-harnesses-fleet-BUILD_ID.json`, that `fleet build` printed for that build.
+        Each removal needs a new or empty output folder, so the examples put the build ID in its name.
         For a file build without `--mcp-servers exclusive`, `fleet remove` prints the path of each file to delete from the managed computers:
 
         ```sh
@@ -116,20 +117,20 @@ cleanup:
         For a file build with `--mcp-servers exclusive`, replace `MCP_CONFIG_FILE` with a copy of the `managed-mcp.json` that the computers have now, and pass an output folder for your own servers that are left:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed-BUILD_ID
         ```
 
         For an MDM build without `--mcp-servers exclusive`, replace `POLICY_FILE` with the policy that the computers get now, and pass an output folder for the keys of your own policy that are left:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-removed-BUILD_ID
         ```
 
         For an MDM build with `--mcp-servers exclusive`, pass all the flags.
         Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
         ```sh
-        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed
+        kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed-BUILD_ID
         ```
 
         When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
@@ -159,7 +160,7 @@ Each developer signs in as themselves, in the browser, on their first {{ site.cl
 For a profile with key servers, the gateway MCP servers that take a fixed key, each developer also runs `kong-harnesses login --profile work` once, and types the key of each key server.
 For a gateway MCP server with its own sign-in, each developer signs in to it once from `/mcp` in {{ site.claude_code }}.
 
-In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one computer for each platform before the rest of the fleet.
+In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each group of computers, check what they hold, and test each build on one computer of its group before the other computers of that group.
 
 ## Sign in on your own computer
 
@@ -346,7 +347,8 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 ## Build the managed settings
 
 Run `fleet build` once for each group of managed computers with the same platform, the same delivery, and the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
-The build takes the headers from the `--policy` that you pass, and an MDM build also takes all the keys of that policy, so a build for another group gives the computers the wrong values.
+For an `--mcp-servers exclusive` build, the computers of a group also have the same `managed-mcp.json`, and the build of the group takes that file with `--mcp-config`.
+The build takes the headers from the `--policy` that you pass, an MDM build also takes all the keys of that policy, and an `exclusive` build writes the servers of its `--mcp-config` file, so a build for another group gives the computers the wrong values.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
 Each install command that a build prints runs from a copy of the build's files: the whole output folder on macOS, or its `root` folder on Linux and Windows, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the absolute path where the kong-harnesses package installs the binary on the managed computers.
@@ -356,7 +358,7 @@ It also must not have `"`, `%`, `!` or a control character, because the helper c
 On macOS and Linux, it must not have a line break or a NUL, and for a macOS MDM build, no control character.
 On every platform, the path must be in UTF-8.
 Each build needs its own output folder, and the folder must be new or empty.
-This guide uses one folder for each build.
+The examples use one folder for each group, so replace `GROUP` with a short name for the group of computers.
 
 Replace each placeholder with the value for your deployment, and keep the quotes that the examples show, so that a path with spaces works:
 
@@ -414,7 +416,7 @@ kong-harnesses fleet build \
   --executable /usr/local/bin/kong-harnesses \
   --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
-  --output-dir fleet-macos
+  --output-dir fleet-macos-GROUP
 ```
 
 {% endnavtab %}
@@ -427,7 +429,7 @@ kong-harnesses fleet build \
   --executable /usr/bin/kong-harnesses \
   --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
-  --output-dir fleet-linux
+  --output-dir fleet-linux-GROUP
 ```
 
 {% endnavtab %}
@@ -440,7 +442,7 @@ kong-harnesses fleet build `
   --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
   --policy 'POLICY_FILE' `
   --mcp-servers MCP_MODE `
-  --output-dir fleet-windows
+  --output-dir fleet-windows-GROUP
 ```
 
 {% endnavtab %}
@@ -459,7 +461,7 @@ kong-harnesses fleet build \
   --executable /usr/local/bin/kong-harnesses \
   --policy 'POLICY_FILE' \
   --mcp-servers MCP_MODE \
-  --output-dir fleet-macos-mdm
+  --output-dir fleet-macos-mdm-GROUP
 ```
 
 {% endnavtab %}
@@ -473,7 +475,7 @@ kong-harnesses fleet build `
   --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
   --policy 'POLICY_FILE' `
   --mcp-servers MCP_MODE `
-  --output-dir fleet-windows-mdm
+  --output-dir fleet-windows-mdm-GROUP
 ```
 
 {% endnavtab %}
@@ -569,8 +571,8 @@ You can't create it again.
 
 ## Install on the managed computers
 
-With your MDM tool, first install the following on one test computer for each platform.
-After the checks in [Validate](#validate) pass on each test computer, install them on the other managed computers:
+With your MDM tool, first install the following on one test computer of each group that gets its own build.
+After the checks in [Validate](#validate) pass on the test computer of a group, install them on the other computers of that group:
 
 1. {{ site.claude_code }}, at a version that Kong supports.
    `fleet build` doesn't install it.
@@ -688,7 +690,7 @@ kong-harnesses doctor --profile work --client claude-code
 `doctor` says that the managed settings of your organization set up the profile, and names the build ID.
 It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from the managed sources on the computer is the helper of the build for the profile.
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, so a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` then doesn't show this line.
-Make sure that the build ID is the one that `fleet build` printed for this platform.
+Make sure that the build ID is the one that `fleet build` printed for the group of this computer.
 `doctor` reports each problem that it finds, gives a fix when one is available, and names the setting that blocks a gateway MCP server.
 Before the first request, it also says that the developer isn't signed in yet, which is expected.
 
