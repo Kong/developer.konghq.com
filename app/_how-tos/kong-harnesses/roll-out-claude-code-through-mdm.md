@@ -81,6 +81,12 @@ cleanup:
         kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json --mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-macos-removed
         ```
 
+        For an MDM build without `--mcp-servers exclusive`, replace `POLICY_FILE` with the policy that the computers get now, and pass an output folder for the keys of your own policy that are left:
+
+        ```sh
+        kong-harnesses fleet remove --record fleet-macos-mdm/kong-harnesses-fleet-BUILD_ID.json --policy 'POLICY_FILE' --output-dir fleet-macos-removed
+        ```
+
         For an MDM build with `--mcp-servers exclusive`, pass all the flags.
         Replace `POLICY_FILE` with the policy that the computers get now, and `MCP_CONFIG_FILE` with a copy of their `managed-mcp.json`:
 
@@ -104,7 +110,6 @@ cleanup:
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
-You build the managed settings, and your MDM tool deploys them.
 With `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer also runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
 Developers don't install, import or edit anything else.
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
@@ -207,18 +212,19 @@ The remote settings then rank above the build, and the build's `apiKeyHelper` is
 ## Choose the MCP servers
 
 `--mcp-servers` sets which MCP servers {{ site.claude_code }} loads on the managed computers.
-When the profile has gateway MCP servers, `fleet build` needs this flag.
-When the profile doesn't have gateway MCP servers, use `allowlist`, the default, or `any`.
+Without this flag, `fleet build` uses `allowlist`, but only for a profile without gateway MCP servers.
+For a profile with gateway MCP servers, `fleet build` refuses the build until you choose a mode with this flag.
+For a profile without gateway MCP servers, use `allowlist` or `any`.
 When the profile has gateway MCP servers, a `managed-mcp.json` on the computers or some of your own managed settings can leave `exclusive` as the only mode that loads them.
 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
   The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build.
-  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that the Claude desktop app delivers.
+  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that Claude Desktop delivers.
   It loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
-* `--mcp-servers allowlist`, the default, locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
+* `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
   To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the `skills` folder of the developer's {{ site.claude_code }} settings:
 
@@ -234,7 +240,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
 With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP servers, even after `profile activate`, in these cases:
 
 * The computers already have a `managed-mcp.json`.
-  {{ site.claude_code }} then loads only the servers in that file and the few exceptions that `exclusive` also has, and not the servers of the plugin that `profile activate` adds.
+  {{ site.claude_code }} then loads only the servers in that file, as with `exclusive`, and not the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
@@ -251,7 +257,7 @@ Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
 A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check): each `managedMcpServers` entry, each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`, built-in servers such as Claude in Chrome, the Slack tools of a Claude Tag session, and the in-process `type: "sdk"` servers of an Agent SDK app.
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
-When a session starts, kong-harnesses names up to 10 of the servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest, but not the servers of a plugin.
+When a session starts, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 `kong-harnesses doctor` names each one.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server.
@@ -290,6 +296,9 @@ The sandbox allowlists of the host still apply, unless your own managed settings
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
 To give it the same settings, add `--wsl inherit`.
+{{ site.claude_code }} in each WSL distribution is a separate Linux install, and it must be at a version that Kong supports.
+`fleet build` doesn't install it, and the Windows install of {{ site.claude_code }} doesn't put it in WSL.
+To install it, see [Install in WSL](https://code.claude.com/docs/en/setup#install-in-wsl), and to find the supported versions, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 If your `--policy` sets `wslInheritsWindowsSettings` to `true`, `fleet build` refuses a Windows build without `--wsl inherit`, so add the option or set the key to `false` in the policy.
 For a new MDM build of computers that already have an MDM build, which you pass with `--record`, `fleet build` first takes the settings of the earlier build out of the policy, and checks only the value that is left.
 This option needs Windows interop, which lets WSL run Windows programs, in each WSL distribution.
@@ -602,7 +611,7 @@ If a server is missing, look for the settings in [Choose the MCP servers](#choos
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
 `doctor` doesn't run in WSL, so there the label and the test prompt are the only checks.
-Start `claude` in the distribution, and run `/status` before you send a prompt.
+Start the `claude` command that is installed in the distribution, and run `/status` before you send a prompt.
 Make sure that the `Setting sources` line shows `Enterprise managed settings` with a label that can carry the build, as on Windows.
 If it doesn't, make sure that you built with `--wsl inherit`, and deploy the build again.
 Then send a short prompt, such as `Say hello`.
