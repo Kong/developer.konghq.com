@@ -8,7 +8,7 @@
 //   {% endkonnect_api_request %}
 //
 // The rendering layer (app/_includes/how-tos/validations/request-check/snippet.md)
-// emits `--json "$(cat secret.json)"`, so the value keeps its `$(...)` wrapper
+// emits `--data-binary "$(cat secret.json)"`, so the value keeps its `$(...)` wrapper
 // and a reader runs the inner command in their own shell. The runner executes
 // the command through `bash -c` in the test container instead, so it needs the
 // inner command, not the substitution syntax around it.

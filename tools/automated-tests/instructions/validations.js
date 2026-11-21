@@ -198,7 +198,7 @@ async function executeRequest(
     } else if (config.body_cmd !== undefined) {
       // The body is produced by a shell command (e.g. `$(cat secret.json)`),
       // matching the curl the page renders. It is not POST-gated like `body`:
-      // the snippet emits `--json "$(cmd)"` for whatever method the page sets.
+      // the snippet emits `--data-binary "$(cmd)"` for whatever method the page sets.
       options.body = await bodyFromCommand(container, config.body_cmd);
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
     } else if (config.form_url_encoded_data !== undefined) {

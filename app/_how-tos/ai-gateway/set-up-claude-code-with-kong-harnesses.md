@@ -39,6 +39,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: Set up {{ site.claude_code }} with a static key and kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-a-static-key/
 
 prereqs:
   inline:
@@ -196,7 +198,7 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.
 
 {:.warning}
-> On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
+> On a shared computer, protect a local gateway with a [static key](/ai-gateway/set-up-claude-code-with-a-static-key/) or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
 If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
