@@ -5,7 +5,7 @@ permalink: /kong-harnesses/roll-out-claude-code-through-mdm/
 breadcrumbs:
   - /kong-harnesses/
 
-description: Build the {{ site.claude_code }} managed settings for a kong-harnesses profile, deploy them with your MDM tool, and let each developer sign in to {{site.ai_gateway}} as themselves.
+description: Build the {{ site.claude_code }} managed settings for a kong-harnesses profile, deploy them with your MDM tool, and let each developer sign in to {{ site.ai_gateway }} as themselves.
 
 products:
   - ai-gateway
@@ -377,8 +377,10 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   Older {{ site.claude_code }} releases drop such a `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces` value instead, as the same section says.
   [`claude doctor`](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) names each such key with its source.
 * Your own managed settings set `allowedMcpServers` to `null`, or to a value that {{ site.claude_code }} can't read.
-  {{ site.claude_code }} [enforces a value that it can't read as an empty list](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), and it also reads a `null` in a managed source as an empty list.
-  So such a list in force admits no gateway MCP server, and a `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
+  {{ site.claude_code }} [enforces a value that it can't read as an empty list](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), drops each entry that it can't read and keeps the others, and reads a `null` in a managed source as an empty list.
+  [`claude doctor`](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) names a value or an entry that {{ site.claude_code }} can't read, but not a `null`.
+  {{ site.claude_code }} [combines the allowlists of every settings scope](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated), unless `allowManagedMcpServersOnly` is `true`, which keeps only the managed list.
+  So the gateway MCP servers then load only when another list that {{ site.claude_code }} combines allows them, and a `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 * When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
@@ -388,7 +390,7 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
   For the other two settings, use `exclusive`, or make sure that {{ site.claude_code }} doesn't merge the host settings: leave out `--host-settings merge`, and remove a `parentSettingsBehavior` of `merge` from your managed settings or set it to `first-wins`.
   With `any`, an `allowedMcpServers` list of the host also applies when no `allowedMcpServers` list of your managed settings is in force, so it must allow the addresses of the gateway MCP servers.
-  [Without the MCP lock](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), the list in force is the list of the managed settings that {{ site.claude_code }} applies.
+  [Without the MCP lock](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), {{ site.claude_code }} reads `allowedMcpServers` from the managed source that it applies, and [combines that list with the lists of the user, project and local settings](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
   While an administrator source sets `allowManagedMcpServersOnly` to `true`, it is the list of the highest administrator source that sets one, and the list of the host applies only when no administrator source sets one.
   When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
 
@@ -434,12 +436,15 @@ Among the servers that [skip the allowlist check](https://code.claude.com/docs/e
 
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 
-In every mode, when a session starts or resumes, a hook of the build names the MCP servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
+In every mode, when a session starts or resumes, a hook of the build names the MCP servers that it finds {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 It names the servers in the user or local settings, or in the `.mcp.json` of the project.
 `kong-harnesses doctor` also names each one, and each gateway MCP server that it finds blocked.
-But `doctor` reads the `deniedMcpServers` list of only one administrator source, while {{ site.claude_code }} [applies the entries of every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
-And when a `managed-mcp.json` is in place, such as for an `exclusive` build, `doctor` doesn't name a gateway MCP server that a `deniedMcpServers` entry blocks, as [Validate](#validate) says.
-Neither names the other servers of a plugin.
+The hook and `doctor` read the settings in the same way, so both have these limits:
+
+* They read the `deniedMcpServers` list of only one administrator source, while {{ site.claude_code }} [applies the entries of every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
+* When a `managed-mcp.json` is in place, such as for an `exclusive` build, they don't check `deniedMcpServers`, as [Validate](#validate) says.
+* They don't name the other servers of a plugin.
+
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
 {{ site.claude_code }} combines the entries from all settings, also from the settings of a developer.
@@ -640,7 +645,8 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold the gateway credential of a developer, but every account on the computer can read them, so they must hold no secret, as [Build the managed settings](#build-the-managed-settings) describes.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts or resumes, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
+  When a session starts or resumes, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that it finds {{ site.claude_code }} doesn't load.
+  It has the limits that [Choose the MCP servers](#choose-the-mcp-servers) gives.
   It names up to 10 of them for each cause, with a count of the rest.
   It doesn't name the servers of a plugin.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
@@ -757,9 +763,9 @@ productbuild --sign 'INSTALLER_IDENTITY' --package kong-harnesses-fleet.pkg kong
 For Microsoft Intune, add the package as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), which takes an unsigned package and a package that installs files outside `/Applications`.
 Intune uses the app bundle IDs of the Included apps list to detect the installation, and this package installs no app, so Intune may not report it as installed.
 An Intune macOS line-of-business app doesn't fit, because Intune [needs a package](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-lob-macos#app-requirements) that a Developer ID Installer certificate signs, and reports its install only for apps in the `Applications` folder, and this package has none.
-Then install the package on each computer: the signed copy, or the unsigned `kong-harnesses-fleet.pkg` only for a path that takes it.
+Then install the package on the test computer of the group, and after [Validate](#validate) passes, on its other computers: the signed copy, or the unsigned `kong-harnesses-fleet.pkg` only for a path that takes it.
 
-On Linux and Windows, copy the `root` folder from the output folder to each computer.
+On Linux and Windows, copy the `root` folder from the output folder to the test computer of the group, and after [Validate](#validate) passes, to its other computers.
 Run the copy command there as an administrator, from inside the copied `root` folder.
 On Windows, run it in Windows PowerShell.
 On Linux, the copy command needs `getfacl`, from the `acl` package.
@@ -837,7 +843,7 @@ When a `managed-mcp.json` is in place, such as for an `exclusive` build, `doctor
 For a server that takes a key or the gateway sign-in, it also checks that the header helper of the entry runs kong-harnesses for this profile.
 It doesn't check `deniedMcpServers`, but {{ site.claude_code }} [checks the denylist also for each server in that file](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
 So when `/mcp` doesn't show a gateway MCP server as connected, check every `deniedMcpServers` list that applies for an entry that matches it.
-These are the list of each administrator source, and the lists in the user, project and local settings of the developer.
+These are the list of each administrator source, the lists in the user, project and local settings of the developer, and the list in the `--settings` value of the session.
 When the account has no saved sign-in to the profile, `doctor` also says that it isn't signed in and that the first request signs in through the browser, which is expected.
 With a saved sign-in, it says that the account is signed in and usable without a browser.
 To test the browser sign-in, use a test account with no saved sign-in to the profile.
@@ -863,7 +869,7 @@ Other files in `managed-settings.d` and other policies give the same labels, so 
 The build ID alone shows only the settings that `doctor` finds, not the source that {{ site.claude_code }} selected.
 So check both: the build ID from `doctor`, and a label that matches the delivery of the build.
 For a file build, that is `(drop-ins)` or `(file + drop-ins)`.
-For an MDM build, that is `(plist)` or `(HKLM)`, or a list that starts with one of them and ends with `, merged`.
+For an MDM build, that is `(plist)` or `(HKLM)`, or a merged list that starts with `plist` or `HKLM`, such as `(plist + file, merged)`.
 Together, the two checks confirm that the build is on the computer and that {{ site.claude_code }} applies its source.
 If the line doesn't show `Enterprise managed settings`, no managed source delivers a policy key, so the build isn't in effect.
 Check that each file of the build is at its path in [Check what the build holds](#check-what-the-build-holds), and that it holds the settings of the build.
@@ -881,9 +887,9 @@ The labels:
 * `(plist)` on macOS or `(HKLM)` on Windows: an MDM build.
   For a file build, this label means that an MDM policy ranks above the drop-in, and {{ site.claude_code }} ignores most keys of the drop-in.
   Build with `--delivery mdm` for those computers.
-* A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
+* A list that ends with `, merged`, such as `(plist + file, merged)`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
 * `(remote)`, or a merged list that starts with `remote`, such as `(remote + file, merged)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
-  Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the highest source.
+  Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the managed source that it takes most keys from.
   Stop this computer from fetching them, such as by removing a claude.ai login of your organization, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
   Keep them for cloud sessions if your developers run them, and otherwise remove them from their source only after the build is on every computer that they cover.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
@@ -906,7 +912,7 @@ To list the [entries that {{ site.claude_code }} dropped](https://code.claude.co
 
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
-To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
+To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{ site.ai_cost_management }}, and find the usage event of the test user at the time of the prompt.
 With the strategy of the linked setup guide, set the [**User**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) filter to `oidc/SUB`, and replace `SUB` with the `sub` claim of the test user.
 The Events debugger shows the event only to a person whose role covers that subject, as the prerequisites say.
 If you filter by model, use the model ID that the provider reports, because the **Model** filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
@@ -936,7 +942,7 @@ If a server is missing, look for these settings in [Choose the MCP servers](#cho
 * `strictPluginOnlyCustomization` set to `true` or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`.
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, or a `blockedMarketplaces` list with one.
 * A `strictPluginOnlyCustomization` value other than `null` that is neither a Boolean nor a list, or a `strictKnownMarketplaces` or `allowedMarketplaces` value other than `null` that {{ site.claude_code }} can't read, which `claude doctor` names.
-* An `allowedMcpServers` list in force that is `null` or that {{ site.claude_code }} can't read.
+* An `allowedMcpServers` of `null`, or a value that {{ site.claude_code }} can't read, which `claude doctor` names, when no other list that {{ site.claude_code }} combines allows the gateway addresses.
 * A `managedMcpServers` entry at the URL of a gateway MCP server.
 * One of these settings from a host app, when {{ site.claude_code }} merges the host settings.
 
