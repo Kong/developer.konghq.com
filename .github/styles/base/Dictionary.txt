@@ -398,6 +398,7 @@ inlineString
 inso
 Instana
 instrumentations
+Intune
 invalidation
 invalidations
 involvedObject
@@ -411,6 +412,7 @@ Istio's
 istioctl
 item_title
 jaq
+Jamf
 Javascript
 jetstack
 Jira
@@ -651,6 +653,7 @@ PostgreSQL
 PowerShell
 preferred_name
 premade
+preinstall
 prepend
 prepended
 prepending
@@ -708,6 +711,7 @@ Rekor
 Reloader
 remediation
 remediations
+reparse
 repo
 repos
 reportingComponent
