@@ -74,6 +74,7 @@ prereqs:
         You need a mobile device management (MDM) tool that installs packages and a configuration profile or policy on the managed computers, such as Jamf Pro on macOS or Microsoft Intune on Windows.
         On Linux, you can use your configuration management tool.
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
+        To check the route of the test request in the Events debugger, you need the Org Admin [role of AI Management](/ai-management/roles-and-permissions/#roles), or a person with that role.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
@@ -233,7 +234,7 @@ No file, in any order, may set `policyHelper` or `policyHelpers`, because the se
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod`, `forceLoginGatewayUrl` or `forceLoginOrgUUID` either, because the build sets none of them, so a value of one of these keys in any file applies.
 Under `forceLoginOrgUUID`, {{ site.claude_code }} [blocks a session with an `apiKeyHelper` at startup](https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization), also a session of the build.
-No file may set `enforceAnthropicSignIn` either, for the reason that [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) gives.
+No file may set `enforceAnthropicSignIn` either, because a session on a gateway then starts only when the developer is signed in to your Anthropic organization.
 For a Windows build without `--wsl inherit`, each file must leave out `wslInheritsWindowsSettings` or set it to `false`.
 {{ site.claude_code }} leaves the Windows chain off only for no key, `null`, `false` or `"false"`, and any other value turns it on, so {{ site.claude_code }} in WSL then reads the build, whose commands only Windows runs.
 
@@ -288,9 +289,9 @@ It also refuses a policy that it can't read, or that {{ site.claude_code }} woul
 For WSL and for the gateway MCP servers, [Build the managed settings](#build-the-managed-settings) and [Choose the MCP servers](#choose-the-mcp-servers) name the other values that `fleet build` refuses.
 `fleet build` doesn't refuse `forceLoginOrgUUID`, but {{ site.claude_code }} [blocks a session with an `apiKeyHelper` at startup](https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization) when a managed source sets it, so remove it from your policy.
 `fleet build` doesn't refuse [`enforceAnthropicSignIn`](https://claude.com/docs/third-party/claude-desktop/admin-console-claude-code#require-the-sign-in-with-managed-settings) either.
-With it, a session on a gateway starts only when the developer is signed in to your Anthropic organization, so the sign-in of the build doesn't count, and you remove the key from your policy too.
+With it, a session on a gateway starts only when the developer is signed in to your Anthropic organization, and the sign-in of the build doesn't count, so remove the key from your policy too.
 It doesn't check the models, so make sure that your policy allows each model of the build: no [`deniedModels`](https://code.claude.com/docs/en/model-config#block-specific-models-or-versions) entry can block one, and an `availableModels` list must allow each one.
-With `--host-settings merge`, an `availableModels` list of the host [also applies](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) when the managed source that wins sets none, so set `availableModels` in your policy, or make sure that the list of the host allows each model of the build.
+When {{ site.claude_code }} merges the host settings, an `availableModels` list of the host [also applies](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) when the managed settings that {{ site.claude_code }} applies set none, so set `availableModels` in your policy, or make sure that the list of the host allows each model of the build.
 `fleet build` lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`, without `forceLoginMethod`, `forceLoginGatewayUrl`, `forceLoginOrgUUID` and `enforceAnthropicSignIn`.
@@ -352,13 +353,15 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
-* With `--host-settings merge`, the app that starts {{ site.claude_code }}, such as Claude Desktop, passes `strictPluginOnlyCustomization`, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
-  [These host settings apply](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) with every lock, and a `strictKnownMarketplaces` list of the host applies when the managed source that wins sets none.
+* When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes `strictPluginOnlyCustomization`, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
+  [These host settings apply](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) with every lock, and a `strictKnownMarketplaces` list of the host applies when the managed settings that {{ site.claude_code }} applies set none.
   Claude Desktop sends such a list when its managed configuration turns off the plugin marketplaces that users add.
   For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
-  For the other two settings, use `exclusive`, or leave out `--host-settings merge`.
+  For the other two settings, use `exclusive`, or make sure that {{ site.claude_code }} doesn't merge the host settings: leave out `--host-settings merge`, and remove a `parentSettingsBehavior` of `merge` from your managed settings or set it to `first-wins`.
   With `any`, an `allowedMcpServers` list of the host also applies when no `allowedMcpServers` list of your managed settings is in force, so it must allow the addresses of the gateway MCP servers.
-  A list in a lower managed source that {{ site.claude_code }} doesn't select isn't in force.
+  [Without the MCP lock](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), the list in force is the list of the managed settings that {{ site.claude_code }} applies.
+  While an administrator source sets `allowManagedMcpServersOnly` to `true`, it is the list of the highest administrator source that sets one, and the list of the host applies only when no administrator source sets one.
+  When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
 
 When the policy that you pass with `--policy` sets `strictPluginOnlyCustomization` or one of the marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for one yourself.
@@ -424,7 +427,8 @@ Replace each placeholder with the value for your deployment, and keep the quotes
 Claude Desktop, an IDE extension or an Agent SDK app can start {{ site.claude_code }} and pass settings of its own, the host settings.
 When the computer has managed settings, {{ site.claude_code }} ignores the host settings by default.
 But the default `--host-settings ignore` writes no value, so a `parentSettingsBehavior` of `merge` in your own managed settings stays in effect.
-Then either remove that key from your managed settings, or build with `--host-settings merge` and follow the steps on this page for that option.
+Then either remove that key from your managed settings or set it to `first-wins`, or build with `--host-settings merge`.
+Each step on this page for the case when {{ site.claude_code }} merges the host settings applies to both: a build with `--host-settings merge`, and a `parentSettingsBehavior` of `merge` in your own managed settings.
 For a new build from the record of a build with `merge`, `fleet build` asks you to pass `--host-settings merge` or `--host-settings ignore`.
 To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), add `--host-settings merge`, which sets `parentSettingsBehavior` to `merge` and replaces the value that your own policy sets.
 {{ site.claude_code }} reads this key only from the managed source that it takes most keys from, so the build must be that source.
@@ -619,7 +623,10 @@ The managed settings hold:
 
 The profile becomes a machine-wide profile on each computer.
 kong-harnesses uses it before a developer's own profile with the same name, and developers can't change it.
-kong-harnesses uses the file only when its owner and the accounts that can write to it, and to its folders, follow the rule for the platform in [Install on the managed computers](#install-on-the-managed-computers).
+kong-harnesses checks the file and each folder above it each time it reads the profile.
+On macOS and Linux, root must own them, and no group or other account can write to them.
+On Windows, up to `C:\Program Files`, the owner must be SYSTEM, Administrators or TrustedInstaller, and no other account can have a right to change them.
+An entry that only passes to new files and folders doesn't count, such as the default CREATOR OWNER entry of `C:\Program Files`.
 Otherwise, it refuses the profile, because another account could send every developer's sign-in to an identity provider that it controls.
 
 `fleet build` also writes a record file, `kong-harnesses-fleet-BUILD_ID.json`, in the output folder, outside `root`.
@@ -652,6 +659,7 @@ After the checks in [Validate](#validate) pass on the test computer of a group, 
    On macOS and Linux, root must own each file and every folder above it, and no group or other account can write to them.
    On Linux, they also can't have ACL entries beyond their mode bits, and on macOS, no ACL entry can let an account other than root change them.
    On Windows, only SYSTEM, Administrators, TrustedInstaller or CREATOR OWNER can own or write to each file and every folder up to `C:\Program Files`, and no reparse point can be on the path.
+   kong-harnesses checks the profile file and its folders again each time it reads the profile, and there a CREATOR OWNER entry is allowed only when it passes only to new files and folders, as [Check what the build holds](#check-what-the-build-holds) says.
    A reparse point, such as a symbolic link or a junction, sends the path to another place.
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
    On macOS, upload `com.anthropic.claudecode.plist` to your MDM tool in place of your Custom Settings payload for the `com.anthropic.claudecode` preference domain.
@@ -676,15 +684,15 @@ find root scripts -type d -exec chmod 755 {} + && find root -type f -exec chmod 
 ```
 
 The command writes `kong-harnesses-fleet.pkg` in that folder, and it doesn't sign the package.
-Several MDM delivery paths need a signed package:
+It is a component package, and several MDM delivery paths need a signed distribution package:
 
-* [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify.
-* A Jamf Pro PreStage enrollment package needs a certificate that the Mac trusts at enrollment.
+* [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify, and MDM tools that send its install command take only a distribution package.
+* A Jamf Pro [PreStage enrollment package](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Computer_PreStage_Enrollment_Payload_Reference) must be a flat, distribution-style package, signed by a certificate that the Mac trusts at enrollment.
 
-For those paths, sign the package with your installer identity:
+For those paths, put the package in a distribution package, and sign it with your installer identity:
 
 ```sh
-productsign --sign 'INSTALLER_IDENTITY' kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
+productbuild --sign 'INSTALLER_IDENTITY' --package kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
 ```
 
 For Microsoft Intune, add the package as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), which takes an unsigned package and a package that installs files outside `/Applications`.
@@ -803,7 +811,7 @@ The labels:
   So check both deliveries of the build: each file that the build wrote under `root`, at its path in [Check what the build holds](#check-what-the-build-holds), and for an MDM build, also the `HKLM` value.
   Then deploy each one that is missing.
 * `(parent process)`: the app that started {{ site.claude_code }}, such as Claude Desktop, supplied the managed settings.
-  When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source for a build with `--host-settings merge`, so this label means that the build didn't reach the computer.
+  When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source when `parentSettingsBehavior` is `merge`, so this label means that the build didn't reach the computer.
   To confirm it, read the `Skipped sources` line, start `claude` from a terminal, run `/status` there, and check the build ID with `doctor`.
   If the session from the terminal doesn't show the build either, deploy the build again.
 * `(helper)`: a `policyHelper` or `policyHelpers` in the MDM policy, in `managed-settings.json` or in a file in `managed-settings.d` computes the settings, and they replace the build.
@@ -819,6 +827,7 @@ On Linux, the sign-in needs a desktop session with Secret Service, as the suppor
 If the sign-in fails, run `kong-harnesses doctor --profile work --client claude-code`, and follow the failure that it names.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
+The Events debugger needs the Org Admin role, as the prerequisites say.
 If you filter by model, use the model ID that the provider reports, because the `model` filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
 Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
@@ -831,9 +840,9 @@ Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as con
 `kong-harnesses doctor` names each key server without a saved key, unless {{ site.claude_code }} reaches it through another entry at the same address.
 `doctor` looks for missing keys only when it finds no blocked or missing gateway MCP server, so fix those problems first, and then run `kong-harnesses doctor` again.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, a `managedMcpServers` entry at the URL of a gateway MCP server, or one of these settings from a host app with `--host-settings merge`.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in force that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, a `managedMcpServers` entry at the URL of a gateway MCP server, or one of these settings from a host app when {{ site.claude_code }} merges the host settings.
 
-For a build with `--host-settings merge`, `doctor` doesn't read the host settings, and a session from a terminal doesn't get them.
+When {{ site.claude_code }} merges the host settings, `doctor` doesn't read them, and a session from a terminal doesn't get them.
 So also start a session from each host app that developers use with the build, such as the {{ site.claude_code }} extension for VS Code, and do the `/status`, `/mcp` and test prompt checks there.
 Claude Desktop isn't such an app, because its sessions don't use the sign-in and the route of the build, as [Check what the build holds](#check-what-the-build-holds) says.
 
