@@ -82,6 +82,10 @@ See the [AI MCP Server entity](/ai-gateway/entities/ai-mcp-server/#server-modes)
 Once authenticated, a token can map to an [AI Consumer](/ai-gateway/entities/ai-consumer/), a [Kong Identity principal](/identity/principals/), or both at once.
 See [Identity mapping](/ai-gateway/entities/ai-auth-strategy/#identity-mapping) on the AI Auth Strategy entity for how that mapping works.
 
+You don't have to map Consumers to report on usage per user.
+The OpenTelemetry Policy can label token usage and cost metrics with the claim from the token instead, so you can charge usage back without creating an AI Consumer for every person who signs in.
+See [Identifying requests in metrics](/ai-gateway/policies/opentelemetry/#identifying-requests-in-metrics).
+
 {% include /ai-gateway/auth-strategy-default-termination.md %}
 
 The following diagram shows the three outcomes for a request against an AI Model, AI Agent, or AI MCP Server with an OpenID Connect AI Auth Strategy attached:

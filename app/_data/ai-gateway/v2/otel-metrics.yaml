@@ -40,6 +40,7 @@ metrics:
       - gen_ai.operation.name
       - kong.workspace.name
       - kong.auth.consumer.name
+      - kong.auth.credential.id
       - kong.gen_ai.request.mode
   - name: gen_ai.server.time_to_first_token
     min_version: ""
@@ -83,6 +84,7 @@ metrics:
       - kong.gen_ai.embeddings.model
       - kong.workspace.name
       - kong.auth.consumer.name
+      - kong.auth.credential.id
       - kong.gen_ai.request.mode
   - name: kong.gen_ai.cache.fetch.latency
     min_version: ""
@@ -306,6 +308,7 @@ attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated AI Consumer.
+  kong.auth.credential.id: "ID of the credential the request authenticated with. Only set when [`enable_credential_attribute`](/ai-gateway/policies/opentelemetry/reference/#schema--config-metrics-enable-credential-attribute) is turned on and the request authenticated."
   kong.workspace.name: Name of the Workspace.
   error.type: Type of error that occurred.
   gen_ai.provider.name: Name of the Gen AI provider.
