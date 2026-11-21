@@ -105,8 +105,9 @@ cleanup:
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
-You build the managed settings, and your MDM tool deploys them, so developers don't install, import or edit anything.
-Only for a build with `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
+You build the managed settings, and your MDM tool deploys them.
+With `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer also runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
+Developers don't install, import or edit anything else.
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one computer for each platform before the rest of the fleet.
@@ -161,14 +162,15 @@ No file, in any order, may set `policyHelper`, because the settings that a polic
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod` or `forceLoginGatewayUrl` either, because the build sets neither, so a value of either key in any file applies.
 
-By default, on a computer that also gets a {{ site.claude_code }} MDM policy, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
+By default, on a computer whose {{ site.claude_code }} MDM policy sets a [policy key](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources), {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 So the credential helper and the hooks of a file build don't apply there, and those computers need an MDM build.
+An MDM policy that sets only control keys, such as `managedSourcesBehavior` or `wslInheritsWindowsSettings`, doesn't count.
 {{ site.claude_code }} still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
 So if the MDM policy on the computers sets its own `allowedMcpServers` list, that list replaces the list of the build.
 If that list doesn't allow the addresses of the gateway MCP servers, {{ site.claude_code }} doesn't load them.
-For every computer that gets an MDM policy, build with `--delivery mdm`.
+For every computer whose MDM policy sets a policy key, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
 If they don't get a {{ site.claude_code }} policy of your own, pass `--no-policy`.
@@ -188,10 +190,18 @@ It lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
 Then remove it from its source.
-Server-managed settings reach a session only when it signs in with one of the credentials that [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability) lists, such as a Team or Enterprise claude.ai login, an OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` or an API key that is set directly.
-The key that the build's `apiKeyHelper` returns is none of them, so it doesn't start the fetch of server-managed settings.
+{{ site.claude_code }} fetches remote settings only in [the cases that the source ranking lists](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources):
+
+* The session has one of the credentials that [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability) lists, such as a Team or Enterprise claude.ai login, an OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` or an API key that is set directly.
+* The session signs in to a Claude apps gateway with `/login`.
+* The session runs in the Code tab of Claude Desktop behind a Claude apps gateway that serves settings to it.
+
+The build itself puts a session in none of these cases.
+The key that the build's `apiKeyHelper` returns isn't one of those credentials.
+A `/login` sign-in to a gateway needs `forceLoginMethod` and `forceLoginGatewayUrl` in your managed settings, which `fleet build` refuses in your policy.
+The gateway of the profile is a {{ site.ai_gateway_name }}, not a Claude apps gateway.
 But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
-The server-managed settings then rank above the build, and the build's `apiKeyHelper` isn't in effect.
+The remote settings then rank above the build, and the build's `apiKeyHelper` isn't in effect.
 
 ## Choose the MCP servers
 
@@ -460,25 +470,25 @@ After the checks in [Validate](#validate) pass on each test computer, install th
 The command can run on a computer other than the one that runs `fleet build`, so it names the copy of the build with a placeholder.
 On macOS, copy the whole output folder of the build to the Mac that builds the package, and replace `BUILD_FOLDER` there with the path of that copy.
 Copy it with a tool that keeps the file modes, such as `ditto` or `rsync -a`.
-The command is like this one.
-It sets the modes of the files and the preinstall script again, so a copy that lost them still gives a correct package, and then `pkgbuild` puts the files and the preinstall script in one package.
-Replace each placeholder with the value for your deployment, and keep the quotes that the example shows:
+The command sets the modes of the files and the preinstall script again, so a copy that lost them still gives a correct package, and then `pkgbuild` puts the files and the preinstall script in one package.
+Replace each placeholder with the value for your deployment, and keep the quotes that the command shows.
+`fleet build` prints this command:
 
 ```sh
 find 'BUILD_FOLDER/root' 'BUILD_FOLDER/scripts' -type d -exec chmod 755 {} + && find 'BUILD_FOLDER/root' -type f -exec chmod 644 {} + && chmod 755 'BUILD_FOLDER/scripts/preinstall' && pkgbuild --root 'BUILD_FOLDER/root' --scripts 'BUILD_FOLDER/scripts' --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
 Then install `kong-harnesses-fleet.pkg` on each computer.
-On Linux and Windows, copy the `root` folder from the output folder to each computer, replace `ROOT_FOLDER` with the path of that copy, and run the copy command there as an administrator.
+On Linux and Windows, copy the `root` folder from the output folder to each computer, replace `ROOT_FOLDER` with the path of that copy, and run the copy command there as an administrator, in PowerShell on Windows.
 
 Before the install writes a file, it checks each file and folder of the build that is already on the computer.
-On macOS, the preinstall script also checks each folder above the files.
+It also checks the folders above the files, such as `/etc` on Linux, `/Library` on macOS and `C:\Program Files` on Windows.
 If an entry is a link or a hard link, has an owner other than root, or other accounts can write to it, the install stops before it writes any file.
 On Windows, the owner must be Administrators, SYSTEM, TrustedInstaller, CREATOR OWNER or the account that runs the command.
 The message starts with `Not installed:` and names the entry.
 Remove or fix that entry, and then run the install again.
 
-After the install, root owns each file and folder of the build on macOS and Linux, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
+On macOS and Linux, after the install, root owns each file and folder of the build, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
 On macOS, `pkgbuild` sets root as the owner by default, and the package keeps the modes of the build.
 On Linux, the copy command sets the owner and the modes after the copy, and doesn't change the top folder, such as `/etc`.
 On Windows, the copy command gives each file and folder of the build to Administrators, with the access rules that it inherits from the folder that holds it.
