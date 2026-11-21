@@ -77,6 +77,9 @@ prereqs:
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
         To check the route of the test request in the Events debugger, you need [access to the usage events](/ai-cost-management/analytics-and-debugging/#how-the-views-relate) of the test user, or a person with that access.
         An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as that section says.
+        The linked setup guide uses an `openid-connect` strategy without `principals.enabled`, so the subject of the event is `oidc/` and the `sub` claim of the test user, with no principal.
+        Then an Org Admin finds the event by that subject and the time of the prompt.
+        A Team Manager or the test user sees it only when the strategy [attributes the usage to a principal](/ai-cost-management/attribution/#set-up-subject-attribution).
         The [roles of AI Management](/ai-management/roles-and-permissions/#roles) say how a user gets each role.
 
 tldr:
@@ -277,7 +280,7 @@ Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 `fleet build` refuses a policy with a value that changes how {{ site.claude_code }} reaches the gateway, and names each key that causes it:
 
 * `forceLoginMethod` or `forceLoginGatewayUrl`, which lock the sign-in.
-* An `allowedProviders` entry other than the gateway.
+* An `allowedProviders` entry other than `customEndpoint`, the provider of the gateway, which is the only entry that `fleet build` accepts.
 * `policyHelper` or `policyHelpers`, because {{ site.claude_code }} then reads only the policy that the helper gives.
 * An `env` value other than text or `null`, for a variable that the build doesn't set, because {{ site.claude_code }} drops it.
 * In `env.ANTHROPIC_CUSTOM_HEADERS`, a header that sets `Authorization`, `Proxy-Authorization`, `X-Api-Key` or `Host`, a header that the attribution of the profile sets to another value, or a line that isn't a `Name: Value` header.
@@ -346,7 +349,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   kong-harnesses profile activate work --client claude-code
   ```
 
-  It fails when the developer's own settings set an Anthropic credential, as [Validate](#validate) describes.
+  `profile activate` fails when the developer's own settings set an Anthropic credential, as [Validate](#validate) describes.
 
 * `--mcp-servers any` doesn't add a lock or servers, and leaves MCP servers to each developer.
   To get the gateway MCP servers, each developer runs `profile activate`, as with `allowlist`.
@@ -381,13 +384,13 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 
 When the policy that you pass with `--policy` has one of these plugin or marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers:
 
-* `strictPluginOnlyCustomization` set to `true`, or to a list of one or more entries that are all text, also names that {{ site.claude_code }} doesn't know.
-* A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, in which each entry is an object, also an empty list or `null`.
-* A `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, in which each entry is an object.
+* `strictPluginOnlyCustomization` set to `true`, or to a list of one or more entries, each of them text or `null`, also names that {{ site.claude_code }} doesn't know.
+* A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, in which each entry is `null` or an object whose `source` is text or missing, also an empty list or `null`.
+* A `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, in which each other entry is `null` or an object whose `source` is text or missing.
 
-`fleet build` doesn't refuse one of these lists when an entry has another type, such as `["mcp", 1]` or `[{"source": "skills-dir"}, 1]`.
+`fleet build` doesn't refuse one of these lists when an entry has another type, such as `["mcp", 1]`, `[{"source": "skills-dir"}, 1]` or `[{"source": 1}]`.
 {{ site.claude_code }} [drops or ignores only that entry](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), so such a list can still block the plugin.
-`fleet build` also doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the list describes.
+`fleet build` also doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the earlier list of cases describes.
 {{ site.claude_code }} reads a `null` as unset, so to pass the check, remove a marketplace key with `null` from your policy.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server either, so check your policy for these values yourself.
 `kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
@@ -667,7 +670,7 @@ Keep the record with your policy.
 You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
 The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries of the gateway MCP servers that the build wrote, but not your own servers.
 `fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same flags and the same kong-harnesses release.
-When the Claude provider of the profile is the Anthropic API, the record also holds the models and prices that `fleet build` gets from the gateway, so it also needs the same model list from the gateway.
+When the Claude provider of the profile is the Anthropic API, the record also holds the models and prices that `fleet build` gets from the gateway, so the same record also needs the same model list from the gateway.
 So keep a backup copy of the record.
 
 ## Install on the managed computers
@@ -724,7 +727,8 @@ It is a component package, and several MDM delivery paths need a signed distribu
 * [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify, and MDM tools that send its install command take only a distribution package.
 * A Jamf Pro [PreStage enrollment package](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Computer_PreStage_Enrollment_Payload_Reference) must be a flat, distribution-style package, signed by a certificate that the Mac trusts at enrollment.
 
-For those paths, put the package in a distribution package, and sign it with your installer identity:
+For those paths, put the package in a distribution package, and sign it with your installer identity.
+Replace `INSTALLER_IDENTITY` with the name of the installer signing certificate in your Keychain:
 
 ```sh
 productbuild --sign 'INSTALLER_IDENTITY' --package kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
@@ -792,7 +796,7 @@ kong-harnesses profile activate work --client claude-code
 
 `profile activate` fails when the `env` of the developer's own {{ site.claude_code }} settings sets `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY` to a value other than empty text or `null`.
 The error says that the settings file sets one of them, which {{ site.claude_code }} would send in place of the sign-in.
-That file is `~/.claude/settings.json`, or `settings.json` in the folder that `CLAUDE_CONFIG_DIR` names.
+That file is `~/.claude/settings.json`, or `%USERPROFILE%\.claude\settings.json` on Windows, or `settings.json` in the folder that `CLAUDE_CONFIG_DIR` names.
 Remove these variables from its `env`, and run `profile activate` again.
 
 Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
@@ -875,7 +879,8 @@ To list the [entries that {{ site.claude_code }} dropped](https://code.claude.co
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
-The Events debugger shows the event only to a person whose role covers the test user, as the prerequisites say.
+With the strategy of the linked setup guide, set the [`User` filter](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) with the subject `oidc/` and the `sub` claim of the test user.
+The Events debugger shows the event only to a person whose role covers that subject, as the prerequisites say.
 If you filter by model, use the model ID that the provider reports, because the `model` filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
 Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
@@ -883,7 +888,7 @@ If one of them does, remove the key or set it to `false`.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
 If a key server isn't connected and `kong-harnesses doctor` names it without a saved key, run `kong-harnesses login --profile work`, and type its key.
-`login` asks only for a key that isn't saved or that it can't read, so it doesn't replace a saved key that the server refuses.
+`login` asks only for a key that isn't saved or that it can't use, so it doesn't replace a saved key that the server refuses.
 If `doctor` says that it can't read the saved key of a server, follow the fix that it names.
 To replace a saved key that the server refuses, run `kong-harnesses logout --profile work`, and then run `kong-harnesses login --profile work` again.
 `logout` asks you to type the profile name, signs out of the profile, and removes its saved sign-in and every saved gateway MCP key of the profile.
