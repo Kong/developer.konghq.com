@@ -25,6 +25,7 @@ Examples:
   kongctl get audit-logs destinations
 
 Available Commands:
+  ai            Inspect Konnect AI resources
   ai-gateway    List or get Konnect AI Gateways
   analytics     Manage Konnect Analytics resources
   api           List or get Konnect APIs

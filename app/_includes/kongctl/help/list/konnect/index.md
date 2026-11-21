@@ -11,6 +11,7 @@ Examples:
   kongctl list konnect gateway control-planes
 
 Available Commands:
+  ai            Inspect Konnect AI resources
   ai-gateway    List or get Konnect AI Gateways
   analytics     Manage Konnect Analytics resources
   api           List or get Konnect APIs
