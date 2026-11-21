@@ -228,9 +228,10 @@ A file whose name sorts after `kong-harnesses.json` in alphabetical order must n
 A file whose name sorts before `kong-harnesses.json` loses each of those values, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
 Its list entries stay.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
-No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
+No file, in any order, may set `policyHelper` or `policyHelpers`, because the settings that a policy helper computes replace all the other managed settings.
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
-No file may set `forceLoginMethod` or `forceLoginGatewayUrl` either, because the build sets neither, so a value of either key in any file applies.
+No file may set `forceLoginMethod`, `forceLoginGatewayUrl` or `forceLoginOrgUUID` either, because the build sets none of them, so a value of one of these keys in any file applies.
+Under `forceLoginOrgUUID`, {{ site.claude_code }} [blocks a session with an `apiKeyHelper` at startup](https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization), also a session of the build.
 For a Windows build without `--wsl inherit`, each file must leave out `wslInheritsWindowsSettings` or set it to `false`.
 {{ site.claude_code }} leaves the Windows chain off only for no key, `null`, `false` or `"false"`, and any other value turns it on, so {{ site.claude_code }} in WSL then reads the build, whose commands only Windows runs.
 
@@ -283,10 +284,12 @@ It also refuses a policy that it can't read, or that {{ site.claude_code }} woul
 * For an MDM build, a value that the MDM policy doesn't read back as it is, such as a control character.
 
 For WSL and for the gateway MCP servers, [Build the managed settings](#build-the-managed-settings) and [Choose the MCP servers](#choose-the-mcp-servers) name the other values that `fleet build` refuses.
+`fleet build` doesn't refuse `forceLoginOrgUUID`, but {{ site.claude_code }} [blocks a session with an `apiKeyHelper` at startup](https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization) when a managed source sets it, so remove it from your policy.
 It doesn't check the models, so make sure that your policy allows each model of the build: no [`deniedModels`](https://code.claude.com/docs/en/model-config#block-specific-models-or-versions) entry can block one, and an `availableModels` list must allow each one.
+With `--host-settings merge`, an `availableModels` list of the host [also applies](https://code.claude.com/docs/en/claude-apps-gateway#settings-the-locks-dont-cover) when the managed source that wins sets none, so set `availableModels` in your policy, or make sure that the list of the host allows each model of the build.
 It lists each of your values that it changes.
 
-If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
+If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`, without `forceLoginMethod`, `forceLoginGatewayUrl` and `forceLoginOrgUUID`.
 If your developers run cloud sessions in Anthropic-hosted environments, keep the server-managed settings for those sessions, because [endpoint-managed settings don't reach them](https://code.claude.com/docs/en/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings).
 Otherwise, remove the policy from its source only after the build is on every computer that it covers.
 In both cases, make sure that no session on the managed computers fetches the remote settings.
@@ -323,7 +326,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   This mode doesn't take `--mcp-url` or `--mcp-command`.
 * `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide or allow, the gateway MCP servers of the profile, and the servers that you list with `--mcp-url` or `--mcp-command`.
   It doesn't add servers.
-  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the `skills` folder of the developer's {{ site.claude_code }} settings:
+  To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows:
 
   ```sh
   kong-harnesses profile activate work --client claude-code
@@ -343,6 +346,12 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
+* With `--host-settings merge`, the app that starts {{ site.claude_code }}, such as Claude Desktop, passes `strictPluginOnlyCustomization`, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
+  [These host settings apply](https://code.claude.com/docs/en/claude-apps-gateway#settings-the-locks-dont-cover) with every lock, and a `strictKnownMarketplaces` list of the host applies when the managed source that wins sets none.
+  Claude Desktop sends such a list when its managed configuration turns off the plugin marketplaces that users add.
+  For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
+  For the other two settings, use `exclusive`, or leave out `--host-settings merge`.
+  With `any`, an `allowedMcpServers` list of the host also applies when no administrator source sets one, so it must allow the addresses of the gateway MCP servers.
 
 When the policy that you pass with `--policy` sets `strictPluginOnlyCustomization` or one of the marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for one yourself.
@@ -413,6 +422,9 @@ To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embeddin
 The permission allow rules of the host still apply, unless your own managed settings set `allowManagedPermissionRulesOnly` to `true`.
 The sandbox allowlists of the host still apply, unless your own managed settings set `sandbox.network.allowManagedDomainsOnly` to `true` for domains and `sandbox.filesystem.allowManagedReadPathsOnly` to `true` for read paths.
 [Restrict parent settings](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) lists all the locks.
+Some host settings [pass every lock](https://code.claude.com/docs/en/claude-apps-gateway#settings-the-locks-dont-cover).
+A `forceLoginOrgUUID` of the host applies when your managed settings set none, and {{ site.claude_code }} then blocks the `apiKeyHelper` of the build at startup, so make sure that the host passes none.
+For the host settings that block the gateway MCP servers or a model of the build, see [Choose the MCP servers](#choose-the-mcp-servers) and [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers).
 
 The Windows examples set up {{ site.claude_code }} on Windows itself.
 By default, {{ site.claude_code }} in WSL on those computers doesn't use the settings.
@@ -782,17 +794,16 @@ The labels:
   When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source for a build with `--host-settings merge`, so this label means that the build didn't reach the computer.
   To confirm it, read the `Skipped sources` line, start `claude` from a terminal, run `/status` there, and check the build ID with `doctor`.
   If the session from the terminal doesn't show the build either, deploy the build again.
-* `(helper)`: a `policyHelper` in the MDM policy or the managed settings file computes the settings, and they replace the build.
-  Remove the `policyHelper`.
+* `(helper)`: a `policyHelper` or `policyHelpers` in the MDM policy, in `managed-settings.json` or in a file in `managed-settings.d` computes the settings, and they replace the build.
+  Remove the `policyHelper` or `policyHelpers`.
 
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
 To list the [entries that {{ site.claude_code }} dropped](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) from the managed settings because they are invalid, also run `claude doctor`, which names the source and the field of each one.
 
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
-When `doctor` said that the account isn't signed in, kong-harnesses opens the browser on the first request.
-On Linux, this needs a desktop session with Secret Service, as the supported computers in the prerequisites describe.
-Sign in with the developer's identity provider account.
+When `doctor` said that the account isn't signed in, kong-harnesses opens the browser on the first request, and you sign in with the developer's identity provider account.
 With a saved sign-in, the request runs without the browser.
+On Linux, the sign-in needs a desktop session with Secret Service, as the supported computers in the prerequisites describe.
 If the sign-in fails, run `kong-harnesses doctor --profile work --client claude-code`, and follow the failure that it names.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
@@ -808,7 +819,10 @@ Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as con
 `kong-harnesses doctor` names each key server without a saved key, unless {{ site.claude_code }} reaches it through another entry at the same address.
 `doctor` looks for missing keys only when it finds no blocked or missing gateway MCP server, so fix those problems first, and then run `kong-harnesses doctor` again.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, or a `managedMcpServers` entry at the URL of a gateway MCP server.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, a `managedMcpServers` entry at the URL of a gateway MCP server, or one of these settings from a host app with `--host-settings merge`.
+
+For a build with `--host-settings merge`, `doctor` doesn't read the host settings, and a session from a terminal doesn't get them.
+So also start a session from each host app that developers use, such as the Code tab of Claude Desktop, and do the `/status`, `/mcp` and test prompt checks there.
 
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
