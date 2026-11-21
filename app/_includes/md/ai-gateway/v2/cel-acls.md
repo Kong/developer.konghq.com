@@ -3,7 +3,8 @@ Use them when access depends on Consumer attributes or request context, not only
 To use them, set `allow_when` or `deny_when` on the {{include.scope}}[`access.acls`]({{include.anchor}}) object.
 Each field is an array of expressions, 1 to 1024 characters each.
 The data plane evaluates the expressions on each request against the authenticated caller and the request itself.
-That includes the AI Consumer, the {{site.identity}} [Principal](/identity/principals/) when the AI Auth Strategy maps one, and `actors` (the entities acting on the Principal's behalf).
+The caller is the AI Consumer and, when the AI Auth Strategy maps one, the {{site.identity}} [Principal](/identity/principals/).
+Expressions can also read `actors`, the separate entities acting on that Principal's behalf.
 The expressions use the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/).
 See [AI Policy conditions](/ai-gateway/conditions/#context-fields) for the full field list.
 Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
