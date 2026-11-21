@@ -177,7 +177,7 @@ For another Claude provider, such as Amazon Bedrock, `fleet build` uses only the
 
 {{ site.claude_code }} can get managed settings from several sources on one computer.
 These are the administrator sources.
-By default, it takes most keys from only the highest of these sources that sets a policy key to a value other than empty objects.
+By default, it takes most keys from only the highest of these sources that sets a policy key to a value other than empty objects, or, when no source does, from the highest source that sets a policy key.
 It reads [a few keys, such as `env`, from every source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 The sources, from highest to lowest:
 
@@ -209,8 +209,9 @@ For an MDM policy, build with `--delivery mdm` instead.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
-A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a key that the build sets, such as `apiKeyHelper` or a variable in `env`.
-A file whose name sorts before `kong-harnesses.json` loses each value that the build sets, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
+A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a single value that the build sets, such as `apiKeyHelper` or a variable in `env`.
+A file whose name sorts before `kong-harnesses.json` loses each single value that the build also sets, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
+Lists [combine](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams) in every order, so the list entries of such a file stay.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
 No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
@@ -235,7 +236,7 @@ If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-po
 The build sets `ANTHROPIC_CUSTOM_HEADERS` in the policy, and {{ site.claude_code }} [takes each `env` variable](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source) from the highest administrator source that sets it.
 So the value of the build replaces the one in your `managed-settings.json` and in `managed-settings.d`.
 The build keeps only the headers of the policy that you pass with `--policy`, so put each header that the computers need in that policy.
-As for a file build, every account on the computer can read these headers, so they must hold no secret.
+These headers must hold no secret either.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 
@@ -314,7 +315,7 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 {{ site.claude_code }} in WSL doesn't load them in any mode.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
-With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds, or that a developer passes with `--mcp-config`, and that the allowlist doesn't match.
+With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds, or that a developer passes with `claude --mcp-config`, and that the allowlist doesn't match.
 Among the servers that [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) are:
 
 * Each `managedMcpServers` entry.
@@ -547,6 +548,10 @@ After the checks in [Validate](#validate) pass on each test computer, install th
 1. {{ site.claude_code }}, at a version that Kong supports.
    `fleet build` doesn't install it.
    To install it, see [Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup).
+   The native installer puts {{ site.claude_code }} in the home folder of the account that runs it, such as `~/.local/bin/claude`, or `%USERPROFILE%\.local\bin\claude.exe` on Windows.
+   So an install that your MDM tool runs as root or SYSTEM doesn't give the developer a `claude` command.
+   Run the native installer in each developer's account, such as with a script that your MDM tool runs as the signed-in user.
+   On Linux, you can also install {{ site.claude_code }} on the local disk from the [`apt`, `dnf` or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
    An older {{ site.claude_code }} doesn't refuse every other provider.
    To find the supported versions and hold the fleet to them, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 1. The kong-harnesses package for the platform, at the path of `--executable`: the macOS installer package at `/usr/local/bin/kong-harnesses`, the Linux `.deb` or `.rpm` package at `/usr/bin/kong-harnesses`, or the Windows installer at `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
@@ -698,7 +703,7 @@ The labels:
   [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the build isn't in effect.
   For a file build, its file in `managed-settings.d` isn't there.
   For an MDM build, the `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode` isn't there, but the other files of the build, such as the profile, can be.
-  So check both deliveries of the build: each file in [Check what the build holds](#check-what-the-build-holds), and for an MDM build, also the `HKLM` value.
+  So check both deliveries of the build: each file that the build wrote under `root`, at its path in [Check what the build holds](#check-what-the-build-holds), and for an MDM build, also the `HKLM` value.
   Then deploy each one that is missing.
 * `(parent process)`: the app that started {{ site.claude_code }}, such as Claude Desktop, supplied the managed settings.
   When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source for a build with `--host-settings merge`, so this label means that the build didn't reach the computer.
@@ -716,7 +721,8 @@ On Linux, this needs a desktop session with Secret Service, as the supported com
 Sign in with the developer's identity provider account.
 If the sign-in fails, run `kong-harnesses doctor --profile work --client claude-code`, and follow the failure that it names.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
-To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt, with the model of the session.
+To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
+If you filter by model, use the model ID that the provider reports, because the `model` filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
 Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
 If one of them does, remove the key or set it to `false`.
