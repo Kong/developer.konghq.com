@@ -38,7 +38,8 @@ prereqs:
   inline:
     - title: A kong-harnesses profile
       content: |
-        Create a kong-harnesses profile that signs developers in through your identity provider, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/) shows, and install it on the computer where you build the managed settings.
+        Create a kong-harnesses profile that signs developers in through your identity provider, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/) shows.
+        Install kong-harnesses with that profile on the computer where you build the managed settings.
         This guide calls the profile `work`.
 
         The gateway origin of the profile must use `https://`.
@@ -53,7 +54,7 @@ tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
   a: |
     Run `kong-harnesses fleet build` for each platform, after you sign in to the profile when its Claude provider is the Anthropic API.
-    Deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA and the files that the build writes through your MDM tool.
+    Deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes through your MDM tool.
     Each developer then signs in as themselves on their first {{ site.claude_code }} request.
 
 cleanup:
@@ -68,7 +69,7 @@ cleanup:
           `fleet remove` writes what is left there, and asks for the flag when it needs it.
 
         Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
-        For a file build without `--mcp-servers exclusive`, `fleet remove` lists the files to delete from each managed computer:
+        For a file build without `--mcp-servers exclusive`, `fleet remove` prints the path of each file to delete from the managed computers:
 
         ```sh
         kong-harnesses fleet remove --record fleet-macos/kong-harnesses-fleet-BUILD_ID.json
@@ -88,20 +89,18 @@ cleanup:
         ```
 
         When keys of your own policy are left, `fleet remove` writes the policy without the settings of the build under `mdm` in the output folder.
-        A value that the build replaced gets your earlier value back, if the value of the build still applies.
-        A value that you changed after the build stays as you set it.
-        If you set a value after the build, and your value is the same as the value of the build, `fleet remove` takes it out too, because it can't tell the two apart.
-        `fleet remove` lists each value that it takes out or gives back, so check that list before you deploy the policy.
-        Deploy that policy in place of the current one.
+        Where the value of the build is still in the policy, your earlier value comes back.
+        A value that you changed after the build stays, unless it is the same as the value of the build, because `fleet remove` can't tell the two apart and takes it out too.
+        `fleet remove` lists each value that it takes out or gives back, so check that list, and then deploy the policy in place of the current one.
         If no other settings are left, `fleet remove` tells you to remove the policy instead.
 
         When your own servers are left in `managed-mcp.json`, `fleet remove` writes the file under `root` in the output folder.
         `fleet remove` keeps a server whose definition changed after the build, even when it has the name of a gateway MCP server, and names each one that it keeps.
         Remove each kept server that still points to the gateway from the file before you install it.
         Install that `managed-mcp.json` in place of the one that the computers have.
-        When no server is left, `fleet remove` lists `managed-mcp.json` among the files to delete.
+        When no server is left, `fleet remove` prints the path of `managed-mcp.json` among the files to delete.
 
-        Then delete the files that `fleet remove` lists from each computer, as an administrator.
+        Then, as an administrator, delete each file that `fleet remove` printed from each computer.
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
@@ -235,7 +234,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
 With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP servers, even after `profile activate`, in these cases:
 
 * The computers already have a `managed-mcp.json`.
-  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the connectors that the Claude desktop app delivers, and not the servers of the plugin that `profile activate` adds.
+  {{ site.claude_code }} then loads only the servers in that file and the few exceptions that `exclusive` also has, and not the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 
@@ -412,7 +411,7 @@ The managed settings hold:
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
   The settings don't hold a credential.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
-  When a session starts, one hook names up to 10 of the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest.
+  When a session starts, one hook names up to 10 of the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest, but not the servers of a plugin.
   When the gateway or the profile marks a model as one that can't run WebSearch, another hook tells that model that no search ran.
 * The models of the gateway.
   The settings set the default model of each Claude family, and the model of other roles such as subagents, to the models of the profile, or to the models that you name with `--model`, such as `--model MODEL_ID`.
@@ -473,7 +472,7 @@ After the checks in [Validate](#validate) pass on each test computer, install th
 
 `fleet build` prints the command that packages or copies the files for the platform.
 The command runs from inside a copy of the build's files, so it can run on a computer other than the one that runs `fleet build`.
-On macOS, copy the whole output folder of the build to the Mac that builds the package with a tool that keeps the file modes, such as `ditto` or `rsync -a`.
+On macOS, copy the whole output folder of the build to the Mac that builds the package, with a tool such as `ditto` or `rsync -a`.
 Then run the command there, from inside the copied output folder.
 The command sets the modes of the files and the preinstall script again, so a copy that lost them still gives a correct package, and then `pkgbuild` puts the files and the preinstall script in one package.
 Replace `PACKAGE_IDENTIFIER` and `PACKAGE_VERSION` with the values for your package.
@@ -507,11 +506,11 @@ The install also stops when it can't list, read or check an entry:
 * `cannot be checked for hard links`: on Windows, `fsutil` doesn't start, exits with a code other than 0, or prints no record that names the file itself.
 
 Each stop prints one message that starts with `Not installed:`, and then names the path and the condition, such as `has another owner`.
-On Windows, the message names the path in the form of the copy and the destination that the command got.
-Remove or fix that entry, and then run the install again.
+On Windows, the message builds each path from the copy folder and the destination as the command got them, so a path can look different from the one that File Explorer shows.
+Remove or fix that entry, or the cause that the condition names, and then run the install again.
 
 On Linux and Windows, the install stops with `could not be written in full; fix the cause and run the step again` when the copy fails after the checks, or when a change of the owner, the modes or the access rules fails.
-The build can then be partly written on the computer, so fix the cause, and then run the install again.
+The build can then be partly written on the computer, so run the install again after the fix.
 
 On macOS and Linux, after the install, root owns each file and folder of the build, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
 On macOS, `pkgbuild` sets root as the owner by default, and the package keeps the modes of the build.
@@ -540,6 +539,8 @@ kong-harnesses doctor --profile work --client claude-code
 ```
 
 `doctor` says that the managed settings of your organization set up the profile, and names the build ID.
+It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from the managed sources on the computer is the helper of the build for the profile.
+{{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, so a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` then doesn't show this line.
 Make sure that the build ID is the one that `fleet build` printed for this platform.
 `doctor` shows a fix for each problem that it finds, and it names the setting that blocks a gateway MCP server.
 Before the first request, it also says that the developer isn't signed in yet, which is expected.
@@ -588,11 +589,12 @@ The labels:
   Remove the `policyHelper`.
 
 If {{ site.claude_code }} ignores a source, the `Skipped sources` line names it.
-To list the entries that {{ site.claude_code }} dropped from the managed settings, also run `claude doctor`.
+To list the [entries that {{ site.claude_code }} dropped](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) from the managed settings because they are invalid, also run `claude doctor`, which names the source and the field of each one.
 
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 On the first request, kong-harnesses opens the browser.
 Sign in with the developer's identity provider account.
+Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
