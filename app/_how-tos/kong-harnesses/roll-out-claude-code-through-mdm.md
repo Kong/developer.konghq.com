@@ -269,7 +269,7 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
 * `--mcp-servers exclusive` gives every developer the gateway MCP servers of the profile.
   It needs a profile with at least one gateway MCP server.
   The build writes the servers to `managed-mcp.json` under `root`, also for an MDM build.
-  {{ site.claude_code }} then loads only the servers in that file and the few others that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that Claude Desktop delivers.
+  {{ site.claude_code }} then loads only the servers in that file and other servers that the [managed MCP docs](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) list, such as the servers that `managedMcpServers` provides and the connectors that Claude Desktop delivers.
   It loads no server that a developer, a project or a plugin adds.
   To keep your own servers in that file, pass the `managed-mcp.json` that the computers have with `--mcp-config`.
   This mode doesn't take `--mcp-url` or `--mcp-command`.
@@ -304,11 +304,11 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
-A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check):
+Among the servers that [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) are:
 
 * Each `managedMcpServers` entry.
 * Each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`.
-* Built-in servers, such as Claude in Chrome.
+* Built-in servers, such as Claude in Chrome, the `ide` server that {{ site.claude_code }} connects to in a running VS Code or JetBrains IDE, and servers that the CLI itself configures.
 * The Slack tools of a Claude Tag session.
 * The in-process `type: "sdk"` servers of an Agent SDK app.
 
@@ -561,15 +561,21 @@ Replace `PACKAGE_IDENTIFIER` and `PACKAGE_VERSION` with the values for your pack
 find root scripts -type d -exec chmod 755 {} + && find root -type f -exec chmod 644 {} + && chmod 755 scripts/preinstall && pkgbuild --root root --scripts scripts --install-location / --identifier PACKAGE_IDENTIFIER --version PACKAGE_VERSION kong-harnesses-fleet.pkg
 ```
 
-Then install, on each computer, the `kong-harnesses-fleet.pkg` that the command writes in that folder.
-The command doesn't sign the package, and most MDM delivery paths need a signed one.
-[Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify.
-A Microsoft Intune macOS line-of-business app needs a Developer ID Installer signature, and a Jamf Pro PreStage enrollment package needs a certificate that the Mac trusts at enrollment.
-For those paths, sign the package with your installer identity, and deploy the signed copy:
+The command writes `kong-harnesses-fleet.pkg` in that folder, and it doesn't sign the package.
+Several MDM delivery paths need a signed package:
+
+* [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) installs only a package with a signature that the Mac can verify.
+* A Jamf Pro PreStage enrollment package needs a certificate that the Mac trusts at enrollment.
+
+For those paths, sign the package with your installer identity:
 
 ```sh
 productsign --sign 'INSTALLER_IDENTITY' kong-harnesses-fleet.pkg kong-harnesses-fleet-signed.pkg
 ```
+
+For Microsoft Intune, add the package as a macOS app (PKG), which takes an unsigned package and a package that installs files outside `/Applications`.
+An Intune macOS line-of-business app doesn't fit, because Intune reports its install only for apps in the `Applications` folder, and this package has none.
+Then install the package on each computer: the signed copy, or the unsigned `kong-harnesses-fleet.pkg` only for a path that takes it.
 
 On Linux and Windows, copy the `root` folder from the output folder to each computer.
 Run the copy command there as an administrator, from inside the copied `root` folder.
@@ -687,8 +693,10 @@ When the build ID and the label are both correct, send a short prompt, such as `
 On the first request, kong-harnesses opens the browser.
 On Linux, this needs a desktop session with Secret Service, as the supported computers in the prerequisites describe.
 Sign in with the developer's identity provider account.
+If the sign-in fails, run `kong-harnesses doctor --profile work --client claude-code`, and follow the failure that it names.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
-To confirm the route, open the LLM usage view of [{{site.observability}} Explorer](/observability/explorer/), and find a request with the model of the session at the time of the prompt.
+To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt, with the model of the session.
+Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
 If one of them does, remove the key or set it to `false`.
 
@@ -708,6 +716,7 @@ Then send a short prompt, such as `Say hello`.
 The credential helper runs kong-harnesses on Windows through interop, so the session uses the developer's Windows sign-in.
 A certificate error means that the distribution doesn't trust the CA of the gateway certificate, or that {{ site.claude_code }} can't read a certificate file.
 To find the cause, start [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) in the distribution.
+It writes the debug log to `~/.claude/debug/` in the distribution, not to the terminal.
 If {{ site.claude_code }} can't read a certificate file, the debug log shows a `Failed to read` or `Failed to load` line with the reason.
 {{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
