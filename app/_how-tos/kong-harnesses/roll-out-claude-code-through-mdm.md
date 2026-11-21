@@ -80,7 +80,8 @@ tldr:
     When the Claude provider of the profile is the Anthropic API, sign in to the profile first.
     Then run `kong-harnesses fleet build` for each platform.
     With your MDM tool, deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes.
-    Each developer then signs in as themselves on their first {{ site.claude_code }} request, and once more for each gateway MCP server that takes a key or its own sign-in.
+    Each developer then signs in as themselves on their first {{ site.claude_code }} request.
+    For the gateway MCP servers that take a key, the developer runs `kong-harnesses login --profile work` once and types each key, and signs in to each server with its own sign-in from `/mcp`.
 
 cleanup:
   inline:
@@ -171,7 +172,7 @@ For that provider, sign in to the profile first with [`kong-harnesses login`](/k
 kong-harnesses login --profile work
 ```
 
-For another Claude provider, such as Amazon Bedrock, `fleet build` uses only the models of the profile, doesn't read the model list of the gateway and doesn't need a sign-in.
+For another Claude provider, such as Amazon Bedrock, `fleet build` uses the models of the profile and of `--model`, doesn't read the model list of the gateway and doesn't need a sign-in.
 
 ## Choose how the settings reach the computers
 
@@ -207,11 +208,18 @@ If the computers have no `managed-settings.json`, also when they have files in `
 For a file build, `--policy` takes only the `managed-settings.json` of the computers, and `fleet build` refuses every property list there, also a binary one.
 For an MDM policy, build with `--delivery mdm` instead.
 
-{{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
+{{ site.claude_code }} merges `managed-settings.json` first, and then the files in `managed-settings.d` in alphabetical order, by [these rules](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams):
+
+* A later single value replaces the earlier one, such as `apiKeyHelper`.
+  Blocks, such as `env`, merge key by key, so a later variable in `env` replaces the earlier one.
+* A later `fallbackModel` or `modelPicker` replaces the earlier one whole.
+* A later entry in `extraKnownMarketplaces` or `managedMcpServers` replaces the earlier entry with the same name whole.
+* Other lists combine, such as `permissions.allow` or `allowedProviders`.
+
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
-A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a single value that the build sets, such as `apiKeyHelper` or a variable in `env`.
-A file whose name sorts before `kong-harnesses.json` loses each single value that the build also sets, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
-Lists [combine](https://code.claude.com/docs/en/managed-settings#split-a-file-based-policy-across-teams) in every order, so the list entries of such a file stay.
+A file whose name sorts after `kong-harnesses.json` in alphabetical order must not set a single value that the build sets, such as `apiKeyHelper` or a variable in `env`, or a `modelPicker` when the build writes one.
+A file whose name sorts before `kong-harnesses.json` loses each of those values, such as the headers in `ANTHROPIC_CUSTOM_HEADERS`, and `fleet build` doesn't tell you.
+Its list entries stay.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
 No file, in any order, may set `policyHelper`, because the settings that a policy helper computes replace all the other managed settings.
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
@@ -361,8 +369,8 @@ When the computer has managed settings, {{ site.claude_code }} ignores the host 
 To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), add `--host-settings merge`, which sets `parentSettingsBehavior` to `merge` and replaces the value that your own policy sets.
 {{ site.claude_code }} reads this key only from the managed source that it takes most keys from, so the build must be that source.
 {{ site.claude_code }} then keeps only the host settings that restrict what Claude can do, with two exceptions.
-The permission allow rules of the host still apply, unless your own managed settings set `allowManagedPermissionRulesOnly`.
-The sandbox allowlists of the host still apply, unless your own managed settings set `sandbox.network.allowManagedDomainsOnly` for domains and `sandbox.filesystem.allowManagedReadPathsOnly` for read paths.
+The permission allow rules of the host still apply, unless your own managed settings set `allowManagedPermissionRulesOnly` to `true`.
+The sandbox allowlists of the host still apply, unless your own managed settings set `sandbox.network.allowManagedDomainsOnly` to `true` for domains and `sandbox.filesystem.allowManagedReadPathsOnly` to `true` for read paths.
 [Restrict parent settings](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) lists all the locks.
 
 The Windows examples set up {{ site.claude_code }} on Windows itself.
@@ -662,7 +670,7 @@ kong-harnesses doctor --profile work --client claude-code
 It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from the managed sources on the computer is the helper of the build for the profile.
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, so a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` then doesn't show this line.
 Make sure that the build ID is the one that `fleet build` printed for this platform.
-`doctor` shows a fix for each problem that it finds, and it names the setting that blocks a gateway MCP server.
+`doctor` reports each problem that it finds, gives a fix when one is available, and names the setting that blocks a gateway MCP server.
 Before the first request, it also says that the developer isn't signed in yet, which is expected.
 
 Start {{ site.claude_code }}, and run `/status` before you send a prompt:
@@ -729,6 +737,8 @@ If one of them does, remove the key or set it to `false`.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
 If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
+{{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
+So then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
 `kong-harnesses doctor` names each key server without a saved key.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
