@@ -57,3 +57,12 @@ rows:
             text: Read the reference
             url: /kong-harnesses/example-reference/
             align: end
+    - blocks:
+      - type: card
+        config:
+          title: Changelog
+          description: See what changed in recent releases, and the steps an upgrade needs.
+          cta:
+            text: kong-harnesses changelog
+            url: /kong-harnesses/changelog/
+            align: end

@@ -95,6 +95,14 @@ rows:
       - blocks:
           - type: card
             config:
+              title: "{{site.kong_harnesses}}"
+              description: "Release notes for {{site.kong_harnesses}}, which signs coding agents in to {{site.ai_gateway}}."
+              cta:
+                text: "{{site.kong_harnesses}} changelog"
+                url: /kong-harnesses/changelog/
+      - blocks:
+          - type: card
+            config:
               title: "Insomnia"
               description: "Release notes for Insomnia, the API design and testing client."
               cta:

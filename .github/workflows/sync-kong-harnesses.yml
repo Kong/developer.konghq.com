@@ -1,64 +1,289 @@
 name: Sync kong-harnesses
 on:
   workflow_dispatch:
+    inputs:
+      dev_site_base_branch:
+        description: "Branch to sync. Leave empty for release/kong-harnesses while it exists, else the default branch. The branch needs the scripts in tools/kong-harnesses-versions."
+        required: false
+        type: string
   schedule:
     - cron: "0 1 * * *"
 
 permissions:
   contents: read
 
+# GitHub runs a plain run step without pipefail, so a failed command at the
+# start of a pipeline would go unnoticed.
+defaults:
+  run:
+    shell: bash
+
 jobs:
+  # GitHub runs a schedule only from the default branch, so this job sends the
+  # sync to the docs release branch while that branch exists.
+  base:
+    name: Pick the base branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      branch: ${{ steps.pick.outputs.branch }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
+        with:
+          egress-policy: audit
+
+      - name: Pick the base branch
+        id: pick
+        env:
+          REQUESTED: ${{ inputs.dev_site_base_branch }}
+          REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          # git ls-remote reads its argument as a pattern, so release/* would
+          # match. Only a valid branch name that the output lists exactly counts,
+          # and a failed listing stops the run instead of picking another branch.
+          branch_exists() {
+            if ! git check-ref-format --branch "$1" >/dev/null; then
+              echo "::error::$1 is not a valid branch name"
+              exit 1
+            fi
+            if ! refs=$(git ls-remote "$REPOSITORY_URL" "refs/heads/$1"); then
+              echo "::error::Could not list the branches of $REPOSITORY_URL"
+              exit 1
+            fi
+            printf '%s\n' "$refs" | awk -v ref="refs/heads/$1" '$2 == ref { found = 1 } END { exit !found }'
+          }
+          if [ -n "$REQUESTED" ]; then
+            if ! branch_exists "$REQUESTED"; then
+              echo "::error::Branch $REQUESTED does not exist"
+              exit 1
+            fi
+            branch="$REQUESTED"
+          elif branch_exists release/kong-harnesses; then
+            branch=release/kong-harnesses
+          else
+            branch=$(git ls-remote --symref "$REPOSITORY_URL" HEAD | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')
+          fi
+          if [ -z "$branch" ]; then
+            echo "::error::Could not find the default branch of $REPOSITORY_URL"
+            exit 1
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
   kong-harnesses-versions:
     name: Fetch kong-harnesses Versions
+    needs: base
+    # Runs for one base branch queue, so an older run can't replace the data
+    # that a newer run wrote to the same pull request.
+    concurrency:
+      group: sync-kong-harnesses-${{ needs.base.outputs.branch }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
-      - name: Create GitHub App Token
+      - name: Create GitHub App Token for the releases
         uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
-        id: app-token
+        id: releases-token
         with:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
           private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
           owner: Kong
+          repositories: kong-harnesses
+          permission-contents: read
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Create GitHub App Token for the pull request
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: pr-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: developer.konghq.com
+          permission-contents: write
+          permission-pull-requests: write
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.base.outputs.branch }}
+          persist-credentials: false
+
+      - name: Check that the branch has the sync scripts
+        env:
+          BRANCH: ${{ needs.base.outputs.branch }}
+        run: |
+          if [ ! -f tools/kong-harnesses-versions/package-lock.json ]; then
+            echo "::error::Branch $BRANCH has no tools/kong-harnesses-versions, so it can't be synced yet"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "26"
           cache: npm
           cache-dependency-path: tools/kong-harnesses-versions/package-lock.json
 
-      - uses: Kong/setup-kong-harnesses@7eaf0b48d0bf57c589dc8aad5d105b904868c3f6 # v1
-        with:
-          token: ${{ steps.app-token.outputs.token }}
+      # The same checks as scripts/install-release.sh in Kong/kong-harnesses.
+      # A replaced archive can come with a matching SHA256SUMS.txt line, so only
+      # the build provenance proves that the release workflow built the archive
+      # from the tag, and gh attestation verify checks it.
+      - name: Install the newest kong-harnesses release
+        id: install
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          REPO: Kong/kong-harnesses
+        run: |
+          # An older release can be marked as the latest one, so the highest
+          # vX.Y.Z release wins. The selection is the one that fetch-versions.js
+          # makes: every page, no drafts and no prereleases.
+          tag=$(gh api --paginate "repos/$REPO/releases?per_page=100" --jq '.[] | select(.draft or .prerelease | not) | .tag_name' \
+            | { grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' || true; } | sort -V | tail -1)
+          if [ -z "$tag" ]; then
+            echo "::error::No vX.Y.Z release in $REPO"
+            exit 1
+          fi
+          archive="kong-harnesses_${tag}_linux_amd64.tar.gz"
+          bundle="kong-harnesses_${tag}.sigstore.json"
+          work="$RUNNER_TEMP/kong-harnesses"
+          mkdir -p "$work/bin"
+          cd "$work"
+          gh release download "$tag" -R "$REPO" -p "$archive" -p SHA256SUMS.txt -p "$bundle"
+          awk -v name="$archive" '$2 == name' SHA256SUMS.txt > expected
+          if [ "$(wc -l < expected)" -ne 1 ]; then
+            echo "::error::SHA256SUMS.txt has no single line for $archive"
+            exit 1
+          fi
+          sha256sum --check expected
+          commit=$(gh api "repos/$REPO/commits/refs/tags/$tag" --jq .sha)
+          gh attestation verify "$archive" --bundle "$bundle" --repo "$REPO" \
+            --signer-workflow "$REPO/.github/workflows/release.yml" \
+            --source-ref "refs/tags/$tag" --source-digest "$commit"
+          # A tag on a commit that never reached main runs that commit's own
+          # release workflow, which the provenance names just the same.
+          status=$(gh api "repos/$REPO/compare/$commit...refs/heads/main" --jq .status)
+          case $status in
+            ahead | identical) ;;
+            *)
+              echo "::error::The release workflow built $archive from $commit, which is not on main"
+              exit 1
+              ;;
+          esac
+          tar -xzf "$archive" -C bin kong-harnesses
+          echo "$work/bin" >> "$GITHUB_PATH"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
       - name: Verify kong-harnesses install
         run: kong-harnesses version --full
 
       - name: Fetch versions
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          TAG: ${{ steps.install.outputs.tag }}
         run: |
           cd tools/kong-harnesses-versions
           npm ci
           node extract-help.js
           node fetch-versions.js
+          # The help comes from the verified binary, so the release data must
+          # name the same release as the latest one.
+          latest=$(awk '/version:/ { gsub(/"/, "", $2); version = $2 } /latest: true/ { print version }' ../../app/_data/tools/kong-harnesses.yml)
+          if [ "$latest" != "${TAG#v}" ]; then
+            echo "::error::The release data names ${latest:-no release} as the latest, but the help comes from $TAG"
+            exit 1
+          fi
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           title: Sync kong-harnesses Releases
           commit-message: Sync kong-harnesses Releases
-          branch: sync-kong-harnesses-releases
+          branch: sync-kong-harnesses/releases/${{ needs.base.outputs.branch }}
+          base: ${{ needs.base.outputs.branch }}
           labels: skip-changelog,review:general
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.pr-token.outputs.token }}
           add-paths: |
             app/_includes/kong-harnesses/help/**
             app/kong-harnesses/**
             app/_data/tools/kong-harnesses.yml
+
+  kong-harnesses-changelog:
+    name: Fetch kong-harnesses Changelog
+    needs: base
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # One changelog sync at a time for each base branch, so an older run cannot
+    # replace newer data in its pull request.
+    concurrency:
+      group: sync-kong-harnesses-changelog-${{ needs.base.outputs.branch }}
+      cancel-in-progress: false
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token for the releases
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: releases-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: kong-harnesses
+          permission-contents: read
+
+      - name: Create GitHub App Token for the pull request
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: pr-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          repositories: developer.konghq.com
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.base.outputs.branch }}
+          persist-credentials: false
+
+      - name: Check that the branch has the sync scripts
+        env:
+          BRANCH: ${{ needs.base.outputs.branch }}
+        run: |
+          if [ ! -f tools/kong-harnesses-versions/sync-changelog.rb ] || [ ! -f tools/kong-harnesses-versions/check-changelog-links.rb ]; then
+            echo "::error::Branch $BRANCH has no changelog sync scripts in tools/kong-harnesses-versions, so its changelog can't be synced yet"
+            exit 1
+          fi
+
+      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Fetch changelog
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+        run: bundle exec ruby tools/kong-harnesses-versions/sync-changelog.rb
+
+      # Renders the changelog with the site's Markdown converter and refuses any link
+      # or address that is left on the page.
+      - name: Refuse any link or address on the changelog page
+        run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          title: Sync kong-harnesses Changelog
+          commit-message: Sync kong-harnesses Changelog
+          branch: sync-kong-harnesses/changelog/${{ needs.base.outputs.branch }}
+          base: ${{ needs.base.outputs.branch }}
+          labels: skip-changelog,review:general
+          token: ${{ steps.pr-token.outputs.token }}
+          add-paths: |
+            app/_data/kong-harnesses/changelog.json

@@ -1,0 +1,142 @@
+# frozen_string_literal: true
+
+require_relative '../../../tools/kong-harnesses-versions/check-changelog-links'
+
+RSpec.describe KongHarnessesChangelogLinks do
+  def entry(text)
+    "## 1.0.0\n\n### Features\n\n* #{text}\n"
+  end
+
+  describe '.check' do
+    [
+      ['a link to any address', '[x](https://example.com/a)'],
+      ['a link after unequal backtick runs', 'a ` [x](https://github.com/Kong/./kong-harnesses) `` d'],
+      ['a link with a ../ segment', '[x](https://github.com/Kong/../Kong/kong-harnesses)'],
+      ['a link to a renamed repository', '[x](https://github.com/Kong/agent-auth-cli)'],
+      ['a link to another GitHub host', '[x](https://github.dev/Kong/kong-harnesses)'],
+      ['an image', 'a ` <img src="https://github.com/Kong/kong-harnesses/a.png"> `` d'],
+      ['a link from an indented definition', "see [x][r]\n\n    [r]: //github.com/Kong/./kong-harnesses"],
+      ['a link from a definition in a block quote', "see [x][r]\n\n> [r]: //github.com/Kong/./kong-harnesses"],
+      ['a link with character references', '[x](https://github&#46;com/Kong/kong&#45;harnesses)'],
+      ['raw HTML with an address', '<a href="https://github&#x2e;com/Kong/kong-harnesses/pull/1">x</a>'],
+      ['a meta refresh', '<meta http-equiv="refresh" content="0; url=https://github.com/Kong/kong-harnesses">'],
+      ['an SVG link', '<svg><a xlink:href="https://github.com/Kong/kong-harnesses"><text>x</text></a></svg>'],
+      ['an attribute list on a span', '*x*{: title="x" data-x="https://github.com/Kong/kong-harnesses"}'],
+      ['an autolink in capitals', '<HTTPS://GITHUB.COM/KONG/KONG-HARNESSES>'],
+      ['a scheme-relative address in text', 'see //github.com/Kong/kong-harnesses/x now'],
+      ['an ssh address in text', 'accept ssh://user@host targets'],
+      ['an scp-like git address', 'clone git@github.com:Kong/kong-harnesses.git'],
+      ['a full-width dot in the host', 'see github．com/Kong/kong-harnesses'],
+      ['percent-encoding in the name', 'see github.com/Kong/kong%252Dharnesses'],
+      ['an invisible character in the host', "see git​hub.com/Kong/kong-harnesses"],
+      ['the repository in a code span', 'run `go install github.com/Kong/kong-harnesses/cmd/x`'],
+      ['the repository at the end of a sentence', 'see github.com/Kong/kong-harnesses.'],
+      ['an HTML comment', '<!-- note -->'],
+      ['a footnote', "see [^1]\n\n[^1]: a note"],
+      ['the repository split by bold', 'see github.com/**Kong**/kong-harnesses'],
+      ['the repository split by a code span', 'see `github.com`/Kong/kong-harnesses'],
+      ['an address split by bold', 'see https:**//**example.com'],
+      ['a www address', 'see www.example.org now'],
+      ['a mail address', 'mail me@example.org now'],
+      ['a mail address with no dot', 'mail me@localhost now'],
+      ['a mailto address', 'write to mailto:me now'],
+      ['an xmpp address', 'chat on xmpp:me now'],
+      # Each character that shows nothing by default goes before the checks read the text.
+      ['a tag character in a host', "see www\u{e0020}.example.com"],
+      ['a function application in a scheme', "see https:/\u2061/evil.example"],
+      ['a line separator in a host', "see ww\u2028w.evil.example"],
+      ['an annotation character in the repository', "run `github.com/Kong\ufff9/kong-harnesses`"],
+      ['a hieroglyph format control in the repository', "run `github.com/Kong\u{13430}/kong-harnesses`"],
+      ['the repository in tag characters after a black flag', "see \u{1f3f4}#{'see github.com/kong/kong-harnesses'.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}"],
+      ['a vowel separator in a mail address', "mail bob\u180e@evil.example"],
+      ['a grapheme joiner in the repository', "run `github.com/Kong\u034f/kong-harnesses`"],
+      ['a variation selector in a host', "see www\ufe0f.example.com"],
+      ['a . segment in the repository', 'run `github.com/Kong/./kong-harnesses`'],
+      ['a .. segment in a GitHub address', 'run `github.com/x/../Kong/kong-harnesses`']
+    ].each do |name, text|
+      it "refuses #{name}" do
+        expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
+      end
+    end
+
+    [
+      ['another host that ends with the same name', 'see `notgithub.com/Kong/kong-harnesses/help`'],
+      ['a host that starts with the same name', 'see `github.com.example.com/Kong/kong-harnesses`'],
+      ['another repository with a longer name', 'see `github.com/Kong/kong-harnesses-plugin`'],
+      ['the host and the path in separate paragraphs', "see github.com\n\n  then Kong/kong-harnesses"],
+      ['an address in a code span', 'run `curl https://example.com/a`'],
+      ['the product name in text', 'run kong-harnesses login once after the upgrade'],
+      ['an entry in parentheses', 'use the value from (the migration guide).'],
+      ['a user name', 'thanks to @bob for the report'],
+      ['a scoped package name', 'bump @types/node'],
+      ['a mail address in a code span', 'run `git config user.email me@example.org`'],
+      ['dots in a GitHub address that are no segment', 'see `github.com/a/b/compare/v1...v2`'],
+      ['the flag of a region', "go to \u{1f3f4}\u{e0067}\u{e0062}\u{e0073}\u{e0063}\u{e0074}\u{e007f} now"],
+      ['a soft hyphen, a zero width joiner and a word joiner', "a\u00adb c\u200dd e\u2060f"],
+      ['a strikethrough', 'a ~~gone~~ word'],
+      ['one variation selector right after an emoji', "a \u2764\ufe0f and 1\ufe0f\u20e3"]
+    ].each do |name, text|
+      it "accepts #{name}" do
+        expect { described_class.check(entry(text)) }.not_to raise_error
+      end
+    end
+
+    it 'reads the repository through a format character' do
+      ["\ufff9", "\u{13430}", "\u2061"].each do |format|
+        expect(described_class.problems("run `github.com/Kong#{format}/kong-harnesses`")).to include(a_string_starting_with('the kong-harnesses repository')), format.inspect
+      end
+    end
+
+    it 'names the backtick fix for a value that reads as a mail address' do
+      expect { described_class.check(entry('use go@1.21 now')) }.to raise_error(/`go@1\.21` can go in backticks/)
+    end
+
+    ["\u0001", "\u007f", '&#1;', '&#x2;', '&#x7f;', "\u202e", '&#x2066;', '&#xfffe;', "\u{e0041}\u{e0042}", '&#xE0041;',
+     "\u{e0067}\u{e007f}", "\u2061", "\ufff9", '&#xfffb;', "\u{13430}", '&#x1343f;', "\u{1f600}\u{e0100}", '&#xE0100;', "a\ufe0f", "\u3164",
+     "\uffa0", "\ufff0", "\u180b", "\u034f", "\u2028", '&#x2029;', "\u00ad\u{1f3f4}\u{e0075}\u{e0073}\u{e0063}\u{e0061}\u{e007f}"].each do |control|
+      it "refuses the hidden character #{control.inspect}" do
+        expect { described_class.check(entry("fix it (#{control}) now")) }.to raise_error(/a hidden code point/)
+      end
+    end
+
+    it 'refuses a control character in an attribute' do
+      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a hidden code point')
+    end
+
+    # The spec loads the site plugins, which highlight code blocks with Shiki, so these
+    # cases give the HTML that kramdown renders for the sync job.
+    it 'accepts a language that the site highlights, and no other class' do
+      expect(described_class.html_problems('<pre><code class="language-sh">x</code></pre>')).to be_empty
+      expect(described_class.html_problems('<pre><code class="language-text">x</code></pre>')).to be_empty
+      expect(described_class.html_problems('<pre><code class="language-rust">x</code></pre>')).to eq(['the attribute class on <code>'])
+      expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
+    end
+
+    it 'reads every language of the Shiki plugin and refuses an entry or a form that it cannot read' do
+      shiki = <<~JS
+        langs: [
+          "yaml", 'fish',
+          "json"
+        ],
+        const languageMap = { bash: "fish", 'sh': 'fish',
+            console: "fish", cef: "text" };
+        const language = languageMap[lang] || lang;
+      JS
+      expect(described_class.languages_in(shiki)).to eq(Set['yaml', 'fish', 'json', 'bash', 'sh', 'console', 'cef', 'text'])
+      expect { described_class.languages_in(shiki.sub('"json"', '"json" // the API')) }.to raise_error(/cannot read: "json" \/\/ the API/)
+      expect { described_class.languages_in(shiki.sub('console: "fish"', 'console: fishLanguage')) }.to raise_error(/cannot read: console: fishLanguage/)
+      # A map value that Shiki does not load would stop the site build.
+      expect { described_class.languages_in(shiki.sub('cef: "text"', 'cef: "zig"')) }.to raise_error(/cannot read: cef: "zig"/)
+      expect { described_class.languages_in(shiki.sub("\"json\"\n]", '"json"].concat(["go"])')) }.to raise_error(/no list|cannot read/)
+      expect { described_class.languages_in("#{shiki}other: { langs: [\"c\"] },") }.to raise_error(/more than one list/)
+      expect { described_class.languages_in('langs: [],') }.to raise_error(/empty list|no list/)
+      expect(described_class.languages).to include('yaml', 'go', 'bash', 'text')
+    end
+
+    it 'accepts the published changelog data' do
+      markdown = JSON.parse(File.read(described_class::DATA_FILE)).fetch('markdown')
+
+      expect { described_class.check(markdown) }.not_to raise_error
+    end
+  end
+end

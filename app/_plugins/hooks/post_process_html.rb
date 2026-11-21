@@ -12,7 +12,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   HTML
 
   MESH_FLATTEN_URLS = ['/mesh/changelog/', '/mesh/version-specific-upgrade-notes/'].freeze
-  COMPOUND_ID_URLS = ['/gateway/changelog/', '/ai-gateway/changelog/',
+  COMPOUND_ID_URLS = ['/gateway/changelog/', '/ai-gateway/changelog/', '/kong-harnesses/changelog/',
                       '/operator/reference/custom-resources/'].freeze
   HEADING_XPATH = './/*[self::h2 or self::h3 or self::h4 or self::h5 or self::h6]'
 

@@ -17,3 +17,5 @@ The `doctor` command checks one profile end to end: the profile, the sign-in, th
 ## Command usage
 
 {% include_cached kong-harnesses/help/doctor/index.md %}
+
+To send the `--report` output to Kong Support, see [kong-harnesses support](/kong-harnesses/support/).
