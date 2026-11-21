@@ -87,7 +87,8 @@ cleanup:
   inline:
     - title: Remove the fleet build
       content: |
-        For a build with `--mcp-servers allowlist` or `any`, first ask each developer who ran `profile activate` to remove the settings that it added, before you remove kong-harnesses from the computers:
+        For a build with `--mcp-servers allowlist` or `any`, first ask each developer who ran `profile activate` to remove the settings that it added, before you remove kong-harnesses from the computers.
+        `profile cleanup` takes no profile name, and removes the setup of the profile that {{ site.claude_code }} uses now, so the developer runs it only when [`kong-harnesses status`](/kong-harnesses/status/) shows {{ site.claude_code }} in the `Used by` line of the `work` profile:
 
         ```sh
         kong-harnesses profile cleanup --client claude-code
@@ -262,13 +263,15 @@ Remove each value that conflicts with the build, and each list entry or key that
 Login keys, such as `forceLoginMethod` and `forceLoginGatewayUrl`, still come only from the highest MDM policy or file with a policy key.
 Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 
-`fleet build` refuses a policy that would stop {{ site.claude_code }} from reaching the gateway, and names the value.
+`fleet build` refuses a policy that sets `forceLoginMethod`, `forceLoginGatewayUrl`, `policyHelper` or `policyHelpers`, an `allowedProviders` entry other than the gateway, or an `env` value that isn't text, and names the value.
+It also refuses a version range that is empty, or a `requiredMaximumVersion` below the version that the lock to the gateway needs.
+It doesn't check the models, so make sure that your policy allows each model of the build: no [`deniedModels`](https://code.claude.com/docs/en/model-config#block-specific-models-or-versions) entry can block one, and an `availableModels` list must allow each one.
 It lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
-Remove it from its source only after the build is on every computer that the policy covers.
-[Endpoint-managed settings don't reach cloud sessions](https://code.claude.com/docs/en/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) in Anthropic-hosted environments, so if your developers run them, keep the server-managed settings for those sessions.
-Then make sure that no session on the managed computers fetches them.
+If your developers run cloud sessions in Anthropic-hosted environments, keep the server-managed settings for those sessions, because [endpoint-managed settings don't reach them](https://code.claude.com/docs/en/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings).
+Otherwise, remove the policy from its source only after the build is on every computer that it covers.
+In both cases, make sure that no session on the managed computers fetches the remote settings.
 {{ site.claude_code }} fetches remote settings only in [the cases that the source ranking lists](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources):
 
 * The session has one of the credentials that [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability) lists, such as a Team or Enterprise claude.ai login, an OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` or an API key that is set directly.
@@ -322,11 +325,14 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 
 When the policy that you pass with `--policy` sets `strictPluginOnlyCustomization` or one of the marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for one yourself.
-`kong-harnesses doctor` names a gateway MCP server that {{ site.claude_code }} reaches through another entry at the same address.
+`kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
+The note can be in a gateway MCP check that passes, so read the whole result of that check.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
 
-In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
-If the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
+In the cases of a `managed-mcp.json` and of the plugin and marketplace settings, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
+Then, if the profile has gateway MCP servers, use `exclusive`, and if the computers have a `managed-mcp.json`, pass it with `--mcp-config`.
+For a `managedMcpServers` entry at the URL of a gateway MCP server, `exclusive` doesn't help, because [provided servers load](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) together with the servers of `managed-mcp.json`.
+Remove that entry from your policy, or change its URL.
 `exclusive` doesn't work with `--wsl inherit`, which [Build the managed settings](#build-the-managed-settings) describes.
 For Windows computers that need {{ site.claude_code }} in WSL, remove the setting or the `managed-mcp.json` that blocks the plugin, and use `allowlist` or `any`, so that {{ site.claude_code }} on Windows loads the gateway MCP servers.
 {{ site.claude_code }} in WSL doesn't load them in any mode.
@@ -352,7 +358,7 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 ## Build the managed settings
 
-Run `fleet build` once for each group of managed computers with the same platform, that need the same delivery, and with the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
+Run `fleet build` once for each group of managed computers that have the same platform, that need the same delivery, and that have the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
 For an `--mcp-servers exclusive` build, the computers of a group also have the same `managed-mcp.json`, and the build of the group takes that file with `--mcp-config`.
 The build takes the headers from the `--policy` that you pass.
 An MDM build also takes all the keys of that policy, and an `exclusive` build writes the servers of its `--mcp-config` file.
@@ -607,7 +613,9 @@ After the checks in [Validate](#validate) pass on the test computer of a group, 
    On Windows, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the line in `Settings.json`, in place of the JSON that the value holds.
    If the computers don't get a policy yet, set the value through Group Policy, Intune or your own tool.
    Computers that already get a {{ site.claude_code }} policy need a build with `--policy`.
-   If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still reads its `env` and its MCP server lock.
+   If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, first remove the package or script of that build from the MDM assignments of the group, so that the MDM tool doesn't install the file again.
+   For an Intune macOS app (PKG), remove the group from its Required and its Available assignments.
+   Then delete that file, because {{ site.claude_code }} still reads its `env` and its MCP server lock.
 
 `fleet build` prints the command that packages or copies the files for the platform.
 The command runs from inside a copy of the build's files, so it can run on a computer other than the one that runs `fleet build`.
@@ -738,7 +746,7 @@ The labels:
 * `(remote)`, or a merged list that starts with `remote`, such as `(remote + file, merged)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the highest source.
   Stop this computer from fetching them, such as by removing a claude.ai login of your organization, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
-  Remove them from their source only after the build is on every computer that they cover, and keep server-managed settings for cloud sessions.
+  Keep them for cloud sessions if your developers run them, and otherwise remove them from their source only after the build is on every computer that they cover.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 * `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
   [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the build isn't in effect.
@@ -772,7 +780,7 @@ If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows 
 If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
 {{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
 Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
-`kong-harnesses doctor` names each key server without a saved key.
+`kong-harnesses doctor` names each key server without a saved key, unless {{ site.claude_code }} reaches it through another entry at the same address.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, or a `managedMcpServers` entry at the URL of a gateway MCP server.
 
