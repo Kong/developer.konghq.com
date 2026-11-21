@@ -1167,38 +1167,36 @@ Entra ID's On-Behalf-Of flow exchanges the caller's token for one scoped to the 
 
 The following example exchanges a caller's Entra ID token for one scoped to an upstream MCP server registered as the Entra application `mcp-server-app-id`:
 
-{% entity_example %}
-type: auth-strategy
-formats:
-  - konnect-api
-  - kongctl
-data:
-  display_name: Entra OBO Auth
-  name: entra-obo-auth
-  type: openid-connect
-  config:
-    issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
-    client_id:
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: entra-obo-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: Entra OBO Auth
+    name: entra-obo-auth
+    type: openid-connect
+    config:
+      issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
+      client_id:
       - my-client-id
-    client_secret:
+      client_secret:
       - !secret {source: !env 'CLIENT_SECRET'}
-    client_auth:
+      client_auth:
       - client_secret_post
-    auth_methods:
+      auth_methods:
       - bearer
-    token_exchange:
-      grant_type: jwt_bearer
-      provider: microsoft
-      subject_token_issuers:
+      token_exchange:
+        grant_type: jwt_bearer
+        provider: microsoft
+        subject_token_issuers:
         - issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
           conditions:
             missing_scopes:
-              - api://mcp-server-app-id/.default
-      request:
-        scopes:
+            - api://mcp-server-app-id/.default
+        request:
+          scopes:
           - api://mcp-server-app-id/.default
-    cache_tokens_salt: entra-obo-auth-cache-salt
-{% endentity_example %}
+      cache_tokens_salt: entra-obo-auth-cache-salt
+{% endentity_examples %}
 
 The exchange only runs when the caller's token matches an entry in [`config.token_exchange.subject_token_issuers`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-subject-token-issuers). When the token's issuer matches an entry but that entry's `conditions` don't match, {{site.ai_gateway}} doesn't exchange it and forwards the original token unchanged, which the upstream can reject with a `401`.
 A token from an issuer that doesn't match an entry and isn't the auth strategy's own `issuer` fails verification at {{site.ai_gateway}}, which returns the `401` itself.
