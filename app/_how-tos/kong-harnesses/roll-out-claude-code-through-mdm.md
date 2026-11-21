@@ -321,7 +321,7 @@ In both cases, make sure that no session on the managed computers fetches the re
 
 The build itself puts a session in none of these cases.
 The key that the build's `apiKeyHelper` returns isn't one of those credentials.
-A `/login` sign-in to a gateway needs `forceLoginMethod` and `forceLoginGatewayUrl` in your managed settings, which `fleet build` refuses in your policy.
+A `/login` sign-in to a gateway needs `forceLoginMethod` and `forceLoginGatewayUrl` in your managed settings, and `fleet build` refuses either key in your policy.
 The gateway of the profile is a {{ site.ai_gateway_name }}, not a Claude apps gateway.
 But on a computer where a developer kept a claude.ai login of your organization, {{ site.claude_code }} can still fetch them.
 The remote settings then rank above the build, and the build's `apiKeyHelper` isn't in effect.
@@ -355,7 +355,8 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   For a file build, the drop-in of the build, your `managed-settings.json` and the other files in `managed-settings.d` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
   Put each entry that those computers need in the `managed-settings.json` that they have or in a file in `managed-settings.d`, or list it with `--mcp-url` or `--mcp-command`.
   When you change `managed-settings.json`, pass the updated file with `--policy`, and deploy it with the drop-in of the build.
-  Write out the URL or command of every `allowedMcpServers` entry in your `--policy` file and in your managed settings files, without a `${...}` reference, because `fleet build` checks only its flags for one.
+  Write out the URL or command of every `allowedMcpServers` entry in your `--policy` file and in your managed settings files, without a `${...}` reference.
+  `fleet build` checks only its flags for such a reference.
   {{ site.claude_code }} [expands such a reference](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) from the environment that it started with, plus the `env` values of the managed settings, so the entry still depends on the shell that starts {{ site.claude_code }}.
   It ignores an entry when the expansion would change the scheme, host or path scope of a URL entry.
   A higher source with its own list replaces the list of the build.
@@ -403,7 +404,7 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   When {{ site.claude_code }} drops an entry, they also load when a kept entry of the same list allows them.
   A `null` in a file in `managed-settings.d` adds nothing to the list of an earlier file.
   For an MDM build with `allowlist`, this case applies only to a source above the build, such as server-managed settings.
-  The build replaces such a value in the policy that you pass with `--policy` with its own list, and its list replaces the list of a lower source.
+  The build replaces such a value in your `--policy` file with its own list, and its list replaces the list of a lower source.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 * When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
@@ -417,6 +418,9 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   While an administrator source sets `allowManagedMcpServersOnly` to `true`, {{ site.claude_code }} ignores the lists of those other scopes, and uses the list of the highest administrator source that sets one.
   The list of the host then applies only when no administrator source sets one.
   When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
+* A session starts with `claude --strict-mcp-config`.
+  {{ site.claude_code }} then [skips the MCP servers of a plugin](https://code.claude.com/docs/en/cli-reference#cli-flags), and loads only the servers that the session passes with `--mcp-config`.
+  So remove this flag from the commands that start {{ site.claude_code }}, such as scripts, aliases and the settings of an IDE or a host app.
 
 When the policy that you pass with `--policy` has one of these plugin or marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers:
 
@@ -508,12 +512,14 @@ Replace each placeholder with the value for your deployment, and keep the quotes
   With `allowlist`, to let developers add servers of their own, also add `--mcp-url` with the URL pattern of each remote server, or `--mcp-command` with the command of each local server as a JSON array of strings.
   Repeat the flag for each server.
   Give `--mcp-command` the command with all its arguments, because {{ site.claude_code }} matches each argument exactly.
-  `--mcp-url` takes a URL with the `http`, `https` or `*` scheme and only visible ASCII characters, so write a host name with other characters in its `xn--` form, the ASCII form of an international domain name.
+  `--mcp-url` takes a URL with the `http`, `https` or `*` scheme and only visible ASCII characters in the whole URL.
+  So write a host name with other characters in its `xn--` form, the ASCII form of an international domain name, and percent-encode other characters in the path.
   Quote each value, so that the shell keeps a `*` in a URL pattern and the JSON quotes of a command, such as `--mcp-url 'https://MCP_HOST/*'` and `--mcp-command '["npx","-y","PACKAGE"]'`.
   On Windows, use this form in PowerShell 7.3 or later.
   Windows PowerShell 5.1 [removes the double quotes inside a value](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters) that it passes to a program.
-  So in Windows PowerShell 5.1, put a backslash before each double quote inside the value, such as `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`.
-  `fleet build` refuses a `${...}` reference in these flags, because {{ site.claude_code }} would [expand it](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) on each computer from the environment that it started with.
+  So in Windows PowerShell 5.1, for a value with no backslash right before a double quote, put a backslash before each double quote inside the value, such as `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`.
+  For a value with a backslash right before a double quote, such as an escaped quote in a JSON string, use PowerShell 7.3 or later.
+  `fleet build` refuses a `${...}` reference in these flags, because {{ site.claude_code }} would [expand it](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) on each computer from the environment that it started with, plus the `env` values of the managed settings.
   Write the value out instead.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
   If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
@@ -987,6 +993,8 @@ If a server is missing, look for these settings in [Choose the MCP servers](#cho
   For an MDM build with `allowlist`, only such a value in a source above the build counts.
 * A `managedMcpServers` entry at the URL of a gateway MCP server.
 * One of these settings from a host app, when {{ site.claude_code }} merges the host settings.
+* The `--strict-mcp-config` flag in the command that started the session.
+  Remove the flag, start the session again, and run `/mcp` again.
 
 When {{ site.claude_code }} merges the host settings, `doctor` doesn't read them, and a session from a terminal doesn't get them.
 So also start a session from each host app that developers use with the build, such as the {{ site.claude_code }} extension for VS Code, and do the `/status`, `/mcp` and test prompt checks there.
