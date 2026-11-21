@@ -200,6 +200,9 @@ The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in
 A file build needs `--policy` or `--no-policy`.
 If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
 The build then keeps your headers in its value.
+{{ site.claude_code }} reads the managed settings as the developer, so every account on the computer can read them, also the headers in them.
+So put only headers that hold no secret in `ANTHROPIC_CUSTOM_HEADERS`.
+The credential helper keeps the gateway credential of each developer out of the settings.
 If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, pass `--no-policy`.
 For a file build, `--policy` takes only the `managed-settings.json` of the computers, and `fleet build` refuses every property list there, also a binary one.
 For an MDM policy, build with `--delivery mdm` instead.
@@ -232,6 +235,7 @@ If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-po
 The build sets `ANTHROPIC_CUSTOM_HEADERS` in the policy, and {{ site.claude_code }} [takes each `env` variable](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source) from the highest administrator source that sets it.
 So the value of the build replaces the one in your `managed-settings.json` and in `managed-settings.d`.
 The build keeps only the headers of the policy that you pass with `--policy`, so put each header that the computers need in that policy.
+As for a file build, every account on the computer can read these headers, so they must hold no secret.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 
@@ -310,7 +314,7 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 {{ site.claude_code }} in WSL doesn't load them in any mode.
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
-With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
+With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds, or that a developer passes with `--mcp-config`, and that the allowlist doesn't match.
 Among the servers that [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) are:
 
 * Each `managedMcpServers` entry.
@@ -321,7 +325,7 @@ Among the servers that [skip the allowlist check](https://code.claude.com/docs/e
 
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 
-In both modes, when a session starts or resumes, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
+In every mode, when a session starts or resumes, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 `kong-harnesses doctor` also names each one.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
@@ -492,7 +496,7 @@ The managed settings hold:
 
 * The credential helper, which runs `kong-harnesses credential --profile work` from the path of `--executable`.
   For a `--wsl inherit` build, {{ site.claude_code }} in WSL runs it through Windows interop.
-  The settings don't hold a credential.
+  The settings don't hold a credential, but every account on the computer can read them, so the headers in them must hold no secret, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
 * Hooks that run kong-harnesses from the path of `--executable`, also through Windows interop in WSL for a `--wsl inherit` build.
   When a session starts or resumes, one hook names the MCP servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load.
   It names up to 10 of them for each cause, with a count of the rest.
@@ -507,9 +511,13 @@ The managed settings hold:
   For a model ID that doesn't name exactly one Claude family, add the family, such as `--model opus=MODEL_ID`.
   When the Claude provider is the Anthropic API, {{ site.claude_code }} also asks the gateway for its model list.
   A model that the gateway adds later then shows in `/model` without a new build when its ID contains `claude` or `anthropic`.
+  {{ site.claude_code }} [fetches the list again at each startup](https://code.claude.com/docs/en/llm-gateway-protocol#picker-entries-and-caching), so a developer restarts {{ site.claude_code }} to see the new model.
   Another new model needs a new build.
   With [`availableModels`](https://code.claude.com/docs/en/model-config#restrict-model-selection) in your managed settings, [discovery](https://code.claude.com/docs/en/llm-gateway-protocol#model-discovery) adds only the models that the list allows, and with `replaceBuiltInOptions` in `modelPicker`, {{ site.claude_code }} hides the discovered models from `/model`.
-  A model that the gateway adds later then needs a change to that key, and for an MDM build, also a new build with the changed `--policy`.
+  By default, [a model ID entry](https://code.claude.com/docs/en/settings-reference#availablemodelsmatch) of `availableModels` also allows each later model ID that extends it, and a family alias such as `opus` allows the whole family.
+  A later model that `availableModels` doesn't allow, or any new model while `replaceBuiltInOptions` is set, needs a change to that key, and for an MDM build, also a new build with the changed `--policy`.
+  When the profile or the gateway has a model whose ID discovery skips, the build writes its own `modelPicker`, which replaces the whole `modelPicker` of your `--policy`, also its `replaceBuiltInOptions`.
+  `fleet build` then names `modelPicker` among the values that it changes, so check the `modelPicker` in the output before you deploy the build.
   For another Claude provider, `/model` shows only the models of the build.
 * The gateway prices of the models for `/cost`, when the gateway or the profile states them.
 * The {{ site.claude_code }} features that the profile turns off behind the gateway.
@@ -585,7 +593,7 @@ productsign --sign 'INSTALLER_IDENTITY' kong-harnesses-fleet.pkg kong-harnesses-
 
 For Microsoft Intune, add the package as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), which takes an unsigned package and a package that installs files outside `/Applications`.
 Intune uses the app bundle IDs of the Included apps list to detect the installation, and this package installs no app, so Intune may not report it as installed.
-An Intune macOS line-of-business app doesn't fit, because Intune reports its install only for apps in the `Applications` folder, and this package has none.
+An Intune macOS line-of-business app doesn't fit, because Intune [needs a package](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-lob-macos#app-requirements) that a Developer ID Installer certificate signs, and reports its install only for apps in the `Applications` folder, and this package has none.
 Then install the package on each computer: the signed copy, or the unsigned `kong-harnesses-fleet.pkg` only for a path that takes it.
 
 On Linux and Windows, copy the `root` folder from the output folder to each computer.
@@ -687,9 +695,11 @@ The labels:
   Find their source, and remove them there.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 * `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
-  [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the files of the build aren't there, and the build isn't in effect.
-  Check the files of the build in [Check what the build holds](#check-what-the-build-holds), and for an MDM build, also the `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode`.
-  Then deploy the build again.
+  [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the build isn't in effect.
+  For a file build, its file in `managed-settings.d` isn't there.
+  For an MDM build, the `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode` isn't there, but the other files of the build, such as the profile, can be.
+  So check both deliveries of the build: each file in [Check what the build holds](#check-what-the-build-holds), and for an MDM build, also the `HKLM` value.
+  Then deploy each one that is missing.
 * `(parent process)`: the app that started {{ site.claude_code }}, such as Claude Desktop, supplied the managed settings.
   When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source for a build with `--host-settings merge`, so this label means that the build didn't reach the computer.
   To confirm it, read the `Skipped sources` line, start `claude` from a terminal, run `/status` there, and check the build ID with `doctor`.
