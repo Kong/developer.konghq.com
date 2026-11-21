@@ -66,6 +66,7 @@ prereqs:
         In the profile, use the HTTPS origin of your deployed gateway in place of the local `http://` origin of that guide.
         Install kong-harnesses with that profile on the computer where you build the managed settings.
         This guide calls the profile `work`.
+        That guide names its profile `quickstart`, so pass `--name work` to `profile create` in place of `--name quickstart`, or put the name of your profile in place of `work` in every command and path on this page.
 
         The gateway origin of the profile must use `https://`.
         `kong-harnesses fleet build` refuses a profile with a plain `http://` gateway origin or with the Claude subscription sign-in.
@@ -345,6 +346,8 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
   kong-harnesses profile activate work --client claude-code
   ```
 
+  It fails when the developer's own settings set an Anthropic credential, as [Validate](#validate) describes.
+
 * `--mcp-servers any` doesn't add a lock or servers, and leaves MCP servers to each developer.
   To get the gateway MCP servers, each developer runs `profile activate`, as with `allowlist`.
   A lock that your own managed settings set still applies.
@@ -376,11 +379,17 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   While an administrator source sets `allowManagedMcpServersOnly` to `true`, it is the list of the highest administrator source that sets one, and the list of the host applies only when no administrator source sets one.
   When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
 
-When the policy that you pass with `--policy` has one of the plugin or marketplace values in this list, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
-These values are `strictPluginOnlyCustomization` set to `true` or to a list with one or more names, also names that {{ site.claude_code }} doesn't know, a `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, and a `blockedMarketplaces` list with one.
-`fleet build` doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the list describes.
-It also doesn't refuse a `strictPluginOnlyCustomization` list with an entry that isn't text, such as `["mcp", 1]`, which still blocks the plugin.
-And it doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for these values yourself.
+When the policy that you pass with `--policy` has one of these plugin or marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers:
+
+* `strictPluginOnlyCustomization` set to `true`, or to a list of one or more entries that are all text, also names that {{ site.claude_code }} doesn't know.
+* A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, in which each entry is an object, also an empty list or `null`.
+* A `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, in which each entry is an object.
+
+`fleet build` doesn't refuse one of these lists when an entry has another type, such as `["mcp", 1]` or `[{"source": "skills-dir"}, 1]`.
+{{ site.claude_code }} [drops or ignores only that entry](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), so such a list can still block the plugin.
+`fleet build` also doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the list describes.
+{{ site.claude_code }} reads a `null` as unset, so to pass the check, remove a marketplace key with `null` from your policy.
+`fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server either, so check your policy for these values yourself.
 `kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
 The note can be in a gateway MCP check that passes, so read the whole result of that check.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
@@ -656,8 +665,9 @@ Otherwise, it refuses the profile, because another account could send every deve
 `BUILD_ID` is the build ID that `fleet build` prints.
 Keep the record with your policy.
 You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
-The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries that the build wrote.
+The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries of the gateway MCP servers that the build wrote, but not your own servers.
 `fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same flags and the same kong-harnesses release.
+When the Claude provider of the profile is the Anthropic API, the record also holds the models and prices that `fleet build` gets from the gateway, so it also needs the same model list from the gateway.
 So keep a backup copy of the record.
 
 ## Install on the managed computers
@@ -780,6 +790,11 @@ If you built with `--mcp-servers allowlist` or `any` and the profile has gateway
 kong-harnesses profile activate work --client claude-code
 ```
 
+`profile activate` fails when the `env` of the developer's own {{ site.claude_code }} settings sets `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY` to a value other than empty text or `null`.
+The error says that the settings file sets one of them, which {{ site.claude_code }} would send in place of the sign-in.
+That file is `~/.claude/settings.json`, or `settings.json` in the folder that `CLAUDE_CONFIG_DIR` names.
+Remove these variables from its `env`, and run `profile activate` again.
+
 Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to check the setup:
 
 ```sh
@@ -869,7 +884,8 @@ If one of them does, remove the key or set it to `false`.
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
 If a key server isn't connected and `kong-harnesses doctor` names it without a saved key, run `kong-harnesses login --profile work`, and type its key.
 `login` asks only for a key that isn't saved or that it can't read, so it doesn't replace a saved key that the server refuses.
-To replace such a key, run `kong-harnesses logout --profile work`, and then run `kong-harnesses login --profile work` again.
+If `doctor` says that it can't read the saved key of a server, follow the fix that it names.
+To replace a saved key that the server refuses, run `kong-harnesses logout --profile work`, and then run `kong-harnesses login --profile work` again.
 `logout` asks you to type the profile name, signs out of the profile, and removes its saved sign-in and every saved gateway MCP key of the profile.
 So `login` then signs in through the browser again and asks for the key of each key server.
 {{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
