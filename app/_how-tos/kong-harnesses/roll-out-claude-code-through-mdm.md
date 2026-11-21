@@ -135,6 +135,11 @@ cleanup:
         When no server is left, `fleet remove` prints the path of `managed-mcp.json` among the files to delete.
 
         Then, as an administrator, delete each file that `fleet remove` printed from each computer.
+        On macOS, also remove the receipt of the package on each computer, so that your MDM tool installs a later package with the same identifier and version:
+
+        ```sh
+        sudo pkgutil --forget PACKAGE_IDENTIFIER
+        ```
 ---
 
 With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that your mobile device management (MDM) tool deploys to every managed computer.
@@ -218,8 +223,10 @@ On macOS, the policy is the XML property list of the Custom Settings payload for
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies your managed settings file and the MDM policy of the build together.
-A file build still doesn't work there, because {{ site.claude_code }} reads `apiKeyHelper` only from the highest source, also with `merge`.
-Then also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
+{{ site.claude_code }} reads `managedSourcesBehavior` only from the highest source that has it or a policy key, so for an MDM build, the policy that you pass with `--policy` must set it.
+If only your `managed-settings.json` sets it, put it in a policy file, and pass that file with `--policy` in place of `--no-policy`.
+On computers with an MDM policy, a file build doesn't work with `merge` either, because {{ site.claude_code }} reads `apiKeyHelper` only from the highest source.
+With `merge`, also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
 A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies each key that the MDM policy leaves unset, such as `model`.
 A [restriction allowlist](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior), such as `allowedProviders`, still comes whole from the highest source that sets one, so there the list of the build applies.
 Remove each value that conflicts with the build, and each list entry or key that you don't want on the computers.
@@ -290,7 +297,14 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
-A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check): each `managedMcpServers` entry, each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`, built-in servers such as Claude in Chrome, the Slack tools of a Claude Tag session, and the in-process `type: "sdk"` servers of an Agent SDK app.
+A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check):
+
+* Each `managedMcpServers` entry.
+* Each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`.
+* Built-in servers, such as Claude in Chrome.
+* The Slack tools of a Claude Tag session.
+* The in-process `type: "sdk"` servers of an Agent SDK app.
+
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 When a session starts, a hook of the build names the servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 `kong-harnesses doctor` names each one.
@@ -549,8 +563,10 @@ On Windows, it stops for a link or another hard link, and when the owner of an e
 The account that runs the command doesn't count as one of them.
 The install also stops when it can't list, read or check an entry:
 
-* `cannot be listed`: the install can't list the copy, a folder in it, or a path on the computer.
-  On Linux, the error of `find` above the message names the path that it can't list.
+* `cannot be listed`: on Linux, the install can't enter or list the copy, `find` fails on a path, or the check doesn't get through the whole listing.
+  The error of `find` above the message names the path that it can't list.
+  On macOS, `find` fails on a path.
+  On Windows, the install can't list the copy or a folder in it, and the message names that folder.
 * `cannot be read`: on macOS, the install can't read the ACL of a path, and on Windows, it can't read a path, its owner or its ACL.
 * `cannot be checked for its owner, because the account that runs the step cannot be read`: on macOS and Linux, the `id` command fails.
 * `cannot be checked for ACL entries; install the acl package, which has getfacl`: on Linux, `/usr/bin/getfacl` isn't there.
@@ -632,7 +648,7 @@ The labels:
   Find their source, and remove them there.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 * `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
-  No administrator source reached the computer, or the deployed files can't be read, so the build isn't in effect.
+  [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the files of the build aren't there, and the build isn't in effect.
   Check the files of the build in [Check what the build holds](#check-what-the-build-holds), and deploy the build again.
 * `(parent process)`: the app that started {{ site.claude_code }}, such as Claude Desktop, supplied the managed settings.
   When an administrator source is on the computer, {{ site.claude_code }} [ignores those settings](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), or merges them with that source for a build with `--host-settings merge`, so this label means that the build didn't reach the computer.
@@ -666,10 +682,10 @@ The credential helper runs kong-harnesses on Windows through interop, so the ses
 A certificate error means that the distribution doesn't trust the CA of the gateway certificate.
 {{ site.claude_code }} in WSL doesn't load the gateway MCP servers, so `/mcp` there doesn't list them.
 
-For a Windows build without `--wsl inherit`, also check each WSL distribution that developers use, in case a policy or a file on the computer sets `wslInheritsWindowsSettings` to `true`.
-Start the `claude` command that is installed in the distribution, and send a short prompt.
-If the credential helper or a hook of the build fails there, {{ site.claude_code }} in WSL reads the build.
-Build again with `--wsl inherit`, or set the key to `false` in that policy or file.
+For a Windows build without `--wsl inherit`, make sure on each Windows computer that no administrator source turns on WSL inheritance.
+The `Settings` value under `HKLM\SOFTWARE\Policies\ClaudeCode`, `C:\Program Files\ClaudeCode\managed-settings.json` and each file in `C:\Program Files\ClaudeCode\managed-settings.d` must not set `wslInheritsWindowsSettings` to `true`.
+{{ site.claude_code }} [reads `wslInheritsWindowsSettings`](https://code.claude.com/docs/en/settings-reference#wslinheritswindowssettings) only from these sources, and the `HKCU` value doesn't turn it on by itself.
+If one of them does, build again with `--wsl inherit`, or set the key to `false` there.
 
 Do these checks before you install on the other managed computers.
 
