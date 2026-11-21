@@ -75,7 +75,7 @@ prereqs:
         On Linux, you can use your configuration management tool.
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
         To check the route of the test request in the Events debugger, you need [access to the usage events](/ai-cost-management/analytics-and-debugging/#how-the-views-relate) of the test user, or a person with that access.
-        An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as that table says.
+        An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as that section says.
         The [roles of AI Management](/ai-management/roles-and-permissions/#roles) say how a user gets each role.
 
 tldr:
@@ -356,7 +356,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   {{ site.claude_code }} then loads only the servers in that file and the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json), such as the servers that `managedMcpServers` provides, as with `exclusive`.
   It doesn't load the servers of the plugin that `profile activate` adds, and it exits at startup on `claude --mcp-config` or `--strict-mcp-config`, as with `exclusive`.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`.
-  {{ site.claude_code }} [ignores a name that it doesn't know](https://code.claude.com/docs/en/settings-reference#strictpluginonlycustomization), so a list with only such names doesn't block the plugin.
+  {{ site.claude_code }} [ignores each entry that isn't one of these kinds](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), such as a name that it doesn't know or a number.
+  So a list with one of these kinds blocks the plugin, also when it has other entries, and a list with none of them doesn't.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
 * Your own managed settings set `strictPluginOnlyCustomization` to a value that is neither a Boolean nor a list, or set `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value that {{ site.claude_code }} can't read.
   {{ site.claude_code }} [reads such a value as the strictest one](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed): `strictPluginOnlyCustomization` as `true`, and each list as an empty list.
@@ -378,7 +379,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 When the policy that you pass with `--policy` has one of the plugin or marketplace values in this list, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 These values are `strictPluginOnlyCustomization` set to `true` or to a list with one or more names, also names that {{ site.claude_code }} doesn't know, a `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, and a `blockedMarketplaces` list with one.
 `fleet build` doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the list describes.
-It also doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for both yourself.
+It also doesn't refuse a `strictPluginOnlyCustomization` list with an entry that isn't text, such as `["mcp", 1]`, which still blocks the plugin.
+And it doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for these values yourself.
 `kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
 The note can be in a gateway MCP check that passes, so read the whole result of that check.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
@@ -654,7 +656,9 @@ Otherwise, it refuses the profile, because another account could send every deve
 `BUILD_ID` is the build ID that `fleet build` prints.
 Keep the record with your policy.
 You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
-You can't create it again.
+The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries that the build wrote.
+`fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same flags and the same kong-harnesses release.
+So keep a backup copy of the record.
 
 ## Install on the managed computers
 
@@ -863,7 +867,11 @@ The test prompt doesn't show whether the hooks of the build run, so also make su
 If one of them does, remove the key or set it to `false`.
 
 If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
-If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
+If a key server isn't connected and `kong-harnesses doctor` names it without a saved key, run `kong-harnesses login --profile work`, and type its key.
+`login` asks only for a key that isn't saved or that it can't read, so it doesn't replace a saved key that the server refuses.
+To replace such a key, run `kong-harnesses logout --profile work`, and then run `kong-harnesses login --profile work` again.
+`logout` asks you to type the profile name, signs out of the profile, and removes its saved sign-in and every saved gateway MCP key of the profile.
+So `login` then signs in through the browser again and asks for the key of each key server.
 {{ site.claude_code }} [marks a server as failed](https://code.claude.com/docs/en/mcp#failed-first-connections) when its first connection at startup still fails after the retries.
 Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
 A gateway MCP server on the gateway sign-in can show as failed after the first browser sign-in of a session, also in the first session of a developer.
