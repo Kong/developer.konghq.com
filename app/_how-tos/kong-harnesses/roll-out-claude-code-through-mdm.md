@@ -35,7 +35,26 @@ related_resources:
 
 prereqs:
   skip_product: true
+  skip_tool: true
   inline:
+    - title: kong-harnesses
+      content: |
+        This guide uses [kong-harnesses](/kong-harnesses/) to build the managed settings.
+        On the computer where you build the managed settings, install a kong-harnesses release that includes `fleet build` and `fleet remove`.
+
+        {% navtabs "install-kong-harnesses" %}
+        {% navtab "macOS" %}
+        {% include tools/kong-harnesses/install/osx.md %}
+        {% endnavtab %}
+        {% navtab "Linux" %}
+        {% include tools/kong-harnesses/install/linux.md %}
+        {% endnavtab %}
+        {% navtab "Windows" %}
+        {% include tools/kong-harnesses/install/windows.md %}
+        {% endnavtab %}
+        {% endnavtabs %}
+
+        To check that your release includes the fleet commands, run `kong-harnesses fleet build --help`.
     - title: A kong-harnesses profile
       content: |
         Create a kong-harnesses profile that signs developers in through your identity provider, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/) shows.
@@ -53,9 +72,10 @@ prereqs:
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
   a: |
-    Run `kong-harnesses fleet build` for each platform, after you sign in to the profile when its Claude provider is the Anthropic API.
+    When the Claude provider of the profile is the Anthropic API, sign in to the profile first.
+    Then run `kong-harnesses fleet build` for each platform.
     Deploy {{ site.claude_code }}, kong-harnesses, the gateway's CA if it comes from a private CA, and the files that the build writes through your MDM tool.
-    Each developer then signs in as themselves on their first {{ site.claude_code }} request.
+    Each developer then signs in as themselves on their first {{ site.claude_code }} request, and once more for each gateway MCP server that takes a key or its own sign-in.
 
 cleanup:
   inline:
@@ -121,6 +141,8 @@ With `kong-harnesses fleet build`, you turn a kong-harnesses profile into [{{ si
 With `--mcp-servers allowlist` or `any` and a profile with gateway MCP servers, each developer also runs `profile activate` to get those servers, as [Choose the MCP servers](#choose-the-mcp-servers) describes.
 Developers don't install, import or edit anything else.
 Each developer signs in as themselves, in the browser, on their first {{ site.claude_code }} request, and kong-harnesses renews the sign-in by itself.
+For a profile with key servers, the gateway MCP servers that take a fixed key, each developer also runs `kong-harnesses login --profile work` once, and types the key of each key server.
+For a gateway MCP server with its own sign-in, each developer signs in to it once from `/mcp` in {{ site.claude_code }}.
 
 In this guide, you choose how the settings reach the computers and which MCP servers they allow, build the managed settings for each platform, check what they hold, and test them on one computer for each platform before the rest of the fleet.
 
@@ -151,7 +173,8 @@ The sources, from highest to lowest:
 
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
 {{ site.claude_code }} uses that value only when [no administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents), and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
-In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`, the `HKCU` value also sets it, and the two conditions for Windows also hold.
+In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`.
+The `HKCU` value must also set it, and the two conditions for Windows must also hold.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
 This is a file build.
@@ -283,6 +306,8 @@ Run `fleet build` once for each platform of your managed computers.
 Each install command that a build prints runs from a copy of the build's files: the whole output folder on macOS, or its `root` folder on Linux and Windows, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the path where the kong-harnesses package installs the binary on the managed computers.
 The filename must be `kong-harnesses`, or `kong-harnesses.exe` on Windows.
+On Windows, the path must not have `"`, `%`, `!` or a control character, because the helper commands of the build can't carry them.
+On macOS and Linux, it must not have a line break or a NUL, and for an MDM build, no control character.
 Each build needs its own output folder, and the folder must be new or empty.
 This guide uses one folder for each build.
 
@@ -323,7 +348,7 @@ If interop is off, the credential helper tells the developer to turn it on.
 {{ site.claude_code }} in WSL gets the managed settings and the route to the gateway.
 But with `allowlist` or `any`, it doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the {{ site.claude_code }} settings in the developer's Windows home folder.
 For a profile with gateway MCP servers, the WSL line in the result of `fleet build` names the servers that {{ site.claude_code }} in WSL doesn't get.
-With `--wsl inherit`, `fleet build` also refuses an `--executable` path with `'`, `"`, `%` or `!`, and a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
+With `--wsl inherit`, `fleet build` also refuses an `--executable` path with `'`, and a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY`.
 A gateway certificate from a private CA also needs that CA in each WSL distribution.
 The developer controls the WSL distribution, so there the gateway lock holds only while the developer runs an unchanged {{ site.claude_code }}.
 
@@ -624,7 +649,10 @@ On the first request, kong-harnesses opens the browser.
 Sign in with the developer's identity provider account.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 
-If the profile has gateway MCP servers, run `/mcp`, and make sure that it lists them.
+If the profile has gateway MCP servers, run `/mcp`, and make sure that it shows each of them as connected.
+If a key server isn't connected, run `kong-harnesses login --profile work`, and type its key.
+`kong-harnesses doctor` names each key server without a saved key.
+If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
 If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
 
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
