@@ -74,7 +74,8 @@ prereqs:
         You need a mobile device management (MDM) tool that installs packages and a configuration profile or policy on the managed computers, such as Jamf Pro on macOS or Microsoft Intune on Windows.
         On Linux, you can use your configuration management tool.
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
-        To check the route of the test request in the Events debugger, you need the Org Admin [role of AI Management](/ai-management/roles-and-permissions/#roles), or a person with that role.
+        To check the route of the test request in the Events debugger, you need [access to the usage events](/ai-cost-management/analytics-and-debugging/#how-the-views-relate) of the test user, or a person with that access.
+        An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as the [roles of AI Management](/ai-management/roles-and-permissions/#roles) describe.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
@@ -277,7 +278,8 @@ Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 * `policyHelper` or `policyHelpers`, because {{ site.claude_code }} then reads only the policy that the helper gives.
 * An `env` value other than text or `null`, for a variable that the build doesn't set, because {{ site.claude_code }} drops it.
 * In `env.ANTHROPIC_CUSTOM_HEADERS`, a header that sets `Authorization`, `Proxy-Authorization`, `X-Api-Key` or `Host`, a header that the attribution of the profile sets to another value, or a line that isn't a `Name: Value` header.
-* A version range that is empty, such as a `--claude-code-minimum` later than the `requiredMaximumVersion` of your policy, or a `requiredMaximumVersion` below the first {{ site.claude_code }} release that refuses every provider but the gateway.
+* A version range that is empty, such as a `--claude-code-minimum` later than the `requiredMaximumVersion` of your policy.
+* A `requiredMaximumVersion` below the first {{ site.claude_code }} release that refuses every provider but the gateway.
   For the version flags, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 
 It also refuses a policy that it can't read, or that {{ site.claude_code }} would read in another way:
@@ -353,10 +355,14 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   It doesn't load the servers of the plugin that `profile activate` adds, and it exits at startup on `claude --mcp-config` or `--strict-mcp-config`, as with `exclusive`.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+* Your own managed settings set `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value that {{ site.claude_code }} can't read.
+  {{ site.claude_code }} [reads such a value as the strictest one](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed): `strictPluginOnlyCustomization` as `true`, and each list as an empty list.
+  Older {{ site.claude_code }} releases drop such a value instead, as the same section says.
+  [`claude doctor`](https://code.claude.com/docs/en/debug-your-config) names each such key with its source.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
-* When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes one of these settings:
-  These are `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
+* When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
+  Such a setting is `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
   [These host settings apply](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) with every lock, and a `strictKnownMarketplaces` list of the host applies when the managed settings that {{ site.claude_code }} applies set none.
   For example, Claude Desktop sends such a list when its managed configuration turns off the plugin marketplaces that users add.
   For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
@@ -368,7 +374,7 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 
 When the policy that you pass with `--policy` has one of the plugin or marketplace values in this list, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
 These values are `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds, a `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, and a `blockedMarketplaces` list with one.
-`fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for one yourself.
+`fleet build` doesn't refuse a value of these keys that it can't read, and it doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for both yourself.
 `kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
 The note can be in a gateway MCP check that passes, so read the whole result of that check.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
@@ -388,6 +394,7 @@ Among the servers that [skip the allowlist check](https://code.claude.com/docs/e
 
 * Each `managedMcpServers` entry.
 * Each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`.
+  Older {{ site.claude_code }} releases also check an entry with `${VAR}` expansion only in `env`, or every entry while an allowlist is set, as [the managed MCP docs](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set) describe.
 * Built-in servers, such as Claude in Chrome, the `ide` server that {{ site.claude_code }} connects to in a running VS Code or JetBrains IDE, and servers that the CLI itself configures.
 * The Slack tools of a Claude Tag session.
 * The in-process `type: "sdk"` servers of an Agent SDK app.
@@ -845,7 +852,7 @@ To list the [entries that {{ site.claude_code }} dropped](https://code.claude.co
 When the build ID and the label are both correct, send a short prompt, such as `Say hello`.
 Make sure that the answer comes back through the gateway without an error, as the last proof that the build is in effect.
 To confirm the route, open the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) of {{site.ai_cost_management}}, and find the usage event of the test user at the time of the prompt.
-The Events debugger needs the Org Admin role, as the prerequisites say.
+The Events debugger shows the event only to a person whose role covers the test user, as the prerequisites say.
 If you filter by model, use the model ID that the provider reports, because the `model` filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
 Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
@@ -867,6 +874,7 @@ If a server is missing, look for these settings in [Choose the MCP servers](#cho
 * An `allowedMcpServers` list in force that doesn't allow the gateway addresses.
 * `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds.
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, or a `blockedMarketplaces` list with one.
+* A `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` value that {{ site.claude_code }} can't read, which `claude doctor` names.
 * A `managedMcpServers` entry at the URL of a gateway MCP server.
 * One of these settings from a host app, when {{ site.claude_code }} merges the host settings.
 
