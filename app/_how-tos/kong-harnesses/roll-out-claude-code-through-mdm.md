@@ -194,7 +194,7 @@ For another Claude provider, such as Amazon Bedrock, `fleet build` uses the mode
 
 {{ site.claude_code }} can get managed settings from several sources on one computer.
 These are the administrator sources.
-By default, it takes most keys from only the highest of these sources that sets a policy key to a value other than empty objects, or, when no source does, from the highest source that sets a policy key.
+By default, it [takes most keys](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources) from only the highest of these sources that sets a policy key to a value other than empty objects, or, when no source does, from the highest source that sets a policy key.
 It reads [a few keys, such as `env`, from every source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 The sources, from highest to lowest:
 
@@ -268,7 +268,8 @@ On Windows, the policy is a JSON file with exactly the text of the `Settings` re
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies your managed settings file and the MDM policy of the build together.
 {{ site.claude_code }} reads `managedSourcesBehavior` only from the highest source that has it or a policy key, so for an MDM build, the policy that you pass with `--policy` must set it.
 If only your `managed-settings.json` sets it, put it in a policy file, and pass that file with `--policy` in place of `--no-policy`.
-On computers whose MDM policy sets a policy key to a value other than empty objects, a file build doesn't work with `merge` either, because {{ site.claude_code }} reads `apiKeyHelper` only from that policy.
+On computers whose MDM policy sets a policy key to a value other than empty objects, a file build doesn't work with `merge` either.
+{{ site.claude_code }} reads `apiKeyHelper` only from the managed source that it takes most keys from, which is then that policy.
 With `merge`, also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
 A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies most keys that the MDM policy leaves unset, such as `model`.
 {{ site.claude_code }} [reads some keys only from the highest source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), also when it leaves them unset, such as `modelPicker`, `permissions.defaultMode` and `apiKeyHelper`.
@@ -295,7 +296,7 @@ It also refuses a policy that it can't read, or that {{ site.claude_code }} woul
 * A binary property list, or a property list for a platform other than macOS or for a file build.
 * A key that is set twice in one block, a date or data value, or a number that {{ site.claude_code }} can't keep.
   Such a number is too large for a double, so {{ site.claude_code }} reads it as infinite, or it isn't zero but is too small for a double, so {{ site.claude_code }} reads it as zero.
-  In a property list, it is also an `integer` outside the range from -2^63 to 2^64-1, or an `integer` that isn't written as a whole number, such as `1e3`.
+  In a property list, `fleet build` also refuses an `integer` outside the range from `-2^63` to `2^64-1`, or an `integer` that isn't written as a whole number, such as `1e3`.
 * For an MDM build, a value that the MDM policy doesn't read back as it is, such as a control character.
 
 For WSL and for the gateway MCP servers, [Build the managed settings](#build-the-managed-settings) and [Choose the MCP servers](#choose-the-mcp-servers) name the other values that `fleet build` refuses.
@@ -431,7 +432,8 @@ With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp
 
 In every mode, when a session starts or resumes, a hook of the build names the MCP servers that {{ site.claude_code }} doesn't load, as [Check what the build holds](#check-what-the-build-holds) describes.
 It names the servers in the user or local settings, or in the `.mcp.json` of the project.
-`kong-harnesses doctor` also names each one, and each gateway MCP server that a setting blocks, apart from a `deniedMcpServers` entry for an `exclusive` build, as [Validate](#validate) says.
+`kong-harnesses doctor` also names each one, and each gateway MCP server that a setting blocks.
+But when a `managed-mcp.json` is in place, such as for an `exclusive` build, `doctor` doesn't name a server that a `deniedMcpServers` entry blocks, as [Validate](#validate) says.
 Neither names the other servers of a plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
@@ -820,14 +822,15 @@ kong-harnesses doctor --profile work --client claude-code
 
 `doctor` says that the managed settings of your organization set up the profile, and names the build ID.
 It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from the managed sources on the computer is the helper of the build for the profile.
-{{ site.claude_code }} [takes `apiKeyHelper` only from the highest source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source) that has a policy key, also with `merge`.
+{{ site.claude_code }} [takes `apiKeyHelper` only from the managed source that it takes most keys from](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), also with `merge`.
 When that source is the managed settings files, such as for a file build, {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order.
 Then a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` doesn't show this line.
 Make sure that the build ID is the one that `fleet build` printed for the group of this computer.
 `doctor` reports each problem that it finds, gives a fix when one is available, and names the setting that blocks a gateway MCP server.
-For an `exclusive` build, `doctor` checks that an entry in `managed-mcp.json` has the address of each gateway MCP server, and that its header helper runs kong-harnesses for this profile, but it doesn't check `deniedMcpServers`.
-But {{ site.claude_code }} [checks the denylist also for each server in that file](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
-So when `/mcp` doesn't show a gateway MCP server of an `exclusive` build as connected, also look for a `deniedMcpServers` entry that matches it, in your managed settings and in the developer's own settings.
+When a `managed-mcp.json` is in place, such as for an `exclusive` build, `doctor` checks that an entry in that file has the address of each gateway MCP server.
+For a server that takes a key or the gateway sign-in, it also checks that the header helper of the entry runs kong-harnesses for this profile.
+It doesn't check `deniedMcpServers`, but {{ site.claude_code }} [checks the denylist also for each server in that file](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
+So when `/mcp` doesn't show a gateway MCP server as connected, also look for a `deniedMcpServers` entry that matches it, in your managed settings and in the user, project or local settings of the developer.
 When the account has no saved sign-in to the profile, `doctor` also says that it isn't signed in and that the first request signs in through the browser, which is expected.
 With a saved sign-in, it says that the account is signed in and usable without a browser.
 To test the browser sign-in, use a test account with no saved sign-in to the profile.
