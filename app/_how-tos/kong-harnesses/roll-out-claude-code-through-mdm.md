@@ -237,7 +237,7 @@ A file whose name sorts before `kong-harnesses.json` loses each of those values,
 Its list entries stay.
 Move such headers into your `managed-settings.json`, and pass a copy of it with `--policy`, so that the build keeps them.
 No file, in any order, may set `policyHelper` or `policyHelpers`, because the settings that a policy helper computes replace all the other managed settings.
-Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
+Also make sure that no file adds an `allowedProviders` entry other than `customEndpoint`, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod`, `forceLoginGatewayUrl` or `forceLoginOrgUUID` either, because the build sets none of them, so a value of one of these keys in any file applies.
 Under `forceLoginOrgUUID`, {{ site.claude_code }} [blocks a session with an `apiKeyHelper` at startup](https://code.claude.com/docs/en/authentication#restrict-login-to-your-organization), also a session of the build.
 No file may set `enforceAnthropicSignIn` either, because a session on a gateway then starts only when the developer is signed in to your Anthropic organization.
@@ -366,8 +366,8 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   {{ site.claude_code }} [ignores each entry that isn't one of these kinds](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), such as a name that it doesn't know or a number.
   So a list with one of these kinds blocks the plugin, also when it has other entries, and a list with none of them doesn't.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
-  When one file sets both spellings, {{ site.claude_code }} [uses `strictKnownMarketplaces` and ignores `allowedMarketplaces`](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases).
-  So each case on this page for `allowedMarketplaces` applies only to a file without `strictKnownMarketplaces`.
+  When one source, such as the MDM policy or a managed settings file, sets both spellings, {{ site.claude_code }} [uses `strictKnownMarketplaces` and ignores `allowedMarketplaces`](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases).
+  So each case on this page for `allowedMarketplaces` applies only to a source without `strictKnownMarketplaces`.
 * Your own managed settings set `strictPluginOnlyCustomization` to a value other than `null` that is neither a Boolean nor a list, or set `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value other than `null` that {{ site.claude_code }} can't read.
   {{ site.claude_code }} reads a `null` as unset.
   {{ site.claude_code }} [reads such a value as the strictest one](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed): `strictPluginOnlyCustomization` as `true`, and each list as an empty list.
@@ -391,12 +391,14 @@ When the policy that you pass with `--policy` has one of these plugin or marketp
 * `strictPluginOnlyCustomization` set to `true`, or to a list of one or more entries, each of them text or `null`, also names that {{ site.claude_code }} doesn't know.
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, in which each entry is `null` or an object whose `source` is text, `null` or missing, also an empty list or `null`.
   `fleet build` checks both keys, also in a policy that sets both, where {{ site.claude_code }} ignores `allowedMarketplaces`.
+  In such a policy, remove `allowedMarketplaces`, because {{ site.claude_code }} ignores it.
 * A `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, in which each other entry is `null` or an object whose `source` is text, `null` or missing.
 
 `fleet build` doesn't refuse one of these lists when an entry has another type, such as `["mcp", 1]`, `[{"source": "skills-dir"}, 1]` or `[{"source": 1}]`.
 {{ site.claude_code }} [drops or ignores only that entry](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed), so such a list can still block the plugin.
 `fleet build` also reads a `source` key with other letter case, such as in `[{"Source": "skills-dir"}]`, as a `{"source": "skills-dir"}` entry, but {{ site.claude_code }} doesn't.
-So `fleet build` passes such a `strictKnownMarketplaces` or `allowedMarketplaces` list, which blocks the plugin, and refuses such a `blockedMarketplaces` list, which blocks nothing.
+So `fleet build` passes such a `strictKnownMarketplaces` or `allowedMarketplaces` list, which blocks the plugin, and refuses such a `blockedMarketplaces` list, which doesn't block the plugin.
+So write the key as `source`, in lowercase, in each marketplace entry.
 `fleet build` also doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the earlier list of cases describes.
 {{ site.claude_code }} reads a `null` as unset, so to pass the check, remove a marketplace key with `null` from your policy.
 `fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server either, so check your policy for these values yourself.
@@ -498,7 +500,7 @@ For a new MDM build of computers that already have an MDM build, which you pass 
 If interop is off, the credential helper tells the developer to turn it on.
 `--wsl inherit` doesn't work with `--mcp-servers exclusive`, because {{ site.claude_code }} in WSL reads `managed-mcp.json` only from `/etc/claude-code`.
 {{ site.claude_code }} in WSL gets the managed settings and the route to the gateway.
-But with `allowlist` or `any`, it doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the {{ site.claude_code }} settings in the developer's Windows home folder.
+But with `allowlist` or `any`, it doesn't load the gateway MCP servers either, because `profile activate` on Windows adds them only to the developer's Windows {{ site.claude_code }} configuration folder.
 For a profile with gateway MCP servers, the WSL line in the result of `fleet build` names the servers that {{ site.claude_code }} in WSL doesn't get.
 With `--wsl inherit`, `fleet build` also refuses an `--executable` path with `'`.
 It also refuses a `--policy` whose `env` sets `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT` or `CLAUDE_CODE_CLIENT_KEY` to a text value that isn't empty, because {{ site.claude_code }} in WSL can't read a Windows path of a certificate file.
@@ -676,8 +678,9 @@ Otherwise, it refuses the profile, because another account could send every deve
 Keep the record with your policy.
 You need it to remove the build, and to update an MDM build or a build with `--mcp-servers exclusive`, as [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/) shows.
 The record holds the policy that you passed, which brings your earlier values back when you remove the build, and the `managed-mcp.json` entries of the gateway MCP servers that the build wrote, but not your own servers.
-`fleet build` writes the same record again only from the same profile file, the same `--policy` and `--mcp-config` files, the same build choices and the same kong-harnesses release.
-The build choices are the flags that set what the build writes, such as `--platform`, `--delivery`, `--executable` and the version, model, MCP, WSL and host settings flags, but not `--output-dir`.
+The build ID depends only on what the build writes: the record, the profile file and the `managed-mcp.json` of the build.
+The record holds the choices of the build, such as `--platform`, `--delivery`, `--executable` and the version, model, MCP, WSL and host settings flags, but not `--output-dir` or the names of the files that you pass.
+So two builds get the same build ID only when they write the same record, profile file and `managed-mcp.json`, also when their input files have other names.
 When the Claude provider of the profile is the Anthropic API, the record also holds the models and prices that `fleet build` takes from the gateway, so a change of the gateway's models or prices can change the record.
 So keep a backup copy of the record.
 
@@ -818,6 +821,9 @@ It says so only when the `apiKeyHelper` that {{ site.claude_code }} takes from t
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, so a file that sorts after `kong-harnesses.json` and sets its own `apiKeyHelper` replaces the helper of the build, and `doctor` then doesn't show this line.
 Make sure that the build ID is the one that `fleet build` printed for the group of this computer.
 `doctor` reports each problem that it finds, gives a fix when one is available, and names the setting that blocks a gateway MCP server.
+For an `exclusive` build, `doctor` compares only the addresses in `managed-mcp.json`, and doesn't check `deniedMcpServers`.
+But {{ site.claude_code }} [checks the denylist also for each server in that file](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
+So when `/mcp` doesn't show a gateway MCP server of an `exclusive` build as connected, also look for a `deniedMcpServers` entry that matches it.
 When the account has no saved sign-in to the profile, `doctor` also says that it isn't signed in and that the first request signs in through the browser, which is expected.
 With a saved sign-in, it says that the account is signed in and usable without a browser.
 To test the browser sign-in, use a test account with no saved sign-in to the profile.
@@ -890,7 +896,7 @@ To confirm the route, open the [Events debugger](/ai-cost-management/analytics-a
 With the strategy of the linked setup guide, set the [**User**](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions) filter to `oidc/SUB`, and replace `SUB` with the `sub` claim of the test user.
 The Events debugger shows the event only to a person whose role covers that subject, as the prerequisites say.
 If you filter by model, use the model ID that the provider reports, because the **Model** filter matches [the model that the provider reports as served](/ai-cost-management/analytics-and-debugging/#filters-and-dimensions), not the model name of the session.
-Its `source` names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
+The `source` of the event names the control plane of the gateway, so make sure that it is the control plane of the profile's gateway.
 The test prompt doesn't show whether the hooks of the build run, so also make sure that your policy, your `managed-settings.json` and the files in `managed-settings.d` don't set `disableAllHooks` to `true`.
 If one of them does, remove the key or set it to `false`.
 
