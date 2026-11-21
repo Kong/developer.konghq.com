@@ -349,10 +349,17 @@ When the profile has gateway MCP servers, a `managed-mcp.json` on the computers 
 * `--mcp-servers allowlist` locks {{ site.claude_code }} to the servers that your own managed settings provide and the servers that the managed `allowedMcpServers` list allows.
   The build adds to that list the gateway MCP servers of the profile and the servers that you list with `--mcp-url` or `--mcp-command`.
   While the lock is on, {{ site.claude_code }} [takes that list from the highest administrator source that sets one](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
-  So the list of the build replaces the list of a lower administrator source, such as your `managed-settings.json` and `managed-settings.d` for an MDM build.
-  And a higher source with its own list, such as an MDM policy for a file build, replaces the list of the build, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
-  So put each entry that the computers need in the policy that you pass with `--policy`, or list it with `--mcp-url` or `--mcp-command`.
-  It doesn't add servers.
+  For an MDM build, the list of the build replaces the list in your `managed-settings.json` and in `managed-settings.d`.
+  Put each entry that those computers need in the policy that you pass with `--policy`, or list it with `--mcp-url` or `--mcp-command`.
+  For a file build, the drop-in of the build and your `managed-settings.json` are one source, and [their lists combine](#choose-how-the-settings-reach-the-computers).
+  Put each entry that those computers need in the `managed-settings.json` that they have, deploy that file, and pass the same file with `--policy`, or list the entry with `--mcp-url` or `--mcp-command`.
+  A higher source with its own list replaces the list of the build.
+  For a file build on computers with such an MDM policy, build with `--delivery mdm` for those computers.
+  For server-managed settings with such a list, stop the computers from fetching them, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
+  The build lists each gateway MCP server and each `--mcp-url` server as a `serverUrl` entry, and each `--mcp-command` server as a `serverCommand` entry.
+  When the list has a `serverUrl` entry, a `serverName` entry [no longer matches a remote server](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated), and when it has a `serverCommand` entry, a `serverName` entry no longer matches a stdio server.
+  So replace each `serverName` entry of your list with a `serverUrl` entry or `--mcp-url` for a remote server, and with a `serverCommand` entry or `--mcp-command` for a stdio server.
+  `allowlist` doesn't add servers.
   To get the gateway MCP servers, each developer runs [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), which adds them as a plugin in the developer's `~/.claude/skills` folder, or `%USERPROFILE%\.claude\skills` on Windows, or the `skills` folder in the folder that `CLAUDE_CONFIG_DIR` names:
 
   ```sh
@@ -455,6 +462,9 @@ The hook and `doctor` read the settings in the same way, so both have these limi
 * When one entry of an `allowedMcpServers` list can't be read, they read that list as one with no entries, so they can name a server that the rest of the list allows.
 * When one entry of a `deniedMcpServers` list can't be read, they skip that list.
   For both lists, {{ site.claude_code }} [drops only that entry and enforces the rest](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
+* They use an entry with more than one key, such as `serverName` and `serverCommand`.
+  {{ site.claude_code }} [reads each entry as an object with a single key](https://code.claude.com/docs/en/managed-mcp#match-servers-by-url-command-or-name), and drops such an entry.
+  So they can name a server that {{ site.claude_code }} loads, or leave out a server that it blocks.
 * The hook names no server of a plugin, and `doctor` names only the gateway MCP servers of the plugin.
 
 In every mode, a `deniedMcpServers` entry blocks each server that it matches, also a gateway MCP server, but not the in-process `type: "sdk"` servers of an Agent SDK app.
