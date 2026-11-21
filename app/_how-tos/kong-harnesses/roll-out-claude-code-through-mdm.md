@@ -107,7 +107,7 @@ cleanup:
 
         Replace each placeholder with the value for your deployment, and keep the quotes that the examples show.
         Replace `BUILD_RECORD` with the path of the record file, `kong-harnesses-fleet-BUILD_ID.json`, that `fleet build` printed for that build.
-        Each removal needs a new or empty output folder, so the examples put the build ID in its name.
+        A removal that writes files needs a new or empty output folder, so the examples put the build ID in the folder name.
         For a file build without `--mcp-servers exclusive`, `fleet remove` prints the path of each file to delete from the managed computers:
 
         ```sh
@@ -266,7 +266,9 @@ Linux doesn't have an MDM policy, so on Linux the settings always go in a file.
 It lists each of your values that it changes.
 
 If you keep {{ site.claude_code }} policy in the claude.ai admin console or on a Claude apps gateway, move it into your MDM policy or your `managed-settings.json`.
-Then remove it from its source.
+Remove it from its source only after the build is on every computer that the policy covers.
+[Endpoint-managed settings don't reach cloud sessions](https://code.claude.com/docs/en/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) in Anthropic-hosted environments, so if your developers run them, keep the server-managed settings for those sessions.
+Then make sure that no session on the managed computers fetches them.
 {{ site.claude_code }} fetches remote settings only in [the cases that the source ranking lists](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources):
 
 * The session has one of the credentials that [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability) lists, such as a Team or Enterprise claude.ai login, an OAuth token in `CLAUDE_CODE_OAUTH_TOKEN` or an API key that is set directly.
@@ -315,8 +317,12 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   It doesn't load the servers of the plugin that `profile activate` adds.
 * Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
+* Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
+  [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 
-When the policy that you pass with `--policy` sets one of these values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
+When the policy that you pass with `--policy` sets `strictPluginOnlyCustomization` or one of the marketplace values, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
+`fleet build` doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for one yourself.
+`kong-harnesses doctor` names a gateway MCP server that {{ site.claude_code }} reaches through another entry at the same address.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
 
 In each case, {{ site.claude_code }} [skips the plugin](https://code.claude.com/docs/en/plugins/loading#skills-directory-plugins-blocked-by-managed-settings) that `profile activate` adds, or the servers in it.
@@ -346,9 +352,11 @@ Make sure that your own managed settings don't deny a gateway MCP server.
 
 ## Build the managed settings
 
-Run `fleet build` once for each group of managed computers with the same platform, the same delivery, and the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
+Run `fleet build` once for each group of managed computers with the same platform, that need the same delivery, and with the same {{ site.claude_code }} policy or `managed-settings.json` now, and deploy each build only to its group.
 For an `--mcp-servers exclusive` build, the computers of a group also have the same `managed-mcp.json`, and the build of the group takes that file with `--mcp-config`.
-The build takes the headers from the `--policy` that you pass, an MDM build also takes all the keys of that policy, and an `exclusive` build writes the servers of its `--mcp-config` file, so a build for another group gives the computers the wrong values.
+The build takes the headers from the `--policy` that you pass.
+An MDM build also takes all the keys of that policy, and an `exclusive` build writes the servers of its `--mcp-config` file.
+So a build for another group gives the computers the wrong values.
 `--platform` names the platform of the managed computers, so you can build for every platform on the same computer.
 Each install command that a build prints runs from a copy of the build's files: the whole output folder on macOS, or its `root` folder on Linux and Windows, as [Install on the managed computers](#install-on-the-managed-computers) describes.
 Set `--executable` to the absolute path where the kong-harnesses package installs the binary on the managed computers.
@@ -358,7 +366,7 @@ It also must not have `"`, `%`, `!` or a control character, because the helper c
 On macOS and Linux, it must not have a line break or a NUL, and for a macOS MDM build, no control character.
 On every platform, the path must be in UTF-8.
 Each build needs its own output folder, and the folder must be new or empty.
-The examples use one folder for each group, so replace `GROUP` with a short name for the group of computers.
+The examples use one folder for each group, so replace `GROUP` with a short name for the group of computers, with no spaces.
 
 Replace each placeholder with the value for your deployment, and keep the quotes that the examples show, so that a path with spaces works:
 
@@ -656,7 +664,10 @@ The install also stops when it can't list, read or check an entry:
 
 Each stop prints one message that starts with `Not installed:`, and then names the path and the condition, such as `has another owner`.
 On Windows, the message builds each path from the copy folder and the destination as the command got them, so a path can look different from the one that File Explorer shows.
-Remove or fix that entry, or the cause that the condition names, and then run the install again.
+Correct the condition that the message names, such as the owner, the modes or the access rules of the path.
+Remove an entry only when it is at a path of a build file, such as a link or a file with another hard link in the place of that file.
+Never remove a folder above the files, such as `/etc` or `C:\Program Files`.
+Then run the install again.
 
 On Linux and Windows, the install stops with `could not be written in full; fix the cause and run the step again` when the copy fails after the checks, or when a change of the owner, the modes or the access rules fails.
 The build can then be partly written on the computer, so run the install again after the fix.
@@ -726,7 +737,8 @@ The labels:
 * A list that ends with `, merged`: your organization sets `managedSourcesBehavior` to `merge`, and {{ site.claude_code }} merged the listed sources.
 * `(remote)`, or a merged list that starts with `remote`, such as `(remote + file, merged)`: server-managed settings from the claude.ai admin console or from a Claude apps gateway rank above the build.
   Then [the `apiKeyHelper` of the build isn't in effect](https://code.claude.com/docs/en/server-managed-settings#machine-apikeyhelper-not-in-effect), also with `merge`, because {{ site.claude_code }} reads it only from the highest source.
-  Find their source, and remove them there.
+  Stop this computer from fetching them, such as by removing a claude.ai login of your organization, as [Choose how the settings reach the computers](#choose-how-the-settings-reach-the-computers) describes.
+  Remove them from their source only after the build is on every computer that they cover, and keep server-managed settings for cloud sessions.
   If a fetch fails, a computer can keep [a cached copy of them](https://code.claude.com/docs/en/server-managed-settings#fetch-and-caching-behavior) for up to 24 hours after its last successful fetch.
 * `(HKCU)`: only the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`, which a developer can write.
   [No administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents) on the computer, so the build isn't in effect.
@@ -762,7 +774,7 @@ If a key server isn't connected, run `kong-harnesses login --profile work`, and 
 Then reconnect the server from `/mcp`, and make sure that `/mcp` shows it as connected.
 `kong-harnesses doctor` names each key server without a saved key.
 If a server with its own sign-in isn't connected, sign in to it from `/mcp`.
-If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, or `blockedMarketplaces`.
+If a server is missing, look for the settings in [Choose the MCP servers](#choose-the-mcp-servers) that block it: a `managed-mcp.json`, a `deniedMcpServers` entry, an `allowedMcpServers` list in a higher managed source that doesn't allow the gateway addresses, `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces`, `blockedMarketplaces`, or a `managedMcpServers` entry at the URL of a gateway MCP server.
 
 For a Windows build with `--wsl inherit`, the Windows package doesn't install kong-harnesses in WSL, so `profile activate` and `doctor` run only on Windows.
 A check on Windows doesn't test Windows interop or the CA in a WSL distribution, so also do these checks in each WSL distribution that developers use.
