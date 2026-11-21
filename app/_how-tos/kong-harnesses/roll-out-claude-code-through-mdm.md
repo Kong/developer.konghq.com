@@ -250,7 +250,7 @@ For Windows computers that need {{ site.claude_code }} in WSL, remove the settin
 Otherwise, use `exclusive`, and leave out `--wsl inherit`.
 
 With `allowlist`, {{ site.claude_code }} stops each server that a developer, a project, a plugin or claude.ai adds and that the allowlist doesn't match.
-A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check): each `managedMcpServers` entry, each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`, built-in servers such as Claude in Chrome, and the Slack tools of a Claude Tag session.
+A few servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check): each `managedMcpServers` entry, each `managed-mcp.json` entry that uses no `${VAR}` expansion outside `env`, built-in servers such as Claude in Chrome, the Slack tools of a Claude Tag session, and the in-process `type: "sdk"` servers of an Agent SDK app.
 With `exclusive`, {{ site.claude_code }} stops every server outside `managed-mcp.json`, apart from the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json).
 When a session starts, kong-harnesses names up to 10 of the servers in the user or local settings, or in the `.mcp.json` of the project, that {{ site.claude_code }} doesn't load for each cause, with a count of the rest, but not the servers of a plugin.
 `kong-harnesses doctor` names each one.
@@ -485,7 +485,8 @@ find root scripts -type d -exec chmod 755 {} + && find root -type f -exec chmod 
 
 Then install, on each computer, the `kong-harnesses-fleet.pkg` that the command writes in that folder.
 On Linux and Windows, copy the `root` folder from the output folder to each computer.
-Run the copy command there as an administrator, in PowerShell on Windows, from inside the copied `root` folder.
+Run the copy command there as an administrator, from inside the copied `root` folder.
+On Windows, run it in Windows PowerShell.
 On Linux, the copy command needs `getfacl`, from the `acl` package.
 
 Before the install writes a file, it checks each file and folder of the build that is already on the computer.
@@ -495,9 +496,22 @@ On Linux, it also stops for an entry with ACL entries beyond its mode bits, and 
 On macOS, it also stops for an ACL entry that lets an account other than root change the entry, also an inherited one.
 On Windows, it stops for a link or another hard link, and when the owner of an entry, or an account that can change it, isn't Administrators, SYSTEM, TrustedInstaller or CREATOR OWNER.
 The account that runs the command doesn't count as one of them.
-The install also stops when it can't check an entry: on Linux when `getfacl` is missing or fails, and on Windows when `fsutil` can't list the hard links of a file.
-The message starts with `Not installed:`, and then names the path and the condition, such as `has another owner`.
+The install also stops when it can't list, read or check an entry:
+
+* `cannot be listed`: the install can't list the copy, a folder in it, or a path on the computer.
+  On Linux, the error of `find` above the message names the path that it can't list.
+* `cannot be read`: on macOS, the install can't read the ACL of a path, and on Windows, it can't read a path, its owner or its ACL.
+* `cannot be checked for its owner, because the account that runs the step cannot be read`: on macOS and Linux, the `id` command fails.
+* `cannot be checked for ACL entries; install the acl package, which has getfacl`: on Linux, `/usr/bin/getfacl` isn't there.
+* `cannot be checked for ACL entries: getfacl failed with exit status STATUS`: on Linux, `getfacl` is there and fails, with the exit status in place of `STATUS`.
+* `cannot be checked for hard links`: on Windows, `fsutil` doesn't start, exits with a code other than 0, or prints no record that names the file itself.
+
+Each stop prints one message that starts with `Not installed:`, and then names the path and the condition, such as `has another owner`.
+On Windows, the message names the path in the form of the copy and the destination that the command got.
 Remove or fix that entry, and then run the install again.
+
+On Linux and Windows, the install stops with `could not be written in full; fix the cause and run the step again` when the copy fails after the checks, or when a change of the owner, the modes or the access rules fails.
+The build can then be partly written on the computer, so fix the cause, and then run the install again.
 
 On macOS and Linux, after the install, root owns each file and folder of the build, with mode 755 for each folder and mode 644 for each file, so each account on the computer can read them.
 On macOS, `pkgbuild` sets root as the owner by default, and the package keeps the modes of the build.
