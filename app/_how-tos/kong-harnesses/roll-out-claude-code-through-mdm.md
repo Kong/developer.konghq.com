@@ -137,7 +137,7 @@ The sources, from highest to lowest:
 1. The managed settings file, `managed-settings.json`, with the files in its `managed-settings.d` folder.
 
 On Windows, a developer can also write the `Settings` value under `HKCU\SOFTWARE\Policies\ClaudeCode`.
-{{ site.claude_code }} uses that value only when no administrator source is on the computer, and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
+{{ site.claude_code }} uses that value only when no administrator source sets a [policy key](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources), and no app that starts {{ site.claude_code }}, such as Claude Desktop, passes a setting that restricts Claude.
 In WSL, {{ site.claude_code }} uses that value only when the `HKLM` policy, or `managed-settings.json` or a file in `managed-settings.d` under `C:\Program Files\ClaudeCode`, sets `wslInheritsWindowsSettings` to `true`, the `HKCU` value also sets it, and the two conditions for Windows also hold.
 
 By default, `fleet build` writes its settings as a file in `managed-settings.d`.
@@ -150,8 +150,8 @@ The build also sets `ANTHROPIC_CUSTOM_HEADERS`, so its value replaces the one in
 A file build needs `--policy` or `--no-policy`.
 If the computers have a `managed-settings.json`, pass a copy of it with `--policy`.
 The build then keeps your headers in its value.
-If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, pass `--no-policy`.
-For a file build, `--policy` takes only a `managed-settings.json`, not an MDM policy.
+If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, pass `--no-policy`.
+For a file build, `--policy` takes your `managed-settings.json`, and `fleet build` refuses an MDM policy there that sets a policy key, because that policy ranks above the drop-in.
 
 {{ site.claude_code }} merges the files in `managed-settings.d` in alphabetical order, and a later file replaces a single value of an earlier file.
 `--policy` checks only `managed-settings.json`, so check each of your own files in `managed-settings.d`.
@@ -162,9 +162,9 @@ No file, in any order, may set `policyHelper`, because the settings that a polic
 Also make sure that no file adds an `allowedProviders` entry, because {{ site.claude_code }} combines the lists of all the files in `managed-settings.d`, also the list of the build.
 No file may set `forceLoginMethod` or `forceLoginGatewayUrl` either, because the build sets neither, so a value of either key in any file applies.
 
-By default, on a computer whose {{ site.claude_code }} MDM policy sets a [policy key](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources), {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
+By default, on a computer whose {{ site.claude_code }} MDM policy sets a policy key, {{ site.claude_code }} takes most keys from the MDM policy and ignores them in the file.
 So the credential helper and the hooks of a file build don't apply there, and those computers need an MDM build.
-An MDM policy that sets only control keys, such as `managedSourcesBehavior` or `wslInheritsWindowsSettings`, doesn't count.
+An MDM policy that sets only the control keys, `managedSourcesBehavior` and `wslInheritsWindowsSettings`, doesn't count.
 {{ site.claude_code }} still reads [a few keys from every administrator source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), such as `env`.
 One of them is the MCP lock that `--mcp-servers allowlist` sets, so the lock and its server list can still apply from the file.
 But while the lock is on, {{ site.claude_code }} takes the server list from the highest administrator source that sets one.
@@ -173,7 +173,7 @@ If that list doesn't allow the addresses of the gateway MCP servers, {{ site.cla
 For every computer whose MDM policy sets a policy key, build with `--delivery mdm`.
 This is an MDM build.
 If the computers get a {{ site.claude_code }} policy now, pass it with `--policy`.
-If they don't get a {{ site.claude_code }} policy of your own, pass `--no-policy`.
+If they don't get a {{ site.claude_code }} MDM policy of your own, pass `--no-policy`.
 On macOS, the policy is the XML property list of the Custom Settings payload for the `com.anthropic.claudecode` preference domain.
 On Windows, the policy is a JSON file with exactly the text of the `Settings` registry value, not a `.reg` export.
 If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_code }} applies your managed settings file and the MDM policy of the build together.
@@ -271,14 +271,14 @@ Replace each placeholder with the value for your deployment, and keep the quotes
 * Replace `MCP_MODE` with the mode that you chose in [Choose the MCP servers](#choose-the-mcp-servers): `exclusive`, `allowlist` or `any`.
   With `exclusive`, if the computers have a `managed-mcp.json`, also add `--mcp-config` with a copy of that file.
 * For a file build, replace `POLICY_FILE` with the path of your copy of `managed-settings.json`.
-  If the computers don't get a {{ site.claude_code }} policy of your own, such as a `managed-settings.json`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+  If the computers have no `managed-settings.json`, also when they have files in `managed-settings.d`, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 * For an MDM build, replace `POLICY_FILE` with the path of your current policy, such as `com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows.
-  If the computers don't get a {{ site.claude_code }} policy of your own now, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+  If the computers don't get a {{ site.claude_code }} MDM policy of your own, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 
 Claude Desktop, an IDE extension or an Agent SDK app can start {{ site.claude_code }} and pass settings of its own, the host settings.
 When the computer has managed settings, {{ site.claude_code }} ignores the host settings by default.
 To [merge them](https://code.claude.com/docs/en/managed-settings#let-an-embedding-host-add-policy), add `--host-settings merge`, which sets `parentSettingsBehavior` to `merge` and replaces the value that your own policy sets.
-{{ site.claude_code }} reads this key only from the highest managed source on the computer, so the build must be that source.
+{{ site.claude_code }} reads this key only from the highest managed source on the computer that sets a policy key, so the build must be that source.
 {{ site.claude_code }} then keeps only the host settings that restrict what Claude can do, with two exceptions.
 The permission allow rules of the host still apply, unless your own managed settings set `allowManagedPermissionRulesOnly`.
 The sandbox allowlists of the host still apply, unless your own managed settings set `sandbox.network.allowManagedDomainsOnly` for domains and `sandbox.filesystem.allowManagedReadPathsOnly` for read paths.
@@ -461,9 +461,10 @@ After the checks in [Validate](#validate) pass on each test computer, install th
    A reparse point, such as a symbolic link or a junction, sends the path to another place.
 1. For an MDM build, the policy under `mdm` in the output folder, in place of the {{ site.claude_code }} policy that the computers get now.
    On macOS, upload `com.anthropic.claudecode.plist` to your MDM tool in place of your Custom Settings payload for the `com.anthropic.claudecode` preference domain.
-   If the computers don't get a {{ site.claude_code }} policy yet, upload it as a Custom Settings payload for that domain, or add its keys to the {{ site.claude_code }} payload that you deploy.
+   If the computers don't get a {{ site.claude_code }} policy yet, upload it as a Custom Settings payload for that domain.
    On Windows, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the line in `Settings.json`, in place of the JSON that the value holds.
-   If the computers don't get a policy yet, set the value through Group Policy, Intune or your own tool, or add the keys of the line to the JSON that the value holds.
+   If the computers don't get a policy yet, set the value through Group Policy, Intune or your own tool.
+   Computers that already get a {{ site.claude_code }} policy need a build with `--policy`.
    If an earlier file build installed `managed-settings.d/kong-harnesses.json` on the computers, delete that file, because {{ site.claude_code }} still merges its `env`.
 
 `fleet build` prints the command that packages or copies the files for the platform.
