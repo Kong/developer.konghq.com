@@ -75,7 +75,8 @@ prereqs:
         On Linux, you can use your configuration management tool.
         You also need administrator rights on one managed computer of each group that gets its own build, to test the result.
         To check the route of the test request in the Events debugger, you need [access to the usage events](/ai-cost-management/analytics-and-debugging/#how-the-views-relate) of the test user, or a person with that access.
-        An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as the [roles of AI Management](/ai-management/roles-and-permissions/#roles) describe.
+        An Org Admin sees the events of the whole organization, a Team Manager sees the events of their teams, and an Individual User sees their own events, as that table says.
+        The [roles of AI Management](/ai-management/roles-and-permissions/#roles) say how a user gets each role.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to every computer of my organization with kong-harnesses?
@@ -265,7 +266,8 @@ If your organization sets `managedSourcesBehavior` to `merge`, {{ site.claude_co
 If only your `managed-settings.json` sets it, put it in a policy file, and pass that file with `--policy` in place of `--no-policy`.
 On computers whose MDM policy sets a policy key to a value other than empty objects, a file build doesn't work with `merge` either, because {{ site.claude_code }} reads `apiKeyHelper` only from that policy.
 With `merge`, also check your `managed-settings.json` and the files in `managed-settings.d`, because {{ site.claude_code }} merges them with the MDM policy.
-A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies each key that the MDM policy leaves unset, such as `model`.
+A lower source [adds its list entries](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), such as `permissions.allow` rules and `hooks`, and supplies most keys that the MDM policy leaves unset, such as `model`.
+{{ site.claude_code }} [reads some keys only from the highest source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source), also when it leaves them unset, such as `modelPicker`, `permissions.defaultMode` and `apiKeyHelper`.
 A [restriction allowlist](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior), such as `allowedProviders`, still comes whole from the highest source that sets one, so there the list of the build applies.
 Remove each value that conflicts with the build, and each list entry or key that you don't want on the computers.
 Login keys, such as `forceLoginMethod` and `forceLoginGatewayUrl`, still come only from the highest MDM policy or file with a policy key.
@@ -353,16 +355,17 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
 * The computers already have a `managed-mcp.json`.
   {{ site.claude_code }} then loads only the servers in that file and the [exceptions of exclusive control](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json), such as the servers that `managedMcpServers` provides, as with `exclusive`.
   It doesn't load the servers of the plugin that `profile activate` adds, and it exits at startup on `claude --mcp-config` or `--strict-mcp-config`, as with `exclusive`.
-* Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more kinds, such as `mcp`.
+* Your own managed settings set `strictPluginOnlyCustomization` to `true`, or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`.
+  {{ site.claude_code }} [ignores a name that it doesn't know](https://code.claude.com/docs/en/settings-reference#strictpluginonlycustomization), so a list with only such names doesn't block the plugin.
 * Your own managed settings set `strictKnownMarketplaces`, or [its alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases) `allowedMarketplaces`, without a `{"source": "skills-dir"}` entry, or `blockedMarketplaces` with one.
-* Your own managed settings set `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value that {{ site.claude_code }} can't read.
+* Your own managed settings set `strictPluginOnlyCustomization` to a value that is neither a Boolean nor a list, or set `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` to a value that {{ site.claude_code }} can't read.
   {{ site.claude_code }} [reads such a value as the strictest one](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed): `strictPluginOnlyCustomization` as `true`, and each list as an empty list.
-  Older {{ site.claude_code }} releases drop such a value instead, as the same section says.
-  [`claude doctor`](https://code.claude.com/docs/en/debug-your-config) names each such key with its source.
+  Older {{ site.claude_code }} releases drop such a `strictPluginOnlyCustomization`, `strictKnownMarketplaces` or `allowedMarketplaces` value instead, as the same section says.
+  [`claude doctor`](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped) names each such key with its source.
 * Your own managed settings provide a server through `managedMcpServers` at the URL of a gateway MCP server.
   [A provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over a plugin server that points at the same URL, so {{ site.claude_code }} uses your entry and not the gateway server of the plugin.
 * When {{ site.claude_code }} merges the host settings, the app that starts {{ site.claude_code }}, such as an IDE extension, passes a setting that blocks the plugin.
-  Such a setting is `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
+  Such a setting is `strictPluginOnlyCustomization` set to `true` or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`, a `blockedMarketplaces` list with a `{"source": "skills-dir"}` entry, or a `strictKnownMarketplaces` list without one.
   [These host settings apply](https://code.claude.com/docs/en/claude-apps-gateway#restrict-parent-settings) with every lock, and a `strictKnownMarketplaces` list of the host applies when the managed settings that {{ site.claude_code }} applies set none.
   For example, Claude Desktop sends such a list when its managed configuration turns off the plugin marketplaces that users add.
   For a `strictKnownMarketplaces` list of the host, set your own list in your policy, with a `{"source": "skills-dir"}` entry beside the marketplaces that you allow, because your list then replaces the list of the host.
@@ -373,8 +376,9 @@ With `allowlist` or `any`, {{ site.claude_code }} doesn't load the gateway MCP s
   When your organization sets `managedSourcesBehavior` to `merge`, [`managedSourcesBehavior`](https://code.claude.com/docs/en/settings-reference#managedsourcesbehavior) says which source supplies the list.
 
 When the policy that you pass with `--policy` has one of the plugin or marketplace values in this list, `fleet build` refuses `allowlist` and `any` for a profile with gateway MCP servers.
-These values are `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds, a `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, and a `blockedMarketplaces` list with one.
-`fleet build` doesn't refuse a value of these keys that it can't read, and it doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for both yourself.
+These values are `strictPluginOnlyCustomization` set to `true` or to a list with one or more names, also names that {{ site.claude_code }} doesn't know, a `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, and a `blockedMarketplaces` list with one.
+`fleet build` doesn't refuse the values of `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` and `allowedMcpServers` that {{ site.claude_code }} can't read, as the list describes.
+It also doesn't check a `managedMcpServers` entry at the URL of a gateway MCP server, so check your policy for both yourself.
 `kong-harnesses doctor` notes a gateway MCP server that takes a key or the gateway sign-in when {{ site.claude_code }} reaches it through another entry at the same address.
 The note can be in a gateway MCP check that passes, so read the whole result of that check.
 For a value that only the computers have, such as a `managed-mcp.json`, check the computers yourself.
@@ -872,9 +876,9 @@ If a server is missing, look for these settings in [Choose the MCP servers](#cho
 * A `managed-mcp.json`.
 * A `deniedMcpServers` entry.
 * An `allowedMcpServers` list in force that doesn't allow the gateway addresses.
-* `strictPluginOnlyCustomization` set to `true` or to a list with one or more kinds.
+* `strictPluginOnlyCustomization` set to `true` or to a list with one or more of the kinds `skills`, `agents`, `hooks` and `mcp`.
 * A `strictKnownMarketplaces` or `allowedMarketplaces` list without a `{"source": "skills-dir"}` entry, or a `blockedMarketplaces` list with one.
-* A `strictPluginOnlyCustomization`, `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` value that {{ site.claude_code }} can't read, which `claude doctor` names.
+* A `strictPluginOnlyCustomization` value that is neither a Boolean nor a list, or a `strictKnownMarketplaces`, `allowedMarketplaces` or `allowedMcpServers` value that {{ site.claude_code }} can't read, which `claude doctor` names.
 * A `managedMcpServers` entry at the URL of a gateway MCP server.
 * One of these settings from a host app, when {{ site.claude_code }} merges the host settings.
 
