@@ -153,6 +153,8 @@ When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp also reads it from t
 
 When `OMP_PROFILE` names a profile, omp reads `~/.omp/profiles/PROFILE_NAME/agent/.env` and `~/.omp/profiles/PROFILE_NAME/.env` in place of the second and third file, which belong to the default omp profile.
 
+pi needs Node.js 22.19 or later.
+
 Whether omp and pi need one of these variables depends on the system:
 
 {% navtabs "omp-pi-ca" %}
@@ -160,7 +162,8 @@ Whether omp and pi need one of these variables depends on the system:
 
 omp and pi don't read the macOS keychain by default, so set one of the variables for a CA that you added to the keychain.
 
-If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
+If pi runs on Node.js from Homebrew, it uses a copy of the keychain from when Homebrew installed its CA certificates.
+For a CA that you added to the keychain later, run `brew postinstall ca-certificates` to build that copy again, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -174,13 +177,13 @@ A CA that the CA tool of the distribution adds to these paths works for them wit
 
 When `NODE_EXTRA_CA_CERTS` is set, omp stops reading these paths, and pi keeps reading them.
 
-pi needs Node.js 22.19 or later.
-A `nodejs` package of Debian, Ubuntu, Fedora or Alpine that meets this minimum reads the CA paths of the distribution, so a CA that these steps add works for pi on that Node.js without a variable.
-Debian 12 and Ubuntu 24.04 ship Node.js 18, which pi can't run on.
+A `nodejs` package of Debian, Ubuntu, Fedora or Alpine that meets the pi minimum reads the CA paths of the distribution, so a CA that these steps add works for pi on that Node.js without a variable.
+Debian 12 and 13 and Ubuntu 24.04 ship Node.js 18 or 20, which pi can't run on.
 
-pi on another Node.js build, such as one from nodejs.org or nvm, trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
+pi on a Node.js build from nodejs.org or nvm trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
 
-If pi runs on Node.js from Homebrew, set `NODE_EXTRA_CA_CERTS` for a CA that you added after Homebrew installed its CA certificates, because that Node.js uses a copy of the system CAs from that time.
+If pi runs on Node.js from Homebrew, it uses a copy of the system CAs from when Homebrew installed its CA certificates.
+For a CA that you added later, run `brew postinstall ca-certificates` to build that copy again, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -260,6 +263,8 @@ Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
 ```
 
 An error for the HTTP status is fine, because Windows checks the certificate chain before the request gets the status.
+A TLS error is expected for a server with a certificate from your private CA, because Windows gets only public root CAs this way.
+The bundle gets the root of your private CA from the CA certificate file in the next step.
 
 Create the bundle in PowerShell from the root CAs of the Windows certificate store and your CA:
 
@@ -270,8 +275,6 @@ $roots = Get-ChildItem Cert:\LocalMachine\Root | ForEach-Object {
 @($roots) + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
 ```
 
-A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so check the bundle with {{site.kong_harnesses}} after you create it.
-
 Set both variables, with the full path of the bundle, in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}, Codex, omp or pi:
 
 ```powershell
@@ -279,13 +282,23 @@ $env:SSL_CERT_FILE = (Resolve-Path CA_BUNDLE_FILE).Path
 $env:GODEBUG = "x509sslcertoverrideplatform=1"
 ```
 
-In the same session, run the doctor checks:
+In the same session, install the profile if it isn't installed yet:
 
 ```powershell
-kong-harnesses doctor
+kong-harnesses profile import PROFILE_URL
 ```
 
-The CA bundle check must show OK for the gateway, the identity provider and the profile server.
+A certificate error here means that the bundle doesn't hold the root CA of the profile server.
+Add that root CA certificate to the bundle, or create the bundle again, and then import the profile.
+
+Run the doctor checks for the profile:
+
+```powershell
+kong-harnesses doctor --profile PROFILE_NAME
+```
+
+The CA bundle check must show OK for each server that the profile uses: the gateway, the identity provider and the profile server.
+A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so a public root CA can be missing from the bundle.
 When the check fails for a server, create the bundle again, or add the root CA certificate of that server to the bundle.
 
 {% endnavtab %}
