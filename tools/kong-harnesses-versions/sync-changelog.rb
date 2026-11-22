@@ -70,9 +70,7 @@ module KongHarnessesChangelog
   # release-please links a user as the subject transform matches one (index.js:21259),
   # but not a name with a `/`.
   USER = /[a-z0-9](?:-?[a-z0-9]){0,38}/
-  # A version as release-please reads one (index.js:59193), with a prerelease and a build
-  # part made of the characters that semver allows.
-  VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
+  VERSION = KongHarnessesChangelogLinks::VERSION
   # The tag of a final release, as STABLE_TAG in tools/lib/tool-versions.js and the
   # versions job read it, so the page and the release data name the same latest
   # release. Change them together.
@@ -705,7 +703,7 @@ module KongHarnessesChangelog
   def version_of(heading, lines)
     location = heading.options[:location] or return
     raw = lines[location - 1].to_s.sub(/\A {0,3}\#{2}[ \t]+/, '').rstrip
-    raw[/\A\[?(#{VERSION})(?=[\]\s(]|\z)/, 1]
+    raw[KongHarnessesChangelogLinks::HEADING_VERSION, 1]
   end
 
   # The release headings of the source, as KongHarnessesChangelogLinks.release_of takes

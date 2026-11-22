@@ -194,7 +194,13 @@ module KongHarnessesChangelogLinks
 
   # The sections that sync-changelog.rb keeps, the only section titles that a place names.
   SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
-  RELEASE = /\A\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?(?=\s|\z)/
+  # A version as release-please reads one (index.js:59193), with a prerelease and a build
+  # part made of the characters that semver allows.
+  VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
+  # The version at the start of a release heading, as the export reads it from the line
+  # of the heading and the page check from its text, so the page check finds the
+  # version of every heading that the export takes.
+  HEADING_VERSION = /\A\[?(#{VERSION})(?=[\]\s(]|\z)/
 
   # Where a node is on the page, as its release, section and entry number. An error
   # names no text of the changelog: GitHub masks only the exact text of a secret, so
@@ -276,7 +282,7 @@ module KongHarnessesChangelogLinks
       release = same.dig(peers.index(heading), 0)
       return release if release
     end
-    heading.text.strip[RELEASE] || 'with no version'
+    written_version(heading.text.strip)[HEADING_VERSION, 1] || 'with no version'
   end
 
   # The version that a heading shows, written back as the source writes it.

@@ -818,6 +818,8 @@ RSpec.describe KongHarnessesChangelog do
     page = exported(release_please_changelog, ['0.17.1']).sub('follow the', "follow‮ the")
     expect { KongHarnessesChangelogLinks.check(page) }
       .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 2 on the page/)
+    page = exported("## 1.0.0(2026-11-22)\n\n### Features\n\n* add\n").sub('* add', "* add‮ x")
+    expect { KongHarnessesChangelogLinks.check(page) }.to raise_error(/a hidden code point in release 1\.0\.0, section Features, entry 1 on the page/)
   end
 
   # The check reads the text from a second rendering of the source and lets only the
