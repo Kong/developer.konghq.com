@@ -39,8 +39,8 @@ module KongHarnessesChangelogLinks
   HOSTS = %w[github.com www.github.com api.github.com raw.githubusercontent.com codeload.github.com].freeze
   REPO_VARIABLE = 'KONG_HARNESSES_RELEASES_REPO'
 
-  # The repository that publishes the releases is internal, so no file of this public
-  # repository names it: the sync job sets it from a repository secret. The same rule
+  # No file of this public repository names the repository that publishes the
+  # releases: the sync job sets it from a repository secret. The same rule
   # as parseRepo in tools/lib/tool-versions.js: an owner can't hold a dot, and a name
   # of . or .. would point the API request at another path.
   def repo
@@ -174,25 +174,85 @@ module KongHarnessesChangelogLinks
       if node.element?
         allowed = ELEMENTS[node.name]
         if allowed.nil?
-          found << "the element <#{node.name}>"
+          found << "an element other than plain text markup in #{place(node)}"
         else
           node.attribute_nodes.each do |attribute|
             next if allowed[attribute.name]&.match?(attribute.value) || language?(node, attribute)
 
-            found << "the attribute #{attribute.name} on <#{node.name}>"
+            found << "an attribute that plain text markup does not have in #{place(node)}"
           end
         end
       elsif !node.text? && !node.fragment?
-        found << "a #{node.class.name.split('::').last} node"
+        found << "a #{node.class.name.split('::').last} node in #{place(node)}"
       end
       next unless node.fragment? || BLOCKS.include?(node.name)
 
       seen = visible(node)
-      found << "the address in #{seen.strip[0, 200].inspect} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
-      found << "the releases repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(repository)
-      found << "a dot segment in a GitHub address in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(DOT_SEGMENT)
+      found << "an address in #{place(node)} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
+      found << "the releases repository in #{place(node)}" if normalize(seen).match?(repository)
+      found << "a dot segment in a GitHub address in #{place(node)}" if normalize(seen).match?(DOT_SEGMENT)
     end
     found.uniq
+  end
+
+  # The sections that sync-changelog.rb keeps, the only section titles that a place names.
+  SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
+  RELEASE = /\A\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?(?=\s|\z)/
+
+  # Where a node is on the page, as its release, section and entry number. An error
+  # names no text of the changelog: GitHub masks only the exact text of a secret, so
+  # the job log would show the repository in another letter case.
+  def place(node)
+    top = node
+    top = top.parent until top.fragment? || top.parent.nil? || top.parent.fragment?
+    return 'the page' if top.fragment?
+
+    release, section, before = heading_of(top)
+    where = release ? "release #{release}" : 'the text before the first release'
+    return "the heading of #{where}" if top.name == 'h2'
+    return "the heading of section #{section} of #{where}" if top.name == 'h3'
+
+    where += ", section #{section}" if section
+    if %w[ul ol].include?(top.name)
+      item = node.ancestors.find { |ancestor| ancestor.parent == top } || node
+      entries = before.select { |sibling| %w[ul ol].include?(sibling.name) }.sum { |list| list.element_children.length }
+      index = item == top ? 0 : top.element_children.index(item).to_i
+      "#{where}, entry #{entries + index + 1}"
+    else
+      "#{where}, block #{before.length + 1}"
+    end
+  end
+
+  # The release and section that the top-level element `top` is in, and the elements
+  # between the section heading and `top`.
+  def heading_of(top)
+    before = []
+    section = nil
+    sibling = top.previous_element
+    while sibling
+      if sibling.name == 'h2'
+        return [sibling.text.strip[RELEASE] || 'with no version', section ? section_name(section, sibling) : nil, before]
+      elsif sibling.name == 'h3' && section.nil?
+        section = sibling
+      elsif section.nil?
+        before.unshift(sibling)
+      end
+      sibling = sibling.previous_element
+    end
+    [nil, section ? section_name(section, nil) : nil, before]
+  end
+
+  def section_name(section, release)
+    name = section.text.strip
+    return name if SECTIONS.include?(name)
+
+    count = 0
+    sibling = section
+    while sibling && sibling != release
+      count += 1 if sibling.name == 'h3'
+      sibling = sibling.previous_element
+    end
+    count.to_s
   end
 
   # The text of a block as a reader sees it: inline elements join their text, and a block

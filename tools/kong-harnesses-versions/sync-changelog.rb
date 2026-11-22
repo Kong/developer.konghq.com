@@ -562,11 +562,6 @@ module KongHarnessesChangelog
     end
   end
 
-  # The start of an entry, as the refusals name it.
-  def name_of(element)
-    text_of(element).gsub(/\s+/, ' ').strip[0, 120].inspect
-  end
-
   # A list entry such as "* **deps(actions):** bump" has the scope `deps`.
   def scope(item)
     strong = item.children.first&.children&.first
@@ -581,15 +576,25 @@ module KongHarnessesChangelog
 
   # Gives the elements of a section that the page shows, and a copy of them as they were
   # in the source, which the export checks its text against.
-  def public_section(title, content, lines)
+  #
+  # A refusal names the place of an entry, as its release, section and entry number, and
+  # no text of it: GitHub masks only the exact text of a secret, so the job log would
+  # show the repository in another letter case.
+  def public_section(title, content, lines, release)
     name = text_of(title).strip
     return [[], []] unless USER_SECTIONS.include?(name)
 
+    where = "#{release}, section #{name}"
+    entries = 0
+    blocks = 0
     sources = [copy(title)]
     kept = content.flat_map do |element|
+      blocks += 1 unless element.type == :blank
       if %i[ul ol].include?(element.type)
         cleaned(element)
         with_last_lines(element.children, element.options[:last_line])
+        numbers = element.children.each_with_index.to_h { |item, index| [item, entries + index + 1] }.compare_by_identity
+        entries += element.children.length
         # An upgrade step stays whatever its scope, because a user must still do it.
         element.children = element.children.reject { |item| name != BREAKING_CHANGES && TOOLING_SCOPES.include?(scope(item)) }
         next [] if element.children.empty?
@@ -597,20 +602,21 @@ module KongHarnessesChangelog
         sources << copy(element)
         # release-please writes its entries in a `*` list.
         element.children = element.children.flat_map do |item|
-          raw_checked(item, lines, name_of(item))
-          checked(element.type == :ul && name != BREAKING_CHANGES ? without_references(item) : item, name_of(item))
+          entry = "#{where}, entry #{numbers.fetch(item)}"
+          raw_checked(item, lines, entry)
+          checked(element.type == :ul && name != BREAKING_CHANGES ? without_references(item) : item, entry)
         end
         [tightened(element)]
       else
         sources << copy(element)
-        raw_checked(element, lines, name_of(element))
-        checked(element, name_of(element))
+        raw_checked(element, lines, "#{where}, block #{blocks}")
+        checked(element, "#{where}, block #{blocks}")
       end
     end
     return [[], []] if kept.all? { |element| element.type == :blank }
 
-    raw_checked(title, lines, name.inspect)
-    [[*checked(title, name.inspect), *kept], sources]
+    raw_checked(title, lines, "the heading of section #{name} of #{release}")
+    [[*checked(title, "the heading of section #{name} of #{release}"), *kept], sources]
   end
 
   def prerelease?(version)
@@ -662,12 +668,13 @@ module KongHarnessesChangelog
     versions = releases.map do |release|
       raw = lines[release[:heading].options[:location] - 1].to_s.sub(/\A {0,3}\#{2}[ \t]+/, '').rstrip
       raw[/\A\[?(#{VERSION})(?=[\]\s(]|\z)/, 1] ||
-        raise("The changelog has a release heading with no version: #{raw}")
+        raise("The changelog has a release heading with no version on line #{release[:heading].options[:location]}.")
     end
     raise "The changelog has no section for #{highest}, the highest final release." unless finals.include?(highest) && versions.include?(highest)
 
     root = Kramdown::Element.new(:root, nil, nil, source.options.slice(:encoding))
     original = Kramdown::Element.new(:root, nil, nil, source.options.slice(:encoding))
+    kept = []
     releases.zip(versions).each do |release, version|
       reason = if finals.include?(version) then nil
                elsif !published.include?(version) then 'is not published'
@@ -675,13 +682,14 @@ module KongHarnessesChangelog
                elsif !published.include?(core(version)) then "is a pre-release, and no #{core(version)} release is published"
                elsif !finals.include?(core(version)) then "is a pre-release, and the #{core(version)} release #{not_final(core(version))}"
                end
-      sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines) }
+      sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines, "release #{version}") }
       reason ||= 'has no entries for users' if sections.all? { |kept, _| kept.empty? }
       next log.puts("Left out the changelog section for #{version}, which #{reason}.") if reason
 
-      raw_checked(release[:heading], lines, name_of(release[:heading]))
+      raw_checked(release[:heading], lines, "the heading of release #{version}")
       original.children.concat([copy(release[:heading])], *sections.map(&:last))
-      root.children.concat(checked(with_source_version(release[:heading], version), name_of(release[:heading])), *sections.map(&:first))
+      root.children.concat(checked(with_source_version(release[:heading], version), "the heading of release #{version}"), *sections.map(&:first))
+      kept << version
     end
     raise 'The changelog has no entries for users in its published releases.' if root.children.empty?
 
@@ -691,7 +699,7 @@ module KongHarnessesChangelog
 
     output, = Writer.convert(root, options)
     output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
-    written(output, root, original, lines)
+    written(output, root, original, lines, releases: kept)
   end
 
   def types_of(element)
@@ -776,6 +784,22 @@ module KongHarnessesChangelog
     text.strip
   end
 
+  # The release whose text the export would change, which a refusal names in place of
+  # the text.
+  def changed_release(source, tree, releases)
+    parts = [html(source), html(tree)].map { |fragment| releases_in(fragment) }
+    return 'the changelog' unless parts.map(&:length).uniq == [releases.length]
+
+    index = parts[0].zip(parts[1]).index { |before, after| reading(before) != reading(after) }
+    index ? "release #{releases[index]}" : 'the changelog'
+  end
+
+  def releases_in(fragment)
+    fragment.children.slice_before { |node| node.name == 'h2' }.select { |run| run.first.name == 'h2' }.map do |run|
+      Nokogiri::HTML5.fragment('').tap { |part| run.each { |node| part.add_child(node.dup) } }
+    end
+  end
+
   # The end of a list item of one paragraph: of all its nodes, where a block after the
   # text is a piece that is not a reference, or of its one `p` when the list is loose.
   def without_rendered_references(item)
@@ -808,16 +832,16 @@ module KongHarnessesChangelog
   # each `[@name](https://github.com/name)` as `@name`, read with its own string
   # compares, apart from `without_subject_links`.
   def code_without_subject_links(code)
-    [['[#', "#{repo}/issues/", /\A\d+\z/], ['[@', '', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, path, label)|
+    [['[#', repo, '/issues/', /\A\d+\z/], ['[@', '', '', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, own, path, label)|
       text.split(open, -1).each_with_index.map do |part, index|
         next part if index.zero?
 
         name, rest = part.split('](https://github.com/', 2)
-        # GitHub names are not case-sensitive, so the repository part matches in any
-        # letter case.
-        next "#{open}#{part}" unless rest && name.match?(label) && rest[0, path.length].casecmp?(path)
+        # GitHub names are not case-sensitive, so the owner and the name match in any
+        # letter case. The path keeps the case that release-please writes.
+        next "#{open}#{part}" unless rest && name.match?(label) && rest[0, own.length].casecmp?(own) && rest[own.length, path.length] == path
 
-        rest = rest[path.length..]
+        rest = rest[(own.length + path.length)..]
         next "#{open}#{part}" unless rest.start_with?("#{name})")
 
         "#{open[1]}#{name}#{rest.delete_prefix("#{name})")}"
@@ -853,7 +877,7 @@ module KongHarnessesChangelog
   # tree unless a reader sees the same text in it as in the source, with only the
   # references at the end of an entry taken out, which it reads from a second rendering
   # of the source. It also refuses a code block that lost its language.
-  def written(output, tree, source = nil, lines = [])
+  def written(output, tree, source = nil, lines = [], releases: [])
     reread, = Kramdown::Parser::GFM.parse(output, options)
     raise 'The export would write a link back, so it refuses the changelog.' if types_of(reread).intersect?(%i[a img])
     raise 'The export would change what a reader sees, so it refuses the changelog.' unless page(html(reread)) == page(html(tree))
@@ -863,10 +887,7 @@ module KongHarnessesChangelog
 
     before = reading(html(source))
     after = reading(html(tree))
-    unless before == after
-      at = (0...before.length).find { |index| before[index] != after[index] } || before.length
-      raise "The export would change the text that a reader sees near #{before[[at - 40, 0].max, 80].inspect}, so it refuses the changelog."
-    end
+    raise "The export would change the text that a reader sees in #{changed_release(source, tree, releases)}, so it refuses the changelog." unless before == after
     raise 'The export would change the language of a code block, so it refuses the changelog.' unless code_languages(html(source)).map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') } == code_languages(html(tree))
 
     output

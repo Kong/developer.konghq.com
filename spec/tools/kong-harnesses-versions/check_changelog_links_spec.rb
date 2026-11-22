@@ -128,8 +128,15 @@ RSpec.describe KongHarnessesChangelogLinks do
     it 'accepts a language that the site highlights, and no other class' do
       expect(described_class.html_problems('<pre><code class="language-sh">x</code></pre>')).to be_empty
       expect(described_class.html_problems('<pre><code class="language-text">x</code></pre>')).to be_empty
-      expect(described_class.html_problems('<pre><code class="language-rust">x</code></pre>')).to eq(['the attribute class on <code>'])
-      expect(described_class.html_problems('<code class="x">x</code>')).to eq(['the attribute class on <code>'])
+      expect(described_class.html_problems('<pre><code class="language-rust">x</code></pre>')).to match([a_string_starting_with('an attribute that plain text markup does not have')])
+      expect(described_class.html_problems('<code class="x">x</code>')).to match([a_string_starting_with('an attribute that plain text markup does not have')])
+    end
+
+    # GitHub masks only the exact text of the secret, so an error that quoted the entry
+    # would show the repository in another letter case in the job log.
+    it 'names the place of a refused entry and none of its text' do
+      markdown = "## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n\n### Bug Fixes\n\n* fix\n* see `github.com/EXAMPLE/SAMPLE-TOOL` and <SAMPLE-TOOL>x</SAMPLE-TOOL>\n"
+      expect { described_class.check(markdown) }.to raise_error(/in release 1\.0\.0, section Bug Fixes, entry 2/) { |error| expect(error.message).not_to match(/sample-tool|see /i) }
     end
 
     it 'reads every language of the Shiki plugin and refuses an entry or a form that it cannot read' do
