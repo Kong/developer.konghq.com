@@ -996,7 +996,9 @@ module KongHarnessesChangelog
   def unwritten_link_in?(element, lines)
     links = links_in(element)
     # Raw HTML gives an anchor with no parsed link, so it has no source span to check.
-    return true unless anchors_in(element) == links.length
+    # The HTML parser drops a link inside some elements, such as `<select>`, so the
+    # count alone lets such a link stand in for a raw anchor.
+    return true if raw_anchor_in?(element) || anchors_in(element) != links.length
 
     links.any? do |link|
       source = link.options[:source]
@@ -1015,6 +1017,10 @@ module KongHarnessesChangelog
 
   def links_in(element)
     [*(element if element.type == :a), *element.children.flat_map { |child| links_in(child) }]
+  end
+
+  def raw_anchor_in?(element)
+    (element.type == :html_element && element.value.to_s.casecmp?('a')) || element.children.any? { |child| raw_anchor_in?(child) }
   end
 
   # The anchors in the HTML of an element, a list item in a list of its own.

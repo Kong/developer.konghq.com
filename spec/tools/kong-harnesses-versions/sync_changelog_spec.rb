@@ -868,6 +868,10 @@ RSpec.describe KongHarnessesChangelog do
     source = source_of("## 1.0.0\n\n### Features\n\n* **a:** see (<a href=\"#{issue}\">#1</a>)\n")
     expect { described_class.written("## 1.0.0\n\n### Features\n\n* **a:** see\n", described_class.parse("## 1.0.0\n\n### Features\n\n* **a:** see\n"), *source) }
       .to raise_error(/does not write so in the entry or block on line 5, in release 1\.0\.0,/)
+    # The HTML parser drops the link inside `<select>`, which leaves its count to the raw anchor.
+    source = source_of("## 1.0.0\n\n### Features\n\n* **a:** see (<A href=\"#{issue}\">#1</A>) <select>[#2](#{issue.sub(/1\z/, '2')})</select>\n")
+    expect { described_class.written("## 1.0.0\n\n### Features\n\n* **a:** see (#1) #2\n", described_class.parse("## 1.0.0\n\n### Features\n\n* **a:** see (#1) #2\n"), *source) }
+      .to raise_error(/does not write so in the entry or block on line 5, in release 1\.0\.0,/)
     # Check B takes nothing off a breaking change note, nor off an entry with more than
     # one block, so a loss there is refused wherever it is.
     page = "### ⚠ BREAKING CHANGES\n\n* **a:** see\n"
