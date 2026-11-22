@@ -153,6 +153,8 @@ MCP rules:
   Remove duplicate `managedMcpServers` entries at gateway URLs under another name.
   In `allowlist` mode, `managedMcpServers` and [allowlist-exempt servers](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) (built-in IDE, Chrome, Agent SDK) also load.
   In every mode (including `exclusive`), `deniedMcpServers` across all scopes blocks every other matching server, including gateway servers.
+  {{ site.claude_code }} drops only the list entries it can't read, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
+  In `exclusive` mode, `fleet build` refuses a `--policy` that denies a gateway server or doesn't allow a written server that names a variable.
   Confirm policies don't deny gateway servers before deploying.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
@@ -169,12 +171,13 @@ MCP rules:
     Otherwise, use PowerShell 7.3 or later.
 * **Plugin blockers (`allowlist` or `any`):** {{ site.claude_code }} skips the `profile activate` plugin when any of these apply:
   * A `managed-mcp.json` file exists.
-  * `strictPluginOnlyCustomization` is `true` or a list with `skills`, `agents`, `hooks`, or `mcp` (`false` and `[]` don't block).
+  * `strictPluginOnlyCustomization` is `true`, a list with `skills`, `agents`, `hooks`, or `mcp`, or any value that isn't a boolean or a list (`null` and strings included), which counts as `true`.
+    `false`, `[]`, and list entries that name no surface lock nothing.
   * `strictKnownMarketplaces` (or alias `allowedMarketplaces`) is set without `{"source": "skills-dir"}`.
   * `blockedMarketplaces` lists `{"source": "skills-dir"}`.
-  * `strictPluginOnlyCustomization` (neither boolean nor array, including strings), `strictKnownMarketplaces` (`allowedMarketplaces`), or `allowedMcpServers` has a wholly invalid value, which fails closed (wholly invalid `blockedMarketplaces` is dropped with a warning, [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+  * `strictKnownMarketplaces` (`allowedMarketplaces`) or `allowedMcpServers` has a wholly invalid value, which fails closed (wholly invalid `blockedMarketplaces` is dropped with a warning, [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
 
-  When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` setting a plugin blocker and names each key {{ site.claude_code }} ignores for its case.
+  When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` setting a plugin blocker and names each key {{ site.claude_code }} ignores for its case and each `strictPluginOnlyCustomization` entry that names no surface.
   Write lowercase `source` in `{"source": "skills-dir"}` because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
   Build with `--mcp-servers exclusive` or change the setting in `--policy` and every other managed source.
   Avoid a `managedMcpServers` entry at a gateway URL because [provided servers take precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load).
