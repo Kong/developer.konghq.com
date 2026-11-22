@@ -78,6 +78,8 @@ For a machine-wide profile deployed with a {{ site.claude_code }} fleet build, s
    When the profile doesn't have a saved sign-in or static key on this computer, `logout` removes any remaining gateway MCP server keys without asking you to confirm and prints `Already signed out`.
    `logout` can remove a sign-in locally without revoking it at an identity provider, such as for a static-key profile or a profile without a revocation endpoint.
    For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+   A gateway MCP server key that your system password store keeps where kong-harnesses doesn't look stays after `logout`.
+   To find and remove such a key, follow the tab for your system in [Delete an invalid profile](#delete-an-invalid-profile).
 
    If `profile list` or `logout` reports that a profile is unreadable or invalid, follow the next step in the message:
 
@@ -182,7 +184,7 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
 1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
 1. If the `Gateway MCP keys` field lists items that might remain, or the tab for your system says that items can remain without that field, delete each item from your system password store.
-   Replace `ITEM_NAME` with a name from the output, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
+   Replace `ITEM_NAME` with a name from the output or from the tab for your system, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
    Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
 
 {% navtabs "delete-gateway-mcp-keys" %}
@@ -204,7 +206,9 @@ If a keychain that was your default at some time after you set up kong-harnesses
    IFS= read -r KEYCHAIN_PATH
    ```
 
-   Paste the path from the `security list-keychains` output, or the path of a former default keychain that isn't in that output, for example `/Users/USER/Library/Keychains/login.keychain-db`, and press Enter.
+   Paste the path from the `security list-keychains` output, or the path of a former default keychain that isn't in that output.
+   For example: `/Users/USER/Library/Keychains/login.keychain-db`.
+   Then press Enter.
    Don't paste the spaces and double quotes that `security list-keychains` prints around the path.
    The variable keeps the path exactly, even when it holds a space or a `$`.
 1. In the same terminal, unlock the keychain:
@@ -214,7 +218,7 @@ If a keychain that was your default at some time after you set up kong-harnesses
    ```
 
    Enter the keychain password when `security` asks for it.
-1. If the `Gateway MCP keys` field names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
+1. List the item names of that profile in the keychain, whatever the `Gateway MCP keys` field shows:
 
    ```sh
    security dump-keychain "$KEYCHAIN_PATH" | awk '
