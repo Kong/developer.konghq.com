@@ -62,7 +62,7 @@ Follow these steps in order so MDM doesn't reinstall files and developers don't 
 
 ## Clean up developer user settings
 
-Before uninstalling kong-harnesses from managed computers, have every developer with a user-level activation follow [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/) to clean up user-level {{ site.claude_code }} settings, sign out, and delete user profiles.
+Before uninstalling kong-harnesses from managed computers, have every developer with a user-level activation clean up user-level {{ site.claude_code }} settings with `kong-harnesses profile cleanup --client claude-code` as described in [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
 
 ## Unassign the deployment in your MDM tool
 
@@ -114,9 +114,12 @@ Apply each instruction that `kong-harnesses fleet remove` prints:
 Confirm the removal on a test computer before closing out the rollout:
 
 1. Verify that none of the exact file paths listed under `Remove` remain on the test computer (see [Check the build output](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output) for target paths).
-1. Start {{ site.claude_code }} and run `/status`.
-   When no other `managed-settings.d/` drop-ins remain (or when the MDM policy was deleted), confirm `Setting sources` no longer shows `(drop-ins)`, `(file + drop-ins)`, `(plist)`, or `(HKLM)`.
-   If other drop-ins or a kept MDM policy remain, `/status` still shows those labels, so confirm removal by the exact deleted file paths and the build ID check in the next step.
+1. Start {{ site.claude_code }} and run `/status` to check `Setting sources` only for a source that this removal deleted:
+   * **File build:** When no other `managed-settings.d/` drop-ins remain, confirm `(drop-ins)` and `(file + drop-ins)` no longer appear.
+   * **MDM build:** When you removed the {{ site.claude_code }} policy from your MDM tool, confirm `(plist)` (macOS) or `(HKLM)` (Windows) no longer appears.
+
+   Unrelated source labels, remaining drop-ins, and a kept MDM policy stay in `/status`.
+   Confirm removal by the exact deleted file paths and the build ID check in the next step.
 1. If kong-harnesses is still installed on the test computer, run [`kong-harnesses doctor`](/kong-harnesses/doctor/), replacing `PROFILE_NAME` with your profile name:
 
    ```sh
