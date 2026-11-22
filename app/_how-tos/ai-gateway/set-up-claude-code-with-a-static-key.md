@@ -318,7 +318,9 @@ This guide sets up only {{ site.claude_code }}, so you can ignore warnings about
 > For supported profile file encodings, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 > The profile doesn't contain the key, so send each developer their own key through a password manager or another secure channel.
 > Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file and `--client claude-code`, such as `kong-harnesses setup <profile>.json --client claude-code`.
-> Without `--client claude-code`, `setup` configures every installed client that the profile lists, and skips a client when the gateway doesn't serve its route or refuses the sign-in.
+> Without `--client`, `setup` configures every installed client that the profile lists.
+> It skips each client that it can't set up and names the fix.
+> For example, it skips a client when the gateway doesn't serve its route or refuses the sign-in, or when the client needs an `https://` gateway.
 > A developer who has only a key can run `kong-harnesses setup --client claude-code` without a profile file, as [Set up without a profile file](/kong-harnesses/setup/#set-up-without-a-profile-file) describes.
 
 ## Save the key and configure {{ site.claude_code }}
