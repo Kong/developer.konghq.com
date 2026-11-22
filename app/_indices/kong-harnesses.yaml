@@ -9,6 +9,7 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/roll-out-claude-code-through-mdm/
+          - path: /kong-harnesses/maintain-a-claude-code-fleet/
           - path: /kong-harnesses/remove-a-claude-code-fleet-build/
 
   - title: CLI References
@@ -39,9 +40,12 @@ groups:
       - title: Diagnose Problems
         items:
           - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/troubleshooting/
           - path: /kong-harnesses/troubleshooting/claude-code-fleet/
 
   - title: Claude Code
     sections:
       - items:
+          - path: /kong-harnesses/claude-code-outside-traffic/
+          - path: /kong-harnesses/claude-code-web-and-slack/
           - path: /kong-harnesses/fleet-build-options/
