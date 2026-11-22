@@ -181,14 +181,10 @@ rows:
 `--audience-parameter` sets how the sign-in request names the audience: `resource` (the default), `audience` or `none`.
 Use the value that your identity provider reads.
 
-When you give these flags, `profile create` reads the endpoints of your identity provider from its OIDC discovery document, saves the profile, and installs it on your computer.
-For a `static-key` or `environment-key` profile, it skips OIDC discovery.
-It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
-When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
-A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
-`setup` sends the same test request again, as [Setup](/kong-harnesses/developer-computer-changes/#setup) describes.
-When a route matches only on a header that the agent CLI sends and `setup` still refuses it, developers run `setup` with `--skip-route-check`.
-For more options, such as gateway MCP servers and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
+`profile create` reads your identity provider's OIDC discovery endpoints for the default and `subscription` sign-ins, then saves and installs the profile on your computer.
+It tests each agent CLI's gateway route without a sign-in, warns when a route doesn't match, and keeps the agent CLI in the profile.
+Check each warned route with a signed-in prompt, and if [`setup`](/kong-harnesses/developer-computer-changes/#setup) refuses a route that matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
+For more options, such as gateway MCP servers and {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
 ### Sign-in kinds
 
@@ -229,19 +225,9 @@ rows:
       Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
 {% endtable %}
 
-In the `anthropic` mode, {{ site.claude_code }} sends a static key in both the `Authorization: Bearer` and the `x-api-key` headers.
+In the `anthropic` mode, {{ site.claude_code }} sends a static key in both `Authorization: Bearer` and `x-api-key`.
 In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
-To accept the key in every mode, give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) that reads both headers and hides the key from the model provider:
-
-```yaml
-config:
-  key_names: [Authorization, x-api-key]
-  header_auth_schemes: [Bearer]
-  hide_credentials: true
-```
-
-When a header value starts with one of the `header_auth_schemes`, such as `Bearer`, followed by a space, the rest of the value is the key.
-A header value without a scheme is used as it is.
+To accept the key in every mode and hide it from the model provider, give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) with `key_names: [Authorization, x-api-key]`, `header_auth_schemes: [Bearer]` and `hide_credentials: true`.
 For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
 
 ## Profile hosting
@@ -252,8 +238,7 @@ Export the installed profile as a JSON file with [jq](https://jqlang.org/):
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile' > PROFILE_NAME.json
 ```
 
-In Windows PowerShell 5.1, `>` writes UTF-16, so run the command in PowerShell 7 or later, which writes UTF-8.
-When you already have a file in another encoding, save a copy as UTF-8 with an editor, and give developers the copy.
+For the file encodings that `profile import` accepts, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 
 Give the file to developers, or host it at an HTTPS URL.
 
@@ -294,7 +279,6 @@ rows:
 {% endtable %}
 
 To change the profile, publish the new file at the same URL or give developers the new file.
-When the change keeps the profile's security identity, developers run the same `setup` command again.
-The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the gateway CA bundle, if a profile from an earlier release has one.
+When the change keeps the profile's [security identity](/kong-harnesses/profile-file/#security-identity), developers run the same `setup` command again.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup` and run `setup` again, which signs them in again.
