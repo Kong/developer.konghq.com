@@ -131,6 +131,15 @@ cleanup:
       include_content: md/ai-gateway/v2/delete-consumer-credential
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
+
+faqs:
+  - q: How do I replace or revoke a kong-harnesses static key?
+    a: |
+      To replace a saved static key on your computer, see [Sign in again](/kong-harnesses/sign-in/#sign-in-again).
+      A running {{ site.claude_code }} session keeps the old key for up to five minutes.
+      Signing out removes the key from your computer only, as [Sign out](/kong-harnesses/sign-in/#sign-out) describes.
+      The key works at {{site.ai_gateway}} until an administrator revokes it.
+      To revoke a leaked key at the gateway, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential).
 ---
 
 Use a static key when your organization doesn't use an identity provider, or when you run a gateway of your own. An administrator creates the key in {{site.ai_gateway}}. [kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
@@ -276,7 +285,8 @@ ai_gateway_models:
 A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It doesn't hold secrets. A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
 
 The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
-If your shell sets a proxy, add `127.0.0.1` to `NO_PROXY` (and `no_proxy` if it's set) in the shell that runs kong-harnesses and `claude`.
+If your shell sets a proxy, add `127.0.0.1` to `NO_PROXY` (and `no_proxy` if it's set) in the shell that runs kong-harnesses.
+The `NO_PROXY` setting exists only in the shell where you set it, so set it again in a new shell or add it to your shell profile before you run kong-harnesses there.
 For loopback HTTP and proxy rules, see [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways).
 
 Create a profile named `quickstart` that signs in with a static key:
@@ -291,7 +301,9 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 > For production, use an `https://` gateway origin and publish the profile as [Profile hosting](/kong-harnesses/profiles-for-administrators/#profile-hosting) describes.
 > For supported profile file encodings, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 > The profile doesn't contain the key, so send each developer their own key through a password manager or another secure channel.
-> Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file.
+> Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file and `--client claude-code`, such as `kong-harnesses setup <profile>.json --client claude-code`.
+> Without `--client claude-code`, `setup` configures every installed client that the profile lists.
+> A developer who has only a key can run `kong-harnesses setup --client claude-code` without a profile file, as [Set up without a profile file](/kong-harnesses/setup/#set-up-without-a-profile-file) describes.
 
 ## Save the key and configure {{ site.claude_code }}
 
@@ -359,10 +371,5 @@ claude
 ```
 
 Send a prompt to check that you get a reply. {{ site.claude_code }} now sends every model request to {{site.ai_gateway}} with the key.
-
-To replace the saved key on this computer, see [Sign in again](/kong-harnesses/sign-in/#sign-in-again).
-A running {{ site.claude_code }} session keeps the old key for up to five minutes.
-Signing out removes the key from this computer only, as [Sign out](/kong-harnesses/sign-in/#sign-out) describes.
-To revoke a leaked key at the gateway, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential).
 
 On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
