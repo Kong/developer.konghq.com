@@ -190,21 +190,21 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
 Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
-Do these steps once for each keychain that `security list-keychains` prints, and add its path, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
+Do these steps once for each keychain that `security list-keychains` prints, and replace `KEYCHAIN_PATH` with its path, for example `~/Library/Keychains/login.keychain-db`.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
 If a keychain that was your default at some time after you set up kong-harnesses isn't in that list, do the steps for its path too.
 
 1. In a terminal of your desktop session, unlock the keychain:
 
    ```sh
-   security unlock-keychain
+   security unlock-keychain KEYCHAIN_PATH
    ```
 
    Enter the keychain password when `security` asks for it.
 1. If the `Gateway MCP keys` field names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
    ```sh
-   security dump-keychain | awk '
+   security dump-keychain KEYCHAIN_PATH | awk '
      function check() { if (svce == "\"io.kong.kong-harnesses.login\"" && index(acct, "\"PROFILE_NAME.mcp-key.") == 1) print substr(acct, 2, length(acct) - 2) }
      /^keychain: / { check(); acct = ""; svce = "" }
      /^    "acct"<blob>=/ { acct = substr($0, index($0, "=") + 1) }
@@ -217,7 +217,7 @@ If a keychain that was your default at some time after you set up kong-harnesses
 1. Delete each named item:
 
    ```sh
-   while security delete-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' >/dev/null; do :; done
+   while security delete-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' KEYCHAIN_PATH >/dev/null; do :; done
    ```
 
    `security delete-generic-password` deletes only the first item that matches, so the loop runs it until no item is left.
@@ -225,7 +225,7 @@ If a keychain that was your default at some time after you set up kong-harnesses
 1. Check that each item is gone, even if `security` reported that the password has been deleted:
 
    ```sh
-   security find-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' >/dev/null
+   security find-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' KEYCHAIN_PATH >/dev/null
    ```
 
    The command must report that the item couldn't be found in the keychain.
@@ -249,7 +249,7 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
    ```
 
    If your desktop asks you to unlock the keyring, unlock it.
-   The command prints only item names, not their values, and a `secret-tool:` line when `secret-tool` fails or is missing.
+   The command prints only item names, not their values, and a `secret-tool:` line when `secret-tool` fails or is missing, or when an item stays locked.
    Use each name that it prints as `ITEM_NAME` in the next step.
 1. Delete each named item while the keyring is unlocked, because `secret-tool clear` removes only items in an unlocked keyring:
 
