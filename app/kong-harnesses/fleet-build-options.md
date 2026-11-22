@@ -159,11 +159,14 @@ MCP rules:
   `fleet build` applies the checks of the minimum version that the computers get, from `--claude-code-minimum` or the `requiredMinimumVersion` of `--policy` ([Version range checks](#version-range-checks)), and both earlier checks when the build sets no minimum.
   A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
 * **MCP policy results (`exclusive`):** `fleet build` gives each server that it writes into `managed-mcp.json` one result: loads, blocked, or undecided.
-  It checks deny entries first, and a deny entry that names a variable counts as a match.
-  A `serverName` entry matches the name as written, before variables expand, and the values in the policy's `env` count as known.
-  A server is undecided when its result depends on a variable that the policy's `env` doesn't set.
-  {{ site.claude_code }} drops a list entry that it can't read and enforces the rest, but `fleet build` refuses a `--policy` with such an entry, because it can't know what the entry was meant to allow or deny.
-  `fleet build` also refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
+  It checks deny entries first, and [expands the variables](https://code.claude.com/docs/en/managed-mcp#environment-variables-in-servercommand-and-serverurl-entries) in `serverUrl` and `serverCommand` entries and in the server with the values in the policy's `env`.
+  A `serverName` entry matches the name as written, before variables expand.
+  An entry is a match when these known values make it match.
+  A server is undecided when its result depends on a variable that the policy's `env` doesn't set, in an entry or in the server.
+  A server that names a variable in `headersHelper` is also undecided when an allowlist is set and doesn't permit it, because the {{ site.claude_code }} docs don't say whether that variable starts the allowlist check.
+  `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
+  The exception is a deny entry that matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` allows it.
+  A deny entry that only may match one of your own servers is refused like any other undecided server.
   `kong-harnesses doctor` never reports an undecided server as loaded.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
