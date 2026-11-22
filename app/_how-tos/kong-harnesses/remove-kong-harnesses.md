@@ -189,7 +189,8 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 {% navtab "macOS" %}
 
 Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
-A later save updates the item in that keychain and doesn't move it.
+A later save updates the item in that keychain while the keychain is in the list that `security list-keychains` prints.
+When that keychain isn't in the list, a later save creates a new item in your default keychain, and the old item stays.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 Do these steps once for each keychain that `security list-keychains` prints.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
@@ -201,8 +202,8 @@ If a keychain that was your default at some time after you set up kong-harnesses
    IFS= read -r KEYCHAIN_PATH
    ```
 
-   Paste the path that `security list-keychains` prints between the double quotes, for example `/Users/USER/Library/Keychains/login.keychain-db`, and press Enter.
-   The variable keeps the path exactly, also when it holds a space or a `$`.
+   Paste the path from the `security list-keychains` output, or the path of a former default keychain that isn't in that output, without the spaces and double quotes around it, for example `/Users/USER/Library/Keychains/login.keychain-db`, and press Enter.
+   The variable keeps the path exactly, even when it holds a space or a `$`.
 1. In the same terminal, unlock the keychain:
 
    ```sh
