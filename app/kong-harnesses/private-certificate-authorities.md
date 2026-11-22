@@ -105,9 +105,9 @@ For these limits, see the [{{ site.claude_code }} CA certificate store](https://
 ## Agent CLIs that need more than the system trust store
 
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
-The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
+The sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
-omp and pi, on Node.js and from the Bun release archives, read one of these variables in the environment where they start:
+omp, and pi on Node.js or from its Bun release archives, read these variables in the environment where they start:
 
 {% table %}
 columns:
@@ -119,11 +119,11 @@ rows:
   - variable: "`NODE_EXTRA_CA_CERTS` set to the CA file"
     effect: |
       pi adds the file to the CAs that it already trusts.
-      omp uses Bun's bundled CA list and that file instead of the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
+      omp uses only Bun's bundled CA list and that file, and stops reading the system CA paths and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
   - variable: "`NODE_USE_SYSTEM_CA=1`"
     effect: |
-      omp and pi also trust the system trust store.
-      For omp, this variable has no effect when `NODE_EXTRA_CA_CERTS` is also set.
+      pi also trusts the system trust store.
+      omp also trusts it only when `NODE_EXTRA_CA_CERTS` isn't set.
 {% endtable %}
 
 Whether omp and pi need one of these variables depends on the system:
@@ -131,22 +131,23 @@ Whether omp and pi need one of these variables depends on the system:
 {% navtabs "omp-pi-ca" %}
 {% navtab "macOS" %}
 
-omp and pi trust only their own CA list by default, so set one of the variables.
+omp and pi don't read the macOS keychain by default, so set one of the variables for a CA that you added to the keychain.
 
 If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
 
 {% endnavtab %}
 {% navtab "Linux" %}
 
-On Debian and Ubuntu, omp and the Bun release archives of pi also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works for them without a variable.
-When `NODE_EXTRA_CA_CERTS` is set, omp stops reading `/etc/ssl/certs`, and pi keeps reading it.
+omp and the Bun release archives of pi also read the CA file `/etc/ssl/cert.pem` and the CA directory `/etc/ssl/certs`.
+A CA that the CA tool of the distribution adds to these paths, such as `update-ca-certificates` on Debian and Ubuntu or `update-ca-trust` on Fedora, works for them without a variable.
+When `NODE_EXTRA_CA_CERTS` is set, omp stops reading these paths, and pi keeps reading them.
 
-On other distributions, and for pi on Node.js on every distribution, omp and pi trust only their own CA list by default, so set one of the variables.
+pi on Node.js trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
-omp and pi trust only their own CA list by default, so set one of the variables.
+omp and pi don't read the Windows certificate store by default, so set one of the variables.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -178,7 +179,7 @@ rows:
       `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, in `~/.hermes/.env` or exported in the shell that starts Hermes Agent.
       Hermes Agent passes the variable to the commands that it runs, such as `curl` and `pip`, and the file replaces their CA list, so a file with only the private CA breaks their public TLS connections.
       Hermes Agent trusts the file in addition to the system trust store.
-      The plugin's `scripts/login.py` doesn't read `~/.hermes/.env`, so sign in with `hermes auth add kong-ai-gateway`.
+      The sign-in script of the plugin doesn't read `~/.hermes/.env`, so sign in with `hermes auth add kong-ai-gateway`.
   - program: OpenCode
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file.
@@ -213,6 +214,17 @@ The file replaces the default CA file, and {{site.kong_harnesses}} still reads t
 
 Also set `GODEBUG=x509sslcertoverrideplatform=1` in the same shell.
 The file then replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
+
+Create the bundle in PowerShell from the root CAs of the Windows certificate store and your CA:
+
+```powershell
+$roots = Get-ChildItem Cert:\LocalMachine\Root | ForEach-Object {
+  "-----BEGIN CERTIFICATE-----`n" + [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks') + "`n-----END CERTIFICATE-----"
+}
+$roots + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
+```
+
+Windows adds a public root CA to this store only when it first needs it, so check that the bundle has the root CA of your identity provider and of your profile server.
 
 {% endnavtab %}
 {% endnavtabs %}
