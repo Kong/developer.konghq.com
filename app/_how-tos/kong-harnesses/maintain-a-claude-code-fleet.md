@@ -53,18 +53,9 @@ tldr:
     Run `kong-harnesses fleet build` with `--record`, `--policy` (or `--no-policy`), and every kept flag from the earlier build.
     Add `--claude-code-minimum` and `--claude-code-maximum` to pin a version range, or `--model` to move to a new model.
     Keep the earlier AI Model on {{ site.ai_gateway }} until every active session moves over or ends.
-
-faqs:
-  - q: Why does a fleet get its {{ site.claude_code }} settings through MDM instead of {{ site.ai_gateway }}?
-    a: |
-      {{ site.claude_code }} needs managed settings before its first request, because they set the {{ site.ai_gateway }} address and credential helper.
-      {{ site.ai_gateway }} can't send settings to a client that doesn't know the gateway yet.
-      Anthropic's [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability) need a direct connection to `api.anthropic.com` and an eligible credential, such as a claude.ai login.
-      A key from the fleet's credential helper doesn't trigger that fetch.
-      MDM or your install tool places managed settings before the first session, so developers can't override the gateway address or credential helper.
 ---
 
-A [kong-harnesses](/kong-harnesses/) fleet build sets the {{ site.claude_code }} managed settings for every managed computer.
+A [kong-harnesses](/kong-harnesses/) fleet build sets the {{ site.claude_code }} managed settings that MDM or your install tool deploys before a developer's first session, as described in [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
 To change them, rebuild with `--record` set to the active build's record file.
 For `--delivery mdm`, `fleet build` strips the earlier build's keys from `--policy` before adding the new ones so dropped keys don't stay behind.
 For `--delivery file`, the new drop-in (`managed-settings.d/kong-harnesses.json`) replaces the earlier one.
