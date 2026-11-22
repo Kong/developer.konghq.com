@@ -50,7 +50,7 @@ If the attempt ends, run `kong-harnesses login --profile PROFILE_NAME --no-brows
 
 In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems.
 Commands that load the profile store can print the `profile storage is unavailable` and `the profiles in FOLDER could not be moved` lines, because kong-harnesses checks the profile folder before the command runs.
-[`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the session doesn't set `XDG_RUNTIME_DIR`, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
+[`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the session has no per-user runtime directory, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
 
 {% table %}
 columns:
@@ -85,49 +85,9 @@ rows:
     fix: >-
       Run `kong-harnesses login --profile PROFILE_NAME` in a terminal.
       The terminal prints the sign-in URL.
-  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
-    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
-    fix: >-
-      If another sign-in uses the address, wait until it finishes.
-      Otherwise, stop the program that uses the port of the callback address.
-      Then try again.
-      On Windows, the line can also say that Windows reserved the port.
-      `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports.
-      If Windows reserved the port, ask your administrator to register a redirect URI with a free port at the identity provider and to give you a new profile with that redirect URI.
-      Then import the new profile, activate it, and sign in again.
-      To find the port, run `kong-harnesses profile get PROFILE_NAME` and read the `Redirect URI` field.
   - message: "`another kong-harnesses command, such as a sign-in or a renewal, is using this profile`"
     cause: Another kong-harnesses command uses the profile, such as a sign-in that waits for the browser.
     fix: Try again when the other command finishes.
-  - message: "`your Keychain is locked`"
-    cause: The macOS Keychain is locked.
-    fix: "Run `security unlock-keychain`, then try again."
-  - message: "`your Keychain does not yet let this kong-harnesses build read your sign-in`"
-    cause: The macOS Keychain doesn't trust this kong-harnesses build yet, for example after an upgrade.
-    fix: >-
-      Run `kong-harnesses login --profile PROFILE_NAME`.
-      Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
-  - message: "`your system password store is locked`"
-    cause: The Linux keyring is locked.
-    fix: Unlock the keyring, then try again.
-  - message: "`your system password store refused access to your sign-in`"
-    cause: The system password store refused access to the sign-in.
-    fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
-  - message: "`Windows cannot save or read your sign-in in this session`"
-    cause: The Windows session can't use DPAPI, for example an SSH session that signed in with a key.
-    fix: >-
-      Use your desktop session, where you set up kong-harnesses.
-      An SSH session that signed in with your password can also use DPAPI.
-  - message: "`no Secret Service runs in this session`"
-    cause: The Linux session doesn't have a keyring.
-    fix: >-
-      Use a desktop session with a keyring, such as GNOME Keyring or KWallet.
-      In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`.
-  - message: "`this session has no per-user runtime directory (XDG_RUNTIME_DIR)`"
-    cause: "The Linux session doesn't set `XDG_RUNTIME_DIR` to an absolute path, for example in a container or a CI job."
-    fix: >-
-      Create a local directory that your user owns and only your user can open, such as with `install -d -m 0700 RUNTIME_DIR`.
-      Then set `XDG_RUNTIME_DIR` to the absolute path of the directory.
   - message: "`this profile has no saved key`"
     cause: The profile uses a key from your administrator, and this computer doesn't have the key yet.
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`, and enter the key from your administrator."
@@ -151,15 +111,6 @@ rows:
       For omp and pi, set the same exclusions where the agent CLI starts.
       Codex, OpenCode and Hermes Agent need an `https://` gateway, because kong-harnesses doesn't set them up for an `http://` gateway.
       You can also use an `https://` gateway.
-      Then try again.
-  - message: "`profile storage is unavailable, because`"
-    cause: >-
-      kong-harnesses can't find an absolute path for your user configuration directory.
-      The line names the variable: `AppData` on Windows, `HOME` on macOS, or `HOME` and `XDG_CONFIG_HOME` on Linux.
-    fix: >-
-      On Windows, set `AppData` to your roaming application data folder.
-      On macOS, set `HOME` to your home folder.
-      On Linux, set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`.
       Then try again.
   - message: "`the profiles in FOLDER could not be moved to FOLDER`"
     cause: kong-harnesses couldn't move the profiles of an earlier release to their new folder.
@@ -197,6 +148,112 @@ rows:
       Otherwise, try again later.
       If it keeps failing, run `kong-harnesses doctor --profile PROFILE_NAME`.
 {% endtable %}
+
+The lines about the secret store, the session, the profile folder and the callback address depend on the operating system:
+
+{% navtabs "access-token-os-errors" %}
+{% navtab "macOS" %}
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: Cause
+    key: cause
+  - title: What to do
+    key: fix
+rows:
+  - message: "`your Keychain is locked`"
+    cause: The Keychain is locked.
+    fix: "Run `security unlock-keychain`, then try again."
+  - message: "`your Keychain does not yet let this kong-harnesses build read your sign-in`"
+    cause: The Keychain doesn't trust this kong-harnesses build yet, for example after an upgrade.
+    fix: >-
+      Run `kong-harnesses login --profile PROFILE_NAME`.
+      Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
+  - message: "`profile storage is unavailable, because HOME is not set to an absolute path`"
+    cause: "kong-harnesses can't find an absolute path for your user configuration directory, because `HOME` isn't set to an absolute path."
+    fix: "Set `HOME` to your home folder, then try again."
+  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
+    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
+    fix: >-
+      If another sign-in uses the address, wait until it finishes.
+      Otherwise, stop the program that uses the port of the callback address.
+      Then try again.
+{% endtable %}
+{% endnavtab %}
+{% navtab "Linux" %}
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: Cause
+    key: cause
+  - title: What to do
+    key: fix
+rows:
+  - message: "`your system password store is locked`"
+    cause: The keyring is locked.
+    fix: Unlock the keyring, then try again.
+  - message: "`your system password store refused access to your sign-in`"
+    cause: The system password store refused access to the sign-in.
+    fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
+  - message: "`no Secret Service runs in this session`"
+    cause: The session doesn't have a keyring.
+    fix: >-
+      Use a desktop session with a keyring, such as GNOME Keyring or KWallet.
+      In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`.
+  - message: "`this session has no per-user runtime directory (XDG_RUNTIME_DIR)`"
+    cause: "The session doesn't set `XDG_RUNTIME_DIR` to an absolute path, for example in a container or a CI job."
+    fix: >-
+      Create a local directory that your user owns and only your user can open, such as with `install -d -m 0700 RUNTIME_DIR`.
+      Then set `XDG_RUNTIME_DIR` to the absolute path of the directory.
+  - message: "`profile storage is unavailable, because XDG_CONFIG_HOME is not an absolute path, or it is unset and HOME is not`"
+    cause: "kong-harnesses can't find an absolute path for your user configuration directory, because neither `XDG_CONFIG_HOME` nor `HOME` gives one."
+    fix: >-
+      Set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`.
+      Then try again.
+  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
+    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
+    fix: >-
+      If another sign-in uses the address, wait until it finishes.
+      Otherwise, stop the program that uses the port of the callback address.
+      Then try again.
+{% endtable %}
+{% endnavtab %}
+{% navtab "Windows" %}
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: Cause
+    key: cause
+  - title: What to do
+    key: fix
+rows:
+  - message: "`Windows cannot save or read your sign-in in this session`"
+    cause: The session can't use DPAPI, for example an SSH session that signed in with a key.
+    fix: >-
+      Use your desktop session, where you set up kong-harnesses.
+      An SSH session that signed in with your password can also use DPAPI.
+  - message: "`your system password store refused access to your sign-in`"
+    cause: The system password store refused access to the sign-in.
+    fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
+  - message: "`profile storage is unavailable, because AppData is not set to an absolute path`"
+    cause: "kong-harnesses can't find an absolute path for your user configuration directory, because `AppData` isn't set to an absolute path."
+    fix: "Set `AppData` to your roaming application data folder, then try again."
+  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address, or Windows reserved that port`"
+    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer, or Windows reserved the port.
+    fix: >-
+      If another sign-in uses the address, wait until it finishes.
+      Otherwise, stop the program that uses the port of the callback address.
+      Then try again.
+      To find the port, run `kong-harnesses profile get PROFILE_NAME` and read the `Redirect URI` field.
+      `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports.
+      If Windows reserved the port, ask your administrator to register a redirect URI with a free port at the identity provider and to give you a new profile with that redirect URI.
+      Then import the new profile, activate it, and sign in again.
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}
 
 For errors about which profile a command uses, including the lines that start with `selected profile`, see [Profile errors](/kong-harnesses/errors/#profile-errors).
 
@@ -274,14 +331,6 @@ rows:
   - message: "`login could not complete`"
     cause: "`login` stopped for a reason that its message doesn't name."
     fix: "Run `kong-harnesses login --profile PROFILE_NAME --diagnostics` to find the cause."
-  - message: "`your Keychain does not let this kong-harnesses build read the saved key of the gateway MCP server`"
-    cause: The macOS Keychain doesn't let this kong-harnesses build read the key, for example because you clicked **Allow** and not **Always Allow**.
-    fix: >-
-      Run `kong-harnesses login --profile PROFILE_NAME` again.
-      When the Keychain asks, click **Always Allow**.
-  - message: "`your system password store did not let kong-harnesses read the saved key of the gateway MCP server`"
-    cause: The system password store refused to give the key, for example because it's locked.
-    fix: "Unlock the system password store, or run `kong-harnesses login --profile PROFILE_NAME` again."
   - message: "`login cancelled; no usable login was created`"
     cause: >-
       The sign-in or the confirmation stopped.
@@ -296,3 +345,40 @@ rows:
     cause: The system password store couldn't read, remove or save the key, for example because it's locked.
     fix: "Unlock the system password store if it's locked, then run `kong-harnesses login --profile PROFILE_NAME`."
 {% endtable %}
+
+When `login` can't read the saved key of a gateway MCP server, the line depends on the operating system:
+
+{% navtabs "gateway-mcp-key-errors" %}
+{% navtab "macOS" %}
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: Cause
+    key: cause
+  - title: What to do
+    key: fix
+rows:
+  - message: "`your Keychain does not let this kong-harnesses build read the saved key of the gateway MCP server`"
+    cause: The Keychain doesn't let this kong-harnesses build read the key, for example because you clicked **Allow** and not **Always Allow**.
+    fix: >-
+      Run `kong-harnesses login --profile PROFILE_NAME` again.
+      When the Keychain asks, click **Always Allow**.
+{% endtable %}
+{% endnavtab %}
+{% navtab "Linux and Windows" %}
+{% table %}
+columns:
+  - title: Message
+    key: message
+  - title: Cause
+    key: cause
+  - title: What to do
+    key: fix
+rows:
+  - message: "`your system password store did not let kong-harnesses read the saved key of the gateway MCP server`"
+    cause: The system password store refused to give the key, for example because it's locked.
+    fix: "Unlock the system password store, or run `kong-harnesses login --profile PROFILE_NAME` again."
+{% endtable %}
+{% endnavtab %}
+{% endnavtabs %}

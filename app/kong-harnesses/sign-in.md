@@ -30,9 +30,26 @@ related_resources:
 
 kong-harnesses signs you in to {{ site.ai_gateway }} and gives your agent CLI, such as {{ site.claude_code }}, an access token or a key when the agent CLI asks for one.
 The profile decides how you sign in: through your company's identity provider in a browser, or with a key from your administrator.
-kong-harnesses keeps the sign-in or the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
+kong-harnesses keeps the sign-in or the key in the computer's own secret store.
 A profile for a CI job reads its key from the environment instead.
 For a profile that signs in through an identity provider, when the agent CLI asks for a token and the saved token has too little time left, kong-harnesses gets a new one from the identity provider without opening the browser.
+
+The secret store depends on the operating system:
+
+{% table %}
+columns:
+  - title: Operating system
+    key: os
+  - title: Secret store
+    key: store
+rows:
+  - os: macOS
+    store: Keychain
+  - os: Linux
+    store: Secret Service, such as GNOME Keyring or KWallet
+  - os: Windows
+    store: DPAPI
+{% endtable %}
 
 ## Sign in to a profile
 
@@ -155,7 +172,7 @@ When the saved sign-in or key is damaged or doesn't match the profile, `login --
 When the saved sign-in is damaged or doesn't match the profile, a plain `login` asks you to type the profile name to confirm.
 kong-harnesses then removes the saved sign-in from this computer and starts a new sign-in.
 The identity provider can keep the old authorization active.
-When the secret store is locked, refuses access or doesn't run in the session, `login` doesn't ask, and prints the line for that problem from the table in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
+When the secret store is locked, refuses access or doesn't run in the session, `login` doesn't ask, and prints the line for that problem from [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
 
 When the last renewal stopped before it finished, a plain `login` starts a new sign-in without a confirmation.
 If the new sign-in fails, the next request for an access token can still resume the renewal.
@@ -191,12 +208,22 @@ For a profile that uses a key from your administrator, `logout` removes the key 
 The key works at the gateway until your administrator revokes it.
 
 For a profile for a CI job, kong-harnesses doesn't save the key.
-On Linux, set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
-`logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name, or in a Linux session without Secret Service.
-If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
-In a Linux session without Secret Service, `logout` doesn't check the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
 `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set.
 Remove the variable from the job environment yourself.
+What `logout` does in the job depends on the operating system:
+
+{% navtabs "ci-job-logout" %}
+{% navtab "macOS and Windows" %}
+`logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name.
+If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
+{% endnavtab %}
+{% navtab "Linux" %}
+Set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
+`logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name, or in a session without Secret Service.
+If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
+In a session without Secret Service, `logout` doesn't check the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Find out why a sign-in fails
 
