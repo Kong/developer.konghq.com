@@ -268,8 +268,33 @@ It doesn't hold secrets.
 A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
 
 The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
-If your shell sets a proxy, add `127.0.0.1` to `NO_PROXY` (and `no_proxy` if it's set) in the shell that runs kong-harnesses.
-The `NO_PROXY` setting exists only in the shell where you set it, so set it again in a new shell or add it to your shell profile before you run kong-harnesses there.
+If your shell sets a proxy, add `127.0.0.1` to the no-proxy list in the shell that runs kong-harnesses.
+The setting exists only in the shell where you set it, so set it again in each new shell, or keep it as the tab for your system describes:
+
+{% navtabs "no-proxy" %}
+{% navtab "macOS and Linux" %}
+
+Set both `NO_PROXY` and `no_proxy`:
+
+```sh
+list="127.0.0.1,localhost${no_proxy:+,$no_proxy}${NO_PROXY:+,$NO_PROXY}"
+export no_proxy="$list" NO_PROXY="$list"
+```
+
+To keep the setting for new terminals, add these lines to your shell profile.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+```powershell
+$env:NO_PROXY = '127.0.0.1,localhost' + $(if ($env:NO_PROXY) { ",$env:NO_PROXY" })
+```
+
+To keep the setting for new PowerShell windows, add `127.0.0.1,localhost` to the `NO_PROXY` user environment variable.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 For loopback HTTP and proxy rules, see [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways).
 
 Create a profile named `quickstart` that signs in with a static key:
