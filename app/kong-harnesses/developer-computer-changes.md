@@ -66,11 +66,13 @@ It also saves there the key of each gateway MCP server that asks for a key, when
 ### Agent CLI checks
 
 Before `setup` sets up an agent CLI, it sends a test request to the gateway route of that agent CLI, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
-In these cases, `setup` warns that the agent CLI may not reach the gateway, tells the developer to send a prompt from that agent CLI to check, and sets up the agent CLI:
+In these cases, `setup` warns that the agent CLI may not reach the gateway, tells the developer to send a prompt from that agent CLI to check, and goes on to the next check of the agent CLI:
 
 - `setup` can't build a request like the one that the agent CLI sends, for example because the {{ site.claude_code }} managed settings set a credential, a gateway URL or a proxy. `setup` then sends no test request.
 - The gateway has no route for the test request or refuses it, and the request doesn't contain a part that the agent CLI adds itself and that a route can depend on, such as a header from its own settings or a client certificate.
 - For a `subscription` profile, the gateway asks for the developer's Claude sign-in before it routes the test request.
+
+A later check can still stop `setup` before it writes the settings of any agent CLI.
 
 `setup` names the fix for each agent CLI that fails one of these checks:
 
