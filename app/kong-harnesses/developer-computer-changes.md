@@ -66,17 +66,22 @@ It also saves there the key of each gateway MCP server that asks for a key, when
 ### Agent CLI checks
 
 Before `setup` sets up an agent CLI, it sends a test request to the gateway route of that agent CLI, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
-When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
+In these cases, `setup` warns that the agent CLI may not reach the gateway, tells the developer to send a prompt from that agent CLI to check, and sets up the agent CLI:
 
-`setup` names the fix for each agent CLI that it can't set up, such as:
+- `setup` can't build a request like the one that the agent CLI sends, for example because the {{ site.claude_code }} managed settings set a credential, a gateway URL or a proxy. `setup` then sends no test request.
+- The gateway has no route for the test request or refuses it, and the request doesn't contain a part that the agent CLI adds itself and that a route can depend on, such as a header from its own settings or a client certificate.
+- For a `subscription` profile, the gateway asks for the developer's Claude sign-in before it routes the test request.
+
+`setup` names the fix for each agent CLI that fails one of these checks:
 
 - An agent CLI whose gateway route is missing or whose sign-in the gateway refuses
 - Codex, OpenCode or Hermes Agent when the profile uses a plain `http://` gateway
 - OpenCode when its npm plugin registry uses plain `http://` on another computer
 
-When the command doesn't name `--client`, `setup` leaves out each agent CLI that it can't set up and sets up the remaining agent CLIs, or stops when none remain.
+When the command doesn't name `--client`, `setup` leaves out each agent CLI that fails one of these checks and sets up the remaining agent CLIs, or stops when none remain.
 When the command names `--client`, `setup` stops.
-When a remaining agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
+Before it writes any settings, `setup` checks that each remaining agent CLI can take the profile.
+When one of them can't, `setup` stops and doesn't write the settings of any agent CLI.
 
 ## {{ site.claude_code }} settings
 
