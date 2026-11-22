@@ -13,9 +13,10 @@ breadcrumbs:
 ---
 
 The `doctor` command checks one profile end to end: the profile, the sign-in, the client, the gateway and, for a profile that signs in through an identity provider, the identity provider.
-It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each of these servers that uses HTTPS and for the profile server of a profile imported from an HTTPS URL.
+It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each of these servers that uses HTTPS, and for the profile server when the profile keeps the HTTPS URL that it was imported from.
+A profile that an earlier release imported doesn't keep that URL.
 A missing or unreadable file gets a separate result.
-The check of the `NODE_EXTRA_CA_CERTS` file also counts the root CAs that Node.js has built in, as Node.js adds the file to them.
+The check of the `NODE_EXTRA_CA_CERTS` file also counts the Mozilla root CAs that {{site.kong_harnesses}} has built in, as Node.js and Bun add the file to their own built-in root CAs.
 It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
 ## Command usage

@@ -292,7 +292,7 @@ In the same session, install the profile if it isn't installed yet:
 kong-harnesses profile import PROFILE_URL
 ```
 
-When the import or the CA bundle check reports an unknown certificate authority for a server, check that the bundle holds the root CA of that server.
+When the import, or the CA bundle check of the `SSL_CERT_FILE` file, reports an unknown certificate authority for a server, check that the bundle holds the root CA of that server.
 For a server with a certificate from your private CA, this is the root CA that your administrator gave you.
 If the bundle doesn't hold it, add that root CA certificate to the bundle, or create the bundle again, and then run the command again.
 If the bundle holds it, ask your administrator to check the certificate chain that the server sends.
@@ -312,7 +312,7 @@ kong-harnesses doctor --profile PROFILE_NAME
 
 The CA bundle check of the `SSL_CERT_FILE` file must show OK for each server that it lists, also for a server whose web request gave a TLS error.
 When the check reports a missing or unreadable file, check the path in the variable that the result names.
-When the check of the `SSL_CERT_FILE` file fails for a server, use the fixes after the import step.
+When that check fails for a server, use the fixes after the import step.
 
 {% endnavtab %}
 {% endnavtabs %}
