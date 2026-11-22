@@ -234,11 +234,11 @@ Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `mod
 
 ### Plain HTTP gateways
 
-A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
+A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it.
+{{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients. When a check of their settings fails before the write, it changes no client settings.
-* When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY` in the shell that starts the agent CLI, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the message names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently.
-* From 0.18.0, for {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. A proxy variable or `NO_PROXY` value in the project settings of {{ site.claude_code }} wins over these values, and `profile activate` refuses when the managed settings could send the requests through a proxy. For these cases, see the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check).
+* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients, and doesn't change any client settings when a check of their settings fails before the write.
+* When a proxy applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential. Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes (from 0.18.0, `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} settings unless project or managed settings take precedence).
 * `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
 
 The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Fleet build errors](/kong-harnesses/errors/#fleet-build-errors).
