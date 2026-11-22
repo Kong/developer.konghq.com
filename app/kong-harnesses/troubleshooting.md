@@ -19,6 +19,10 @@ breadcrumbs:
 related_resources:
   - text: kong-harnesses doctor
     url: /kong-harnesses/doctor/
+  - text: kong-harnesses errors and exit codes
+    url: /kong-harnesses/errors/
+  - text: Troubleshoot a {{ site.claude_code }} fleet
+    url: /kong-harnesses/troubleshooting/claude-code-fleet/
   - text: Remove kong-harnesses
     url: /kong-harnesses/remove-kong-harnesses/
   - text: Sign in with kong-harnesses
@@ -31,6 +35,7 @@ When an agent CLI such as {{ site.claude_code }} can't reach {{ site.ai_gateway 
 `doctor` checks the profile, the sign-in, the agent CLI settings and the gateway, and, when it knows one, prints the next step under a problem.
 `doctor` doesn't change any settings.
 To undo agent CLI settings, sign out, delete a profile, or uninstall kong-harnesses, see [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
+To troubleshoot {{ site.claude_code }} configured through managed settings and MDM, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 
 ## Run doctor
 
@@ -61,25 +66,7 @@ The following part of a report shows a failed `overrides` check:
 {:.no-copy-code}
 
 `doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
-In each report, the kind of the first failed check sets the exit code.
-When `doctor` prints more than one report, or finds a problem with the kong-harnesses install, it exits with the most serious of those codes: `2` takes precedence over `1`, and `1` over `3`:
-
-{% table %}
-columns:
-  - title: Exit code
-    key: code
-  - title: Kind of problem
-    key: problem
-rows:
-  - code: "`1`"
-    problem: The network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
-  - code: "`2`"
-    problem: The profile, the agent CLI or its settings, the shell that starts the agent CLI, or the kong-harnesses install.
-  - code: "`3`"
-    problem: The sign-in, or a missing key for a gateway MCP server.
-  - code: "`130`"
-    problem: You canceled `doctor` before it finished the report, for example with Ctrl+C.
-{% endtable %}
+For what each exit code means, see [Exit codes](/kong-harnesses/errors/#exit-codes).
 
 ## Next step for each check
 
