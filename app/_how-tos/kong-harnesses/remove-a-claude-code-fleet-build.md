@@ -106,12 +106,31 @@ Apply each instruction that `kong-harnesses fleet remove` prints:
    * If `fleet remove` writes a policy under `mdm/`, deploy that policy in place of the existing {{ site.claude_code }} MDM policy.
    * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool even when `fleet remove` doesn't write an `mdm/` folder.
 1. If `fleet remove` writes `managed-mcp.json` under `root/`, inspect any kept server definitions that changed after the build, remove any that still point to the gateway, and deploy the updated file in place of the existing `managed-mcp.json`.
-1. Delete every file path listed under `Remove` from each managed computer as an administrator.
-1. On macOS, forget the package receipt on each managed computer so your MDM tool can install a future package with the same identifier and version:
+
+Then remove the build files from each managed computer:
+
+{% navtabs "fleet-build" %}
+{% navtab "macOS" %}
+
+1. Delete every file path listed under `Remove` as an administrator.
+1. Forget the package receipt so your MDM tool can install a future package with the same identifier and version:
 
    ```sh
    sudo pkgutil --forget PACKAGE_IDENTIFIER
    ```
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+Delete every file path listed under `Remove` as an administrator.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Delete every file path listed under `Remove` as an administrator.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Validate
 

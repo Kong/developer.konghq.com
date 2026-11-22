@@ -108,7 +108,7 @@ Confirm these choices before building:
 
 ## Build the managed settings
 
-Run `kong-harnesses fleet build` per group (`--platform` builds for any OS from one computer), keeping quotes and adding mode-specific MCP flags from [fleet build options](/kong-harnesses/fleet-build-options/) (including PowerShell quoting).
+Run `kong-harnesses fleet build` per group (`--platform` builds for any OS from one computer), keeping quotes and adding mode-specific MCP flags from [fleet build options](/kong-harnesses/fleet-build-options/) (see [Allowlist values and quoting](/kong-harnesses/fleet-build-options/#allowlist-values-and-quoting) for each shell).
 Replace `POLICY_FILE` (or `--no-policy`), `MCP_MODE`, and `GROUP` without spaces (new or empty `--output-dir`).
 
 {% navtabs "fleet-build" %}
@@ -215,7 +215,7 @@ Deploy to one test computer per platform and policy group first, and roll out af
 Install in this order through your MDM tool or configuration management.
 `fleet build` doesn't install CAs, {{ site.claude_code }}, or kong-harnesses.
 
-{% navtabs "deploy-fleet" %}
+{% navtabs "fleet-build" %}
 {% navtab "macOS" %}
 
 1. Install {{ site.claude_code }} `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
@@ -250,8 +250,9 @@ Install in this order through your MDM tool or configuration management.
 1. Deploy the package through MDM.
    In Microsoft Intune, add it as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), not a line-of-business app, because without an `/Applications` `.app` bundle Intune may not detect it.
    `root` must own the machine-wide profile and its parent folders, without group or world write permissions.
+1. If you migrate from a file build to an MDM build, unassign the old package or script before you change the policy (for an Intune macOS PKG, remove its **Required** and **Available** assignments).
+   Then delete `/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 1. For an MDM build, upload `mdm/com.anthropic.claudecode.plist` as Custom Settings for `com.anthropic.claudecode`, replacing the existing policy.
-   When you migrate from a file build, first unassign the old package (for an Intune macOS PKG, remove its **Required** and **Available** assignments) and delete `/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 
 The preinstall script checks the targets and their parent folders before it writes.
 If it prints `Not installed:`, fix the cause (symlink, extra hard link, unexpected owner, or writable permissions or ACLs) and retry.
@@ -261,7 +262,8 @@ Delete an unexpected file or link only at a build file's exact path, never syste
 {% navtab "Linux" %}
 
 1. Install {{ site.claude_code }} `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
-   Run the native installer in each developer's user context, not as `root`, so it installs `~/.local/bin/claude`, or install from the [`apt`, `dnf`, or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
+   Run the native installer in each developer's user context, not as `root`, so it installs `~/.local/bin/claude`.
+   Or install from the [`apt`, `dnf`, or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
 1. Install [kong-harnesses](/kong-harnesses/install/) system-wide at `--executable`.
 1. If you use a private gateway CA, trust it in the system trust store.
 1. Confirm `acl` (`getfacl`) is installed on each managed computer.
@@ -286,8 +288,9 @@ Delete an unexpected file or link only at a build file's exact path, never syste
 
    The command checks targets for unexpected owners, writable ACLs, symlinks, junctions, and extra hard links, copies under `C:\`, sets `Administrators` ownership, and runs `icacls /reset` on written paths (including existing folders) to inherit `C:\Program Files` ACLs.
    Only `Administrators`, `SYSTEM`, or `TrustedInstaller` may own and write the machine-wide profile and its folders up to `C:\Program Files`, without symlinks or junctions.
+1. If you migrate from a file build to an MDM build, unassign the old package or script before you change the policy.
+   Then delete `C:\Program Files\ClaudeCode\managed-settings.d\kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 1. For an MDM build, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the single-line JSON in `mdm/Settings.json`, replacing the existing value.
-   When you migrate from a file build, first unassign the old package or script and delete `C:\Program Files\ClaudeCode\managed-settings.d\kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 
 If the command prints `Not installed:`, fix the cause (symlink, junction, extra hard link, unexpected owner, or writable ACLs) and retry.
 If it prints `could not be written in full; fix the cause and run the step again`, the write was partial: fix the cause and run the command again.
