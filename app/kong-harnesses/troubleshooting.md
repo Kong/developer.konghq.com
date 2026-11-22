@@ -65,7 +65,6 @@ The following part of a report shows a failed `overrides` check:
 ```
 {:.no-copy-code}
 
-`doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
 For what each exit code means, see [Exit codes](/kong-harnesses/errors/#exit-codes).
 
 ## Next step for each check
@@ -138,17 +137,22 @@ rows:
       For an `http://` gateway, it fails when a proxy applies or when `doctor` can't check proxy settings.
       For an `https://` gateway, it skips the direct test when a proxy applies.
       When `--inference` runs for {{ site.claude_code }}, it skips the direct test once the request is sent, but still fails an `http://` gateway for the same proxy reasons.
+      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the gateway's certificate, install its issuing certificate authority in the system trust store.
       When a shell proxy applies to an `http://` gateway on this computer, add the exact gateway host without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
       For an IPv6 loopback address, add instead each form of the address: with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again so activation writes the same exclusion to {{ site.claude_code }} settings.
+      When the `fix:` line names only that `profile activate` step, run it on its own.
       When {{ site.claude_code }} project or managed settings set a proxy variable or can't be read, follow the `fix:` line, because those settings take precedence over the `NO_PROXY` that activation writes.
       The same applies when a settings file sets a proxy variable to a non-string value or a value with a NUL character, or on Windows sets one proxy variable twice with different letter case and different values.
       Codex, OpenCode, and Hermes require an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
-    what: The gateway has a route for the agent CLI's requests and accepts your sign-in on it.
+    what: |
+      The gateway has a route for the agent CLI's requests.
+      `doctor` sends a request with the JSON body `{}` to check for the route.
+      When `doctor` sends your credential, an HTTP `401` or `403` response means the gateway refuses the credential on that route.
     next: |
       When the gateway doesn't have the route or refuses the sign-in on it, ask the gateway operators to add the route or accept the profile's sign-in on it.
       When the check warns with a `fix:` line, complete that step, such as signing in, unsetting a variable, or making managed settings readable, before contacting the operators.
@@ -187,11 +191,12 @@ rows:
   - check: "`overrides`"
     what: |
       The `overrides` check reports variables in the shell that starts {{ site.claude_code }} that override the gateway setup: non-empty credential variables such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and other-provider switches such as `CLAUDE_CODE_USE_BEDROCK`.
+      It skips a shell variable that the `env` block of the settings file also sets, because the value in the settings file takes precedence.
       It also reports other-provider switches and provider-mode credentials set in the `env` block of the settings file.
       `ANTHROPIC_AUTH_TOKEN` fails because it replaces the sign-in.
       For an identity-provider profile, `ANTHROPIC_API_KEY` warns because it sends a second credential beside the sign-in.
       For a static-key or Claude subscription profile, both variables fail.
-    next: Unset the reported variables in the shell that starts {{ site.claude_code }}, remove the reported keys from a settings file `env` block, or ask your administrator to change managed settings.
+    next: Do each step that the `fix:` line names, such as unsetting variables in the shell that starts {{ site.claude_code }}, removing keys from a settings file `env` block, or asking your administrator to change managed settings.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers listed in the profile, and the gateway accepts your sign-in on them.
