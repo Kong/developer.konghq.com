@@ -53,6 +53,31 @@ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keyc
 You can also deploy the certificate with an MDM certificate payload.
 
 {% endnavtab %}
+{% navtab "Linux" %}
+
+On Debian and Ubuntu:
+
+```sh
+sudo cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
+sudo update-ca-certificates
+```
+
+On Fedora and RHEL:
+
+```sh
+sudo cp CA_CERTIFICATE_FILE /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust
+```
+
+On Alpine, run these commands as root:
+
+```sh
+apk add ca-certificates
+cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
+update-ca-certificates
+```
+
+{% endnavtab %}
 {% navtab "Windows" %}
 
 Run this command in PowerShell as an administrator:
@@ -63,38 +88,11 @@ certutil -addstore -f Root CA_CERTIFICATE_FILE
 
 You can also deploy the certificate with Group Policy or Intune.
 
-{% endnavtab %}
-{% navtab "Debian and Ubuntu" %}
-
-```sh
-sudo cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
-sudo update-ca-certificates
-```
-
-{% endnavtab %}
-{% navtab "Fedora and RHEL" %}
-
-```sh
-sudo cp CA_CERTIFICATE_FILE /etc/pki/ca-trust/source/anchors/
-sudo update-ca-trust
-```
-
-{% endnavtab %}
-{% navtab "Alpine" %}
-
-Run these commands as root:
-
-```sh
-apk add ca-certificates
-cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
-update-ca-certificates
-```
+Each WSL distribution has its own trust store.
+Install the CA in each distribution with the commands of the **Linux** tab.
 
 {% endnavtab %}
 {% endnavtabs %}
-
-Each WSL distribution has its own trust store.
-Install the CA in each distribution with the Linux commands.
 
 ## {{ site.claude_code }} installs
 
@@ -109,28 +107,49 @@ For these limits, see the [{{ site.claude_code }} CA certificate store](https://
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
-On Debian and Ubuntu, omp and the Bun release archives of pi also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable.
-On other systems, omp and pi use their own CA list by default, and so does pi on Node.js on every system.
-In those cases, set one of the following variables in the environment where omp or pi starts:
+omp and pi, on Node.js and from the Bun release archives, read one of these variables in the environment where they start:
 
 {% table %}
 columns:
-  - title: Agent CLI
-    key: client
-  - title: Setting
-    key: setting
+  - title: Variable
+    key: variable
+  - title: Effect
+    key: effect
 rows:
-  - client: omp
-    setting: "`NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`."
-  - client: pi
-    setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`, which pi on Node.js and pi's Bun release archives both read.
-      If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
+  - variable: "`NODE_EXTRA_CA_CERTS` set to the CA file"
+    effect: |
+      pi adds the file to the CAs that it already trusts.
+      omp uses Bun's bundled CA list and that file instead of the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
+  - variable: "`NODE_USE_SYSTEM_CA=1`"
+    effect: |
+      omp and pi also trust the system trust store.
+      For omp, this variable has no effect when `NODE_EXTRA_CA_CERTS` is also set.
 {% endtable %}
 
-When `NODE_EXTRA_CA_CERTS` is set, omp and the Bun release archives of pi use Bun's bundled CA list and that file instead of `/etc/ssl/certs` and the system trust store.
-Put every private CA that omp or pi needs in that file, such as the CA of a proxy.
-For omp, `NODE_USE_SYSTEM_CA=1` doesn't add the system trust store when `NODE_EXTRA_CA_CERTS` is also set.
+Whether omp and pi need one of these variables depends on the system:
+
+{% navtabs "omp-pi-ca" %}
+{% navtab "macOS" %}
+
+omp and pi trust only their own CA list by default, so set one of the variables.
+
+If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+On Debian and Ubuntu, omp and the Bun release archives of pi also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works for them without a variable.
+When `NODE_EXTRA_CA_CERTS` is set, omp stops reading `/etc/ssl/certs`, and pi keeps reading it.
+
+On other distributions, and for pi on Node.js on every distribution, omp and pi trust only their own CA list by default, so set one of the variables.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+omp and pi trust only their own CA list by default, so set one of the variables.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## CA settings per program
 
@@ -168,8 +187,32 @@ rows:
     setting: |
       `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts {{ site.claude_code }}, Codex, omp or pi, because these agent CLIs run {{site.kong_harnesses}} to get each token.
       OpenCode and Hermes Agent sign in through their own plugins and don't run {{site.kong_harnesses}} for a token.
-      On Linux, the file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
-      On macOS and Windows, also export `GODEBUG=x509sslcertoverrideplatform=1`, and the file then replaces the system trust store for {{site.kong_harnesses}}.
-      A file with only the private CA then breaks the token renewal with a public identity provider, and the profile download from a public profile server.
-      On macOS, create the bundle with `cat /etc/ssl/cert.pem CA_CERTIFICATE_FILE > CA_BUNDLE_FILE`.
 {% endtable %}
+
+How {{site.kong_harnesses}} reads `SSL_CERT_FILE` depends on the system:
+
+{% navtabs "kong-harnesses-ca-bundle" %}
+{% navtab "macOS" %}
+
+Also export `GODEBUG=x509sslcertoverrideplatform=1`.
+The file then replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
+
+Create the bundle from the public root CAs of the system and your CA:
+
+```sh
+cat /etc/ssl/cert.pem CA_CERTIFICATE_FILE > CA_BUNDLE_FILE
+```
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+The file replaces the default CA file, and {{site.kong_harnesses}} still reads the default certificate directories.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Also set `GODEBUG=x509sslcertoverrideplatform=1` in the same shell.
+The file then replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
+
+{% endnavtab %}
+{% endnavtabs %}
