@@ -197,10 +197,16 @@ module KongHarnessesChangelogLinks
   # A version as release-please reads one (index.js:59193), with a prerelease and a build
   # part made of the characters that semver allows.
   VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
-  # The version at the start of a release heading, as the export reads it from the line
-  # of the heading and the page check from its text, so the page check finds the
-  # version of every heading that the export takes.
-  HEADING_VERSION = /\A\[?(#{VERSION})(?=[\]\s(]|\z)/
+  # Where the version of a heading ends: at the `]` of the compare link, a space, the
+  # `(` of the date, or the end of the text.
+  VERSION_END = '\]\s('
+  # The version at the start of a release heading. The export reads it from the line of
+  # the heading, and the export and the page check read it from the heading text that
+  # the page shows, so the page check finds the version of every heading that the
+  # export takes.
+  HEADING_VERSION = /\A\[?(#{VERSION})(?=[#{VERSION_END}]|\z)/
+  # The start of a heading text up to where HEADING_VERSION ends.
+  HEADING_START = /\A\[?[^#{VERSION_END}]*/
 
   # Where a node is on the page, as its release, section and entry number. An error
   # names no text of the changelog: GitHub masks only the exact text of a secret, so
@@ -268,25 +274,24 @@ module KongHarnessesChangelogLinks
   # `releases`, each release heading of the source as the version that the source writes
   # and the version that the heading shows, and a heading names the release that shows
   # the same version, because kramdown shows `--` in a heading as a dash. The export
-  # refuses a heading that does not show exactly its version, so no two releases show
-  # the same one. The heading text names a release only when none matches.
+  # refuses a heading that does not show exactly the version of its line. The heading
+  # text names a release only when none matches.
   def release_of(heading, releases = nil)
     shown = shown_version(heading)
-    same = shown.empty? ? [] : releases.to_a.select { |_, version| version == shown }
+    same = shown ? releases.to_a.select { |_, version| version == shown } : []
     return same.first.first if same.length == 1
 
-    written_version(heading.text.strip)[HEADING_VERSION, 1] || 'with no version'
+    shown || 'with no version'
   end
 
-  # The version that a heading shows, written back as the source writes it.
+  # The version that a heading shows, as HEADING_VERSION reads it from the text written
+  # back as the source writes it, or nil.
   def shown_version(heading)
-    written_version(heading.text.strip[SHOWN_VERSION, 1].to_s)
+    written_version(heading.text.strip)[HEADING_VERSION, 1]
   end
 
-  # The version at the start of a heading, after an optional `[` as in HEADING_VERSION,
-  # with the dashes and the ellipsis that kramdown makes of `--`, `---` and `...`.
-  SHOWN_VERSION = /\A\[?([0-9A-Za-z.+\-–—…]+)/
-
+  # The text with the dashes and the ellipsis that kramdown makes of `--`, `---` and
+  # `...` written back.
   def written_version(shown)
     shown.gsub('—', '---').gsub('–', '--').gsub('…', '...')
   end

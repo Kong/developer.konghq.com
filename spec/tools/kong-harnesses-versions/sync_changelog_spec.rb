@@ -797,10 +797,35 @@ RSpec.describe KongHarnessesChangelog do
 
   # Text right after the compare link shows as part of the version, so the page would
   # show a version that no release has, or the version of another release.
+  suffixes = ['beta', '.1', '-rc.1', '!beta', '_beta', '/2', "'s", ':beta', ': hotfix', ', 2026-11-22', '[2]', 'β']
+  suffixed = ->(suffix) { "## 1.0.0\n\n### Features\n\n* add\n\n## [0.9.0](https://github.com/example/sample-tool/compare/v0.8.0...v0.9.0)#{suffix} (2026-11-22)\n\n### Features\n\n* fix\n" }
+
   it 'refuses a release heading that does not show exactly its version' do
-    ['beta', '.1', '-rc.1'].each do |suffix|
-      markdown = "## 1.0.0\n\n### Features\n\n* add\n\n## [0.9.0](https://github.com/example/sample-tool/compare/v0.8.0...v0.9.0)#{suffix} (2026-11-22)\n\n### Features\n\n* fix\n"
-      expect { exported(markdown, %w[1.0.0 0.9.0]) }.to raise_error(/release heading on line 7 that does not show exactly its version/), suffix
+    suffixes.each do |suffix|
+      expect { exported(suffixed.call(suffix), %w[1.0.0 0.9.0]) }.to raise_error(/release heading on line 7 that does not show exactly its version/), suffix
+    end
+  end
+
+  # The page check reads the version of a heading from the page, so each heading that
+  # the export takes must give the page check the version of its line.
+  it 'gives the page check the version of each release heading that it takes' do
+    dashed = "## [1.2.3-rc--1](https://github.com/example/sample-tool/compare/v1.2.2...v1.2.3-rc--1) (2026-11-20)\n\n### Bug Fixes\n\n* tag it\n\n" \
+             "## 1.2.3--rc.1\n\n### Bug Fixes\n\n* try it\n\n## [1.2.3]\n\n### Bug Fixes\n\n* final\n"
+    [
+      [release_please_changelog, %w[0.17.1], %w[0.17.1]],
+      [generated, %w[1.2.3+build.2 1.2.3-rc.1 1.2.2], %w[1.2.3+build.2 1.2.3-rc.1 1.2.2]],
+      [dashed, %w[1.2.3-rc--1 1.2.3--rc.1 1.2.3], %w[1.2.3-rc--1 1.2.3--rc.1 1.2.3]],
+      *suffixes.map { |suffix| [suffixed.call(suffix), %w[1.0.0 0.9.0], nil] },
+    ].each do |markdown, finals, versions|
+      page = begin
+        described_class.export(markdown, published: finals, finals: finals, highest: finals.first, log: StringIO.new)
+      rescue RuntimeError => e
+        raise unless versions.nil? && e.message.include?('does not show exactly its version')
+
+        next
+      end
+      headings = Nokogiri::HTML5.fragment(KongHarnessesChangelogLinks.html(page)).css('h2')
+      expect(headings.map { |heading| KongHarnessesChangelogLinks.release_of(heading) }).to eq(versions), markdown
     end
   end
 

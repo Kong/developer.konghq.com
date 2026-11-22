@@ -662,8 +662,8 @@ module KongHarnessesChangelog
       end
     end
 
-    # Each release heading shows exactly its version, so a place on the page names one
-    # release for it.
+    # Each release heading shows exactly the version of its line, so a place on the page
+    # finds the release of each heading by its version.
     shown = release_headings(source).map { |node| KongHarnessesChangelogLinks.shown_version(node) }
     versions = releases.zip(shown).map do |release, version_shown|
       line = release[:heading].options[:location]
@@ -722,7 +722,7 @@ module KongHarnessesChangelog
 
     release_elements(source).zip(release_headings(source)).map do |heading, node|
       shown = KongHarnessesChangelogLinks.shown_version(node)
-      [version_of(heading, lines) || shown[KongHarnessesChangelogLinks::HEADING_VERSION, 1] || 'with no version', shown]
+      [version_of(heading, lines) || shown || 'with no version', shown]
     end
   end
 
@@ -796,7 +796,7 @@ module KongHarnessesChangelog
     # A release heading shows its version as its tag writes it, so `--` in the version
     # reads the same as the dash that kramdown makes of it in the source.
     fragment.css('h2').each do |heading|
-      heading.content = heading.text.sub(KongHarnessesChangelogLinks::SHOWN_VERSION) { |version| KongHarnessesChangelogLinks.written_version(version) }
+      heading.content = heading.text.sub(KongHarnessesChangelogLinks::HEADING_START) { |version| KongHarnessesChangelogLinks.written_version(version) }
     end
     section = nil
     fragment.children.each do |node|

@@ -88,7 +88,7 @@ Run the steps in this order:
    For each release that it leaves out, it prints the version and why: the release is not published, it is marked as a pre-release, it has no `vX.Y.Z` tag, it is a pre-release whose `X.Y.Z` release is not published or is not a final release, or it has no entries for users.
    It also prints each published final release that has no section in the changelog.
    It stops with an error at a release heading with no version, such as `Unreleased`, when the changelog has no section with the version of the highest final release, and when no entry for users is left, so a changelog that lost its sections cannot empty the page.
-   It also stops at a release heading that does not show exactly the version of its line, such as one with text right after the compare link, so each release heading on the page shows the one version that names its release.
+   It also stops at a release heading whose text on the page does not start with exactly the version of its line, ended by a `]`, a space, a `(` or the end, such as one with text right after the compare link, and names the line.
    Jekyll does not parse a variable as a template, so Liquid syntax in a commit subject stays text.
    Vale checks only Markdown pages, so the commit subjects in this file do not fail the spelling check.
    The page has no links, as the Mesh changelog drops its source links.
