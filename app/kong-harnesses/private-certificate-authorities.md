@@ -119,12 +119,21 @@ rows:
   - variable: "`NODE_EXTRA_CA_CERTS` set to the CA file"
     effect: |
       pi adds the file to the CAs that it already trusts.
-      omp uses only Bun's bundled CA list and that file, and stops reading the system CA paths and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
+      omp trusts only Bun's bundled CA list and that file.
+      omp then stops reading `/etc/ssl/cert.pem`, or the file that `SSL_CERT_FILE` names, the CA directory `/etc/ssl/certs` and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
   - variable: "`NODE_USE_SYSTEM_CA=1`"
     effect: |
       pi also trusts the system trust store.
-      omp also trusts it only when `NODE_EXTRA_CA_CERTS` isn't set.
+      pi on Node.js reads this variable only on Node.js 22.19 or a later 22 release, or on Node.js 24.6 or later, so set `NODE_EXTRA_CA_CERTS` on an earlier release, such as Node.js 24.0 to 24.5.
+      omp also trusts the system trust store only when `NODE_EXTRA_CA_CERTS` isn't set.
 {% endtable %}
+
+When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp also reads it from these `.env` files, and the first value that isn't empty wins:
+
+1. `.env` in the directory where omp starts
+1. `~/.omp/agent/.env`
+1. `~/.omp/.env`
+1. `~/.env`
 
 Whether omp and pi need one of these variables depends on the system:
 
@@ -138,8 +147,13 @@ If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the
 {% endnavtab %}
 {% navtab "Linux" %}
 
-omp and the Bun release archives of pi also read the CA file `/etc/ssl/cert.pem` and the CA directory `/etc/ssl/certs`.
-A CA that the CA tool of the distribution adds to these paths, such as `update-ca-certificates` on Debian and Ubuntu or `update-ca-trust` on Fedora, works for them without a variable.
+omp and the Bun release archives of pi also read the CA file `/etc/ssl/cert.pem`, or the file that `SSL_CERT_FILE` names, and the CA directory `/etc/ssl/certs`.
+A CA that the CA tool of the distribution adds to these paths works for them without a variable:
+
+* On Debian and Ubuntu, `update-ca-certificates` adds the CA to the directory `/etc/ssl/certs`.
+* On Alpine, `update-ca-certificates` adds the CA to the bundle that `/etc/ssl/cert.pem` links to.
+* On Fedora, `update-ca-trust` adds the CA to the bundle that `/etc/ssl/cert.pem` links to.
+
 When `NODE_EXTRA_CA_CERTS` is set, omp stops reading these paths, and pi keeps reading them.
 
 pi on Node.js trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
@@ -212,8 +226,15 @@ The file replaces the default CA file, and {{site.kong_harnesses}} still reads t
 {% endnavtab %}
 {% navtab "Windows" %}
 
-Also set `GODEBUG=x509sslcertoverrideplatform=1` in the same shell.
+{{site.kong_harnesses}} also needs `GODEBUG` set to `x509sslcertoverrideplatform=1`, as the last step shows.
 The file then replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
+
+Windows adds a public root CA to its certificate store only when it first needs it.
+When your identity provider or your profile server uses a public CA, connect to it once in PowerShell, so that Windows adds its root CA:
+
+```powershell
+Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
+```
 
 Create the bundle in PowerShell from the root CAs of the Windows certificate store and your CA:
 
@@ -221,10 +242,15 @@ Create the bundle in PowerShell from the root CAs of the Windows certificate sto
 $roots = Get-ChildItem Cert:\LocalMachine\Root | ForEach-Object {
   "-----BEGIN CERTIFICATE-----`n" + [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks') + "`n-----END CERTIFICATE-----"
 }
-$roots + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
+@($roots) + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
 ```
 
-Windows adds a public root CA to this store only when it first needs it, so check that the bundle has the root CA of your identity provider and of your profile server.
+Set both variables in the PowerShell session that runs {{site.kong_harnesses}}:
+
+```powershell
+$env:SSL_CERT_FILE = "CA_BUNDLE_FILE"
+$env:GODEBUG = "x509sslcertoverrideplatform=1"
+```
 
 {% endnavtab %}
 {% endnavtabs %}
