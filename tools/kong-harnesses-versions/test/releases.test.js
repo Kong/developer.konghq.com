@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { compareVersions, syncReleases } from '../../lib/tool-versions.js';
+import { compareVersions, parseRepo, syncReleases } from '../../lib/tool-versions.js';
 
 const dataFile = 'app/_data/tools/kong-harnesses.yml';
 
@@ -103,7 +103,7 @@ test('throws an error naming the token requirement when the request fails', asyn
   assert.equal(writes.length, 0);
 });
 
-test('ignores tags that the install script refuses, so the data and the help name one release', async () => {
+test('ignores tags that the versions job refuses, so the data and the help name one release', async () => {
   const { fetchImpl } = fakeFetch([
     { tag_name: 'v0.5.10', published_at: '2026-10-06T12:00:00Z', draft: false, prerelease: false },
     { tag_name: '0.6.0', published_at: '2026-10-07T12:00:00Z', draft: false, prerelease: false },
@@ -178,4 +178,22 @@ test('compareVersions orders parts above 2^53 by their digits', () => {
   assert.equal(compareVersions('0.0.9007199254740993', '0.0.9007199254740992'), 1);
   assert.equal(compareVersions('0.0.9007199254740992', '0.0.9007199254740993'), -1);
   assert.equal(compareVersions('1.2.3', '1.2.3'), 0);
+});
+
+test('parseRepo splits <owner>/<name> and refuses any other form', () => {
+  assert.deepEqual(parseRepo('example/sample-tool.js'), { owner: 'example', name: 'sample-tool.js' });
+  for (const value of [undefined, '', 'example', 'example/', '/tool', 'example/tool/extra', 'example/..', 'example/.', '../tool', 'ex.ample/tool', 'example/to ol']) {
+    assert.throws(() => parseRepo(value), /<owner>\/<name>/, String(value));
+  }
+});
+
+test('refuses a malformed repository before any request', async () => {
+  const { fetchImpl, calls } = fakeFetch([stable]);
+  const { writeFile } = fakeWriter();
+
+  await assert.rejects(
+    syncReleases({ repo: 'example/..', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile }),
+    /<owner>\/<name>/,
+  );
+  assert.equal(calls.length, 0);
 });
