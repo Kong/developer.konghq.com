@@ -200,11 +200,12 @@ module KongHarnessesChangelogLinks
   # names no text of the changelog: GitHub masks only the exact text of a secret, so
   # the job log would show the repository in another letter case. The numbers count
   # what the page holds, which has no tooling entries, so they say "on the page".
-  def place(node)
+  # `releases` are the versions of the release headings, as `release_of` takes them.
+  def place(node, releases = nil)
     top = top_of(node)
     return 'the page' if top.fragment?
 
-    release, section, before = heading_of(top)
+    release, section, before = heading_of(top, releases)
     where = release ? "release #{release}" : 'the text before the first release'
     return "the heading of #{where}" if top.name == 'h2'
     return "the heading of section #{section} of #{where}" if top.name == 'h3'
@@ -221,11 +222,11 @@ module KongHarnessesChangelogLinks
   end
 
   # The release and section of a node, as `place` names them.
-  def section_of(node)
+  def section_of(node, releases = nil)
     top = top_of(node)
     return 'the page' if top.fragment?
 
-    release, section, = heading_of(top)
+    release, section, = heading_of(top, releases)
     where = release ? "release #{release}" : 'the text before the first release'
     section ? "#{where}, section #{section}" : where
   end
@@ -238,15 +239,15 @@ module KongHarnessesChangelogLinks
 
   # The release and section that the top-level element `top` is in, and the elements
   # between the section heading and `top`. A heading is its own release or section.
-  def heading_of(top)
-    return [release_of(top), nil, []] if top.name == 'h2'
+  def heading_of(top, releases = nil)
+    return [release_of(top, releases), nil, []] if top.name == 'h2'
 
     before = []
     section = top.name == 'h3' ? top : nil
     sibling = top.previous_element
     while sibling
       if sibling.name == 'h2'
-        return [release_of(sibling), section ? section_name(section, sibling) : nil, before]
+        return [release_of(sibling, releases), section ? section_name(section, sibling) : nil, before]
       elsif sibling.name == 'h3' && section.nil?
         section = sibling
       elsif section.nil?
@@ -257,7 +258,13 @@ module KongHarnessesChangelogLinks
     [nil, section ? section_name(section, nil) : nil, before]
   end
 
-  def release_of(heading)
+  # kramdown shows `--` in a heading as a dash, so a caller that has the version of each
+  # release heading, as the source writes it, passes them in page order. They name a
+  # heading only when the page has one heading for each.
+  def release_of(heading, releases = nil)
+    headings = heading.parent.element_children.select { |node| node.name == 'h2' }
+    return releases[headings.index(heading)] if releases && headings.length == releases.length
+
     heading.text.strip[RELEASE] || 'with no version'
   end
 

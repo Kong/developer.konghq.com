@@ -791,7 +791,7 @@ module KongHarnessesChangelog
   def changed_release(source, tree, releases)
     parts = [html(source), html(tree)].map { |fragment| releases_in(fragment) }
     unless parts.map(&:length).uniq == [releases.length]
-      return changed_block(html(source), html(tree)) { |before, after| reading(in_section(before)) == reading(in_section(after)) } || 'the changelog'
+      return changed_block(html(source), html(tree), releases) { |before, after| reading(in_section(before)) == reading(in_section(after)) } || 'the changelog'
     end
 
     index = parts[0].zip(parts[1]).index { |before, after| reading(before) != reading(after) }
@@ -801,7 +801,7 @@ module KongHarnessesChangelog
   # The first block of `expected` that `actual` does not show the same by `same`, and in
   # a list its first entry that differs, named as the page check names a place, or nil.
   # A block that only `actual` has is named there.
-  def changed_block(expected, actual, &same)
+  def changed_block(expected, actual, releases = nil, &same)
     pairs = lambda do |nodes|
       runs = nodes.map { |list| list.reject { |node| node.text? && node.text.strip.empty? } }
       (0...runs.map(&:length).max).lazy.map { |index| runs.map { |run| run[index] } }.find { |pair| pair.include?(nil) || !same.call(*pair) }
@@ -811,7 +811,7 @@ module KongHarnessesChangelog
     if pair.none?(&:nil?) && %w[ul ol].include?(pair[0].name) && pair[0].name == pair[1].name
       pair = pairs.call(pair.map(&:element_children)) || pair
     end
-    KongHarnessesChangelogLinks.place(pair.compact.first)
+    KongHarnessesChangelogLinks.place(pair.compact.first, releases)
   end
 
   # A block, or a list entry in a list of its own, with the heading of its section, so
@@ -913,10 +913,10 @@ module KongHarnessesChangelog
     reread, = Kramdown::Parser::GFM.parse(output, options)
     if types_of(reread).intersect?(%i[a img])
       link = html(reread).at_css('a, img')
-      raise "The export would write a link back in #{link ? KongHarnessesChangelogLinks.place(link) : 'the page'}, so it refuses the changelog."
+      raise "The export would write a link back in #{link ? KongHarnessesChangelogLinks.place(link, releases) : 'the page'}, so it refuses the changelog."
     end
     unless page(html(reread)) == page(html(tree))
-      raise "The export would change what a reader sees in #{changed_block(html(tree), html(reread)) { |before, after| page(before) == page(after) } || 'the page'}, so it refuses the changelog."
+      raise "The export would change what a reader sees in #{changed_block(html(tree), html(reread), releases) { |before, after| page(before) == page(after) } || 'the page'}, so it refuses the changelog."
     end
     return output unless source
 
@@ -929,7 +929,7 @@ module KongHarnessesChangelog
     code = [html(source), html(tree)].map { |fragment| code_blocks(fragment) }
     expected = code[0].map { |block| language_of(block) }.map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') }
     index = (0...code.map(&:length).max).find { |number| code.any? { |blocks| blocks[number].nil? } || expected[number] != language_of(code[1][number]) }
-    raise "The export would change the language of the code block in #{code_block_place(code.find { |blocks| blocks[index] }, index)}, so it refuses the changelog." if index
+    raise "The export would change the language of the code block in #{code_block_place(code.find { |blocks| blocks[index] }, index, releases)}, so it refuses the changelog." if index
 
     output
   end
@@ -981,8 +981,8 @@ module KongHarnessesChangelog
   end
 
   # A code block as its number in its section on the page, with the release and section.
-  def code_block_place(blocks, index)
-    sections = blocks[0..index].map { |code| KongHarnessesChangelogLinks.section_of(code) }
+  def code_block_place(blocks, index, releases)
+    sections = blocks[0..index].map { |code| KongHarnessesChangelogLinks.section_of(code, releases) }
     "#{sections.last}, code block #{sections.count(sections.last)} on the page"
   end
 

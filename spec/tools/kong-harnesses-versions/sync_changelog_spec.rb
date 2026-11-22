@@ -695,7 +695,7 @@ RSpec.describe KongHarnessesChangelog do
     tree.children.first.children.first.children.first.children.first.children.clear
     expect { described_class.written("* **** y\n", tree) }.to raise_error(/would change what a reader sees/)
     source = source_of("```sh\nkoha up\n```\n")
-    expect { described_class.written("    koha up\n", described_class.parse("    koha up\n"), *source) }.to raise_error(/language of the code block in/)
+    expect { described_class.written("    koha up\n", described_class.parse("    koha up\n"), *source) }.to raise_error(/language of the code block in the text before the first release, code block 1 on the page,/)
   end
 
   # GitHub masks only the exact text of the secret, so an error that quoted the entry
@@ -753,6 +753,25 @@ RSpec.describe KongHarnessesChangelog do
     markdown = release_please_changelog.sub("after the upgrade\n", "after the upgrade\n\n  ```sh\n  koha login\n  ```\n")
     expect { exported(markdown, ['0.17.1']) }
       .to raise_error(/language of the code block in release 0\.17\.1, section ⚠ BREAKING CHANGES, code block 1 on the page,/) { |error| expect(error.message).not_to match(/koha/) }
+  end
+
+  # kramdown shows `--` in a heading as a dash, so a place in the source names the
+  # release by the version that the export read from its line.
+  it 'names a release with -- in its version' do
+    allow_any_instance_of(described_class::Writer).to receive(:convert_codeblock).and_wrap_original do |original, element, opts| # rubocop:disable RSpec/AnyInstance
+      element.attr.delete('class')
+      element.options.delete(:lang)
+      original.call(element, opts)
+    end
+    beta = "## [0.17.1-beta--2](https://github.com/example/sample-tool/compare/v0.17.0...v0.17.1-beta--2) (2026-11-18)\n\n### Features\n\n" \
+           "* **cli:** add a step\n\n  ```sh\n  koha login\n  ```\n\n"
+    markdown = release_please_changelog.sub('## [0.17.0]', "#{beta}## [0.17.0]")
+    expect { exported(markdown, %w[0.17.1 0.17.1-beta--2]) }
+      .to raise_error(/language of the code block in release 0\.17\.1-beta--2, section Features, code block 1 on the page,/)
+    source = source_of("## 1.0.0\n\n### Features\n\n* add\n\n## 1.0.0-beta--2\n\n### Features\n\n* fix\n")
+    page = "## 1.0.0\n\n### Features\n\n* add\n\n### Features\n\n* fix\n"
+    expect { described_class.written(page, described_class.parse(page), *source, releases: %w[1.0.0 1.0.0-beta--2]) }
+      .to raise_error(/sees in the heading of release 1\.0\.0-beta--2,/)
   end
 
   # When the page and the source hold other releases, the refusal names the first block
