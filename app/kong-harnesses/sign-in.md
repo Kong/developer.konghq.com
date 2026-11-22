@@ -220,7 +220,7 @@ What `logout` does in the job depends on the operating system:
 {% navtab "Linux" %}
 Set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
 `logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name, or in a session without Secret Service.
-In a session without Secret Service, `logout` doesn't check the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
+In a session without Secret Service, `logout` can't reach the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
 {% endnavtab %}
 {% endnavtabs %}
 
