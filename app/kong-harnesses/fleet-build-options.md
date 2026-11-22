@@ -185,13 +185,17 @@ MCP rules:
   When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` setting a plugin blocker and names each key {{ site.claude_code }} ignores for its case and each `strictPluginOnlyCustomization` entry that names no surface.
   Write lowercase `source` in `{"source": "skills-dir"}` because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
   Build with `--mcp-servers exclusive` or change the setting in `--policy` and every other managed source.
+* **Invalid MCP lists:** In every mode, also when the profile has no gateway MCP servers, `fleet build` refuses a `--policy` whose `allowedMcpServers` or `deniedMcpServers` value isn't a list, or holds an entry without exactly one valid `serverName`, `serverUrl`, or `serverCommand`.
+  {{ site.claude_code }} drops such an entry and enforces the rest, but `fleet build` can't know what the entry was meant to allow or deny.
+  A `deniedMcpServers` value that isn't a list blocks no server.
+  `null` for either key removes the key ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)), so `fleet build` reads it as no list and doesn't refuse it.
 * **Invalid allowlist (`allowlist` or `any`):** {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value as an empty managed allowlist ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
   The value doesn't skip the plugin, and `managedMcpServers` and allowlist-exempt servers still load.
   The empty list applies only when the invalid value supplies the managed allowlist.
   With the MCP lock (`allowManagedMcpServersOnly: true`), a valid list in an administrator source with higher precedence, such as server-managed settings, takes its place ([Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source)).
   When the empty list applies and the MCP lock is set, or no other settings scope sets `allowedMcpServers`, it's the only list, so no server that a developer adds loads, gateway plugin servers included.
   In `any` mode without the MCP lock, an `allowedMcpServers` entry in user, project, or local settings can still permit a server.
-  `fleet build` refuses a `--policy` with such a value, as a rule of its own apart from the plugin blockers.
+  `fleet build` refuses a `--policy` with such a value, as the **Invalid MCP lists** rule says.
 * **CLI startup flags:** Remove `--mcp-config` and `--strict-mcp-config` from wrappers, aliases, and IDE settings, because either [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) with `managed-mcp.json` and `--strict-mcp-config` skips plugin servers in `allowlist` or `any`.
 
 ### Allowlist values and quoting
