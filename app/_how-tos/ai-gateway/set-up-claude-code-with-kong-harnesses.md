@@ -106,12 +106,10 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 ---
 
-[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one.
-It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
-kong-harnesses doesn't write a long-lived key to the {{ site.claude_code }} settings.
+[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when needed.
+It stores the sign-in in the operating system secret store (macOS Keychain, Windows DPAPI, or Secret Service on Linux) rather than writing a long-lived key to {{ site.claude_code }} settings.
 
-In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
-Then you set up {{ site.claude_code }} as a developer does.
+In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator, then set up {{ site.claude_code }} as a developer.
 
 ## Create the AI Model
 
@@ -185,36 +183,24 @@ The strategy accepts any valid access token from your Okta authorization server 
 
 ## Create the kong-harnesses profile
 
-A kong-harnesses profile names the gateway, the identity provider that developers sign in with, and the model that {{ site.claude_code }} starts with.
-It holds no secrets.
-Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+A kong-harnesses profile names the gateway, the identity provider, and the starting model for {{ site.claude_code }}.
+It doesn't store secrets.
+The gateway origin for the quickstart data plane is `http://127.0.0.1:8000`.
 Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the system resolver.
 
 {:.info}
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
-> The omp and pi agent CLIs also work with an `http://` gateway on this computer.
-> Codex, OpenCode and Hermes need an `https://` gateway.
-> They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.
+> For how other agent CLIs handle `http://` gateways, see [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways).
 
 {:.warning}
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
-A proxy that carries a request to an `http://` gateway can read your access token.
-When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client.
-They stop with an error that names `NO_PROXY`.
-`doctor` also fails.
-
-Run the kong-harnesses and `claude` commands of this guide in the same shell, because the `NO_PROXY` setting exists only there.
-Before you start `claude` in a new shell, set it again, or add it to your shell profile.
-Without it, kong-harnesses doesn't give {{ site.claude_code }} an access token.
-
-The following commands add `127.0.0.1` and `localhost` to `NO_PROXY` and keep the hosts that are already in the list.
-Separate the entries in `NO_PROXY` with commas.
+If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue, because a proxy on an `http://` gateway can read your access token.
+When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client and stop with an error naming `NO_PROXY`, `doctor` fails, and kong-harnesses doesn't give {{ site.claude_code }} an access token.
+Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses or `claude`, or add it to your shell profile:
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
@@ -236,7 +222,7 @@ To keep the setting for new PowerShell windows, add `127.0.0.1,localhost` to the
 {% endnavtab %}
 {% endnavtabs %}
 
-Create the profile:
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/):
 
 {% navtabs "profile-create" %}
 {% navtab "macOS and Linux" %}
@@ -254,8 +240,7 @@ kong-harnesses profile create \
 {% endnavtab %}
 {% navtab "Windows" %}
 
-Run kong-harnesses and {{ site.claude_code }} in PowerShell.
-Replace the placeholders with the values of `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
+In PowerShell, replace the placeholders with `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
 
 ```powershell
 kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin http://127.0.0.1:8000 --model claude-sonnet-5-5
@@ -264,20 +249,18 @@ kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --cli
 {% endnavtab %}
 {% endnavtabs %}
 
-kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, then saves the profile and installs it on this computer.
-It also sends a test request without your sign-in to the gateway route of each agent CLI that the profile sets up.
-This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
+kong-harnesses reads your Okta endpoints from the discovery document, saves and installs the profile, and sends an unauthenticated test request to each configured agent CLI route.
+Because this guide sets up only {{ site.claude_code }}, ignore warnings about other agent CLIs.
 
 {:.info}
-> In production, the administrator creates the profile once and gives developers its HTTPS URL or a JSON file.
-> A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with it:
+> In production, the administrator creates the profile once and shares its HTTPS URL or JSON file with developers, who run [`kong-harnesses setup`](/kong-harnesses/setup/):
 >
 > ```sh
 > kong-harnesses setup <profile-url> --client claude-code
 > ```
 >
 > `setup` installs the profile, signs the developer in, and configures {{ site.claude_code }} in one run.
-> When the administrator changes the profile, developers run the same `setup` command again.
+> When the profile changes, developers run the same `setup` command again.
 
 ## Sign in and configure {{ site.claude_code }}
 
@@ -303,9 +286,8 @@ If `profile activate` asks to install the gateway prices for `/cost`, you can de
 
 ## Features that change behind the gateway
 
-Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic.
-The profile lists which of these features `profile activate` turns off.
-To see the {{ site.claude_code }} choices in the profile, run:
+Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, send data to Anthropic, or behave differently with gateway models.
+To inspect the {{ site.claude_code }} choices in the profile, run:
 
 ```sh
 kong-harnesses profile get quickstart
@@ -320,35 +302,20 @@ columns:
   - title: What you can do
     key: recover
 rows:
-  - feature: claude.ai connectors
-    why: "{{ site.claude_code }} loads connectors only with a claude.ai sign-in, so they never load with a gateway sign-in. When the profile uses the developers' own Claude subscriptions, connector traffic goes to `mcp-proxy.anthropic.com`, outside the gateway."
-    recover: "Add the MCP servers you need with `claude mcp add`."
-  - feature: Fast mode
-    why: "`profile create` turns it off, because fast mode costs more per token on the API and draws on usage credits on a subscription. It also needs fast mode access on the Anthropic organization behind the gateway."
-    recover: "Ask your administrator to set `fast_mode` to `true` in the profile. Fast mode works only on the providers that the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements) list."
-  - feature: "`/bug`, `/feedback` and the feedback survey"
-    why: They send your conversation or your ratings to Anthropic.
-    recover: "Ask your administrator to set `bug_command` and `feedback_command` to `true` in the profile, because each one turns off both commands. For the feedback survey, the administrator sets `feedback_survey` and `anthropic_telemetry` to `true`."
   - feature: Cost warnings
-    why: They report Anthropic API spend, and a gateway session has none.
+    why: They report Anthropic API spend, and a gateway session doesn't incur Anthropic API spend.
     recover: Nothing to do.
   - feature: "`/cost` prices"
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
     recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
-  - feature: Automatic updates
-    why: The update check and other background requests go outside the gateway, to Anthropic, GitHub and Homebrew. The setting also turns off automatic plugin updates, unless `FORCE_AUTOUPDATE_PLUGINS=1` is set. It turns off release notes and pull request status badges too, unless the profile turns on a feature such as telemetry.
-    recover: "Run `claude update` when you want a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. To keep plugin updates on, set `FORCE_AUTOUPDATE_PLUGINS=1` in your {{ site.claude_code }} settings. You can also ask your administrator to keep automatic updates on in the profile."
-  - feature: WebFetch domain check
-    why: "{{ site.claude_code }} asks `api.anthropic.com` whether it may fetch each domain."
-    recover: "WebFetch still works, without Anthropic's list of blocked domains. To limit the domains, add `WebFetch(domain:...)` permission rules."
   - feature: WebSearch on some models
     why: Some models cannot search the web, but answer as if they did. When the gateway or the profile names such a model, WebSearch says that no search ran.
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
-A profile can also turn off Anthropic's usage metrics and feature flags, and the automatic install of Anthropic's plugin marketplace.
-[{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, and how to turn off each one.
-[{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off the Claude products that run sessions outside the developer's computer, without the gateway.
+A profile also controls features that contact Anthropic or other hosts outside the gateway, including claude.ai connectors, fast mode, `/bug`, `/feedback`, the feedback survey, automatic updates, the WebFetch domain check, usage metrics, feature flags, and automatic install of Anthropic's plugin marketplace.
+[{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, what changes when they are off, and how to change them.
+[{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off Claude products that run sessions outside the developer's computer, without the gateway.
 The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
 {{ site.claude_code }} itself hides `/usage-credits`, organization memory sync and Remote Control, because they need a claude.ai sign-in or a direct connection to Anthropic.
 The Artifact tool works only in the cases that [Artifact availability](/kong-harnesses/claude-code-outside-traffic/#artifact-availability) lists.
@@ -361,10 +328,8 @@ Run `kong-harnesses doctor` to check the setup:
 kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
-`doctor` checks the sign-in, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings.
-It shows a fix for each problem it finds.
-It doesn't change any settings.
-Fix each failure and run it again until no check fails.
+`doctor` checks the sign-in, gateway connection, {{ site.claude_code }} gateway route, and {{ site.claude_code }} settings without changing any settings.
+Fix each failure it reports and run `doctor` again until all checks pass.
 
 The model request of `--inference` can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 To also send one model request, add `--inference`:
