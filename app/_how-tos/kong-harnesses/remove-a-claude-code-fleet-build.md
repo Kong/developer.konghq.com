@@ -46,19 +46,19 @@ prereqs:
         Install [kong-harnesses](/kong-harnesses/install/) on your administration computer and have the deployed build's record file (`kong-harnesses-fleet-BUILD_ID.json`) ready.
         For an MDM build, export the MDM policy file that managed computers receive now.
         For an `exclusive` MCP build, copy the `managed-mcp.json` file that managed computers have now.
-    - title: MDM and administrator access
+    - title: Deployment tool and administrator access
       content: |
-        You need access to the tool that deployed the build to unassign it and to update or remove the MDM policy, and administrator rights on managed computers to delete build files and validate removal on a test computer.
+        You need access to the tool that deployed the build to unassign it, access to the MDM policy for an MDM build to update or remove it, and administrator rights on managed computers to delete build files and validate removal on a test computer.
 
 tldr:
   q: How do I remove a kong-harnesses {{ site.claude_code }} fleet build from managed computers?
   a: |
-    Have each developer sign out of the machine-wide profile and clean up any user-level activation, then unassign the deployment in your MDM tool.
+    Have each developer sign out of the machine-wide profile and clean up any user-level activation, then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
     Run `kong-harnesses fleet remove --record` (with the current `--policy` for MDM builds and `--mcp-config` for `exclusive` builds), apply or remove the printed policy and `managed-mcp.json`, and remove the build files with the [steps for your platform](#apply-the-removal-output).
 ---
 
 Removing a kong-harnesses fleet build reverses the managed settings, machine-wide profile, and `managed-mcp.json` deployed by [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
-Follow these steps in order so MDM doesn't reinstall files and developers don't lose access to sign-out and cleanup commands.
+Follow these steps in order so your deployment tool doesn't reinstall files and developers don't lose access to sign-out and cleanup commands.
 
 ## Have developers sign out and clean up
 
@@ -68,7 +68,7 @@ Before you unassign the deployment, have every developer on a managed computer d
    After you remove the build, `logout` can't read the profile to revoke the sign-in.
 1. If they activated the profile for {{ site.claude_code }} in their user settings, run `kong-harnesses profile cleanup --client claude-code`, as described in [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
 
-## Unassign the deployment in your MDM tool
+## Unassign the deployment
 
 Unassign the fleet build deployment so that it doesn't reinstall build files after you delete them:
 
