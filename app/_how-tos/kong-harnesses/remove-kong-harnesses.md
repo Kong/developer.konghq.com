@@ -79,7 +79,7 @@ For a machine-wide profile deployed with a {{ site.claude_code }} fleet build, s
    `logout` can remove a sign-in locally without revoking it at an identity provider, such as for a static-key profile or a profile without a revocation endpoint.
    For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
    A gateway MCP server key that your system password store keeps where kong-harnesses doesn't look stays after `logout`.
-   To find and remove such a key, follow the tab for your system in [Delete an invalid profile](#delete-an-invalid-profile).
+   To find and remove such a key, follow [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys).
 
    If `profile list` or `logout` reports that a profile is unreadable or invalid, follow the next step in the message:
 
@@ -183,9 +183,13 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
 1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
-1. If the `Gateway MCP keys` field lists items that might remain, or the tab for your system says that items can remain without that field, delete each item from your system password store.
-   Replace `ITEM_NAME` with a name from the output or from the tab for your system, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
-   Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
+1. If the `Gateway MCP keys` field lists items that might remain, or the tab for your system in [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys) says that items can remain without that field, follow that section.
+
+### Delete leftover gateway MCP server keys
+
+Use these steps when the `Gateway MCP keys` field of `profile delete` names items that might remain, or when the tab for your system says that items can remain without that field, also after `logout` of a valid profile.
+Replace `ITEM_NAME` with a name from the output or from the tab for your system, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
+Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
 
 {% navtabs "delete-gateway-mcp-keys" %}
 {% navtab "macOS" %}
