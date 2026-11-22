@@ -1,6 +1,6 @@
 ---
 title: Deploy the kong-harnesses Windows installer with Intune
-description: Wrap the kong-harnesses Windows installer, add it to Microsoft Intune as a Windows app (Win32), and replace it with each new release.
+description: Wrap the kong-harnesses Windows installer as a Win32 app, deploy it to managed Windows 11 computers with Microsoft Intune, and upgrade it with supersedence.
 content_type: how_to
 permalink: /kong-harnesses/deploy-with-intune/
 breadcrumbs:
@@ -15,13 +15,15 @@ works_on:
 tags:
   - cli
   - azure
+  - windows
 
 automated_tests: false
 
 tldr:
   q: How do I deploy kong-harnesses to Windows computers with Intune?
   a: |
-    Wrap the checked Windows installer with the Microsoft Win32 Content Prep Tool, and add the `.intunewin` file to Intune as a Windows app (Win32) with an MSI detection rule and a **Required** assignment. For each new release, add a new app that supersedes the app of the previous release.
+    Wrap the verified `.msi` installer with the Microsoft Win32 Content Prep Tool (`IntuneWinAppUtil.exe`), and add the `.intunewin` file to Intune as a Windows app (Win32) with System install behavior, an MSI detection rule, and a **Required** assignment to a one-device test group.
+    Validate on the test device before assigning remaining groups, and add a new app that supersedes the previous release for each upgrade.
 
 related_resources:
   - text: Install kong-harnesses for every user of a computer
@@ -34,33 +36,49 @@ prereqs:
   inline:
     - title: Microsoft Intune
       content: |
-        You need an account in the [Microsoft Intune admin center](https://intune.microsoft.com) with the **Create**, **Assign**, **Update** and **Delete** permissions for **Mobile apps**. To add the app of a new release, the account also needs the **Relate** permission for **Mobile apps**, which supersedence uses. The built-in Application Manager role has these permissions.
+        You need an account in the [Microsoft Intune admin center](https://intune.microsoft.com) with **Create**, **Assign**, **Update**, and **Delete** permissions for **Mobile apps**.
+        To configure supersedence for new releases, the account also needs the **Relate** permission for **Mobile apps**.
+        The built-in Application Manager role includes these permissions.
 
-        You also need a group of Windows 11 devices, or of their users, that meet the [Win32 app prerequisites](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-win32#prerequisites): each device is joined or registered to Microsoft Entra ID and enrolled in Intune.
+        You also need a group of Windows 11 devices, or their users, that meet the [Win32 app prerequisites](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-win32#prerequisites): each device is joined or registered to Microsoft Entra ID and enrolled in Intune.
     - title: kong-harnesses Windows installer
       content: |
-        Download the file that ends in `_windows_amd64.msi` for x64 computers, or in `_windows_arm64.msi` for Arm computers, and check it as in [Check a downloaded file](/kong-harnesses/install/#check-a-downloaded-file).
-        Releases don't include an `.intunewin` file, so you wrap the installer yourself.
-        Add one Windows app (Win32) for each processor type.
+        Download `_windows_amd64.msi` for x64 computers or `_windows_arm64.msi` for Arm computers, and verify it using [Check a downloaded file](/kong-harnesses/install/#check-a-downloaded-file).
+        Releases don't include an `.intunewin` file, so wrap the installer yourself and add one Windows app (Win32) for each processor type.
+
+cleanup:
+  inline:
+    - title: Remove kong-harnesses from Intune-managed devices
+      content: |
+        1. Ask each developer on the managed devices to [remove their settings](/kong-harnesses/install/#remove-developer-settings).
+        1. In the Microsoft Intune admin center, remove the **Required** assignment for the target users or devices so Intune doesn't reinstall kong-harnesses.
+        1. Uninstall the Windows installer from the devices using [Remove from Windows](/kong-harnesses/install/#remove-from-windows).
 ---
 
 ## Wrap the installer
 
-1. Put the checked installer alone in an empty folder.
-1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), and open PowerShell in the folder that contains `IntuneWinAppUtil.exe`.
-1. Wrap the installer:
+Package the verified `.msi` file into an `.intunewin` archive before uploading it to Intune.
+
+1. Place the verified `.msi` installer alone in an empty folder.
+1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), then open PowerShell in the folder containing `IntuneWinAppUtil.exe`.
+1. Wrap the installer into an `.intunewin` package, replacing `SOURCE_FOLDER`, `FILE`, and `OUTPUT_FOLDER` with full paths (`OUTPUT_FOLDER` must be a different folder than `SOURCE_FOLDER`):
 
    ```powershell
-   .\IntuneWinAppUtil.exe -c '<folder>' -s '<folder>\<file>' -o '<output-folder>'
+   .\IntuneWinAppUtil.exe -c 'SOURCE_FOLDER' -s 'SOURCE_FOLDER\FILE' -o 'OUTPUT_FOLDER'
    ```
 
-   Use full paths. `<file>` is the filename of the installer. `<output-folder>` must be a folder other than `<folder>`.
+   The tool writes a `.intunewin` package file into `OUTPUT_FOLDER`.
 
 ## Add the app in Intune
 
-Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags** page between the pages of these steps, click **Next** on that page.
+Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intune.microsoft.com) and assign it to a one-device test group first.
 
-1. Navigate to **Apps** > **All Apps**.
+{:.info}
+> If Intune shows a **Scope tags** page between wizard pages, click **Next**.
+
+### Upload the package and enter app details
+
+1. Navigate to **Apps** > **All apps**.
 1. Click **Create**.
 1. In the **Select app type** pane, select **Windows**.
 1. Select **Windows app (Win32)**.
@@ -69,63 +87,101 @@ Add the app in the Microsoft Intune admin center. If Intune shows a **Scope tags
 1. In the **App package file** pane, click the browse button.
 1. Select the `.intunewin` file.
 1. Click **OK**.
-1. In the **Name** field, enter a name that contains the release and the processor type, for example `kong-harnesses v1.2.3 x64`.
+1. In the **Name** field, enter a name that includes the release and processor type, for example `kong-harnesses v1.2.3 x64`.
 1. Click **Edit Description**.
 1. In the description field, enter `Installs kong-harnesses for every user of the computer`.
 1. Click **OK**.
 1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
 1. Click **Next**.
+
+### Configure program, requirements, and detection
+
 1. On the **Program** page, keep the install and uninstall commands that Intune reads from the installer.
 1. In the **Install behavior** section, select **System**.
-1. From the **Device restart behavior** dropdown menu, select "No specific action". This setting stops the install from restarting the device.
+1. From the **Device restart behavior** dropdown menu, select "No specific action".
+   This setting prevents the installation from restarting the device.
 1. Click **Next**.
 1. On the **Requirements** page, in the **Check operating system architecture** section, select **Yes. Specify the systems the app can be installed on.**
-1. Select the **Install on x64 system** checkbox for the `_windows_amd64.msi` installer, or the **Install on ARM64 system** checkbox for the `_windows_arm64.msi` installer. Make sure that no other architecture checkbox is selected, because the two installers replace each other.
-1. From the **Minimum operating system** dropdown menu, select the oldest Windows 11 release in the list. kong-harnesses doesn't support Windows 10.
+1. Select the **Install on x64 system** checkbox for `_windows_amd64.msi`, or select the **Install on ARM64 system** checkbox for `_windows_arm64.msi`.
+   Make sure no other architecture checkbox is selected, because the two installers replace each other.
+1. From the **Minimum operating system** dropdown menu, select the oldest Windows 11 release in the list.
+   kong-harnesses doesn't support Windows 10.
 1. Click **Next**.
 1. On the **Detection rules** page, from the **Rules format** dropdown menu, select "Manually configure detection rules".
 1. Click **Add**.
-1. From the **Rule type** dropdown menu, select "MSI". Keep the product code that Intune reads from the installer.
+1. From the **Rule type** dropdown menu, select "MSI".
+   Keep the product code that Intune reads from the installer.
 1. Click **OK**.
 1. Click **Next**.
 1. On the **Dependencies** page, click **Next**.
-1. On the **Supersedence** page, for a new release, add the app of the previous release. Skip these steps for the first release:
-   1. Click **Add**.
-   1. In the **Add Apps** pane, select the app of the previous release for the same processor type.
-   1. Click **Select**.
-   1. Disable **Uninstall previous version**. The new installer upgrades the installed version in place, so Intune doesn't need to remove the previous version first.
-1. Click **Next**.
+
+### Assign the app to a test group
+
+1. On the **Supersedence** page, click **Next**.
+   For a new release replacing an earlier Intune app, configure supersedence using the steps in [Upgrade to a new release](#upgrade-to-a-new-release) before clicking **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
-1. Select a test group with one device, or with the user of one device. Add the other groups after the [validation](#validate) passes on that device.
+1. Select a test group with one device, or with the user of one device.
+   Add the remaining groups only after [Validate](#validate) passes on that device.
 1. Click **Select**.
 1. Click **Next**.
 1. On the **Review + create** page, click **Create**.
 
-## Replace the app for each new release
-
-Add a new app in the same way for each new release. Intune allows at most 10 superseded apps in a supersedence graph, including apps that the new app supersedes through other apps, and each release adds one.
-
-When all assigned devices run the new release, remove the assignments of the previous app. Then open the **Properties** of the new app, click **Edit** next to **Supersedence**, remove the previous app, click **Review + save** and **Save**, and delete the previous app.
-
-To remove kong-harnesses from the devices, see the removal steps in [Windows installer](/kong-harnesses/install/#windows-installer).
-
 ## Validate
 
-When Intune reports the install on the test device as successful, open a new PowerShell window on that device. The install changes the system `PATH`, and a PowerShell window that was open before the install doesn't see the change. Run:
+Confirm that Intune installed the expected release on the test device before rolling out the app broadly.
 
-```powershell
-(Get-Command kong-harnesses).Source
-```
+1. Wait until Intune reports the installation on the test device as successful, then open a new PowerShell window on that device.
+   The installer updates the system `PATH`, which a PowerShell window opened before the installation doesn't see.
+1. Confirm that PowerShell resolves the system-wide executable:
 
-The command must print `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`. Then check the release:
+   ```powershell
+   (Get-Command kong-harnesses).Source
+   ```
 
-{% validation custom-command %}
-command: kong-harnesses version
-expected:
-  return_code: 0
-render_output: false
-{% endvalidation %}
+   The command must print `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
+1. Verify the installed release version:
 
-The command prints the release that you added to Intune, with its initial `v`, for example `v1.2.3`.
+   {% validation custom-command %}
+   command: kong-harnesses version
+   expected:
+     return_code: 0
+   render_output: false
+   indent: 3
+   {% endvalidation %}
 
-When the check passes, add the other groups that need kong-harnesses. Open the **Properties** of the app, click **Edit** next to **Assignments**, add the groups under **Required**, and click **Review + save** and **Save**. A new app doesn't copy the assignments of the previous app, so test each release on the test group first, and then add the same groups.
+   The command prints the release added to Intune with its leading `v`, for example `v1.2.3`.
+
+### Roll out to remaining groups
+
+After validation passes on the test device, assign the app to the remaining groups that need kong-harnesses:
+
+1. In the Microsoft Intune admin center, open the app's **Properties**.
+1. Click **Edit** next to **Assignments**.
+1. Under **Required**, add the remaining groups.
+1. Click **Review + save**.
+1. Click **Save**.
+
+## Upgrade to a new release
+
+Add a new Windows app (Win32) for each new release using the same workflow, with supersedence configured to upgrade the previous app in place.
+A new app doesn't copy the assignments of the previous app, so test each new release on the test group first and add the same groups after validation passes.
+
+1. Complete [Wrap the installer](#wrap-the-installer) and [Add the app in Intune](#add-the-app-in-intune) through the **Dependencies** page.
+1. On the **Supersedence** page, click **Add**.
+1. In the **Add Apps** pane, select the previous release's app for the same processor type.
+1. Click **Select**.
+1. Disable **Uninstall previous version**.
+   The new `.msi` upgrades the installed version in place, so Intune doesn't need to uninstall the previous version first.
+1. Click **Next**.
+1. Assign the app to the test group, create the app, and complete [Validate](#validate) before adding the remaining groups.
+
+Intune allows at most 10 superseded apps in a supersedence graph, including apps superseded through other apps, and each release adds one.
+Remove each previous app once all assigned devices run the new release:
+
+1. In the Microsoft Intune admin center, remove all assignments from the previous app.
+1. Open the **Properties** of the new app.
+1. Click **Edit** next to **Supersedence**.
+1. Remove the previous app from the supersedence list.
+1. Click **Review + save**.
+1. Click **Save**.
+1. Delete the previous app.
