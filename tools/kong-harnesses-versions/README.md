@@ -1,10 +1,12 @@
 # kong-harnesses versions
 
-Keeps the kong-harnesses documentation on developer.konghq.com in sync with the installed binary and its GitHub releases.
+Keeps the kong-harnesses documentation on developer.konghq.com in sync with the installed binary and the kong-harnesses releases.
 
-The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) workflow runs on a daily schedule and on manual dispatch. Its `kong-harnesses-versions` job regenerates the help includes and refreshes the release data from the `Kong/kong-harnesses` releases. Its `kong-harnesses-changelog` job refreshes the changelog. The two jobs run at the same time, and each opens its own pull request. GitHub runs a schedule only from the default branch, so the same workflow file is also on `main`. Its `base` job sends the sync to `release/kong-harnesses` while that branch exists, else to the default branch. A manual run can name the branch in `dev_site_base_branch`, which must have the scripts in this folder. Runs of the same job for the same base branch wait for each other. Each base branch gets two sync pull requests, from the branches `sync-kong-harnesses/releases/<base branch>` and `sync-kong-harnesses/changelog/<base branch>`. No earlier workflow used a branch named `sync-kong-harnesses`, `sync-kong-harnesses/releases` or `sync-kong-harnesses/changelog`, which would block those names.
+The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) workflow runs on a daily schedule and on manual dispatch. Its `kong-harnesses-versions` job regenerates the help includes and refreshes the release data from the kong-harnesses releases. Its `kong-harnesses-changelog` job refreshes the changelog. The two jobs run at the same time, and each opens its own pull request. GitHub runs a schedule only from the default branch, so the same workflow file is also on `main`. Its `base` job sends the sync to `release/kong-harnesses` while that branch exists, else to the default branch. A manual run can name the branch in `dev_site_base_branch`, which must have the scripts in this folder. Runs of the same job for the same base branch wait for each other. Each base branch gets two sync pull requests, from the branches `sync-kong-harnesses/releases/<base branch>` and `sync-kong-harnesses/changelog/<base branch>`. No earlier workflow used a branch named `sync-kong-harnesses`, `sync-kong-harnesses/releases` or `sync-kong-harnesses/changelog`, which would block those names.
 
-The `kong-harnesses-versions` job downloads the newest release for Linux, and checks the archive against `SHA256SUMS.txt` and against the build provenance in `kong-harnesses_<tag>.sigstore.json`, as `scripts/install-release.sh` in `Kong/kong-harnesses` does. `gh attestation verify` checks that provenance. The job reads the releases with a Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), and also sets it as `GH_TOKEN` for `fetch-versions.js`. The install step and `fetch-versions.js` both read every page of releases and take only `vX.Y.Z` tags of releases that aren't drafts or pre-releases, and the job fails when the release data names another latest release than the binary it checked. It opens the pull request with a second GitHub App token.
+The `kong-harnesses-versions` job downloads the newest release for Linux, and checks the archive against `SHA256SUMS.txt` and against the build provenance in `kong-harnesses_<tag>.sigstore.json`. `gh attestation verify` checks that provenance. The job reads the releases with a Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), and also sets it as `GH_TOKEN` for `fetch-versions.js`. The install step and `fetch-versions.js` both read every page of releases and take only `vX.Y.Z` tags of releases that aren't drafts or pre-releases, and the job fails when the release data names another latest release than the binary it checked. It opens the pull request with a second GitHub App token.
+
+The workflow reads the `<owner>/<name>` of the repository that publishes the kong-harnesses releases from the repository variable `KONG_HARNESSES_RELEASES_REPO`, so no file in this repository names it. An administrator of Kong/developer.konghq.com must set that variable before the workflow can run. Without it the job fails with an error that names the variable.
 
 The manual runbook below does the same work by hand, and stays the way to sync from a local binary.
 
@@ -20,13 +22,13 @@ Run the steps in this order:
 
    The tap is `kong/kong-harnesses`.
 
-2. Update the release data from the `Kong/kong-harnesses` releases:
+2. Update the release data from the kong-harnesses releases:
 
    ```sh
-   GH_TOKEN=<token> node fetch-versions.js
+   KONG_HARNESSES_RELEASES_REPO=<owner>/<name> GH_TOKEN=<token> node fetch-versions.js
    ```
 
-   Set `GH_TOKEN` to a GitHub token. Without it the script sends the request with no token, and when the request fails it exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
+   Set `KONG_HARNESSES_RELEASES_REPO` to the repository that publishes the releases, the same value as the repository variable. Without it the script exits with an error. Set `GH_TOKEN` to a GitHub token. Without it the script sends the request with no token, and when the request fails it exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
 
 3. Update the help text from the installed binary:
 

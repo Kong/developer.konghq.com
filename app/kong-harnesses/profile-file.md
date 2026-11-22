@@ -565,12 +565,13 @@ rows:
 #### Claude Code choices
 
 Each choice is `true` or `false`.
-From version 14, each choice is optional, and a choice that the profile leaves out changes nothing.
+From version 14, each choice is optional.
+A choice that the profile leaves out sets nothing, but it can restore the earlier value of a setting that activation controlled.
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 When a later profile omits a choice or sets `auto_updates: true`, `profile activate` restores each setting it stops controlling to its earlier value, unless the setting changed after activation wrote it.
 If the setting changed, `profile activate` keeps the current value.
-Either a restored setting from you or another tool, or a later edit, can still turn the feature off.
+So an earlier setting or a later edit, from you or another tool, can still turn the feature off.
 
 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on `anthropic-messages`, where it depends on a feature flag.
 `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey.
