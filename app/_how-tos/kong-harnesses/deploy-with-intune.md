@@ -52,8 +52,19 @@ cleanup:
   inline:
     - title: Remove kong-harnesses from Intune-managed devices
       content: |
-        1. Ask each developer on the managed devices to remove their agent CLI settings, sign-ins, and profiles using [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
-        1. In the Microsoft Intune admin center, remove the target groups from the **Required** assignment and assign them under **Uninstall**, or remove the **Required** assignment and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
+        1. Ask each developer on the managed devices to remove their sign-ins, agent CLI settings, and profiles using [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
+        1. In the [Microsoft Intune admin center](https://intune.microsoft.com), navigate to **Apps** > **All apps**.
+        1. Click the kong-harnesses app.
+        1. Click **Properties**.
+        1. Next to **Assignments**, click **Edit**.
+        1. Under **Required**, remove the target groups.
+        1. Under **Uninstall**, click **Add group**.
+        1. Select the same groups.
+        1. Click **Select**.
+        1. Click **Review + save**.
+        1. Click **Save**.
+
+        To uninstall kong-harnesses manually on each device instead of through Intune, skip adding the groups under **Uninstall**, save the removed **Required** assignment, and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
 ---
 
 ## Wrap the installer
@@ -164,6 +175,9 @@ After validation passes on the test device, assign the app to the remaining grou
 1. Click **Select**.
 1. Click **Review + save**.
 1. Click **Save**.
+1. Under **Monitor**, click **Device install status**.
+   If you assigned user groups, click **User install status** instead.
+   Confirm that the assigned devices or users report `Installed`.
 
 ## Upgrade to a new release
 
@@ -177,26 +191,42 @@ A new app doesn't copy the assignments of the previous app, so test each new rel
 1. Disable **Uninstall previous version**.
    The new `.msi` upgrades the installed version in place, so Intune doesn't need to uninstall the previous version first.
 1. Click **Next**.
-1. Complete steps 2 through 6 of [Assign the app to a test group](#assign-the-app-to-a-test-group).
+1. Complete [Assign the app to a test group](#assign-the-app-to-a-test-group), starting on the **Assignments** page.
 1. Confirm the upgrade on the test device using [Validate](#validate).
-1. Assign the new app to the remaining groups using [Roll out to remaining groups](#roll-out-to-remaining-groups).
+1. Assign the new app to the remaining groups and confirm the rollout using [Roll out to remaining groups](#roll-out-to-remaining-groups).
 
 Intune allows at most 11 apps in a [supersedence graph](https://learn.microsoft.com/en-us/intune/intune-service/apps/apps-win32-supersedence#supersedence-limitations), counting the new app and up to 10 superseded apps (including apps superseded through earlier releases), and each release adds one.
-Remove each previous app once all assigned devices run the new release:
+Once all assigned devices report `Installed` for the new release, clean up the previous app from **Apps** > **All apps** in the [Microsoft Intune admin center](https://intune.microsoft.com).
 
-1. In the Microsoft Intune admin center, navigate to **Apps** > **All apps**.
+Remove the previous app's assignments:
+
 1. Click the previous app.
 1. Click **Properties**.
 1. Next to **Assignments**, click **Edit**.
 1. Remove each assigned group.
 1. Click **Review + save**.
 1. Click **Save**.
-1. Navigate to **Apps** > **All apps**.
+
+Return to **Apps** > **All apps** and remove the previous app from the new app's supersedence list:
+
 1. Click the new app.
 1. Click **Properties**.
 1. Next to **Supersedence**, click **Edit**.
 1. Remove the previous app from the supersedence list.
 1. Click **Review + save**.
 1. Click **Save**.
+
+Return to **Apps** > **All apps** and delete the previous app:
+
+1. Click the previous app.
+1. Click **Delete**.
+   Confirm the deletion when prompted.
+
+Confirm the final rollout:
+
 1. Navigate to **Apps** > **All apps**.
-1. Delete the previous app.
+   Confirm that only the active release app remains.
+1. Click the active release app.
+1. Under **Monitor**, click **Device install status**.
+   If you assigned user groups, click **User install status** instead.
+   Confirm that the assigned devices or users report `Installed`.
