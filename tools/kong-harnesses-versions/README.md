@@ -6,7 +6,7 @@ The [`sync-kong-harnesses`](../../.github/workflows/sync-kong-harnesses.yml) wor
 
 The `kong-harnesses-versions` job downloads the newest release for Linux, and checks the archive against `SHA256SUMS.txt` and against the build provenance in `kong-harnesses_<tag>.sigstore.json`. `gh attestation verify` checks that provenance. The job reads the releases with a Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), and also sets it as `GH_TOKEN` for `fetch-versions.js`. The install step and `fetch-versions.js` both read every page of releases and take only `vX.Y.Z` tags of releases that aren't drafts or pre-releases, and the job fails when the release data names another latest release than the binary it checked. It opens the pull request with a second GitHub App token.
 
-The workflow reads the `<owner>/<name>` of the repository that publishes the kong-harnesses releases from the repository variable `KONG_HARNESSES_RELEASES_REPO`, so no file in this repository names it. An administrator of Kong/developer.konghq.com must set that variable before the workflow can run. Without it the job fails with an error that names the variable.
+The workflow reads the `<owner>/<name>` of the repository that publishes the kong-harnesses releases from the repository secret `KONG_HARNESSES_RELEASES_REPO`, so no file in this repository names it and GitHub masks it in the logs. An administrator of Kong/developer.konghq.com must add that repository secret, with the value `<owner>/<name>` in the same letter case as the repository, before the workflow can run. GitHub masks only that exact text, so a value in another letter case leaves the name of the repository in the logs. Without the secret the job fails with an error that names it. The workflow and `fetch-versions.js` take only an owner of letters, digits and hyphens, and a name of letters, digits, `.`, `_` and `-` that isn't `.` or `..`.
 
 The manual runbook below does the same work by hand, and stays the way to sync from a local binary.
 
@@ -25,10 +25,12 @@ Run the steps in this order:
 2. Update the release data from the kong-harnesses releases:
 
    ```sh
-   KONG_HARNESSES_RELEASES_REPO=<owner>/<name> GH_TOKEN=<token> node fetch-versions.js
+   export KONG_HARNESSES_RELEASES_REPO='OWNER/NAME'
+   export GH_TOKEN='TOKEN'
+   node fetch-versions.js
    ```
 
-   Set `KONG_HARNESSES_RELEASES_REPO` to the repository that publishes the releases, the same value as the repository variable. Without it the script exits with an error. Set `GH_TOKEN` to a GitHub token. Without it the script sends the request with no token, and when the request fails it exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
+   Replace `OWNER/NAME` with the repository that publishes the releases, the same value as the repository secret. Without `KONG_HARNESSES_RELEASES_REPO` the script exits with an error. Replace `TOKEN` with a GitHub token. Without `GH_TOKEN` the script sends the request with no token, and when the request fails it exits with a message that asks for `GH_TOKEN`. `gh auth token` can supply the token for a logged-in `gh` session.
 
 3. Update the help text from the installed binary:
 

@@ -199,9 +199,21 @@ export async function buildCobraCommandTree({
 
 const RELEASES_PER_PAGE = 100;
 
-// The same rule as the sync workflow and the kong-harnesses install script, so
-// the release data names the release whose help the pages show.
+// The same rule as the versions job in the sync workflow, so the release data
+// names the release whose help the pages show.
 const STABLE_TAG = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
+
+// The same rule as the sync workflow and the changelog scripts. An owner can't
+// hold a dot, and a name of . or .. would point the API request at another path.
+const REPO = /^([A-Za-z0-9-]+)\/([A-Za-z0-9._-]+)$/;
+
+export function parseRepo(value) {
+  const match = REPO.exec(value ?? '');
+  if (!match || match[2] === '.' || match[2] === '..') {
+    throw new Error('The releases repository must have the form <owner>/<name>');
+  }
+  return { owner: match[1], name: match[2] };
+}
 
 export async function syncReleases({
   repo,
@@ -212,6 +224,7 @@ export async function syncReleases({
   writeFile = (filePath, content) => fs.writeFileSync(filePath, content, 'utf8'),
   env = process.env,
 }) {
+  parseRepo(repo);
   const headers = { Accept: 'application/vnd.github+json' };
   if (env.GH_TOKEN) {
     headers.Authorization = `Bearer ${env.GH_TOKEN}`;
