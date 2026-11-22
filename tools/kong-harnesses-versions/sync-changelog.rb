@@ -25,6 +25,16 @@ module KongHarnessesChangelog
     KongHarnessesChangelogLinks.repo
   end
 
+  # GitHub owner and repository names are not case-sensitive, so the value of the
+  # secret can differ in letter case from the addresses that release-please writes.
+  def own?(name)
+    name.casecmp?(repo)
+  end
+
+  def own_owner?(owner)
+    owner.casecmp?(repo.split('/').first)
+  end
+
   # Readers of the site need what changed for them, not the repository's own build, CI
   # and docs work, so only these sections are published.
   USER_SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
@@ -243,16 +253,16 @@ module KongHarnessesChangelog
     return [] unless scheme == 'https' && host == 'github.com' && [userinfo, port, registry, opaque, query, fragment].all?(&:nil?)
     return [] if path.split('/', -1).intersect?(%w[. ..])
 
-    owner, repository = repo.split('/').map { |part| Regexp.escape(part) }
+    own = "(?i:#{Regexp.escape(repo)})"
     case path
-    when %r{\A/#{owner}/#{repository}/commit/([0-9a-f]{40})\z} then [[:commit, Regexp.last_match(1)[0, 7]]]
-    when %r{\A/#{owner}/#{repository}/compare/v#{VERSION}\.\.\.v(#{VERSION})\z} then [[:compare, Regexp.last_match(1)]]
+    when %r{\A/#{own}/commit/([0-9a-f]{40})\z} then [[:commit, Regexp.last_match(1)[0, 7]]]
+    when %r{\A/#{own}/compare/v#{VERSION}\.\.\.v(#{VERSION})\z} then [[:compare, Regexp.last_match(1)]]
     when %r{\A/(#{USER})\z} then [[:user, "@#{Regexp.last_match(1)}"]]
     when %r{\A/(?<other_owner>[\w.-]+)/(?<other>[\w.-]+)/issues/(?<number>\d+)\z}
       match = Regexp.last_match
       name = "#{match[:other_owner]}/#{match[:other]}"
-      [([:issue, "##{match[:number]}"] if name == repo), [:closes, "#{name}##{match[:number]}"],
-       ([:closes, "#{match[:other]}##{match[:number]}"] if match[:other_owner] == repo.split('/').first)].compact
+      [([:issue, "##{match[:number]}"] if own?(name)), [:closes, "#{name}##{match[:number]}"],
+       ([:closes, "#{match[:other]}##{match[:number]}"] if own_owner?(match[:other_owner]))].compact
     else []
     end
   rescue URI::InvalidURIError
@@ -435,7 +445,7 @@ module KongHarnessesChangelog
   # (index.js:21247) and to a user (index.js:21259), each with its own number or name as
   # its label.
   def without_subject_links(code)
-    code.gsub(%r{\[#(\d+)\]\(https://github\.com/#{Regexp.escape(repo)}/issues/(\d+)\)|\[@(#{USER})\]\(https://github\.com/(#{USER})\)}) do
+    code.gsub(%r{\[#(\d+)\]\(https://github\.com/(?i:#{Regexp.escape(repo)})/issues/(\d+)\)|\[@(#{USER})\]\(https://github\.com/(#{USER})\)}) do
       match = Regexp.last_match
       if match[1] then match[1] == match[2] ? "##{match[1]}" : match[0]
       else match[3] == match[4] ? "@#{match[3]}" : match[0]
@@ -798,12 +808,17 @@ module KongHarnessesChangelog
   # each `[@name](https://github.com/name)` as `@name`, read with its own string
   # compares, apart from `without_subject_links`.
   def code_without_subject_links(code)
-    [['[#', "](https://github.com/#{repo}/issues/", /\A\d+\z/], ['[@', '](https://github.com/', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, prefix, label)|
+    [['[#', "#{repo}/issues/", /\A\d+\z/], ['[@', '', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, path, label)|
       text.split(open, -1).each_with_index.map do |part, index|
         next part if index.zero?
 
-        name, rest = part.split(prefix, 2)
-        next "#{open}#{part}" unless rest && name.match?(label) && rest.start_with?("#{name})")
+        name, rest = part.split('](https://github.com/', 2)
+        # GitHub names are not case-sensitive, so the repository part matches in any
+        # letter case.
+        next "#{open}#{part}" unless rest && name.match?(label) && rest[0, path.length].casecmp?(path)
+
+        rest = rest[path.length..]
+        next "#{open}#{part}" unless rest.start_with?("#{name})")
 
         "#{open[1]}#{name}#{rest.delete_prefix("#{name})")}"
       end.join
@@ -821,14 +836,14 @@ module KongHarnessesChangelog
     owner, repository, kind, id, *rest = address.delete_prefix(site).split('/', -1)
     return unless rest.empty? && [owner, repository].all? { |part| part.to_s.match?(/\A[\w.-]+\z/) && !part.match?(/\A\.\.?\z/) }
 
-    own = "#{owner}/#{repository}" == repo
+    own = "#{owner}/#{repository}".casecmp?(repo)
     label = ->(text) { html(parse("[#{text}](#{address})")).at_css('a')&.inner_html == link.inner_html }
     if kind == 'commit' && own && id.to_s.match?(/\A[0-9a-f]{40}\z/)
       :commit if label.call(id[0, 7])
     elsif kind == 'issues' && id.to_s.match?(/\A\d+\z/)
       return :issue if own && label.call("##{id}")
 
-      :closes if ["#{owner}/#{repository}##{id}", ("#{repository}##{id}" if owner == repo.split('/').first)].compact.any?(&label)
+      :closes if ["#{owner}/#{repository}##{id}", ("#{repository}##{id}" if owner.casecmp?(repo.split('/').first))].compact.any?(&label)
     end
   end
 

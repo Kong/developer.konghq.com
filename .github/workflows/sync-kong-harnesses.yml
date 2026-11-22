@@ -99,8 +99,9 @@ jobs:
             echo "::error::Set the repository secret KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases"
             exit 1
           fi
-          # The same rule as parseRepo in tools/lib/tool-versions.js. An owner
-          # can't hold a dot, and a name of . or .. would point at another path.
+          # The same rule as parseRepo in tools/lib/tool-versions.js and repo in
+          # check-changelog-links.rb. An owner can't hold a dot, and a name of .
+          # or .. would point at another path.
           owner='' name=''
           if [[ $REPO =~ ^([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
             owner=${BASH_REMATCH[1]}
@@ -257,24 +258,34 @@ jobs:
           egress-policy: audit
 
       # The repository that publishes the releases is set only in this
-      # variable, so no file in this public repository names it.
+      # secret, so no file or log of this public repository names it. GitHub
+      # masks only the whole secret, and the token step logs its inputs, so the
+      # name is masked on its own too.
       - name: Read the releases repository
         id: releases-repo
         env:
-          REPO: ${{ vars.KONG_HARNESSES_RELEASES_REPO }}
+          REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
         run: |
           if [ -z "$REPO" ]; then
-            echo "::error::Set the repository variable KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases"
+            echo "::error::Set the repository secret KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases"
             exit 1
           fi
-          if ! [[ $REPO =~ ^([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
+          # The same rule as parseRepo in tools/lib/tool-versions.js and repo in
+          # check-changelog-links.rb. An owner can't hold a dot, and a name of .
+          # or .. would point at another path.
+          owner='' name=''
+          if [[ $REPO =~ ^([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
+            owner=${BASH_REMATCH[1]}
+            name=${BASH_REMATCH[2]}
+          fi
+          if [ -z "$name" ] || [ "$name" = . ] || [ "$name" = .. ]; then
             echo "::error::KONG_HARNESSES_RELEASES_REPO must have the form <owner>/<name>"
             exit 1
           fi
+          echo "::add-mask::$name"
           {
-            echo "repo=$REPO"
-            echo "owner=${BASH_REMATCH[1]}"
-            echo "name=${BASH_REMATCH[2]}"
+            echo "owner=$owner"
+            echo "name=$name"
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub App Token for the releases
@@ -320,14 +331,14 @@ jobs:
       - name: Fetch changelog
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
-          KONG_HARNESSES_RELEASES_REPO: ${{ steps.releases-repo.outputs.repo }}
+          KONG_HARNESSES_RELEASES_REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
         run: bundle exec ruby tools/kong-harnesses-versions/sync-changelog.rb
 
       # Renders the changelog with the site's Markdown converter and refuses any link
       # or address that is left on the page.
       - name: Refuse any link or address on the changelog page
         env:
-          KONG_HARNESSES_RELEASES_REPO: ${{ steps.releases-repo.outputs.repo }}
+          KONG_HARNESSES_RELEASES_REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
         run: bundle exec ruby tools/kong-harnesses-versions/check-changelog-links.rb
 
       - name: Create pull request

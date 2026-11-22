@@ -40,10 +40,12 @@ module KongHarnessesChangelogLinks
   REPO_VARIABLE = 'KONG_HARNESSES_RELEASES_REPO'
 
   # The repository that publishes the releases is internal, so no file of this public
-  # repository names it: the sync job sets it from a repository variable.
+  # repository names it: the sync job sets it from a repository secret. The same rule
+  # as parseRepo in tools/lib/tool-versions.js: an owner can't hold a dot, and a name
+  # of . or .. would point the API request at another path.
   def repo
     name = ENV.fetch(REPO_VARIABLE, '')
-    return name if name.match?(%r{\A[A-Za-z0-9-]+/[A-Za-z0-9._-]+\z})
+    return name if name.match?(%r{\A[A-Za-z0-9-]+/(?!\.\.?\z)[A-Za-z0-9._-]+\z})
 
     raise "Set #{REPO_VARIABLE} to the <owner>/<name> of the repository that publishes the kong-harnesses releases."
   end

@@ -206,6 +206,23 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
+  # GitHub names are not case-sensitive, so a secret in another letter case still
+  # reads the addresses that release-please writes.
+  context 'with the repository in another letter case' do
+    before { stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => 'Example/SAMPLE-tool')) }
+
+    [
+      ["* **cli:** fix x ([#1](#{issue})) ([abc1234](#{commit}))", '* **cli:** fix x'],
+      ["* fix x ([abc1234](#{commit})), closes [sample-tool#7](https://github.com/example/sample-tool/issues/7)", '* fix x'],
+      ['* see [#12](https://github.com/example/sample-tool/issues/12) now', '* see #12 now'],
+      ["* show an em dash `&[#8212](https://github.com/example/sample-tool/issues/8212);` in a template ([abc1234](#{commit}))", '* show an em dash `&#8212;` in a template']
+    ].each do |entry, expected|
+      it "exports #{entry.inspect}" do
+        expect(exported(section(entry))).to eq(section(expected))
+      end
+    end
+  end
+
   # The site's parser gives no node for an address in text, and only a guess could say
   # where it ends, so the export refuses such an entry and names it.
   [

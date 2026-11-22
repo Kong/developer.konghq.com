@@ -6,7 +6,7 @@ RSpec.describe KongHarnessesChangelogLinks do
   before { stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => 'example/sample-tool')) }
 
   describe '.repo' do
-    [nil, '', 'sample-tool', 'example/sample-tool/x', 'example/sample tool'].each do |value|
+    [nil, '', 'sample-tool', 'example/sample-tool/x', 'example/sample tool', 'example/..', 'example/.', '../sample-tool'].each do |value|
       it "refuses #{value.inspect} and names the variable" do
         stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => value).compact)
         expect { described_class.check(entry('add')) }.to raise_error(/KONG_HARNESSES_RELEASES_REPO/)
@@ -67,6 +67,15 @@ RSpec.describe KongHarnessesChangelogLinks do
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
+      end
+    end
+
+    # GitHub names are not case-sensitive, so the address is refused in any letter case
+    # of the secret and of the text.
+    ['run `go install github.com/example/sample-tool/cmd/x`', 'see `github.com/EXAMPLE/sample-TOOL`'].each do |text|
+      it "refuses #{text.inspect} with the repository in another letter case" do
+        stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => 'Example/SAMPLE-tool'))
+        expect { described_class.check(entry(text)) }.to raise_error(/releases repository/)
       end
     end
 
