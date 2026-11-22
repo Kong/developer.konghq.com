@@ -189,6 +189,10 @@ module KongHarnessesChangelogLinks
       found << "the releases repository in #{place(node)}" if normalize(seen).match?(repository)
       found << "a dot segment in a GitHub address in #{place(node)}" if normalize(seen).match?(DOT_SEGMENT)
     end
+    shown = fragment.element_children.select { |node| node.name == 'h2' }.map { |heading| shown_version(heading) }
+    shown.each_with_index do |version, index|
+      found << "a second release #{version} at release heading #{index + 1}" if version && shown.take(index).include?(version)
+    end
     found.uniq
   end
 
@@ -274,7 +278,8 @@ module KongHarnessesChangelogLinks
   # `releases`, each release heading of the source as the version that the source writes
   # and the version that the heading shows, and a heading names the release that shows
   # the same version, because kramdown shows `--` in a heading as a dash. The export
-  # refuses a heading that does not show exactly the version of its line. The heading
+  # refuses a heading that does not show exactly the version of its line, and a version
+  # that an earlier heading has, so each release shows a version of its own. The heading
   # text names a release only when none matches.
   def release_of(heading, releases = nil)
     shown = shown_version(heading)

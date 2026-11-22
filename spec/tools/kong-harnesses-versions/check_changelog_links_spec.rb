@@ -170,6 +170,8 @@ RSpec.describe KongHarnessesChangelogLinks do
        'an address in the heading of section 2 of release 0.17.1 '],
       ['an entry of an unknown section', page.sub('### Bug Fixes', '### Other').sub('follow the', 'follow a@b the'),
        'an address in release 0.17.1, section 2, entry 2 on the page '],
+      ['a second release with the version of an earlier one', page.sub('## 0.17.0 (2026-11-18)', '## 0.17.1 (2026-11-18)'),
+       'a second release 0.17.1 at release heading 2'],
     ].each do |name, markdown, place|
       it "names the place of #{name}" do
         expect { described_class.check(markdown) }.to raise_error(RuntimeError, /#{Regexp.escape(place)}/)

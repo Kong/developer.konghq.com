@@ -662,15 +662,18 @@ module KongHarnessesChangelog
       end
     end
 
-    # Each release heading shows exactly the version of its line, so a place on the page
-    # finds the release of each heading by its version.
+    # Each release heading shows exactly the version of its line, and no two lines have
+    # the same version, as release-please writes them, so a place on the page names one
+    # release for each heading.
     shown = release_headings(source).map { |node| KongHarnessesChangelogLinks.shown_version(node) }
-    versions = releases.zip(shown).map do |release, version_shown|
+    versions = []
+    releases.zip(shown).each do |release, version_shown|
       line = release[:heading].options[:location]
       version = version_of(release[:heading], lines) or raise("The changelog has a release heading with no version on line #{line}.")
       raise "The changelog has a release heading on line #{line} that does not show exactly its version, so the export refuses it." unless version_shown == version
+      raise "The changelog has a second release heading for #{version} on line #{line}, so the export refuses it." if versions.include?(version)
 
-      version
+      versions << version
     end
     raise "The changelog has no section for #{highest}, the highest final release." unless finals.include?(highest) && versions.include?(highest)
 

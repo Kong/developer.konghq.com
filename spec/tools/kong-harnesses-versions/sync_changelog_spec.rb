@@ -806,6 +806,16 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
+  # release-please writes each version once, and a place on the page names a release
+  # by its version.
+  it 'refuses a second release heading with the version of an earlier one' do
+    expect { exported("## 1.0.0\n\n### Features\n\n* add\n\n## 1.0.0\n\n### Features\n\n* fix\n") }
+      .to raise_error(/second release heading for 1\.0\.0 on line 7,/)
+    compare = 'https://github.com/example/sample-tool/compare/v0.9.0...v1.0.0'
+    expect { exported("## [1.0.0](#{compare}) (2026-11-22)\n\n### Features\n\n* add\n\n## [1.0.0](#{compare}) (2026-11-21)\n\n### Features\n\n* fix\n") }
+      .to raise_error(/second release heading for 1\.0\.0 on line 7,/)
+  end
+
   # The page check reads the version of a heading from the page, so each heading that
   # the export takes must give the page check the version of its line.
   it 'gives the page check the version of each release heading that it takes' do
