@@ -185,7 +185,8 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
 If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue.
-A proxy that forwards a request to an `http://` gateway can read your access token.
+A proxy that forwards a request to an `http://` gateway can read your access token and your prompts.
+The proxy can read your prompts even when the credential helper withholds the token, because {{ site.claude_code }} still sends the request.
 When a proxy applies to the gateway host in the current shell, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
 When `profile activate` configures {{ site.claude_code }} for an `http://` gateway, it writes `NO_PROXY` and `no_proxy` into {{ site.claude_code }} user settings.
 {{ site.claude_code }} uses those settings values instead of the shell's `NO_PROXY` for its own requests and passes them to subprocesses it starts, including the kong-harnesses credential helper.
