@@ -38,7 +38,7 @@ Developers installing kong-harnesses for their own account use the single-user s
 
 ## Platform packages
 
-Download packages from `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`.
+Download packages from the kong-harnesses Cloudsmith repository at `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`.
 Choose `_amd64` for Intel and AMD (x64) processors, or `_arm64` for Arm processors such as Apple silicon.
 A prerelease doesn't include the Windows installer (`.msi`).
 
@@ -69,13 +69,13 @@ rows:
 
 Verify every downloaded package before installing it or adding it to an MDM tool.
 The SHA-256 checksum confirms the file is complete.
-The build provenance confirms the kong-harnesses release workflow built it from the release tag.
+The build provenance confirms that a Kong GitHub Actions workflow built it from the release tag on a GitHub-hosted runner.
 
 {:.warning}
 > Do not install a file or add it to an MDM tool until all checks pass.
-> A file that fails a check might not be the file built by the release workflow.
+> A file that fails a check might not be the file that Kong built.
 
-Download `SHA256SUMS.txt` and `kong-harnesses_TAG.sigstore.json` from the same release into the folder containing the package.
+Download `SHA256SUMS.txt` and `kong-harnesses_TAG.sigstore.json` of the same release from the kong-harnesses Cloudsmith repository into the folder containing the package.
 Replace `TAG` with the release version including its leading `v`, for example `v1.2.3`.
 Run the following checks from that folder, replacing `FILE` with the full filename including its extension.
 
@@ -126,9 +126,9 @@ Install the [GitHub CLI](https://cli.github.com/) and verify `FILE` against `kon
 ```sh
 gh attestation verify FILE \
   --bundle kong-harnesses_TAG.sigstore.json \
-  --repo Kong/kong-harnesses \
-  --signer-workflow Kong/kong-harnesses/.github/workflows/release.yml \
-  --source-ref refs/tags/TAG
+  --owner Kong \
+  --source-ref refs/tags/TAG \
+  --deny-self-hosted-runners
 ```
 
 {% endnavtab %}
@@ -137,9 +137,9 @@ gh attestation verify FILE \
 ```powershell
 gh attestation verify FILE `
   --bundle kong-harnesses_TAG.sigstore.json `
-  --repo Kong/kong-harnesses `
-  --signer-workflow Kong/kong-harnesses/.github/workflows/release.yml `
-  --source-ref refs/tags/TAG
+  --owner Kong `
+  --source-ref refs/tags/TAG `
+  --deny-self-hosted-runners
 ```
 
 {% endnavtab %}
