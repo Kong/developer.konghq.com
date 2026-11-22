@@ -436,12 +436,20 @@ Each choice is `true` or `false`. From version 14, each choice is optional, and 
 
 `profile activate` keeps the value that a setting had before it wrote the setting the first time. When a later profile leaves the choice out, or sets `auto_updates: true`, `profile activate` puts that earlier value back, so a setting that you or another tool wrote before can still turn the feature off.
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey. `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey. `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` each turn off both commands. So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback` and the feedback survey.
+`DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey.
+`DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, and either turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
+So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
 
-* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or, in a `subscription` profile, `true` for `artifact`. Releases up to 0.17.1 accepted `artifact: true` with `auto_updates: false`, so a profile that they installed with this pair still reads.
+* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or, in a `subscription` profile, `true` for `artifact`.
+  Releases up to 0.17.1 accepted `artifact: true` with `auto_updates: false`, so a `subscription` profile that they installed with this pair still reads.
+  In that profile, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` keeps artifacts off, and `profile activate` and `profile get` say so and ask for a version 18 profile.
 * `feature_flags: true` can't go with `anthropic_telemetry: false`.
 * From version 18, `error_reports: true` and `feedback_survey: true` can't go with `anthropic_telemetry: false`.
 * `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
+  From version 18, `profile create` and `profile import` also refuse a profile that sets only one of `bug_command` and `feedback_command` and leaves the other out.
+
+Apart from `bug_command` and `feedback_command` in version 18, an omitted choice never causes a conflict.
 
 {% table %}
 columns:
@@ -505,7 +513,12 @@ rows:
     on: "Version 18 and later. Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway."
 {% endtable %}
 
-From version 18, when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or a `subscription` profile sets `true` for `artifact`, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, whatever `auto_updates` is. A value that you export in the shell then can't turn those features off.
+From version 18, when the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command` or `feedback_survey`, or a `subscription` profile sets `true` for `artifact`, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, whatever `auto_updates` is.
+A value that you export in the shell then can't turn those features off.
+When the Claude Desktop app or a self-hosted environment runner starts a session, its launch environment [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over settings, so a `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` value set there stays on even when activation writes the switch blank.
+While activation writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, `auto_updates: false` turns off only automatic updates of {{ site.claude_code }}, its plugins, and its marketplaces.
+Other nonessential background traffic resumes where each feature's own conditions apply.
+Choices set to `false` keep their own traffic off, and {{ site.claude_code }} still skips the fast mode availability check with a gateway key.
 
 When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its own default, which loads every tool at the start behind a gateway.
 
