@@ -189,6 +189,7 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 {% navtab "macOS" %}
 
 Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
+A later save updates the item in that keychain and doesn't move it.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 Do these steps once for each keychain that `security list-keychains` prints.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
