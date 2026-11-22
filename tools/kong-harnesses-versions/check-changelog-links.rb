@@ -265,23 +265,16 @@ module KongHarnessesChangelogLinks
   end
 
   # The release of a release heading of the page. A caller that has the source passes
-  # `releases`, each release heading of the source in its order as the version that the
-  # source writes and the version that the heading shows, and a heading names the
-  # release that shows the same version. kramdown shows `--` in a heading as a dash, and
-  # a suffix after the compare link of a heading shows as part of the version, so two
-  # releases can show the same one: then the heading names the release at its own
-  # position among the headings that show that version. The heading text names a
-  # release only when none matches.
+  # `releases`, each release heading of the source as the version that the source writes
+  # and the version that the heading shows, and a heading names the release that shows
+  # the same version, because kramdown shows `--` in a heading as a dash. The export
+  # refuses a heading that does not show exactly its version, so no two releases show
+  # the same one. The heading text names a release only when none matches.
   def release_of(heading, releases = nil)
     shown = shown_version(heading)
     same = releases.to_a.select { |_, version| version == shown }
     return same.first.first if same.length == 1
 
-    if same.length > 1
-      peers = heading.parent.element_children.select { |node| node.name == 'h2' && shown_version(node) == shown }
-      release = same.dig(peers.index(heading), 0)
-      return release if release
-    end
     written_version(heading.text.strip)[HEADING_VERSION, 1] || 'with no version'
   end
 

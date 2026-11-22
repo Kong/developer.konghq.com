@@ -795,21 +795,13 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/does not write so in the entry or block on line 5, in release 0\.9\.0,/)
   end
 
-  # A suffix after the compare link of a heading shows as part of its version, so two
-  # headings can show the same version. Each names the release at its own position.
-  it 'names the release of a heading that shows the version of another' do
-    allow_any_instance_of(described_class::Writer).to receive(:convert_codeblock).and_wrap_original do |original, element, opts| # rubocop:disable RSpec/AnyInstance
-      element.attr.delete('class')
-      element.options.delete(:lang)
-      original.call(element, opts)
+  # Text right after the compare link shows as part of the version, so the page would
+  # show a version that no release has, or the version of another release.
+  it 'refuses a release heading that does not show exactly its version' do
+    ['beta', '.1', '-rc.1'].each do |suffix|
+      markdown = "## 1.0.0\n\n### Features\n\n* add\n\n## [0.9.0](https://github.com/example/sample-tool/compare/v0.8.0...v0.9.0)#{suffix} (2026-11-22)\n\n### Features\n\n* fix\n"
+      expect { exported(markdown, %w[1.0.0 0.9.0]) }.to raise_error(/release heading on line 7 that does not show exactly its version/), suffix
     end
-    step = "* **cli:** add a step\n\n  ```sh\n  koha login\n  ```\n"
-    final = '## [1.0.0](https://github.com/example/sample-tool/compare/v0.9.0...v1.0.0)-rc.1 (2026-11-22)'
-    candidate = '## 1.0.0-rc.1 (2026-11-20)'
-    expect { exported("#{final}\n\n### Features\n\n#{step}\n#{candidate}\n\n### Features\n\n* fix\n", %w[1.0.0 1.0.0-rc.1]) }
-      .to raise_error(/language of the code block in release 1\.0\.0, section Features, code block 1 on the page,/)
-    expect { exported("#{final}\n\n### Features\n\n* fix\n\n#{candidate}\n\n### Features\n\n#{step}", %w[1.0.0 1.0.0-rc.1]) }
-      .to raise_error(/language of the code block in release 1\.0\.0-rc\.1, section Features, code block 1 on the page,/)
   end
 
   it 'counts the entries at the source, and the page check counts the entries on the page' do

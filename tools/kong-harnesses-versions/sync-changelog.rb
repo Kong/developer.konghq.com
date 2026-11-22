@@ -662,9 +662,15 @@ module KongHarnessesChangelog
       end
     end
 
-    versions = releases.map do |release|
-      version_of(release[:heading], lines) ||
-        raise("The changelog has a release heading with no version on line #{release[:heading].options[:location]}.")
+    # Each release heading shows exactly its version, so a place on the page names one
+    # release for it.
+    shown = release_headings(source).map { |node| KongHarnessesChangelogLinks.shown_version(node) }
+    versions = releases.zip(shown).map do |release, version_shown|
+      line = release[:heading].options[:location]
+      version = version_of(release[:heading], lines) or raise("The changelog has a release heading with no version on line #{line}.")
+      raise "The changelog has a release heading on line #{line} that does not show exactly its version, so the export refuses it." unless version_shown == version
+
+      version
     end
     raise "The changelog has no section for #{highest}, the highest final release." unless finals.include?(highest) && versions.include?(highest)
 
@@ -723,8 +729,7 @@ module KongHarnessesChangelog
   end
 
   # The release headings of the source as the page shows them, one for each of
-  # `release_elements` and in one fragment, so that `release_of` sees the position of
-  # each among them.
+  # `release_elements`.
   def release_headings(source)
     root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
     root.children.concat(release_elements(source))
