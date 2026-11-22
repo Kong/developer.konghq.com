@@ -17,9 +17,9 @@ It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS`
 A profile that an earlier release imported doesn't keep that URL.
 A missing or unreadable file gets a separate result.
 It judges the `NODE_EXTRA_CA_CERTS` file for each client of the profile that reads it, with the root CAs that the client trusts when the variable is set, and names the client in a failure.
-For {{ site.claude_code }}, it uses the value in the `env` block of the [user settings](/kong-harnesses/developer-computer-changes/#claude-code-settings) when that block sets one, and else the value in the environment.
-For OpenCode as a background service, it uses the value in the environment of the service.
-For omp, when the environment doesn't set the variable, it uses the value that omp uses: the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#agent-clis-that-need-more-than-the-system-trust-store), with the directory where you run `doctor` as the directory where omp starts.
+For {{ site.claude_code }}, it uses the value in the `env` block of the [user settings](/kong-harnesses/developer-computer-changes/#claude-code-settings) when that block sets one, or else the value in the environment.
+For OpenCode, it uses the value in the environment, or in the environment of the service when OpenCode runs as a background service.
+For omp, when the environment doesn't set the variable, it uses the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#agent-clis-that-need-more-than-the-system-trust-store), with the directory where you run `doctor` as the directory where omp starts.
 It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
 ## Command usage
