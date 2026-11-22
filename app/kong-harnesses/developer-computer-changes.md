@@ -50,7 +50,7 @@ kong-harnesses setup ./PROFILE_NAME.json
 Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
 It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
 When `setup` sets up OpenCode or Hermes Agent, also when the same run sets up {{ site.claude_code }}, the developer runs the sign-in command that `kong-harnesses status` names for that agent CLI, then restarts the agent CLI.
-When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists.
+When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists, and leaves out any when its gateway route is missing or the gateway refuses the sign-in.
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
 When the developer adds `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
