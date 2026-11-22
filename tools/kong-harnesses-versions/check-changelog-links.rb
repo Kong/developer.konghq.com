@@ -259,13 +259,20 @@ module KongHarnessesChangelogLinks
   end
 
   # kramdown shows `--` in a heading as a dash, so a caller that has the version of each
-  # release heading, as the source writes it, passes them in page order. They name a
-  # heading only when the page has one heading for each.
+  # release heading, as the source writes it, passes them, and a heading names the one
+  # that it shows. The heading text names it only when none matches.
   def release_of(heading, releases = nil)
-    headings = heading.parent.element_children.select { |node| node.name == 'h2' }
-    return releases[headings.index(heading)] if releases && headings.length == releases.length
+    shown = heading.text.strip
+    written = written_version(shown[SHOWN_VERSION].to_s)
+    releases.to_a.find { |release| release == written } || shown[RELEASE] || 'with no version'
+  end
 
-    heading.text.strip[RELEASE] || 'with no version'
+  # The version at the start of a heading, with the dashes and the ellipsis that kramdown
+  # makes of `--`, `---` and `...`.
+  SHOWN_VERSION = /\A[0-9A-Za-z.+\-–—…]+/
+
+  def written_version(shown)
+    shown.gsub('—', '---').gsub('–', '--').gsub('…', '...')
   end
 
   def section_name(section, release)

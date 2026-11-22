@@ -106,8 +106,8 @@ Run the steps in this order:
    `check-changelog-links.rb` reads only the page, so it counts the entries on the page and says "on the page".
    The checks of the whole page below read the page too, so they name the first place that they refuse on the page in the same way, and a code block by its number in its section.
    The check of the text that a reader sees names the release, or the first block that differs when the page and the source hold other releases.
-   A place names a release by the version that its `CHANGELOG.md` heading writes, also with `--`, which kramdown shows as a dash.
-   They name a link that release-please does not write so by the line in `CHANGELOG.md` where its entry or block starts, and its release.
+   A place names a release by the version that its `CHANGELOG.md` heading writes, also with `--`, which kramdown shows as a dash, and finds it by the version that the heading shows, not by the order of the headings.
+   The checks name a link that release-please does not write so by the line in `CHANGELOG.md` where its entry or block starts, and its release.
    release-please links each `#N` and `@name` of a subject also in code, so such a link in a code span becomes `#N` or `@name` again, as in `` `&#8212;` `` or `` `@local` ``, and the script refuses code that holds any other link.
    Outside code, the writer escapes the `&` of `&#8212;` once the link between its parts goes, so the page still shows `&#8212;`.
    It also refuses a character reference to no character and a hidden code point, raw or as a character reference: a control character other than a tab or a line end, a line or paragraph separator (U+2028, U+2029), a noncharacter, a format character (the Unicode `Cf` category) and any other character that shows nothing by default (the Unicode `Default_Ignorable_Code_Point` property), such as a character that changes the order of text, a variation selector, a Hangul filler or a tag character.

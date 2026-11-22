@@ -783,6 +783,14 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/sees in the heading of release 0\.9\.0,/)
   end
 
+  # A place finds a release by the version that its heading shows, so a caller that
+  # sorts the releases otherwise than the headings still names the right one.
+  it 'names the release of a heading by its version, not its position' do
+    page = "## 0.9.0-beta--2\n\n### Features\n\n* add\n\n## 1.0.0\n\n### Features\n\n* fix\n"
+    expect { described_class.written(page.sub('* add', '* add [x](https://example.org)'), described_class.parse(page), releases: %w[1.0.0 0.9.0-beta--2]) }
+      .to raise_error(/write a link back in release 0\.9\.0-beta--2, section Features, entry 1 on the page,/)
+  end
+
   it 'counts the entries at the source, and the page check counts the entries on the page' do
     expect { exported(release_please_changelog.sub('follow the', "follow‮ the"), ['0.17.1']) }
       .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 4,/)

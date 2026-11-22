@@ -761,7 +761,7 @@ module KongHarnessesChangelog
     # A release heading shows its version as its tag writes it, so `--` in the version
     # reads the same as the dash that kramdown makes of it in the source.
     fragment.css('h2').each do |heading|
-      heading.content = heading.text.sub(/\A[0-9A-Za-z.+\-–—…]+/) { |version| version.gsub('—', '---').gsub('–', '--').gsub('…', '...') }
+      heading.content = heading.text.sub(KongHarnessesChangelogLinks::SHOWN_VERSION) { |version| KongHarnessesChangelogLinks.written_version(version) }
     end
     section = nil
     fragment.children.each do |node|
