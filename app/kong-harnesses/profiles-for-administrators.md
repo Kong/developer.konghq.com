@@ -110,47 +110,25 @@ For an example with Okta, see [Set up {{ site.claude_code }} with kong-harnesses
 {% navtab "Anthropic API" %}
 
 ```sh
-kong-harnesses profile create \
-  --name PROFILE_NAME \
-  --issuer ISSUER_URL \
-  --client-id CLIENT_ID \
-  --audience AUDIENCE \
-  --gateway-origin GATEWAY_ORIGIN \
-  --model MODEL_NAME
+kong-harnesses profile create --name PROFILE_NAME --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model MODEL_NAME
 ```
 
 {% endnavtab %}
 {% navtab "Microsoft Foundry" %}
 
 ```sh
-kong-harnesses profile create \
-  --name PROFILE_NAME \
-  --provider foundry \
-  --issuer ISSUER_URL \
-  --client-id CLIENT_ID \
-  --audience AUDIENCE \
-  --gateway-origin GATEWAY_ORIGIN \
-  --model FOUNDRY_DEPLOYMENT_NAME
+kong-harnesses profile create --name PROFILE_NAME --provider foundry --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model FOUNDRY_DEPLOYMENT_NAME
 ```
 
 {% endnavtab %}
 {% navtab "Amazon Bedrock Mantle" %}
 
 ```sh
-kong-harnesses profile create \
-  --name PROFILE_NAME \
-  --provider mantle \
-  --issuer ISSUER_URL \
-  --client-id CLIENT_ID \
-  --audience AUDIENCE \
-  --gateway-origin GATEWAY_ORIGIN \
-  --model BEDROCK_MODEL_ID
+kong-harnesses profile create --name PROFILE_NAME --provider mantle --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model BEDROCK_MODEL_ID
 ```
 
 {% endnavtab %}
 {% endnavtabs %}
-
-In PowerShell, end each continued line with a backtick (`` ` ``) instead of `\`, or write the command on one line.
 
 {% table %}
 columns:
