@@ -5,6 +5,12 @@ groups:
       - items:
           - path: /kong-harnesses/
 
+  - title: How-to Guides
+    sections:
+      - items:
+          - path: /kong-harnesses/roll-out-claude-code-through-mdm/
+          - path: /kong-harnesses/remove-a-claude-code-fleet-build/
+
   - title: CLI References
     sections:
       - title: Get Started
@@ -33,3 +39,9 @@ groups:
       - title: Diagnose Problems
         items:
           - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/troubleshooting/claude-code-fleet/
+
+  - title: Claude Code
+    sections:
+      - items:
+          - path: /kong-harnesses/fleet-build-options/

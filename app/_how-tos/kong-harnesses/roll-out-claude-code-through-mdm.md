@@ -26,12 +26,18 @@ tags:
   - anthropic
 
 related_resources:
-  - text: Set up {{ site.claude_code }} with kong-harnesses
-    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
-  - text: Install kong-harnesses for every user of a computer
-    url: /kong-harnesses/install/
+  - text: "{{ site.claude_code }} fleet build options"
+    url: /kong-harnesses/fleet-build-options/
   - text: Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model
     url: /kong-harnesses/maintain-a-claude-code-fleet/
+  - text: Remove a {{ site.claude_code }} fleet build
+    url: /kong-harnesses/remove-a-claude-code-fleet-build/
+  - text: Troubleshoot a {{ site.claude_code }} fleet
+    url: /kong-harnesses/troubleshooting/claude-code-fleet/
+  - text: Install kong-harnesses for every user of a computer
+    url: /kong-harnesses/install/
+  - text: Set up {{ site.claude_code }} with kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - text: "{{ site.claude_code }} managed settings"
     url: https://code.claude.com/docs/en/managed-settings
 
