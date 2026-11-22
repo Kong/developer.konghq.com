@@ -152,12 +152,8 @@ module KongHarnessesChangelogLinks
     text.match?(HIDDEN) || text.gsub(FLAGS, '').match?(TAG)
   end
 
-  def hidden?(fragment)
-    found = false
-    fragment.traverse do |node|
-      found ||= node.text? ? hidden_text?(node.content) : node.element? && node.attribute_nodes.any? { |attribute| hidden_text?(attribute.value) }
-    end
-    found
+  def hidden?(node)
+    node.text? ? hidden_text?(node.content) : node.element? && node.attribute_nodes.any? { |attribute| hidden_text?(attribute.value) }
   end
 
   def problems(markdown)
@@ -169,8 +165,9 @@ module KongHarnessesChangelogLinks
   def html_problems(html)
     repository = repository_pattern
     fragment = Nokogiri::HTML5.fragment(html)
-    found = hidden?(fragment) ? ['a hidden code point'] : []
+    found = []
     fragment.traverse do |node|
+      found << "a hidden code point in #{place(node)}" if hidden?(node)
       if node.element?
         allowed = ELEMENTS[node.name]
         if allowed.nil?
@@ -201,7 +198,8 @@ module KongHarnessesChangelogLinks
 
   # Where a node is on the page, as its release, section and entry number. An error
   # names no text of the changelog: GitHub masks only the exact text of a secret, so
-  # the job log would show the repository in another letter case.
+  # the job log would show the repository in another letter case. The numbers count
+  # what the page holds, which has no tooling entries, so they say "on the page".
   def place(node)
     top = node
     top = top.parent until top.fragment? || top.parent.nil? || top.parent.fragment?
@@ -217,21 +215,23 @@ module KongHarnessesChangelogLinks
       item = node.ancestors.find { |ancestor| ancestor.parent == top } || node
       entries = before.select { |sibling| %w[ul ol].include?(sibling.name) }.sum { |list| list.element_children.length }
       index = item == top ? 0 : top.element_children.index(item).to_i
-      "#{where}, entry #{entries + index + 1}"
+      "#{where}, entry #{entries + index + 1} on the page"
     else
-      "#{where}, block #{before.length + 1}"
+      "#{where}, block #{before.length + 1} on the page"
     end
   end
 
   # The release and section that the top-level element `top` is in, and the elements
-  # between the section heading and `top`.
+  # between the section heading and `top`. A heading is its own release or section.
   def heading_of(top)
+    return [release_of(top), nil, []] if top.name == 'h2'
+
     before = []
-    section = nil
+    section = top.name == 'h3' ? top : nil
     sibling = top.previous_element
     while sibling
       if sibling.name == 'h2'
-        return [sibling.text.strip[RELEASE] || 'with no version', section ? section_name(section, sibling) : nil, before]
+        return [release_of(sibling), section ? section_name(section, sibling) : nil, before]
       elsif sibling.name == 'h3' && section.nil?
         section = sibling
       elsif section.nil?
@@ -240,6 +240,10 @@ module KongHarnessesChangelogLinks
       sibling = sibling.previous_element
     end
     [nil, section ? section_name(section, nil) : nil, before]
+  end
+
+  def release_of(heading)
+    heading.text.strip[RELEASE] || 'with no version'
   end
 
   def section_name(section, release)

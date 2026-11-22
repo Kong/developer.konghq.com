@@ -120,7 +120,7 @@ RSpec.describe KongHarnessesChangelogLinks do
     end
 
     it 'refuses a control character in an attribute' do
-      expect(described_class.html_problems("<h2 id=\"a\u0002b\">x</h2>")).to include('a hidden code point')
+      expect(described_class.html_problems("<h2 id=\"a\u0002b\">1.0.0</h2>")).to include('a hidden code point in the heading of release 1.0.0')
     end
 
     # The spec loads the site plugins, which highlight code blocks with Shiki, so these
@@ -137,6 +137,43 @@ RSpec.describe KongHarnessesChangelogLinks do
     it 'names the place of a refused entry and none of its text' do
       markdown = "## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n\n### Bug Fixes\n\n* fix\n* see `github.com/EXAMPLE/SAMPLE-TOOL` and <SAMPLE-TOOL>x</SAMPLE-TOOL>\n"
       expect { described_class.check(markdown) }.to raise_error(/in release 1\.0\.0, section Bug Fixes, entry 2/) { |error| expect(error.message).not_to match(/sample-tool|see /i) }
+    end
+
+    # The page that the sync spec's release-please fixture gives, with an older release.
+    page = <<~MARKDOWN
+      ## 0.17.1 (2026-11-19)
+
+      ### ⚠ BREAKING CHANGES
+
+      * **profile:** run login again after the upgrade
+
+      ### Bug Fixes
+
+      * **profile:** accept plain http for a gateway on loopback
+      * **docs:** follow the Claude Code settings
+
+      ## 0.17.0 (2026-11-18)
+
+      ### Features
+
+      * **cli:** add a flag
+    MARKDOWN
+
+    [
+      ['a hidden code point in an entry', page.sub('follow the', "follow‮ the"),
+       'a hidden code point in release 0.17.1, section Bug Fixes, entry 2 on the page'],
+      ['a bad heading of the second release', page.sub('## 0.17.0 (2026-11-18)', '## 0.17.0 (2026-11-18) a@b'),
+       'an address in the heading of release 0.17.0 '],
+      ['a bad heading of the second section', page.sub('### Bug Fixes', "### Bug Fixes\n{: data-x=\"1\"}"),
+       'an attribute that plain text markup does not have in the heading of section Bug Fixes of release 0.17.1'],
+      ['a bad heading of an unknown section', page.sub('### Bug Fixes', '### Other a@b'),
+       'an address in the heading of section 2 of release 0.17.1 '],
+      ['an entry of an unknown section', page.sub('### Bug Fixes', '### Other').sub('follow the', 'follow a@b the'),
+       'an address in release 0.17.1, section 2, entry 2 on the page '],
+    ].each do |name, markdown, place|
+      it "names the place of #{name}" do
+        expect { described_class.check(markdown) }.to raise_error(RuntimeError, /#{Regexp.escape(place)}/)
+      end
     end
 
     it 'reads every language of the Shiki plugin and refuses an entry or a form that it cannot read' do

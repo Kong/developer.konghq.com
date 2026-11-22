@@ -709,6 +709,23 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/sees in release 0\.9\.0,/) { |error| expect(error.message).not_to match(/sample-tool|see /i) }
   end
 
+  # The docs entry of the fixture is the fourth Bug Fixes entry at the source, and the
+  # page drops the ksai and deps entries before it.
+  it 'names the place of raw HTML and of code that starts a block' do
+    expect { exported(release_please_changelog.sub('follow the', 'follow <b>the</b>'), ['0.17.1']) }
+      .to raise_error(/raw HTML in release 0\.17\.1, section Bug Fixes, entry 4,/)
+    expect { exported(release_please_changelog.sub('follow the', "follow `x\n  <profile>` the"), ['0.17.1']) }
+      .to raise_error(/code with a line that starts a block in release 0\.17\.1, section Bug Fixes, entry 4,/)
+  end
+
+  it 'counts the entries at the source, and the page check counts the entries on the page' do
+    expect { exported(release_please_changelog.sub('follow the', "follow‮ the"), ['0.17.1']) }
+      .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 4,/)
+    page = exported(release_please_changelog, ['0.17.1']).sub('follow the', "follow‮ the")
+    expect { KongHarnessesChangelogLinks.check(page) }
+      .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 2 on the page/)
+  end
+
   # The check reads the text from a second rendering of the source and lets only the
   # references at the end of an entry go.
   it 'refuses a page that changes the text of the source' do

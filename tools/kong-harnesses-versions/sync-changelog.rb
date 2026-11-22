@@ -364,10 +364,10 @@ module KongHarnessesChangelog
 
   # Refuses an element that the export cannot write back, and drops every attribute but
   # the language of a code block, so no attribute list reaches the page.
-  def cleaned(element)
+  def cleaned(element, entry)
     unless strikethrough?(element)
-      raise 'The changelog has raw HTML, which the export cannot write back safely.' if %i[html_element xml_comment xml_pi].include?(element.type)
-      raise "The changelog has #{element.type}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
+      raise "The changelog has raw HTML in #{entry}, which the export cannot write back safely." if %i[html_element xml_comment xml_pi].include?(element.type)
+      raise "The changelog has #{element.type} in #{entry}, which the export cannot write back safely." unless ELEMENTS.include?(element.type)
     end
 
     language = element.attr['class'].to_s[/(?:\A|\s)language-(\S+)/, 1] if element.type == :codeblock
@@ -413,7 +413,7 @@ module KongHarnessesChangelog
   def checked(element, entry)
     address = element.attr['href'].to_s
     kind, label = link_kind(element, address) if element.type == :a
-    cleaned(element)
+    cleaned(element, entry)
     hidden(element, entry)
     case element.type
     when :a, :img
@@ -422,7 +422,7 @@ module KongHarnessesChangelog
       raise "The changelog has a link in #{entry}, and the page shows no links. Only the references that release-please writes go. Write the entry without the link at the source."
     when :codespan, :codeblock
       element.value = without_subject_links(element.value) if element.type == :codespan
-      raise 'The changelog has code with a line that starts a block, which the export cannot write back safely.' if element.type == :codespan && code_breaks_paragraph?(element)
+      raise "The changelog has code with a line that starts a block in #{entry}, which the export cannot write back safely." if element.type == :codespan && code_breaks_paragraph?(element)
       raise "The changelog has a link in the code of #{entry}. Write the code without the link at the source." if types_of(parse(element.value)).intersect?(%i[a img])
       # The writer writes nothing for a code block of only white space.
       return [] if element.type == :codeblock && element.value.strip.empty?
@@ -579,7 +579,8 @@ module KongHarnessesChangelog
   #
   # A refusal names the place of an entry, as its release, section and entry number, and
   # no text of it: GitHub masks only the exact text of a secret, so the job log would
-  # show the repository in another letter case.
+  # show the repository in another letter case. The numbers count the source, also the
+  # tooling entries that the page drops, because a person fixes the entry there.
   def public_section(title, content, lines, release)
     name = text_of(title).strip
     return [[], []] unless USER_SECTIONS.include?(name)
@@ -591,7 +592,7 @@ module KongHarnessesChangelog
     kept = content.flat_map do |element|
       blocks += 1 unless element.type == :blank
       if %i[ul ol].include?(element.type)
-        cleaned(element)
+        cleaned(element, where)
         with_last_lines(element.children, element.options[:last_line])
         numbers = element.children.each_with_index.to_h { |item, index| [item, entries + index + 1] }.compare_by_identity
         entries += element.children.length
