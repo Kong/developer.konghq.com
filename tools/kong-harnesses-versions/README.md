@@ -21,7 +21,8 @@ It opens the pull request with a second GitHub App token.
 
 Both jobs read the `<owner>/<name>` of the repository that publishes the kong-harnesses releases from the repository secret `KONG_HARNESSES_RELEASES_REPO`, and pass it to the scripts in the environment variable of the same name, so no file in this repository names it and GitHub masks it in the logs.
 An administrator of Kong/developer.konghq.com must add that repository secret, with the value `<owner>/<name>` in the same letter case as the repository, before the workflow can run.
-GitHub masks only that exact text, so a value in another letter case leaves the name of the repository in the logs.
+GitHub masks only that exact text, and `gh attestation verify` accepts a value in another letter case but prints the name of the repository in its own case.
+So right after the releases token step, the job stops with an error when the value differs in letter case from the repository, and the error names neither.
 The workflow also masks the owner and the name each on their own, so the job logs show `***` in place of each, also inside archive names and tool output.
 Without the secret each job fails with an error that names it.
 The workflow, `fetch-versions.js` and the changelog scripts take only an owner of letters, digits and hyphens, and a name of letters, digits, `.`, `_` and `-` that isn't `.` or `..`, and the changelog scripts compare the owner and the name without regard to letter case, as GitHub does.

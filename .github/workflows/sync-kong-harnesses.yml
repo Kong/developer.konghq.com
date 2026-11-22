@@ -128,6 +128,23 @@ jobs:
           repositories: ${{ steps.releases-repo.outputs.name }}
           permission-contents: read
 
+      # gh attestation verify matches the repository without regard to letter
+      # case, then prints it in the case of the repository, which the masks of
+      # a secret in another case miss.
+      - name: Check the letter case of the releases repository
+        env:
+          GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
+        run: |
+          if ! full_name=$(gh api "repos/$REPO" --jq .full_name); then
+            echo "::error::Could not read the releases repository"
+            exit 1
+          fi
+          if [ "$full_name" != "$REPO" ]; then
+            echo "::error::KONG_HARNESSES_RELEASES_REPO must use the exact letter case of the repository"
+            exit 1
+          fi
+
       - name: Create GitHub App Token for the pull request
         uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: pr-token

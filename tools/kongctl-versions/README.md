@@ -21,7 +21,8 @@ Set `GH_TOKEN` to raise the GitHub API rate limit.
    node fetch-versions.js
    ```
 
-   This rewrites `app/_data/tools/kongctl.yml` with one release entry per major.minor series, marking the newest series `latest`. The site only consumes the `latest` entry.
+   This rewrites `app/_data/tools/kongctl.yml` with one release entry per major.minor series, marking the newest series `latest`.
+   The site only consumes the `latest` entry.
 
 Both scripts are thin entry points over the shared library in `tools/lib/tool-versions.js`, which `tools/kong-harnesses-versions` uses too.
 
@@ -58,7 +59,8 @@ When changing the sync logic (the entry points or `tools/lib/tool-versions.js`),
    diff /tmp/kongctl-sync-snapshot/kongctl.yml ../../app/_data/tools/kongctl.yml
    ```
 
-   The help includes must be byte-identical. The yml may differ only in extra older series rows (`syncReleases` keeps up to 10 series); the `latest` entry must be unchanged.
+   The help includes must be byte-identical.
+   The yml may differ only in extra older series rows (`syncReleases` keeps up to 10 series); the `latest` entry must be unchanged.
 
 3. `git restore` and `git clean` the generated files (the local binary can add include files that `git restore` alone leaves behind) so the commit contains only the code change, then confirm with `git status --short`.
 
