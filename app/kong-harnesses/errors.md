@@ -101,7 +101,11 @@ Across the install, the profile, and every agent CLI report, `doctor` exits with
 ## Profile errors
 
 Most messages about choosing a profile start with the command name, such as `login`, `logout`, `doctor` or `profile activate`.
-When an installed profile file can't be read, `profile list` and `status` without `--profile` or `KONG_HARNESSES_PROFILE` exit with `2` and print "Unreadable" followed by the recovery step (`status` also prints "is unreadable" with that step on standard error).
+When an installed profile file can't be read, `profile list` and `status` without `--profile` or `KONG_HARNESSES_PROFILE` exit with `2`.
+`profile list` exits with `1` instead when it also can't read which profile is the default.
+In text output, they print "Unreadable" followed by the recovery step.
+With `--output json` or `--output yaml`, the state of the profile is `unreadable`, with no recovery step.
+In every output format, `status` also prints "is unreadable" with the recovery step on standard error.
 Commands that select one profile and `doctor` print the message for the cause instead.
 
 ### "selected profile does not exist"
@@ -215,8 +219,9 @@ When `profile delete` prints "your organization's managed settings run the selec
 
 An administrator installed this profile for every user of the computer, so `profile import` and `profile create` can't replace it, and `profile delete` can't remove it.
 `profile delete` refuses any machine-wide profile before asking you to confirm or removing saved keys.
-`profile import` and `profile create` print this message for an invalid or untrusted machine-wide profile too.
-Sign in to a valid machine-wide profile with `kong-harnesses login`, or ask your administrator to change or remove it.
+For a valid machine-wide profile, `profile import`, `profile create` and `setup` tell you to sign in to it with `kong-harnesses login`.
+Sign in to it, or ask your administrator to change or remove it.
+For an invalid or untrusted machine-wide profile, they print the message in ["the selected profile installed for every user is invalid"](#the-selected-profile-installed-for-every-user-is-invalid-or-the-profile-installed-for-every-user-can-be-changed-by-an-account-that-is-not-an-administrator) instead.
 
 ### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
@@ -224,7 +229,7 @@ The installed copy of a user profile fails validation or can't be read, and `pro
 `profile list` and `status` report it as unreadable with the same `profile delete` and import step, and `doctor` reports "the stored profile is invalid".
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
-When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server keys for each server that the file lists and deletes the profile file.
+When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server key for each server name in `mcp_servers` and deletes the profile file.
 If your password store keeps a key, or if `profile delete` can't read the server list from the file, its result names each item to delete from your system password store (`PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the server list).
 `profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
 When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
@@ -401,7 +406,8 @@ The message names the step that failed and the reason, and the lines before it c
 Fix the cause, using the entry for that message on this page, then run the command that the message names to resume past the finished steps.
 For a source or `--profile` run, or if `profile create` failed before saving the profile, that command is the same `setup` command.
 After `profile create` saves the profile, the message names `setup --profile PROFILE_NAME` with any `--client`, `--no-browser`, `--auto-approve`, or `--skip-route-check` flags from your run, so `setup` uses the saved profile and starts at sign-in.
-On every rerun, `setup` leaves a usable sign-in and a configured client as they are.
+On every rerun, `setup` leaves a usable sign-in as it is.
+It leaves the settings of a configured client the same only when they still match what the profile asks for, so a profile with other model aliases updates them.
 With a profile file or HTTPS URL, `setup` skips the import only when the source matches the installed profile.
 Running `setup` without a source or `--profile` starts profile creation from the first question.
 

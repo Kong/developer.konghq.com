@@ -16,7 +16,8 @@ The `setup` command imports a profile from a file or HTTPS URL, creates one inte
 Pass `--profile PROFILE_NAME` (or `-p PROFILE_NAME`) in place of a source to use any installed profile, skip the profile import or creation step, and start at sign-in.
 Passing both a profile source and `--profile` exits with a usage error.
 
-On every rerun, `setup` leaves a usable sign-in and a configured client as they are.
+On every rerun, `setup` leaves a usable sign-in as it is.
+It leaves the settings of a configured client the same only when they still match what the profile asks for, so a profile with other model aliases updates them.
 With a profile file or HTTPS URL, `setup` skips the import only when the source matches the installed profile.
 Running `setup` without a source or `--profile` starts profile creation from the first question.
 `setup` stops at the first step that fails.
