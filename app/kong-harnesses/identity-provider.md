@@ -148,19 +148,7 @@ Give the client the refresh token grant type and the `offline_access` scope.
 
 When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag.
 For the rules of the list, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
-
-When the token response has a `scope` value, it can't be empty, and each scope in it must match a different allowed scope.
-At sign-in, the allowed scopes are the scopes that the profile requests.
-At renewal, they are the last accepted list.
-After the sign-in, that list is the requested scopes that the sign-in response matched, or the scopes of the profile when the response doesn't list scopes.
-After each renewal that lists scopes, it is the scopes that the renewal response matched, and a renewal response without `scope` keeps the list.
-
-{{site.kong_harnesses}} first looks for an allowed scope that is the same as the returned scope.
-Then it looks for one that is the same after it decodes the percent escapes of the returned scope.
-Then it looks for exactly one allowed scope that is a URI with a scheme and a host, and with the returned scope as its last path segment, such as `api://API_ID/access_as_user` for `access_as_user`.
-
-The response must also keep each scope that the profile requests, other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
-A response with a `scope` value that breaks these rules fails the sign-in or the renewal.
+For the checks on the `scope` value and the other fields of a token response, see [Token responses](/kong-harnesses/identity-provider/checks/#token-responses).
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
 When the identity provider refuses a refresh token, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
