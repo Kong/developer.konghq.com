@@ -40,7 +40,6 @@ Developers installing kong-harnesses for their own account use the single-user s
 
 Download packages from the kong-harnesses Cloudsmith repository at `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`.
 Choose `_amd64` for Intel and AMD (x64) processors, or `_arm64` for Arm processors such as Apple silicon.
-A prerelease doesn't include the Windows installer (`.msi`).
 
 {% table %}
 columns:
@@ -55,7 +54,7 @@ rows:
     packages: "`_darwin_arm64.pkg`, `_darwin_amd64.pkg`"
     path: "`/usr/local/bin/kong-harnesses`"
   - platform: Windows 11 (x64 / Arm)
-    packages: "`_windows_amd64.msi`, `_windows_arm64.msi`"
+    packages: "`_windows_amd64.msi`, `_windows_arm64.msi` (not in a prerelease)"
     path: "`C:\\Program Files\\Kong\\kong-harnesses\\kong-harnesses.exe`"
   - platform: Ubuntu 26.04, 24.04, 22.04 (amd64 / arm64)
     packages: "`_linux_amd64.deb`, `_linux_arm64.deb`"
@@ -159,7 +158,7 @@ The notarization ticket is stapled to the package, so it installs without networ
 {:.warning}
 > Do not install kong-harnesses by another method on a Mac that uses the installer package.
 > On an Intel Mac, Homebrew installs `kong-harnesses` at `/usr/local/bin/kong-harnesses`, and a release archive can also go to that path.
-> Package removal cannot distinguish a release archive copy from the package copy.
+> Package removal can't distinguish a release archive copy from the package copy.
 
 ### Install on macOS
 
@@ -215,10 +214,14 @@ Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Inst
    ```
 
    The `version` line must match the release version without its leading `v`, for example `1.2.3`.
-1. Assign the package to remaining Macs only after the MDM tool reports success on the test Mac and `version` matches.
+1. Assign the package to remaining Macs only after the test Mac passes the check for your MDM tool:
+
+   * **An MDM tool that reports installation status, such as Jamf Pro:** The MDM tool reports success on the test Mac and the receipt `version` matches.
+   * **Microsoft Intune:** The receipt `version` matches and `/usr/local/bin/kong-harnesses version` on the test Mac prints the release version with its leading `v`, for example `v1.2.3`.
+     Intune can't report success for this package, so don't wait for an Intune success status.
 
 {:.info}
-> **Microsoft Intune macOS PKG detection:** Microsoft Intune's **macOS app (PKG)** type cannot report installation success for this package.
+> **Microsoft Intune macOS PKG detection:** Microsoft Intune's **macOS app (PKG)** type can't report installation success for this package.
 > Intune's [unmanaged macOS PKG detection rules](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos#step-4--detection-rules) detect and monitor installations using the bundle IDs and build numbers of included `.app` applications, and **Included apps** must contain only applications.
 > The kong-harnesses `.pkg` installs only `/usr/local/bin/kong-harnesses` and documentation files without a `.app` bundle.
 > Check deployment on the Mac with `pkgutil --pkg-info com.konghq.kong-harnesses` (receipt `version` field) or `/usr/local/bin/kong-harnesses version`, or deploy with an MDM tool that checks the receipt version.
