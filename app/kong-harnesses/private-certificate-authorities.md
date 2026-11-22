@@ -139,7 +139,7 @@ rows:
       omp then stops reading the default CA file and directory of the system and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
   - variable: "`NODE_USE_SYSTEM_CA=1`"
     effect: |
-      pi also trusts the system trust store.
+      pi also trusts the system trust store, but not on Node.js from Homebrew.
       pi on Node.js reads this variable only on Node.js 22.19 or a later 22 release, or on Node.js 24.6 or later, so set `NODE_EXTRA_CA_CERTS` on an earlier release, such as Node.js 24.0 to 24.5.
       omp also trusts the system trust store only when `NODE_EXTRA_CA_CERTS` isn't set.
 {% endtable %}
@@ -162,9 +162,9 @@ Whether omp and pi need one of these variables depends on the system:
 
 omp and pi don't read the macOS keychain by default, so set one of the variables for a CA that you added to the keychain.
 
-pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package.
+pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package and ignores `NODE_USE_SYSTEM_CA`.
 Homebrew builds that bundle from the certificates trusted for SSL in the System keychain (`/Library/Keychains/System.keychain`), the certificates of `/System/Library/Keychains/SystemRootCertificates.keychain` and the Mozilla certificates.
-For pi on Node.js from Homebrew, run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
+Run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -183,9 +183,10 @@ Debian 12 and 13 and Ubuntu 24.04 ship Node.js 18 or 20, which pi can't run on.
 
 pi on a Node.js build from nodejs.org or nvm trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
 
-pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package.
-Homebrew builds that bundle from the first system bundle that it finds, `/etc/ssl/certs/ca-certificates.crt`, `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` or `/etc/ssl/ca-bundle.pem`, and the Mozilla certificates.
-For pi on Node.js from Homebrew, run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
+pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package and ignores `NODE_USE_SYSTEM_CA`.
+Homebrew builds that bundle from the Mozilla certificates and the first readable system bundle of `/etc/ssl/certs/ca-certificates.crt`, `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` and `/etc/ssl/ca-bundle.pem`, in that order.
+When Homebrew finds none of these bundles or no `openssl` command, the bundle holds only the Mozilla certificates.
+Run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -258,7 +259,7 @@ The file replaces the default CA file, and {{site.kong_harnesses}} still reads t
 With the `GODEBUG` value that you set after you create the bundle, the file replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
 
 Windows adds a public root CA to its certificate store only when it first needs it.
-Connect once in PowerShell to each server that {{site.kong_harnesses}} uses, the gateway, the identity provider and the profile server, so that Windows adds the root CA of each server:
+Connect once in PowerShell to the gateway, to the identity provider of a profile that signs in through one, and to the profile server of a profile that you import from an HTTPS URL, so that Windows adds the root CA of each server:
 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
@@ -290,11 +291,14 @@ In the same session, install the profile if it isn't installed yet:
 kong-harnesses profile import PROFILE_URL
 ```
 
-When the import reports an unknown certificate authority, the bundle doesn't hold the root CA of the profile server.
-Add that root CA certificate to the bundle, or create the bundle again, and then import the profile.
+When the import reports an unknown certificate authority, check that the bundle holds the root CA of the profile server.
+If it doesn't, add that root CA certificate to the bundle, or create the bundle again, and then import the profile.
+If it does, ask your administrator to check the certificate chain that the profile server sends.
+
 A new bundle doesn't fix an expired certificate or a host name mismatch.
+For an expired certificate, ask your administrator to renew the certificate of the profile server.
 For a host name mismatch, check the host in the profile URL.
-Otherwise, ask your administrator to fix the certificate of the profile server.
+When the URL is right, ask your administrator to fix the certificate of the profile server.
 
 Run the doctor checks for the profile:
 
@@ -302,7 +306,8 @@ Run the doctor checks for the profile:
 kong-harnesses doctor --profile PROFILE_NAME
 ```
 
-The CA bundle check must show OK for each server that the profile uses: the gateway, the identity provider and, for a profile imported from an HTTPS URL, the profile server.
+The CA bundle check must show OK for each server that the profile uses: the gateway, the identity provider of a profile that signs in through one, and the profile server of a profile imported from an HTTPS URL.
+When the check reports a missing or unreadable file, check the path that `SSL_CERT_FILE` names.
 A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so a public root CA can be missing from the bundle.
 When the check fails for a server, create the bundle again, or add the root CA certificate of that server to the bundle.
 
