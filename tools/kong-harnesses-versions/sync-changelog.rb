@@ -712,7 +712,7 @@ module KongHarnessesChangelog
   def version_of(heading, lines)
     location = heading.options[:location] or return
     raw = lines[location - 1].to_s.sub(/\A {0,3}\#{2}[ \t]+/, '').rstrip
-    raw[KongHarnessesChangelogLinks::HEADING_VERSION, 1]
+    raw[KongHarnessesChangelogLinks::HEADING_VERSION, 2]
   end
 
   # The release headings of the source, as KongHarnessesChangelogLinks.release_of takes

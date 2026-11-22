@@ -66,7 +66,7 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a .. segment in a GitHub address', 'run `github.com/x/../example/sample-tool`']
     ].each do |name, text|
       it "refuses #{name}" do
-        expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
+        expect { described_class.check(entry(text)) }.to raise_error(/in release 1\.0\.0, section Features, entry 1 on the page/)
       end
     end
 

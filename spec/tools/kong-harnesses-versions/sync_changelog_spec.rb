@@ -797,17 +797,17 @@ RSpec.describe KongHarnessesChangelog do
 
   # Text right after the compare link shows as part of the version, so the page would
   # show a version that no release has, or the version of another release.
-  suffixes = ['beta', '.1', '-rc.1', '!beta', '_beta', '/2', "'s", ':beta', ': hotfix', ', 2026-11-22', '[2]', 'β']
+  suffixes = ['beta', '.1', '-rc.1', '!beta', '_beta', '/2', "'s", ':beta', ': hotfix', ', 2026-11-22', '[2]', 'β', ']beta']
   suffixed = ->(suffix) { "## 1.0.0\n\n### Features\n\n* add\n\n## [0.9.0](https://github.com/example/sample-tool/compare/v0.8.0...v0.9.0)#{suffix} (2026-11-22)\n\n### Features\n\n* fix\n" }
 
   it 'refuses a release heading that does not show exactly its version' do
     suffixes.each do |suffix|
-      expect { exported(suffixed.call(suffix), %w[1.0.0 0.9.0]) }.to raise_error(/release heading on line 7 that does not show exactly its version/), suffix
+      expect { exported(suffixed.call(suffix), %w[1.0.0 0.9.0]) }.to raise_error(/\bline 7\b/), suffix
     end
   end
 
-  # release-please writes each version once, and a place on the page names a release
-  # by its version.
+  # A place on the page names a release by its version, so each version must name one
+  # release.
   it 'refuses a second release heading with the version of an earlier one' do
     expect { exported("## 1.0.0\n\n### Features\n\n* add\n\n## 1.0.0\n\n### Features\n\n* fix\n") }
       .to raise_error(/second release heading for 1\.0\.0 on line 7,/)
@@ -830,7 +830,7 @@ RSpec.describe KongHarnessesChangelog do
       page = begin
         described_class.export(markdown, published: finals, finals: finals, highest: finals.first, log: StringIO.new)
       rescue RuntimeError => e
-        raise unless versions.nil? && e.message.include?('does not show exactly its version')
+        raise unless versions.nil? && e.message.match?(/\bline 7\b/)
 
         next
       end

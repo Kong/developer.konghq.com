@@ -201,14 +201,15 @@ module KongHarnessesChangelogLinks
   # A version as release-please reads one (index.js:59193), with a prerelease and a build
   # part made of the characters that semver allows.
   VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
-  # Where the version of a heading ends: at the `]` of the compare link, a space, the
-  # `(` of the date, or the end of the text.
+  # The characters that can end the version text of a heading.
   VERSION_END = '\]\s('
-  # The version at the start of a release heading. The export reads it from the line of
-  # the heading, and the export and the page check read it from the heading text that
-  # the page shows, so the page check finds the version of every heading that the
-  # export takes.
-  HEADING_VERSION = /\A\[?(#{VERSION})(?=[#{VERSION_END}]|\z)/
+  # The version at the start of a release heading. After a `[`, a `]`, a space, a `(` or
+  # the end of the text ends it. A bare version ends only at a space, the `(` of the
+  # date or the end, so a `]` that no `[` opens never ends it. The
+  # export reads it from the line of the heading, and the export and the page check read
+  # it from the heading text that the page shows, so the page check finds the version
+  # of every heading that the export takes.
+  HEADING_VERSION = /\A(\[)?(#{VERSION})(?(1)(?=[#{VERSION_END}]|\z)|(?=[\s(]|\z))/
   # The start of a heading text up to where HEADING_VERSION ends.
   HEADING_START = /\A\[?[^#{VERSION_END}]*/
 
@@ -292,7 +293,7 @@ module KongHarnessesChangelogLinks
   # The version that a heading shows, as HEADING_VERSION reads it from the text written
   # back as the source writes it, or nil.
   def shown_version(heading)
-    written_version(heading.text.strip)[HEADING_VERSION, 1]
+    written_version(heading.text.strip)[HEADING_VERSION, 2]
   end
 
   # The text with the dashes and the ellipsis that kramdown makes of `--`, `---` and
@@ -332,14 +333,14 @@ module KongHarnessesChangelogLinks
     found = problems(markdown)
     return if found.empty?
 
-    raise "The changelog page would hold a link or an address: #{found.join(', ')}"
+    raise "The changelog page fails the page check: #{found.join(', ')}"
   end
 end
 
 if $PROGRAM_NAME == __FILE__
   begin
     KongHarnessesChangelogLinks.check(JSON.parse(File.read(ARGV.fetch(0, KongHarnessesChangelogLinks::DATA_FILE))).fetch('markdown'))
-    puts 'The kong-harnesses changelog page holds no links or addresses.'
+    puts 'The kong-harnesses changelog page passes the page check.'
   rescue StandardError => e
     warn "Error: #{e.message}"
     exit 1
