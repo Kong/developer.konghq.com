@@ -227,9 +227,16 @@ When `claude --version` shows a different release than the one you installed, an
    "%USERPROFILE%\.local\bin\claude.exe" --version
    ```
 
-1. If the native build shows the release you installed, list every `claude` executable on your `PATH`:
+1. If the native build shows the release you installed, list every `claude` executable on your `PATH`.
+   In PowerShell, run:
 
    ```powershell
+   Get-Command claude -All
+   ```
+
+   In Command Prompt, run:
+
+   ```cmd
    where.exe claude
    ```
 
