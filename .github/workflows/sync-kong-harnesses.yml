@@ -86,14 +86,45 @@ jobs:
         with:
           egress-policy: audit
 
+      # The repository that publishes the releases is set only in this
+      # secret, so no file or log of this public repository names it. GitHub
+      # masks only the whole secret, and the token step logs its inputs, so the
+      # owner and the name are masked on their own too.
+      - name: Read the releases repository
+        id: releases-repo
+        env:
+          REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
+        run: |
+          if [ -z "$REPO" ]; then
+            echo "::error::Set the repository secret KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases"
+            exit 1
+          fi
+          # The same rule as parseRepo in tools/lib/tool-versions.js. An owner
+          # can't hold a dot, and a name of . or .. would point at another path.
+          owner='' name=''
+          if [[ $REPO =~ ^([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
+            owner=${BASH_REMATCH[1]}
+            name=${BASH_REMATCH[2]}
+          fi
+          if [ -z "$name" ] || [ "$name" = . ] || [ "$name" = .. ]; then
+            echo "::error::KONG_HARNESSES_RELEASES_REPO must have the form <owner>/<name>"
+            exit 1
+          fi
+          echo "::add-mask::$owner"
+          echo "::add-mask::$name"
+          {
+            echo "owner=$owner"
+            echo "name=$name"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub App Token for the releases
         uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: releases-token
         with:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
           private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
-          owner: Kong
-          repositories: kong-harnesses
+          owner: ${{ steps.releases-repo.outputs.owner }}
+          repositories: ${{ steps.releases-repo.outputs.name }}
           permission-contents: read
 
       - name: Create GitHub App Token for the pull request
@@ -127,7 +158,6 @@ jobs:
           cache: npm
           cache-dependency-path: tools/kong-harnesses-versions/package-lock.json
 
-      # The same checks as scripts/install-release.sh in Kong/kong-harnesses.
       # A replaced archive can come with a matching SHA256SUMS.txt line, so only
       # the build provenance proves that the release workflow built the archive
       # from the tag, and gh attestation verify checks it.
@@ -135,7 +165,7 @@ jobs:
         id: install
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
-          REPO: Kong/kong-harnesses
+          REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
         run: |
           # An older release can be marked as the latest one, so the highest
           # vX.Y.Z release wins. The selection is the one that fetch-versions.js
@@ -143,7 +173,7 @@ jobs:
           tag=$(gh api --paginate "repos/$REPO/releases?per_page=100" --jq '.[] | select(.draft or .prerelease | not) | .tag_name' \
             | { grep -Ex 'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)' || true; } | sort -V | tail -1)
           if [ -z "$tag" ]; then
-            echo "::error::No vX.Y.Z release in $REPO"
+            echo "::error::The releases repository has no vX.Y.Z release"
             exit 1
           fi
           archive="kong-harnesses_${tag}_linux_amd64.tar.gz"
@@ -182,6 +212,7 @@ jobs:
       - name: Fetch versions
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
+          KONG_HARNESSES_RELEASES_REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
           TAG: ${{ steps.install.outputs.tag }}
         run: |
           cd tools/kong-harnesses-versions
