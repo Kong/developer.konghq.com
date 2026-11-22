@@ -97,7 +97,7 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
 * **Server with its own OAuth sign-in:** Sign in from `/mcp`.
 * **Gateway-authenticated server failed at startup:** If a server [fails during the initial browser sign-in](https://code.claude.com/docs/en/mcp#failed-first-connections), reconnect it from `/mcp` after signing in.
 * **Missing servers:** Run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and `claude doctor` to find dropped invalid entries.
-  For `--mcp-servers allowlist` or `any`, `profile activate` installs the gateway MCP plugin in `~/.claude/skills` (`%USERPROFILE%\.claude\skills` on Windows, or `skills` inside `CLAUDE_CONFIG_DIR`).
+  For `--mcp-servers allowlist` or `any`, `profile activate` installs the gateway MCP plugin in `.claude/skills` under the developer's home folder, or in `skills` inside `CLAUDE_CONFIG_DIR` when it's set.
   Remove `--strict-mcp-config` from startup commands, and check both `allowedMcpServers` and `deniedMcpServers` across all settings scopes:
   * User settings
   * Project settings

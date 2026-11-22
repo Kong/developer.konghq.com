@@ -37,8 +37,7 @@ related_resources:
     url: https://code.claude.com/docs/en/managed-settings
 ---
 
-`kong-harnesses fleet build` generates [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) and a machine-wide profile per group sharing platform, delivery, policy, and `managed-mcp.json` (`exclusive`).
-See [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/) for setup, or [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/) for `fleet remove`.
+`kong-harnesses fleet build` generates [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) and a machine-wide profile per group sharing platform, delivery, policy, and `managed-mcp.json` (`exclusive`), as [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/) shows.
 
 {:.warning}
 > **Keep secrets out of managed files:** Every account can read managed settings and `managed-mcp.json`.
@@ -49,7 +48,7 @@ See [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claud
 {{ site.claude_code }} ranks managed sources in [precedence order](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources):
 
 1. Remote settings (claude.ai admin console or Claude apps gateway).
-1. MDM policy (`com.anthropic.claudecode` on macOS, `HKLM\SOFTWARE\Policies\ClaudeCode` `Settings` on Windows).
+1. MDM policy (see the MDM policy table under the delivery flags).
 1. Managed settings files (`managed-settings.json` and `managed-settings.d/`).
 
 By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set; otherwise the highest setting a non-`null` policy key).
@@ -74,7 +73,26 @@ rows:
     platforms: macOS, Windows
     usage: |
       Use when an MDM policy sets a policy key, or for MDM delivery.
-      Pass XML `com.anthropic.claudecode.plist` or Windows `Settings` JSON (not `.reg`) with `--policy POLICY_FILE`, or `--no-policy` only without an MDM policy.
+      Pass the current MDM policy with `--policy POLICY_FILE`, or `--no-policy` only without an MDM policy.
+{% endtable %}
+
+MDM policy by platform:
+
+{% table %}
+columns:
+  - title: Platform
+    key: platform
+  - title: MDM policy location
+    key: location
+  - title: "`--policy` file for `--delivery mdm`"
+    key: file
+rows:
+  - platform: macOS
+    location: "`com.anthropic.claudecode` preference domain"
+    file: "XML `com.anthropic.claudecode.plist`"
+  - platform: Windows
+    location: "`REG_SZ` value `Settings` under `HKLM\\SOFTWARE\\Policies\\ClaudeCode`"
+    file: "`Settings` JSON (not a `.reg` file)"
 {% endtable %}
 
 Policy rules:
@@ -164,8 +182,6 @@ MCP rules:
 
 ## Host apps, WSL, and executable path
 
-Optional flags control `--host-settings`, `--wsl`, and `--executable`.
-
 ### Host settings
 
 By default, `--host-settings ignore` omits `parentSettingsBehavior` and keeps any policy value.
@@ -194,10 +210,27 @@ WSL limits:
 
 ### Executable path restrictions
 
-`--executable` must be the absolute path to `kong-harnesses` (or `kong-harnesses.exe` with drive letter and backslashes on Windows):
+`--executable` must be an absolute path:
 
-* **Windows:** Disallows `"`, `%`, `!`, and control characters (and `'` with `--wsl inherit`).
-* **macOS and Linux:** Disallows line breaks and NUL bytes (and control characters for macOS MDM builds).
+{% table %}
+columns:
+  - title: Platform
+    key: platform
+  - title: Path to
+    key: form
+  - title: Disallowed characters
+    key: chars
+rows:
+  - platform: macOS
+    form: "`kong-harnesses`"
+    chars: Line breaks and NUL bytes, and control characters for MDM builds
+  - platform: Linux
+    form: "`kong-harnesses`"
+    chars: Line breaks and NUL bytes
+  - platform: Windows
+    form: "`kong-harnesses.exe`, with a drive letter and backslashes"
+    chars: "`\"`, `%`, `!`, and control characters, and `'` with `--wsl inherit`"
+{% endtable %}
 
 ## Keep or revert recorded flags
 
@@ -235,8 +268,6 @@ rows:
     revert: Pass `--gateway-mcp-only` to drop unlisted earlier entries.
 {% endtable %}
 
-For profiles with gateway MCP servers, `fleet build` requires `--mcp-servers` even to keep `allowlist`.
-
 ## Version bounds
 
 `--claude-code-minimum` writes `requiredMinimumVersion` and `minimumVersion`, and `--claude-code-maximum` writes `requiredMaximumVersion`.
@@ -256,8 +287,22 @@ Version bounds apply at startup and updates:
 * **Startup:** {{ site.claude_code }} refuses to start outside the range and prompts for an approved version (running sessions continue until restart).
 * **Native and npm:** Background updates and `claude update` stay in range.
 * **Homebrew:** Pin the version in your install tool because updates use `brew upgrade`.
-* **Claude Desktop:** Deploy a release with bundled {{ site.claude_code }} in range.
-  [Turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM on macOS and Windows (Microsoft Store installs still update), or pin in your Linux package manager.
+* **Claude Desktop:** Deploy a release with bundled {{ site.claude_code }} in range, and keep it from updating out of range:
+
+{% table %}
+columns:
+  - title: Platform
+    key: platform
+  - title: Keep Claude Desktop in range
+    key: how
+rows:
+  - platform: macOS
+    how: "[Turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM."
+  - platform: Linux
+    how: Pin the version in your package manager.
+  - platform: Windows
+    how: "[Turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM. Microsoft Store installs still update."
+{% endtable %}
 
 ## Model overrides
 
