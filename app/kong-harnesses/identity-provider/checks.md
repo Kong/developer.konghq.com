@@ -46,7 +46,7 @@ For `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fie
 For `--name`, `display_name`, `description` and `--gateway-origin`, see [Top-level fields](/kong-harnesses/profile-file/#top-level-fields).
 For `--redirect-uri`, see [Callback](/kong-harnesses/identity-provider/#callback).
 A `--gateway-origin` value also follows the rules in [URLs](#urls), without a path or query.
-For a loopback `http` origin, the port rule excludes `80` in place of `443`.
+For a loopback `http` origin, the URL must not name port `80`, in the same way that an `https` URL must not name port `443`.
 
 ## URLs
 

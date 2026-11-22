@@ -59,9 +59,9 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
 * Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
-  The response can't name a scope that the profile doesn't request, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
-  The profile requests `openid`, `profile`, `email` and `offline_access` by default, so keep **Include in token scope** on in the `profile` and `email` client scopes.
-  In each other default client scope of the client, turn off **Include in token scope**.
+  The response can't name a scope that the profile doesn't request, and a response with `scope` must keep every custom scope that the profile requests, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
+  In each default client scope of the client that the profile doesn't request, turn off **Include in token scope**.
+  Keep **Include in token scope** on in each client scope that the profile requests, such as `profile` and `email` when you use the default scopes (`openid`, `profile`, `email` and `offline_access`).
   When your `--scope` list leaves out `profile` or `email`, turn off **Include in token scope** in each client scope that it leaves out.
 * Refresh token rotation: You can keep **Revoke Refresh Token** off.
   When **Use Refresh Tokens** is on, Keycloak sends a new refresh token in each successful renewal response.
