@@ -36,7 +36,8 @@ When the gateway, the identity provider or the profile server uses a certificate
 
 {:.warning}
 > Add the CA to the system trust store of each developer's computer and of your own computer, for example, through mobile device management (MDM).
-> A CA setting of one program doesn't change the trust of a program that reads another setting, and the browser that opens for the sign-in must also trust the certificate of the identity provider.
+> A CA setting changes only the program that reads it.
+> The browser that opens for the sign-in must also trust the certificate of the identity provider.
 
 ## System trust store installation
 
@@ -95,6 +96,14 @@ update-ca-certificates
 Each WSL distribution has its own trust store.
 Install the CA in each distribution with the Linux commands.
 
+## {{ site.claude_code }} installs
+
+The native installer, the npm package, the Homebrew cask, the WinGet package and the apt, dnf and apk packages of {{ site.claude_code }} install the same native binary.
+That binary trusts the system trust store by default, so each of these installs needs only the CA in the system trust store.
+When `CLAUDE_CODE_CERT_STORE` is set without `system`, add `system` to it.
+An older npm install that runs {{ site.claude_code }} on Node.js reads the system trust store only on Node.js 22.15 or later, so update it to the native binary or set `NODE_EXTRA_CA_CERTS` for it.
+For these limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
+
 ## Agent CLIs that need more than the system trust store
 
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
@@ -121,16 +130,9 @@ rows:
       On Debian and Ubuntu, pi's Bun release archives also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
 {% endtable %}
 
-## {{ site.claude_code }} installs
-
-The native installer, the npm package, the Homebrew cask, the WinGet package and the apt, dnf and apk packages of {{ site.claude_code }} install the same native binary.
-That binary trusts the system trust store by default, so each of these installs needs only the CA in the system trust store.
-When `CLAUDE_CODE_CERT_STORE` is set without `system`, add `system` to it.
-An older npm install that runs {{ site.claude_code }} on Node.js reads the system trust store only on Node.js 22.15 or later, so update it to the native binary or set `NODE_EXTRA_CA_CERTS` for it.
-For these limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
-
 ## CA settings per program
 
+A profile can't give developers a CA.
 When you can't change the system trust store, set the CA for each program instead:
 
 {% table %}
@@ -155,7 +157,7 @@ rows:
       `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, in `~/.hermes/.env` or exported in the shell that starts Hermes Agent.
       Hermes Agent passes the variable to the commands that it runs, such as `curl` and `pip`, and the file replaces their CA list, so a file with only the private CA breaks their public TLS connections.
       Hermes Agent trusts the file in addition to the system trust store.
-      The plugin's `scripts/login.py` doesn't read `~/.hermes/.env`, so sign in with `hermes auth add kong-ai-gateway`.
+      The plugin's `scripts/login.py` doesn't read `~/.hermes/.env`.
   - program: OpenCode
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file.
@@ -169,5 +171,3 @@ rows:
       A file with only the private CA then breaks the token renewal with a public identity provider, and the profile download from a public profile server.
       On macOS, create the bundle with `cat /etc/ssl/cert.pem CA_CERTIFICATE_FILE > CA_BUNDLE_FILE`.
 {% endtable %}
-
-`profile create` doesn't take a CA bundle.

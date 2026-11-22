@@ -92,6 +92,9 @@ For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Ro
 For the `mantle` mode, use a `bedrock` [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
 
+In the `anthropic` mode, Codex sends OpenAI Responses API requests to `/v1/responses` on the gateway origin, so Codex needs an AI Model in the OpenAI format, as in [Route OpenAI Codex CLI traffic through {{site.ai_gateway}}](/ai-gateway/use-codex-with-ai-gateway/).
+OpenCode, omp and pi send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
+
 ## Profile creation
 
 Create the profile on your own computer with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
@@ -183,9 +186,7 @@ For a `static-key` or `environment-key` profile, it skips OIDC discovery.
 It then sends an empty test request without a sign-in to the gateway route of each agent CLI that the profile sets up.
 When the gateway answers that no route matches, `profile create` warns about that route and keeps the agent CLI in the profile.
 A route can match on the credential or on headers that only the agent CLI sends, so check each warned route with a signed-in prompt from that agent CLI.
-`setup` sends the same test request, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
-When the gateway has no route or refuses the sign-in, `setup` doesn't set up that agent CLI.
-When the request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
+`setup` sends the same test request again, as [Setup](/kong-harnesses/developer-computer-changes/#setup) describes.
 When a route matches only on a header that the agent CLI sends and `setup` still refuses it, developers run `setup` with `--skip-route-check`.
 For more options, such as gateway MCP servers and the {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
@@ -251,8 +252,8 @@ Export the installed profile as a JSON file with [jq](https://jqlang.org/):
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile' > PROFILE_NAME.json
 ```
 
-In Windows PowerShell 5.1, `>` writes UTF-16, and `profile import` refuses that file.
-Run the command in PowerShell 7 or later, which writes UTF-8.
+In Windows PowerShell 5.1, `>` writes UTF-16, so run the command in PowerShell 7 or later, which writes UTF-8.
+When you already have a file in another encoding, save a copy as UTF-8 with an editor, and give developers the copy.
 
 Give the file to developers, or host it at an HTTPS URL.
 
@@ -294,6 +295,6 @@ rows:
 
 To change the profile, publish the new file at the same URL or give developers the new file.
 When the change keeps the profile's security identity, developers run the same `setup` command again.
-The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the profile's gateway CA bundle, if it has one.
+The security identity includes the gateway origin, the issuer and its endpoints, including the revocation endpoint, the client ID, the redirect URI, the audience, the audience parameter, the scopes, the longest access token lifetime, the public client evidence, the sign-in kind, and a digest of the gateway CA bundle, if a profile from an earlier release has one.
 When the change alters the security identity, `setup` stops while an agent CLI still uses the old profile.
 Developers then run `kong-harnesses profile cleanup` and run `setup` again, which signs them in again.

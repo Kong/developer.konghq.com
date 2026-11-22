@@ -59,7 +59,8 @@ Use `--auto-approve` only in an onboarding script that your organization owns, b
 When a step fails, `setup` stops and names the step.
 Fix the reported error, then run the same `setup` command again.
 A step that is already done changes nothing: a sign-in that works stays, and an agent CLI that is already set up stays as it is.
-When the gateway refuses an agent CLI, for example because its route is missing or refuses the sign-in, `setup` names the fix.
+Before `setup` sets up an agent CLI, it sends a test request to the gateway route of that agent CLI, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
+When the route is missing or the gateway refuses the sign-in, `setup` names the fix.
 When the command doesn't name `--client`, `setup` leaves that agent CLI out and sets up the others.
 When the command names `--client`, `setup` stops.
 When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
@@ -83,7 +84,7 @@ rows:
   - key: "`apiKeyHelper`"
     value: |
       A command that runs `kong-harnesses credential` for the profile.
-      {{ site.claude_code }} runs it to get a short-lived access token, or the static key of a key profile.
+      {{ site.claude_code }} runs it to get a short-lived access token, or the key of a `static-key` or `environment-key` profile.
       A `subscription` profile doesn't write it, and removes an `apiKeyHelper` that the file already contains.
       `profile cleanup` restores the removed value.
   - key: "`env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`"
