@@ -153,17 +153,27 @@ MCP rules:
   Remove duplicate `managedMcpServers` entries at gateway URLs under another name.
   In `allowlist` mode, `managedMcpServers` and [allowlist-exempt servers](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) (built-in IDE, Chrome, Agent SDK) also load.
   In every mode (including `exclusive`), `deniedMcpServers` across all scopes blocks every other matching server, including gateway servers.
-  {{ site.claude_code }} drops each list entry it can't read and enforces the rest, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
-  {{ site.claude_code }} `2.1.285` through `2.1.304` also check a server that names a variable only in `env` ([allowlists and the managed set](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set)), and `fleet build` counts such a server as blocked when the version range includes those versions.
-  In `exclusive` mode, `fleet build` refuses a `--policy` whose `deniedMcpServers` can match a gateway server (an entry that names a variable counts as a match) or whose `allowedMcpServers` doesn't allow a written server that names a variable.
   Confirm policies don't deny gateway servers before deploying.
+* **Allowlist checks of `managed-mcp.json` servers:** {{ site.claude_code }} drops each list entry it can't read and enforces the rest, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
+  [Earlier versions check more servers](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set): before `2.1.305`, also a server that names a variable only in `env`, and before `2.1.259`, every `managed-mcp.json` server whenever an allowlist is set.
+  `--claude-code-minimum` accepts versions down to `2.1.163`, so `fleet build` applies the checks of the lowest version that the build allows.
+  A minimum earlier than `2.1.259`, or no minimum, turns on both earlier checks.
+  A minimum from `2.1.259` through `2.1.304` turns on the `env` check.
+  A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
+* **MCP policy results (`exclusive`):** `fleet build` gives each server that it writes into `managed-mcp.json` one result: loads, blocked, or undecided.
+  It checks deny entries first, and a deny entry that names a variable counts as a match.
+  It checks literal `serverName` entries before it expands variables, refuses a `--policy` with an invalid list entry, and counts the values in the policy's `env` as known.
+  A server is undecided when its result depends on a variable that the policy's `env` doesn't set.
+  `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
+  `kong-harnesses doctor` never reports an undecided server as loaded.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
   Move needed entries to `--policy`, `--mcp-url`, or `--mcp-command`.
 * **`serverName` entries (`allowlist`):** Added `serverUrl` entries stop `serverName` from matching remote servers, and `serverCommand` entries stop it from matching stdio servers.
   Replace matching `serverName` entries with `--mcp-url` or `--mcp-command`.
-* **Plugin blockers (`allowlist` or `any`):** {{ site.claude_code }} skips the `profile activate` plugin when any of these apply:
+* **Plugin blockers (`allowlist` or `any`):** {{ site.claude_code }} skips the `profile activate` plugin, or one of its servers, when any of these apply:
   * A `managed-mcp.json` file exists.
+  * A `managedMcpServers` entry points at the URL of a gateway server, because the [provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over the plugin server.
   * `strictPluginOnlyCustomization` is `true`, a list with `skills`, `agents`, `hooks`, or `mcp`, or any value that isn't a boolean, a list or `null` (strings included), which counts as `true`.
     `false`, `[]`, `null` (which removes the key), and list entries that name no surface lock nothing.
   * `strictKnownMarketplaces` (or alias `allowedMarketplaces`) is set without `{"source": "skills-dir"}`.
@@ -173,10 +183,11 @@ MCP rules:
   When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` setting a plugin blocker and names each key {{ site.claude_code }} ignores for its case and each `strictPluginOnlyCustomization` entry that names no surface.
   Write lowercase `source` in `{"source": "skills-dir"}` because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
   Build with `--mcp-servers exclusive` or change the setting in `--policy` and every other managed source.
-  Avoid a `managedMcpServers` entry at a gateway URL because [provided servers take precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load).
-* **Invalid allowlist (`allowlist` or `any`):** A wholly invalid `allowedMcpServers` value doesn't skip the plugin, but {{ site.claude_code }} enforces it as an empty allowlist, so no server that a developer adds loads, gateway plugin servers included ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
-  `managedMcpServers` and allowlist-exempt servers still load.
-  When the profile has gateway MCP servers, `fleet build` refuses a `--policy` with such a value.
+* **Invalid allowlist (`allowlist` or `any`):** {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value as an empty managed allowlist ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+  The value doesn't skip the plugin, and `managedMcpServers` and allowlist-exempt servers still load.
+  When the MCP lock (`allowManagedMcpServersOnly: true`) is set, or no other settings scope sets `allowedMcpServers`, the empty list is the only list that applies, so no server that a developer adds loads, gateway plugin servers included.
+  In `any` mode without the MCP lock, an `allowedMcpServers` entry in user, project, or local settings can still permit a server.
+  `fleet build` refuses a `--policy` with such a value, as a rule of its own apart from the plugin blockers.
 * **CLI startup flags:** Remove `--mcp-config` and `--strict-mcp-config` from wrappers, aliases, and IDE settings, because either [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) with `managed-mcp.json` and `--strict-mcp-config` skips plugin servers in `allowlist` or `any`.
 
 ### Allowlist values and quoting
@@ -202,7 +213,10 @@ rows:
   - shell: Windows, PowerShell 7.3 or later
     quote: Single quotes, as on macOS and Linux.
   - shell: Windows PowerShell 5.1
-    quote: "[Windows PowerShell 5.1 strips inner double quotes](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters), so escape each with `\\` (for example, `--mcp-command '[\\\"npx\\\",\\\"-y\\\",\\\"PACKAGE\\\"]'`). This works only when no backslash comes right before a double quote. Otherwise, use PowerShell 7.3 or later."
+    quote: |
+      [Windows PowerShell 5.1 strips inner double quotes](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters), so escape each with `\` (for example, `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`).
+      This works only when no backslash comes right before a double quote.
+      Otherwise, use PowerShell 7.3 or later.
 {% endtable %}
 
 ## Host apps, WSL, and executable path

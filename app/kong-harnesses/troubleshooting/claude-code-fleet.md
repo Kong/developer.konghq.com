@@ -69,7 +69,7 @@ rows:
       Check `Skipped sources`, verify the deployed MDM policy, and redeploy.
   - label: "`(plist)`, `(HKLM)`, or a merged list starting with `plist` or `HKLM` on a file build"
     fix: |
-      An MDM policy setting a policy key to a value other than `null` or empty objects outranks `managed-settings.d/` and supplies `apiKeyHelper` even in merge mode.
+      An MDM policy outranks the file build and supplies `apiKeyHelper`, even in merge mode ([Delivery method and existing policy](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy)).
       Rebuild with `--delivery mdm --policy`.
   - label: "`(remote)` or a merged list starting with `remote`"
     fix: |
@@ -107,7 +107,7 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
 
   `kong-harnesses doctor` reads local administrator sources (not remote server-managed settings).
   As {{ site.claude_code }} does, `doctor` reads each `allowedMcpServers` and `deniedMcpServers` entry on its own and keeps the valid ones, ignores keys whose case doesn't match, checks `deniedMcpServers` even when `managed-mcp.json` exists, treats a `strictPluginOnlyCustomization` value that isn't a boolean, a list or `null` (strings included) as `true`, and treats `null` as no lock because it removes the key.
-  For plugin-blocking settings (`strictPluginOnlyCustomization`, marketplace lists, and `managedMcpServers`), see [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
+  For plugin blockers (a `managed-mcp.json` file, a `managedMcpServers` entry at a gateway server's URL, `strictPluginOnlyCustomization`, and marketplace lists), see [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
 
 ## Host apps and WSL
 
