@@ -59,23 +59,7 @@ prereqs:
       include_content: prereqs/auth/oidc/okta-kong-harnesses
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        Install {{ site.claude_code }} 2.1.284 or later.
-        On macOS and Linux:
-
-        ```sh
-        curl -fsSL https://claude.ai/install.sh | bash
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        irm https://claude.ai/install.ps1 | iex
-        ```
-
-        Run `claude --version` to check the install.
-        If the terminal can't find `claude`, do the `PATH` step that the installer prints.
-        On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
+      include_content: prereqs/claude-code-kong-harnesses
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
@@ -107,7 +91,7 @@ cleanup:
 ---
 
 [kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when needed.
-It stores the sign-in in the operating system secret store (macOS Keychain, Windows DPAPI, or Secret Service on Linux) rather than writing a long-lived key to {{ site.claude_code }} settings.
+It stores the sign-in in the [secret store of the operating system](/kong-harnesses/sign-in/) rather than writing a long-lived key to {{ site.claude_code }} settings.
 
 In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator, then set up {{ site.claude_code }} as a developer.
 
@@ -200,7 +184,7 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` (and `no_proxy` on macOS and Linux) before you continue.
+If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue.
 A proxy that forwards a request to an `http://` gateway can read your access token.
 When a proxy applies to the gateway host in the current shell, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
 When `profile activate` configures {{ site.claude_code }} for an `http://` gateway, it writes `NO_PROXY` and `no_proxy` into {{ site.claude_code }} user settings.
@@ -208,15 +192,19 @@ When `profile activate` configures {{ site.claude_code }} for an `http://` gatew
 `kong-harnesses credential` and `kong-harnesses token` check only their own process environment, without reading settings files, and withhold the access token when a proxy applies to the gateway host there.
 `doctor` fails when a proxy applies to the gateway host before `profile activate` writes those settings.
 It also fails when project or managed settings could send the gateway through a proxy, or when `doctor` can't check project or managed proxy settings.
-Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses, or add it to your shell profile:
+Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses.
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
+
+Set both `NO_PROXY` and `no_proxy`:
 
 ```sh
 list="127.0.0.1,localhost${no_proxy:+,$no_proxy}${NO_PROXY:+,$NO_PROXY}"
 export no_proxy="$list" NO_PROXY="$list"
 ```
+
+To keep the setting for new terminals, add these lines to your shell profile.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -360,6 +348,4 @@ Send a prompt to check that you get a reply.
 {{ site.claude_code }} now sends every model request to {{site.ai_gateway}}.
 kong-harnesses renews your access token by itself.
 Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
-
-On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
-Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
+When kong-harnesses can't read your sign-in, follow the fix in [Sign-in errors](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
