@@ -54,27 +54,11 @@ prereqs:
         Run kong-harnesses and {{ site.claude_code }} in PowerShell.
     - title: jq
       icon_url: /assets/icons/code.svg
-      content: |
-        The request that creates the key uses [jq](https://jqlang.org/) to save the key in a variable.
-        Install jq in the shell where you run the API requests.
-        On macOS:
-
-        ```sh
-        brew install jq
-        ```
-
-        On Debian and Ubuntu, and in WSL on Windows:
-
-        ```sh
-        sudo apt-get install jq
-        ```
-
-        For other installation methods, see the [jq download page](https://jqlang.org/download/).
+      include_content: md/ai-gateway/v2/prereqs/kong-harnesses-jq
     - title: Clipboard tool on Linux
       icon_url: /assets/icons/code.svg
       content: |
         On Linux, this guide copies the key with `wl-copy` from wl-clipboard on Wayland, or with `xclip` on X11.
-        macOS and WSL already have a clipboard command.
         On Debian and Ubuntu, install the one for your desktop:
 
         ```sh
@@ -89,23 +73,7 @@ prereqs:
       include_content: md/ai-gateway/v2/prereqs/anthropic
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        Install {{ site.claude_code }} 2.1.284 or later.
-        On macOS and Linux:
-
-        ```sh
-        curl -fsSL https://claude.ai/install.sh | bash
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        irm https://claude.ai/install.ps1 | iex
-        ```
-
-        Run `claude --version` to check the install.
-        If the terminal can't find `claude`, do the `PATH` step that the installer prints.
-        On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
+      include_content: md/ai-gateway/v2/prereqs/kong-harnesses-claude-code
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with a key and without an identity provider?
@@ -144,7 +112,7 @@ faqs:
 
 Use a static key when your organization doesn't use an identity provider, or when you run a gateway of your own.
 An administrator creates the key in {{site.ai_gateway}}.
-[kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
+[kong-harnesses](/kong-harnesses/) keeps the key in the secret store of the operating system.
 It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
 
 The key doesn't expire.
@@ -327,37 +295,93 @@ This guide sets up only {{ site.claude_code }}, so you can ignore warnings about
 
 ## Save the key and configure {{ site.claude_code }}
 
-Copy the key to the clipboard without showing it.
-First, turn off clipboard sync, which can send the key to your other devices:
+Copy the key to the clipboard without showing it, and save it in the profile.
+Then remove the key from the clipboard and from the shell:
 
-* On Windows, turn off **Clipboard history** and **Clipboard history across your devices** in **Settings** > **System** > **Clipboard**.
-* On macOS, Universal Clipboard sends the clipboard to your other Apple devices.
-  Turn off Handoff in **System Settings** > **General** > **AirDrop & Handoff**.
+{% navtabs "save-the-key" %}
+{% navtab "macOS" %}
+1. Turn off Handoff in **System Settings** > **General** > **AirDrop & Handoff**.
+   Universal Clipboard sends the clipboard to your other Apple devices, so it can send the key to them.
 
-In the shell where you created the key, run the command for your system:
+1. In the shell where you created the key, copy the key:
 
-* On macOS: `printf %s "$CONSUMER_API_KEY" | pbcopy`
-* In WSL: `printf %s "$CONSUMER_API_KEY" | clip.exe`
-* On Linux: `printf %s "$CONSUMER_API_KEY" | wl-copy`, or `xclip -selection clipboard` in place of `wl-copy`
+   ```sh
+   printf %s "$CONSUMER_API_KEY" | pbcopy
+   ```
 
-Save the key in the profile:
+1. Save the key in the profile:
 
-```sh
-kong-harnesses login --profile quickstart
-```
+   ```sh
+   kong-harnesses login --profile quickstart
+   ```
 
-`login` asks for the key and doesn't show it as you type.
-Paste the key.
+   `login` asks for the key and doesn't show it as you type.
+   Paste the key.
 
-Remove the key from the clipboard and from the shell:
+1. Remove the key from the clipboard and from the shell:
 
-* On macOS: `pbcopy < /dev/null`
-* In WSL: `printf '' | clip.exe`
-* On Linux: `wl-copy --clear`, or `xclip -selection clipboard < /dev/null`
+   ```sh
+   pbcopy < /dev/null
+   unset CONSUMER_API_KEY
+   ```
 
-```sh
-unset CONSUMER_API_KEY
-```
+After each upgrade of kong-harnesses, run `kong-harnesses login --profile quickstart` once.
+Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
+{% endnavtab %}
+{% navtab "Linux" %}
+1. In the shell where you created the key, copy the key:
+
+   ```sh
+   printf %s "$CONSUMER_API_KEY" | wl-copy
+   ```
+
+   On X11, use `xclip -selection clipboard` in place of `wl-copy`.
+
+1. Save the key in the profile:
+
+   ```sh
+   kong-harnesses login --profile quickstart
+   ```
+
+   `login` asks for the key and doesn't show it as you type.
+   Paste the key.
+
+1. Remove the key from the clipboard and from the shell:
+
+   ```sh
+   wl-copy --clear
+   unset CONSUMER_API_KEY
+   ```
+
+   On X11, use `xclip -selection clipboard < /dev/null` in place of `wl-copy --clear`.
+{% endnavtab %}
+{% navtab "Windows" %}
+1. Turn off **Clipboard history** and **Clipboard history across your devices** in **Settings** > **System** > **Clipboard**.
+   Clipboard sync can send the key to your other devices.
+
+1. In the WSL shell where you created the key, copy the key:
+
+   ```sh
+   printf %s "$CONSUMER_API_KEY" | clip.exe
+   ```
+
+1. In PowerShell, save the key in the profile:
+
+   ```powershell
+   kong-harnesses login --profile quickstart
+   ```
+
+   `login` asks for the key and doesn't show it as you type.
+   Paste the key.
+
+1. In WSL, remove the key from the clipboard and from the shell:
+
+   ```sh
+   printf '' | clip.exe
+   unset CONSUMER_API_KEY
+   ```
+{% endnavtab %}
+{% endnavtabs %}
 
 If your computer keeps a clipboard history, delete the key from it too.
 You can turn clipboard sync on again now.
@@ -402,6 +426,3 @@ claude
 
 Send a prompt to check that you get a reply.
 {{ site.claude_code }} now sends every model request to {{site.ai_gateway}} with the key.
-
-On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
-Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
