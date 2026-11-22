@@ -215,9 +215,10 @@ Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Inst
 1. Assign the package to remaining Macs only after the MDM tool reports success on the test Mac and `version` matches.
 
 {:.info}
-> **Microsoft Intune macOS PKG detection:** Microsoft Intune's [unmanaged macOS PKG detection rules](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos#step-4--detection-rules) detect and monitor installations using the bundle IDs and build numbers of included `.app` applications.
-> The kong-harnesses `.pkg` installs only `/usr/local/bin/kong-harnesses` and documentation files without a `.app` bundle, and Microsoft states that **Included apps** must contain only applications or installation status doesn't report success.
-> If Intune doesn't report success on the test Mac or the receipt `version` doesn't match, deploy with an MDM tool that checks the package receipt `version` field (`pkgutil --pkg-info com.konghq.kong-harnesses`) or `/usr/local/bin/kong-harnesses version`.
+> **Microsoft Intune macOS PKG detection:** Microsoft Intune's **macOS app (PKG)** type cannot report installation success for this package.
+> Intune's [unmanaged macOS PKG detection rules](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos#step-4--detection-rules) detect and monitor installations using the bundle IDs and build numbers of included `.app` applications, and **Included apps** must contain only applications.
+> The kong-harnesses `.pkg` installs only `/usr/local/bin/kong-harnesses` and documentation files without a `.app` bundle.
+> Check deployment on the Mac with `pkgutil --pkg-info com.konghq.kong-harnesses` (receipt `version` field) or `/usr/local/bin/kong-harnesses version`, or deploy with an MDM tool that checks the receipt version.
 > The `version` command output includes the leading `v`, for example `v1.2.3`.
 
 ### Remove from macOS
