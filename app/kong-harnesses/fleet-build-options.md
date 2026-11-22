@@ -324,6 +324,7 @@ rows:
 `fleet build` refuses a range when:
 
 * `--claude-code-minimum` is earlier than `2.1.163`, the first release reading version bounds (flags only).
+* `--claude-code-minimum` or `--claude-code-maximum` names another version than the `requiredMinimumVersion` or `requiredMaximumVersion` of `--policy`.
 * The maximum version (`--claude-code-maximum` or combined `requiredMaximumVersion`) is earlier than `2.1.285`, the first release keeping every session on the gateway.
 * The minimum version (`--claude-code-minimum`, or combined `requiredMinimumVersion` or `minimumVersion`) is later than the maximum version.
 
@@ -331,7 +332,6 @@ rows:
 
 Version bounds apply at startup and updates:
 
-* `--claude-code-minimum` or `--claude-code-maximum` names another version than the `requiredMinimumVersion` or `requiredMaximumVersion` of `--policy`.
 * **Startup:** {{ site.claude_code }} refuses to start outside the range and prompts for an approved version (running sessions continue until restart).
 * **Native and npm:** Background updates and `claude update` stay in range.
 * **Homebrew:** Pin the version in your install tool because updates use `brew upgrade`.
