@@ -156,7 +156,7 @@ MCP rules:
   Confirm policies don't deny gateway servers before deploying.
 * **Allowlist checks of `managed-mcp.json` servers (`exclusive`):** {{ site.claude_code }} checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
   [Earlier versions check more servers](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set): below `2.1.305`, also a server that names a variable only in `env`, and below `2.1.259`, every `managed-mcp.json` server whenever an allowlist is set.
-  A build without `--claude-code-minimum` applies both earlier checks, and a minimum (`2.1.163` or later, [Version range checks](#version-range-checks)) applies the checks of that version.
+  `fleet build` applies the checks of the minimum version that the computers get, from `--claude-code-minimum` or the `requiredMinimumVersion` of `--policy` ([Version range checks](#version-range-checks)), and both earlier checks when the build sets no minimum.
   A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
 * **MCP policy results (`exclusive`):** `fleet build` gives each server that it writes into `managed-mcp.json` one result: loads, blocked, or undecided.
   It checks deny entries first, and a deny entry that names a variable counts as a match.
@@ -324,6 +324,7 @@ rows:
 
 Version bounds apply at startup and updates:
 
+* `--claude-code-minimum` or `--claude-code-maximum` names another version than the `requiredMinimumVersion` or `requiredMaximumVersion` of `--policy`.
 * **Startup:** {{ site.claude_code }} refuses to start outside the range and prompts for an approved version (running sessions continue until restart).
 * **Native and npm:** Background updates and `claude update` stay in range.
 * **Homebrew:** Pin the version in your install tool because updates use `brew upgrade`.
