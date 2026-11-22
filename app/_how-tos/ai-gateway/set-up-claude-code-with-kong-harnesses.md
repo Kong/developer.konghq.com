@@ -57,23 +57,7 @@ prereqs:
       include_content: prereqs/auth/oidc/okta-kong-harnesses
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        Install {{ site.claude_code }} 2.1.278 or later.
-        On macOS and Linux:
-
-        ```sh
-        curl -fsSL https://claude.ai/install.sh | bash
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        irm https://claude.ai/install.ps1 | iex
-        ```
-
-        Run `claude --version` to check the install.
-        If the terminal can't find `claude`, do the `PATH` step that the installer prints.
-        On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
+      include_content: md/ai-gateway/v2/prereqs/kong-harnesses-claude-code
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
