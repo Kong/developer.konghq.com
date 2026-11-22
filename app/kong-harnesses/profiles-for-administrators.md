@@ -93,7 +93,7 @@ For the `mantle` mode, use a `bedrock` [AI Model Provider](/ai-gateway/entities/
 Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
 
 In the `anthropic` mode, Codex sends OpenAI Responses API requests to `/v1/responses` on the gateway origin, so Codex needs an AI Model in the OpenAI format, as in [Route OpenAI Codex CLI traffic through {{site.ai_gateway}}](/ai-gateway/use-codex-with-ai-gateway/).
-OpenCode, omp and pi send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
+OpenCode, omp, pi and Hermes Agent send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
 
 ## Profile creation
 
@@ -183,7 +183,8 @@ Use the value that your identity provider reads.
 
 `profile create` reads your identity provider's OIDC discovery endpoints for the default and `subscription` sign-ins, then saves and installs the profile on your computer.
 It tests each agent CLI's gateway route without a sign-in, warns when a route doesn't match, and keeps the agent CLI in the profile.
-Check each warned route with a signed-in prompt, and if [`setup`](/kong-harnesses/developer-computer-changes/#setup) refuses a route that matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
+Send a signed-in prompt from the affected agent CLI to check each warned route.
+If [`setup`](/kong-harnesses/developer-computer-changes/#setup) refuses a route that matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
 For more options, such as gateway MCP servers and {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
 ### Sign-in kinds
@@ -227,7 +228,7 @@ rows:
 
 In the `anthropic` mode, {{ site.claude_code }} sends a static key in both `Authorization: Bearer` and `x-api-key`.
 In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
-To accept the key in every mode and hide it from the model provider, give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) with `key_names: [Authorization, x-api-key]`, `header_auth_schemes: [Bearer]` and `hide_credentials: true`.
+Give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) that accepts those headers and hides the key from the model provider.
 For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
 
 ## Profile hosting
