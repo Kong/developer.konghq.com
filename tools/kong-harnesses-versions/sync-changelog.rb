@@ -987,7 +987,11 @@ module KongHarnessesChangelog
   end
 
   def unwritten_link_in?(element, lines)
-    links_in(element).any? do |link|
+    links = links_in(element)
+    # Raw HTML gives an anchor with no parsed link, so it has no source span to check.
+    return true unless anchors_in(element) == links.length
+
+    links.any? do |link|
       source = link.options[:source]
       line = lines[link.options[:location] - 1] if link.options[:location]
       # release-please writes no attribute list, also none that gives no attribute. The
@@ -1004,6 +1008,13 @@ module KongHarnessesChangelog
 
   def links_in(element)
     [*(element if element.type == :a), *element.children.flat_map { |child| links_in(child) }]
+  end
+
+  # The anchors in the HTML of an element, a list item in a list of its own.
+  def anchors_in(element)
+    root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
+    root.children << (element.type == :li ? Kramdown::Element.new(:ul).tap { |list| list.children << element } : element)
+    html(root).css('a').length
   end
 
   def code_blocks(fragment)

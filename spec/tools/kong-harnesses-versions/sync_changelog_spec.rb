@@ -853,6 +853,10 @@ RSpec.describe KongHarnessesChangelog do
     # does not let a reference link pass.
     source = source_of("* **a:** see <!-- [#1](#{issue}) --> ([#1][r])\n\n  [r]: #{issue}\n")
     expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), *source) }.to raise_error(/does not write so/)
+    # Raw HTML gives an anchor with no parsed link, so no source span shows its form.
+    source = source_of("## 1.0.0\n\n### Features\n\n* **a:** see (<a href=\"#{issue}\">#1</a>)\n")
+    expect { described_class.written("## 1.0.0\n\n### Features\n\n* **a:** see\n", described_class.parse("## 1.0.0\n\n### Features\n\n* **a:** see\n"), *source) }
+      .to raise_error(/does not write so in the entry or block on line 5, in release 1\.0\.0,/)
     # Check B takes nothing off a breaking change note, nor off an entry with more than
     # one block, so a loss there is refused wherever it is.
     page = "### ⚠ BREAKING CHANGES\n\n* **a:** see\n"
