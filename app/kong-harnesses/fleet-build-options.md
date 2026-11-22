@@ -98,7 +98,7 @@ Policy rules:
   Confirm files sorting after `kong-harnesses.json` don't override `apiKeyHelper`, `env`, or `modelPicker`, and move earlier non-secret `ANTHROPIC_CUSTOM_HEADERS` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` on MDM builds, include it in `--policy` and confirm `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries such as `permissions.allow` rules or hooks ([Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source)).
   An MDM policy that sets a policy key, as counted in [Delivery method and existing policy](#delivery-method-and-existing-policy), takes precedence over a file build, so {{ site.claude_code }} uses the `apiKeyHelper` of the MDM policy, or none when the MDM policy has none.
-  An MDM policy with only empty objects yields to a file build only when the file sets a policy key to a value other than empty objects, such as the credential helper that `fleet build` writes.
+  An MDM policy with only empty objects yields to a file build only when the file sets a policy key to a value other than empty objects, such as the `apiKeyHelper` that `fleet build` writes.
 
 ### MDM policy location
 

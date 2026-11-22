@@ -155,7 +155,7 @@ kong-harnesses fleet build --profile work --platform linux --executable /usr/bin
 
 Replace `DELIVERY` with `file` or `mdm`.
 By default, {{ site.claude_code }} in Windows Subsystem for Linux (WSL) reads only its own managed settings.
-To make it read this policy, add `--wsl inherit` ([Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path)).
+To make it read the Windows managed settings of this build, add `--wsl inherit` ([Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path)).
 
 ```powershell
 kong-harnesses fleet build --profile work --platform windows --delivery DELIVERY --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows-GROUP
