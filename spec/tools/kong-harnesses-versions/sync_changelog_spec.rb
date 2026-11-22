@@ -789,6 +789,27 @@ RSpec.describe KongHarnessesChangelog do
     page = "## 0.9.0-beta--2\n\n### Features\n\n* add\n\n## 1.0.0\n\n### Features\n\n* fix\n"
     expect { described_class.written(page.sub('* add', '* add [x](https://example.org)'), described_class.parse(page), releases: %w[1.0.0 0.9.0-beta--2]) }
       .to raise_error(/write a link back in release 0\.9\.0-beta--2, section Features, entry 1 on the page,/)
+    reference = "## 0.9.0\n\n### Features\n\n* **a:** see ([#1][r])\n\n## 1.0.0\n\n### Features\n\n* add\n\n[r]: #{issue}\n"
+    page = "## 0.9.0\n\n### Features\n\n* **a:** see\n\n## 1.0.0\n\n### Features\n\n* add\n"
+    expect { described_class.written(page, described_class.parse(page), *source_of(reference), releases: %w[1.0.0 0.9.0]) }
+      .to raise_error(/does not write so in the entry or block on line 5, in release 0\.9\.0,/)
+  end
+
+  # A suffix after the compare link of a heading shows as part of its version, so two
+  # headings can show the same version. Each names the release at its own position.
+  it 'names the release of a heading that shows the version of another' do
+    allow_any_instance_of(described_class::Writer).to receive(:convert_codeblock).and_wrap_original do |original, element, opts| # rubocop:disable RSpec/AnyInstance
+      element.attr.delete('class')
+      element.options.delete(:lang)
+      original.call(element, opts)
+    end
+    step = "* **cli:** add a step\n\n  ```sh\n  koha login\n  ```\n"
+    final = '## [1.0.0](https://github.com/example/sample-tool/compare/v0.9.0...v1.0.0)-rc.1 (2026-11-22)'
+    candidate = '## 1.0.0-rc.1 (2026-11-20)'
+    expect { exported("#{final}\n\n### Features\n\n#{step}\n#{candidate}\n\n### Features\n\n* fix\n", %w[1.0.0 1.0.0-rc.1]) }
+      .to raise_error(/language of the code block in release 1\.0\.0, section Features, code block 1 on the page,/)
+    expect { exported("#{final}\n\n### Features\n\n* fix\n\n#{candidate}\n\n### Features\n\n#{step}", %w[1.0.0 1.0.0-rc.1]) }
+      .to raise_error(/language of the code block in release 1\.0\.0-rc\.1, section Features, code block 1 on the page,/)
   end
 
   it 'counts the entries at the source, and the page check counts the entries on the page' do

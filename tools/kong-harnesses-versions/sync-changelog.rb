@@ -664,11 +664,8 @@ module KongHarnessesChangelog
       end
     end
 
-    # The version as the source writes it, because kramdown shows `--` in a heading as a
-    # dash.
     versions = releases.map do |release|
-      raw = lines[release[:heading].options[:location] - 1].to_s.sub(/\A {0,3}\#{2}[ \t]+/, '').rstrip
-      raw[/\A\[?(#{VERSION})(?=[\]\s(]|\z)/, 1] ||
+      version_of(release[:heading], lines) ||
         raise("The changelog has a release heading with no version on line #{release[:heading].options[:location]}.")
     end
     raise "The changelog has no section for #{highest}, the highest final release." unless finals.include?(highest) && versions.include?(highest)
@@ -701,6 +698,39 @@ module KongHarnessesChangelog
     output, = Writer.convert(root, options)
     output = "#{output.sub(/\A\n+/, '').sub(/\n+\z/, '')}\n"
     written(output, root, original, lines, releases: kept)
+  end
+
+  # The version of a release heading as its line in the source writes it, because
+  # kramdown shows `--` in a heading as a dash, or nil.
+  def version_of(heading, lines)
+    location = heading.options[:location] or return
+    raw = lines[location - 1].to_s.sub(/\A {0,3}\#{2}[ \t]+/, '').rstrip
+    raw[/\A\[?(#{VERSION})(?=[\]\s(]|\z)/, 1]
+  end
+
+  # The release headings of the source, as KongHarnessesChangelogLinks.release_of takes
+  # them: each as its version, read from its line, and the version that it shows. With
+  # no source, each of `releases` shows its own version.
+  def releases_of(source, lines, releases)
+    return releases.map { |version| [version, version] } unless source
+
+    release_elements(source).zip(release_headings(source)).map do |heading, node|
+      shown = KongHarnessesChangelogLinks.shown_version(node)
+      [version_of(heading, lines) || shown, shown]
+    end
+  end
+
+  def release_elements(source)
+    source.children.select { |element| element.type == :header && element.options[:level] == 2 }
+  end
+
+  # The release headings of the source as the page shows them, one for each of
+  # `release_elements` and in one fragment, so that `release_of` sees the position of
+  # each among them.
+  def release_headings(source)
+    root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
+    root.children.concat(release_elements(source))
+    html(root).element_children
   end
 
   def types_of(element)
@@ -795,7 +825,7 @@ module KongHarnessesChangelog
     end
 
     index = parts[0].zip(parts[1]).index { |before, after| reading(before) != reading(after) }
-    index ? "release #{releases[index]}" : 'the changelog'
+    index ? "release #{KongHarnessesChangelogLinks.release_of(release_headings(source)[index], releases)}" : 'the changelog'
   end
 
   # The first block of `expected` that `actual` does not show the same by `same`, and in
@@ -910,6 +940,7 @@ module KongHarnessesChangelog
   # references at the end of an entry taken out, which it reads from a second rendering
   # of the source. It also refuses a code block that lost its language.
   def written(output, tree, source = nil, lines = [], releases: [])
+    releases = releases_of(source, lines, releases)
     reread, = Kramdown::Parser::GFM.parse(output, options)
     if types_of(reread).intersect?(%i[a img])
       link = html(reread).at_css('a, img')
@@ -944,13 +975,14 @@ module KongHarnessesChangelog
   # It gives the place of the first such element, as its first line in the source and its
   # release, or nil.
   def unwritten_link(source, lines, releases)
+    headings = release_headings(source)
     count = 0
     source.children.each do |element|
       count += 1 if element.type == :header && element.options[:level] == 2
       items = %i[ul ol].include?(element.type) ? element.children : [element]
       found = items.find { |item| unwritten_link_in?(item, lines) } or next
 
-      release = count.zero? ? 'the text before the first release' : "release #{releases[count - 1] || 'with no version'}"
+      release = count.zero? ? 'the text before the first release' : "release #{KongHarnessesChangelogLinks.release_of(headings[count - 1], releases)}"
       return "the entry or block on line #{found.options[:location]}, in #{release}"
     end
     nil

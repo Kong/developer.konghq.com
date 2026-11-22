@@ -200,7 +200,7 @@ module KongHarnessesChangelogLinks
   # names no text of the changelog: GitHub masks only the exact text of a secret, so
   # the job log would show the repository in another letter case. The numbers count
   # what the page holds, which has no tooling entries, so they say "on the page".
-  # `releases` are the versions of the release headings, as `release_of` takes them.
+  # `releases` are the release headings of the source, as `release_of` takes them.
   def place(node, releases = nil)
     top = top_of(node)
     return 'the page' if top.fragment?
@@ -258,13 +258,30 @@ module KongHarnessesChangelogLinks
     [nil, section ? section_name(section, nil) : nil, before]
   end
 
-  # kramdown shows `--` in a heading as a dash, so a caller that has the version of each
-  # release heading, as the source writes it, passes them, and a heading names the one
-  # that it shows. The heading text names it only when none matches.
+  # The release of a release heading of the page. A caller that has the source passes
+  # `releases`, each release heading of the source in its order as the version that the
+  # source writes and the version that the heading shows, and a heading names the
+  # release that shows the same version. kramdown shows `--` in a heading as a dash, and
+  # a suffix after the compare link of a heading shows as part of the version, so two
+  # releases can show the same one: then the heading names the release at its own
+  # position among the headings that show that version. The heading text names a
+  # release only when none matches.
   def release_of(heading, releases = nil)
-    shown = heading.text.strip
-    written = written_version(shown[SHOWN_VERSION].to_s)
-    releases.to_a.find { |release| release == written } || shown[RELEASE] || 'with no version'
+    shown = shown_version(heading)
+    same = releases.to_a.select { |_, version| version == shown }
+    return same.first.first if same.length == 1
+
+    if same.length > 1
+      peers = heading.parent.element_children.select { |node| node.name == 'h2' && shown_version(node) == shown }
+      release = same.dig(peers.index(heading), 0)
+      return release if release
+    end
+    heading.text.strip[RELEASE] || 'with no version'
+  end
+
+  # The version that a heading shows, written back as the source writes it.
+  def shown_version(heading)
+    written_version(heading.text.strip[SHOWN_VERSION].to_s)
   end
 
   # The version at the start of a heading, with the dashes and the ellipsis that kramdown

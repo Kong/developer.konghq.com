@@ -107,6 +107,7 @@ Run the steps in this order:
    The checks of the whole page below read the page too, so they name the first place that they refuse on the page in the same way, and a code block by its number in its section.
    The check of the text that a reader sees names the release, or the first block that differs when the page and the source hold other releases.
    A place names a release by the version that its `CHANGELOG.md` heading writes, also with `--`, which kramdown shows as a dash, and finds it by the version that the heading shows, not by the order of the headings.
+   A suffix after the compare link of a heading shows as part of its version, so two headings can show the same version, and then each names the release at its own position among them.
    The checks name a link that release-please does not write so by the line in `CHANGELOG.md` where its entry or block starts, and its release.
    release-please links each `#N` and `@name` of a subject also in code, so such a link in a code span becomes `#N` or `@name` again, as in `` `&#8212;` `` or `` `@local` ``, and the script refuses code that holds any other link.
    Outside code, the writer escapes the `&` of `&#8212;` once the link between its parts goes, so the page still shows `&#8212;`.
