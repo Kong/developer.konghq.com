@@ -164,7 +164,8 @@ MCP rules:
   An entry is a match when these known values make it match.
   A server is undecided when its result depends on a variable that the policy's `env` doesn't set, in an entry or in the server.
   A match of an `allowedMcpServers` `serverUrl` entry is also undecided when a known value in the entry holds `/`, `?`, `#`, `@`, `:`, or `\`, because {{ site.claude_code }} [ignores an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the URL's scheme, host, or path.
-  A server that names a variable in `headersHelper` is also undecided when an allowlist is set and doesn't permit it, because the {{ site.claude_code }} docs don't say whether that variable starts the allowlist check.
+  A server that names a variable in `headersHelper` and that the **Allowlist checks of `managed-mcp.json` servers** rule doesn't check is also undecided when an allowlist is set and doesn't permit it, because the {{ site.claude_code }} docs don't say whether that variable starts the check.
+  A deny entry that matches such a server still blocks it.
   `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
   The exception is a deny entry that matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` allows it.
   A deny entry that only may match one of your own servers is refused like any other undecided server.
