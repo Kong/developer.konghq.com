@@ -54,7 +54,7 @@ prereqs:
     - title: MDM, {{ site.claude_code }}, and test access
       content: |
         You need an MDM tool (for example, Jamf Pro or Microsoft Intune) or Linux configuration management, administrator access on one test computer per platform and policy group, and [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) access ([required role](/ai-cost-management/analytics-and-debugging/#how-the-views-relate)).
-        Target computers need {{ site.claude_code }} `2.1.285` or later to enforce `allowedProviders` (Linux also supports the [`apt`, `dnf`, and `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers)).
+        Target computers need {{ site.claude_code }} `2.1.285` or later to enforce `allowedProviders`.
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to managed computers with kong-harnesses?
@@ -109,10 +109,12 @@ Confirm these choices before building:
 ## Build the managed settings
 
 Run `kong-harnesses fleet build` per group (`--platform` builds for any OS from one computer), keeping quotes and adding mode-specific MCP flags from [fleet build options](/kong-harnesses/fleet-build-options/) (including PowerShell quoting).
-Replace `DELIVERY` (`file` or `mdm`, Linux supports `file` only), `POLICY_FILE` (or `--no-policy`), `MCP_MODE`, and `GROUP` without spaces (new or empty `--output-dir`).
+Replace `POLICY_FILE` (or `--no-policy`), `MCP_MODE`, and `GROUP` without spaces (new or empty `--output-dir`).
 
 {% navtabs "fleet-build" %}
 {% navtab "macOS" %}
+
+Replace `DELIVERY` with `file` or `mdm`.
 
 ```sh
 kong-harnesses fleet build \
@@ -128,6 +130,8 @@ kong-harnesses fleet build \
 {% endnavtab %}
 {% navtab "Linux" %}
 
+Linux supports only `file` delivery, the default.
+
 ```sh
 kong-harnesses fleet build \
   --profile work \
@@ -140,6 +144,8 @@ kong-harnesses fleet build \
 
 {% endnavtab %}
 {% navtab "Windows" %}
+
+Replace `DELIVERY` with `file` or `mdm`.
 
 ```powershell
 kong-harnesses fleet build `
@@ -159,7 +165,7 @@ kong-harnesses fleet build `
 
 ## Check the build output
 
-`fleet build` writes files under `root/` at these target paths:
+`fleet build` writes files under `root/` at these target paths, and other files outside `root/`:
 
 {% table %}
 columns:
@@ -171,22 +177,28 @@ columns:
     key: profile
   - title: "MCP servers (`exclusive` only)"
     key: servers
+  - title: "Outside `root/`"
+    key: other
 rows:
   - platform: macOS
     settings: "`/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`"
     profile: "`/Library/Application Support/kong-harnesses/profiles/work.json`"
     servers: "`/Library/Application Support/ClaudeCode/managed-mcp.json`"
+    other: "`scripts/preinstall`, and `mdm/com.anthropic.claudecode.plist` for an MDM build"
   - platform: Linux
     settings: "`/etc/claude-code/managed-settings.d/kong-harnesses.json`"
     profile: "`/etc/kong-harnesses/profiles/work.json`"
     servers: "`/etc/claude-code/managed-mcp.json`"
+    other: None
   - platform: Windows
     settings: "`C:\\Program Files\\ClaudeCode\\managed-settings.d\\kong-harnesses.json`"
     profile: "`C:\\Program Files\\kong-harnesses\\profiles\\work.json`"
     servers: "`C:\\Program Files\\ClaudeCode\\managed-mcp.json`"
+    other: "`mdm/Settings.json` for an MDM build"
 {% endtable %}
 
-Outside `root/`, `--output-dir` holds `scripts/preinstall` (macOS), `mdm/com.anthropic.claudecode.plist` (macOS MDM) or `mdm/Settings.json` (Windows MDM), and `kong-harnesses-fleet-BUILD_ID.json` (keep this record with your policy for `--record` updates and `fleet remove`).
+`--output-dir` also holds the build record `kong-harnesses-fleet-BUILD_ID.json`.
+Keep it with your policy for `--record` updates and `fleet remove`.
 
 Confirm before deploying:
 
@@ -194,32 +206,23 @@ Confirm before deploying:
 * **Secrets and helpers:** Confirm settings and `managed-mcp.json` don't contain secrets, the helper runs `kong-harnesses credential --profile work` at `--executable`, and hooks report blocked MCP servers and skipped web searches (models without WebSearch).
 * **Build ID:** Save the build ID (`env.KONG_HARNESSES_FLEET_BUILD`) to match in `kong-harnesses doctor`.
 
-kong-harnesses prefers the machine-wide profile over a same-named user profile and refuses it unless only administrators can modify the file and parent folders.
-On macOS and Linux, `root` must own them without group or world write permissions.
-On Windows, `Administrators`, `SYSTEM`, or `TrustedInstaller` must own and be the only writers up to `C:\Program Files`, without symlinks or junctions.
+kong-harnesses prefers the machine-wide profile over a same-named user profile and refuses it unless only administrators can modify the file and its parent folders.
+The deploy step for your platform says which owners and writers it accepts.
 
 ## Deploy to managed computers
 
 Deploy to one test computer per platform and policy group first, and roll out after [Validate](#validate) passes.
+Install in this order through your MDM tool or configuration management.
+`fleet build` doesn't install CAs, {{ site.claude_code }}, or kong-harnesses.
 
-Install through your MDM tool:
-
-1. **{{ site.claude_code }}:** Install `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
-   Run the native installer in each developer's user context, not as `root` or SYSTEM (`~/.local/bin/claude` or `%USERPROFILE%\.local\bin\claude.exe`).
-1. **kong-harnesses:** Install system-wide at `--executable` ([install guide](/kong-harnesses/install/)).
-   Don't use Homebrew on managed Macs because it shares `/usr/local/bin` on Intel Macs.
-1. **Private gateway CA (if used):** Trust it in the OS store and each WSL distribution for `--wsl inherit` (`fleet build` doesn't install CAs).
-1. **Build files (`root/`):** Install as administrator using [Package or copy the build files](#package-or-copy-the-build-files).
-1. **MDM policy (MDM builds only):**
-   * **macOS:** Upload `mdm/com.anthropic.claudecode.plist` as Custom Settings for `com.anthropic.claudecode`, replacing existing policy.
-   * **Windows:** Set `REG_SZ` `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the single-line JSON in `mdm/Settings.json`, replacing existing value.
-   * **Migrating from a file build:** Unassign the old package or script first (Intune macOS PKG: remove **Required** and **Available** assignments) and delete `managed-settings.d/kong-harnesses.json` so {{ site.claude_code }} stops reading its `env` and MCP lock.
-
-### Package or copy the build files
-
-{% navtabs "deploy-fleet-files" %}
+{% navtabs "deploy-fleet" %}
 {% navtab "macOS" %}
 
+1. Install {{ site.claude_code }} `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
+   Run the native installer in each developer's user context, not as `root`, so it installs `~/.local/bin/claude`.
+1. Install [kong-harnesses](/kong-harnesses/install/) system-wide at `--executable`.
+   Don't use Homebrew on managed Macs, because it shares `/usr/local/bin` on Intel Macs.
+1. If you use a private gateway CA, trust it in the macOS system trust store.
 1. Copy `--output-dir` to a Mac preserving permissions (`ditto` or `rsync -a`).
 1. Inside that folder, build `kong-harnesses-fleet.pkg` with the printed `pkgbuild` command (sets `root` ownership, 755/644 modes, and `scripts/preinstall`), replacing `PACKAGE_IDENTIFIER` and `PACKAGE_VERSION`:
 
@@ -244,35 +247,78 @@ Install through your MDM tool:
      kong-harnesses-fleet-signed.pkg
    ```
 
-1. Deploy through MDM (in Microsoft Intune, add as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), not a line-of-business app, because without an `/Applications` `.app` bundle Intune may not detect it).
+1. Deploy the package through MDM.
+   In Microsoft Intune, add it as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), not a line-of-business app, because without an `/Applications` `.app` bundle Intune may not detect it.
+   `root` must own the machine-wide profile and its parent folders, without group or world write permissions.
+1. For an MDM build, upload `mdm/com.anthropic.claudecode.plist` as Custom Settings for `com.anthropic.claudecode`, replacing the existing policy.
+   When you migrate from a file build, first unassign the old package (for an Intune macOS PKG, remove its **Required** and **Available** assignments) and delete `/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
+
+The preinstall script checks the targets and their parent folders before it writes.
+If it prints `Not installed:`, fix the cause (symlink, extra hard link, unexpected owner, or writable permissions or ACLs) and retry.
+Delete an unexpected file or link only at a build file's exact path, never system folders such as `/Library`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
 
+1. Install {{ site.claude_code }} `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
+   Run the native installer in each developer's user context, not as `root`, so it installs `~/.local/bin/claude`, or install from the [`apt`, `dnf`, or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
+1. Install [kong-harnesses](/kong-harnesses/install/) system-wide at `--executable`.
+1. If you use a private gateway CA, trust it in the system trust store.
 1. Confirm `acl` (`getfacl`) is installed on each managed computer.
 1. Copy `root/` to the target computer and run the printed `sudo sh -c` command inside `root/`.
 
-The command checks ownership, permissions, links, and ACLs, copies under `/`, and sets `root:root` with 755 folders and 644 files.
+   The command checks ownership, permissions, links, and ACLs, copies under `/`, and sets `root:root` with 755 folders and 644 files.
+   `root` must own the machine-wide profile and its parent folders, without group or world write permissions.
+
+If the command prints `Not installed:`, fix the cause (symlink, extra hard link, unexpected owner, writable permissions or ACLs, or missing `getfacl`) and retry.
+If it prints `could not be written in full; fix the cause and run the step again`, the write was partial: fix the cause and run the command again.
+Delete an unexpected file or link only at a build file's exact path, never system folders such as `/etc`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
+1. Install {{ site.claude_code }} `2.1.285` or later ([Set up {{ site.claude_code }}](https://code.claude.com/docs/en/setup), [version pinning](/kong-harnesses/maintain-a-claude-code-fleet/)).
+   Run the native installer in each developer's user context, not as SYSTEM, so it installs `%USERPROFILE%\.local\bin\claude.exe`.
+1. Install [kong-harnesses](/kong-harnesses/install/) system-wide at `--executable`.
+1. If you use a private gateway CA, trust it in the Windows certificate store, and for `--wsl inherit` in each WSL distribution.
 1. Confirm `C:\Program Files` allows only `Administrators`, `SYSTEM`, `TrustedInstaller`, or `CREATOR OWNER` to modify files, and existing folders (for example, `C:\Program Files\ClaudeCode`) can lose explicit ACLs.
 1. Copy `root/` to the target computer and run the printed command from elevated Windows PowerShell inside `root/`.
 
-The command checks targets for unexpected owners, writable ACLs, symlinks, junctions, and extra hard links, copies under `C:\`, sets `Administrators` ownership, and runs `icacls /reset` on written paths (including existing folders) to inherit `C:\Program Files` ACLs.
+   The command checks targets for unexpected owners, writable ACLs, symlinks, junctions, and extra hard links, copies under `C:\`, sets `Administrators` ownership, and runs `icacls /reset` on written paths (including existing folders) to inherit `C:\Program Files` ACLs.
+   Only `Administrators`, `SYSTEM`, or `TrustedInstaller` may own and write the machine-wide profile and its folders up to `C:\Program Files`, without symlinks or junctions.
+1. For an MDM build, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the single-line JSON in `mdm/Settings.json`, replacing the existing value.
+   When you migrate from a file build, first unassign the old package or script and delete `C:\Program Files\ClaudeCode\managed-settings.d\kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
+
+If the command prints `Not installed:`, fix the cause (symlink, junction, extra hard link, unexpected owner, or writable ACLs) and retry.
+If it prints `could not be written in full; fix the cause and run the step again`, the write was partial: fix the cause and run the command again.
+Delete an unexpected file or link only at a build file's exact path, never system folders such as `C:\Program Files`.
 
 {% endnavtab %}
 {% endnavtabs %}
 
-{:.info}
-> **Preinstall safety checks:** The macOS preinstall script and Linux and Windows commands check targets and parent folders before writing.
-> * On `Not installed:`, fix the cause (symlink, extra hard link, unexpected owner, writable permissions or ACLs, or missing `getfacl`) and retry.
-> * Delete an unexpected file or link only at a build file's exact path, never system folders such as `/etc`, `/Library`, or `C:\Program Files`.
-> * On Linux and Windows, `could not be written in full; fix the cause and run the step again` indicates a partial write.
->   Fix the cause and rerun.
-
 ## Validate
+
+Each build shows one of these `Setting sources` labels in `/status`:
+
+{% table %}
+columns:
+  - title: Platform
+    key: platform
+  - title: File build
+    key: file
+  - title: MDM build
+    key: managed
+rows:
+  - platform: macOS
+    file: "`(drop-ins)` or `(file + drop-ins)`"
+    managed: "`(plist)`, or a `, merged` list starting with `plist`"
+  - platform: Linux
+    file: "`(drop-ins)` or `(file + drop-ins)`"
+    managed: Not supported
+  - platform: Windows
+    file: "`(drop-ins)` or `(file + drop-ins)`"
+    managed: "`(HKLM)`, or a `, merged` list starting with `HKLM`"
+{% endtable %}
 
 Sign in to each test computer as a standard developer without a saved sign-in, and verify before sending a prompt:
 
@@ -292,11 +338,12 @@ Sign in to each test computer as a standard developer without a saved sign-in, a
    Confirm `doctor` reports your organization's managed settings configure {{ site.claude_code }} and prints the `fleet build` ID (a browser sign-in note is expected without a saved sign-in).
    Fix any errors before continuing.
 1. Start {{ site.claude_code }} (`claude`) and sign in when the browser opens on startup (Anthropic API discovery) or first request.
-1. Run `/status` before prompting and confirm `Setting sources` shows `Enterprise managed settings` with `(drop-ins)` or `(file + drop-ins)` (file build), or `(plist)`, `(HKLM)`, or a `, merged` list starting with `plist` or `HKLM` (MDM build).
+1. Run `/status` before prompting and confirm `Setting sources` shows `Enterprise managed settings` with the file build or MDM build label for your platform.
 1. Send `Say hello`, confirm a reply, and verify the event under your control plane in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) (filter by **User** `oidc/SUB`, where `SUB` is the test user's `sub` claim, or configure [subject attribution](/ai-cost-management/attribution/#set-up-subject-attribution)).
    Confirm policies don't set `disableAllHooks` to `true`, because the test prompt doesn't verify hooks.
 1. For profiles with gateway MCP servers, run `/mcp` and confirm every server connects.
-1. Before full rollout, test supported embedding host apps (not Claude Desktop) when `--host-settings merge` or `parentSettingsBehavior: "merge"` is active, and verify Windows WSL inheritance matches `--wsl`, using [Host apps and WSL](/kong-harnesses/troubleshooting/claude-code-fleet/#host-apps-and-wsl).
+1. Before full rollout, test supported embedding host apps (not Claude Desktop) when `--host-settings merge` or `parentSettingsBehavior: "merge"` is active, using [Host apps and WSL](/kong-harnesses/troubleshooting/claude-code-fleet/#host-apps-and-wsl).
+1. For a Windows build, verify that WSL inheritance matches `--wsl`, using the same section.
 
 If any check fails, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 
