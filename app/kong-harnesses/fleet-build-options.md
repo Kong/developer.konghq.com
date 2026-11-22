@@ -52,6 +52,7 @@ related_resources:
 1. Managed settings files (`managed-settings.json` and `managed-settings.d/`).
 
 By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set; otherwise the highest setting a non-`null` policy key).
+A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list: `allowedMcpServers`, `availableModels`, `allowedHttpHookUrls`, `httpHookAllowedEnvVars`, `allowedChannelPlugins`, `allowedProviders`, `forceLoginOrgUUID`, and `gatewayInternalNetworks`.
 Sources setting only `managedSourcesBehavior` or `wslInheritsWindowsSettings` don't count.
 [Select keys apply across administrator sources](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), including `env` and MCP locks.
 
@@ -93,7 +94,7 @@ Policy rules:
   Check all drop-ins regardless of sort order for `policyHelper`, `policyHelpers`, `forceLoginMethod`, `forceLoginGatewayUrl`, `forceLoginOrgUUID`, `enforceAnthropicSignIn`, and non-`customEndpoint` `allowedProviders` entries (lists combine).
   Confirm files sorting after `kong-harnesses.json` don't override `apiKeyHelper`, `env`, or `modelPicker`, and move earlier non-secret `ANTHROPIC_CUSTOM_HEADERS` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` on MDM builds, include it in `--policy` and confirm `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries such as `permissions.allow` rules or hooks ([Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source)).
-  An MDM policy setting a policy key to a value other than `null` or empty objects still supplies `apiKeyHelper` over a file build.
+  An MDM policy that sets a policy key, as counted in [Delivery method and existing policy](#delivery-method-and-existing-policy), still supplies `apiKeyHelper` over a file build.
 
 ### MDM policy location
 
@@ -229,7 +230,7 @@ rows:
       Otherwise, use PowerShell 7.3 or later.
   - shell: Windows, Git Bash
     quote: |
-      Use PowerShell instead.
+      For a macOS or Linux build, use PowerShell instead.
       Git Bash turns an argument that starts with `/`, such as `/usr/local/bin/kong-harnesses`, into a Windows path, and `fleet build` then refuses the macOS or Linux `--executable`.
 {% endtable %}
 
