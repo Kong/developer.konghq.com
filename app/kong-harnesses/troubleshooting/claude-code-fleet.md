@@ -22,7 +22,8 @@ tags:
 
 breadcrumbs:
   - /kong-harnesses/
-  - /kong-harnesses/troubleshooting/
+  - url: /kong-harnesses/troubleshooting/
+    title: Troubleshoot kong-harnesses
 
 related_resources:
   - text: Troubleshoot kong-harnesses
@@ -104,7 +105,8 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
   * `--settings`
   * Every administrator source, including remote server-managed settings
 
-  `kong-harnesses doctor` reads local administrator sources (not remote server-managed settings), skips `deniedMcpServers` when `managed-mcp.json` is present, and drops an entire `allowedMcpServers` or `deniedMcpServers` list if any entry fails to decode, whereas {{ site.claude_code }} can keep valid entries.
+  `kong-harnesses doctor` reads local administrator sources (not remote server-managed settings).
+  As {{ site.claude_code }} does, `doctor` reads each `allowedMcpServers` and `deniedMcpServers` entry on its own and keeps the valid ones, ignores keys whose case doesn't match, checks `deniedMcpServers` even when `managed-mcp.json` exists, and treats a string (or other non-boolean, non-array) `strictPluginOnlyCustomization` value as `true`.
   For plugin-blocking settings (`strictPluginOnlyCustomization`, marketplace lists, and `managedMcpServers`), see [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
 
 ## Host apps and WSL
