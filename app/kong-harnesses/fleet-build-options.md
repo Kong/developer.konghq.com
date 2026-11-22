@@ -53,7 +53,8 @@ related_resources:
 
 By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set, apart from the exceptions below; otherwise the highest setting a non-`null` policy key).
 A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list: `allowedMcpServers`, `availableModels`, `allowedHttpHookUrls`, `httpHookAllowedEnvVars`, `allowedChannelPlugins`, `allowedProviders`, and `forceLoginOrgUUID`.
-A `null` `gatewayInternalNetworks` also counts as set, but {{ site.claude_code }} reads it as a network that matches no address and refuses gateway sign-in, so `fleet build` refuses a `--policy` that sets it.
+A `null` `gatewayInternalNetworks` also counts as set, but {{ site.claude_code }} reads it as a network that matches no address: when the highest managed source on the computer holds it, `/login` refuses every new [cloud gateway](https://code.claude.com/docs/en/claude-apps-gateway) sign-in there ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+`fleet build` refuses a `--policy` that sets it.
 `false` or `"false"` for `disableAutoMode`, `disableDeepLinkRegistration`, `permissions.disableBypassPermissionsMode`, or `permissions.disableAutoMode`, an `env` that isn't an object, and a `null` under `permissions` don't count.
 Sources setting only `managedSourcesBehavior` or `wslInheritsWindowsSettings` don't count.
 [Select keys apply across administrator sources](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), including `env` and MCP locks.
@@ -97,7 +98,7 @@ Policy rules:
   Confirm files sorting after `kong-harnesses.json` don't override `apiKeyHelper`, `env`, or `modelPicker`, and move earlier non-secret `ANTHROPIC_CUSTOM_HEADERS` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` on MDM builds, include it in `--policy` and confirm `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries such as `permissions.allow` rules or hooks ([Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source)).
   An MDM policy that sets a policy key, as counted in [Delivery method and existing policy](#delivery-method-and-existing-policy), takes precedence over a file build, so {{ site.claude_code }} uses the `apiKeyHelper` of the MDM policy, or none when the MDM policy has none.
-  An MDM policy with only empty objects doesn't count, so the file build applies.
+  An MDM policy with only empty objects yields to a file build that sets a policy key.
 
 ### MDM policy location
 

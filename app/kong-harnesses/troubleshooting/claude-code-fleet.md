@@ -61,11 +61,11 @@ columns:
 rows:
   - label: "Missing `Enterprise managed settings`, `(file)`, or `(HKCU)`"
     fix: |
-      Build files or the MDM policy didn't reach the computer, or the policy sets no key that [counts as a policy value](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy), for example only control keys or empty objects.
+      Build files or the MDM policy didn't reach the computer, or the policy sets no key that [counts as a policy value](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy), for example only `managedSourcesBehavior` or `wslInheritsWindowsSettings`.
       Verify the files at their [target paths](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output) and redeploy.
   - label: "`(drop-ins)` or `(file + drop-ins)` on an MDM build"
     fix: |
-      The MDM policy didn't reach the computer or sets no key that [counts as a policy value](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy), for example only control keys or empty objects.
+      The MDM policy didn't reach the computer or sets no key that [counts as a policy value](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy), for example only `managedSourcesBehavior`, `wslInheritsWindowsSettings`, or empty objects.
       Check `Skipped sources`, verify the deployed MDM policy, and redeploy.
   - label: "`(plist)`, `(HKLM)`, or a merged list starting with `plist` or `HKLM` on a file build"
     fix: |
