@@ -205,10 +205,10 @@ module KongHarnessesChangelogLinks
   VERSION_END = '\]\s('
   # The version at the start of a release heading. After a `[`, a `]`, a space, a `(` or
   # the end of the text ends it. A bare version ends only at a space, the `(` of the
-  # date or the end, so a `]` that no `[` opens never ends it. The
-  # export reads it from the line of the heading, and the export and the page check read
-  # it from the heading text that the page shows, so the page check finds the version
-  # of every heading that the export takes.
+  # date or the end, so a `]` that no `[` opens never ends it. The export reads it from
+  # the line of the heading, and the export and the page check read it from the heading
+  # text that the page shows, so the page check finds the version of every heading that
+  # the export takes.
   HEADING_VERSION = /\A(\[)?(#{VERSION})(?(1)(?=[#{VERSION_END}]|\z)|(?=[\s(]|\z))/
   # The start of a heading text up to where HEADING_VERSION ends.
   HEADING_START = /\A\[?[^#{VERSION_END}]*/

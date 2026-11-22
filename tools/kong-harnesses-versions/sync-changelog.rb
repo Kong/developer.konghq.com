@@ -662,9 +662,9 @@ module KongHarnessesChangelog
       end
     end
 
-    # Each release heading shows exactly the version of its line, and no two lines have
-    # the same version, as release-please writes them, so a place on the page names one
-    # release for each heading.
+    # The export refuses a release heading that does not show exactly the version of its
+    # line, and a second line with the version of an earlier one, so a place on the page
+    # names one release for each heading.
     shown = release_headings(source).map { |node| KongHarnessesChangelogLinks.shown_version(node) }
     versions = []
     releases.zip(shown).each do |release, version_shown|
