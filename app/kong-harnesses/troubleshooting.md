@@ -93,7 +93,7 @@ rows:
       If `doctor` or `profile get` says the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
       If `profile get` says the profile needs a newer kong-harnesses, update kong-harnesses and run `doctor` again.
       If an administrator installed the profile for every user, ask your administrator to reinstall it.
-      If the `profile` line says the session doesn't have a per-user runtime directory (common in a Linux container or CI job), set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
+      On Linux, if the `profile` line says the session doesn't have a per-user runtime directory, such as in a container or CI job, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
     what: |
       You're signed in to the profile.
@@ -103,7 +103,7 @@ rows:
       For OpenCode and Hermes, the agent CLI can own the sign-in.
       When it does, `doctor` reports `ok` and says the client owns it, so check sign-in status in that agent CLI.
       For a CI profile that reads its key from the environment, set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator, because `login` refuses that profile.
-      If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
+      On Linux, if the report says that no Secret Service runs in the session, use a desktop session that runs a keyring, such as GNOME Keyring.
       If `doctor`, `login`, or `status` says `max_access_token_lifetime_seconds` is below 365 seconds, ask your administrator to raise it to at least 365 seconds, then import the corrected profile.
       In that case, `login` fails even while you're signed in, because the next renewal fails.
       For more about sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
@@ -145,12 +145,13 @@ rows:
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the gateway's certificate, install its issuing certificate authority in the system trust store.
-      When a shell proxy applies to an `http://` gateway on this computer, add the exact gateway host without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
+      When a shell proxy applies to an `http://` gateway on this computer, add the exact gateway host without the port, such as `localhost`, to each variable that the `fix:` line names, such as `NO_PROXY`, in the shell that starts the agent CLI.
       For an IPv6 loopback address, add instead each form of the address: with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
       For {{ site.claude_code }}, run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again so activation writes the same exclusion to {{ site.claude_code }} settings.
       When the `fix:` line names only that `profile activate` step, run it on its own.
       When {{ site.claude_code }} project or managed settings set a proxy variable or can't be read, follow the `fix:` line, because those settings take precedence over the `NO_PROXY` that activation writes.
-      The same applies when a settings file sets a proxy variable to a non-string value or a value with a NUL character, or on Windows sets one proxy variable twice with different letter case and different values.
+      The same applies when a settings file sets a proxy variable to a non-string value or a value with a NUL character.
+      On Windows, it also applies when a settings file sets one proxy variable twice with different letter case and different values.
       Codex, OpenCode, and Hermes require an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
     what: |
