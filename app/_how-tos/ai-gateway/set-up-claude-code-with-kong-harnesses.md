@@ -204,9 +204,10 @@ If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, a
 A proxy that forwards a request to an `http://` gateway can read your access token.
 When a proxy applies to the gateway host in the current shell, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
 When `profile activate` configures {{ site.claude_code }} for an `http://` gateway, it writes `NO_PROXY` and `no_proxy` into {{ site.claude_code }} user settings.
-{{ site.claude_code }} applies those values instead of the shell's `NO_PROXY` to its own requests and to the kong-harnesses credential helper it starts.
-If a proxy applies to the gateway host before `profile activate` writes those settings, or if project or managed settings override them, `doctor` fails.
-Whenever a proxy applies to the gateway host in the environment where kong-harnesses runs, kong-harnesses doesn't return an access token.
+{{ site.claude_code }} uses those settings values instead of the shell's `NO_PROXY` for its own requests and passes them to subprocesses it starts, including the kong-harnesses credential helper.
+`kong-harnesses credential` and `kong-harnesses token` check only their own process environment, without reading settings files, and withhold the access token when a proxy applies to the gateway host there.
+`doctor` fails when a proxy applies to the gateway host before `profile activate` writes those settings.
+It also fails when project or managed settings could send the gateway through a proxy, or when `doctor` can't check project or managed proxy settings.
 Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses, or add it to your shell profile:
 
 {% navtabs "no-proxy" %}
