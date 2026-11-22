@@ -325,7 +325,7 @@ rows:
 `fleet build` refuses a range when:
 
 * `--claude-code-minimum` is earlier than `2.1.163`, the first release reading version bounds (flags only).
-* `--claude-code-minimum` or `--claude-code-maximum` names another version than the `requiredMinimumVersion` or `requiredMaximumVersion` of `--policy`.
+* `--claude-code-minimum` or `--claude-code-maximum` differs from the `requiredMinimumVersion` or `requiredMaximumVersion` that `--policy` sets.
 * The maximum version (`--claude-code-maximum` or combined `requiredMaximumVersion`) is earlier than `2.1.285`, the first release keeping every session on the gateway.
 * The minimum version (`--claude-code-minimum`, or combined `requiredMinimumVersion` or `minimumVersion`) is later than the maximum version.
 
