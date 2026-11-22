@@ -167,8 +167,7 @@ MCP rules:
   A server that names a variable in `headersHelper` and that the **Allowlist checks of `managed-mcp.json` servers** rule doesn't check is also undecided when an allowlist is set and doesn't permit it, because the {{ site.claude_code }} docs don't say whether that variable starts the check.
   A deny entry that matches such a server still blocks it.
   `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
-  The exception is a deny entry that matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` allows it.
-  A deny entry that only may match one of your own servers is refused like any other undecided server.
+  The exception is a deny entry that provably matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` allows it, and a deny entry that only may match is still refused.
   `kong-harnesses doctor` never reports an undecided server as loaded.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
