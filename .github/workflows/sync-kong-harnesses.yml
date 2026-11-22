@@ -322,18 +322,18 @@ jobs:
 
       # GitHub prints the repository in its own letter case, which the masks of
       # a secret in another case miss. The same check as in the
-      # kong-harnesses-versions job.
+      # kong-harnesses-versions job, which says why.
       - name: Check the letter case of the releases repository
         env:
           GH_TOKEN: ${{ steps.releases-token.outputs.token }}
           REPO: ${{ secrets.KONG_HARNESSES_RELEASES_REPO }}
         run: |
-          if ! full_name=$(gh api "repos/$REPO" --jq .full_name); then
+          if ! full_name=$(gh api "repos/$REPO" --jq .full_name 2>/dev/null); then
             echo "::error::Could not read the releases repository"
             exit 1
           fi
           if [ "$full_name" != "$REPO" ]; then
-            echo "::error::KONG_HARNESSES_RELEASES_REPO must use the exact letter case of the repository"
+            echo "::error::KONG_HARNESSES_RELEASES_REPO must be the exact <owner>/<name> of the repository, in its letter case. The old name of a renamed or moved repository fails this check too"
             exit 1
           fi
 
