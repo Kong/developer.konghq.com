@@ -269,15 +269,15 @@ ai_gateway_models:
             - claude-sonnet-5-5
 {% endentity_examples %}
 
-{{ site.claude_code }} sends the key in the `Authorization: Bearer` header and in the `x-api-key` header. With `header_auth_schemes` set to `Bearer`, the strategy reads the key that follows `Bearer` and a space in the `Authorization` header. A header value without the `Bearer` scheme is used as the key as it is. The strategy checks `Authorization` first, so it finds the key there. When `hide_credentials` is `true`, {{site.ai_gateway}} removes only that header, and the developer's key is still in `x-api-key`. The AI Model Provider then replaces `x-api-key` with your Anthropic key, so Anthropic doesn't get the developer's key.
-
-[`header_auth_schemes`](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) needs {{site.ai_gateway}} 2.4 or later.
+{{ site.claude_code }} sends the key in `Authorization: Bearer` and `x-api-key`, so this [API key authentication](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) strategy removes `Authorization` and the AI Model Provider replaces `x-api-key` with your Anthropic key.
 
 ## Create the kong-harnesses profile
 
 A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It doesn't hold secrets. A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
 
-The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane. kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address. If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, first add `127.0.0.1` to `NO_PROXY`, as [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/#create-the-kong-harnesses-profile) shows. A proxy that carries a request to an `http://` gateway can read the key, so `profile activate` doesn't configure a client when a proxy applies to the gateway host. The `NO_PROXY` setting exists only in the shell where you set it. Before you start `claude` in a new shell, set it again, or add it to your shell profile. Without it, kong-harnesses doesn't give {{ site.claude_code }} the key.
+The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+If your shell sets a proxy, add `127.0.0.1` to `NO_PROXY` (and `no_proxy` if it's set) in the shell that runs kong-harnesses and `claude`.
+For loopback HTTP and proxy rules, see [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways).
 
 Create a profile named `quickstart` that signs in with a static key:
 
@@ -288,35 +288,10 @@ kong-harnesses profile create --name quickstart --sign-in static-key --gateway-o
 kong-harnesses saves the profile and installs it on this computer. It also sends a test request without the key to the gateway route of each agent CLI that the profile sets up. This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
 
 {:.info}
-> In production, the administrator creates the profile once, with the `https://` origin of the gateway. To give developers the profile as a JSON file, the administrator saves it from the installed profile. `setup` accepts only a UTF-8 file without a byte order mark. On macOS and Linux:
->
-> ```sh
-> kong-harnesses profile get <profile> -o json | jq '.profile' > <profile>.json
-> ```
->
-> On Windows, in PowerShell 7. Windows comes with Windows PowerShell 5.1 only, so install PowerShell 7 with `winget install Microsoft.PowerShell` first, and start it with `pwsh`:
->
-> ```powershell
-> [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
-> $json = (kong-harnesses profile get <profile> -o json | Out-String | ConvertFrom-Json).profile | ConvertTo-Json -Depth 100
-> [IO.File]::WriteAllText("$PWD\<profile>.json", $json)
-> ```
->
-> The administrator shares the file or puts it at an HTTPS URL. The profile doesn't hold the key, so the administrator sends each developer a key of their own through a password manager or another secure channel. A developer then runs [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file:
->
-> ```sh
-> kong-harnesses setup <profile>.json --client claude-code
-> ```
->
-> `setup` installs the profile, asks for the key, and configures {{ site.claude_code }} in one run.
->
-> A developer who has only the key can run `setup` without a profile:
->
-> ```sh
-> kong-harnesses setup --client claude-code
-> ```
->
-> `setup` then asks the questions of `profile create`. The developer needs the gateway URL and the model ID from the administrator, because `setup` can ask for the model before it asks for the key. At the **Sign-in** question, the developer picks **Use a key from the administrator**.
+> For production, use an `https://` gateway origin and publish the profile as [Profile hosting](/kong-harnesses/profiles-for-administrators/#profile-hosting) describes.
+> For supported profile file encodings, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
+> The profile doesn't contain the key, so send each developer their own key through a password manager or another secure channel.
+> Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file.
 
 ## Save the key and configure {{ site.claude_code }}
 
@@ -361,14 +336,6 @@ kong-harnesses profile activate quickstart --client claude-code
 
 Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic, so they change behind the gateway. [Features that change behind the gateway](/ai-gateway/set-up-claude-code-with-kong-harnesses/#features-that-change-behind-the-gateway) lists them.
 
-## Replace or revoke the key
-
-The key doesn't expire, so a leaked key works until an administrator revokes it.
-
-* To revoke the key, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential). The cleanup steps at the end of this guide show the requests. Don't revoke the key now, because the rest of this guide uses it.
-* To save a new key on this computer, run `kong-harnesses login --profile quickstart --replace`. `login` asks you to type the profile name, removes the saved key, and asks for the new one. A {{ site.claude_code }} session that is already running keeps the old key for up to five minutes.
-* `kong-harnesses logout --profile quickstart` removes the key from this computer only. The key still works at the gateway until an administrator revokes it.
-
 ## Validate
 
 Run `kong-harnesses doctor` to check the setup:
@@ -392,5 +359,10 @@ claude
 ```
 
 Send a prompt to check that you get a reply. {{ site.claude_code }} now sends every model request to {{site.ai_gateway}} with the key.
+
+To replace the saved key on this computer, see [Sign in again](/kong-harnesses/sign-in/#sign-in-again).
+A running {{ site.claude_code }} session keeps the old key for up to five minutes.
+Signing out removes the key from this computer only, as [Sign out](/kong-harnesses/sign-in/#sign-out) describes.
+To revoke a leaked key at the gateway, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential).
 
 On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
