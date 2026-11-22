@@ -90,7 +90,7 @@ prereqs:
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
       content: |
-        Install {{ site.claude_code }} 2.1.278 or later.
+        Install {{ site.claude_code }} 2.1.284 or later.
         On macOS and Linux:
 
         ```sh
@@ -135,7 +135,7 @@ cleanup:
 faqs:
   - q: How do I replace or revoke a kong-harnesses static key?
     a: |
-      To replace a saved static key on your computer, see [Sign in again](/kong-harnesses/sign-in/#sign-in-again).
+      Replace a saved kong-harnesses static key on your computer with the command in [Sign in again](/kong-harnesses/sign-in/#sign-in-again).
       A running {{ site.claude_code }} session keeps the old key for up to five minutes.
       Signing out removes the key from your computer only, as [Sign out](/kong-harnesses/sign-in/#sign-out) describes.
       The key works at {{site.ai_gateway}} until an administrator revokes it.
@@ -318,7 +318,7 @@ This guide sets up only {{ site.claude_code }}, so you can ignore warnings about
 > For supported profile file encodings, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 > The profile doesn't contain the key, so send each developer their own key through a password manager or another secure channel.
 > Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file and `--client claude-code`, such as `kong-harnesses setup <profile>.json --client claude-code`.
-> Without `--client claude-code`, `setup` configures every installed client that the profile lists.
+> Without `--client claude-code`, `setup` configures every installed client that the profile lists, and skips a client when the gateway doesn't serve its route or refuses the sign-in.
 > A developer who has only a key can run `kong-harnesses setup --client claude-code` without a profile file, as [Set up without a profile file](/kong-harnesses/setup/#set-up-without-a-profile-file) describes.
 
 ## Save the key and configure {{ site.claude_code }}
