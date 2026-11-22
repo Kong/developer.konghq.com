@@ -139,14 +139,7 @@ Replace `POLICY_FILE` (or `--no-policy`), `MCP_MODE`, and `GROUP` without spaces
 Replace `DELIVERY` with `file` or `mdm`.
 
 ```sh
-kong-harnesses fleet build \
-  --profile work \
-  --platform macos \
-  --delivery DELIVERY \
-  --executable /usr/local/bin/kong-harnesses \
-  --policy 'POLICY_FILE' \
-  --mcp-servers MCP_MODE \
-  --output-dir fleet-macos-GROUP
+kong-harnesses fleet build --profile work --platform macos --delivery DELIVERY --executable /usr/local/bin/kong-harnesses --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-macos-GROUP
 ```
 
 {% endnavtab %}
@@ -155,13 +148,7 @@ kong-harnesses fleet build \
 Linux supports only `file` delivery, the default.
 
 ```sh
-kong-harnesses fleet build \
-  --profile work \
-  --platform linux \
-  --executable /usr/bin/kong-harnesses \
-  --policy 'POLICY_FILE' \
-  --mcp-servers MCP_MODE \
-  --output-dir fleet-linux-GROUP
+kong-harnesses fleet build --profile work --platform linux --executable /usr/bin/kong-harnesses --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-linux-GROUP
 ```
 
 {% endnavtab %}
@@ -170,14 +157,7 @@ kong-harnesses fleet build \
 Replace `DELIVERY` with `file` or `mdm`.
 
 ```powershell
-kong-harnesses fleet build `
-  --profile work `
-  --platform windows `
-  --delivery DELIVERY `
-  --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
-  --policy 'POLICY_FILE' `
-  --mcp-servers MCP_MODE `
-  --output-dir fleet-windows-GROUP
+kong-harnesses fleet build --profile work --platform windows --delivery DELIVERY --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows-GROUP
 ```
 
 {% endnavtab %}
