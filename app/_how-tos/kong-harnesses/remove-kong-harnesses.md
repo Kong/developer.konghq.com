@@ -190,6 +190,7 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
 Each item is a password in your default keychain, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
+If you changed the default keychain after setup, add the path of the keychain that was the default then, as listed by `security list-keychains`, at the end of each `security` command below.
 
 1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
@@ -211,8 +212,15 @@ macOS can ask for the keychain password, normally your login password, to allow 
    ```
 
    `security delete-generic-password` deletes only the first item that matches, so the loop runs it until no item is left.
-   The last message must report that the item couldn't be found in the keychain.
-   Any other last message means that the item is still there.
+
+1. Check that each item is gone, even if `security` reported that the password has been deleted:
+
+   ```sh
+   security find-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' >/dev/null
+   ```
+
+   The command must report that the item couldn't be found in the keychain.
+   Any other message, or no message, means that the item is still there.
 
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -221,42 +229,50 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 
 {:.warning}
 > Always pass the `profile` attribute to `secret-tool clear`.
-> Without it, the command deletes every item that kong-harnesses saved in your system password store, including your sign-ins.
+> Without it, the command deletes every item that kong-harnesses saved in an unlocked keyring, including your sign-ins.
 
 1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
    ```sh
-   secret-tool search --all --unlock application io.kong.kong-harnesses 2>&1 >/dev/null \
+   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null; } 2>&1 \
      | sed -n -e 's/^attribute\.profile = \(PROFILE_NAME\.mcp-key\.\)/\1/p' -e '/^secret-tool: /p'
    ```
 
    If your desktop asks you to unlock the keyring, unlock it.
    The command prints only item names, not their values, and any `secret-tool` error.
    Use each name that it prints as `ITEM_NAME` in the next step.
-1. Delete each named item:
+1. Delete each named item while the keyring is unlocked, because `secret-tool clear` removes only items in an unlocked keyring:
 
    ```sh
    secret-tool clear application io.kong.kong-harnesses profile 'ITEM_NAME'
    ```
+
+1. Check that each item is gone:
+
+   ```sh
+   secret-tool lookup application io.kong.kong-harnesses profile 'ITEM_NAME' >/dev/null && echo 'ITEM_NAME is still there'
+   ```
+
+   The command prints nothing when the item is gone.
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
 Each item is a file named `ITEM_NAME.login.dpapi` in the `%LOCALAPPDATA%\kong-harnesses\vault` folder.
 
-1. In PowerShell, delete each named item:
+1. If the output names `PROFILE_NAME.mcp-key.*`, delete every item of that profile in PowerShell:
+
+   ```powershell
+   Get-ChildItem -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault" -Filter 'PROFILE_NAME.mcp-key.*.login.dpapi' | Remove-Item
+   ```
+
+1. Delete each other named item:
 
    ```powershell
    Remove-Item -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault\ITEM_NAME.login.dpapi"
    ```
 
    If PowerShell reports that the path doesn't exist, the item is already gone.
-
-1. If the output names `PROFILE_NAME.mcp-key.*`, delete every item of that profile:
-
-   ```powershell
-   Get-ChildItem -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault" -Filter 'PROFILE_NAME.mcp-key.*.login.dpapi' | Remove-Item
-   ```
 
 {% endnavtab %}
 {% endnavtabs %}
