@@ -25,6 +25,8 @@ related_resources:
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
   - text: "{{site.kong_harnesses}} profile"
     url: /kong-harnesses/profile/
+  - text: "{{site.kong_harnesses}} profile file"
+    url: /kong-harnesses/profile-file/
   - text: "{{site.kong_harnesses}} doctor"
     url: /kong-harnesses/doctor/
   - text: "{{ site.claude_code }} on the web and Claude in Slack"
@@ -90,7 +92,7 @@ rows:
   - traffic: Feedback survey
     destination: Anthropic
     member: "`feedback_survey`"
-    cost: "{{ site.claude_code }} doesn't ask developers to rate a session, or to send the session transcript and log after the rating. The follow-up uploads them only when the developer selects **Yes**, and zero data retention or an organization policy that turns off product feedback stops the follow-up. On a third-party provider, that follow-up writes the transcript and log to a local file instead of sending them."
+    cost: "{{ site.claude_code }} doesn't ask developers to rate a session, or to send the session transcript and log after the rating. The follow-up uploads them only when the developer selects **Yes**, and zero data retention or an organization policy that turns off product feedback stops the follow-up. On a third-party provider, that follow-up writes the transcript and log to a local file instead of sending them. While `DISABLE_TELEMETRY` or `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is on, [`CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1`](https://code.claude.com/docs/en/env-vars#variables) can send the survey ratings to your OpenTelemetry collector instead of Anthropic. Setting `feedback_survey` to `false` keeps the survey off even then."
   - traffic: Official plugin marketplace install
     destination: "`github.com`"
     member: "`official_marketplace_autoinstall`"
@@ -102,7 +104,7 @@ rows:
   - traffic: Automatic updates and other nonessential traffic
     destination: "`downloads.claude.ai` for the native installer and its automatic updates, `registry.npmjs.org` for an npm install, `formulae.brew.sh` for a Homebrew install, `raw.githubusercontent.com` for the release notes, `api.anthropic.com`, `*-review.googlesource.com`, the GitHub or GitLab host of the repository remote, such as `github.com` or `gitlab.com`, and the marketplace hosts that plugin updates download from, such as `github.com` and `registry.npmjs.org`"
     member: "`auto_updates`"
-    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Before a `name@marketplace` plugin install, it doesn't refresh that marketplace, so the install uses the cached catalog. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups to `*-review.googlesource.com` also turn off. While that traffic is on, [`prStatusFooterEnabled`](https://code.claude.com/docs/en/settings-reference#prstatusfooterenabled) set to `false` in `~/.claude.json` stops only the status badge checks. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. The [Members that depend on each other](#members-that-depend-on-each-other) section explains when only automatic updates turn off."
+    cost: "{{ site.claude_code }} doesn't update itself, its plugins or its marketplaces automatically, and doesn't fetch the release notes. Before a `name@marketplace` plugin install, it doesn't refresh that marketplace, so the install uses the cached catalog. Artifacts, the fast mode availability check, the pull request and merge request status badges, the usage limit checks that `CLAUDE_CODE_RETRY_WATCHDOG` and `CLAUDE_CODE_RETRY_WATCHDOG_USAGE_LIMIT_RECHECK_MS` turn on for a claude.ai subscription while usage credits aren't in use, and the code review lookups to `*-review.googlesource.com` also turn off. While that traffic is on, [`prStatusFooterEnabled`](https://code.claude.com/docs/en/settings-reference#prstatusfooterenabled) set to `false` in `~/.claude.json` stops only the status badge checks. Run `claude update` to install a newer release, or upgrade a Homebrew, WinGet or Linux package manager install with that package manager. [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices) explains when `auto_updates` turns off only automatic updates."
 {% endtable %}
 
 A code review lookup asks `*-review.googlesource.com` for the change that matches the `Change-Id` of HEAD.
@@ -118,13 +120,16 @@ When an earlier activation wrote that setting, activation gives back the value t
 The default depends on the model provider and the sign-in.
 For example, {{ site.claude_code }} doesn't send usage metrics by default on Azure AI Foundry.
 To be sure that the traffic stays off, set each member to `false`.
-`FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings still turns the automatic plugin and marketplace updates back on, as [Members that depend on each other](#members-that-depend-on-each-other) explains.
+`FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings still turns automatic plugin and marketplace updates back on.
+Some switches cover more than one profile member, and [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices) lists the member conflict rules, the settings activation writes, and how schema 18 handles `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`.
 
 `cost_warnings` doesn't change which hosts {{ site.claude_code }} contacts.
 [Features that change behind the gateway](/ai-gateway/set-up-claude-code-with-kong-harnesses/#features-that-change-behind-the-gateway) explains what it does.
 
 ### Fast mode availability check
 
+`kong-harnesses profile create` turns fast mode off because it costs more per token on the API and draws on usage credits on a subscription.
+Fast mode requires fast mode access on the Anthropic organization behind the gateway and works only on the providers in the [fast mode requirements](https://code.claude.com/docs/en/fast-mode#requirements).
 {{ site.claude_code }} skips the fast mode availability check with a gateway key, and when the nonessential traffic switch is on.
 When `fast_mode` is `true`, activation tells {{ site.claude_code }} to treat a skipped check, or a check that fails with a network error, as available, unless the organization turned fast mode off.
 When a proxy answers the check with its own page, {{ site.claude_code }} reads that page as an organization that [turned fast mode off](https://code.claude.com/docs/en/fast-mode#fast-mode-has-been-disabled-by-your-organization), so let the check reach `api.anthropic.com` through the proxy.
@@ -156,53 +161,10 @@ Set `feature_flags` to `false` to stop both syncs, or set `syncClaudeAiPlugins` 
 A plugin with a `command` source runs its command in the background once in each session, and again when its installed version is missing from the plugin cache.
 These runs can install dependencies.
 The nonessential traffic switch stops the background runs, but an explicit plugin install or update runs the command even while the switch is on.
-When activation writes the switch blank, as [Members that depend on each other](#members-that-depend-on-each-other) explains, the background runs start again.
+When activation writes the switch blank, as [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices) explains, the background runs start again.
 To stop them without the nonessential traffic switch, set [`disableCommandPluginSources`](https://code.claude.com/docs/en/settings-reference#disablecommandpluginsources) to `true` in managed settings.
 That setting also stops the installs, updates and loading of the plugins that use a `command` source.
 `allowManagedHooksOnly` set to `true` has the same effect while `disableCommandPluginSources` is unset.
-
-### Members that depend on each other
-
-Some {{ site.claude_code }} switches cover more than one profile member:
-
-* The usage metrics switch (`DISABLE_TELEMETRY`) also turns off feature flags, error reports and the feedback survey.
-* `DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, so {{ site.claude_code }} reads the two as one switch, and either of them turns off `/feedback`, `/bug`, `/share` and Claude-drafted feedback.
-* The nonessential traffic switch, which `auto_updates` set to `false` writes, also turns off usage metrics, feature flags, error reports, `/feedback`, Claude-drafted feedback and the feedback survey, and, for a profile that uses the developers' own Claude subscriptions, artifacts.
-
-For that reason, {{site.kong_harnesses}} refuses a profile that turns on a feature while another member turns it off:
-
-* `feature_flags` set to `true` while `anthropic_telemetry` is `false`.
-* In a schema 18 profile, `error_reports` or `feedback_survey` set to `true` while `anthropic_telemetry` is `false`.
-* `bug_command` and `feedback_command` set to different values.
-  In a schema 18 profile, {{site.kong_harnesses}} also refuses a profile that sets only one of these members.
-* In a profile of an earlier schema, a member set to `true` for a feature that the nonessential traffic switch turns off, while `auto_updates` is `false`.
-  For `artifact`, [Earlier schemas](#earlier-schemas) says when an installed profile stays valid.
-
-Apart from the two command members in a schema 18 profile, a member that the profile leaves out never causes a conflict.
-
-While the usage metrics switch or the nonessential traffic switch is on, [`CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL=1`](https://code.claude.com/docs/en/env-vars#variables) can send the survey ratings to your OpenTelemetry collector instead of Anthropic.
-`feedback_survey` set to `false` keeps the survey off even then.
-
-In a schema 18 profile, `auto_updates` set to `false` doesn't cause a conflict.
-When the profile turns on usage metrics, feature flags, error reports, a feedback command or the feedback survey, activation writes the nonessential traffic switch blank, whatever the value of `auto_updates`.
-When a profile that uses the developers' own Claude subscriptions sets `artifact` to `true`, activation also writes the switch blank.
-A blank value turns the switch itself off, so the feature stays on, even when the developer's shell exports the switch.
-While the switch is blank, `auto_updates` set to `false` turns off only the automatic updates of {{ site.claude_code }}, its plugins and its marketplaces.
-{{ site.claude_code }} sends the other traffic in the automatic updates row of the table again, but only where that traffic's own conditions apply.
-The background runs of [plugin `command` sources](#plugin-command-sources) also start again.
-A member set to `false` keeps its own traffic off, and a gateway key still stops the fast mode availability check.
-
-When the Claude desktop app or a self-hosted environment runner starts the session, the launch environment that it builds [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over the settings.
-A nonessential traffic switch that this launch environment sets stays on, even when activation writes the switch blank.
-
-`FORCE_AUTOUPDATE_PLUGINS=1` in {{ site.claude_code }} settings keeps the automatic plugin updates on, even while `auto_updates` is `false`.
-
-#### Earlier schemas
-
-In a profile of an earlier schema, `auto_updates` set to `false` always writes the nonessential traffic switch.
-`kong-harnesses profile import` refuses such a profile when it uses the developers' own Claude subscriptions and sets `artifact` to `true`.
-A profile with those values that is already installed stays valid, because earlier releases accepted it.
-In that profile, the switch keeps artifacts off, and activation and `kong-harnesses profile get` say so and ask for a schema 18 profile.
 
 ## Traffic that stays
 
@@ -249,23 +211,14 @@ In a schema 14 or later profile, activation writes `enableArtifact: false` for `
 
 ### In the profile
 
-`kong-harnesses profile create` sets every member in the table to `false`, with two exceptions:
+`kong-harnesses profile create` writes a schema 18 profile with every member in the table set to `false`.
+Two flags or their interactive prompts override that default: `--auto-updates on` sets `auto_updates` to `true`, and `--anthropic-telemetry on` sets `anthropic_telemetry`, `feature_flags` and `error_reports` to `true`.
+Turning a member on removes only the profile restriction, so the provider and account conditions in the table still apply.
+Setting `--anthropic-telemetry on` also causes activation to write `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, so the other background traffic in the automatic updates row resumes where its own conditions apply.
+For schema version rules and what activation writes for each choice, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).
 
-* `--auto-updates on`, or the automatic updates choice in the questions, sets `auto_updates` to `true`.
-  For that value, activation doesn't write `DISABLE_AUTOUPDATER`.
-  It writes the nonessential traffic switch blank when the profile also turns on a feature that the switch turns off, as [Members that depend on each other](#members-that-depend-on-each-other) explains, and doesn't write the switch otherwise.
-  Each feature in the automatic updates row then stays on where its own conditions apply.
-  A developer can still turn off the automatic updates with `DISABLE_AUTOUPDATER`, and the whole row with the nonessential traffic switch when activation doesn't write it blank.
-* `--anthropic-telemetry on`, or a yes to the telemetry question, sets `anthropic_telemetry`, `feature_flags` and `error_reports` to `true`.
-
-The telemetry choice removes only the profile restriction, so the provider and account conditions in the table still apply.
-Activation then writes the nonessential traffic switch blank, so {{ site.claude_code }} sends the other nonessential traffic again, as [Members that depend on each other](#members-that-depend-on-each-other) explains.
-
-To keep a feature on, set its member to `true` in the profile file.
-The members in the table other than `auto_updates` and `artifact` need `schema_version` 14 or later, and schemas 12 and 13 refuse them.
-Schemas 12 and 13 require `artifact`, but activation writes nothing for it in those schemas.
-The behavior on this page needs schema 18, which `profile create` writes.
-The following part of a profile file keeps the WebFetch domain check on, and keeps the other traffic off:
+To keep a feature on, set its member to `true` in a schema 18 profile.
+The following part of a profile file keeps the WebFetch domain check on and the other traffic off:
 
 ```json
 {
@@ -289,57 +242,23 @@ The following part of a profile file keeps the WebFetch domain check on, and kee
 }
 ```
 
-After you change the file, import it again with [`kong-harnesses profile import`](/kong-harnesses/profile/import/), and activate it with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), so that {{ site.claude_code }} gets the changed settings.
-Activation writes the matching settings to the {{ site.claude_code }} user settings file.
+After you change the file, run [`kong-harnesses profile import`](/kong-harnesses/profile/import/) and [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) to apply the new settings.
 If a developer changes or removes one of these settings later, the `anthropic` check of [`kong-harnesses doctor`](/kong-harnesses/doctor/) fails and shows the command that restores it.
 
 ### In {{ site.claude_code }} settings
 
-The following table gives the {{ site.claude_code }} settings that each profile member writes.
-To set them without {{site.kong_harnesses}}, add them to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
-{{ site.claude_code }} reads `DISABLE_GROWTHBOOK` from v2.1.124, and its newer name `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` from v2.1.319.
-To turn off feature flags by hand on a computer that runs {{ site.claude_code }} v2.1.318 or earlier, use `DISABLE_GROWTHBOOK`, as the [environment variables reference](https://code.claude.com/docs/en/env-vars#variables) explains.
-Otherwise, use `CLAUDE_CODE_DISABLE_FEATURE_FLAGS`.
+To turn off outside traffic without {{site.kong_harnesses}}, add the settings from [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices) to a [{{ site.claude_code }} settings file](https://code.claude.com/docs/en/settings).
 The environment variables go in the `env` key, and `skipWebFetchPreflight`, `enableArtifact` and `disableClaudeAiConnectors` are top-level keys.
+`disableClaudeAiConnectors: true` turns off claude.ai connectors like `ENABLE_CLAUDEAI_MCP_SERVERS=false`, though activation doesn't write it.
+{{ site.claude_code }} reads `DISABLE_GROWTHBOOK` from v2.1.124, and its newer name `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` from v2.1.319.
+To turn off feature flags manually on {{ site.claude_code }} v2.1.318 or earlier, use `DISABLE_GROWTHBOOK`, as the [environment variables reference](https://code.claude.com/docs/en/env-vars#variables) explains.
+Otherwise, use `CLAUDE_CODE_DISABLE_FEATURE_FLAGS`.
+When you turn on a feature that `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` turns off, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead of `1`.
 
-To stop developers from turning the settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) that you deliver with MDM or a `managed-settings.json` file.
+To stop developers from turning these settings back on, set them in [managed settings](https://code.claude.com/docs/en/managed-settings) delivered through MDM or a `managed-settings.json` file.
 Managed settings take precedence over the user settings file that `profile activate` writes.
-A developer can still turn the plugin updates back on with `FORCE_AUTOUPDATE_PLUGINS=1`, so also set `FORCE_AUTOUPDATE_PLUGINS` to `0` in the managed settings `env` block.
-A managed `env` value [takes precedence](https://code.claude.com/docs/en/env-vars#precedence) over the user and project settings, and replaces the shell value in most sessions.
-A profile that `kong-harnesses profile activate` set up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
-Server-managed settings need a direct connection to `api.anthropic.com`.
+A developer can still turn plugin updates back on with `FORCE_AUTOUPDATE_PLUGINS=1`, so also set `FORCE_AUTOUPDATE_PLUGINS` to `0` in the managed settings `env` block.
+A managed `env` value [takes precedence](https://code.claude.com/docs/en/env-vars#precedence) over user and project settings, and replaces the shell value in most sessions.
+A profile that `kong-harnesses profile activate` sets up doesn't get [server-managed settings](https://code.claude.com/docs/en/server-managed-settings#platform-availability), because server-managed settings need a direct connection to `api.anthropic.com`.
 Activation writes the gateway base URL to the user settings file, with the provider switch in the Azure AI Foundry and Amazon Bedrock Mantle modes, and {{ site.claude_code }} reads those values before it decides to fetch the settings.
 When the profile uses a gateway key, {{ site.claude_code }} gets its key through `apiKeyHelper`, and a key from `apiKeyHelper` doesn't start the fetch.
-
-{% table %}
-columns:
-  - title: Profile member
-    key: member
-  - title: "{{ site.claude_code }} setting for `false`"
-    key: setting
-rows:
-  - member: "`anthropic_telemetry`"
-    setting: "`DISABLE_TELEMETRY=1`"
-  - member: "`feature_flags`"
-    setting: "`DISABLE_GROWTHBOOK=1`, and in a schema 18 profile also `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`"
-  - member: "`error_reports`"
-    setting: "`DISABLE_ERROR_REPORTING=1`"
-  - member: "`fast_mode`"
-    setting: "`CLAUDE_CODE_DISABLE_FAST_MODE=1`"
-  - member: "`webfetch_preflight`"
-    setting: "`skipWebFetchPreflight: true`"
-  - member: "`connectors`"
-    setting: "`ENABLE_CLAUDEAI_MCP_SERVERS=false`. `disableClaudeAiConnectors: true` has the same effect, but activation doesn't write it."
-  - member: "`bug_command`"
-    setting: "`DISABLE_BUG_COMMAND=1`"
-  - member: "`feedback_command`"
-    setting: "`DISABLE_FEEDBACK_COMMAND=1`"
-  - member: "`feedback_survey`"
-    setting: "`CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`"
-  - member: "`official_marketplace_autoinstall`"
-    setting: "`CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`"
-  - member: "`artifact`"
-    setting: "`enableArtifact: false`"
-  - member: "`auto_updates`"
-    setting: "`DISABLE_AUTOUPDATER=1`, and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. When you turn on a feature that the second switch turns off, set `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead, as activation does."
-{% endtable %}
