@@ -139,8 +139,9 @@ rows:
       For an `http://` gateway, it fails when a proxy applies or when `doctor` can't check proxy settings.
       For an `https://` gateway, it skips only the direct connection test and warns when a proxy applies.
       When `--inference` runs for {{ site.claude_code }}, it skips the direct test once the request is sent, but still fails an `http://` gateway for the same proxy reasons.
-      The `route`, `catalog`, `gateway-mcp`, and `inference` checks each send their own HTTP request to the gateway, through the proxy when one applies to an `https://` gateway.
-      When `gateway` fails, `catalog` and `gateway-mcp` skip their requests, while `route` still attempts its request.
+      The `route`, `catalog`, `gateway-mcp`, and `inference` checks can each send their own HTTP request to the gateway, through the proxy when one applies to an `https://` gateway.
+      When one of those checks sends a request, it uses {{ site.claude_code }}'s proxy rule for {{ site.claude_code }}, and Go's standard proxy policy for other agent CLIs.
+      When `gateway` fails, `catalog` and `gateway-mcp` skip their requests, while a `gateway` failure alone doesn't stop `route`.
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the gateway's certificate, install its issuing certificate authority in the system trust store.
@@ -156,8 +157,9 @@ rows:
       The gateway has a route for the agent CLI's requests.
       `doctor` sends a request with the JSON body `{}` to check for the route.
       When `doctor` sends your credential, an HTTP `401` or `403` response means the gateway refuses the credential on that route.
-      When `doctor` can't send a credential, such as when you aren't signed in or the agent CLI owns its sign-in, it sends the request without one.
-      When the request doesn't include a credential, `route` reports `ok` on an HTTP `401` or `403` response, or warns for a Claude subscription profile.
+      When `doctor` can't send a credential, such as when you aren't signed in, the agent CLI owns its sign-in, or the profile uses your Claude subscription, it sends the request without one.
+      For a Claude subscription profile, where the route requires {{ site.claude_code }}'s subscription sign-in, `route` warns on an HTTP `401` or `403` response and doesn't confirm that the route exists.
+      For other profiles, `route` reports `ok` on an HTTP `401` or `403` response without a credential.
       That `ok` result confirms only that the route exists and doesn't confirm that the gateway accepts your credential.
     next: |
       When the gateway doesn't have the route or refuses the sign-in on it, ask the gateway operators to add the route or accept the profile's sign-in on it.
