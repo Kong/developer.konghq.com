@@ -188,7 +188,7 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 {% navtabs "delete-gateway-mcp-keys" %}
 {% navtab "macOS" %}
 
-Each item is a password in the keychain that was your default when kong-harnesses saved it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
+Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 Do these steps once for each keychain that `security list-keychains` prints, and add its path, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
