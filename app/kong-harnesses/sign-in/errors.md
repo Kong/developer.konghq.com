@@ -213,7 +213,6 @@ rows:
     cause: >-
       kong-harnesses can't find an absolute path for your user configuration directory.
       `XDG_CONFIG_HOME` is set to a relative path, or `XDG_CONFIG_HOME` is unset or empty and `HOME` isn't set to an absolute path.
-      kong-harnesses reads `HOME` only when `XDG_CONFIG_HOME` is unset or empty.
     fix: >-
       Set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`.
       Then try again.
@@ -242,8 +241,8 @@ rows:
     fix: "Set `AppData` to your roaming application data folder, then try again."
   - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address, or Windows reserved that port`"
     cause: >-
-      Windows reserved the port of the callback address.
-      When another program uses the port, follow the row for this line in the first table.
+      Windows reserved the port of the callback address, or another program on this computer uses the port.
+      When another program uses the port, follow the fix for the `is using the sign-in callback address` line in [When kong-harnesses can't give an access token](#when-kong-harnesses-can-t-give-an-access-token).
     fix: >-
       To find the port, run `kong-harnesses profile get PROFILE_NAME` and read the `Redirect URI` field.
       `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports.
