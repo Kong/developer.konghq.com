@@ -224,7 +224,8 @@ Give each developer an AI Consumer and a key of their own.
    > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty.
    > Fix the error and run the command again.
    > If the error is `409`, a key named `developer-key` already exists.
-   > The API returns a key only when it creates it, so if you lose the key, revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
+   > The API returns a key only when it creates it.
+   > If you lose the key, expand **Revoke the key** in [Cleanup](#cleanup) and run its requests, then create the key again.
 
 ## Create the AI Model
 
@@ -319,8 +320,9 @@ This guide sets up only {{ site.claude_code }}, so you can ignore warnings about
 > The profile doesn't contain the key, so send each developer their own key through a password manager or another secure channel.
 > Developers then run [`kong-harnesses setup`](/kong-harnesses/setup/) with the profile URL or file and `--client claude-code`, such as `kong-harnesses setup <profile>.json --client claude-code`.
 > Without `--client`, `setup` configures every installed client that the profile lists.
-> It skips each client that it can't set up and names the fix.
+> It first checks each client, skips each client that fails these checks, and names the fix.
 > For example, it skips a client when the gateway doesn't serve its route or refuses the sign-in, or when the client needs an `https://` gateway.
+> If a client that passes these checks then refuses the profile, `setup` stops before it writes the settings of any client.
 > A developer who has only a key can run `kong-harnesses setup --client claude-code` without a profile file, as [Set up without a profile file](/kong-harnesses/setup/#set-up-without-a-profile-file) describes.
 
 ## Save the key and configure {{ site.claude_code }}
