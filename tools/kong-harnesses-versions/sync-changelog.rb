@@ -714,13 +714,15 @@ module KongHarnessesChangelog
 
   # The release headings of the source, as KongHarnessesChangelogLinks.release_of takes
   # them: each as its version, read from its line, and the version that it shows. With
-  # no source, each of `releases` shows its own version.
+  # no source, each of `releases` shows its own version. A heading with no version on
+  # its line names its release by the version that it shows, and only by a version, so
+  # no text of the changelog reaches an error.
   def releases_of(source, lines, releases)
     return releases.map { |version| [version, version] } unless source
 
     release_elements(source).zip(release_headings(source)).map do |heading, node|
       shown = KongHarnessesChangelogLinks.shown_version(node)
-      [version_of(heading, lines) || shown, shown]
+      [version_of(heading, lines) || shown[KongHarnessesChangelogLinks::HEADING_VERSION, 1] || 'with no version', shown]
     end
   end
 

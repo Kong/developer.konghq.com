@@ -272,7 +272,7 @@ module KongHarnessesChangelogLinks
   # the same one. The heading text names a release only when none matches.
   def release_of(heading, releases = nil)
     shown = shown_version(heading)
-    same = releases.to_a.select { |_, version| version == shown }
+    same = shown.empty? ? [] : releases.to_a.select { |_, version| version == shown }
     return same.first.first if same.length == 1
 
     written_version(heading.text.strip)[HEADING_VERSION, 1] || 'with no version'

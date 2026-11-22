@@ -813,6 +813,16 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/write a link back in release 2\.0\.0, section Features, entry 1 on the page,/)
   end
 
+  # A place names a release only by a version, so an error shows no heading text.
+  it 'names a release heading with no version as one with no version' do
+    ['## Sample-Heading (2026-11-22)', '## !foo', '## (2026-11-22)'].each do |heading|
+      source = source_of("#{heading}\n\n### Features\n\n* **a:** see ([#1][r])\n\n[r]: #{issue}\n")
+      page = "#{heading}\n\n### Features\n\n* **a:** see\n"
+      expect { described_class.written(page, described_class.parse(page), *source) }
+        .to raise_error(/does not write so in the entry or block on line 5, in release with no version,/) { |error| expect(error.message).not_to match(/sample|foo/i) }
+    end
+  end
+
   it 'counts the entries at the source, and the page check counts the entries on the page' do
     expect { exported(release_please_changelog.sub('follow the', "follow‮ the"), ['0.17.1']) }
       .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 4,/)
