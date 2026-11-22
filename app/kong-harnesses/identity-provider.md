@@ -147,7 +147,7 @@ The sign-in fails if the identity provider doesn't issue a refresh token.
 Give the client the refresh token grant type and the `offline_access` scope.
 
 When you set `--scope`, your list replaces the defaults, so give each scope that you need with its own `--scope` flag.
-For the rules of the list, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
+For the rules of the list, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 For the checks on the `scope` value and the other fields of a token response, see [Token responses](/kong-harnesses/identity-provider/checks/#token-responses).
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
@@ -164,7 +164,7 @@ Set `config.audience_required` to a list that contains the gateway audience, as 
 Set `--audience` in the profile to the gateway audience.
 The profile always needs this value, even with `--audience-parameter none`.
 For example, use an absolute URI such as `https://gateway.example.com/api`.
-For the rules of the value, see [Profile values](/kong-harnesses/identity-provider/checks/#profile-values).
+For the rules of the value, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 The `aud` claim of the access token can differ from the `--audience` value.
 
 Set `--audience-parameter` to match how your identity provider reads the audience from the sign-in request:
