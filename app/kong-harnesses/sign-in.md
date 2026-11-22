@@ -210,17 +210,16 @@ The key works at the gateway until your administrator revokes it.
 For a profile for a CI job, kong-harnesses doesn't save the key.
 `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set.
 Remove the variable from the job environment yourself.
+If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
 What `logout` does in the job depends on the operating system:
 
 {% navtabs "ci-job-logout" %}
 {% navtab "macOS and Windows" %}
 `logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name.
-If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
 {% endnavtab %}
 {% navtab "Linux" %}
 Set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
 `logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name, or in a session without Secret Service.
-If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
 In a session without Secret Service, `logout` doesn't check the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
 {% endnavtab %}
 {% endnavtabs %}
