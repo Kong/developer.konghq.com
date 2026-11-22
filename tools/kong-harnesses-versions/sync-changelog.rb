@@ -936,8 +936,9 @@ module KongHarnessesChangelog
 
   # A reference link, a link in angle brackets, an escaped label or a character
   # reference in a label or an address gives the same HTML as `[label](address)`, the form that
-  # release-please writes. So each link of an element must have that form in the source
-  # lines of the element, apart from the same text in code. `lines` are the lines of the
+  # release-please writes. So each link of an element must have that form in its own
+  # text, the span that kramdown parsed for it, and that span must be on its line of the
+  # source, so no other text of the line counts for it. `lines` are the lines of the
   # source, with their line ends.
   #
   # It gives the place of the first such element, as its first line in the source and its
@@ -946,31 +947,28 @@ module KongHarnessesChangelog
     count = 0
     source.children.each do |element|
       count += 1 if element.type == :header && element.options[:level] == 2
-      items = %i[ul ol].include?(element.type) ? element.children.map { |item| [item, element.type] } : [[element]]
-      found = items.find { |item, list| unwritten_link_in?(item, list, lines) } or next
+      items = %i[ul ol].include?(element.type) ? element.children : [element]
+      found = items.find { |item| unwritten_link_in?(item, lines) } or next
 
       release = count.zero? ? 'the text before the first release' : "release #{releases[count - 1] || 'with no version'}"
-      return "the entry or block on line #{found.first.options[:location]}, in #{release}"
+      return "the entry or block on line #{found.options[:location]}, in #{release}"
     end
     nil
   end
 
-  def unwritten_link_in?(element, list, lines)
-    from = element.options[:location] or return false
-    raw = lines[(from - 1)...element.options.fetch(:last_line)].join
-    root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
-    root.children << (list ? Kramdown::Element.new(list).tap { |parent| parent.children << element } : element)
-    # release-please writes no attribute list, also none that gives no attribute. The
-    # parser tells one from the same characters as text, which the lines cannot.
-    return true if links_in(element).any? { |link| link.options[:ial] }
+  def unwritten_link_in?(element, lines)
+    links_in(element).any? do |link|
+      source = link.options[:source]
+      line = lines[link.options[:location] - 1] if link.options[:location]
+      # release-please writes no attribute list, also none that gives no attribute. The
+      # parser tells one from the same characters as text, which the lines cannot.
+      next true if link.options[:ial] || source.nil? || !line.to_s.include?(source)
 
-    fragment = html(root)
-    code = fragment.css('code').map(&:text)
-    fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
-      # A label that release-please writes has no `\` or `&`.
-      form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)/
-      written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
-      written.call(raw) - code.sum(&written) < links.length
+      # A label that release-please writes has no `\` or `&`, and its address is the one
+      # that a browser follows, with no character reference.
+      address = source[/\A\[[^\[\]\\&\n]*\]\((\S+)\)\z/, 1] or next true
+      paragraph = Kramdown::Element.new(:p).tap { |p| p.children << link }
+      address != html(Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8).tap { |root| root.children << paragraph }).at_css('a')['href']
     end
   end
 

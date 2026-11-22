@@ -635,8 +635,8 @@ RSpec.describe KongHarnessesChangelog do
   # match in any letter case. The path keeps the case that release-please writes.
   it 'matches the repository of a code link in any letter case and its path only as written' do
     %i[code_without_subject_links without_subject_links].each do |reader|
-      expect(described_class.send(reader, '[#1](https://github.com/EXAMPLE/Sample-Tool/issues/1)')).to eq('#1'), reader
-      expect(described_class.send(reader, '[#1](https://github.com/example/sample-tool/ISSUES/1)')).to eq('[#1](https://github.com/example/sample-tool/ISSUES/1)'), reader
+      expect(described_class.send(reader, '[#1](https://github.com/EXAMPLE/Sample-Tool/issues/1)')).to eq('#1'), reader.to_s
+      expect(described_class.send(reader, '[#1](https://github.com/example/sample-tool/ISSUES/1)')).to eq('[#1](https://github.com/example/sample-tool/ISSUES/1)'), reader.to_s
     end
   end
 
@@ -826,6 +826,10 @@ RSpec.describe KongHarnessesChangelog do
     # The form in code is no link, so it does not count for a reference link next to it.
     source = source_of("* **a:** see `[#1](#{issue})` ([#1][r])\n\n  [r]: #{issue}\n")
     expect { described_class.written("* **a:** see `#1`\n", described_class.parse("* **a:** see `#1`\n"), *source) }.to raise_error(/does not write so/)
+    # Only the text of a link counts for it, so the same form in a comment on its line
+    # does not let a reference link pass.
+    source = source_of("* **a:** see <!-- [#1](#{issue}) --> ([#1][r])\n\n  [r]: #{issue}\n")
+    expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), *source) }.to raise_error(/does not write so/)
     # Check B takes nothing off a breaking change note, nor off an entry with more than
     # one block, so a loss there is refused wherever it is.
     page = "### ⚠ BREAKING CHANGES\n\n* **a:** see\n"
