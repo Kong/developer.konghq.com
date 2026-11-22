@@ -190,8 +190,7 @@ rows:
       The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
       Leave out `--issuer`, `--client-id` and `--audience`.
       Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
-      On Linux, {{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
-      A desktop sign-in sets the variable, but most CI containers don't, so when it isn't set, create a private directory with `mktemp -d` and set `XDG_RUNTIME_DIR` to it before you run {{site.kong_harnesses}}.
+      For the other setup of the CI job, see the tabs after this table.
     limits: The profile doesn't set up OpenCode or Hermes Agent.
   - kind: "`subscription`"
     use: |
@@ -203,6 +202,27 @@ rows:
       The profile sets up only {{ site.claude_code }}, and can't list gateway MCP servers.
       Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
 {% endtable %}
+
+The other setup of a CI job with an `environment-key` profile depends on the system:
+
+{% navtabs "environment-key-ci" %}
+{% navtab "macOS and Windows" %}
+
+The CI job needs no other setup.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+{{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
+A desktop sign-in sets the variable, but most CI containers don't.
+When the variable isn't set, create a private directory and set the variable to it before you run {{site.kong_harnesses}}:
+
+```sh
+export XDG_RUNTIME_DIR="$(mktemp -d)"
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 In the `anthropic` mode, {{ site.claude_code }} sends a static key in both `Authorization: Bearer` and `x-api-key`.
 In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
