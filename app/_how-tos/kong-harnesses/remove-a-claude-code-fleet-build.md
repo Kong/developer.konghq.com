@@ -53,16 +53,20 @@ prereqs:
 tldr:
   q: How do I remove a kong-harnesses {{ site.claude_code }} fleet build from managed computers?
   a: |
-    Have developers with user-level activations clean up their user settings before uninstalling kong-harnesses, then unassign the deployment in your MDM tool.
+    Have each developer sign out of the machine-wide profile and clean up any user-level activation, then unassign the deployment in your MDM tool.
     Run `kong-harnesses fleet remove --record` (with the current `--policy` for MDM builds and `--mcp-config` for `exclusive` builds), apply or remove the printed policy and `managed-mcp.json`, delete the listed files as an administrator, and forget the package receipt on macOS.
 ---
 
 Removing a kong-harnesses fleet build reverses the managed settings, machine-wide profile, and `managed-mcp.json` deployed by [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
-Follow these steps in order so MDM doesn't reinstall files and developers don't lose access to cleanup commands.
+Follow these steps in order so MDM doesn't reinstall files and developers don't lose access to sign-out and cleanup commands.
 
-## Clean up developer user settings
+## Have developers sign out and clean up
 
-Before uninstalling kong-harnesses from managed computers, have every developer with a user-level activation clean up user-level {{ site.claude_code }} settings with `kong-harnesses profile cleanup --client claude-code` as described in [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
+Before you unassign the deployment, have every developer on a managed computer do these steps:
+
+1. Sign out of the machine-wide profile, as described in [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile).
+   After you remove the build, `logout` can't read the profile to revoke the sign-in.
+1. If they activated the profile for {{ site.claude_code }} in their user settings, run `kong-harnesses profile cleanup --client claude-code`, as described in [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
 
 ## Unassign the deployment in your MDM tool
 
@@ -114,9 +118,9 @@ Apply each instruction that `kong-harnesses fleet remove` prints:
 Confirm the removal on a test computer before closing out the rollout:
 
 1. Verify that none of the exact file paths listed under `Remove` remain on the test computer (see [Check the build output](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output) for target paths).
-1. Start {{ site.claude_code }} and run `/status` to check `Setting sources` only for a source that this removal deleted:
-   * **File build:** When no other `managed-settings.d/` drop-ins remain, confirm `(drop-ins)` and `(file + drop-ins)` no longer appear.
-   * **MDM build:** When you removed the {{ site.claude_code }} policy from your MDM tool, confirm `(plist)` (macOS) or `(HKLM)` (Windows) no longer appears.
+1. Start {{ site.claude_code }} and run `/status` to check `Setting sources` only for a source that this removal deleted, using the labels for your platform in [Validate](/kong-harnesses/roll-out-claude-code-through-mdm/#validate):
+   * **File build:** When no other `managed-settings.d/` drop-ins remain, confirm the file build labels no longer appear.
+   * **MDM build:** When you removed the {{ site.claude_code }} policy from your MDM tool, confirm the MDM build labels no longer appear.
 
    Unrelated source labels, remaining drop-ins, and a kept MDM policy stay in `/status`.
    Confirm removal by the exact deleted file paths and the build ID check in the next step.
