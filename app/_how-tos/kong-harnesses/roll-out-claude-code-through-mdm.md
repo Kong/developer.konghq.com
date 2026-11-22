@@ -47,7 +47,8 @@ prereqs:
   inline:
     - title: kong-harnesses and a profile
       content: |
-        Install [kong-harnesses](/kong-harnesses/install/) on a build desktop that meets the requirement for its operating system:
+        Install [kong-harnesses](/kong-harnesses/install/) on a build desktop that meets the requirement for its operating system.
+        Each operating system also needs a tool that deploys to its managed computers:
 
         {% table %}
         columns:
@@ -55,21 +56,26 @@ prereqs:
             key: os
           - title: Build desktop requirement
             key: requirement
+          - title: Deployment tool
+            key: tool
         rows:
           - os: macOS
             requirement: None
+            tool: An MDM tool, such as Jamf Pro or Microsoft Intune
           - os: Linux
             requirement: Secret Service, such as GNOME Keyring or KWallet, outside WSL, a container, or an SSH session
+            tool: Configuration management
           - os: Windows
             requirement: Windows 11
+            tool: An MDM tool, such as Microsoft Intune
         {% endtable %}
 
         Create and install an HTTPS OIDC profile named `work` ([setup guide](/ai-gateway/set-up-claude-code-with-kong-harnesses/)), replacing `work` with your profile name.
         `fleet build` refuses `http://` origins and Claude subscription profiles.
         For the Anthropic API provider, your build computer must reach the gateway and trust any private gateway CA.
-    - title: MDM, {{ site.claude_code }}, and test access
+    - title: "{{ site.claude_code }} and test access"
       content: |
-        You need an MDM tool (for example, Jamf Pro or Microsoft Intune) or Linux configuration management, administrator access on one test computer per platform and policy group, and [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) access ([required role](/ai-cost-management/analytics-and-debugging/#how-the-views-relate)).
+        You need administrator access on one test computer per platform and policy group, and [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) access ([required role](/ai-cost-management/analytics-and-debugging/#how-the-views-relate)).
         Target computers need {{ site.claude_code }} `2.1.285` or later to enforce `allowedProviders` ([Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks)).
 
 tldr:
@@ -319,28 +325,6 @@ Delete an unexpected file or link only at a build file's exact path, never syste
 
 ## Validate
 
-Each build shows one of these `Setting sources` labels in `/status`:
-
-{% table %}
-columns:
-  - title: Platform
-    key: platform
-  - title: File build
-    key: file
-  - title: MDM build
-    key: managed
-rows:
-  - platform: macOS
-    file: "`(drop-ins)` or `(file + drop-ins)`"
-    managed: "`(plist)`, or a `, merged` list starting with `plist`"
-  - platform: Linux
-    file: "`(drop-ins)` or `(file + drop-ins)`"
-    managed: Not supported
-  - platform: Windows
-    file: "`(drop-ins)` or `(file + drop-ins)`"
-    managed: "`(HKLM)`, or a `, merged` list starting with `HKLM`"
-{% endtable %}
-
 Sign in to each test computer as a standard developer without a saved sign-in, and verify before sending a prompt:
 
 1. For `--mcp-servers allowlist` or `any` with gateway MCP servers, run [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
@@ -359,12 +343,41 @@ Sign in to each test computer as a standard developer without a saved sign-in, a
    Confirm `doctor` reports your organization's managed settings configure {{ site.claude_code }} and prints the `fleet build` ID (a browser sign-in note is expected without a saved sign-in).
    Fix any errors before continuing.
 1. Start {{ site.claude_code }} (`claude`) and sign in when the browser opens on startup (Anthropic API discovery) or first request.
-1. Run `/status` before prompting and confirm `Setting sources` shows `Enterprise managed settings` with the file build or MDM build label for your platform.
+
+Before you send a prompt, check the settings source on the test computer:
+
+{% navtabs "fleet-build" %}
+{% navtab "macOS" %}
+
+Run `/status` and confirm that `Setting sources` shows `Enterprise managed settings` with the label of your build:
+
+* File build: `(drop-ins)` or `(file + drop-ins)`
+* MDM build: `(plist)`, or a `, merged` list starting with `plist`
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+Run `/status` and confirm that `Setting sources` shows `Enterprise managed settings` with `(drop-ins)` or `(file + drop-ins)`.
+Linux supports only file builds.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+1. Run `/status` and confirm that `Setting sources` shows `Enterprise managed settings` with the label of your build:
+
+   * File build: `(drop-ins)` or `(file + drop-ins)`
+   * MDM build: `(HKLM)`, or a `, merged` list starting with `HKLM`
+1. Verify that WSL inheritance matches `--wsl`, using [WSL on Windows](/kong-harnesses/troubleshooting/claude-code-fleet/#wsl-on-windows).
+
+{% endnavtab %}
+{% endnavtabs %}
+
+Then finish the check on every platform:
+
 1. Send `Say hello`, confirm a reply, and verify the event under your control plane in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) (filter by **User** `oidc/SUB`, where `SUB` is the test user's `sub` claim, or configure [subject attribution](/ai-cost-management/attribution/#set-up-subject-attribution)).
    Confirm policies don't set `disableAllHooks` to `true`, because the test prompt doesn't verify hooks.
 1. For profiles with gateway MCP servers, run `/mcp` and confirm every server connects.
 1. Before full rollout, test supported embedding host apps (not Claude Desktop) when `--host-settings merge` or `parentSettingsBehavior: "merge"` is active, using [Host apps and WSL](/kong-harnesses/troubleshooting/claude-code-fleet/#host-apps-and-wsl).
-1. For a Windows build, verify that WSL inheritance matches `--wsl`, using the same section.
 
 If any check fails, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 

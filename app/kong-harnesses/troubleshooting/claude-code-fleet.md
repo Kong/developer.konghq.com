@@ -111,15 +111,20 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
 
 ## Host apps and WSL
 
-Validate embedding host apps and WSL separately when your fleet build uses `--host-settings merge` or `--wsl inherit`:
+Validate embedding host apps and WSL separately when your fleet build uses `--host-settings merge` or `--wsl inherit`.
 
-* **Host apps (`--host-settings merge` or `parentSettingsBehavior` set to `merge`):** Start a session from each supported host app, such as the {{ site.claude_code }} extension for VS Code, and run `/status`, `/mcp`, and a test prompt.
-  Terminal sessions and `kong-harnesses doctor` don't read host-passed settings.
-  Exclude Claude Desktop ([Host settings](/kong-harnesses/fleet-build-options/#host-settings)).
+For host apps (`--host-settings merge` or `parentSettingsBehavior` set to `merge`), start a session from each supported host app, such as the {{ site.claude_code }} extension for VS Code, and run `/status`, `/mcp`, and a test prompt.
+Terminal sessions and `kong-harnesses doctor` don't read host-passed settings.
+Exclude Claude Desktop ([Host settings](/kong-harnesses/fleet-build-options/#host-settings)).
+
+### WSL on Windows
+
+Check WSL on each Windows test computer:
+
 * **WSL (`--wsl inherit`):** In each WSL distribution, start `claude` and run `/status` before sending a prompt.
   Confirm `Setting sources` shows `Enterprise managed settings` with a label matching the Windows build's delivery: `(drop-ins)` or `(file + drop-ins)` for a file build, or `(HKLM)` or a merged list starting with `HKLM` for an MDM build.
   A generic `Enterprise managed settings` label alone can indicate a WSL-local `/etc/claude-code` policy instead of the Windows build.
   Send a short test prompt and verify the WSL usage event appears in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) (`doctor` and gateway MCP servers don't run in WSL).
   If you hit a TLS error, confirm the private CA is trusted inside WSL and inspect [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) logs under `~/.claude/debug/`.
   If the credential helper exits with status `126`, enable Windows interop in that WSL distribution.
-* **Windows without `--wsl inherit`:** If WSL inherits Windows settings unexpectedly, verify the Windows administrator sources omit `wslInheritsWindowsSettings` or set a disabled value as described in [WSL on Windows](/kong-harnesses/fleet-build-options/#wsl-on-windows).
+* **Without `--wsl inherit`:** If WSL inherits Windows settings unexpectedly, verify the Windows administrator sources omit `wslInheritsWindowsSettings` or set a disabled value as described in [WSL on Windows](/kong-harnesses/fleet-build-options/#wsl-on-windows).

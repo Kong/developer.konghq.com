@@ -48,13 +48,13 @@ prereqs:
         For an `exclusive` MCP build, copy the `managed-mcp.json` file that managed computers have now.
     - title: MDM and administrator access
       content: |
-        You need access to your MDM tool to unassign packages and update or remove policies, and administrator rights on managed computers to delete build files and validate removal on a test computer.
+        You need access to the tool that deployed the build to unassign it and to update or remove the MDM policy, and administrator rights on managed computers to delete build files and validate removal on a test computer.
 
 tldr:
   q: How do I remove a kong-harnesses {{ site.claude_code }} fleet build from managed computers?
   a: |
     Have each developer sign out of the machine-wide profile and clean up any user-level activation, then unassign the deployment in your MDM tool.
-    Run `kong-harnesses fleet remove --record` (with the current `--policy` for MDM builds and `--mcp-config` for `exclusive` builds), apply or remove the printed policy and `managed-mcp.json`, delete the listed files as an administrator, and forget the package receipt on macOS.
+    Run `kong-harnesses fleet remove --record` (with the current `--policy` for MDM builds and `--mcp-config` for `exclusive` builds), apply or remove the printed policy and `managed-mcp.json`, and remove the build files with the [steps for your platform](#apply-the-removal-output).
 ---
 
 Removing a kong-harnesses fleet build reverses the managed settings, machine-wide profile, and `managed-mcp.json` deployed by [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
@@ -70,8 +70,26 @@ Before you unassign the deployment, have every developer on a managed computer d
 
 ## Unassign the deployment in your MDM tool
 
-Unassign the fleet build package or deployment script in your MDM tool so it doesn't reinstall build files after you delete them.
+Unassign the fleet build deployment so that it doesn't reinstall build files after you delete them:
+
+{% navtabs "fleet-build" %}
+{% navtab "macOS" %}
+
+Unassign the fleet build package in your MDM tool.
 For a Microsoft Intune macOS app (PKG), remove assigned groups from both its **Required** and **Available** assignments.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+Unassign the fleet build deployment script in your configuration management.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Unassign the fleet build package or deployment script in your MDM tool.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Generate the removal plan
 
