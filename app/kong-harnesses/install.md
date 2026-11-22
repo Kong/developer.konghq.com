@@ -215,16 +215,15 @@ Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Inst
 1. Assign the package to remaining Macs only after the MDM tool reports success on the test Mac and `version` matches.
 
 {:.info}
-> **Microsoft Intune macOS PKG detection:** This package doesn't install an app bundle and writes only the receipt `com.konghq.kong-harnesses`.
-> Intune's macOS app (PKG) type detects installs by app bundle ID or package receipt, so test it on one Mac first.
-> If Intune doesn't report success or `version` doesn't match, use an MDM tool that checks the receipt `version` field or `/usr/local/bin/kong-harnesses version`.
+> **Microsoft Intune macOS PKG detection:** This package doesn't install an app bundle and writes only the receipt `com.konghq.kong-harnesses`, which Intune's macOS app (PKG) type uses when detecting installs by app bundle ID or package receipt.
+> If Intune doesn't report success on the test Mac or `version` doesn't match, use an MDM tool that checks the receipt `version` field or `/usr/local/bin/kong-harnesses version`.
 > The `version` command output includes the leading `v`, for example `v1.2.3`.
 
 ### Remove from macOS
 
 Follow these steps to remove only the files installed by the macOS package:
 
-1. Ask each developer on the Mac to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/).
+1. Ask each developer on the Mac to [remove their sign-ins, settings, and profiles](/kong-harnesses/remove-kong-harnesses/).
 1. If an MDM tool deploys the package to the Mac, remove the Mac from that deployment so the tool doesn't reinstall it.
 1. Confirm the installer package created the installation:
 
@@ -315,9 +314,7 @@ When kong-harnesses runs from `C:\Program Files\Kong\kong-harnesses`, [`kong-har
    (Start-Process msiexec.exe -ArgumentList '/i "MSI_PATH" /qn /norestart' -Wait -PassThru).ExitCode
    ```
 
-   The command prints `0` when the installation completes.
-   It prints `3010` when the installation completes and requires a restart to finish.
-   Schedule a restart when you see `3010`.
+   The command prints `0` when installation completes, or `3010` when installation completes and requires you to schedule a restart.
    Because `/qn` suppresses error dialogs, any other exit code means the installation failed.
 
 Installing a newer `.msi` replaces the installed version in place, and Windows Installer refuses an older installer.
@@ -329,7 +326,7 @@ See [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/de
 
 ### Remove from Windows
 
-1. Ask each developer on the computer to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/).
+1. Ask each developer on the computer to [remove their sign-ins, settings, and profiles](/kong-harnesses/remove-kong-harnesses/).
 1. If Microsoft Intune manages the app, remove the **Required** assignment for the target users or devices before uninstalling so Intune doesn't reinstall it.
 1. Open PowerShell as an administrator and uninstall kong-harnesses with the `.msi` file that installed it, replacing `MSI_PATH` with its full path:
 
@@ -368,7 +365,7 @@ sudo dnf install ./FILE
 
 ### Remove from Linux
 
-Ask each developer on the computer to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/) before uninstalling.
+Ask each developer on the computer to [remove their sign-ins, settings, and profiles](/kong-harnesses/remove-kong-harnesses/) before uninstalling.
 Remove the kong-harnesses package with your distribution's package manager:
 
 {% navtabs "remove-linux-package" %}
@@ -422,7 +419,3 @@ kong-harnesses version
 ```
 
 The command prints the release version with its leading `v`, for example `v1.2.3`.
-
-## Remove developer settings
-
-Removing kong-harnesses doesn't remove a developer's saved sign-ins, profiles, or coding agent settings, so ask each developer to complete the settings, sign-out, and profile steps in [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/) before you uninstall it.
