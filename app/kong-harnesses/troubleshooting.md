@@ -126,18 +126,21 @@ rows:
       Fix any `npm` access problem first, such as an npm token.
       Then follow the `plugin` `fix:` line, such as removing an old cached plugin and starting OpenCode once.
   - check: "`issuer`"
-    what: The `issuer` check tests a direct connection to the identity provider's token endpoint, and skips the test when a proxy applies.
+    what: |
+      The `issuer` check tests a direct connection to the identity provider's token endpoint, and skips the test when a proxy applies.
+      For a static-key profile, `doctor` skips this check.
     next: |
       If `doctor` reports a proxy for the endpoint, check that the proxy can connect to it.
       Check the network, VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the identity provider's certificate, install its issuing certificate authority in the system trust store.
   - check: "`gateway`"
     what: |
-      The `gateway` check tests a direct connection to the gateway.
+      The `gateway` check tests a direct connection to the gateway without sending an HTTP request.
       For an `http://` gateway, it fails when a proxy applies or when `doctor` can't check proxy settings.
-      For an `https://` gateway, it skips the direct test when a proxy applies.
+      For an `https://` gateway, it skips only the direct connection test and warns when a proxy applies.
       When `--inference` runs for {{ site.claude_code }}, it skips the direct test once the request is sent, but still fails an `http://` gateway for the same proxy reasons.
-      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
+      The `route`, `catalog`, `gateway-mcp`, and `inference` checks each send their own HTTP request to the gateway, through the proxy when one applies to an `https://` gateway.
+      When `gateway` fails, `catalog` and `gateway-mcp` skip their requests, while `route` still attempts its request.
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
       If the computer doesn't trust the gateway's certificate, install its issuing certificate authority in the system trust store.
@@ -153,6 +156,9 @@ rows:
       The gateway has a route for the agent CLI's requests.
       `doctor` sends a request with the JSON body `{}` to check for the route.
       When `doctor` sends your credential, an HTTP `401` or `403` response means the gateway refuses the credential on that route.
+      When `doctor` can't send a credential, such as when you aren't signed in or the agent CLI owns its sign-in, it sends the request without one.
+      When the request doesn't include a credential, `route` reports `ok` on an HTTP `401` or `403` response, or warns for a Claude subscription profile.
+      That `ok` result confirms only that the route exists and doesn't confirm that the gateway accepts your credential.
     next: |
       When the gateway doesn't have the route or refuses the sign-in on it, ask the gateway operators to add the route or accept the profile's sign-in on it.
       When the check warns with a `fix:` line, complete that step, such as signing in, unsetting a variable, or making managed settings readable, before contacting the operators.
