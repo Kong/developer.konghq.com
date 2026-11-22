@@ -67,21 +67,52 @@ For `--delivery file`, the new drop-in (`managed-settings.d/kong-harnesses.json`
 
 ## Prepare rebuild flags and placeholders
 
-Rebuild each platform and policy group from its own active build record (`RECORD_FILE`) into a new or empty folder (`NEW_FOLDER`, for example, `fleet-macos-mdm-2`).
+Rebuild each platform and policy group from its own active build record (`RECORD_FILE`) into a new or empty folder (`NEW_FOLDER`).
 
-* **Profile and platform (`PROFILE_NAME`):** Pass the recorded profile name and `--platform` from `RECORD_FILE`, because `fleet build` refuses a mismatch.
-  The commands target macOS (`/usr/local/bin/kong-harnesses`).
-  On Linux or Windows, pass your earlier `--platform` and `--executable`.
-  On Linux, use `--delivery file` (default), because `fleet build` refuses `--delivery mdm`.
-* **Policy (`POLICY_FILE`):** For an MDM build, pass the MDM policy that your computers get now (`com.anthropic.claudecode.plist` on macOS or `Settings.json` on Windows) with `--policy 'POLICY_FILE'`.
-  For a file build, pass `managed-settings.json` with `--policy 'POLICY_FILE'` so `fleet build` checks the combined policy and keeps `ANTHROPIC_CUSTOM_HEADERS`.
-  If file-build computers don't have `managed-settings.json` (including with only `managed-settings.d/` files), use `--no-policy` instead.
+Set the placeholders that are the same on every platform:
+
+* **Profile (`PROFILE_NAME`):** Pass the profile name that `RECORD_FILE` records.
+  `fleet build` refuses a record whose profile or platform differs from the rebuild.
 * **MCP mode (`MCP_MODE`):** Pass your earlier `--mcp-servers` mode:
   * `exclusive` (also pass your current `managed-mcp.json` with `--mcp-config 'MCP_CONFIG_FILE'`)
   * `allowlist`
   * `any`
 
   `fleet build` refuses to omit `--mcp-servers` when the profile defines gateway MCP servers or when the earlier build recorded `any` or `exclusive`.
+* **File build policy (`POLICY_FILE`):** For a file build, pass the `managed-settings.json` that your computers have now, so `fleet build` checks the combined policy and keeps `ANTHROPIC_CUSTOM_HEADERS`.
+  If the computers don't have `managed-settings.json` (also when they have only `managed-settings.d/` files), replace `--policy 'POLICY_FILE'` with `--no-policy`.
+
+Set the platform, executable and delivery for the target operating system:
+
+{% navtabs "fleet-rebuild-platform" %}
+{% navtab "macOS" %}
+
+* **Platform and executable:** Pass `--platform macos` and your earlier `--executable` path.
+  The installer package installs `/usr/local/bin/kong-harnesses`.
+* **Delivery (`DELIVERY`):** Set `DELIVERY` to the delivery of the earlier build, `file` or `mdm`.
+  For an MDM build, set `POLICY_FILE` to the MDM policy that your computers get now (`com.anthropic.claudecode.plist`).
+* **Output folder (`NEW_FOLDER`):** For example, `fleet-macos-mdm-2`.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+* **Platform and executable:** Pass `--platform linux` and your earlier `--executable` path.
+  The Linux packages install `/usr/bin/kong-harnesses`.
+* **Delivery:** Linux builds use file delivery, so the Linux commands omit `--delivery`.
+  `fleet build` refuses `--delivery mdm` for Linux, because {{ site.claude_code }} on Linux reads its policy only from managed settings files.
+* **Output folder (`NEW_FOLDER`):** For example, `fleet-linux-file-2`.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+* **Platform and executable:** Pass `--platform windows` and your earlier `--executable` path.
+  The MSI installer installs `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
+* **Delivery (`DELIVERY`):** Set `DELIVERY` to the delivery of the earlier build, `file` or `mdm`.
+  For an MDM build, set `POLICY_FILE` to the MDM policy that your computers get now (`Settings.json`).
+* **Output folder (`NEW_FOLDER`):** For example, `fleet-windows-mdm-2`.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 Omitting an earlier flag can drop its setting or cause `fleet build` to refuse the rebuild.
 Repeat every kept flag from the earlier build, or pass its revert flag from [Keep or revert recorded flags](/kong-harnesses/fleet-build-options/#keep-or-revert-recorded-flags).
@@ -94,12 +125,16 @@ Repeat every kept flag from the earlier build, or pass its revert flag from [Kee
 
 Choose `OLDEST_VERSION` and `NEWEST_VERSION` (`2.1.285` or later) from the {{ site.claude_code }} releases that you tested through {{ site.ai_gateway }}, written as three dot-separated numbers like `claude --version`.
 
-Build managed settings that pin the group to that version range (for an MDM build on macOS or Windows, add `--delivery mdm`):
+Build managed settings that pin the group to that version range:
+
+{% navtabs "fleet-pin-version" %}
+{% navtab "macOS" %}
 
 ```sh
 kong-harnesses fleet build \
   --profile PROFILE_NAME \
   --platform macos \
+  --delivery DELIVERY \
   --executable /usr/local/bin/kong-harnesses \
   --policy 'POLICY_FILE' \
   --record 'RECORD_FILE' \
@@ -108,6 +143,42 @@ kong-harnesses fleet build \
   --claude-code-maximum NEWEST_VERSION \
   --output-dir NEW_FOLDER
 ```
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+```sh
+kong-harnesses fleet build \
+  --profile PROFILE_NAME \
+  --platform linux \
+  --executable /usr/bin/kong-harnesses \
+  --policy 'POLICY_FILE' \
+  --record 'RECORD_FILE' \
+  --mcp-servers MCP_MODE \
+  --claude-code-minimum OLDEST_VERSION \
+  --claude-code-maximum NEWEST_VERSION \
+  --output-dir NEW_FOLDER
+```
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+```powershell
+kong-harnesses fleet build `
+  --profile PROFILE_NAME `
+  --platform windows `
+  --delivery DELIVERY `
+  --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
+  --policy 'POLICY_FILE' `
+  --record 'RECORD_FILE' `
+  --mcp-servers MCP_MODE `
+  --claude-code-minimum OLDEST_VERSION `
+  --claude-code-maximum NEWEST_VERSION `
+  --output-dir NEW_FOLDER
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 `fleet build` writes the build to `NEW_FOLDER` and prints the build ID and record path (see [Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks) for rejected ranges).
 
@@ -127,12 +198,16 @@ For Homebrew and Claude Desktop update controls, see [How version bounds behave]
 Add the new model version to {{ site.ai_gateway }} as an [AI Model](/ai-gateway/entities/ai-model/).
 If your managed policy sets `availableModels` or `deniedModels`, verify that those settings permit both models until the move completes.
 
-Build managed settings with `--model NEW_MODEL_ID` and every kept flag from the earlier build, such as your version range (for an MDM build on macOS or Windows, add `--delivery mdm`):
+Build managed settings with `--model NEW_MODEL_ID` and every kept flag from the earlier build, such as your version range:
+
+{% navtabs "fleet-move-model" %}
+{% navtab "macOS" %}
 
 ```sh
 kong-harnesses fleet build \
   --profile PROFILE_NAME \
   --platform macos \
+  --delivery DELIVERY \
   --executable /usr/local/bin/kong-harnesses \
   --policy 'POLICY_FILE' \
   --record 'RECORD_FILE' \
@@ -140,6 +215,40 @@ kong-harnesses fleet build \
   --model NEW_MODEL_ID \
   --output-dir NEW_FOLDER
 ```
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+```sh
+kong-harnesses fleet build \
+  --profile PROFILE_NAME \
+  --platform linux \
+  --executable /usr/bin/kong-harnesses \
+  --policy 'POLICY_FILE' \
+  --record 'RECORD_FILE' \
+  --mcp-servers MCP_MODE \
+  --model NEW_MODEL_ID \
+  --output-dir NEW_FOLDER
+```
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+```powershell
+kong-harnesses fleet build `
+  --profile PROFILE_NAME `
+  --platform windows `
+  --delivery DELIVERY `
+  --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' `
+  --policy 'POLICY_FILE' `
+  --record 'RECORD_FILE' `
+  --mcp-servers MCP_MODE `
+  --model NEW_MODEL_ID `
+  --output-dir NEW_FOLDER
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 `fleet build` writes the build to `NEW_FOLDER` and prints the build ID and record path.
 Prefix `NEW_MODEL_ID` as `--model FAMILY=NEW_MODEL_ID` if it doesn't name one Claude family, and repeat `--model` for each family.
