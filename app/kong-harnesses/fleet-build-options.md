@@ -159,7 +159,7 @@ MCP rules:
   `fleet build` applies the checks of the minimum version that the computers get, from `--claude-code-minimum` or the `requiredMinimumVersion` of `--policy` ([Version range checks](#version-range-checks)), and both earlier checks when the build sets no minimum.
   A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
 * **MCP policy results (`exclusive`):** `fleet build` gives each server that it writes into `managed-mcp.json` one result: loads, blocked, or undecided.
-  It checks deny entries first, and [expands the variables](https://code.claude.com/docs/en/managed-mcp#environment-variables-in-servercommand-and-serverurl-entries) in `serverUrl` and `serverCommand` entries and in the server with the values in the policy's `env`.
+  It checks deny entries first, and [expands the variables](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) in `serverUrl` and `serverCommand` entries and in the server with the values in the policy's `env`.
   A `serverName` entry matches the name as written, before variables expand.
   An entry is a match when these known values make it match.
   A server is undecided when its result depends on a variable that the policy's `env` doesn't set, in an entry or in the server.
