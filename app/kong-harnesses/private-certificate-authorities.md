@@ -259,13 +259,13 @@ The file replaces the default CA file, and {{site.kong_harnesses}} still reads t
 With the `GODEBUG` value that you set after you create the bundle, the file replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
 
 Windows adds a public root CA to its certificate store only when it first needs it.
-Connect once in PowerShell to the gateway, to the identity provider of a profile that signs in through one, and to the profile server of a profile that you import from an HTTPS URL, so that Windows adds the root CA of each server:
+Connect once in PowerShell to the gateway, to the identity provider of a profile that signs in through one, and to the profile server of a profile that you import from an HTTPS URL, so that Windows adds the root CA of each server.
+Skip the gateway when it runs on the local computer with a plain `http` URL.
 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
 ```
 
-Skip the gateway when it runs on the local computer with a plain `http` URL, the only server that a profile can reach without HTTPS.
 An error for the HTTP status is fine, because Windows checks the certificate chain before the request gets the status.
 A TLS error is expected for a server with a certificate from your private CA, because Windows gets only public root CAs this way.
 The bundle gets the root of your private CA from the CA certificate file in the next step.
@@ -295,12 +295,12 @@ kong-harnesses profile import PROFILE_URL
 When the import or the CA bundle check reports an unknown certificate authority for a server, check that the bundle holds the root CA of that server.
 For a server with a certificate from your private CA, this is the root CA that your administrator gave you.
 If the bundle doesn't hold it, add that root CA certificate to the bundle, or create the bundle again, and then run the command again.
-A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so a public root CA can be missing from the bundle.
 If the bundle holds it, ask your administrator to check the certificate chain that the server sends.
+When a Windows policy [stops the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), ask your administrator for a public root CA that the bundle is missing.
 
 A new bundle doesn't fix an expired certificate or a host name mismatch.
-For an expired certificate, check the clock of the computer first, because a wrong clock gives the same error.
-When the clock is right, ask your administrator to renew the certificate of the server.
+For a certificate that is expired or not valid yet, check the clock of the computer first, because a wrong clock gives the same error.
+When the clock is right, ask your administrator to check the dates of the certificate of the server.
 For a host name mismatch of the profile server, check the host in the profile URL.
 When the URL is right, or for another server, ask your administrator to fix the certificate of the server.
 
@@ -310,7 +310,7 @@ Run the doctor checks for the profile:
 kong-harnesses doctor --profile PROFILE_NAME
 ```
 
-The CA bundle check must show OK for each server that you connected to with `Invoke-WebRequest`.
+The CA bundle check of the `SSL_CERT_FILE` file must show OK for each server that you sent a web request to, also when that request gave a TLS error.
 When the check reports a missing or unreadable file, check the path in the variable that the result names.
 When the check fails for a server, use the fixes after the import step.
 
