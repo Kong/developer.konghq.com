@@ -249,7 +249,7 @@ WSL is outside the default Windows rollout because {{ site.claude_code }} in WSL
 WSL limits:
 
 * Incompatible with `--mcp-servers exclusive`.
-* `fleet build` rejects `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT`, and `CLAUDE_CODE_CLIENT_KEY` in `--policy` because WSL can't open Windows paths.
+* With `--wsl inherit`, `fleet build` rejects `NODE_EXTRA_CA_CERTS`, `CLAUDE_CODE_CLIENT_CERT`, and `CLAUDE_CODE_CLIENT_KEY` in the `env` of `--policy`, because {{ site.claude_code }} in WSL inherits them and can't open the Windows paths they name.
   Omit them from all three Windows administrator sources because `env` merges into WSL.
 * Gateway MCP servers don't load in WSL in any mode, and enforcement requires an unchanged {{ site.claude_code }}.
 * Without `--wsl inherit` (including default `ignore`), Windows `fleet build` refuses any `--policy` enabling `wslInheritsWindowsSettings`.
