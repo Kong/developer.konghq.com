@@ -163,11 +163,12 @@ MCP rules:
   A `serverName` entry matches the name as written, before variables expand.
   An entry is a match when these known values make it match.
   A server is undecided when its result depends on a variable that the policy's `env` doesn't set, in an entry or in the server.
-  An `allowedMcpServers` `serverUrl` entry is also undecided, at every minimum version, when a known value in the entry holds `/`, `?`, `#`, `@`, `:`, or `\`, because {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the URL's scheme, host, or path.
+  An `allowedMcpServers` `serverUrl` entry is also undecided, at every minimum version, when the policy's `env` sets a variable that the entry names to a value that holds `/`, `?`, `#`, `@`, `:`, or `\`, because {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the URL's scheme, host, or path.
   Write such an entry as a literal URL.
   A server that names a variable in `headersHelper` and that the **Allowlist checks of `managed-mcp.json` servers** rule doesn't check is also undecided when an allowlist is set and doesn't permit it, because the {{ site.claude_code }} docs don't say whether that variable starts the check.
   `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
-  The exception is a deny entry that provably matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` allows that server, and a deny entry that only may match is still refused.
+  The exception is a deny entry that provably matches one of your own `--mcp-config` servers: that is your policy's choice, so `fleet build` doesn't refuse that server, and {{ site.claude_code }} blocks it.
+  A deny entry that only may match is still refused.
   `kong-harnesses doctor` never reports an undecided server as loaded.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
