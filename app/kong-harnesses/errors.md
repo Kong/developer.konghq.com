@@ -74,10 +74,11 @@ rows:
 {% endtable %}
 
 `kong-harnesses doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
+For an interrupted sign-in renewal that resumes on the next credential call (`refresh-pending`), `doctor` reports `ok` and exits with `0` instead of `3`.
 In each report, the failed check to fix first sets the exit code:
 
-* `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete
-* `2` for the profile, the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install
+* `1` for the network, the identity provider, the gateway or its MCP routes (including non-temporary failures such as a missing route or a refused sign-in), the OpenCode plugin download, the `--inference` request, or a check that couldn't complete
+* `2` for the profile, the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows
 * `3` for the sign-in, or a missing key for a gateway MCP server
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C
 
