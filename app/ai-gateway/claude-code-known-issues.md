@@ -336,9 +336,13 @@ On Alpine Linux, those `apk` steps add the `stable` repository line to `/etc/apk
 Replace the `latest` line with the `stable` line instead:
 
 ```sh
-sed -i '\|downloads.claude.ai/claude-code/apk/latest|d' /etc/apk/repositories
-echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
+sed -i '\|^https://downloads\.claude\.ai/claude-code/apk/latest$|d' /etc/apk/repositories
+grep -qxF "https://downloads.claude.ai/claude-code/apk/stable" /etc/apk/repositories ||
+  echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
 ```
+
+Then run `apk update && apk upgrade claude-code`.
+`apk` keeps your current release until the `stable` channel serves a newer one.
 
 {% endnavtab %}
 {% endnavtabs %}
