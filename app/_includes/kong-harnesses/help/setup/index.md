@@ -23,12 +23,12 @@ sign-in, so setup skips the sign-in when they are the only agent CLIs. With
 --no-browser, open the printed URL in a browser on this computer.
 
 You can run setup again safely. It does not import a profile file that is
-already installed with the same content, keeps a sign-in that still works,
-and leaves an agent CLI that is already set up. If a step fails, setup stops
-and names the step and the command that continues from there. After profile
-create has saved the profile, that command is setup --profile <name>, so the
-questions are not asked again. If the gateway or this computer refuses an
-agent CLI, setup names it with the fix.
+already installed with the same content, keeps a sign-in that still works, and
+keeps the settings of an agent CLI only when they still match what the profile
+asks for. If a step fails, setup stops and names the step and the command that
+continues from there. After profile create has saved the profile, that command
+is setup --profile <name>, so the questions are not asked again. If the
+gateway or this computer refuses an agent CLI, setup names it with the fix.
 
 After setup, use login to fix a sign-in, profile activate to switch profiles,
 and profile cleanup to undo the setup.

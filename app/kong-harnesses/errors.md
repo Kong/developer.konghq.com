@@ -105,7 +105,9 @@ When an installed profile file can't be read, `profile list` and `status` withou
 `profile list` exits with `1` instead when it also can't read which profile is the default.
 In text output, they print "Unreadable" followed by the recovery step.
 With `--output json` or `--output yaml`, the state of the profile is `unreadable`, with no recovery step.
-In every output format, `status` also prints "is unreadable" with the recovery step on standard error.
+In every output format, `status` also prints one message on standard error, for the first problem with the most severe exit code.
+When that problem is an unreadable profile, the message says "is unreadable" with the recovery step.
+With `--output json` or `--output yaml`, no other unreadable profile gets a recovery step, so run `kong-harnesses status --profile PROFILE_NAME` for each of them.
 Commands that select one profile and `doctor` print the message for the cause instead.
 
 ### "selected profile does not exist"
@@ -226,11 +228,11 @@ For an invalid or untrusted machine-wide profile, they print the message in ["th
 ### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
 The installed copy of a user profile fails validation or can't be read, and `profile import` doesn't replace an installed profile that it can't read.
-`profile list` and `status` report it as unreadable with the same `profile delete` and import step, and `doctor` reports "the stored profile is invalid".
+`profile list` and `status` report it as unreadable with the same `profile delete` and import step in text output, and `doctor` reports "the stored profile is invalid".
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
 When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server key for each server name in `mcp_servers` and deletes the profile file.
-If your password store keeps a key, or if `profile delete` can't read the server list from the file, its result names each item to delete from your system password store (`PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the server list).
+If your password store keeps a key, or if the file has no readable `mcp_servers` list, its result names each item to delete from your system password store (`PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when the file has no readable `mcp_servers` list, also when the list is absent or `null`).
 `profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
 When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
 When its result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
@@ -239,7 +241,7 @@ For an agent CLI that still uses the profile, run `kong-harnesses profile cleanu
 ### "selected profile needs a newer kong-harnesses"
 
 The installed profile, whether user or machine-wide, has a schema version that this release can't read, usually because a newer release installed it.
-`profile list` and `status` report it as unreadable with "update kong-harnesses, then run the command again", and `doctor` reports "the stored profile needs a newer kong-harnesses".
+`profile list` and `status` report it as unreadable with "update kong-harnesses, then run the command again" in text output, and `doctor` reports "the stored profile needs a newer kong-harnesses".
 `profile import` and `profile create` print "the installed profile of this name needs a newer kong-harnesses" when an installed profile has a newer version.
 `profile import` prints "this profile needs a newer kong-harnesses" when a source file or URL has a newer version.
 Reinstalling the same profile doesn't change its schema version, so a machine-wide profile also needs an update of {{site.kong_harnesses}}.
@@ -253,13 +255,13 @@ An administrator installed the profile for every user of the computer, and {{sit
   `doctor` prints the shorter message.
 * "the profile installed for every user can be changed by an account that is not an administrator": The machine-wide profile file or folder lets an account that isn't an administrator change it, so {{site.kong_harnesses}} doesn't use it.
 
-For either cause, `profile list` and `status` report the profile as unreadable with "ask your administrator to reinstall it".
+For either cause, `profile list` and `status` report the profile as unreadable with "ask your administrator to reinstall it" in text output.
 `profile delete` refuses a machine-wide profile, so ask your administrator to reinstall the profile.
 
 ### "is not a profile name"
 
 `profile list` and `status` report a `.json` file in a profile folder as unreadable when its filename without `.json` doesn't follow the [rules for `name`](/kong-harnesses/profile-file/#top-level-fields).
-The end of the message tells you what to do:
+In text output, the end of the message tells you what to do:
 
 * "ask your administrator to remove it": The file is in the machine-wide profile folder.
   Ask your administrator to remove the file, because reinstalling under the same filename keeps the invalid name.
