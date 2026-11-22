@@ -31,6 +31,10 @@ tags:
 related_resources:
   - text: Roll out {{ site.claude_code }} through MDM
     url: /kong-harnesses/roll-out-claude-code-through-mdm/
+  - text: "{{ site.claude_code }} fleet build options"
+    url: /kong-harnesses/fleet-build-options/
+  - text: Remove a {{ site.claude_code }} fleet build
+    url: /kong-harnesses/remove-a-claude-code-fleet-build/
   - text: Proxy AI CLI tools through {{ site.ai_gateway }}
     url: /ai-gateway/ai-clis/
   - text: Set up {{ site.claude_code }} with kong-harnesses
