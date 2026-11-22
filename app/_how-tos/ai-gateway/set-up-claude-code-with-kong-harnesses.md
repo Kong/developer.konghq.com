@@ -191,7 +191,7 @@ When a proxy applies to the gateway host in the current shell, `profile activate
 When `profile activate` configures {{ site.claude_code }} for an `http://` gateway, it writes `NO_PROXY` and `no_proxy` into {{ site.claude_code }} user settings.
 {{ site.claude_code }} uses those settings values instead of the shell's `NO_PROXY` for its own requests and passes them to subprocesses it starts, including the kong-harnesses credential helper.
 `kong-harnesses credential` and `kong-harnesses token` check only their own process environment, without reading settings files, and withhold the access token when a proxy applies to the gateway host there.
-`doctor` fails when a proxy applies to the gateway host after it applies the settings `NO_PROXY`, for example before `profile activate` writes it.
+`doctor` applies the settings `NO_PROXY` over the shell's and fails when a proxy still applies to the gateway host, for example before `profile activate` writes those settings.
 It also fails when project or managed settings could send the gateway through a proxy, or when `doctor` can't check project or managed proxy settings.
 Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses.
 
