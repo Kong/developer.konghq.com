@@ -60,9 +60,14 @@ Until you get an updated profile, or if you don't use {{site.kong_harnesses}}, a
 ```
 
 You can also export `DISABLE_AUTOUPDATER=1` in your shell environment.
-When a {{site.kong_harnesses}} profile keeps auto-updates on or omits the setting, {{site.kong_harnesses}} leaves `DISABLE_AUTOUPDATER` unchanged in your settings and doesn't override a shell export.
 
-On a native or npm install, confirm that auto-updates are off with `claude doctor`:
+When you activate a {{site.kong_harnesses}} profile that enables or omits auto-updates, activation doesn't set `DISABLE_AUTOUPDATER`.
+If an earlier activation wrote `DISABLE_AUTOUPDATER` (for example, from a profile with auto-updates off), activation restores the earlier value in your settings file, or removes the key if it wasn't present before.
+Otherwise, activation leaves `DISABLE_AUTOUPDATER` itself unchanged in your settings and doesn't override a `DISABLE_AUTOUPDATER` shell export.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also turns off auto-updates, so a non-empty value in your settings or shell can still keep auto-updates off unless activation writes it blank for another enabled choice.
+For when activation writes, keeps, or restores `DISABLE_AUTOUPDATER` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).
+
+On a native or npm install, run `claude doctor` after setting `DISABLE_AUTOUPDATER` or activating a {{site.kong_harnesses}} profile to confirm that auto-updates are off:
 
 ```sh
 claude doctor
