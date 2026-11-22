@@ -50,9 +50,8 @@ cleanup:
   inline:
     - title: Remove kong-harnesses from Intune-managed devices
       content: |
-        1. Ask each developer on the managed devices to [remove their settings](/kong-harnesses/install/#remove-developer-settings).
-        1. In the Microsoft Intune admin center, remove the **Required** assignment for the target users or devices so Intune doesn't reinstall kong-harnesses.
-        1. Uninstall the Windows installer from the devices using [Remove from Windows](/kong-harnesses/install/#remove-from-windows).
+        1. Ask each developer on the managed devices to remove their agent CLI settings, sign-ins, and profiles using [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
+        1. In the Microsoft Intune admin center, remove the target groups from the **Required** assignment and assign them under **Uninstall**, or remove the **Required** assignment and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
 ---
 
 ## Wrap the installer

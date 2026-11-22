@@ -29,6 +29,8 @@ related_resources:
     url: /kong-harnesses/doctor/
   - text: Deploy the kong-harnesses Windows installer with Intune
     url: /kong-harnesses/deploy-with-intune/
+  - text: Remove kong-harnesses
+    url: /kong-harnesses/remove-kong-harnesses/
 ---
 
 Administrators use platform installers to install kong-harnesses for every user of a computer or to deploy it across managed computers with a mobile device management (MDM) tool.
@@ -222,7 +224,7 @@ The package doesn't contain installer scripts.
 Follow these steps to remove only the files installed by the macOS package:
 
 1. If an MDM tool deploys the package to the Mac, remove the Mac from that deployment so the tool doesn't reinstall it.
-1. Ask each developer on the Mac to [remove their settings](#remove-developer-settings).
+1. Ask each developer on the Mac to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/).
 1. Confirm the installer package created the installation:
 
    ```sh
@@ -324,7 +326,7 @@ See [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/de
 
 ### Remove from Windows
 
-1. Ask each developer on the computer to [remove their settings](#remove-developer-settings).
+1. Ask each developer on the computer to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/).
 1. If Microsoft Intune manages the app, remove the **Required** assignment for the target users or devices before uninstalling so Intune doesn't reinstall it.
 1. Open PowerShell as an administrator and uninstall kong-harnesses with the `.msi` file that installed it, replacing `MSI_PATH` with its full path:
 
@@ -363,7 +365,7 @@ sudo dnf install ./FILE
 
 ### Remove from Linux
 
-Ask each developer on the computer to [remove their settings](#remove-developer-settings) before uninstalling.
+Ask each developer on the computer to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/) before uninstalling.
 Remove the kong-harnesses package with your distribution's package manager:
 
 {% navtabs "remove-linux-package" %}
@@ -420,27 +422,4 @@ The command prints the release version with its leading `v`, for example `v1.2.3
 
 ## Remove developer settings
 
-Removing kong-harnesses doesn't remove a developer's saved sign-ins, profiles, or coding agent settings.
-Before removing kong-harnesses from a computer, ask each developer to run these steps in their own account:
-
-1. Sign out of each profile with [`kong-harnesses logout`](/kong-harnesses/logout/):
-
-   ```sh
-   kong-harnesses logout --profile PROFILE
-   ```
-
-1. Remove credentials from coding agents that store their own sign-in:
-   * **OpenCode:** Run `opencode auth logout`, then select the provider named after the profile.
-   * **Hermes:** Run `hermes auth list kong-ai-gateway` to find each credential's entry ID, then remove each entry with `hermes auth remove kong-ai-gateway ENTRY_ID`.
-     Do not pass an index, which changes when an earlier entry is removed, or a label, which Hermes refuses when more than one entry shares it.
-1. Remove the coding agent settings added by kong-harnesses with [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/):
-
-   ```sh
-   kong-harnesses profile cleanup
-   ```
-
-1. Delete each profile with [`kong-harnesses profile delete`](/kong-harnesses/profile/delete/):
-
-   ```sh
-   kong-harnesses profile delete PROFILE
-   ```
+Removing kong-harnesses doesn't remove a developer's saved sign-ins, profiles, or coding agent settings, so ask each developer to complete the settings, sign-out, and profile steps in [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/) before you uninstall it.

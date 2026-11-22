@@ -6,6 +6,7 @@ groups:
           - path: /kong-harnesses/
           - path: /kong-harnesses/install/
           - path: /kong-harnesses/deploy-with-intune/
+          - path: /kong-harnesses/remove-kong-harnesses/
 
   - title: CLI References
     sections:
