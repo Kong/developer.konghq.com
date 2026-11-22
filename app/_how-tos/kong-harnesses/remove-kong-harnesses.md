@@ -51,7 +51,7 @@ prereqs:
     - title: Desktop session with kong-harnesses installed
       content: |
         Keep kong-harnesses installed until you finish signing out, cleaning up agent CLI settings, and deleting profiles.
-        Run these steps in your own user account in an interactive desktop session that can reach your system secret store.
+        Run these steps in your own user account in an interactive desktop session that can reach your system password store.
 ---
 
 Uninstalling kong-harnesses leaves behind your saved sign-ins, installed profiles, and agent CLI settings.
@@ -76,7 +76,6 @@ For a machine-wide profile deployed with a {{ site.claude_code }} fleet build, s
    `logout` removes only the sign-in or static key and gateway MCP server keys that kong-harnesses saved for that profile.
    When the profile has a saved sign-in or static key on this computer, `logout` asks you to type the profile name to confirm before removing it along with any saved gateway MCP server keys.
    When the profile doesn't have a saved sign-in or static key on this computer, `logout` removes any remaining gateway MCP server keys without asking you to confirm and prints `Already signed out`.
-   For a CI profile in a Linux session without Secret Service, `logout` also prints `Already signed out` without checking the secret store.
    `logout` can remove a sign-in locally without revoking it at an identity provider, such as for a static-key profile or a profile without a revocation endpoint.
    For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
 
@@ -182,7 +181,67 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
 1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
-1. If the `Gateway MCP keys` field lists password store items that might remain, delete those named items from your system password store.
+1. If the `Gateway MCP keys` field lists items that might remain, delete each named item from your system password store.
+   Replace `ITEM_NAME` with a name from the output, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
+   Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
+
+{% navtabs "delete-gateway-mcp-keys" %}
+{% navtab "macOS" %}
+
+Each item is a password in your login keychain with the service `io.kong.kong-harnesses.login` and the item name as its account.
+
+1. Delete each named item:
+
+   ```sh
+   security delete-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME'
+   ```
+
+   If the command reports that the item couldn't be found, the item is already gone.
+1. If the output names `PROFILE_NAME.mcp-key.*`, open Keychain Access, select the login keychain, and search for `PROFILE_NAME.mcp-key.`.
+   Delete each item whose account starts with `PROFILE_NAME.mcp-key.`.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+Each item is a Secret Service item with the attribute `application` set to `io.kong.kong-harnesses` and the attribute `profile` set to the item name.
+
+{:.warning}
+> Always pass the `profile` attribute to `secret-tool clear`.
+> Without it, the command deletes every kong-harnesses sign-in on this computer.
+
+1. Delete each named item:
+
+   ```sh
+   secret-tool clear application io.kong.kong-harnesses profile 'ITEM_NAME'
+   ```
+
+1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
+
+   ```sh
+   secret-tool search --all application io.kong.kong-harnesses | grep -a -F 'attribute.profile = PROFILE_NAME.mcp-key.'
+   ```
+
+   Delete each item name that the command prints with the `secret-tool clear` command in the previous step.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Each item is a file named `ITEM_NAME.login.dpapi` in the `%LOCALAPPDATA%\kong-harnesses\vault` folder.
+
+1. In PowerShell, delete each named item:
+
+   ```powershell
+   Remove-Item -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault\ITEM_NAME.login.dpapi"
+   ```
+
+1. If the output names `PROFILE_NAME.mcp-key.*`, delete every item of that profile:
+
+   ```powershell
+   Get-ChildItem -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault" -Filter 'PROFILE_NAME.mcp-key.*.login.dpapi' | Remove-Item
+   ```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Uninstall kong-harnesses
 
