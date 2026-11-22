@@ -116,17 +116,24 @@ kong-harnesses logout --profile PROFILE_NAME
 When the profile has a saved sign-in, `logout` asks you to type the profile name to confirm. What it does depends on the profile and the saved sign-in:
 
 - When the profile names a revocation endpoint and the saved sign-in can be used, `logout` revokes the sign-in at the identity provider, then removes it from this computer.
-- In that case, `logout` disables the current sign-in on this computer before it asks the identity provider to revoke it. The sign-out at the identity provider stays unconfirmed when the identity provider doesn't confirm the revocation. It also stays unconfirmed when `logout` finds an older copy of the sign-in from an earlier release that it can't read or choose. If the identity provider confirms the revocation of the current sign-in, `logout` tries to remove that older copy without a revocation, and it reports the sign-out as unconfirmed even when the removal from this computer fails. A later `logout` can show `Already signed out` while the earlier authorization is still active. Check the authorization at the identity provider, and revoke it there if it's still active. Then run `logout` again to finish the removal from this computer, or to confirm that the sign-in is gone from it.
+- When `logout` reports that server sign-out is unconfirmed, check and revoke the authorization at the identity provider, then run `logout` again.
 - When the profile doesn't name a revocation endpoint, `logout` says that it can't confirm the sign-out at the identity provider. It asks before it removes the sign-in from this computer.
 - When the saved sign-in is damaged or doesn't match the profile, `logout` removes it from this computer only.
 - When the profile doesn't have a sign-in on this computer, `logout` doesn't ask you to confirm, and shows `Already signed out`. It also removes any keys of gateway MCP servers that are left.
-- When `logout` says that the local cleanup is incomplete, or that the saved sign-in needs attention, run `logout` again. The table in [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists each of these lines.
+- When `logout` says that the local cleanup is incomplete, or that the saved sign-in needs attention, run `logout` again.
+  For these and other `logout` failure messages, see [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails).
 
 Each time `logout` removes the sign-in or the key from this computer, it also removes the saved keys of gateway MCP servers for the profile.
 
 A {{ site.claude_code }} session that already has an access token can use it until the token expires.
 
-For a profile that uses a key from your administrator, `logout` removes the key from this computer only. The key works at the gateway until your administrator revokes it. For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key. On Linux, `logout` first takes a lock on the profile in `XDG_RUNTIME_DIR`, so set that variable in the job before you run `logout`. If this computer still has a saved sign-in or key for the profile, `logout` asks you to confirm and removes it. In a Linux session without Secret Service, `logout` doesn't check for a saved sign-in or key, so to remove one that an earlier setup saved, run `logout` in a desktop session with a keyring. `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set. Remove the variable from the job environment yourself.
+For a profile that uses a key from your administrator, `logout` removes the key from this computer only.
+The key works at the gateway until your administrator revokes it.
+
+For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key.
+`logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set.
+Remove the variable from the job environment yourself.
+If an earlier setup saved a sign-in or key for that profile name, run `logout` in a session with access to the secret store to remove it.
 
 ## Find out why a sign-in fails
 

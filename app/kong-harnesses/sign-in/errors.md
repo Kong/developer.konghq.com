@@ -155,10 +155,10 @@ columns:
 rows:
   - message: "`OpenCode owns authentication`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client opencode`."
-    fix: "Follow the OpenCode steps in [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile). If OpenCode says `Integration not found` or `Unknown provider`, OpenCode couldn't install the plugin. Run `kong-harnesses doctor --profile PROFILE_NAME --client opencode`. If the report says that the profile doesn't configure OpenCode, run `kong-harnesses profile get PROFILE_NAME` to see the agent CLIs that the profile sets up. If you made the profile with [`kong-harnesses profile create`](/kong-harnesses/profile/create/), create it again. Otherwise, ask your administrator for a profile that sets up OpenCode, and [import it](/kong-harnesses/profile/import/). Then run `kong-harnesses profile activate PROFILE_NAME --client opencode`, so that the OpenCode configuration names the plugin. If the report shows the `npm` and `plugin` checks, follow their steps. Then start OpenCode and sign in again. To sign out, run `opencode auth logout`."
+    fix: "Follow the OpenCode steps in [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile)."
   - message: "`the Kong AI Gateway plugin owns authentication for Hermes`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client hermes`."
-    fix: "To sign in, run `hermes auth add kong-ai-gateway`, then restart Hermes Agent. To remove all credentials of the `kong-ai-gateway` provider, run `hermes auth logout kong-ai-gateway`. To remove one credential from a pool, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with the entry ID of the credential as `TARGET`. Don't use an index, because the index changes when an entry above it is removed, and don't use a label, because more than one credential can have the same label."
+    fix: "Follow the Hermes Agent steps in [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile)."
   - message: "`login requires an interactive controlling terminal` or `logout asks you to type the profile name, so it needs an interactive controlling terminal`"
     cause: "`login` or `logout` ran without a terminal, for example in a script or a CI job."
     fix: "Run the command in a terminal. For `logout`, you can also pass `--auto-approve` to confirm in advance. In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`, set the variable in the job, and don't run `login` for that profile."
@@ -173,7 +173,7 @@ rows:
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
   - message: "`local sign-in disabled; server sign-out unconfirmed`"
     cause: "`logout` disabled the sign-in on this computer, but it couldn't confirm that the identity provider revoked all authorizations for the profile. For example, the identity provider didn't confirm the revocation, or `logout` found an older copy of the sign-in from an earlier release that it can't read or choose."
-    fix: "Run `kong-harnesses status --profile PROFILE_NAME` to check the sign-in on this computer. Check the authorization at the identity provider, and revoke it there if it's still active. Then run `kong-harnesses logout --profile PROFILE_NAME` again."
+    fix: "Run `kong-harnesses status --profile PROFILE_NAME` to check the sign-in on this computer. Check the authorization at the identity provider, and revoke it there if it's still active, even if a later `logout` shows `Already signed out`. Then run `kong-harnesses logout --profile PROFILE_NAME` again."
   - message: "`server sign-out confirmed; local cleanup incomplete`"
     cause: The identity provider confirmed the revocation, but kong-harnesses couldn't remove everything from this computer, or it couldn't release its lock on the profile after the removal.
     fix: "Run `kong-harnesses logout --profile PROFILE_NAME` again."
