@@ -369,8 +369,10 @@ Give `setup` the file or URL of the profile, or run it in a terminal.
 ### "setup stopped at step"
 
 The message names the step that failed and the reason, and the lines before it can give more detail.
-Fix the cause, using the entry for that message on this page, then run the same `setup` command again.
-It keeps the work of the finished steps, so it is safe to run again.
+Fix the cause, using the entry for that message on this page, then run the command that the message names to resume past the finished steps.
+On every rerun, `setup` leaves a usable sign-in and a configured client as they are.
+Only an unchanged profile file or HTTPS URL makes `setup` skip the import.
+Running `setup` without a source starts profile creation from the first question.
 
 When the message says that `setup` leaves a client out, or that a client "cannot be configured", the gateway or this computer refuses that agent CLI, and the preceding line names the fix.
 Until you make that fix, `setup` leaves the client out each time, or stops at the same step when it is the only client.
