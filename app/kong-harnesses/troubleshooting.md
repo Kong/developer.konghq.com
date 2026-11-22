@@ -32,31 +32,31 @@ related_resources:
 ---
 
 When an agent CLI such as {{ site.claude_code }} can't reach {{ site.ai_gateway }} through kong-harnesses, [`kong-harnesses doctor`](/kong-harnesses/doctor/) finds the cause.
-`doctor` checks the profile, the sign-in, the agent CLI settings and the gateway, and, when it knows one, prints the next step under a problem.
+`doctor` checks the profile, sign-in, agent CLI settings, and gateway, and prints the next step under a problem when it knows one.
 `doctor` doesn't change any settings.
 To undo agent CLI settings, sign out, delete a profile, or uninstall kong-harnesses, see [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
 To troubleshoot {{ site.claude_code }} configured through managed settings and MDM, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 
 ## Run doctor
 
-Check the profile and the agent CLI that fails:
+Check a profile and agent CLI with `kong-harnesses doctor`:
 
 ```sh
 kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 ```
 
-Replace `PROFILE_NAME` with the name of your installed profile, here and in each command on this page.
+Replace `PROFILE_NAME` with the name of your installed profile across the commands on this page.
 Replace `CLIENT_NAME` with the name of the agent CLI, such as `claude-code`.
 
-Without `--client`, `doctor` checks each agent CLI that the profile configures and that this kong-harnesses build sets up, with one report for each.
-When the profile doesn't configure any of them, `doctor` says so before any report and exits with `2`.
-Then ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
-Run `doctor` in the shell and the folder where you start the agent CLI, because some checks read the environment and the project settings of {{ site.claude_code }} there.
-`doctor` uses the network to check the gateway, and, unless the profile uses a static key, the identity provider.
-To check the sign-in and the agent CLI setup of a profile without the network, run `kong-harnesses status --profile PROFILE_NAME`.
+When you omit `--client`, `doctor` checks every supported agent CLI that the profile configures, with one report for each.
+When the profile doesn't configure any supported agent CLI, `doctor` says so before printing a report and exits with `2`.
+Ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
+Run `doctor` in the shell and folder where you start the agent CLI, because some checks read the environment and the project settings of {{ site.claude_code }} there.
+`doctor` uses the network to check the gateway and, unless the profile uses a static key, the identity provider.
+To check the sign-in and agent CLI setup without the network, run [`kong-harnesses status --profile PROFILE_NAME`](/kong-harnesses/status/).
 
-Each line of the report starts with a level, `ok`, `warn` or `fail`, and the name of the check.
-When `doctor` knows the next step for a problem, the line under it starts with `fix:` and names that step, often with the command for your profile.
+Each line of the report starts with a level (`ok`, `warn`, or `fail`) and the name of the check.
+When `doctor` knows the next step for a problem, the `fix:` line under the finding names that step, often with the command for your profile.
 The following part of a report shows a failed `overrides` check:
 
 ```
@@ -70,7 +70,8 @@ For what each exit code means, see [Exit codes](/kong-harnesses/errors/#exit-cod
 
 ## Next step for each check
 
-A check that doesn't apply to the profile or the agent CLI isn't in the report.
+Each `kong-harnesses doctor` report includes only the checks that apply to the profile and agent CLI.
+When a finding includes a `fix:` line, follow it first.
 
 {% table %}
 columns:
@@ -83,146 +84,128 @@ columns:
 rows:
   - check: "`install`"
     what: |
-      The `install` check runs once, before the reports, and only on Windows for an install under `Program Files`.
-      It checks that only administrators can change the install and the folders above it.
-    next: Ask your administrator to install kong-harnesses again with its MSI, or to remove write access for every account that isn't an administrator.
+      The `install` check runs once before the client reports, only on Windows for an install under `Program Files`.
+      It verifies that only administrators can change the install and parent folders.
+    next: Ask your administrator to reinstall kong-harnesses with its MSI, or remove write access for every non-administrator account.
   - check: "`profile`"
     what: The profile is installed, and kong-harnesses can read it.
     next: |
-      Run `kong-harnesses profile list` to see the installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
-      If `doctor` or `profile get` says that the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
-      If `profile get` says that the profile needs a newer kong-harnesses, update kong-harnesses, then run `doctor` again.
-      If `doctor` says that the selected profile doesn't configure an agent CLI that this kong-harnesses build sets up, ask your administrator for a profile that sets up your agent CLI, and [import it](/kong-harnesses/profile/import/).
-      If your administrator installed the profile for every user, ask your administrator to install it again.
-      If the `profile` line says that the session doesn't have a per-user runtime directory, which is common in a container or a CI job on Linux, set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
+      Run `kong-harnesses profile list` to see installed profiles, or `kong-harnesses profile get PROFILE_NAME` to inspect one.
+      If `doctor` or `profile get` says the profile is invalid, run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
+      If `profile get` says the profile needs a newer kong-harnesses, update kong-harnesses and run `doctor` again.
+      If an administrator installed the profile for every user, ask your administrator to reinstall it.
+      If the `profile` line says the session doesn't have a per-user runtime directory (common in a Linux container or CI job), set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
   - check: "`login`"
-    what: You're signed in to the profile. For a profile that uses a static key, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
+    what: |
+      You're signed in to the profile.
+      For a static-key profile, a key is saved, or `KONG_HARNESSES_STATIC_KEY` contains the key for a CI profile.
     next: |
-      Do what the `fix:` line says, usually `kong-harnesses login --profile PROFILE_NAME`.
+      Run `kong-harnesses login --profile PROFILE_NAME`, or the agent CLI sign-in command named on the `fix:` line.
       For OpenCode and Hermes, the agent CLI can own the sign-in.
-      Then `doctor` reports `ok` and says that the client owns it, so check the sign-in in the agent CLI.
-      When the `fix:` line names the sign-in command of the agent CLI, run that command.
+      When it does, `doctor` reports `ok` and says the client owns it, so check sign-in status in that agent CLI.
       For a CI profile that reads its key from the environment, set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator, because `login` refuses that profile.
       If the report says that no Secret Service runs on Linux, use a desktop session that runs a keyring, such as GNOME Keyring.
-      If the `login` check, `login` or `status` says that the `max_access_token_lifetime_seconds` of the profile is below the shortest token lifetime that sign-in accepts, ask your administrator to raise the value to at least 365 seconds, then import the corrected profile.
-      The `login` check then fails even when you're signed in, because the next renewal of the sign-in fails.
-      For more about the sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
+      If `doctor`, `login`, or `status` says `max_access_token_lifetime_seconds` is below 365 seconds, ask your administrator to raise it to at least 365 seconds, then import the corrected profile.
+      In that case, `login` fails even while you're signed in, because the next renewal fails.
+      For more about sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
   - check: "`client`"
-    what: kong-harnesses, or the managed settings of your organization, set up the agent CLI for this profile, and the agent CLI settings still contain what that setup wrote.
+    what: kong-harnesses or your organization's managed settings set up the agent CLI for this profile, and the settings still match what that setup wrote.
     next: |
-      Do what the `fix:` line says.
-      For an agent CLI that the profile lists, `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` sets up the agent CLI, or applies what changed in the profile.
-      When the settings are inconsistent with what kong-harnesses wrote, and the `fix:` line names `profile cleanup`, run that command first.
-      When the settings have two ownership documents, `profile cleanup` refuses them, so remove the leftover values and both documents manually, then activate the profile, as the `fix:` line says.
-      If `profile cleanup` reports that the settings no longer match what kong-harnesses installed, inspect them and remove the leftover values manually.
-      When the settings name the profile, but kong-harnesses didn't record that it wrote them, `profile activate` takes them over.
-      For OpenCode, remove the gateway plugin entry that kong-harnesses didn't record from the settings file first, then activate the profile.
+      For an agent CLI listed in the profile, run `kong-harnesses profile activate PROFILE_NAME --client CLIENT_NAME` to set it up, apply profile changes, or take over settings that name the profile without a kong-harnesses ownership record.
+      For OpenCode, remove an unrecorded gateway plugin entry from the settings file first, then activate the profile.
+      If settings are inconsistent with what kong-harnesses wrote and the `fix:` line names [`profile cleanup`](/kong-harnesses/profile/cleanup/), run it first.
+      If `profile cleanup` reports that settings no longer match what kong-harnesses installed, inspect them and remove leftover values manually.
+      When settings have two ownership documents, `profile cleanup` refuses them, so remove the leftover values and both documents manually, then activate the profile.
   - check: "`claude-code`"
     what: The installed {{ site.claude_code }} is a release that kong-harnesses supports.
-    next: Update {{ site.claude_code }}. The `fix:` line names the oldest release that works.
+    next: |
+      Update {{ site.claude_code }}.
+      The `fix:` line names the oldest supported release.
   - check: "`npm` and `plugin`"
-    what: For OpenCode, npm can read the gateway plugin package from the registry, and a plugin version that works is in the OpenCode cache.
+    what: For OpenCode, npm can read the gateway plugin package from the registry, and a working plugin version is in the OpenCode cache.
     next: |
-      If the `npm` check reports an access problem, fix it first, for example the npm token.
-      Then do what the `fix:` line says, for example remove an old plugin from the cache and start OpenCode once.
+      Fix any `npm` access problem first, such as an npm token.
+      Then follow the `plugin` `fix:` line, such as removing an old cached plugin and starting OpenCode once.
   - check: "`issuer`"
-    what: |
-      The `issuer` check tests a direct connection to the token endpoint of the identity provider of the profile, and skips that test when a proxy applies.
-      A profile that uses a static key skips this check.
+    what: The `issuer` check tests a direct connection to the identity provider's token endpoint, and skips the test when a proxy applies.
     next: |
-      If `doctor` reports a proxy for the endpoint, check that the proxy can connect to the endpoint.
-      Check the network, the VPN, and any proxy, then run `doctor` again.
-      If the computer doesn't trust the certificate of the identity provider, install the certificate authority that issued it in the system trust store.
+      If `doctor` reports a proxy for the endpoint, check that the proxy can connect to it.
+      Check the network, VPN, and any proxy, then run `doctor` again.
+      If the computer doesn't trust the identity provider's certificate, install its issuing certificate authority in the system trust store.
   - check: "`gateway`"
     what: |
       The `gateway` check tests a direct connection to the gateway.
-      For an `http://` gateway, the check fails when a proxy applies to the gateway, or when `doctor` can't check the proxy settings.
-      For an `https://` gateway, the check skips the test when a proxy applies.
-      When `--inference` runs for {{ site.claude_code }}, the check skips the direct test, but still fails an `http://` gateway for the same proxy reasons.
-      For an `https://` gateway, other checks, such as `catalog`, can send their requests through the proxy.
+      For an `http://` gateway, it fails when a proxy applies or when `doctor` can't check proxy settings.
+      For an `https://` gateway, it skips the direct test when a proxy applies.
+      When `--inference` runs for {{ site.claude_code }}, it skips the direct test once the request is sent, but still fails an `http://` gateway for the same proxy reasons.
     next: |
-      Check the network, the VPN, and any proxy, then run `doctor` again.
-      If the computer doesn't trust the certificate of the gateway, install the certificate authority that issued it in the system trust store.
-      When a proxy in the shell applies to an `http://` gateway on this computer, add the exact gateway host, without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
-      For an IPv6 loopback address, add instead each form of the address, with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
-      For {{ site.claude_code }}, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which writes the same exclusion to the {{ site.claude_code }} settings.
-      When the `fix:` line names only that `profile activate` step, run it on its own.
-      When project settings or managed settings of {{ site.claude_code }} set a proxy variable, or `doctor` can't read them, do what the `fix:` line says, because those settings take precedence over the `NO_PROXY` that activation writes.
-      The same applies when a settings file sets a proxy variable to a value that isn't a string or that contains a NUL character.
-      On Windows, it also applies when a settings file sets one proxy variable twice, with different letter case and different values.
-      Codex, OpenCode and Hermes need an `https://` gateway, and the other agent CLIs can use one too.
+      Check the network, VPN, and any proxy, then run `doctor` again.
+      If the computer doesn't trust the gateway's certificate, install its issuing certificate authority in the system trust store.
+      When a shell proxy applies to an `http://` gateway on this computer, add the exact gateway host without the port, such as `localhost`, to `NO_PROXY` and `no_proxy` in the shell that starts the agent CLI.
+      For an IPv6 loopback address, add instead each form of the address: with brackets and the port, with brackets, and bare, such as `[::1]:8000,[::1],::1`.
+      For {{ site.claude_code }}, run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again so activation writes the same exclusion to {{ site.claude_code }} settings.
+      When {{ site.claude_code }} project or managed settings set a proxy variable or can't be read, follow the `fix:` line, because those settings take precedence over the `NO_PROXY` that activation writes.
+      The same applies when a settings file sets a proxy variable to a non-string value or a value with a NUL character, or on Windows sets one proxy variable twice with different letter case and different values.
+      Codex, OpenCode, and Hermes require an `https://` gateway, and the other agent CLIs can use one too.
   - check: "`route`"
-    what: |
-      The gateway has a route for the requests that the agent CLI sends.
-      `doctor` sends a request with the JSON body `{}` to check for the route.
-      When it sends your credential, an HTTP `401` or `403` answer means that the gateway refuses the credential on that route.
+    what: The gateway has a route for the agent CLI's requests and accepts your sign-in on it.
     next: |
-      When the check fails because the gateway doesn't have a route, or refuses the sign-in on it, ask the gateway operators to add the route, or to accept the sign-in of the profile on it.
-      When the check reports a warning with a `fix:` line, do what it says before you contact the operators, for example sign in, unset a variable, or make the managed settings readable.
+      When the gateway doesn't have the route or refuses the sign-in on it, ask the gateway operators to add the route or accept the profile's sign-in on it.
+      When the check warns with a `fix:` line, complete that step, such as signing in, unsetting a variable, or making managed settings readable, before contacting the operators.
       When the `fix:` line says to send a prompt, send one from the agent CLI to test the route.
   - check: "`catalog`"
     what: |
-      The gateway answers `GET /v1/models` with the list of models that it serves.
-      When the provider mode of the profile takes model IDs from the profile, `catalog` reports `ok` without a request, and the `picker` and `model` checks use the models of the profile.
+      The gateway answers `GET /v1/models` with the list of models it serves.
+      When the profile's provider mode takes model IDs from the profile, `catalog` reports `ok` without a request, and `picker` and `model` use the profile's models.
     next: |
-      Do what the `fix:` line says.
-      When the check says that the gateway needs a sign-in, and the profile doesn't use your Claude subscription, sign in as the `fix:` line says, then run `doctor` again.
-      For a profile that uses your Claude subscription, `doctor` can't send that sign-in, so the `fix:` line says to start {{ site.claude_code }}, which reads the model list with your subscription sign-in.
+      When the gateway needs a sign-in and the profile doesn't use your Claude subscription, sign in as the `fix:` line says, then run `doctor` again.
+      For a Claude subscription profile, `doctor` can't send that sign-in, so start {{ site.claude_code }} to read the model list with your subscription sign-in.
       When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
     what: |
-      Without gateway discovery, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
-      When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model whose ID contains `claude` or `anthropic`, and each gateway model that discovery skips needs its own row.
+      When gateway discovery is off, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
+      When gateway discovery fills `/model`, the menu keeps built-in models, adds each gateway model whose ID contains `claude` or `anthropic`, and needs explicit rows for gateway models that discovery skips.
     next: |
-      Do what the `fix:` line says, when the report has one.
-      It's usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again, which updates the menu.
+      Run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again to update the menu.
       When your organization's managed settings set the menu, ask your administrator to change them.
   - check: "`model`"
-    what: The model that a new {{ site.claude_code }} session starts on, and the model that each role such as a subagent uses, are models that the gateway serves, or that the profile lists.
+    what: The startup model for {{ site.claude_code }} and the model for each role, such as a subagent, are served by the gateway or listed in the profile.
     next: |
-      Do what the `fix:` line says, when the report has one.
       When the `fix:` line says to pick a model, pick a gateway model with `/model`.
-      When the `fix:` line says to unset a variable, unset it in the shell that starts {{ site.claude_code }}, because that variable overrides the choice in `/model`.
-      If the profile sets the model, import the profile again from your administrator, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again.
+      When the `fix:` line says to unset a variable, unset it in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
+      If the profile sets the model, import the profile again from your administrator, then run `kong-harnesses profile activate PROFILE_NAME --client claude-code`.
       When your organization's managed settings set the model, ask your administrator to change them.
   - check: "`anthropic`"
     what: |
-      The settings that keep {{ site.claude_code }} on the gateway still contain the values that kong-harnesses wrote.
-      A static Anthropic credential in the `env` block of the settings file is a changed value.
+      The settings that keep {{ site.claude_code }} on the gateway still match what kong-harnesses wrote.
+      A static Anthropic credential in the `env` block of the settings file counts as a changed value.
     next: |
-      Remove a static Anthropic credential from the `env` block first, because `profile activate` refuses a credential there.
-      Then do what the `fix:` line says, usually `kong-harnesses profile activate PROFILE_NAME --client claude-code` again.
-      When the settings are inconsistent with what kong-harnesses wrote, the `fix:` line can name `kong-harnesses profile cleanup` first.
-      After the cleanup, inspect the settings and remove any leftover values manually.
+      Remove any static Anthropic credential from the `env` block first, because `profile activate` refuses a credential there.
+      Run `kong-harnesses profile activate PROFILE_NAME --client claude-code` again.
+      If settings are inconsistent and the `fix:` line names `kong-harnesses profile cleanup`, run it first, then inspect the settings and remove any leftover values manually.
   - check: "`overrides`"
     what: |
-      The check reports each variable in the shell that starts {{ site.claude_code }} that overrides the gateway setup.
-      These are credential variables that aren't empty, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and switches for another provider that are turned on, such as `CLAUDE_CODE_USE_BEDROCK`.
-      The check skips a variable that the `env` block of the settings file also sets, because the value in the settings file takes precedence.
-      It also reports a switch for another provider that the `env` block turns on, and a credential for the provider mode of the profile that the `env` block sets.
-      `ANTHROPIC_AUTH_TOKEN` fails, because it replaces the sign-in.
-      For a profile that signs in through an identity provider, `ANTHROPIC_API_KEY` is a warning, because it sends a second credential beside the sign-in.
-      For a profile that uses a static key or your own Claude subscription, both variables fail.
-    next: |
-      Do each step that the `fix:` line names.
-      It can say to unset a variable in the shell that starts {{ site.claude_code }}, to remove a key from the `env` block of a settings file, or to ask your administrator to change managed settings.
+      The `overrides` check reports variables in the shell that starts {{ site.claude_code }} that override the gateway setup: non-empty credential variables such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, and other-provider switches such as `CLAUDE_CODE_USE_BEDROCK`.
+      It also reports other-provider switches and provider-mode credentials set in the `env` block of the settings file.
+      `ANTHROPIC_AUTH_TOKEN` fails because it replaces the sign-in.
+      For an identity-provider profile, `ANTHROPIC_API_KEY` warns because it sends a second credential beside the sign-in.
+      For a static-key or Claude subscription profile, both variables fail.
+    next: Unset the reported variables in the shell that starts {{ site.claude_code }}, remove the reported keys from a settings file `env` block, or ask your administrator to change managed settings.
   - check: "`gateway-mcp`"
     what: |
-      No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
-      `doctor` doesn't send a request to a server that takes its own OAuth sign-in or a saved key, or that {{ site.claude_code }} uses through another entry at the same address.
+      No setting keeps {{ site.claude_code }} from loading the gateway MCP servers listed in the profile, and the gateway accepts your sign-in on them.
+      `doctor` doesn't send a request to a server that uses its own OAuth sign-in or a saved key, or that {{ site.claude_code }} uses through another entry at the same address.
     next: |
-      If {{ site.claude_code }} doesn't load a server, do what the `fix:` line says, usually `kong-harnesses profile activate PROFILE_NAME --client claude-code`, which installs the servers.
+      If {{ site.claude_code }} doesn't load a server, run `kong-harnesses profile activate PROFILE_NAME --client claude-code` to install the servers.
       For a server that takes a key, run `kong-harnesses login --profile PROFILE_NAME`, which asks for each missing key.
-      If the gateway refuses the sign-in on an MCP route, or doesn't serve a server that the profile lists, ask the gateway operators.
+      If the gateway refuses the sign-in on an MCP route or doesn't serve a listed server, ask the gateway operators.
       If your organization's managed settings block the servers, ask your administrator.
-      When `doctor` can't read a saved key, or your own MCP settings block the servers, do what the `fix:` line says.
+      If `doctor` can't read a saved key or your own MCP settings block the servers, follow the `fix:` line.
   - check: "`inference`"
     what: |
-      With `--inference` only, one small model request through the route of {{ site.claude_code }} gets a complete answer.
+      When you pass `--inference`, `doctor` sends one small model request through the {{ site.claude_code }} route and checks for a complete answer.
       The request can cost money.
-      For a profile that uses your Claude subscription, `doctor` doesn't send the request, so send a prompt from {{ site.claude_code }} to test the route.
-    next: |
-      Read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
-      Do what the `fix:` line says, when the report has one.
+      For a Claude subscription profile, `doctor` doesn't send the request, so send a prompt from {{ site.claude_code }} to test the route.
+    next: Read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
 {% endtable %}
