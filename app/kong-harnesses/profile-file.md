@@ -30,8 +30,8 @@ related_resources:
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 ---
 
-A profile is a JSON document configuring {{site.ai_gateway}}, sign-in, and agent CLIs for {{site.kong_harnesses}}.
-Profiles don't contain secrets, so administrators can share one file with every developer.
+A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI.
+A profile doesn't contain secrets, so an administrator can share one file with every developer.
 Create one with [`kong-harnesses profile create`](/kong-harnesses/profile/create/) or install one from a file or HTTPS URL with [`kong-harnesses profile import`](/kong-harnesses/profile/import/).
 
 A profile file can be up to 65,536 bytes as saved, so a UTF-16 file holds about half as much text.
@@ -43,7 +43,7 @@ To inspect an installed profile document (stored under `.profile` in JSON output
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile'
 ```
 
-Example profile with identity provider sign-in for {{ site.claude_code }} and Codex:
+The following profile signs developers in with an identity provider and sets up {{ site.claude_code }} and Codex:
 
 ```json
 {
@@ -275,16 +275,18 @@ rows:
       See [Attribution](#attribution).
 {% endtable %}
 
-Versions 2 to 11 keep {{ site.claude_code }} fields (`models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata`, and `pricing`) at the top level; from version 12 they move into `clients.claude-code` and the top level refuses them.
-Profiles before version 12 don't have client blocks, so `profile activate` configures every agent CLI except Hermes Agent.
+Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`.
+From version 12, these fields go in `clients.claude-code`, and the top level refuses them.
+A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes Agent.
 
 ### Plain HTTP gateways
 
-Requests to an `http://` gateway aren't encrypted, so a proxy could read credentials; {{site.kong_harnesses}} keeps them off proxies:
+Requests to an `http://` gateway aren't encrypted, so a proxy could read the credential.
+{{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` skips Codex, OpenCode, and Hermes Agent, because they choose proxies in ways {{site.kong_harnesses}} can't verify.
-  It configures the other clients and doesn't change any client settings when a pre-write check fails.
-* When a proxy applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
+* Codex, OpenCode, and Hermes Agent need an `https://` gateway, because they pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
+  It still sets up {{ site.claude_code }}, `omp`, and pi, and doesn't change any client settings when a pre-write check fails.
+* When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
   Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
   From 0.18.0, `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
   A proxy variable or `NO_PROXY` in project settings takes precedence over these values, and `profile activate` refuses when managed settings could send the requests through a proxy.
@@ -390,13 +392,14 @@ rows:
 
 ### Security identity
 
-A profile's security identity consists of `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle`, and `sign_in`.
+A profile's security identity consists of `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
 
-Each saved sign-in binds to one security identity.
-When `profile create` or `profile import` replaces a profile and changes any of these fields, developers must sign in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes (`environment_key` profiles don't have saved sign-ins).
-`profile create` and `profile import` refuse the change while an agent CLI uses the profile: run `profile cleanup` for that client or activate another profile, then create or import and activate again.
-Upgrading from version 11 or earlier to version 12 or later also creates a new security identity, even with unchanged values.
-Changing other fields, such as `routes` or `clients`, keeps the sign-in.
+A saved sign-in belongs to one security identity.
+When `profile create` or `profile import` replaces a profile and changes one of these fields, each developer signs in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes for each kind of profile.
+An `environment_key` profile doesn't save a sign-in, so developers don't need to sign in again.
+`profile create` and `profile import` refuse the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then create or import the profile and activate it again.
+A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values.
+A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
 ## Routes
 
@@ -562,20 +565,24 @@ rows:
 #### Claude Code choices
 
 Each choice is `true` or `false`.
-From version 14, every choice is optional and an omitted choice changes nothing.
-Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, refuse the other choices, and set `anthropic_telemetry` through `webfetch_preflight` to `false` on activation.
+From version 14, each choice is optional, and a choice that the profile leaves out changes nothing.
+Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
+For a profile before version 14, `profile activate` sets each choice from `anthropic_telemetry` to `webfetch_preflight` to `false`.
 `profile activate` restores each setting's earlier value when a later profile omits the choice or sets `auto_updates: true`, so an earlier setting from you or another tool can still turn the feature off.
 
-Three switches affect multiple features: `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` (`auto_updates: false`) also turns off telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the Anthropic API advisor feature flag; `DISABLE_TELEMETRY` also turns off feature flags, error reports, and the feedback survey; and `DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, so either turns off `/bug`, `/feedback`, `/share`, and Claude-drafted feedback.
-`profile create` and `profile import` therefore refuse conflicting choices:
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on provider modes where it depends on a feature flag, such as `anthropic-messages`.
+`DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey.
+`DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, and either turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
+So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
 
 * Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`, with `artifact: true` in a `subscription` profile, or with an eligible `advisor: true` on `anthropic-messages` (where `experimental_betas`, `feature_flags`, and `anthropic_telemetry` aren't `false`).
-  Releases up to 0.17.1 accepted `artifact: true` (in a `subscription` profile) and `advisor: true` with `auto_updates: false`, so installed pre-18 profiles with either pair still read; `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` keeps those features off, and `profile activate` and `profile get` report them and ask for a version 18 profile.
+  Releases up to 0.17.1 accepted `artifact: true` in a `subscription` profile, and `advisor: true`, with `auto_updates: false`, so installed pre-18 profiles with either pair still read.
+  In those profiles, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` keeps those features off, and `profile activate` and `profile get` report them and ask for a version 18 profile.
 * `feature_flags: true` can't go with `anthropic_telemetry: false`.
 * From version 18, `error_reports: true` and `feedback_survey: true` can't go with `anthropic_telemetry: false`.
 * From version 18, `advisor: true` is refused on provider modes without advisor support (`foundry-messages` and `bedrock-mantle-messages`), with `experimental_betas: false`, or on `anthropic-messages` with `feature_flags: false` or `anthropic_telemetry: false`.
 * `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
-  From version 18, setting only one of `bug_command` and `feedback_command` and omitting the other is also refused.
+  From version 18, `profile create` and `profile import` also refuse setting only one of `bug_command` and `feedback_command`.
 
 Apart from `bug_command` and `feedback_command` in version 18, an omitted choice never causes a conflict.
 
@@ -602,8 +609,8 @@ rows:
   - choice: "`advisor`"
     off: "Writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`."
     on: >-
-      Leaves the advisor tool on when the route sets `advisor: true` and nothing blocks it.
-      From version 18, `advisor: true` requires a supported provider mode (`anthropic-messages`), `experimental_betas` not `false`, and (on `anthropic-messages`) neither `feature_flags` nor `anthropic_telemetry` set to `false`.
+      Leaves the advisor tool on.
+      The route needs `advisor: true`.
   - choice: "`artifact`"
     off: >-
       From version 14, writes `enableArtifact: false`.
@@ -664,11 +671,11 @@ rows:
     off: >-
       Version 18 and later.
       Writes `CLAUDE_CODE_AUTO_MODE_SERVER=1`, so auto mode asks the model API for its verdict.
-      Models other than Claude don't return a verdict, so auto mode asks about or denies each checked action.
-      Incompatible with `experimental_betas: false` in `request_shape`.
+      A model that isn't Claude doesn't give one, so auto mode then asks about or denies each checked action.
+      You can't combine it with `experimental_betas: false` in `request_shape`.
     on: >-
       Version 18 and later.
-      Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends auto mode checks to the `auto_mode` model through the gateway.
+      Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway.
 {% endtable %}
 
 From version 18, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, regardless of `auto_updates`, whenever the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`, sets `artifact: true` in a `subscription` profile, or sets an eligible `advisor: true` on `anthropic-messages` (with `experimental_betas`, `feature_flags`, and `anthropic_telemetry` not `false`).
@@ -676,7 +683,7 @@ A shell export then can't turn those features off.
 In the Claude Desktop app or a self-hosted environment runner, the launch environment [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over settings, so a `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` value set there stays on even when activation writes the switch blank.
 While activation writes the switch blank, `auto_updates: false` turns off only automatic updates of {{ site.claude_code }}, its plugins, and its marketplaces, unless `FORCE_AUTOUPDATE_PLUGINS=1` is set to restore plugin auto-updates.
 Other nonessential background traffic resumes where each feature's own conditions apply.
-Choices set to `false` keep their own traffic off, and {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway and `ANTHROPIC_API_KEY` (or the `apiKeyHelper` credential) is a gateway-issued key not in the format of an Anthropic API key.
+Choices set to `false` keep their own traffic off, and {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway and `ANTHROPIC_API_KEY` is a gateway-issued key not in the format of an Anthropic API key.
 
 When the profile omits `tool_search`, {{ site.claude_code }} keeps its default, which loads every tool at startup behind a gateway.
 
@@ -799,10 +806,12 @@ rows:
 ## Attribution
 
 `attribution` declares HTTP headers that agent CLIs send with each request for gateway spend grouping.
-Its only field, `headers`, maps 1 to 8 header names to values; the gateway reads `Ai-Cost-<name>` headers as cost tags.
+Its only field, `headers`, maps 1 to 8 header names to values.
+The gateway reads `Ai-Cost-<name>` headers as cost tags.
 
-Each header name is a case-insensitively unique HTTP token up to 64 bytes, and each value is 1 to 128 printable ASCII characters.
-Reserved header names (any case): `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent`, and `X-Api-Key`.
+A header name is an HTTP token of up to 64 bytes, and appears once without regard to case.
+A value is 1 to 128 printable ASCII characters.
+These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent` and `X-Api-Key`.
 
 {{site.kong_harnesses}} ignores `caller` from older profiles so they still import.
 
