@@ -190,7 +190,6 @@ rows:
       The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
       Leave out `--issuer`, `--client-id` and `--audience`.
       Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
-      For the other setup of the CI job, see the tabs after this table.
     limits: The profile doesn't set up OpenCode or Hermes Agent.
   - kind: "`subscription`"
     use: |
@@ -215,10 +214,12 @@ The CI job needs no other setup.
 
 {{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
 A desktop sign-in sets the variable, but most CI containers don't.
-When the variable isn't set, create a private directory and set the variable to it before you run {{site.kong_harnesses}}:
+When the variable isn't set, create a private directory once, and give each step of the job that runs a {{site.kong_harnesses}} command the same `XDG_RUNTIME_DIR`.
+In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.
+For example, in GitHub Actions, add this step before the first step that runs {{site.kong_harnesses}}:
 
 ```sh
-export XDG_RUNTIME_DIR="$(mktemp -d)"
+echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
 ```
 
 {% endnavtab %}
