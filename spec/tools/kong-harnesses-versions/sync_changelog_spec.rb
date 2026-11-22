@@ -813,6 +813,8 @@ RSpec.describe KongHarnessesChangelog do
       fake = source_of("* **a:** see #{tail}\n")
       expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), *fake) }.to raise_error(/does not write so|change the text that a reader sees in the changelog,/), tail
     end
+    # `{:` that starts no attribute list is text after the link, as a reader sees it.
+    expect(KongHarnessesChangelogLinks.html(exported(section("* **cli:** see [#1](#{issue}){: here")))).to include('see #1{: here')
     # The form in code is no link, so it does not count for a reference link next to it.
     source = source_of("* **a:** see `[#1](#{issue})` ([#1][r])\n\n  [r]: #{issue}\n")
     expect { described_class.written("* **a:** see `#1`\n", described_class.parse("* **a:** see `#1`\n"), *source) }.to raise_error(/does not write so/)
@@ -834,7 +836,7 @@ RSpec.describe KongHarnessesChangelog do
     # label and a character reference in a label are no reference.
     ['([#12](https://github.com/example/sample-tool/issues/&#49;2))', '([#12](https://git&#104;ub.com/example/sample-tool/issues/12))',
      "([#1![](a.png)](#{issue}))", "([`#1`](#{issue}))", "([#1][r])\n\n  [r]: #{issue}", "([#1](<#{issue}>))", "([#1]( #{issue} ))",
-     "([#1](#{issue}){: target=\"_blank\" rel=\"noopener\"})", "([#1](#{issue}){: })", "([\\#1](#{issue}))", "([&#35;1](#{issue}))", "([#1](#{issue}) `[#1](#{issue})`)"].each do |tail|
+     "([#1](#{issue}){: target=\"_blank\" rel=\"noopener\"})", "([#1](#{issue}){: })", "([#1](#{issue}){:r})", "([\\#1](#{issue}))", "([&#35;1](#{issue}))", "([#1](#{issue}) `[#1](#{issue})`)"].each do |tail|
       fake = source_of("* **a:** see #{tail}\n")
       expect { described_class.written("* **a:** see\n", described_class.parse("* **a:** see\n"), *fake) }.to raise_error(/character reference in a link|does not write so|change the text that a reader sees in the changelog,/), tail
     end

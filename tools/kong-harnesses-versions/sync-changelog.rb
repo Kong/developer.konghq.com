@@ -960,15 +960,22 @@ module KongHarnessesChangelog
     raw = lines[(from - 1)...element.options.fetch(:last_line)].join
     root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
     root.children << (list ? Kramdown::Element.new(list).tap { |parent| parent.children << element } : element)
+    # release-please writes no attribute list, also none that gives no attribute. The
+    # parser tells one from the same characters as text, which the lines cannot.
+    return true if links_in(element).any? { |link| link.options[:ial] }
+
     fragment = html(root)
     code = fragment.css('code').map(&:text)
     fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
-      # A label that release-please writes has no `\` or `&`, and no attribute list
-      # follows the link, also one that gives no attribute.
-      form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)(?!\{:)/
+      # A label that release-please writes has no `\` or `&`.
+      form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)/
       written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
       written.call(raw) - code.sum(&written) < links.length
     end
+  end
+
+  def links_in(element)
+    [*(element if element.type == :a), *element.children.flat_map { |child| links_in(child) }]
   end
 
   def code_blocks(fragment)
