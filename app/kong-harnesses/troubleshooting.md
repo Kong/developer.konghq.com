@@ -1,6 +1,6 @@
 ---
 title: Troubleshoot kong-harnesses
-description: Find the next step for each problem that kong-harnesses doctor reports, and undo the agent CLI settings that kong-harnesses setup and profile activate changed.
+description: Run kong-harnesses doctor and find the next step for each check in its report.
 
 content_type: reference
 layout: reference
@@ -19,18 +19,18 @@ breadcrumbs:
 related_resources:
   - text: kong-harnesses doctor
     url: /kong-harnesses/doctor/
-  - text: kong-harnesses profile cleanup
-    url: /kong-harnesses/profile/cleanup/
+  - text: Remove kong-harnesses
+    url: /kong-harnesses/remove-kong-harnesses/
   - text: Sign in with kong-harnesses
     url: /kong-harnesses/sign-in/
   - text: Set up {{ site.claude_code }} with kong-harnesses
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 ---
 
-When an agent CLI such as {{ site.claude_code }} can't reach {{site.ai_gateway}} through kong-harnesses, [`kong-harnesses doctor`](/kong-harnesses/doctor/) finds the cause.
+When an agent CLI such as {{ site.claude_code }} can't reach {{ site.ai_gateway }} through kong-harnesses, [`kong-harnesses doctor`](/kong-harnesses/doctor/) finds the cause.
 `doctor` checks the profile, the sign-in, the agent CLI settings and the gateway, and, when it knows one, prints the next step under a problem.
 `doctor` doesn't change any settings.
-When you want to stop using kong-harnesses on a computer, [`kong-harnesses profile cleanup`](/kong-harnesses/profile/cleanup/) gives the agent CLI settings back.
+To undo agent CLI settings, sign out, delete a profile, or uninstall kong-harnesses, see [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
 
 ## Run doctor
 
@@ -239,67 +239,3 @@ rows:
       Read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
       Do what the `fix:` line says, when the report has one.
 {% endtable %}
-
-## Undo setup
-
-`kong-harnesses setup` and `kong-harnesses profile activate` change the settings of each agent CLI that they set up.
-`kong-harnesses profile cleanup` gives back the values that those settings contained before, and removes the values that kong-harnesses added.
-Without `--client`, `profile cleanup` works on every supported agent CLI, and also removes the settings that other profiles wrote.
-To clean up one agent CLI, add `--client`, for example `--client claude-code`.
-
-1. Show what `profile cleanup` would change:
-
-   ```sh
-   kong-harnesses profile cleanup --dry-run
-   ```
-
-1. Remove the settings:
-
-   ```sh
-   kong-harnesses profile cleanup
-   ```
-
-`profile cleanup` changes only the values that kong-harnesses still owns.
-If you edited a value after kong-harnesses wrote it, `profile cleanup` leaves your edit as it is.
-Its output names each setting or group of settings that holds your edits, for each agent CLI that the cleanup finished.
-Without `--client`, it names them also when the cleanup fails for another agent CLI.
-If `profile cleanup` can't tell which values it owns, it exits with `2`, or with `4` when it changed another agent CLI.
-Do the steps that its message names, for example inspect the settings and remove the leftover values manually.
-If `profile cleanup` changes settings but can't finish the cleanup for one or more agent CLIs, it exits with `4`, also with `--client`.
-Do the step that the message names, then run it again.
-`profile cleanup` doesn't sign you out, and doesn't delete the profile.
-
-To remove one profile from the computer, sign out first:
-
-```sh
-kong-harnesses logout --profile PROFILE_NAME
-```
-
-If `logout` fails, do what its message says, and run it again.
-`logout` removes only the sign-in and the keys of gateway MCP servers that kong-harnesses saved for the profile.
-OpenCode and Hermes Agent sign in through their own plugin, so `logout` refuses `--client opencode` and `--client hermes`, and their sign-ins stay active.
-To sign out of OpenCode, run `opencode auth logout`.
-To sign out of Hermes Agent, run `hermes auth list kong-ai-gateway`, then run `hermes auth remove kong-ai-gateway TARGET` with the entry ID of the credential as `TARGET`.
-For these commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
-After `logout` succeeds, or if it says that the profile is invalid, delete the profile:
-
-```sh
-kong-harnesses profile delete PROFILE_NAME
-```
-
-While an agent CLI still uses a valid profile, `profile delete` refuses, and its message names the next step, such as the `profile cleanup` command for that agent CLI.
-Do that step, then run `profile delete` again.
-
-`profile delete` comes last, because the profile contains what `logout` needs to revoke the sign-in.
-`profile delete` also refuses while you're signed in to a valid profile.
-`profile delete` asks you to type the profile name to confirm.
-`logout` asks too when the profile has a saved sign-in or key on this computer.
-When only gateway MCP keys are left, `logout` removes them without asking.
-For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
-
-If `doctor`, `logout`, `profile get` or `profile list` says that the profile is invalid, kong-harnesses can't read it, so you can't sign out first.
-Run `profile delete` without `logout`.
-For an invalid profile, `profile delete` doesn't refuse while an agent CLI uses the profile or while a sign-in remains, so it can remove the profile in both cases.
-When a sign-in can remain, `profile delete` warns about it before it asks you to confirm, and again in the `Login` field of its output.
-Run `kong-harnesses profile cleanup --client CLIENT_NAME` for each agent CLI that still uses the profile.
-To remove that sign-in, import the profile again, then run `kong-harnesses logout --profile PROFILE_NAME`.
