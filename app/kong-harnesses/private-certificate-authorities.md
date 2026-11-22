@@ -310,9 +310,9 @@ Run the doctor checks for the profile:
 kong-harnesses doctor --profile PROFILE_NAME
 ```
 
-The CA bundle check of the `SSL_CERT_FILE` file must show OK for each server that you sent a web request to, also when that request gave a TLS error.
+The CA bundle check of the `SSL_CERT_FILE` file must show OK for each server that it lists, also for a server whose web request gave a TLS error.
 When the check reports a missing or unreadable file, check the path in the variable that the result names.
-When the check fails for a server, use the fixes after the import step.
+When the check of the `SSL_CERT_FILE` file fails for a server, use the fixes after the import step.
 
 {% endnavtab %}
 {% endnavtabs %}
