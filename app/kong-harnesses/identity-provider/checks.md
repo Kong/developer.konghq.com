@@ -173,8 +173,20 @@ In both responses:
 * `refresh_token` has 1 to 16,384 visible ASCII characters.
 * `token_type` is `Bearer`, in any case.
 * `expires_in` is a JSON number with digits only, not a string.
-* `scope` is a string with single spaces between scopes, without a space at the start or the end.
-  Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, and occurs only once.
+* `scope`, when present, is a nonempty string with single spaces between scopes, without a space at the start or the end.
+  Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, occurs only once, and must match a different allowed scope.
+
+At sign-in, the allowed scopes are the scopes that the profile requests, and the accepted list becomes the matched scopes or, when the response omits `scope`, the requested scopes.
+At renewal, the allowed scopes are the last accepted list.
+A renewal response with `scope` replaces that list with the matched scopes, and a renewal response without `scope` keeps it.
+
+To match each returned scope against the allowed scopes, {{site.kong_harnesses}} tries these rules in order:
+
+1. Look for an allowed scope equal to the returned scope.
+2. Decode percent escapes in the returned scope and look for an equal allowed scope.
+3. Look for exactly one allowed scope that is a URI with a scheme and a host whose last path segment equals the returned scope, such as `api://API_ID/access_as_user` for `access_as_user`.
+
+When `scope` is present, it must keep every scope that the profile requests other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
 
 Omit the `error` member from a successful sign-in response.
 At renewal, {{site.kong_harnesses}} ignores an `id_token`.
