@@ -22,8 +22,10 @@ automated_tests: false
 tldr:
   q: How do I deploy kong-harnesses to Windows computers with Intune?
   a: |
-    Wrap the verified `.msi` installer with the Microsoft Win32 Content Prep Tool (`IntuneWinAppUtil.exe`), and add the `.intunewin` file to Intune as a Windows app (Win32) with System install behavior, an MSI detection rule, and a **Required** assignment to a one-device test group.
-    Validate on the test device before assigning remaining groups, and add a new app that supersedes the previous release for each upgrade.
+    Wrap the verified `.msi` installer with the Microsoft Win32 Content Prep Tool (`IntuneWinAppUtil.exe`).
+    Add the `.intunewin` file to Intune as a Windows app (Win32) with **System** install behavior, an MSI detection rule, and a **Required** assignment to a one-device test group.
+    Validate the install on the test device before assigning remaining groups.
+    For each new release, add a new app that supersedes the previous release.
 
 related_resources:
   - text: Install kong-harnesses for every user of a computer
@@ -36,7 +38,7 @@ prereqs:
   inline:
     - title: Microsoft Intune
       content: |
-        You need an account in the [Microsoft Intune admin center](https://intune.microsoft.com) with **Create**, **Assign**, **Update**, and **Delete** permissions for **Mobile apps**.
+        You need an account in the [Microsoft Intune admin center](https://intune.microsoft.com) with **Read**, **Create**, **Assign**, **Update**, and **Delete** permissions for **Mobile apps**.
         To configure supersedence for new releases, the account also needs the **Relate** permission for **Mobile apps**.
         The built-in Application Manager role includes these permissions.
 
@@ -60,7 +62,7 @@ Package the verified `.msi` file into an `.intunewin` archive before uploading i
 
 1. Place the verified `.msi` installer alone in an empty folder.
 1. Download the [Microsoft Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool), then open PowerShell in the folder containing `IntuneWinAppUtil.exe`.
-1. Wrap the installer into an `.intunewin` package, replacing `SOURCE_FOLDER`, `FILE`, and `OUTPUT_FOLDER` with full paths (`OUTPUT_FOLDER` must be a different folder than `SOURCE_FOLDER`):
+1. Wrap the installer into an `.intunewin` package, replacing `SOURCE_FOLDER` and `OUTPUT_FOLDER` with full paths (`OUTPUT_FOLDER` must be a different folder than `SOURCE_FOLDER`) and `FILE` with the `.msi` filename:
 
    ```powershell
    .\IntuneWinAppUtil.exe -c 'SOURCE_FOLDER' -s 'SOURCE_FOLDER\FILE' -o 'OUTPUT_FOLDER'
@@ -117,7 +119,6 @@ Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intu
 ### Assign the app to a test group
 
 1. On the **Supersedence** page, click **Next**.
-   For a new release replacing an earlier Intune app, configure supersedence using the steps in [Upgrade to a new release](#upgrade-to-a-new-release) before clicking **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
 1. Select a test group with one device, or with the user of one device.
    Add the remaining groups only after [Validate](#validate) passes on that device.
@@ -150,13 +151,17 @@ Confirm that Intune installed the expected release on the test device before rol
 
    The command prints the release added to Intune with its leading `v`, for example `v1.2.3`.
 
-### Roll out to remaining groups
+## Roll out to remaining groups
 
 After validation passes on the test device, assign the app to the remaining groups that need kong-harnesses:
 
-1. In the Microsoft Intune admin center, open the app's **Properties**.
-1. Click **Edit** next to **Assignments**.
-1. Under **Required**, add the remaining groups.
+1. In the Microsoft Intune admin center, navigate to **Apps** > **All apps**.
+1. Click the app name.
+1. Click **Properties**.
+1. Next to **Assignments**, click **Edit**.
+1. Under **Required**, click **Add group**.
+1. Select the remaining groups.
+1. Click **Select**.
 1. Click **Review + save**.
 1. Click **Save**.
 
@@ -172,15 +177,26 @@ A new app doesn't copy the assignments of the previous app, so test each new rel
 1. Disable **Uninstall previous version**.
    The new `.msi` upgrades the installed version in place, so Intune doesn't need to uninstall the previous version first.
 1. Click **Next**.
-1. Assign the app to the test group, create the app, and complete [Validate](#validate) before adding the remaining groups.
+1. Complete steps 2 through 6 of [Assign the app to a test group](#assign-the-app-to-a-test-group).
+1. Confirm the upgrade on the test device using [Validate](#validate).
+1. Assign the new app to the remaining groups using [Roll out to remaining groups](#roll-out-to-remaining-groups).
 
-Intune allows at most 10 superseded apps in a supersedence graph, including apps superseded through other apps, and each release adds one.
+Intune allows at most 11 apps in a [supersedence graph](https://learn.microsoft.com/en-us/intune/intune-service/apps/apps-win32-supersedence#supersedence-limitations), counting the new app and up to 10 superseded apps (including apps superseded through earlier releases), and each release adds one.
 Remove each previous app once all assigned devices run the new release:
 
-1. In the Microsoft Intune admin center, remove all assignments from the previous app.
-1. Open the **Properties** of the new app.
-1. Click **Edit** next to **Supersedence**.
+1. In the Microsoft Intune admin center, navigate to **Apps** > **All apps**.
+1. Click the previous app.
+1. Click **Properties**.
+1. Next to **Assignments**, click **Edit**.
+1. Remove each assigned group.
+1. Click **Review + save**.
+1. Click **Save**.
+1. Navigate to **Apps** > **All apps**.
+1. Click the new app.
+1. Click **Properties**.
+1. Next to **Supersedence**, click **Edit**.
 1. Remove the previous app from the supersedence list.
 1. Click **Review + save**.
 1. Click **Save**.
+1. Navigate to **Apps** > **All apps**.
 1. Delete the previous app.
