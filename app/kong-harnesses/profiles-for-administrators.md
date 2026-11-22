@@ -218,8 +218,8 @@ When the variable isn't set, create a private directory once, and give each step
 In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.
 For example, in GitHub Actions, add this step before the first step that runs {{site.kong_harnesses}}:
 
-```sh
-echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
+```yaml
+- run: echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
 ```
 
 {% endnavtab %}
