@@ -64,4 +64,5 @@ When changing the sync logic (the entry points or `tools/lib/tool-versions.js`),
 
 3. `git restore` and `git clean` the generated files (the local binary can add include files that `git restore` alone leaves behind) so the commit contains only the code change, then confirm with `git status --short`.
 
-The node:test suite locks the structure (three-level nesting, usage-scoped help, ansi fences) so the equivalence is regression-checked every time the suite runs, not just proven once. (`make test` runs only the RSpec suite, so run `npm test` in this directory explicitly.)
+The node:test suite locks the structure (three-level nesting, usage-scoped help, ansi fences) so the equivalence is regression-checked every time the suite runs, not just proven once.
+`make test` runs only the RSpec suite, so run `npm test` in this directory explicitly.
