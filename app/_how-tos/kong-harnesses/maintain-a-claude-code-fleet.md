@@ -269,7 +269,8 @@ Test each platform and policy group's build on one managed computer:
 
 After every pilot passes, finish the rollout:
 
-1. Deploy the same package or files that passed the pilot test to the remaining computers, and keep the new record file with the policy.
+1. Deploy every item that passed the pilot test to the remaining computers, as in [Deploy to managed computers](/kong-harnesses/roll-out-claude-code-through-mdm/#deploy-to-managed-computers): the package or files and, for an MDM build, the MDM policy.
+   Keep the new record file with the policy.
 1. When your MDM or install tool confirms the new build on every computer, ask developers to restart {{ site.claude_code }}.
 1. Tell developers that resuming a saved session can return to its saved model, and ask them to run `claude --resume --model NEW_MODEL_ID` or switch with `/model`.
 1. Remove the earlier AI Model from {{ site.ai_gateway }} once every active session uses the new model or has ended.
