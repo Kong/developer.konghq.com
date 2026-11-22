@@ -55,7 +55,7 @@ cleanup:
         1. Ask each developer on the managed devices to remove their sign-ins, agent CLI settings, and profiles using [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
            Confirm that developers have finished before you assign **Uninstall**, because they need kong-harnesses installed to run those steps.
         1. In the [Microsoft Intune admin center](https://intune.microsoft.com), navigate to **Apps** > **All apps**.
-        1. Click the kong-harnesses app.
+        1. Click the kong-harnesses app for a deployed processor type (x64 or Arm64).
         1. Click **Properties**.
         1. Next to **Assignments**, click **Edit**.
         1. Under **Required**, remove the target groups.
@@ -64,10 +64,11 @@ cleanup:
         1. Click **Select**.
         1. Click **Review + save**.
         1. Click **Save**.
+        1. If you deployed apps for both x64 and Arm64 devices, repeat the Intune steps from **Apps** > **All apps** for the other processor-type app.
 
-        Intune's **Uninstall** assignment removes kong-harnesses only on devices where this Intune app previously installed it through a **Required** or **Available for enrolled devices** assignment.
-        For copies installed outside this Intune app, follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
-        To uninstall manually on every device instead of through Intune, skip adding groups under **Uninstall**, save the removed **Required** assignment, and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
+        Intune's **Uninstall** assignment removes kong-harnesses only on devices where that Intune app previously installed it through a **Required** or **Available for enrolled devices** assignment.
+        For copies installed outside the Intune app, follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
+        To uninstall manually on every device instead of through Intune, skip adding groups under **Uninstall**, save the removed **Required** assignment for each processor-type app (x64 and Arm64), and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
 ---
 
 ## Wrap the installer
