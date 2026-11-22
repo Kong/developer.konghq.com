@@ -39,15 +39,6 @@ To keep {{ site.claude_code }} on a working release, turn off auto-updates, upda
 
 ## Confirmed issues
 
-<!--
-When a tested Claude Code release fails in a provider mode, replace the
-paragraph that starts with "No tested" with one bullet per release and mode:
-the release, the mode, what breaks, how to avoid it and, once it ships, the
-release with the fix. Keep the bullet after the fix ships, so developers who
-still run the failing release see it. Remove it when Kong no longer supports
-the failing release.
--->
-
 No tested {{ site.claude_code }} release has a confirmed issue in the provider modes that Kong tests.
 A release that isn't listed on this page might not have a test result yet.
 
@@ -68,7 +59,8 @@ Until you get an updated profile, or if you don't use {{site.kong_harnesses}}, a
 }
 ```
 
-When a {{site.kong_harnesses}} profile keeps auto-updates on or omits the setting, {{site.kong_harnesses}} leaves that value in place.
+You can also export `DISABLE_AUTOUPDATER=1` in your shell environment.
+When a {{site.kong_harnesses}} profile keeps auto-updates on or omits the setting, {{site.kong_harnesses}} leaves `DISABLE_AUTOUPDATER` unchanged in your settings and doesn't override a shell export.
 
 On a native or npm install, confirm that auto-updates are off with `claude doctor`:
 
@@ -82,7 +74,7 @@ Homebrew and WinGet installs don't auto-update unless `CLAUDE_CODE_PACKAGE_MANAG
 
 {:.warning}
 > After you run `claude install`, you also have a native build on your computer.
-> The native build updates itself unless `"DISABLE_AUTOUPDATER": "1"` is set in your {{ site.claude_code }} settings.
+> The native build updates itself unless `DISABLE_AUTOUPDATER=1` is set in your {{ site.claude_code }} settings or exported in your shell.
 
 ## Update manually
 
@@ -173,7 +165,7 @@ Rolling back {{ site.claude_code }} installs a native build at a release that wo
 
 {:.warning}
 > Turn off auto-updates before you roll back, even on a Homebrew or WinGet install.
-> Running `claude install` installs a native build that updates itself unless `"DISABLE_AUTOUPDATER": "1"` is set, which can replace the release you install.
+> Running `claude install` installs a native build that updates itself unless `DISABLE_AUTOUPDATER=1` is set in your {{ site.claude_code }} settings or exported in your shell, which can replace the release you install.
 > See [Turn off auto-updates](#turn-off-auto-updates).
 
 1. Install a working {{ site.claude_code }} release by replacing `VERSION` with a release that worked in your provider mode:
@@ -292,7 +284,7 @@ That command also saves the stable channel in your settings.
 
 Anthropic documents the stable channel switch and `minimumVersion` for native installs only, so move to the native build first.
 
-1. Keep `"DISABLE_AUTOUPDATER": "1"` set in your {{ site.claude_code }} settings because the native build updates itself (see [Turn off auto-updates](#turn-off-auto-updates)).
+1. Keep `DISABLE_AUTOUPDATER=1` set in your {{ site.claude_code }} settings or exported in your shell because the native build updates itself (see [Turn off auto-updates](#turn-off-auto-updates)).
 
 1. Move to the native build at your current release by replacing `VERSION` with the release you have installed:
 
