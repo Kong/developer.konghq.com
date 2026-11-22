@@ -154,17 +154,16 @@ MCP rules:
   In `allowlist` mode, `managedMcpServers` and [allowlist-exempt servers](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) (built-in IDE, Chrome, Agent SDK) also load.
   In every mode (including `exclusive`), `deniedMcpServers` across all scopes blocks every other matching server, including gateway servers.
   Confirm policies don't deny gateway servers before deploying.
-* **Allowlist checks of `managed-mcp.json` servers:** {{ site.claude_code }} drops each list entry it can't read and enforces the rest, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
-  [Earlier versions check more servers](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set): before `2.1.305`, also a server that names a variable only in `env`, and before `2.1.259`, every `managed-mcp.json` server whenever an allowlist is set.
-  `--claude-code-minimum` accepts versions down to `2.1.163`, so `fleet build` applies the checks of the lowest version that the build allows.
-  A minimum earlier than `2.1.259`, or no minimum, turns on both earlier checks.
-  A minimum from `2.1.259` through `2.1.304` turns on the `env` check.
+* **Allowlist checks of `managed-mcp.json` servers (`exclusive`):** {{ site.claude_code }} checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
+  [Earlier versions check more servers](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set): below `2.1.305`, also a server that names a variable only in `env`, and below `2.1.259`, every `managed-mcp.json` server whenever an allowlist is set.
+  A build without `--claude-code-minimum` applies both earlier checks, and a minimum (`2.1.163` or later, [Version range checks](#version-range-checks)) applies the checks of that version.
   A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
 * **MCP policy results (`exclusive`):** `fleet build` gives each server that it writes into `managed-mcp.json` one result: loads, blocked, or undecided.
   It checks deny entries first, and a deny entry that names a variable counts as a match.
-  It checks literal `serverName` entries before it expands variables, refuses a `--policy` with an invalid list entry, and counts the values in the policy's `env` as known.
+  A `serverName` entry matches the name as written, before variables expand, and the values in the policy's `env` count as known.
   A server is undecided when its result depends on a variable that the policy's `env` doesn't set.
-  `fleet build` refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
+  {{ site.claude_code }} drops a list entry that it can't read and enforces the rest, but `fleet build` refuses a `--policy` with such an entry, because it can't know what the entry was meant to allow or deny.
+  `fleet build` also refuses a blocked or undecided server, and names each server, its cause, and the fix (for example, a literal allowlist entry, or the variable's value in the policy's `env`).
   `kong-harnesses doctor` never reports an undecided server as loaded.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
@@ -185,7 +184,9 @@ MCP rules:
   Build with `--mcp-servers exclusive` or change the setting in `--policy` and every other managed source.
 * **Invalid allowlist (`allowlist` or `any`):** {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value as an empty managed allowlist ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
   The value doesn't skip the plugin, and `managedMcpServers` and allowlist-exempt servers still load.
-  When the MCP lock (`allowManagedMcpServersOnly: true`) is set, or no other settings scope sets `allowedMcpServers`, the empty list is the only list that applies, so no server that a developer adds loads, gateway plugin servers included.
+  The empty list applies only when the invalid value supplies the managed allowlist.
+  With the MCP lock (`allowManagedMcpServersOnly: true`), a valid list in an administrator source with higher precedence, such as server-managed settings, takes its place ([Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source)).
+  When the empty list applies and the MCP lock is set, or no other settings scope sets `allowedMcpServers`, it's the only list, so no server that a developer adds loads, gateway plugin servers included.
   In `any` mode without the MCP lock, an `allowedMcpServers` entry in user, project, or local settings can still permit a server.
   `fleet build` refuses a `--policy` with such a value, as a rule of its own apart from the plugin blockers.
 * **CLI startup flags:** Remove `--mcp-config` and `--strict-mcp-config` from wrappers, aliases, and IDE settings, because either [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) with `managed-mcp.json` and `--strict-mcp-config` skips plugin servers in `allowlist` or `any`.
