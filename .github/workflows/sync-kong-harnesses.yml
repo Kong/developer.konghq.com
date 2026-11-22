@@ -99,8 +99,9 @@ jobs:
             echo "::error::Set the repository secret KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases"
             exit 1
           fi
-          # The same rule as parseRepo in tools/lib/tool-versions.js. An owner
-          # can't hold a dot, and a name of . or .. would point at another path.
+          # The same rule as parseRepo in tools/lib/tool-versions.js and repo in
+          # check-changelog-links.rb. An owner can't hold a dot, and a name of .
+          # or .. would point at another path.
           owner='' name=''
           if [[ $REPO =~ ^([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
             owner=${BASH_REMATCH[1]}
@@ -259,7 +260,7 @@ jobs:
       # The repository that publishes the releases is set only in this
       # secret, so no file or log of this public repository names it. GitHub
       # masks only the whole secret, and the token step logs its inputs, so the
-      # owner and the name are masked on their own too.
+      # name is masked on its own too.
       - name: Read the releases repository
         id: releases-repo
         env:
@@ -281,7 +282,6 @@ jobs:
             echo "::error::KONG_HARNESSES_RELEASES_REPO must have the form <owner>/<name>"
             exit 1
           fi
-          echo "::add-mask::$owner"
           echo "::add-mask::$name"
           {
             echo "owner=$owner"
