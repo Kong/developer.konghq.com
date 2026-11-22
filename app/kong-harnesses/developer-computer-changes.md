@@ -50,7 +50,7 @@ kong-harnesses setup ./PROFILE_NAME.json
 Before it installs the profile, it shows the gateway and the identity provider of the profile, and asks the developer to type the profile name.
 It skips `login` for an `environment-key` profile, and when every agent CLI that it sets up is OpenCode or Hermes Agent, which sign in through their own plugins.
 When `setup` sets up OpenCode or Hermes Agent, also when the same run sets up {{ site.claude_code }}, the developer runs the sign-in command that `kong-harnesses status` names for that agent CLI, then restarts the agent CLI.
-When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists, and leaves out any when its gateway route is missing or the gateway refuses the sign-in.
+When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists and that passes the [agent CLI checks](#agent-cli-checks).
 Add `--client claude-code` to set up only {{ site.claude_code }}.
 
 When the developer adds `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
@@ -59,15 +59,24 @@ Use `--auto-approve` only in an onboarding script that your organization owns, b
 When a step fails, `setup` stops and names the step.
 Fix the reported error, then run the same `setup` command again.
 A step that is already done changes nothing: a sign-in that works stays, and an agent CLI that is already set up stays as it is.
-Before `setup` sets up an agent CLI, it sends a test request to the gateway route of that agent CLI, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
-When the route is missing or the gateway refuses the sign-in, `setup` names the fix.
-When the command doesn't name `--client`, `setup` leaves that agent CLI out and sets up the others.
-When the command names `--client`, `setup` stops.
-When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
-When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
 
 `login` saves the renewal credential or the static key in the operating system's credential store.
 It also saves there the key of each gateway MCP server that asks for a key, when the developer enters it.
+
+### Agent CLI checks
+
+Before `setup` sets up an agent CLI, it sends a test request to the gateway route of that agent CLI, with the developer's sign-in, except for an agent CLI that signs in through its own plugin and for a `subscription` profile.
+When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
+
+`setup` names the fix for each agent CLI that it can't set up, such as:
+
+- An agent CLI whose gateway route is missing or whose sign-in the gateway refuses
+- Codex, OpenCode or Hermes Agent when the profile uses a plain `http://` gateway
+- OpenCode when its npm plugin registry uses plain `http://` on another computer
+
+When the command doesn't name `--client`, `setup` leaves out each agent CLI that it can't set up and sets up the remaining agent CLIs, or stops when none remain.
+When the command names `--client`, `setup` stops.
+When a remaining agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
 
 ## {{ site.claude_code }} settings
 
