@@ -136,10 +136,27 @@ The value must:
 For a `localhost` callback, {{site.kong_harnesses}} listens on `127.0.0.1`, and also on `[::1]` when the computer has it.
 Two sign-ins on the same computer conflict when they need the same address and port, even with different paths.
 For example, a `localhost` callback and a `127.0.0.1` callback on the same port conflict.
-When another program, such as another sign-in, listens on the callback address and port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
-On Windows, a port that Windows reserved gives the same error.
-To list the reserved ports, run `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp`.
 To let several profiles sign in at the same time, give each profile a different port.
+
+{% navtabs "callback-port-conflicts" %}
+{% navtab "macOS and Linux" %}
+
+When another program, such as another sign-in, listens on the callback address and port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+When another program, such as another sign-in, listens on the callback address and port, or when Windows reserved the port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
+
+To list the TCP ports that Windows reserved for IPv4 and IPv6, run these commands, which the error also names:
+
+```powershell
+netsh interface ipv4 show excludedportrange protocol=tcp
+netsh interface ipv6 show excludedportrange protocol=tcp
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Offline access and renewal
 
