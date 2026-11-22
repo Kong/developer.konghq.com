@@ -183,12 +183,13 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
 1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
-1. If the `Gateway MCP keys` field lists items that might remain, or the tab for your system in [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys) says that items can remain without that field, follow that section.
+1. Follow [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys).
 
 ### Delete leftover gateway MCP server keys
 
-Use these steps when the `Gateway MCP keys` field of `profile delete` names items that might remain, or when the tab for your system says that items can remain without that field, also after `logout` of a valid profile.
-Replace `ITEM_NAME` with a name from the output or from the tab for your system, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
+Use these steps when the `Gateway MCP keys` field of `profile delete` names items that might remain, or when the tab for your system says that items can remain without that field.
+The tab applies after `logout` of a valid profile too.
+Replace `ITEM_NAME` with a name from the `Gateway MCP keys` field or from the tab for your system, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
 Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
 
 {% navtabs "delete-gateway-mcp-keys" %}
