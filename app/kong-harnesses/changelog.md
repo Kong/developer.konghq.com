@@ -43,7 +43,7 @@ The settings stay as the earlier release wrote them until you activate the profi
 `kong-harnesses status` reports these settings as `Set up by an earlier release or profile` and names `profile activate`, the command that applies the change.
 For a profile that you imported with `relay import`, `kong-harnesses relay status` reports them and names `relay activate`.
 
-If your organization's managed settings set up Claude Code, `status` names no command for such a change.
+If your organization's managed settings set up Claude Code, `status` doesn't name a command for such a change.
 The administrator runs `fleet build` again into a new or empty output folder, with every flag of the earlier build that they keep, the record and the MDM policy or managed settings that the computers have now, and, for a build with `--mcp-servers exclusive`, the `managed-mcp.json` that the computers have now with `--mcp-config`.
 Then the administrator delivers the new build, as [Keep a Claude Code fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) describes.
 The release lists that step under **⚠ BREAKING CHANGES**.
