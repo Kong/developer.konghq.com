@@ -413,7 +413,7 @@ Each time the Keychain asks whether kong-harnesses can use the saved key, click 
    unset CONSUMER_API_KEY
    ```
 
-1. If you turned off **Clipboard history** and **Clipboard history across your devices**, turn them on again.
+1. Turn on again each of **Clipboard history** and **Clipboard history across your devices** that you turned off in the first step.
 {% endnavtab %}
 {% endnavtabs %}
 
