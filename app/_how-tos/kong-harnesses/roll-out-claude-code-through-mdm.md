@@ -378,72 +378,7 @@ Sign in to each test computer as a standard developer account without a saved si
    Also confirm your policies don't set `disableAllHooks` to `true`, because the test prompt doesn't verify hooks.
 1. If your profile defines gateway MCP servers, run `/mcp` inside {{ site.claude_code }} and confirm every server shows as connected.
 
-### Troubleshoot gateway MCP connections
-
-If a gateway MCP server isn't connected or doesn't appear in `/mcp`, check these causes:
-
-* **Key server without a saved key:** Run `kong-harnesses login --profile work` once to save each key.
-* **Rejected key on a key server:** Run `kong-harnesses logout --profile work` and then `kong-harnesses login --profile work`.
-  `logout` asks you to type the profile name, signs out of the profile, and removes both the saved sign-in and every saved gateway MCP key of the profile.
-  Have all server keys ready before running `logout`.
-* **Server with its own OAuth sign-in:** Sign in from `/mcp`.
-* **Gateway-authenticated server failed at startup:** If a server [fails during the initial browser sign-in](https://code.claude.com/docs/en/mcp#failed-first-connections), reconnect it from `/mcp` after signing in.
-* **Missing servers:** Check `kong-harnesses doctor` output, remove `--strict-mcp-config` from startup commands, and check `deniedMcpServers` across all settings scopes (user, project, local, `--settings`, and every administrator source).
-  `doctor` reads only one administrator source and skips `deniedMcpServers` when `managed-mcp.json` is present.
-
-### Troubleshoot status labels
-
-If `/status` shows an unexpected `Setting sources` label, check the `Skipped sources` line and run `claude doctor` to list [dropped invalid managed settings fields](https://code.claude.com/docs/en/managed-settings#find-entries-claude-code-dropped).
-See [How {{ site.claude_code }} combines managed sources](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources) for all source labels, and use the following fleet-specific fixes:
-
-{% table %}
-columns:
-  - title: Observed label
-    key: label
-  - title: Cause and fix
-    key: fix
-rows:
-  - label: "Missing `Enterprise managed settings`, `(file)`, or `(HKCU)`"
-    fix: |
-      Build files or MDM policy didn't reach the computer, or the policy sets only control keys.
-      Verify the files at their target paths and redeploy.
-  - label: "`(drop-ins)` or `(file + drop-ins)` on an MDM build"
-    fix: |
-      The MDM policy didn't reach the computer or sets only control keys such as `managedSourcesBehavior`.
-      Check `Skipped sources`, verify the deployed MDM policy, and redeploy.
-  - label: "`(plist)`, `(HKLM)`, or a merged list starting with `plist` or `HKLM` on a file build"
-    fix: |
-      An MDM policy outranks `managed-settings.d/` (even when merged, `apiKeyHelper` comes from the MDM policy).
-      Rebuild with `--delivery mdm --policy`.
-  - label: "`(remote)` or a merged list starting with `remote`"
-    fix: |
-      Server-managed settings outrank the build.
-      Remove every credential loading the conflicting policy, including an organization claude.ai sign-in, `CLAUDE_CODE_OAUTH_TOKEN`, or a direct API key ([Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability)).
-      Cached remote settings can persist for up to 24 hours.
-      Remove server-managed settings from their source only after the build is on every computer they cover.
-  - label: "`(helper)`"
-    fix: |
-      `policyHelper` or `policyHelpers` in the MDM policy, `managed-settings.json`, or `managed-settings.d/` overrides managed settings.
-      Remove it from all managed sources.
-  - label: "`(parent process)`"
-    fix: |
-      Only host-app settings loaded.
-      Start `claude` from a terminal to confirm, then redeploy the build.
-{% endtable %}
-
-### Check host apps and WSL
-
-Validate host apps and WSL separately when your fleet build uses `--host-settings merge` or `--wsl inherit`:
-
-* **Host apps (`--host-settings merge` or `parentSettingsBehavior` set to `merge`):** Start a session from each supported host app, such as the {{ site.claude_code }} extension for VS Code, and run `/status`, `/mcp`, and a test prompt.
-  Terminal sessions and `kong-harnesses doctor` don't see host-passed settings.
-  Exclude Claude Desktop, because it doesn't use the build's `apiKeyHelper` or gateway route.
-* **WSL (`--wsl inherit`):** In each WSL distribution, start `claude` and run `/status` before sending a prompt.
-  Confirm `Setting sources` shows `Enterprise managed settings` with a label matching the Windows build's delivery: `(drop-ins)` or `(file + drop-ins)` for a file build, or `(HKLM)` or a merged list starting with `HKLM` for an MDM build.
-  A generic `Enterprise managed settings` label alone can indicate a WSL-local `/etc/claude-code` policy instead of the Windows build.
-  Send a short test prompt and confirm the WSL usage event appears in the Events debugger (`doctor` and gateway MCP servers don't run in WSL).
-  If you hit a TLS error, confirm the private CA is trusted inside WSL and inspect [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) logs under `~/.claude/debug/`.
-* **Windows without `--wsl inherit`:** Confirm that `HKLM\SOFTWARE\Policies\ClaudeCode`, `C:\Program Files\ClaudeCode\managed-settings.json`, and every file in `C:\Program Files\ClaudeCode\managed-settings.d/` omit `wslInheritsWindowsSettings` or set it to `null`, `false`, or `"false"`.
+For unexpected `/status` labels, gateway MCP connection issues, or host app and WSL validation, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 
 After validation passes on each test computer, roll out the deployment to the rest of that group.
 To pin {{ site.claude_code }} versions or move your fleet to a new model later, see [Keep a {{ site.claude_code }} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
