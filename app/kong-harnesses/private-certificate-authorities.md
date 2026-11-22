@@ -110,8 +110,8 @@ Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
 On Debian and Ubuntu, omp and the Bun release archives of pi also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable.
-Setting `NODE_EXTRA_CA_CERTS` to another file removes that trust.
-On other systems, and for pi on Node.js, omp and pi use their own CA list by default, so set one of these variables in the environment where they start:
+On other systems, omp and pi use their own CA list by default, and so does pi on Node.js on every system.
+In those cases, set one of the following variables in the environment where omp or pi starts:
 
 {% table %}
 columns:
@@ -121,15 +121,15 @@ columns:
     key: setting
 rows:
   - client: omp
-    setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`.
-      When `NODE_EXTRA_CA_CERTS` is set, omp uses its own CA list and the file instead of the system trust store, so put every private CA that omp needs in the file, such as the CA of a proxy.
+    setting: "`NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`."
   - client: pi
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`, which pi on Node.js and pi's Bun release archives both read.
-      For pi's Bun release archives, `NODE_EXTRA_CA_CERTS` replaces the system trust store, so put every private CA that pi needs in the file.
       If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
 {% endtable %}
+
+When `NODE_EXTRA_CA_CERTS` is set, omp and the Bun release archives of pi use Bun's bundled CA list and that file instead of `/etc/ssl/certs` and the system trust store, even when `NODE_USE_SYSTEM_CA=1` is set.
+Put every private CA that omp or pi needs in that file, such as the CA of a proxy.
 
 ## CA settings per program
 
