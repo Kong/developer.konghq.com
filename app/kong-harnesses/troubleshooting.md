@@ -34,7 +34,7 @@ related_resources:
 When an agent CLI such as {{ site.claude_code }} can't reach {{ site.ai_gateway }} through kong-harnesses, [`kong-harnesses doctor`](/kong-harnesses/doctor/) finds the cause.
 `doctor` checks the profile, sign-in, agent CLI settings, and gateway, and prints the next step under a problem when it knows one.
 `doctor` doesn't change any settings.
-To undo agent CLI settings, sign out, delete a profile, or uninstall kong-harnesses, see [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
+To sign out, undo agent CLI settings, delete a profile, or uninstall kong-harnesses, in that order, see [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
 To troubleshoot {{ site.claude_code }} configured through managed settings and MDM, see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
 
 ## Run doctor
