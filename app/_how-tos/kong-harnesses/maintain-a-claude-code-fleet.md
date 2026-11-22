@@ -82,35 +82,8 @@ Rebuild each platform and policy group from its own active build record (`RECORD
   `fleet build` refuses a profile with gateway MCP servers if you omit `--mcp-servers`.
   For `exclusive`, also pass your current `managed-mcp.json` with `--mcp-config`.
 
-Repeat every flag from the earlier build that you want to keep.
-Omitting a flag can remove its setting from managed computers.
-`fleet build` refuses a rebuild that omits a recorded choice from the following table without an explicit keep or revert flag:
-
-{% table %}
-columns:
-  - title: Earlier flag
-    key: earlier
-  - title: Keep
-    key: keep
-  - title: Revert
-    key: revert
-rows:
-  - earlier: "`--model`"
-    keep: Pass `--model` for each family again.
-    revert: Omit the family's `--model` and pass `--profile-models` to restore the profile's model.
-  - earlier: "`--claude-code-minimum` or `--claude-code-maximum`"
-    keep: Pass each version bound again, or a new version.
-    revert: Pass `--claude-code-any-version` in place of any bound you remove.
-  - earlier: "`--host-settings merge`"
-    keep: Pass `--host-settings merge`.
-    revert: Pass `--host-settings ignore` to drop host-app settings from Claude Desktop or an IDE.
-  - earlier: "`--wsl inherit` (Windows)"
-    keep: Pass `--wsl inherit`.
-    revert: Pass `--wsl ignore` to stop WSL from using Windows managed settings.
-  - earlier: "`--mcp-url` or `--mcp-command` (`allowlist`)"
-    keep: Pass each server flag again.
-    revert: Pass `--gateway-mcp-only` to drop unlisted allowlist entries.
-{% endtable %}
+Omitting an earlier flag can remove its setting or cause `fleet build` to refuse the rebuild.
+Repeat every flag you want to keep from the earlier build, or pass its revert flag from [Keep or revert recorded flags](/kong-harnesses/fleet-build-options/#keep-or-revert-recorded-flags).
 
 To remove a fleet build completely, follow the cleanup steps in [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
 
@@ -164,26 +137,13 @@ kong-harnesses fleet build \
 {% endnavtabs %}
 
 `fleet build` writes the files to `NEW_FOLDER` and prints the build ID and record path.
-`fleet build` refuses a version range when any of the following applies:
-
-* `--claude-code-minimum` is earlier than `2.1.163`, the first release that reads version bounds.
-* `--claude-code-maximum` is earlier than `2.1.285`, the first release that keeps every session on the gateway, in your flags or in the combined policy with `--policy`.
-* The minimum version is later than the maximum version, in your flags or in the combined policy with `--policy`.
+For the version checks that `fleet build` runs on your flags and combined policy, see [Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks).
 
 Deploy `NEW_FOLDER/root` (and `NEW_FOLDER/mdm` for an MDM build) using [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/#deploy-to-managed-computers).
 Keep the new build record file in `NEW_FOLDER` with the policy for future rebuilds.
 
-### How version bounds behave
-
-Version bounds enforce the range at startup and during updates:
-
-* **Startup check:** {{ site.claude_code }} refuses to start outside the range and tells the developer to install an approved version.
-  Running sessions continue until restarted.
-* **Native and npm installs:** Background updates and `claude update` skip versions newer than `--claude-code-maximum` and don't install versions older than `--claude-code-minimum`.
-* **Homebrew:** Updates run through `brew upgrade`, so pin the version with your install tool.
-* **Claude Desktop:** The app updates its own bundled {{ site.claude_code }}.
-  Deploy a desktop release whose {{ site.claude_code }} version is in range and [turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM to keep its Code tab in range.
-  The Microsoft Store still updates a desktop app it installed.
+{{ site.claude_code }} enforces the range at startup (a running session continues until the developer restarts it) and during native or npm updates.
+For Homebrew and Claude Desktop update controls, see [How version bounds behave](/kong-harnesses/fleet-build-options/#how-version-bounds-behave).
 
 ## Move the fleet to a new model
 
@@ -237,14 +197,9 @@ kong-harnesses fleet build \
 {% endnavtab %}
 {% endnavtabs %}
 
-`fleet build` writes the files to `NEW_FOLDER` and applies `--model` overrides as follows:
-
-* **Family detection:** `fleet build` detects the Claude family (`opus`, `sonnet`, `haiku`, or `fable`) from `NEW_MODEL_ID`.
-  If the ID doesn't name a family or names more than one, prefix it as `--model <family>=NEW_MODEL_ID`, for example, `--model sonnet=NEW_MODEL_ID`.
-  Repeat `--model` for each family you move.
-* **Settings and rates:** `--model` updates that family in every role that used it, such as subagents, in both the managed settings and the machine-wide profile.
-  The settings include `/cost` rates for the new model when the profile or {{ site.ai_gateway }} provides a complete set of rates.
-* **Local profile unchanged:** Your build computer's profile stays unchanged, so repeat `--model` in every later rebuild.
+`fleet build` writes the files to `NEW_FOLDER` and prints the build ID and record path.
+If `NEW_MODEL_ID` doesn't name a single Claude family, prefix it as `--model FAMILY=NEW_MODEL_ID`, and repeat `--model` for each family you move.
+See [Model overrides](/kong-harnesses/fleet-build-options/#model-overrides) for supported families and how `--model` updates roles and `/cost` rates.
 
 ### Pilot on one computer per platform
 
