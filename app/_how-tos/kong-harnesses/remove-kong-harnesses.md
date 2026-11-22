@@ -192,6 +192,7 @@ Each item is a password in your default keychain, normally the login keychain, w
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 If your default keychain changed after you set up kong-harnesses, add the path of the keychain that was the default then, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
 If you don't know which keychain that was, do these steps once for each keychain that `security list-keychains` prints, with its path.
+Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
 
 1. In a terminal of your desktop session, unlock the keychain:
 
