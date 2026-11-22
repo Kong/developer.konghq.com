@@ -105,10 +105,7 @@ kong-harnesses fleet remove --record 'BUILD_RECORD'
 To remove an MDM build, pass both `--record` and the MDM policy file that computers receive now with `--policy` so later changes aren't lost (add `--mcp-config 'MCP_CONFIG_FILE'` for an `exclusive` MCP build):
 
 ```sh
-kong-harnesses fleet remove \
-  --record 'BUILD_RECORD' \
-  --policy 'POLICY_FILE' \
-  --output-dir fleet-removed-BUILD_ID
+kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-removed-BUILD_ID
 ```
 
 For an MDM build, `fleet remove` prints the removed or restored policy keys under `Taken out` and the MDM policy action.
