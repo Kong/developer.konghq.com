@@ -84,7 +84,7 @@ Set the placeholders that are the same on every platform:
 
 Set the platform, executable and delivery for the target operating system:
 
-{% navtabs "fleet-rebuild-platform" %}
+{% navtabs "fleet-build" %}
 {% navtab "macOS" %}
 
 * **Platform and executable:** Pass `--platform macos` and your earlier `--executable` path.
@@ -127,7 +127,7 @@ Choose `OLDEST_VERSION` and `NEWEST_VERSION` (`2.1.285` or later) from the {{ si
 
 Build managed settings that pin the group to that version range:
 
-{% navtabs "fleet-pin-version" %}
+{% navtabs "fleet-build" %}
 {% navtab "macOS" %}
 
 ```sh
@@ -200,7 +200,7 @@ If your managed policy sets `availableModels` or `deniedModels`, verify that tho
 
 Build managed settings with `--model NEW_MODEL_ID` and every kept flag from the earlier build, such as your version range:
 
-{% navtabs "fleet-move-model" %}
+{% navtabs "fleet-build" %}
 {% navtab "macOS" %}
 
 ```sh
