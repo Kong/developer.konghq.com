@@ -50,7 +50,7 @@ If the attempt ends, run `kong-harnesses login --profile PROFILE_NAME --no-brows
 
 In a terminal, [`token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/) and [`login`](/kong-harnesses/login/) print the same line for many of these problems.
 Commands that load the profile store can print the `profile storage is unavailable` and `the profiles in FOLDER could not be moved` lines, because kong-harnesses checks the profile folder before the command runs.
-[`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the session has no per-user runtime directory, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
+[`logout`](/kong-harnesses/logout/) prints the same line when the secret store refuses access to the sign-in or doesn't run in the session, when the saved sign-in needs attention, and when another kong-harnesses command uses the profile.
 
 {% table %}
 columns:
@@ -88,6 +88,12 @@ rows:
   - message: "`another kong-harnesses command, such as a sign-in or a renewal, is using this profile`"
     cause: Another kong-harnesses command uses the profile, such as a sign-in that waits for the browser.
     fix: Try again when the other command finishes.
+  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
+    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
+    fix: >-
+      If another sign-in uses the address, wait until it finishes.
+      Otherwise, stop the program that uses the port of the callback address.
+      Then try again.
   - message: "`this profile has no saved key`"
     cause: The profile uses a key from your administrator, and this computer doesn't have the key yet.
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`, and enter the key from your administrator."
@@ -173,12 +179,6 @@ rows:
   - message: "`profile storage is unavailable, because HOME is not set to an absolute path`"
     cause: "kong-harnesses can't find an absolute path for your user configuration directory, because `HOME` isn't set to an absolute path."
     fix: "Set `HOME` to your home folder, then try again."
-  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
-    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
-    fix: >-
-      If another sign-in uses the address, wait until it finishes.
-      Otherwise, stop the program that uses the port of the callback address.
-      Then try again.
 {% endtable %}
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -203,20 +203,19 @@ rows:
       Use a desktop session with a keyring, such as GNOME Keyring or KWallet.
       In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`.
   - message: "`this session has no per-user runtime directory (XDG_RUNTIME_DIR)`"
-    cause: "The session doesn't set `XDG_RUNTIME_DIR` to an absolute path, for example in a container or a CI job."
+    cause: >-
+      The session doesn't set `XDG_RUNTIME_DIR` to an absolute path, for example in a container or a CI job.
+      `logout` also prints this line.
     fix: >-
       Create a local directory that your user owns and only your user can open, such as with `install -d -m 0700 RUNTIME_DIR`.
       Then set `XDG_RUNTIME_DIR` to the absolute path of the directory.
   - message: "`profile storage is unavailable, because XDG_CONFIG_HOME is not an absolute path, or it is unset and HOME is not`"
-    cause: "kong-harnesses can't find an absolute path for your user configuration directory, because neither `XDG_CONFIG_HOME` nor `HOME` gives one."
+    cause: >-
+      kong-harnesses can't find an absolute path for your user configuration directory.
+      `XDG_CONFIG_HOME` is set to a relative path, or `XDG_CONFIG_HOME` is unset or empty and `HOME` isn't set to an absolute path.
+      kong-harnesses reads `HOME` only when `XDG_CONFIG_HOME` is unset or empty.
     fix: >-
       Set `XDG_CONFIG_HOME` to an absolute path, or unset it and set `HOME`.
-      Then try again.
-  - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address`"
-    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer.
-    fix: >-
-      If another sign-in uses the address, wait until it finishes.
-      Otherwise, stop the program that uses the port of the callback address.
       Then try again.
 {% endtable %}
 {% endnavtab %}
@@ -242,11 +241,10 @@ rows:
     cause: "kong-harnesses can't find an absolute path for your user configuration directory, because `AppData` isn't set to an absolute path."
     fix: "Set `AppData` to your roaming application data folder, then try again."
   - message: "`another program on this computer, such as another developer's sign-in, is using the sign-in callback address, or Windows reserved that port`"
-    cause: Another program on this computer uses the callback address of the profile, such as another developer's sign-in on a shared computer, or Windows reserved the port.
+    cause: >-
+      Windows reserved the port of the callback address.
+      When another program uses the port, follow the row for this line in the first table.
     fix: >-
-      If another sign-in uses the address, wait until it finishes.
-      Otherwise, stop the program that uses the port of the callback address.
-      Then try again.
       To find the port, run `kong-harnesses profile get PROFILE_NAME` and read the `Redirect URI` field.
       `netsh interface ipv4 show excludedportrange protocol=tcp` and `netsh interface ipv6 show excludedportrange protocol=tcp` list the reserved ports.
       If Windows reserved the port, ask your administrator to register a redirect URI with a free port at the identity provider and to give you a new profile with that redirect URI.
