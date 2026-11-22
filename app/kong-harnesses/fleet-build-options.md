@@ -51,8 +51,10 @@ related_resources:
 1. MDM policy (see [MDM policy location](#mdm-policy-location)).
 1. Managed settings files (`managed-settings.json` and `managed-settings.d/`).
 
-By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set; otherwise the highest setting a non-`null` policy key).
-A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list: `allowedMcpServers`, `availableModels`, `allowedHttpHookUrls`, `httpHookAllowedEnvVars`, `allowedChannelPlugins`, `allowedProviders`, `forceLoginOrgUUID`, and `gatewayInternalNetworks`.
+By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set, apart from the exceptions below; otherwise the highest setting a non-`null` policy key).
+A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list: `allowedMcpServers`, `availableModels`, `allowedHttpHookUrls`, `httpHookAllowedEnvVars`, `allowedChannelPlugins`, `allowedProviders`, and `forceLoginOrgUUID`.
+A `null` `gatewayInternalNetworks` also counts as set, but {{ site.claude_code }} reads it as a network that matches no address and refuses gateway sign-in, so `fleet build` refuses a `--policy` that sets it.
+`false` or `"false"` for `disableAutoMode`, `disableDeepLinkRegistration`, `permissions.disableBypassPermissionsMode`, or `permissions.disableAutoMode`, an `env` that isn't an object, and a `null` under `permissions` don't count.
 Sources setting only `managedSourcesBehavior` or `wslInheritsWindowsSettings` don't count.
 [Select keys apply across administrator sources](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source), including `env` and MCP locks.
 
@@ -94,7 +96,8 @@ Policy rules:
   Check all drop-ins regardless of sort order for `policyHelper`, `policyHelpers`, `forceLoginMethod`, `forceLoginGatewayUrl`, `forceLoginOrgUUID`, `enforceAnthropicSignIn`, and non-`customEndpoint` `allowedProviders` entries (lists combine).
   Confirm files sorting after `kong-harnesses.json` don't override `apiKeyHelper`, `env`, or `modelPicker`, and move earlier non-secret `ANTHROPIC_CUSTOM_HEADERS` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` on MDM builds, include it in `--policy` and confirm `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries such as `permissions.allow` rules or hooks ([Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source)).
-  An MDM policy that sets a policy key, as counted in [Delivery method and existing policy](#delivery-method-and-existing-policy), still supplies `apiKeyHelper` over a file build.
+  An MDM policy that sets a policy key, as counted in [Delivery method and existing policy](#delivery-method-and-existing-policy), takes precedence over a file build, so {{ site.claude_code }} uses the `apiKeyHelper` of the MDM policy, or none when the MDM policy has none.
+  An MDM policy with only empty objects doesn't count, so the file build applies.
 
 ### MDM policy location
 
@@ -231,6 +234,7 @@ rows:
   - shell: Windows, Git Bash
     quote: |
       For a macOS or Linux build, use PowerShell instead.
+      For a Windows build, use single quotes, as on macOS and Linux.
       Git Bash turns an argument that starts with `/`, such as `/usr/local/bin/kong-harnesses`, into a Windows path, and `fleet build` then refuses the macOS or Linux `--executable`.
 {% endtable %}
 
