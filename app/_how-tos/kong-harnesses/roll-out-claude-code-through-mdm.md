@@ -344,7 +344,7 @@ Sign in to each test computer as a standard developer without a saved sign-in, a
    Fix any errors before continuing.
 1. Start {{ site.claude_code }} (`claude`) and sign in when the browser opens on startup (Anthropic API discovery) or first request.
 
-Before you send a prompt, check the settings source on each test computer:
+Check the settings source on each test computer:
 
 {% navtabs "fleet-build" %}
 {% navtab "macOS" %}
