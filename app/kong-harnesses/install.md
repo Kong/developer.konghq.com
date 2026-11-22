@@ -36,6 +36,8 @@ related_resources:
 Administrators use platform installers to install kong-harnesses for every user of a computer or to deploy it across managed computers with a mobile device management (MDM) tool.
 Developers installing kong-harnesses for their own account use the single-user steps on the [kong-harnesses page](/kong-harnesses/#install-kong-harnesses).
 
+## Platform packages
+
 Download packages from `https://cloudsmith.io/~kong/repos/kong-harnesses/packages/`.
 Choose `_amd64` for Intel and AMD (x64) processors, or `_arm64` for Arm processors such as Apple silicon.
 A prerelease doesn't include the Windows installer (`.msi`).
@@ -55,10 +57,10 @@ rows:
   - platform: Windows 11 (x64 / Arm)
     packages: "`_windows_amd64.msi`, `_windows_arm64.msi`"
     path: "`C:\\Program Files\\Kong\\kong-harnesses\\kong-harnesses.exe`"
-  - platform: Ubuntu (amd64 / arm64)
+  - platform: Ubuntu 26.04, 24.04, 22.04 (amd64 / arm64)
     packages: "`_linux_amd64.deb`, `_linux_arm64.deb`"
     path: "`/usr/bin/kong-harnesses`"
-  - platform: Red Hat Enterprise Linux (amd64 / arm64)
+  - platform: Red Hat Enterprise Linux 9 (amd64 / arm64)
     packages: "`_linux_amd64.rpm`, `_linux_arm64.rpm`"
     path: "`/usr/bin/kong-harnesses`"
 {% endtable %}
@@ -77,12 +79,12 @@ Download `SHA256SUMS.txt` and `kong-harnesses_TAG.sigstore.json` from the same r
 Replace `TAG` with the release version including its leading `v`, for example `v1.2.3`.
 Run the following checks from that folder, replacing `FILE` with the full filename including its extension.
 
-**1. Verify the SHA-256 checksum**
+### Verify the checksum
+
+Verify `FILE` against `SHA256SUMS.txt`:
 
 {% navtabs "verify-checksum" %}
 {% navtab "macOS" %}
-
-Verify `FILE` against `SHA256SUMS.txt`:
 
 ```sh
 awk -v file='FILE' '$2 == file' SHA256SUMS.txt | shasum -a 256 --check
@@ -93,8 +95,6 @@ The command must print `FILE: OK`.
 {% endnavtab %}
 {% navtab "Linux" %}
 
-Verify `FILE` against `SHA256SUMS.txt`:
-
 ```sh
 awk -v file='FILE' '$2 == file' SHA256SUMS.txt | sha256sum --check
 ```
@@ -104,7 +104,7 @@ The command must print `FILE: OK`.
 {% endnavtab %}
 {% navtab "Windows" %}
 
-Verify `FILE` against `SHA256SUMS.txt` in PowerShell:
+In PowerShell:
 
 ```powershell
 "$((Get-FileHash 'FILE' -Algorithm SHA256).Hash.ToLowerInvariant())  FILE" -cin (Get-Content SHA256SUMS.txt)
@@ -116,7 +116,7 @@ The check is case-sensitive, so enter `FILE` exactly as it appears in `SHA256SUM
 {% endnavtab %}
 {% endnavtabs %}
 
-**2. Verify the build provenance**
+### Verify the build provenance
 
 Install the [GitHub CLI](https://cli.github.com/) and verify `FILE` against `kong-harnesses_TAG.sigstore.json`:
 
@@ -161,8 +161,7 @@ The notarization ticket is stapled to the package, so it installs without networ
 ### Install on macOS
 
 The macOS package preserves permissions on existing folders.
-Verify that only administrators can modify `/usr/local` and `/usr/local/bin` before installing.
-If either folder doesn't exist, the package creates it writable only by administrators.
+If `/usr/local` or `/usr/local/bin` doesn't exist, the package creates it writable only by administrators.
 
 1. Check ownership and permissions on `/usr/local` and `/usr/local/bin`:
 
@@ -170,9 +169,9 @@ If either folder doesn't exist, the package creates it writable only by administ
    /bin/ls -lde /usr/local /usr/local/bin
    ```
 
-   Each folder must be owned by `root`.
+   Each existing path must start with `d` (a directory, not a symbolic link) and be owned by `root`.
    Only `root` and the `admin` or `wheel` group can have write permission, and no access control entry can grant write permission to another account.
-1. Download `_darwin_arm64.pkg` (Apple silicon) or `_darwin_amd64.pkg` (Intel) and verify it using [Check a downloaded file](#check-a-downloaded-file).
+1. Download the macOS package for your processor from [Platform packages](#platform-packages) and verify it using [Check a downloaded file](#check-a-downloaded-file).
 1. Verify Kong's Developer ID Installer signature:
 
    ```sh
@@ -199,10 +198,11 @@ Installing a newer macOS package replaces the installed version.
 
 ### Deploy on macOS with an MDM tool
 
-Upload the verified `.pkg` to your MDM tool, for example Jamf Pro, without modification.
-The package doesn't contain installer scripts.
+The macOS package preserves permissions on existing folders and doesn't contain installer scripts.
+Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Installer signature, and Apple notarization checks) to your MDM tool, for example Jamf Pro, without modification.
 
-1. Assign `_darwin_arm64.pkg` to Apple silicon Macs and `_darwin_amd64.pkg` to Intel Macs.
+1. Confirm that on every target Mac where `/usr/local` or `/usr/local/bin` exists, each path is a directory owned by `root` and writable only by administrators, using step 1 of [Install on macOS](#install-on-macos).
+1. Assign the Arm package from [Platform packages](#platform-packages) to Apple silicon Macs and the Intel package to Intel Macs.
 1. Deploy to one test Mac first.
    For a new release, use a test Mac running the previous release, because an earlier receipt also passes a receipt-existence check.
 1. Inspect the package receipt on the test Mac:
@@ -215,16 +215,17 @@ The package doesn't contain installer scripts.
 1. Assign the package to remaining Macs only after the MDM tool reports success on the test Mac and `version` matches.
 
 {:.info}
-> **Microsoft Intune macOS PKG detection:** Intune's macOS app (PKG) type detects installs by an app bundle ID or a matching package receipt.
-> Because this package doesn't install an app bundle and writes only the receipt `com.konghq.kong-harnesses`, test it on one Mac first.
-> If Intune doesn't report success or `version` doesn't match, use an MDM tool that checks the receipt's `version` field or the output of `/usr/local/bin/kong-harnesses version`, which includes the leading `v`, for example `v1.2.3`.
+> **Microsoft Intune macOS PKG detection:** This package doesn't install an app bundle and writes only the receipt `com.konghq.kong-harnesses`.
+> Intune's macOS app (PKG) type detects installs by app bundle ID or package receipt, so test it on one Mac first.
+> If Intune doesn't report success or `version` doesn't match, use an MDM tool that checks the receipt `version` field or `/usr/local/bin/kong-harnesses version`.
+> The `version` command output includes the leading `v`, for example `v1.2.3`.
 
 ### Remove from macOS
 
 Follow these steps to remove only the files installed by the macOS package:
 
-1. If an MDM tool deploys the package to the Mac, remove the Mac from that deployment so the tool doesn't reinstall it.
 1. Ask each developer on the Mac to [remove their settings, sign-ins, and profiles](/kong-harnesses/remove-kong-harnesses/).
+1. If an MDM tool deploys the package to the Mac, remove the Mac from that deployment so the tool doesn't reinstall it.
 1. Confirm the installer package created the installation:
 
    ```sh
@@ -240,7 +241,8 @@ Follow these steps to remove only the files installed by the macOS package:
    ```
 
    The `/usr/local` and `/usr/local/bin` lines must start with `d`, and the `/usr/local/bin/kong-harnesses` line must start with `-`.
-   If any line starts with another character or prints `No such file or directory`, skip the next three steps (verifying and deleting the executable) so `rm` doesn't delete a file in another folder through a link.
+   If any line starts with another character or prints `No such file or directory`, skip the next three steps (verifying and deleting the executable).
+   Skipping them prevents `rm` from deleting a file in another folder through a symbolic link.
    If `/usr/local/bin/kong-harnesses` links to a path containing `Cellar`, Homebrew installed it.
    Remove that copy with Homebrew instead.
 1. Print the executable checksum stored in the package receipt:
@@ -271,7 +273,8 @@ Follow these steps to remove only the files installed by the macOS package:
    ```
 
    All four lines must start with `d`.
-   If any line starts with another character or prints `No such file or directory`, skip the next two steps (deleting the license files and folder) so `rm` doesn't delete files through a link.
+   If any line starts with another character or prints `No such file or directory`, skip the next two steps (deleting the license files and folder).
+   Skipping them prevents `rm` from deleting files in another folder through a symbolic link.
 1. Delete the license and third-party notices:
 
    ```sh
@@ -300,11 +303,11 @@ kong-harnesses doesn't support Windows 10.
 > Make sure that only administrators can modify `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe` and its parent folders.
 > Any other account with write permission can replace kong-harnesses with a program that captures developer sign-ins.
 
-When kong-harnesses runs from `C:\Program Files\Kong\kong-harnesses`, running [`kong-harnesses doctor`](/kong-harnesses/doctor/) (`kong-harnesses doctor --profile PROFILE`) also checks these permissions and reports the fix if another account can modify them.
+When kong-harnesses runs from `C:\Program Files\Kong\kong-harnesses`, [`kong-harnesses doctor`](/kong-harnesses/doctor/) also checks these permissions and shows the fix.
 
 ### Install on Windows
 
-1. Download `_windows_amd64.msi` (x64) or `_windows_arm64.msi` (Arm) and verify it using [Check a downloaded file](#check-a-downloaded-file).
+1. Download the Windows installer for your processor from [Platform packages](#platform-packages) and verify it using [Check a downloaded file](#check-a-downloaded-file).
 1. Open PowerShell as an administrator.
 1. Run the silent Windows installer, replacing `MSI_PATH` with the full path to the `.msi` file:
 
@@ -338,12 +341,12 @@ See [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/de
 
 ## Linux packages
 
-On the Ubuntu and Red Hat Enterprise Linux releases that kong-harnesses supports, the `.deb` and `.rpm` packages install `kong-harnesses` in `/usr/bin` for every user.
+On Ubuntu 26.04, 24.04, and 22.04 and Red Hat Enterprise Linux 9, the `.deb` and `.rpm` packages install `kong-harnesses` in `/usr/bin` for every user.
 The package manager handles upgrades and removal.
 
 ### Install on Linux
 
-Download `_linux_amd64.deb` or `_linux_arm64.deb` (Ubuntu), or `_linux_amd64.rpm` or `_linux_arm64.rpm` (Red Hat Enterprise Linux), and verify it using [Check a downloaded file](#check-a-downloaded-file).
+Download the Linux package for your distribution and processor from [Platform packages](#platform-packages), then verify it using [Check a downloaded file](#check-a-downloaded-file).
 Install the verified package, replacing `FILE` with the downloaded filename:
 
 {% navtabs "install-linux-package" %}
