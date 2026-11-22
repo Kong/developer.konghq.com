@@ -1,4 +1,5 @@
-Revoke the key of the `developer` AI Consumer. First, get the ID of the key:
+Revoke the key of the `developer` AI Consumer.
+First, get the ID of the key:
 
 <!--vale off-->
 {% konnect_api_request %}

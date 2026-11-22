@@ -142,15 +142,21 @@ faqs:
       To revoke a leaked key at the gateway, [delete the API key of the AI Consumer](/api/konnect/ai-gateway/#/operations/delete-ai-gateway-consumer-credential).
 ---
 
-Use a static key when your organization doesn't use an identity provider, or when you run a gateway of your own. An administrator creates the key in {{site.ai_gateway}}. [kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux. It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
+Use a static key when your organization doesn't use an identity provider, or when you run a gateway of your own.
+An administrator creates the key in {{site.ai_gateway}}.
+[kong-harnesses](/kong-harnesses/) keeps the key in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
+It gives the key to {{ site.claude_code }} when {{ site.claude_code }} needs it, so the key isn't in the {{ site.claude_code }} settings.
 
-The key doesn't expire. It works until an administrator revokes it in {{site.ai_gateway}}.
+The key doesn't expire.
+It works until an administrator revokes it in {{site.ai_gateway}}.
 
-In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does. Then you set up {{ site.claude_code }} as a developer does.
+In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
+Then you set up {{ site.claude_code }} as a developer does.
 
 ## Create an AI Consumer and its key
 
-An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at the gateway. Give each developer an AI Consumer and a key of their own.
+An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at the gateway.
+Give each developer an AI Consumer and a key of their own.
 
 1. Create the AI Consumer:
 
@@ -177,7 +183,8 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    ```
    {: data-test-step="block"}
 
-1. Remove an older `CONSUMER_API_KEY` from this shell. If the variable was exported before, the shell keeps exporting it, and the programs that you start from this shell get the new key:
+1. Remove an older `CONSUMER_API_KEY` from this shell.
+   If the variable was exported before, the shell keeps exporting it, and the programs that you start from this shell get the new key:
 
    ```sh
    unset CONSUMER_API_KEY
@@ -210,9 +217,14 @@ An [AI Consumer](/ai-gateway/entities/ai-consumer/) identifies the developer at 
    {{ developer_credential | indent }}
 
    {:.info}
-   > The server generates the `api_key` value and shows it only in this response. `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide. The command doesn't export the variable, so the programs that you start from this shell don't get the key.
+   > The server generates the `api_key` value and shows it only in this response.
+   > `CONSUMER_API_KEY` keeps it in this shell for the sign-in step of this guide.
+   > The command doesn't export the variable, so the programs that you start from this shell don't get the key.
    >
-   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty. Fix the error and run the command again. If the error is `409`, a key named `developer-key` already exists. The API returns a key only when it creates it, so if you lose the key, revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
+   > If the request fails, or the response has no key, the command exits with an error and `CONSUMER_API_KEY` is empty.
+   > Fix the error and run the command again.
+   > If the error is `409`, a key named `developer-key` already exists.
+   > The API returns a key only when it creates it, so if you lose the key, revoke it with the requests in [Revoke the key](#revoke-the-key), then create it again.
 
 ## Create the AI Model
 
@@ -282,7 +294,9 @@ ai_gateway_models:
 
 ## Create the kong-harnesses profile
 
-A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with. It doesn't hold secrets. A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
+A kong-harnesses profile names the gateway, how developers sign in, and the model that {{ site.claude_code }} starts with.
+It doesn't hold secrets.
+A static-key profile doesn't name an identity provider, so it needs only a name, the gateway origin and the model.
 
 The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
 If your shell sets a proxy, add `127.0.0.1` to `NO_PROXY` (and `no_proxy` if it's set) in the shell that runs kong-harnesses.
@@ -295,7 +309,9 @@ Create a profile named `quickstart` that signs in with a static key:
 kong-harnesses profile create --name quickstart --sign-in static-key --gateway-origin http://127.0.0.1:8000 --model claude-sonnet-5-5
 ```
 
-kong-harnesses saves the profile and installs it on this computer. It also sends a test request without the key to the gateway route of each agent CLI that the profile sets up. This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
+kong-harnesses saves the profile and installs it on this computer.
+It also sends a test request without the key to the gateway route of each agent CLI that the profile sets up.
+This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
 
 {:.info}
 > For production, use an `https://` gateway origin and publish the profile as [Profile hosting](/kong-harnesses/profiles-for-administrators/#profile-hosting) describes.
@@ -307,10 +323,12 @@ kong-harnesses saves the profile and installs it on this computer. It also sends
 
 ## Save the key and configure {{ site.claude_code }}
 
-Copy the key to the clipboard without showing it. First, turn off clipboard sync, which can send the key to your other devices:
+Copy the key to the clipboard without showing it.
+First, turn off clipboard sync, which can send the key to your other devices:
 
 * On Windows, turn off **Clipboard history** and **Clipboard history across your devices** in **Settings** > **System** > **Clipboard**.
-* On macOS, Universal Clipboard sends the clipboard to your other Apple devices. Turn off Handoff in **System Settings** > **General** > **AirDrop & Handoff**.
+* On macOS, Universal Clipboard sends the clipboard to your other Apple devices.
+  Turn off Handoff in **System Settings** > **General** > **AirDrop & Handoff**.
 
 In the shell where you created the key, run the command for your system:
 
@@ -324,7 +342,8 @@ Save the key in the profile:
 kong-harnesses login --profile quickstart
 ```
 
-`login` asks for the key and doesn't show it as you type. Paste the key.
+`login` asks for the key and doesn't show it as you type.
+Paste the key.
 
 Remove the key from the clipboard and from the shell:
 
@@ -336,7 +355,8 @@ Remove the key from the clipboard and from the shell:
 unset CONSUMER_API_KEY
 ```
 
-If your computer keeps a clipboard history, delete the key from it too. You can turn clipboard sync on again now.
+If your computer keeps a clipboard history, delete the key from it too.
+You can turn clipboard sync on again now.
 
 Configure {{ site.claude_code }} to use the profile:
 
@@ -344,9 +364,12 @@ Configure {{ site.claude_code }} to use the profile:
 kong-harnesses profile activate quickstart --client claude-code
 ```
 
-`profile activate` sends a test request with the key to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks. It shows each problem that it finds with a fix. Fix the problems and run the same command again.
+`profile activate` sends a test request with the key to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
+It shows each problem that it finds with a fix.
+Fix the problems and run the same command again.
 
-Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic, so they change behind the gateway. [Features that change behind the gateway](/ai-gateway/set-up-claude-code-with-kong-harnesses/#features-that-change-behind-the-gateway) lists them.
+Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, or send data to Anthropic, so they change behind the gateway.
+[Features that change behind the gateway](/ai-gateway/set-up-claude-code-with-kong-harnesses/#features-that-change-behind-the-gateway) lists them.
 
 ## Validate
 
@@ -356,9 +379,12 @@ Run `kong-harnesses doctor` to check the setup:
 kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
-`doctor` checks the saved key, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings. A static-key profile doesn't use an identity provider, so `doctor` skips the issuer check. It shows a fix for each problem it finds, and it doesn't change any settings.
+`doctor` checks the saved key, the connection to the gateway, the gateway route that {{ site.claude_code }} uses, and the {{ site.claude_code }} settings.
+A static-key profile doesn't use an identity provider, so `doctor` skips the issuer check.
+It shows a fix for each problem it finds, and it doesn't change any settings.
 
-To also send one model request, add `--inference`. The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
+To also send one model request, add `--inference`.
+The request can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 
 ```sh
 kong-harnesses doctor --profile quickstart --client claude-code --inference
@@ -370,6 +396,8 @@ Start a {{ site.claude_code }} session:
 claude
 ```
 
-Send a prompt to check that you get a reply. {{ site.claude_code }} now sends every model request to {{site.ai_gateway}} with the key.
+Send a prompt to check that you get a reply.
+{{ site.claude_code }} now sends every model request to {{site.ai_gateway}} with the key.
 
-On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses. Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
+On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
+Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
