@@ -181,7 +181,7 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
 1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
-1. If the `Gateway MCP keys` field lists items that might remain, delete each named item from your system password store.
+1. If the `Gateway MCP keys` field lists items that might remain, or the tab for your system says that items can remain without that field, delete each item from your system password store.
    Replace `ITEM_NAME` with a name from the output, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
    Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
 
@@ -189,12 +189,14 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 {% navtab "macOS" %}
 
 Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
-A later save updates the item in that keychain while the keychain is in the list that `security list-keychains` prints.
-When that keychain isn't in the list, a later save creates a new item in your default keychain, and the old item stays.
+kong-harnesses looks for an item only in the keychains that `security list-keychains` prints.
+A later save updates the item that it finds there, or creates a new item in your default keychain when it finds none, so a copy in a keychain outside that list stays.
+When it finds more than one, the save fails and changes nothing.
+`profile delete` doesn't report such a copy in the `Gateway MCP keys` field.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 Do these steps once for each keychain that `security list-keychains` prints.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
-If a keychain that was your default at some time after you set up kong-harnesses isn't in that list, do the steps for its path too.
+If a keychain that was your default at some time after you set up kong-harnesses isn't in that list, do the steps for its path too, also when the `Gateway MCP keys` field is absent.
 
 1. In a terminal of your desktop session, read the path of the keychain into a variable:
 
@@ -202,7 +204,8 @@ If a keychain that was your default at some time after you set up kong-harnesses
    IFS= read -r KEYCHAIN_PATH
    ```
 
-   Paste the path from the `security list-keychains` output, or the path of a former default keychain that isn't in that output, without the spaces and double quotes around it, for example `/Users/USER/Library/Keychains/login.keychain-db`, and press Enter.
+   Paste the path from the `security list-keychains` output, or the path of a former default keychain that isn't in that output, for example `/Users/USER/Library/Keychains/login.keychain-db`, and press Enter.
+   Don't paste the spaces and double quotes that `security list-keychains` prints around the path.
    The variable keeps the path exactly, even when it holds a space or a `$`.
 1. In the same terminal, unlock the keychain:
 
