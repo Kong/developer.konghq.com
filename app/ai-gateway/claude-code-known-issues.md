@@ -332,5 +332,13 @@ Switching casks can install an older release than your current one.
 Installs from the `apt`, `dnf`, and `apk` repositories choose a channel by repository instead of the `autoUpdatesChannel` setting.
 To switch to the stable channel, follow [Install with Linux package managers](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
 
+On Alpine Linux, those `apk` steps add the `stable` repository line to `/etc/apk/repositories` and keep any `latest` line.
+Replace the `latest` line with the `stable` line instead:
+
+```sh
+sed -i '\|downloads.claude.ai/claude-code/apk/latest|d' /etc/apk/repositories
+echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
+```
+
 {% endnavtab %}
 {% endnavtabs %}
