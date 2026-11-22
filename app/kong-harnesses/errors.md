@@ -88,13 +88,14 @@ rows:
 
 `kong-harnesses doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
 For an interrupted sign-in renewal that resumes on the next credential call (`refresh-pending`), `doctor` reports `ok` on the `login` check instead of failing with `3`, so `doctor` exits with `0` when no other check fails.
-In each report, the failed check to fix first sets the exit code:
+When `doctor` doesn't exit with `0`, it uses these exit codes:
 
 * `1` for the network, the identity provider, the gateway or its MCP routes (including non-temporary failures such as a missing route or a refused sign-in), the OpenCode plugin download, the `--inference` request, or a check that couldn't complete
 * `2` for the profile (including a `login` finding when `max_access_token_lifetime_seconds` is too low), the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows
 * `3` for the sign-in, or a missing key for a gateway MCP server
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C
 
+Within one report, the first failed check in report order sets that report's exit code.
 Across the install, the profile, and every agent CLI report, `doctor` exits with the most severe code: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
@@ -128,7 +129,7 @@ The command got more than one profile, for example `--profile` twice, or a profi
 A command that takes `--profile PROFILE_NAME`, such as `login`, also prints this error when you pass the profile name as an argument, as in `kong-harnesses login PROFILE_NAME`.
 Give one profile, in the form that the command takes.
 
-### "profile name is invalid" or "KONG_HARNESSES_PROFILE holds an invalid profile name"
+### "profile name is invalid", "profile name after --profile is invalid" or "KONG_HARNESSES_PROFILE holds an invalid profile name"
 
 The profile name after the command, after `--profile`, or in `KONG_HARNESSES_PROFILE` doesn't follow the [rules for `name`](/kong-harnesses/profile-file/#top-level-fields).
 Check the spelling, set `KONG_HARNESSES_PROFILE` to the name of an installed profile, or pass `--profile PROFILE_NAME`.
@@ -247,9 +248,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
 `profile delete` checks for a saved sign-in and inspects each agent CLI's settings before it removes a profile:
 
-* "selected profile still has a saved sign-in": The profile is still signed in.
-  Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
-* "the saved sign-in could not be inspected, so the profile was not deleted": `profile delete` couldn't find out whether the profile is still signed in, for example because the password store is locked, and doesn't delete a profile that could still have a sign-in.
+* "selected profile still has a saved sign-in" or "the saved sign-in could not be inspected, so the profile was not deleted": Either the profile is still signed in, or `profile delete` couldn't check whether it is signed in (for example, because the password store is locked) and doesn't delete a profile that could still have a sign-in.
   Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
 * "cannot tell whether the profile still has a saved sign-in and did not delete it": The message starts with "no Secret Service runs in this session".
   On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses.
