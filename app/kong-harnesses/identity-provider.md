@@ -218,20 +218,6 @@ If the policy allows more than 86400 seconds, reduce it to 86400 seconds.
 
 ## Create the profile
 
-Create a profile with the client settings, the gateway origin and the model ID:
-
-```sh
-kong-harnesses profile create \
-  --name PROFILE_NAME \
-  --issuer ISSUER_URL \
-  --client-id CLIENT_ID \
-  --audience AUDIENCE \
-  --gateway-origin GATEWAY_ORIGIN \
-  --model MODEL_ID
-```
-
-Add `--redirect-uri`, `--scope`, `--audience-parameter`, `--public-client-evidence` or `--max-token-lifetime-seconds` when your identity provider needs them.
-
-If you create a profile again with a different issuer, endpoint, client ID, callback, `--scope` list, audience, `--audience-parameter`, `--public-client-evidence`, `--max-token-lifetime-seconds` or gateway origin, developers who already signed in must run [`kong-harnesses login`](/kong-harnesses/login/) again.
-While a client still uses the old profile, `profile create` and [`profile import`](/kong-harnesses/profile/import/) refuse a new profile with the same name and one of these changes.
-First, activate another profile in that client with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/), or run [`kong-harnesses profile cleanup --client CLIENT`](/kong-harnesses/profile/cleanup/) for that client.
+To create and publish a profile with your identity provider settings, see [Profile creation](/kong-harnesses/profiles-for-administrators/#profile-creation) and [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+Changing an identity provider setting changes the profile's security identity.
+For which fields belong to the security identity, and how `profile create` and [`profile import`](/kong-harnesses/profile/import/) handle changes while a client uses the profile, see [Security identity](/kong-harnesses/profile-file/#security-identity).
