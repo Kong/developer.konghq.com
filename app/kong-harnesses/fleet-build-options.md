@@ -191,7 +191,7 @@ MCP rules:
   {{ site.claude_code }} drops such an entry and enforces the rest, but `fleet build` can't know what the entry was meant to allow or deny.
   A `deniedMcpServers` value that isn't a list blocks no server.
   To set no list, leave the key out of `--policy`.
-* **Invalid allowlist (`allowlist` or `any`):** {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value as an empty managed allowlist ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+* **Invalid allowlist (`allowlist` or `any`):** {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value (`null` included) as an empty managed allowlist ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
   The value doesn't skip the plugin, and `managedMcpServers` and allowlist-exempt servers still load.
   The empty list applies only when the invalid value supplies the managed allowlist.
   With the MCP lock (`allowManagedMcpServersOnly: true`), a valid list in an administrator source with higher precedence, such as server-managed settings, takes its place ([Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source)).
@@ -227,6 +227,10 @@ rows:
       [Windows PowerShell 5.1 strips inner double quotes](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters), so escape each with `\` (for example, `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`).
       This works only when no backslash comes right before a double quote.
       Otherwise, use PowerShell 7.3 or later.
+  - shell: Windows, Git Bash
+    quote: |
+      Use PowerShell instead.
+      Git Bash turns an argument that starts with `/`, such as `/usr/local/bin/kong-harnesses`, into a Windows path, and `fleet build` then refuses the macOS or Linux `--executable`.
 {% endtable %}
 
 ## Host apps, WSL, and executable path
