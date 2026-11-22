@@ -117,7 +117,7 @@ Apply each instruction that `kong-harnesses fleet remove` prints:
 
 1. For an MDM build, review the `Taken out` list and re-add any key that you set yourself after the build to the same value the build wrote.
    `fleet remove` reverts or removes values matching what the build wrote because it can't distinguish them from administrator edits made after the build.
-1. Update or remove the MDM policy:
+1. For an MDM build, update or remove the MDM policy:
    * If `fleet remove` writes a policy under `mdm/`, deploy that policy in place of the existing {{ site.claude_code }} MDM policy.
    * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool even when `fleet remove` doesn't write an `mdm/` folder.
 1. If `fleet remove` writes `managed-mcp.json` under `root/`, inspect any kept server definitions that changed after the build, remove any that still point to the gateway, and deploy the updated file in place of the existing `managed-mcp.json`.
