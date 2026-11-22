@@ -53,6 +53,7 @@ cleanup:
     - title: Remove kong-harnesses from Intune-managed devices
       content: |
         1. Ask each developer on the managed devices to remove their sign-ins, agent CLI settings, and profiles using [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
+           Confirm that developers have finished before you assign **Uninstall**, because they need kong-harnesses installed to run those steps.
         1. In the [Microsoft Intune admin center](https://intune.microsoft.com), navigate to **Apps** > **All apps**.
         1. Click the kong-harnesses app.
         1. Click **Properties**.
@@ -64,7 +65,9 @@ cleanup:
         1. Click **Review + save**.
         1. Click **Save**.
 
-        To uninstall kong-harnesses manually on each device instead of through Intune, skip adding the groups under **Uninstall**, save the removed **Required** assignment, and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
+        Intune's **Uninstall** assignment removes kong-harnesses only on devices where this Intune app previously installed it through a **Required** or **Available for enrolled devices** assignment.
+        For copies installed outside this Intune app, follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
+        To uninstall manually on every device instead of through Intune, skip adding groups under **Uninstall**, save the removed **Required** assignment, and follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
 ---
 
 ## Wrap the installer
@@ -218,14 +221,14 @@ Return to **Apps** > **All apps** and remove the previous app from the new app's
 
 Return to **Apps** > **All apps** and delete the previous app:
 
-1. Click the previous app.
+1. Right-click the previous app, or click the ellipsis (`...`) menu on its row.
 1. Click **Delete**.
    Confirm the deletion when prompted.
 
 Confirm the final rollout:
 
 1. Navigate to **Apps** > **All apps**.
-   Confirm that only the active release app remains.
+   Confirm that only the active kong-harnesses release app remains for the processor type you upgraded.
 1. Click the active release app.
 1. Under **Monitor**, click **Device install status**.
    If you assigned user groups, click **User install status** instead.
