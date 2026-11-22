@@ -190,8 +190,8 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
 Each item is a password in the keychain that was your default when kong-harnesses created it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
-Do these steps once for each keychain that `security list-keychains` prints, and replace `KEYCHAIN_PATH` with its path as that command prints it, for example `/Users/USER/Library/Keychains/login.keychain-db`.
-Keep the double quotes around the path, because a path can hold a space.
+Do these steps once for each keychain that `security list-keychains` prints, and replace `KEYCHAIN_PATH` with the path that `security list-keychains` prints between the double quotes, for example `/Users/USER/Library/Keychains/login.keychain-db`.
+Keep the double quotes of the commands, because a path can hold a space.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
 If a keychain that was your default at some time after you set up kong-harnesses isn't in that list, do the steps for its path too.
 
