@@ -120,7 +120,7 @@ rows:
     effect: |
       pi adds the file to the CAs that it already trusts.
       omp trusts only Bun's bundled CA list and that file.
-      omp then stops reading `/etc/ssl/cert.pem`, or the file that `SSL_CERT_FILE` names, the CA directory `/etc/ssl/certs` and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
+      omp then stops reading the default CA file and directory of the system and the system trust store, so put every private CA that omp needs in that file, such as the CA of a proxy.
   - variable: "`NODE_USE_SYSTEM_CA=1`"
     effect: |
       pi also trusts the system trust store.
@@ -130,10 +130,13 @@ rows:
 
 When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp also reads it from these `.env` files, and the first value that isn't empty wins:
 
-1. `.env` in the directory where omp starts
+1. `.env` and the other dotenv files that Bun loads from the directory where omp starts, such as `.env.local`
 1. `~/.omp/agent/.env`
 1. `~/.omp/.env`
 1. `~/.env`
+
+These are the paths of the default omp profile.
+When `OMP_PROFILE` names a profile, omp reads `~/.omp/profiles/PROFILE_NAME/agent/.env` and `~/.omp/profiles/PROFILE_NAME/.env` in place of the second and third file.
 
 Whether omp and pi need one of these variables depends on the system:
 
@@ -156,7 +159,9 @@ A CA that the CA tool of the distribution adds to these paths works for them wit
 
 When `NODE_EXTRA_CA_CERTS` is set, omp stops reading these paths, and pi keeps reading them.
 
-pi on Node.js trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
+The `nodejs` package of Debian, Ubuntu, Fedora and Alpine reads the CA paths of the distribution, so a CA that these steps add works for pi on that Node.js without a variable.
+
+pi on a Node.js build from nodejs.org, for example through nvm, trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -230,11 +235,13 @@ The file replaces the default CA file, and {{site.kong_harnesses}} still reads t
 The file then replaces the system trust store for {{site.kong_harnesses}}, so a file with only the private CA breaks the token renewal with a public identity provider, and the profile download from a public profile server.
 
 Windows adds a public root CA to its certificate store only when it first needs it.
-When your identity provider or your profile server uses a public CA, connect to it once in PowerShell, so that Windows adds its root CA:
+When your identity provider or your profile server uses a public CA, connect to each of these two servers once in PowerShell, so that Windows adds its root CA:
 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
 ```
+
+An error for the HTTP status is fine, because Windows checks the certificate chain before the request gets the status.
 
 Create the bundle in PowerShell from the root CAs of the Windows certificate store and your CA:
 
@@ -245,10 +252,30 @@ $roots = Get-ChildItem Cert:\LocalMachine\Root | ForEach-Object {
 @($roots) + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
 ```
 
-Set both variables in the PowerShell session that runs {{site.kong_harnesses}}:
+A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so check that the bundle has the root CA of each server: the gateway, the identity provider and the profile server.
+Run this check in PowerShell for each server, and change `443` when the server uses another port:
 
 ```powershell
-$env:SSL_CERT_FILE = "CA_BUNDLE_FILE"
+$certs = [regex]::Matches((Get-Content -Raw CA_BUNDLE_FILE), '(?s)-----BEGIN CERTIFICATE-----(.+?)-----END CERTIFICATE-----') |
+  ForEach-Object { [Security.Cryptography.X509Certificates.X509Certificate2]::new([Convert]::FromBase64String($_.Groups[1].Value)) }
+$tcp = [Net.Sockets.TcpClient]::new("SERVER_HOST", 443)
+$tls = [Net.Security.SslStream]::new($tcp.GetStream(), $false, { $true })
+$tls.AuthenticateAsClient("SERVER_HOST")
+$chain = [Security.Cryptography.X509Certificates.X509Chain]::new()
+$chain.ChainPolicy.RevocationMode = "NoCheck"
+$chain.ChainPolicy.ExtraStore.AddRange([Security.Cryptography.X509Certificates.X509Certificate2[]]$certs)
+$null = $chain.Build([Security.Cryptography.X509Certificates.X509Certificate2]::new($tls.RemoteCertificate))
+$tcp.Close()
+$certs.Thumbprint -contains $chain.ChainElements[$chain.ChainElements.Count - 1].Certificate.Thumbprint
+```
+
+The check prints `True` when the bundle has the root CA of the server.
+When it prints `False`, add the root CA certificate of that server to the bundle.
+
+Set both variables, with the full path of the bundle, in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}, Codex, omp or pi:
+
+```powershell
+$env:SSL_CERT_FILE = (Resolve-Path CA_BUNDLE_FILE).Path
 $env:GODEBUG = "x509sslcertoverrideplatform=1"
 ```
 
