@@ -106,7 +106,7 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
   * Every administrator source, including remote server-managed settings
 
   `kong-harnesses doctor` reads local administrator sources (not remote server-managed settings).
-  As {{ site.claude_code }} does, `doctor` reads each `allowedMcpServers` and `deniedMcpServers` entry on its own and keeps the valid ones, ignores keys whose case doesn't match, checks `deniedMcpServers` even when `managed-mcp.json` exists, and treats a string (or other non-boolean, non-array) `strictPluginOnlyCustomization` value as `true`.
+  As {{ site.claude_code }} does, `doctor` reads each `allowedMcpServers` and `deniedMcpServers` entry on its own and keeps the valid ones, ignores keys whose case doesn't match, checks `deniedMcpServers` even when `managed-mcp.json` exists, treats a `strictPluginOnlyCustomization` value that isn't a boolean, a list or `null` (strings included) as `true`, and treats `null` as no lock because it removes the key.
   For plugin-blocking settings (`strictPluginOnlyCustomization`, marketplace lists, and `managedMcpServers`), see [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
 
 ## Host apps and WSL
@@ -115,7 +115,7 @@ Validate embedding host apps and WSL separately when your fleet build uses `--ho
 
 * **Host apps (`--host-settings merge` or `parentSettingsBehavior` set to `merge`):** Start a session from each supported host app, such as the {{ site.claude_code }} extension for VS Code, and run `/status`, `/mcp`, and a test prompt.
   Terminal sessions and `kong-harnesses doctor` don't read host-passed settings.
-  Exclude Claude Desktop, because it doesn't use the build's `apiKeyHelper` or gateway route.
+  Exclude Claude Desktop ([Host settings](/kong-harnesses/fleet-build-options/#host-settings)).
 * **WSL (`--wsl inherit`):** In each WSL distribution, start `claude` and run `/status` before sending a prompt.
   Confirm `Setting sources` shows `Enterprise managed settings` with a label matching the Windows build's delivery: `(drop-ins)` or `(file + drop-ins)` for a file build, or `(HKLM)` or a merged list starting with `HKLM` for an MDM build.
   A generic `Enterprise managed settings` label alone can indicate a WSL-local `/etc/claude-code` policy instead of the Windows build.

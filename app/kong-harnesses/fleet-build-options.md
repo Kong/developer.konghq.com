@@ -48,7 +48,7 @@ related_resources:
 {{ site.claude_code }} ranks managed sources in [precedence order](https://code.claude.com/docs/en/managed-settings#how-claude-code-combines-managed-sources):
 
 1. Remote settings (claude.ai admin console or Claude apps gateway).
-1. MDM policy (see the MDM policy table under the delivery flags).
+1. MDM policy (see [MDM policy location](#mdm-policy-location)).
 1. Managed settings files (`managed-settings.json` and `managed-settings.d/`).
 
 By default, {{ site.claude_code }} reads most keys (including `apiKeyHelper`) from the highest administrator source setting a policy key to a value other than `null` or empty objects (`false`, `0`, and `""` count as set; otherwise the highest setting a non-`null` policy key).
@@ -76,25 +76,6 @@ rows:
       Pass the current MDM policy with `--policy POLICY_FILE`, or `--no-policy` only without an MDM policy.
 {% endtable %}
 
-MDM policy by platform:
-
-{% table %}
-columns:
-  - title: Platform
-    key: platform
-  - title: MDM policy location
-    key: location
-  - title: "`--policy` file for `--delivery mdm`"
-    key: file
-rows:
-  - platform: macOS
-    location: "`com.anthropic.claudecode` preference domain"
-    file: "XML `com.anthropic.claudecode.plist`"
-  - platform: Windows
-    location: "`REG_SZ` value `Settings` under `HKLM\\SOFTWARE\\Policies\\ClaudeCode`"
-    file: "`Settings` JSON (not a `.reg` file)"
-{% endtable %}
-
 Policy rules:
 
 * **Remote settings:** Migrate policy into MDM or `managed-settings.json`, keeping remote settings only for [Anthropic-hosted cloud sessions](https://code.claude.com/docs/en/server-managed-settings#choose-between-server-managed-and-endpoint-managed-settings) or unmanaged devices.
@@ -113,6 +94,25 @@ Policy rules:
   Confirm files sorting after `kong-harnesses.json` don't override `apiKeyHelper`, `env`, or `modelPicker`, and move earlier non-secret `ANTHROPIC_CUSTOM_HEADERS` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` on MDM builds, include it in `--policy` and confirm `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries such as `permissions.allow` rules or hooks ([Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source)).
   An MDM policy setting a policy key to a value other than `null` or empty objects still supplies `apiKeyHelper` over a file build.
+
+### MDM policy location
+
+{% table %}
+columns:
+  - title: Platform
+    key: platform
+  - title: MDM policy location
+    key: location
+  - title: "`--policy` file for `--delivery mdm`"
+    key: file
+rows:
+  - platform: macOS
+    location: "`com.anthropic.claudecode` preference domain"
+    file: "XML `com.anthropic.claudecode.plist`"
+  - platform: Windows
+    location: "`REG_SZ` value `Settings` under `HKLM\\SOFTWARE\\Policies\\ClaudeCode`"
+    file: "`Settings` JSON (not a `.reg` file)"
+{% endtable %}
 
 ## MCP server modes and exceptions
 
@@ -153,35 +153,57 @@ MCP rules:
   Remove duplicate `managedMcpServers` entries at gateway URLs under another name.
   In `allowlist` mode, `managedMcpServers` and [allowlist-exempt servers](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) (built-in IDE, Chrome, Agent SDK) also load.
   In every mode (including `exclusive`), `deniedMcpServers` across all scopes blocks every other matching server, including gateway servers.
-  {{ site.claude_code }} drops only the list entries it can't read, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
-  In `exclusive` mode, `fleet build` refuses a `--policy` that denies a gateway server or doesn't allow a written server that names a variable.
+  {{ site.claude_code }} drops each list entry it can't read and enforces the rest, and checks a `managed-mcp.json` server against `allowedMcpServers` when its URL, command, arguments, or headers name a variable.
+  {{ site.claude_code }} `2.1.285` through `2.1.304` also check a server that names a variable only in `env` ([allowlists and the managed set](https://code.claude.com/docs/en/managed-mcp#how-allowlists-and-denylists-apply-to-the-managed-set)), and `fleet build` counts such a server as blocked when the version range includes those versions.
+  In `exclusive` mode, `fleet build` refuses a `--policy` whose `deniedMcpServers` can match a gateway server (an entry that names a variable counts as a match) or whose `allowedMcpServers` doesn't allow a written server that names a variable.
   Confirm policies don't deny gateway servers before deploying.
 * **Name collisions (`exclusive`):** Rename any `--mcp-config` server matching a gateway server name, or pass `--record` for an earlier build.
 * **MDM allowlist displacement (`allowlist`):** Because the highest administrator source supplies locked `allowedMcpServers`, MDM `allowlist` builds replace file allowlists.
   Move needed entries to `--policy`, `--mcp-url`, or `--mcp-command`.
 * **`serverName` entries (`allowlist`):** Added `serverUrl` entries stop `serverName` from matching remote servers, and `serverCommand` entries stop it from matching stdio servers.
   Replace matching `serverName` entries with `--mcp-url` or `--mcp-command`.
-* **Allowlist values and quoting (`allowlist`):**
-  * `URL_PATTERN`: `http`, `https`, or `*` remote URL with optional `*` wildcards in visible ASCII (for example, `'https://MCP_HOST/*'`).
-    Use `xn--` ASCII for international hosts and percent-encode non-ASCII paths.
-  * `COMMAND_JSON_ARRAY`: Non-empty JSON string array matching the exact stdio command and arguments (for example, `'["npx","-y","PACKAGE"]'`).
-  * Quote values to preserve `*` and JSON quotes, and omit `${...}` (`fleet build` rejects it, and {{ site.claude_code }} [expands `${...}`](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) from developer shell and managed `env`).
-  * On Windows, use single-quoted JSON in PowerShell 7.3 or later.
-    In Windows PowerShell 5.1 ([strips inner double quotes](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters)), escape inner double quotes with `\` (for example, `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`) only without a backslash immediately before a double quote.
-    Otherwise, use PowerShell 7.3 or later.
 * **Plugin blockers (`allowlist` or `any`):** {{ site.claude_code }} skips the `profile activate` plugin when any of these apply:
   * A `managed-mcp.json` file exists.
-  * `strictPluginOnlyCustomization` is `true`, a list with `skills`, `agents`, `hooks`, or `mcp`, or any value that isn't a boolean or a list (`null` and strings included), which counts as `true`.
-    `false`, `[]`, and list entries that name no surface lock nothing.
+  * `strictPluginOnlyCustomization` is `true`, a list with `skills`, `agents`, `hooks`, or `mcp`, or any value that isn't a boolean, a list or `null` (strings included), which counts as `true`.
+    `false`, `[]`, `null` (which removes the key), and list entries that name no surface lock nothing.
   * `strictKnownMarketplaces` (or alias `allowedMarketplaces`) is set without `{"source": "skills-dir"}`.
   * `blockedMarketplaces` lists `{"source": "skills-dir"}`.
-  * `strictKnownMarketplaces` (`allowedMarketplaces`) or `allowedMcpServers` has a wholly invalid value, which fails closed (wholly invalid `blockedMarketplaces` is dropped with a warning, [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+  * `strictKnownMarketplaces` (`allowedMarketplaces`) has a wholly invalid value, which fails closed (wholly invalid `blockedMarketplaces` is dropped with a warning, [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
 
   When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` setting a plugin blocker and names each key {{ site.claude_code }} ignores for its case and each `strictPluginOnlyCustomization` entry that names no surface.
   Write lowercase `source` in `{"source": "skills-dir"}` because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
   Build with `--mcp-servers exclusive` or change the setting in `--policy` and every other managed source.
   Avoid a `managedMcpServers` entry at a gateway URL because [provided servers take precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load).
+* **Invalid allowlist (`allowlist` or `any`):** A wholly invalid `allowedMcpServers` value doesn't skip the plugin, but {{ site.claude_code }} enforces it as an empty allowlist, so no server that a developer adds loads, gateway plugin servers included ([Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed)).
+  `managedMcpServers` and allowlist-exempt servers still load.
+  When the profile has gateway MCP servers, `fleet build` refuses a `--policy` with such a value.
 * **CLI startup flags:** Remove `--mcp-config` and `--strict-mcp-config` from wrappers, aliases, and IDE settings, because either [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) with `managed-mcp.json` and `--strict-mcp-config` skips plugin servers in `allowlist` or `any`.
+
+### Allowlist values and quoting
+
+In `allowlist` mode, pass these values:
+
+* `URL_PATTERN`: `http`, `https`, or `*` remote URL with optional `*` wildcards in visible ASCII (for example, `'https://MCP_HOST/*'`).
+  Use `xn--` ASCII for international hosts and percent-encode non-ASCII paths.
+* `COMMAND_JSON_ARRAY`: Non-empty JSON string array matching the exact stdio command and arguments (for example, `'["npx","-y","PACKAGE"]'`).
+
+Omit `${...}` (`fleet build` rejects it, and {{ site.claude_code }} [expands `${...}`](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) from developer shell and managed `env`).
+Quote each value to preserve `*` and JSON quotes:
+
+{% table %}
+columns:
+  - title: Platform and shell
+    key: shell
+  - title: How to quote
+    key: quote
+rows:
+  - shell: macOS and Linux
+    quote: "Single quotes, for example `--mcp-command '[\"npx\",\"-y\",\"PACKAGE\"]'`."
+  - shell: Windows, PowerShell 7.3 or later
+    quote: Single quotes, as on macOS and Linux.
+  - shell: Windows PowerShell 5.1
+    quote: "[Windows PowerShell 5.1 strips inner double quotes](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#passing-arguments-that-contain-quote-characters), so escape each with `\\` (for example, `--mcp-command '[\\\"npx\\\",\\\"-y\\\",\\\"PACKAGE\\\"]'`). This works only when no backslash comes right before a double quote. Otherwise, use PowerShell 7.3 or later."
+{% endtable %}
 
 ## Host apps, WSL, and executable path
 
@@ -213,7 +235,7 @@ WSL limits:
 
 ### Executable path restrictions
 
-`--executable` must be an absolute path:
+`--executable` must be an absolute path in UTF-8 on every platform, without the characters in this table:
 
 {% table %}
 columns:
