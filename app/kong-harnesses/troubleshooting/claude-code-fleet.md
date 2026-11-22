@@ -69,7 +69,7 @@ rows:
       Check `Skipped sources`, verify the deployed MDM policy, and redeploy.
   - label: "`(plist)`, `(HKLM)`, or a merged list starting with `plist` or `HKLM` on a file build"
     fix: |
-      An MDM policy outranks the file build and supplies `apiKeyHelper`, even in merge mode ([Delivery method and existing policy](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy)).
+      An MDM policy on the computer outranks the file build ([Delivery method and existing policy](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy)).
       Rebuild with `--delivery mdm --policy`.
   - label: "`(remote)` or a merged list starting with `remote`"
     fix: |
