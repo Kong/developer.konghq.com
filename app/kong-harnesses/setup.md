@@ -1,6 +1,6 @@
 ---
 title: kong-harnesses setup
-description: Import one profile, sign in, and configure the client, in one run.
+description: Import or create one profile, or use an installed profile, sign in, and configure the client in one run.
 
 content_type: reference
 layout: reference
@@ -12,17 +12,22 @@ breadcrumbs:
   - /kong-harnesses/
 ---
 
-The `setup` command imports one profile, signs in, and configures the client, in one run.
+The `setup` command imports a profile from a file or HTTPS URL, creates one interactively, or uses an installed profile, then signs in and configures the client in one run.
+Pass `--profile PROFILE_NAME` (or `-p PROFILE_NAME`) in place of a source to use any installed profile, skip the profile import or creation step, and start at sign-in.
+Passing both a profile source and `--profile` exits with a usage error.
+
 On every rerun, `setup` leaves a usable sign-in and a configured client as they are.
-Only an unchanged profile file or HTTPS URL makes `setup` skip the import.
-Running `setup` without a source starts profile creation from the first question.
+With a profile file or HTTPS URL, `setup` skips the import only when the source matches the installed profile.
+Running `setup` without a source or `--profile` starts profile creation from the first question.
 `setup` stops at the first step that fails.
 After you fix the cause, run the command that the message names to resume past the finished steps, unless a client is refused.
-When the gateway or this computer refuses a client, a rerun stops at the same step or leaves that client out until you make the fix that the message names, as ["setup stopped at step"](/kong-harnesses/errors/#setup-stopped-at-step) describes.
+For a source or `--profile` run, or when `profile create` fails before saving the profile, that command is the same `setup` command.
+After `profile create` saves the profile, the message names `setup --profile PROFILE_NAME` with any `--client`, `--no-browser`, `--auto-approve`, or `--skip-route-check` flags from your run, so you don't answer the profile creation questions again.
+When the gateway or this computer refuses a client, running that command stops at the same step or leaves that client out until you make the fix that the message names, as ["setup stopped at step"](/kong-harnesses/errors/#setup-stopped-at-step) describes.
 
 ## Set up without a profile file
 
-If you don't have a profile file or HTTPS URL, run `setup` without a source in a terminal to create a profile interactively, sign in, and configure your agent CLI (for example, for {{ site.claude_code }} only):
+If you don't have a profile file or HTTPS URL, run `setup` without a source or `--profile` in a terminal to create a profile interactively, sign in, and configure your agent CLI (for example, for {{ site.claude_code }} only):
 
 ```sh
 kong-harnesses setup --client claude-code
