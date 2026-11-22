@@ -171,7 +171,8 @@ kong-harnesses logout --profile PROFILE_NAME
 When the profile has a saved sign-in, `logout` asks you to type the profile name to confirm.
 What it does depends on the profile and the saved sign-in:
 
-- When the profile names a revocation endpoint and the saved sign-in can be used, `logout` revokes the sign-in at the identity provider, then removes it from this computer.
+- When the profile names a revocation endpoint and the saved sign-in can be used, `logout` disables the current sign-in on this computer before it asks the identity provider to revoke it.
+  After the identity provider confirms the revocation, `logout` removes the sign-in from this computer.
 - When `logout` reports that server sign-out is unconfirmed, check and revoke the authorization at the identity provider, then run `logout` again.
 - When the profile doesn't name a revocation endpoint, `logout` says that it can't confirm the sign-out at the identity provider.
   It asks before it removes the sign-in from this computer.
