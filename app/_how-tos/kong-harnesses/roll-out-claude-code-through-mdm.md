@@ -101,7 +101,6 @@ faqs:
 `kong-harnesses fleet build` creates a machine-wide profile and [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) locking managed macOS, Linux, and Windows computers to {{ site.ai_gateway }}.
 Developers don't import profiles.
 Each developer signs in through the browser on first use, and kong-harnesses renews the token automatically.
-By default, {{ site.claude_code }} in Windows Subsystem for Linux (WSL) reads only its own managed settings unless you pass `--wsl inherit`.
 
 ## Sign in to the profile
 
@@ -126,7 +125,7 @@ Confirm these choices before building:
 
 * [Delivery method and existing policy](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy): export MDM policy or `managed-settings.json` and clear policy, drop-in, header, and remote conflicts.
 * [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions): pick `--mcp-servers`, prepare `managed-mcp.json` or allowlists, and check `deniedMcpServers` and plugin blockers.
-* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): confirm `--host-settings`, `--wsl`, `--executable`, version bounds, and `--model`.
+* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): confirm `--host-settings`, `--executable`, version bounds, and `--model`.
 
 ## Build the managed settings
 
@@ -155,6 +154,8 @@ kong-harnesses fleet build --profile work --platform linux --executable /usr/bin
 {% navtab "Windows" %}
 
 Replace `DELIVERY` with `file` or `mdm`.
+By default, {{ site.claude_code }} in Windows Subsystem for Linux (WSL) reads only its own managed settings.
+To make it read this policy, add `--wsl inherit` ([Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path)).
 
 ```powershell
 kong-harnesses fleet build --profile work --platform windows --delivery DELIVERY --executable 'C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe' --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-windows-GROUP
