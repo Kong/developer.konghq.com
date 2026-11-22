@@ -192,16 +192,21 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
 > The issuer and its endpoints always need `https://`.
-> For how other agent CLIs handle `http://` gateways, see [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways).
+> Only {{ site.claude_code }}, omp, and pi work with an `http://` gateway.
+> Codex, OpenCode, and Hermes Agent need an `https://` gateway.
+> See [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways) for the client rules.
 
 {:.warning}
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue.
+If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` (and `no_proxy` on macOS and Linux) before you continue.
 A proxy that forwards a request to an `http://` gateway can read your access token.
-When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
-`doctor` also fails, and kong-harnesses doesn't give {{ site.claude_code }} an access token.
+When a proxy applies to the gateway host in the current shell, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
+When `profile activate` configures {{ site.claude_code }} for an `http://` gateway, it writes `NO_PROXY` and `no_proxy` into {{ site.claude_code }} user settings.
+{{ site.claude_code }} applies those values instead of the shell's `NO_PROXY` to its own requests and to the kong-harnesses credential helper it starts.
+If a proxy applies to the gateway host before `profile activate` writes those settings, or if project or managed settings override them, `doctor` fails.
+Whenever a proxy applies to the gateway host in the environment where kong-harnesses runs, kong-harnesses doesn't return an access token.
 Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses, or add it to your shell profile:
 
 {% navtabs "no-proxy" %}
@@ -282,8 +287,7 @@ kong-harnesses profile activate quickstart --client claude-code
 ```
 
 `profile activate` sends a test request with your sign-in to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
-It shows each problem that it finds with a fix.
-Fix the problems and run the same command again.
+Follow each `fix:` line that appears, fix any remaining problems, and run the same command again.
 If `profile activate` asks to install the gateway prices for `/cost`, you can decline, because the install needs administrator rights.
 
 ## Features that change behind the gateway
@@ -336,8 +340,7 @@ kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
 `doctor` checks the sign-in, gateway connection, {{ site.claude_code }} gateway route, and {{ site.claude_code }} settings without changing any settings.
-It shows a fix for each problem it finds.
-Fix each failure it reports and run `doctor` again until all checks pass.
+Follow each `fix:` line that appears, resolve any failure it reports, and run `doctor` again until all checks pass.
 
 The model request of `--inference` can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
 To also send one model request, add `--inference`:
