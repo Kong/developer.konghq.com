@@ -78,74 +78,77 @@ The build provenance confirms that a Kong GitHub Actions workflow built it from 
 Download `SHA256SUMS.txt` and `kong-harnesses_TAG.sigstore.json` of the same release from the kong-harnesses Cloudsmith repository into the folder containing the package.
 Replace `TAG` with the release version including its leading `v`, for example `v1.2.3`.
 Run the following checks from that folder, replacing `FILE` with the full filename including its extension.
+The build provenance check needs the [GitHub CLI](https://cli.github.com/).
 
-### Verify the checksum
-
-Verify `FILE` against `SHA256SUMS.txt`:
-
-{% navtabs "verify-checksum" %}
+{% navtabs "check-downloaded-file" %}
 {% navtab "macOS" %}
 
-```sh
-awk -v file='FILE' '$2 == file' SHA256SUMS.txt | shasum -a 256 --check
-```
+1. Verify `FILE` against `SHA256SUMS.txt`:
 
-The command must print `FILE: OK`.
+   ```sh
+   awk -v file='FILE' '$2 == file' SHA256SUMS.txt | shasum -a 256 --check
+   ```
+
+   The command must print `FILE: OK`.
+1. Verify the build provenance of `FILE` against `kong-harnesses_TAG.sigstore.json`:
+
+   ```sh
+   gh attestation verify FILE \
+     --bundle kong-harnesses_TAG.sigstore.json \
+     --owner Kong \
+     --source-ref refs/tags/TAG \
+     --deny-self-hosted-runners
+   ```
+
+   The command must exit with code `0`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
 
-```sh
-awk -v file='FILE' '$2 == file' SHA256SUMS.txt | sha256sum --check
-```
+1. Verify `FILE` against `SHA256SUMS.txt`:
 
-The command must print `FILE: OK`.
+   ```sh
+   awk -v file='FILE' '$2 == file' SHA256SUMS.txt | sha256sum --check
+   ```
 
-{% endnavtab %}
-{% navtab "Windows" %}
+   The command must print `FILE: OK`.
+1. Verify the build provenance of `FILE` against `kong-harnesses_TAG.sigstore.json`:
 
-In PowerShell:
+   ```sh
+   gh attestation verify FILE \
+     --bundle kong-harnesses_TAG.sigstore.json \
+     --owner Kong \
+     --source-ref refs/tags/TAG \
+     --deny-self-hosted-runners
+   ```
 
-```powershell
-"$((Get-FileHash 'FILE' -Algorithm SHA256).Hash.ToLowerInvariant())  FILE" -cin (Get-Content SHA256SUMS.txt)
-```
-
-The command must print `True`.
-The check is case-sensitive, so enter `FILE` exactly as it appears in `SHA256SUMS.txt`.
-
-{% endnavtab %}
-{% endnavtabs %}
-
-### Verify the build provenance
-
-Install the [GitHub CLI](https://cli.github.com/) and verify `FILE` against `kong-harnesses_TAG.sigstore.json`:
-
-{% navtabs "verify-provenance" %}
-{% navtab "macOS and Linux" %}
-
-```sh
-gh attestation verify FILE \
-  --bundle kong-harnesses_TAG.sigstore.json \
-  --owner Kong \
-  --source-ref refs/tags/TAG \
-  --deny-self-hosted-runners
-```
+   The command must exit with code `0`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
-```powershell
-gh attestation verify FILE `
-  --bundle kong-harnesses_TAG.sigstore.json `
-  --owner Kong `
-  --source-ref refs/tags/TAG `
-  --deny-self-hosted-runners
-```
+1. In PowerShell, verify `FILE` against `SHA256SUMS.txt`:
+
+   ```powershell
+   "$((Get-FileHash 'FILE' -Algorithm SHA256).Hash.ToLowerInvariant())  FILE" -cin (Get-Content SHA256SUMS.txt)
+   ```
+
+   The command must print `True`.
+   The check is case-sensitive, so enter `FILE` exactly as it appears in `SHA256SUMS.txt`.
+1. Verify the build provenance of `FILE` against `kong-harnesses_TAG.sigstore.json`:
+
+   ```powershell
+   gh attestation verify FILE `
+     --bundle kong-harnesses_TAG.sigstore.json `
+     --owner Kong `
+     --source-ref refs/tags/TAG `
+     --deny-self-hosted-runners
+   ```
+
+   The command must exit with code `0`.
 
 {% endnavtab %}
 {% endnavtabs %}
-
-The command must exit with code `0`.
 
 ## macOS installer package
 
@@ -394,13 +397,22 @@ Open a new terminal so `PATH` changes take effect, then verify both the executab
 Confirm the terminal resolves the system-wide executable:
 
 {% navtabs "check-install-path" %}
-{% navtab "macOS and Linux" %}
+{% navtab "macOS" %}
 
 ```sh
 command -v kong-harnesses
 ```
 
-The command must print `/usr/local/bin/kong-harnesses` on macOS or `/usr/bin/kong-harnesses` on Linux.
+The command must print `/usr/local/bin/kong-harnesses`.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+```sh
+command -v kong-harnesses
+```
+
+The command must print `/usr/bin/kong-harnesses`.
 
 {% endnavtab %}
 {% navtab "Windows" %}

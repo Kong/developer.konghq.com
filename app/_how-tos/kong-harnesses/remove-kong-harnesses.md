@@ -28,7 +28,7 @@ tldr:
     Then run `kong-harnesses profile cleanup` to restore agent CLI settings, and run `kong-harnesses profile delete PROFILE_NAME` to delete each user profile.
     `logout` revokes the sign-in at your identity provider only when the profile supports server sign-out, and removes it locally otherwise.
     For what `logout` revokes, see [Sign out](/kong-harnesses/sign-in/#sign-out).
-    Finally, uninstall kong-harnesses with Homebrew, `apt`, `dnf`, or Windows Installer.
+    Finally, uninstall kong-harnesses with the package manager or installer that installed it.
 
 related_resources:
   - text: kong-harnesses
@@ -51,7 +51,7 @@ prereqs:
     - title: Desktop session with kong-harnesses installed
       content: |
         Keep kong-harnesses installed until you finish signing out, cleaning up agent CLI settings, and deleting profiles.
-        Run these steps in your own user account in an interactive desktop session that can reach your system secret store (macOS Keychain, Windows DPAPI, or Secret Service on Linux).
+        Run these steps in your own user account in an interactive desktop session that can reach your system secret store.
 ---
 
 Uninstalling kong-harnesses leaves behind your saved sign-ins, installed profiles, and agent CLI settings.
