@@ -60,9 +60,11 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
 * Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
   The response can't name a scope that the profile doesn't request, and a response with `scope` must keep every custom scope that the profile requests, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
-  In each default client scope of the client that the profile doesn't request, turn off **Include in token scope**.
-  Keep **Include in token scope** on in each client scope that the profile requests, such as `profile` and `email` when you use the default scopes (`openid`, `profile`, `email` and `offline_access`).
-  When your `--scope` list leaves out `profile` or `email`, turn off **Include in token scope** in each client scope that it leaves out.
+  **Include in token scope** is a setting of the shared client scope, so changing it alters the `scope` claim for every other client linked to that scope.
+  In the **Client scopes** tab of the {{site.kong_harnesses}} client, unlink each unneeded default client scope that the profile doesn't request and that has **Include in token scope** on, as [Link client scope with the client](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_linking) describes.
+  If the {{site.kong_harnesses}} client needs the mappers or role mappings of such a scope, turn off **Include in token scope** on that shared scope only when the other clients linked to it need that change too.
+  Otherwise, unlink the shared scope and add those mappers or role mappings to the [dedicated client scope](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_dedicated) of the client.
+  Check that each client scope that the profile requests is linked to the client as a default or optional client scope with **Include in token scope** on, such as `profile` and `email` when you use the default scopes (`openid`, `profile`, `email` and `offline_access`).
 * Refresh token rotation: You can keep **Revoke Refresh Token** off.
   When **Use Refresh Tokens** is on, Keycloak sends a new refresh token in each successful renewal response.
   If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
@@ -71,7 +73,8 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
   In the dedicated client scope of the client, add an Audience mapper, and set its **Included Custom Audience** to the `--audience` value.
   Keep **Add to ID token** off in the mapper, as it is by default ([Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded)), because the [ID token](/kong-harnesses/identity-provider/checks/#id-token) check accepts only the client ID in `aud`.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
-  If you use a shared client scope, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
+  If you use a shared client scope instead, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
+  Use a shared client scope this way only when the other clients linked to it need **Include in token scope** off too.
 * Access token lifetime: Set the **Access Token Lifespan** of the realm, or of the client, from 7 to 60 minutes, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
   For longer lifespans, see [Access token lifetime](/kong-harnesses/identity-provider/#access-token-lifetime).
 
