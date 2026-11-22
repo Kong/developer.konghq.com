@@ -75,16 +75,26 @@ For a machine-wide profile deployed with a {{ site.claude_code }} fleet build, s
 
    `logout` removes only the sign-in or static key and gateway MCP server keys that kong-harnesses saved for that profile.
    When the profile has a saved sign-in or static key on this computer, `logout` asks you to type the profile name to confirm before removing it along with any saved gateway MCP server keys.
-   When only gateway MCP server keys remain without a saved sign-in or static key, `logout` removes those MCP server keys without asking and prints `Already signed out`.
-   If `profile list` or `logout` reports that a profile is invalid or unreadable, skip `logout` for that profile and follow [Delete an invalid profile](#delete-an-invalid-profile).
-   If `logout` fails for another reason, complete the step its message names and run `logout` again.
+   When the profile doesn't have a saved sign-in or static key on this computer, `logout` removes any remaining gateway MCP server keys without asking you to confirm and prints `Already signed out`.
+   For a CI profile in a Linux session without Secret Service, `logout` also prints `Already signed out` without checking the secret store.
    `logout` can remove a sign-in locally without revoking it at an identity provider, such as for a static-key profile or a profile without a revocation endpoint.
    For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+
+   If `profile list` or `logout` reports that a profile is unreadable, follow the next step in the message:
+
+   * **Needs a newer kong-harnesses (`update kong-harnesses`):** Update kong-harnesses, then run `logout` again.
+   * **Unreadable machine-wide profile (`ask your administrator to reinstall it`):** Ask your administrator to reinstall the profile so you can run `logout` before they remove the fleet build.
+   * **Invalid user profile (the message says the profile is invalid or names `kong-harnesses profile delete`):** Skip `logout` for that profile, finish the OpenCode and Hermes Agent sign-outs in the next step, and delete the profile later with [Delete an invalid profile](#delete-an-invalid-profile).
+   * **File whose name isn't a profile name (`no command can use or delete it`):** Skip that entry, because no kong-harnesses command can sign out of it or delete it.
+
+   For details on unreadable profile messages, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+   If `logout` fails for another reason, complete the step its message names and run `logout` again.
 1. If you use OpenCode or Hermes Agent, remove their credentials through each client's own plugin before running `profile cleanup`.
    OpenCode and Hermes Agent sign in through their own plugins, so `kong-harnesses logout` refuses `--client opencode` and `--client hermes`, and their sign-ins stay active.
 
    * **OpenCode:** Run `opencode auth logout`, then select the provider named after the profile.
-   * **Hermes Agent:** Run `hermes auth list kong-ai-gateway` to find each credential's entry ID, then remove each entry with `hermes auth remove kong-ai-gateway ENTRY_ID`.
+   * **Hermes Agent:** Run `hermes auth logout kong-ai-gateway` to remove all credentials for the `kong-ai-gateway` provider.
+     To remove only one credential from a pool instead, run `hermes auth list kong-ai-gateway` to find its entry ID, then run `hermes auth remove kong-ai-gateway ENTRY_ID`.
      Do not pass an index, which changes when an earlier entry is removed, or a label, which Hermes refuses when more than one entry shares it.
 
    For these plugin commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
@@ -130,7 +140,8 @@ Delete each user profile after `logout` and `profile cleanup` finish.
 For a valid profile, `profile delete` refuses while you're still signed in or while any agent CLI still uses the profile.
 
 `profile delete` removes only user profiles that you installed.
-For a machine-wide profile (`installed for every user by your administrator` in `profile list`), `profile delete` refuses because only an administrator can remove it by following [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
+For a machine-wide profile (`installed for every user by your administrator` in `profile list`), `profile delete` refuses before asking you to confirm and without removing any saved keys.
+Only an administrator can remove a machine-wide profile by following [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
 1. Delete the stored profile document:
 
@@ -145,18 +156,23 @@ Complete that step, then run `profile delete` again.
 
 ### Delete an invalid profile
 
-If `doctor`, `logout`, `profile get`, or `profile list` reports that a profile is invalid or unreadable, kong-harnesses can't read it, so you can't sign out first.
+If `doctor`, `logout`, `profile get`, or `profile list` reports that a user profile is invalid and names `kong-harnesses profile delete`, kong-harnesses can't read it, so you can't run `logout` first.
+This procedure applies only to an invalid user profile.
+If an unreadable profile needs a newer kong-harnesses release, update kong-harnesses and run `logout` again.
+If an unreadable profile is machine-wide, ask your administrator to reinstall it so you can run `logout` before they remove the fleet build.
 
-1. Delete the invalid profile without running `logout`:
+1. Delete the invalid user profile without running `logout`:
 
    ```sh
    kong-harnesses profile delete PROFILE_NAME
    ```
 
-   For an invalid profile, `profile delete` doesn't refuse while an agent CLI uses the profile or while a saved sign-in remains, so it removes the profile in both cases.
-   When a sign-in might remain, `profile delete` warns about it before asking you to confirm and again in the `Login` field of its output.
+   For an invalid user profile, `profile delete` doesn't refuse while an agent CLI uses the profile or while a saved sign-in remains.
+   It removes the profile and any saved gateway MCP server keys for that profile.
+   When a saved sign-in might remain, `profile delete` warns about it before asking you to confirm and again in the `Login` field of its output.
 1. Type the profile name when prompted to confirm.
-1. Clean up each agent CLI that still uses the deleted profile:
+1. If you use OpenCode or Hermes Agent and haven't signed out through their plugins yet, sign out using [Sign out of each profile](#sign-out-of-each-profile) before running `profile cleanup`.
+1. Clean up each agent CLI that still uses the deleted profile, if you haven't already run [Clean up agent CLI settings](#clean-up-agent-cli-settings):
 
    ```sh
    kong-harnesses profile cleanup --client CLIENT_NAME
