@@ -61,10 +61,21 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 * Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
   The response can't name a scope that the profile doesn't request, and a response with `scope` must keep every custom scope that the profile requests, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
   **Include in token scope** is a setting of the shared client scope, so changing it alters the `scope` claim for every other client linked to that scope.
-  In the **Client scopes** tab of the {{site.kong_harnesses}} client, unlink each unneeded default client scope that the profile doesn't request and that has **Include in token scope** on, as [Link client scope with the client](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_linking) describes.
-  If the {{site.kong_harnesses}} client needs the mappers or role mappings of such a scope, turn off **Include in token scope** on that shared scope only when the other clients linked to it need that change too.
-  Otherwise, unlink the shared scope and add those mappers or role mappings to the [dedicated client scope](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_dedicated) of the client.
-  Check that each client scope that the profile requests is linked to the client as a default or optional client scope with **Include in token scope** on, such as `profile` and `email` when you use the default scopes (`openid`, `profile`, `email` and `offline_access`).
+  In the **Client scopes** tab of the {{site.kong_harnesses}} client, find each default client scope that the profile doesn't request and that has **Include in token scope** on, as [Link client scope with the client](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_linking) describes.
+  Before you unlink a scope, pick the first change in this list that applies to it:
+
+  * If the {{site.kong_harnesses}} client doesn't need the mappers or the role scope mappings of the scope, unlink the scope from the client.
+  * If every other client linked to the scope needs **Include in token scope** off too, keep the link and turn **Include in token scope** off on the scope.
+  * If another linked client needs **Include in token scope** on and the scope doesn't have role scope mappings, unlink the scope and add its mappers to the [dedicated client scope](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_dedicated) of the client.
+  * If another linked client needs **Include in token scope** on and the scope has role scope mappings, create a client scope with the same mappers and role scope mappings, and turn **Include in token scope** off on it.
+    Link the new scope as a default client scope only to the {{site.kong_harnesses}} client, and unlink the shared scope.
+    Don't add these mappers to the dedicated client scope, because Keycloak applies a client scope with role scope mappings only for users who have one of its roles, as [Client scopes permissions](https://www.keycloak.org/docs/latest/server_admin/index.html#client-scopes-permissions) describes, and the dedicated client scope doesn't make that check.
+
+  Keep `openid` and `offline_access` in the scopes that the profile requests.
+  `openid` is a protocol value, so it has no client scope to link.
+  Link each other scope that the profile requests to the client as a default or optional client scope, such as `profile` and `email` when the profile uses the default `--scope` list.
+  Keep **Include in token scope** on for each custom scope that the profile requests, because the response must keep it.
+  For `profile`, `email`, `offline_access` and the other scopes that [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) lists as exceptions, the setting can be on or off.
 * Refresh token rotation: You can keep **Revoke Refresh Token** off.
   When **Use Refresh Tokens** is on, Keycloak sends a new refresh token in each successful renewal response.
   If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0.
