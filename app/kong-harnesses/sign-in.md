@@ -121,7 +121,8 @@ When the profile has a saved sign-in, `logout` asks you to type the profile name
 - When the saved sign-in is damaged or doesn't match the profile, `logout` removes it from this computer only.
 - When the profile doesn't have a sign-in on this computer, `logout` doesn't ask you to confirm, and shows `Already signed out`. It also removes any keys of gateway MCP servers that are left.
 - When `logout` says that the local cleanup is incomplete, or that the saved sign-in needs attention, run `logout` again.
-  For these and other `logout` failure messages, see [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails).
+
+For these and other `logout` failure messages, see [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails).
 
 Each time `logout` removes the sign-in or the key from this computer, it also removes the saved keys of gateway MCP servers for the profile.
 
@@ -130,10 +131,13 @@ A {{ site.claude_code }} session that already has an access token can use it unt
 For a profile that uses a key from your administrator, `logout` removes the key from this computer only.
 The key works at the gateway until your administrator revokes it.
 
-For a profile for a CI job, `logout` shows `Already signed out`, because kong-harnesses doesn't save the key.
+For a profile for a CI job, kong-harnesses doesn't save the key.
+On Linux, set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
+`logout` shows `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name, or in a Linux session without Secret Service.
+If this computer still has a saved sign-in or key for that profile name and the session has access to the secret store, `logout` asks you to confirm and removes it from this computer.
+In a Linux session without Secret Service, `logout` doesn't check the secret store, so run `logout` in a desktop session with a keyring to remove a sign-in or key that an earlier setup saved.
 `logout` doesn't remove `KONG_HARNESSES_STATIC_KEY`, and the agent CLI can still use the key while the variable is set.
 Remove the variable from the job environment yourself.
-If an earlier setup saved a sign-in or key for that profile name, run `logout` in a session with access to the secret store to remove it.
 
 ## Find out why a sign-in fails
 
