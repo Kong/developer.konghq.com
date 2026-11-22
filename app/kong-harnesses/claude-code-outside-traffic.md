@@ -118,7 +118,7 @@ rows:
       Add it with `claude plugin marketplace add anthropics/claude-plugins-official`.
   - traffic: Artifacts
     destination: "`api.anthropic.com` (publish and organization policy), `*.frame.claudeusercontent.com` (reads), `claude.ai` (browser)"
-    member: "`artifact` (`auto_updates: false` also turns it off, unless a schema 18 or later profile makes activation write `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices))"
+    member: "`artifact` (`auto_updates: false` also turns it off, unless a schema 18 or later profile makes activation write `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank. See [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).)"
     cost: >-
       Disables publishing and reading [artifacts](https://code.claude.com/docs/en/artifacts).
       See [Artifact availability](#artifact-availability).
