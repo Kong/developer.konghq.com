@@ -33,12 +33,16 @@ related_resources:
 
 When a command fails, {{site.kong_harnesses}} prints a line that starts with `Error:` to standard error, and says what to do next. For a wrong flag or argument, most commands also print `Run 'kong-harnesses COMMAND --help' for usage`.
 
-`kong-harnesses doctor` works in another way. It prints its findings, and the `--report` output, to standard output. For each agent CLI, the failed check to fix first gives a code: 2 for a profile or setup problem, 3 for a sign-in problem, and 1 for any other problem. `doctor` exits with the most severe of these codes across the profile and every agent CLI, in the order 2, then 1, then 3. A warning alone exits with 0. To act on the findings, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
+`kong-harnesses doctor` works in another way.
+It prints its findings, and the `--report` output, to standard output.
+To act on the findings, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
 {:.info}
 > The text of a message can change between releases. In a script, check the exit code, not the message.
 
 ## Exit codes
+
+Every {{site.kong_harnesses}} command returns one of the following exit codes:
 
 {% table %}
 columns:
@@ -68,6 +72,16 @@ rows:
     meaning: "You canceled the command, for example with Ctrl+C. The message says that the command stopped, and for some commands what it did before it stopped."
     action: "Run the command again when you are ready."
 {% endtable %}
+
+`kong-harnesses doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
+In each report, the failed check to fix first sets the exit code:
+
+* `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete
+* `2` for the profile, the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install
+* `3` for the sign-in, or a missing key for a gateway MCP server
+* `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C
+
+Across the install, the profile, and every agent CLI report, `doctor` exits with the most severe code: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
 
@@ -117,12 +131,8 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 ### "the profile file is in" an encoding that kong-harnesses can't read
 
-`profile import` reads a file in UTF-8, with or without a byte-order mark, or in UTF-16 with a byte-order mark. The message names what it found instead, and the fix for it:
-
-* "UTF-16 without a byte-order mark": Save a copy with a byte-order mark, for example in PowerShell with `Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
-* "UTF-32": Save a copy as UTF-16, for example in PowerShell with `Get-Content -Raw PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
-* "UTF-16 with a broken character": The file is cut short or damaged. Get the profile file again.
-* "a text encoding that is not UTF-8", or "UTF-8 with a byte-order mark" for a file with two byte-order marks: Save a copy as UTF-8 with an editor, then import the copy.
+`profile import` prints this message when the profile file isn't in an encoding that it reads, and names what it found and how to save a copy.
+For the accepted encodings and the fix for each refused encoding, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 
 ### "OIDC discovery failed; check issuer access and retry"
 
@@ -150,31 +160,30 @@ Another {{site.kong_harnesses}} command, such as a sign-in or a renewal, uses th
 
 ### "no Secret Service runs in this session, so kong-harnesses cannot reach a saved sign-in"
 
-`profile import` and other commands print this message on Linux when the session has no keyring. The fix is in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token).
+`profile import` and other commands print this message on Linux when the session doesn't have a keyring.
+The fix is in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
 
 ### "still uses this profile, so its security identity cannot change"
 
 The profile that you import changes a [security identity field](/kong-harnesses/profile-file/#security-identity), and an agent CLI still uses the installed profile. Run the command that the message names, `kong-harnesses profile cleanup --client CLIENT_NAME`, or activate another profile in that client. Then import the profile, and activate it again.
 
-### "your organization's managed settings run this profile in Claude Code"
+### "your organization's managed settings run"
 
-Your organization delivers the profile to {{ site.claude_code }} through managed settings, so `profile import` can't change its security identity on your computer. Ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
-
-### "your organization's managed settings run the selected profile"
-
-`profile delete` prints this message when your organization delivers the profile to {{ site.claude_code }} through managed settings. The managed settings run the credential helper of the profile, and `profile cleanup` can't take the helper out either. Ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
+Your organization delivers the profile to {{ site.claude_code }} through managed settings, so your account can't change its security identity or remove its credential helper with `profile cleanup`.
+When `profile import` prints "your organization's managed settings run this profile in Claude Code", ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
+When `profile delete` prints "your organization's managed settings run the selected profile", ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
 
 ### "your administrator installed a profile with this name for every user" or "installed this profile for every user"
 
 An administrator installed this profile for every user of the computer, so `profile import` can't replace it, and `profile delete` can't remove it. Sign in to it with `kong-harnesses login`, or ask your administrator to change it.
 
-### "selected profile is invalid"
+### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
-The installed copy of the profile can't be read. Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`. `profile delete` can't check the client settings of an invalid profile, and it keeps a saved sign-in. When its result says that the login may remain, import the profile, then run `kong-harnesses logout --profile PROFILE_NAME`. For an agent CLI that still uses the profile, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
-
-### "the installed profile of this name is invalid, so import cannot replace it"
-
-`profile import` doesn't replace an installed profile that it can't read. Run `kong-harnesses profile delete PROFILE_NAME`, then run the import again. The steps after the delete are in ["selected profile is invalid"](#selected-profile-is-invalid).
+The installed copy of the profile can't be read, and `profile import` doesn't replace an installed profile that it can't read.
+Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
+`profile delete` can't check the client settings of an invalid profile, and it keeps a saved sign-in.
+When its result says that the login may remain, import the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
+For an agent CLI that still uses the profile, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
 
 ### "selected profile needs a newer kong-harnesses"
 
@@ -192,21 +201,14 @@ An administrator installed the profile for every user of the computer, but its f
 
 `status`, `doctor` and `login --diagnostics` without `--client` work on each agent CLI that the profile has a block for, and the profile doesn't have a block for one that this release sets up. Ask your administrator for a profile with a block for your agent CLI in [`clients`](/kong-harnesses/profile-file/#clients). To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
-### "selected profile still has a saved sign-in"
+### "saved sign-in" or "profile delete could not inspect"
 
-`profile delete` refuses a profile that is still signed in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
+`profile delete` checks for a saved sign-in and inspects each agent CLI's settings before it removes a profile:
 
-### "the saved sign-in could not be inspected, so the profile was not deleted"
-
-`profile delete` couldn't find out whether the profile is still signed in, for example because the password store is locked, and it doesn't delete a profile that could still have a sign-in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
-
-### "cannot tell whether the profile still has a saved sign-in and did not delete it"
-
-The message starts with "no Secret Service runs in this session". On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses. Delete the profile from a desktop session with a keyring, such as GNOME Keyring.
-
-### "profile delete could not inspect"
-
-`profile delete` checks the settings of each agent CLI before it removes the profile. When the message ends with "retry later", the check didn't finish, so run `profile delete` again. When the message ends with "settings configuration", the settings of that agent CLI can't be read. Fix the settings file of that client, then run `profile delete` again.
+* "selected profile still has a saved sign-in": The profile is still signed in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
+* "the saved sign-in could not be inspected, so the profile was not deleted": `profile delete` couldn't find out whether the profile is still signed in, for example because the password store is locked, and doesn't delete a profile that could still have a sign-in. Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
+* "cannot tell whether the profile still has a saved sign-in and did not delete it": The message starts with "no Secret Service runs in this session". On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses. Delete the profile from a desktop session with a keyring, such as GNOME Keyring.
+* "profile delete could not inspect": When the message ends with "retry later", the settings check didn't finish, so run `profile delete` again. When the message ends with "settings configuration", the settings of that agent CLI can't be read. Fix the settings file of that client, then run `profile delete` again.
 
 ### "selected profile is still activated"
 
@@ -214,7 +216,10 @@ The message starts with "no Secret Service runs in this session". On Linux, a se
 
 ## Sign-in errors
 
-`login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/#when-the-login-or-logout-command-fails) lists them with their fixes. When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out). The errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, are listed with their fixes in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token). This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
+`login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists them with their fixes.
+When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+[When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, with their fixes.
+This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
 
 ### "no key for the gateway MCP server"
 
@@ -236,7 +241,9 @@ pi has its own saved key for the `kong` provider, and it would send that key in 
 
 ### "a proxy is set for the plain-HTTP gateway"
 
-The profile uses an `http://` gateway, and a proxy variable in the shell applies to the gateway host. The proxy could read the credential, so `profile activate` sets up no client. To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/#when-kong-harnesses-can-t-give-an-access-token), then run `profile activate` again.
+The profile uses an `http://` gateway, and a proxy variable in the shell applies to the gateway host.
+The proxy could read the credential, so `profile activate` doesn't set up any client.
+To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token), then run `profile activate` again.
 
 ### "is not configured: it can choose a proxy"
 
@@ -297,7 +304,9 @@ When the message says that `setup` leaves a client out, or that a client "cannot
 
 ## Fleet build errors
 
-Most `fleet build` and `fleet remove` errors name the flag to add or take out. [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/) describes `--policy`, `--no-policy`, `--mcp-servers`, `--mcp-config` and `fleet remove`. [Keep a {{ site.claude_code }} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) describes a new build with `--record`, which needs the record of the build that the computers have now.
+Most `fleet build` and `fleet remove` errors name the flag to add or remove.
+[Fleet build options](/kong-harnesses/fleet-build-options/) describes `--policy`, `--no-policy`, `--mcp-servers`, `--mcp-config`, `--record`, and `fleet remove`.
+[Keep a {{ site.claude_code }} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) walks through a new build with `--record`, which needs the record of the build that the computers run.
 
 ### "fleet build needs an https:// gateway"
 

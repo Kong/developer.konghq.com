@@ -32,7 +32,11 @@ related_resources:
 
 A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_gateway}} is, how developers sign in, and how to set up each agent CLI. A profile doesn't contain secrets, so an administrator can share one file with every developer. [`kong-harnesses profile create`](/kong-harnesses/profile/create/) writes a profile for you, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) installs one from a file or an HTTPS URL.
 
-The file is JSON of up to 65536 bytes, saved as UTF-8, or as UTF-16 with a byte-order mark. {{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice. To see the document of an installed profile, run this command with [jq](https://jqlang.org/). The JSON output of `profile get` puts the document in `profile`:
+The file is JSON of up to 65,536 bytes, saved as UTF-8 (with or without a byte-order mark), or as UTF-16LE or UTF-16BE with a byte-order mark.
+For accepted encodings and how to convert refused files, see [Profile file encoding](#profile-file-encoding).
+{{site.kong_harnesses}} refuses a field that it doesn't know, a field that the schema version doesn't allow, and a field that appears twice.
+To see the document of an installed profile, run this command with [jq](https://jqlang.org/).
+The JSON output of `profile get` puts the document in `profile`:
 
 ```sh
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile'
@@ -91,6 +95,30 @@ This profile signs developers in with an identity provider and sets up {{ site.c
   }
 }
 ```
+
+## Profile file encoding
+
+`profile import` reads a profile file saved as UTF-8, with or without a byte-order mark, or as UTF-16LE or UTF-16BE with a byte-order mark, and stores it as UTF-8 without a byte-order mark.
+Windows PowerShell 5.1 `>` redirection writes UTF-16LE with a byte-order mark, so `profile import` reads the redirected file directly.
+
+When `profile import` refuses a file for its encoding, the error names what it found and how to save a copy:
+
+{% table %}
+columns:
+  - title: Encoding reported
+    key: encoding
+  - title: Fix
+    key: fix
+rows:
+  - encoding: "`UTF-16LE without a byte-order mark` or `UTF-16BE without a byte-order mark`"
+    fix: "Save a copy with a byte-order mark, then import the copy. For example, in PowerShell run `Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE` for UTF-16LE, or use `-Encoding BigEndianUnicode` for UTF-16BE."
+  - encoding: "`UTF-32`"
+    fix: "Save a copy as UTF-16, for example in PowerShell with `Get-Content -Raw PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy."
+  - encoding: "`UTF-16 with a broken character`"
+    fix: "The file is cut short or damaged. Get the profile file again."
+  - encoding: "`a text encoding that is not UTF-8`, or `UTF-8 with a byte-order mark` (when a file has two byte-order marks)"
+    fix: "Save a copy as UTF-8 with an editor, then import the copy."
+{% endtable %}
 
 ## Schema versions
 
@@ -206,11 +234,11 @@ Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `mod
 
 ### Plain HTTP gateways
 
-A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it. {{site.kong_harnesses}} keeps these requests off proxies:
+A request to an `http://` gateway isn't encrypted, so a proxy could read the credential in it.
+{{site.kong_harnesses}} keeps these requests off proxies:
 
-* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients. When a check of their settings fails before the write, it changes no client settings.
-* When a proxy variable in the shell applies to the gateway host, `profile activate` sets up no client, and `credential` and `token` don't give a credential. Add the gateway host to `NO_PROXY` in the shell that starts the agent CLI, and also to `no_proxy` if it's set. For a gateway at an IPv6 address, add each form that the message names, such as `[::1]:8000,[::1],::1`, because clients read an IPv6 address in `NO_PROXY` differently.
-* From 0.18.0, for {{ site.claude_code }}, `profile activate` writes the gateway host to `NO_PROXY` and `no_proxy` in the settings. A proxy variable or `NO_PROXY` value in the project settings of {{ site.claude_code }} wins over these values, and `profile activate` refuses when the managed settings could send the requests through a proxy. For these cases, see the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check).
+* `profile activate` doesn't set up Codex, OpenCode or Hermes Agent, because they pick their proxy in ways that {{site.kong_harnesses}} can't check. It sets up the other clients, and doesn't change any client settings when a check of their settings fails before the write.
+* When a proxy applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential. Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes (from 0.18.0, `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} settings unless project or managed settings take precedence).
 * `fleet build` refuses the profile, because it can't check the proxy settings of the managed computers.
 
 The errors and their fixes are in [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Fleet build errors](/kong-harnesses/errors/#fleet-build-errors).
