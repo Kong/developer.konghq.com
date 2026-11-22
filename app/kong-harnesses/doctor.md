@@ -16,7 +16,8 @@ The `doctor` command checks one profile end to end: the profile, the sign-in, th
 It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each of these servers that uses HTTPS, and for the profile server when the profile keeps the HTTPS URL that it was imported from.
 A profile that an earlier release imported doesn't keep that URL.
 A missing or unreadable file gets a separate result.
-The check of the `NODE_EXTRA_CA_CERTS` file also counts the Mozilla root CAs that {{site.kong_harnesses}} has built in and the system trust store.
+It judges the `NODE_EXTRA_CA_CERTS` file for each client of the profile, with the root CAs that the client trusts when the variable is set, and names the client in a failure.
+For omp, it also finds the variable in the `.env` files that omp reads when it starts in the directory where you run `doctor`.
 It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
 ## Command usage
