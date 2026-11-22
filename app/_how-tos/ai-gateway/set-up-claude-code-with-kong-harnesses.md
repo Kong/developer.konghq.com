@@ -198,9 +198,11 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
-If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue, because a proxy on an `http://` gateway can read your access token.
-When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client and stop with an error naming `NO_PROXY`, `doctor` fails, and kong-harnesses doesn't give {{ site.claude_code }} an access token.
-Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses or `claude`, or add it to your shell profile:
+If `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, or their lowercase forms are set, add `127.0.0.1` and `localhost` to `NO_PROXY` before you continue.
+A proxy that forwards a request to an `http://` gateway can read your access token.
+When a proxy applies to the gateway host, `profile activate` and `setup` don't configure a client and stop with an error that names `NO_PROXY`.
+`doctor` also fails, and kong-harnesses doesn't give {{ site.claude_code }} an access token.
+Separate `NO_PROXY` entries with commas, and keep the setting in every shell where you run kong-harnesses, or add it to your shell profile:
 
 {% navtabs "no-proxy" %}
 {% navtab "macOS and Linux" %}
@@ -307,9 +309,14 @@ rows:
     recover: Nothing to do.
   - feature: "`/cost` prices"
     why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
-    recover: "If the profile or the gateway states prices, `profile activate` asks to install them. The install needs administrator rights, and works only on macOS and Linux. A model without a stated price keeps the price that {{ site.claude_code }} uses by default."
+    recover: >-
+      If the profile or the gateway states prices, `profile activate` asks to install them.
+      The install needs administrator rights, and works only on macOS and Linux.
+      A model without a stated price keeps the price that {{ site.claude_code }} uses by default.
   - feature: WebSearch on some models
-    why: Some models cannot search the web, but answer as if they did. When the gateway or the profile names such a model, WebSearch says that no search ran.
+    why: >-
+      Some models cannot search the web, but answer as if they did.
+      When the gateway or the profile names such a model, WebSearch says that no search ran.
     recover: Switch to a Claude model with `/model` when you need a web search.
 {% endtable %}
 
@@ -329,6 +336,7 @@ kong-harnesses doctor --profile quickstart --client claude-code
 ```
 
 `doctor` checks the sign-in, gateway connection, {{ site.claude_code }} gateway route, and {{ site.claude_code }} settings without changing any settings.
+It shows a fix for each problem it finds.
 Fix each failure it reports and run `doctor` again until all checks pass.
 
 The model request of `--inference` can cost money: the prompt is "Reply with OK." and the answer is at most 16 tokens.
