@@ -153,7 +153,7 @@ When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp also reads it from t
 
 When `OMP_PROFILE` names a profile, omp reads `~/.omp/profiles/PROFILE_NAME/agent/.env` and `~/.omp/profiles/PROFILE_NAME/.env` in place of the second and third file, which belong to the default omp profile.
 
-pi needs Node.js 22.19 or later.
+pi on Node.js needs Node.js 22.19 or later.
 
 Whether omp and pi need one of these variables depends on the system:
 
@@ -162,8 +162,9 @@ Whether omp and pi need one of these variables depends on the system:
 
 omp and pi don't read the macOS keychain by default, so set one of the variables for a CA that you added to the keychain.
 
-If pi runs on Node.js from Homebrew, it uses a copy of the keychain from when Homebrew installed its CA certificates.
-For a CA that you added to the keychain later, run `brew postinstall ca-certificates` to build that copy again, or set `NODE_EXTRA_CA_CERTS`.
+pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package.
+Homebrew builds that bundle from the certificates trusted for SSL in the System keychain (`/Library/Keychains/System.keychain`), the certificates of `/System/Library/Keychains/SystemRootCertificates.keychain` and the Mozilla certificates.
+For pi on Node.js from Homebrew, run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -182,8 +183,9 @@ Debian 12 and 13 and Ubuntu 24.04 ship Node.js 18 or 20, which pi can't run on.
 
 pi on a Node.js build from nodejs.org or nvm trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
 
-If pi runs on Node.js from Homebrew, it uses a copy of the system CAs from when Homebrew installed its CA certificates.
-For a CA that you added later, run `brew postinstall ca-certificates` to build that copy again, or set `NODE_EXTRA_CA_CERTS`.
+pi on Node.js from Homebrew trusts the CA bundle of the Homebrew `ca-certificates` package.
+Homebrew builds that bundle from the first system bundle that it finds, `/etc/ssl/certs/ca-certificates.crt`, `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` or `/etc/ssl/ca-bundle.pem`, and the Mozilla certificates.
+For pi on Node.js from Homebrew, run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_CA_CERTS`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -288,8 +290,11 @@ In the same session, install the profile if it isn't installed yet:
 kong-harnesses profile import PROFILE_URL
 ```
 
-A certificate error here means that the bundle doesn't hold the root CA of the profile server.
+When the import reports an unknown certificate authority, the bundle doesn't hold the root CA of the profile server.
 Add that root CA certificate to the bundle, or create the bundle again, and then import the profile.
+A new bundle doesn't fix an expired certificate or a host name mismatch.
+For a host name mismatch, check the host in the profile URL.
+Otherwise, ask your administrator to fix the certificate of the profile server.
 
 Run the doctor checks for the profile:
 
@@ -297,7 +302,7 @@ Run the doctor checks for the profile:
 kong-harnesses doctor --profile PROFILE_NAME
 ```
 
-The CA bundle check must show OK for each server that the profile uses: the gateway, the identity provider and the profile server.
+The CA bundle check must show OK for each server that the profile uses: the gateway, the identity provider and, for a profile imported from an HTTPS URL, the profile server.
 A Windows policy can [stop the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), so a public root CA can be missing from the bundle.
 When the check fails for a server, create the bundle again, or add the root CA certificate of that server to the bundle.
 
