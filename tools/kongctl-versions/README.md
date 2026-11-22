@@ -2,7 +2,8 @@
 
 Keeps the kongctl documentation on developer.konghq.com in sync with the installed binary and the public `Kong/kongctl` GitHub releases.
 
-The daily [`sync-kongctl`](../../.github/workflows/sync-kongctl.yml) workflow runs both scripts: it regenerates the help includes and prunes stale pages, then refreshes the release data. Set `GH_TOKEN` to raise the GitHub API rate limit.
+The daily [`sync-kongctl`](../../.github/workflows/sync-kongctl.yml) workflow runs both scripts: it regenerates the help includes and prunes stale pages, then refreshes the release data.
+Set `GH_TOKEN` to raise the GitHub API rate limit.
 
 ## How to run the sync
 
