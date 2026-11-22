@@ -107,7 +107,9 @@ In text output, they print "Unreadable" followed by the recovery step.
 With `--output json` or `--output yaml`, the state of the profile is `unreadable`, with no recovery step.
 In every output format, `status` also prints one message on standard error, for the first problem with the most severe exit code.
 When that problem is an unreadable profile, the message says "is unreadable" with the recovery step.
-With `--output json` or `--output yaml`, no other unreadable profile gets a recovery step, so run `kong-harnesses status --profile PROFILE_NAME` for each of them.
+An earlier problem that also exits with `2`, such as an agent CLI failure, takes that message instead.
+With `--output json` or `--output yaml`, each unreadable profile that the message doesn't name has no recovery step.
+To see the recovery step for each unreadable profile, run `kong-harnesses status` in text output, without `--profile` or `KONG_HARNESSES_PROFILE`.
 Commands that select one profile and `doctor` print the message for the cause instead.
 
 ### "selected profile does not exist"
@@ -232,7 +234,7 @@ The installed copy of a user profile fails validation or can't be read, and `pro
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
 When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server key for each server name in `mcp_servers` and deletes the profile file.
-If your password store keeps a key, or if the file has no readable `mcp_servers` list, its result names each item to delete from your system password store (`PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when the file has no readable `mcp_servers` list, also when the list is absent or `null`).
+If your password store keeps a key, or the file has no readable `mcp_servers` list (also when the list is absent or `null`), its result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
 `profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
 When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
 When its result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
