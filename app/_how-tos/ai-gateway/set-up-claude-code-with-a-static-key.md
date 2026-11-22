@@ -325,10 +325,15 @@ Then remove the key from the clipboard and from the shell:
    unset CONSUMER_API_KEY
    ```
 
+1. If you turned off Handoff, turn it on again.
+
 After each upgrade of kong-harnesses, run `kong-harnesses login --profile quickstart` once.
 Each time the Keychain asks whether kong-harnesses can use the saved key, click **Always Allow**.
 {% endnavtab %}
 {% navtab "Linux" %}
+1. If a clipboard sync tool runs on this computer, such as the **Clipboard** plugin of [KDE Connect](https://userbase.kde.org/KDEConnect#Clipboard), turn off its clipboard sync.
+   The tool can send the key to your other devices.
+
 1. In the shell where you created the key, copy the key:
 
    ```sh
@@ -354,6 +359,8 @@ Each time the Keychain asks whether kong-harnesses can use the saved key, click 
    ```
 
    On X11, use `xclip -selection clipboard < /dev/null` in place of `wl-copy --clear`.
+
+1. If you turned off clipboard sync, turn it on again.
 {% endnavtab %}
 {% navtab "Windows" %}
 1. Turn off **Clipboard history** and **Clipboard history across your devices** in **Settings** > **System** > **Clipboard**.
@@ -380,11 +387,12 @@ Each time the Keychain asks whether kong-harnesses can use the saved key, click 
    printf '' | clip.exe
    unset CONSUMER_API_KEY
    ```
+
+1. If you turned off **Clipboard history** and **Clipboard history across your devices**, turn them on again.
 {% endnavtab %}
 {% endnavtabs %}
 
 If your computer keeps a clipboard history, delete the key from it too.
-You can turn clipboard sync on again now.
 
 Configure {{ site.claude_code }} to use the profile:
 
