@@ -58,7 +58,8 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 * Consent: Keycloak shows the consent screen only when consent is on for the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
-* Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes, and [token responses](/kong-harnesses/identity-provider/checks/#token-responses) can't name a scope that the profile doesn't request.
+* Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
+  The response can't name a scope that the profile doesn't request, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
   The profile requests `openid`, `profile`, `email` and `offline_access` by default, so keep **Include in token scope** on in the `profile` and `email` client scopes.
   In each other default client scope of the client, turn off **Include in token scope**.
   When your `--scope` list leaves out `profile` or `email`, turn off **Include in token scope** in each client scope that it leaves out.

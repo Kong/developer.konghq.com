@@ -45,7 +45,8 @@ It also refuses a response with more than 16,384 bytes of headers, or a body tha
 For `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 For `--name`, `display_name`, `description` and `--gateway-origin`, see [Top-level fields](/kong-harnesses/profile-file/#top-level-fields).
 For `--redirect-uri`, see [Callback](/kong-harnesses/identity-provider/#callback).
-`--gateway-origin` also meets [URLs](#urls), without a path or query and with port `80` in place of `443` for loopback `http`.
+A `--gateway-origin` value also follows the rules in [URLs](#urls), without a path or query.
+For a loopback `http` origin, the port rule excludes `80` in place of `443`.
 
 ## URLs
 
