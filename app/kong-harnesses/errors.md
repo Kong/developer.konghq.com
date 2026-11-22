@@ -117,12 +117,8 @@ The full message is `a Claude subscription and a gateway MCP server with its own
 
 ### "the profile file is in" an encoding that kong-harnesses can't read
 
-`profile import` reads a file in UTF-8, with or without a byte-order mark, or in UTF-16 with a byte-order mark. The message names what it found instead, and the fix for it:
-
-* "UTF-16 without a byte-order mark": Save a copy with a byte-order mark, for example in PowerShell with `Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
-* "UTF-32": Save a copy as UTF-16, for example in PowerShell with `Get-Content -Raw PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy.
-* "UTF-16 with a broken character": The file is cut short or damaged. Get the profile file again.
-* "a text encoding that is not UTF-8", or "UTF-8 with a byte-order mark" for a file with two byte-order marks: Save a copy as UTF-8 with an editor, then import the copy.
+`profile import` prints this message when the profile file isn't in an encoding that it reads, and names what it found and how to save a copy.
+For the accepted encodings and the fix for each refused encoding, see [Profile file encoding](/kong-harnesses/profile-file/#profile-file-encoding).
 
 ### "OIDC discovery failed; check issuer access and retry"
 
