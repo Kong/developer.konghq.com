@@ -101,6 +101,8 @@ Across the install, the profile, and every agent CLI report, `doctor` exits with
 ## Profile errors
 
 Most messages about choosing a profile start with the command name, such as `login`, `logout`, `doctor` or `profile activate`.
+When an installed profile file can't be read, `profile list` and `status` without `--profile` or `KONG_HARNESSES_PROFILE` exit with `2` and print "Unreadable" followed by the recovery step (`status` also prints "is unreadable" with that step on standard error).
+Commands that select one profile and `doctor` print the message for the cause instead.
 
 ### "selected profile does not exist"
 
@@ -211,32 +213,59 @@ When `profile delete` prints "your organization's managed settings run the selec
 
 ### "your administrator installed a profile with this name for every user" or "installed this profile for every user"
 
-An administrator installed this profile for every user of the computer, so `profile import` can't replace it, and `profile delete` can't remove it.
-Sign in to it with `kong-harnesses login`, or ask your administrator to change it.
+An administrator installed this profile for every user of the computer, so `profile import` and `profile create` can't replace it, and `profile delete` can't remove it.
+`profile delete` refuses any machine-wide profile before asking you to confirm or removing saved keys.
+`profile import` and `profile create` print this message for an invalid or untrusted machine-wide profile too.
+Sign in to a valid machine-wide profile with `kong-harnesses login`, or ask your administrator to change or remove it.
 
 ### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
-The installed copy of the profile can't be read, and `profile import` doesn't replace an installed profile that it can't read.
+The installed copy of a user profile fails validation or can't be read, and `profile import` doesn't replace an installed profile that it can't read.
+`profile list` and `status` report it as unreadable with the same `profile delete` and import step, and `doctor` reports "the stored profile is invalid".
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
-`profile delete` can't check the client settings of an invalid profile, and it keeps a saved sign-in.
-When its result says that the login may remain, import the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
+
+When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server keys for each server that the file lists and deletes the profile file.
+If your password store keeps a key, or if `profile delete` can't read the server list from the file, its result names each item to delete from your system password store (`PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the server list).
+`profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
+When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
+When its result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
 For an agent CLI that still uses the profile, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
 
 ### "selected profile needs a newer kong-harnesses"
 
-The installed profile has a schema version that this release can't read, usually because a newer release installed it.
+The installed profile, whether user or machine-wide, has a schema version that this release can't read, usually because a newer release installed it.
+`profile list` and `status` report it as unreadable with "update kong-harnesses, then run the command again", and `doctor` reports "the stored profile needs a newer kong-harnesses".
+`profile import` and `profile create` print "the installed profile of this name needs a newer kong-harnesses" when an installed profile has a newer version.
+`profile import` prints "this profile needs a newer kong-harnesses" when a source file or URL has a newer version.
+Reinstalling the same profile doesn't change its schema version, so a machine-wide profile also needs an update of {{site.kong_harnesses}}.
 [Update {{site.kong_harnesses}}](/kong-harnesses/), then run the command again.
+
+### "the selected profile installed for every user is invalid" or "the profile installed for every user can be changed by an account that is not an administrator"
+
+An administrator installed the profile for every user of the computer, and {{site.kong_harnesses}} can't use it:
+
+* "the selected profile installed for every user is invalid" or "the profile installed for every user is invalid": The machine-wide profile file fails validation, is damaged, or names another profile.
+  `doctor` prints the shorter message.
+* "the profile installed for every user can be changed by an account that is not an administrator": The machine-wide profile file or folder lets an account that isn't an administrator change it, so {{site.kong_harnesses}} doesn't use it.
+
+For either cause, `profile list` and `status` report the profile as unreadable with "ask your administrator to reinstall it".
+`profile delete` refuses a machine-wide profile, so ask your administrator to reinstall the profile.
+
+### "is not a profile name"
+
+`profile list` and `status` report a `.json` file in a profile folder as unreadable when its filename without `.json` doesn't follow the [rules for `name`](/kong-harnesses/profile-file/#top-level-fields).
+The end of the message tells you what to do:
+
+* "ask your administrator to remove it": The file is in the machine-wide profile folder.
+  Ask your administrator to remove the file, because reinstalling under the same filename keeps the invalid name.
+* "so no command can use or delete it": The file is in your user profile folder.
+  No {{site.kong_harnesses}} command can select, sign out of, or delete the file.
 
 ### "selected profile is missing, invalid, or unsupported"
 
 The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile, because the profile isn't installed, can't be read, or needs a newer release.
 `login`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies; otherwise, they print a more specific profile error.
-Run `kong-harnesses profile list` to check whether the profile is installed, then re-import it or update {{site.kong_harnesses}}.
-
-### "the profile installed for every user can be changed by an account that is not an administrator"
-
-An administrator installed the profile for every user of the computer, but its file or folder lets other accounts change it, so {{site.kong_harnesses}} doesn't use it.
-Ask your administrator to install the profile again.
+Run `kong-harnesses profile list` to check whether the profile is installed, then import it or follow the step that `profile list` prints for it.
 
 ### "selected profile configures no agent client that this kong-harnesses sets up"
 
