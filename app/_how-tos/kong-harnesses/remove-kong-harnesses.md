@@ -188,11 +188,11 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 {% navtabs "delete-gateway-mcp-keys" %}
 {% navtab "macOS" %}
 
-Each item is a password in your default keychain, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
+Each item is a password in the keychain that was your default when kong-harnesses saved it, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
-If your default keychain changed after you set up kong-harnesses, add the path of the keychain that was the default then, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
-If you don't know which keychain that was, do these steps once for each keychain that `security list-keychains` prints, with its path.
+Do these steps once for each keychain that `security list-keychains` prints, and add its path, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
 Skip `/Library/Keychains/System.keychain`, because kong-harnesses doesn't save items there.
+If a keychain that was your default at some time after you set up kong-harnesses isn't in that list, do the steps for its path too.
 
 1. In a terminal of your desktop session, unlock the keychain:
 
@@ -260,8 +260,8 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 1. Check that each item is gone:
 
    ```sh
-   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null || echo "secret-tool: exit code $?"; } 2>&1 \
-     | sed -n -e 's/^attribute\.profile = \(PROFILE_NAME\.mcp-key\.\)/\1/p' -e '/^secret-tool: /p'
+   { secret-tool search --all --unlock application io.kong.kong-harnesses profile 'ITEM_NAME' >/dev/null || echo "secret-tool: exit code $?"; } 2>&1 \
+     | sed -n -e 's/^attribute\.profile = //p' -e '/^secret-tool: /p'
    ```
 
    If your desktop asks you to unlock the keyring, unlock it.
