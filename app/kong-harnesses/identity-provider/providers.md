@@ -73,8 +73,11 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 
   Keep `openid` and `offline_access` in the scopes that the profile requests.
   `openid` is a protocol value, so it has no client scope to link.
-  Link each other scope that the profile requests to the client as a default or optional client scope, such as `profile` and `email` when the profile uses the default `--scope` list.
+  Link each other scope that the profile requests to the client as a default client scope, or as an optional client scope, which Keycloak applies because the profile requests it, as [Link client scope with the client](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_linking) describes.
+  For example, link `profile` and `email` when the profile uses the default `--scope` list.
   Keep **Include in token scope** on for each custom scope that the profile requests, because the response must keep it.
+  If such a custom scope has role scope mappings, Keycloak leaves it out of the token and out of `scope` for a user who has none of its roles, as [Client scopes permissions](https://www.keycloak.org/docs/latest/server_admin/index.html#client-scopes-permissions) describes, so the sign-in of that user fails.
+  Check that each user who signs in has at least one role of each such scope.
   For `profile`, `email`, `offline_access` and the other scopes that [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) lists as exceptions, the setting can be on or off.
 * Refresh token rotation: You can keep **Revoke Refresh Token** off.
   When **Use Refresh Tokens** is on, Keycloak sends a new refresh token in each successful renewal response.
