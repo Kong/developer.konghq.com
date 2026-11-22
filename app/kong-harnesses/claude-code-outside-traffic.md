@@ -118,7 +118,7 @@ rows:
       Add it with `claude plugin marketplace add anthropics/claude-plugins-official`.
   - traffic: Artifacts
     destination: "`api.anthropic.com` (publish and organization policy), `*.frame.claudeusercontent.com` (reads), `claude.ai` (browser)"
-    member: "`artifact` (`auto_updates: false` also turns it off unless `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` is blank)"
+    member: "`artifact` (`auto_updates: false` also turns it off, except in a schema 18 or later profile that uses the developers' own Claude subscriptions and sets `artifact: true`)"
     cost: >-
       Disables publishing and reading [artifacts](https://code.claude.com/docs/en/artifacts).
       See [Artifact availability](#artifact-availability).
