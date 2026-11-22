@@ -292,7 +292,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
 `login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists them with their fixes.
 When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out).
-[When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, such as an expired sign-in, a locked Keychain or a proxy in front of an `http://` gateway, with their fixes.
+[When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, such as an expired sign-in, a locked system password store or a proxy in front of an `http://` gateway, with their fixes.
 This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
 
 ### "no key for the gateway MCP server"
@@ -443,7 +443,7 @@ rows:
   - message: "`could not write the identity header to Claude Code's settings; retry later`"
     check: "That your account can write the {{ site.claude_code }} settings file."
   - message: "`the key for the gateway MCP server SERVER could not be read; retry later`"
-    check: "That the password store, such as the macOS Keychain, is unlocked."
+    check: "That the system password store is unlocked."
   - message: "`diagnosis could not complete; retry later`"
     check: >-
       Run `doctor` again.
