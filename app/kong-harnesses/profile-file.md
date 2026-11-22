@@ -237,11 +237,10 @@ rows:
       Required.
       The origin of {{site.ai_gateway}}, up to 2,048 bytes, without a path or the default port.
       It uses `https://`.
-      A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address.
-      An `http://` gateway needs 0.17.1 or later, and only {{ site.claude_code }}, `omp` and pi use it: Codex, OpenCode and Hermes Agent need `https://`, even for a gateway on this computer.
+      From 0.17.1, a gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address.
       `fleet build` refuses an `http://` gateway.
       A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`.
-      See [Plain HTTP gateways](#plain-http-gateways).
+      For which agent CLIs work with an `http://` gateway and the proxy rules, see [Plain HTTP gateways](#plain-http-gateways).
   - field: "`gateway_ca_bundle`"
     description: >-
       Version 12 and later.
@@ -284,8 +283,9 @@ A profile before version 12 doesn't have client blocks, so `profile activate` se
 Requests to an `http://` gateway aren't encrypted, so a proxy could read the credential.
 {{site.kong_harnesses}} keeps these requests off proxies:
 
-* Codex, OpenCode, and Hermes Agent need an `https://` gateway, because they pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
-  It still sets up {{ site.claude_code }}, `omp`, and pi, and doesn't change any client settings when a pre-write check fails.
+* Codex, OpenCode, and Hermes Agent need an `https://` gateway, even for a gateway on this computer, because they pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
+  {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway when the profile configures them, they are installed (or named with `--client`), and the applicable checks pass.
+  `profile activate` doesn't change any client settings when a pre-write check fails.
 * When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
   Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
   From 0.18.0, `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
@@ -479,9 +479,9 @@ Some blocks have more rules:
 `profile activate` also refuses some agent CLIs for a profile that has fields they can't use:
 
 * Hermes Agent and pi don't take `attribution`.
-* Codex, OpenCode and Hermes Agent don't take an `http://` gateway.
+* Codex, OpenCode, and Hermes Agent don't take an `http://` gateway.
   See [Plain HTTP gateways](#plain-http-gateways).
-* In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp` and pi, and top-level `models` stops Codex.
+* In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp`, and pi, and top-level `models` stops Codex.
 
 ### Claude Code
 
@@ -567,10 +567,10 @@ rows:
 Each choice is `true` or `false`.
 From version 14, each choice is optional, and a choice that the profile leaves out changes nothing.
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
-For a profile before version 14, `profile activate` sets each choice from `anthropic_telemetry` to `webfetch_preflight` to `false`.
+For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 `profile activate` restores each setting's earlier value when a later profile omits the choice or sets `auto_updates: true`, so an earlier setting from you or another tool can still turn the feature off.
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on provider modes where it depends on a feature flag, such as `anthropic-messages`.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on `anthropic-messages`, where it depends on a feature flag.
 `DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey.
 `DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, and either turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
 So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
@@ -609,8 +609,9 @@ rows:
   - choice: "`advisor`"
     off: "Writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`."
     on: >-
-      Leaves the advisor tool on.
+      Leaves the advisor tool on when nothing in the profile keeps it off.
       The route needs `advisor: true`.
+      For an older stored profile whose provider mode, `experimental_betas: false`, or blocked feature flags keep the advisor off, `profile activate` writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`.
   - choice: "`artifact`"
     off: >-
       From version 14, writes `enableArtifact: false`.
