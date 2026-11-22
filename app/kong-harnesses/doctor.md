@@ -12,7 +12,9 @@ breadcrumbs:
   - /kong-harnesses/
 ---
 
-The `doctor` command checks one profile end to end: the profile, the sign-in, the client, and both endpoints. It reaches the network, reports each finding beside its fix, and can write the report as JSON.
+The `doctor` command checks one profile end to end: the profile, the sign-in, the client, the gateway, the identity provider and the profile server.
+It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each of these servers, and a separate result when the file is missing or unreadable.
+It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
 ## Command usage
 
