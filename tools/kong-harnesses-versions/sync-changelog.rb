@@ -11,23 +11,27 @@ require 'yaml'
 require_relative 'check-changelog-links'
 
 # Writes the kong-harnesses changelog page data from CHANGELOG.md on the main branch of
-# Kong/kong-harnesses. The export parses the changelog with the parser that the site
-# uses, changes the tree, and writes it back with kramdown's own Markdown writer, so it
-# never rewrites Markdown text with patterns. check-changelog-links.rb then checks the
-# result as the site renders it.
+# the repository that publishes the kong-harnesses releases. The export parses the
+# changelog with the parser that the site uses, changes the tree, and writes it back
+# with kramdown's own Markdown writer, so it never rewrites Markdown text with patterns.
+# check-changelog-links.rb then checks the result as the site renders it.
 module KongHarnessesChangelog
   module_function
 
   ROOT = File.expand_path('../..', __dir__)
   DATA_FILE = File.join(ROOT, 'app/_data/kong-harnesses/changelog.json')
-  REPO = 'Kong/kong-harnesses'
+
+  def repo
+    KongHarnessesChangelogLinks.repo
+  end
 
   # Readers of the site need what changed for them, not the repository's own build, CI
   # and docs work, so only these sections are published.
   USER_SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
   BREAKING_CHANGES = '⚠ BREAKING CHANGES'
   # Scopes of changes to the repository's own tooling and dependency pins.
-  # docs/release.md in Kong/kong-harnesses names the same list; change both together.
+  # The release notes of the kong-harnesses releases use the same scopes; change both
+  # together.
   TOOLING_SCOPES = %w[ci deps ksai threat-model].freeze
 
   # The elements that the export knows how to write back. It refuses any other, such
@@ -59,9 +63,9 @@ module KongHarnessesChangelog
   # A version as release-please reads one (index.js:59193), with a prerelease and a build
   # part made of the characters that semver allows.
   VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
-  # The tag of a final release, as STABLE_TAG in tools/lib/tool-versions.js, the
-  # versions job and scripts/install-release.sh in Kong/kong-harnesses read it, so the
-  # page and the release data name the same latest release. Change them together.
+  # The tag of a final release, as STABLE_TAG in tools/lib/tool-versions.js and the
+  # versions job read it, so the page and the release data name the same latest
+  # release. Change them together.
   STABLE_TAG = /\Av(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\z/
   # The characters that kramdown's typographic symbols show, with a no-break space in the
   # two forms with a space.
@@ -239,7 +243,7 @@ module KongHarnessesChangelog
     return [] unless scheme == 'https' && host == 'github.com' && [userinfo, port, registry, opaque, query, fragment].all?(&:nil?)
     return [] if path.split('/', -1).intersect?(%w[. ..])
 
-    owner, repository = REPO.split('/').map { |part| Regexp.escape(part) }
+    owner, repository = repo.split('/').map { |part| Regexp.escape(part) }
     case path
     when %r{\A/#{owner}/#{repository}/commit/([0-9a-f]{40})\z} then [[:commit, Regexp.last_match(1)[0, 7]]]
     when %r{\A/#{owner}/#{repository}/compare/v#{VERSION}\.\.\.v(#{VERSION})\z} then [[:compare, Regexp.last_match(1)]]
@@ -247,8 +251,8 @@ module KongHarnessesChangelog
     when %r{\A/(?<other_owner>[\w.-]+)/(?<other>[\w.-]+)/issues/(?<number>\d+)\z}
       match = Regexp.last_match
       name = "#{match[:other_owner]}/#{match[:other]}"
-      [([:issue, "##{match[:number]}"] if name == REPO), [:closes, "#{name}##{match[:number]}"],
-       ([:closes, "#{match[:other]}##{match[:number]}"] if match[:other_owner] == REPO.split('/').first)].compact
+      [([:issue, "##{match[:number]}"] if name == repo), [:closes, "#{name}##{match[:number]}"],
+       ([:closes, "#{match[:other]}##{match[:number]}"] if match[:other_owner] == repo.split('/').first)].compact
     else []
     end
   rescue URI::InvalidURIError
@@ -431,7 +435,7 @@ module KongHarnessesChangelog
   # (index.js:21247) and to a user (index.js:21259), each with its own number or name as
   # its label.
   def without_subject_links(code)
-    code.gsub(%r{\[#(\d+)\]\(https://github\.com/#{Regexp.escape(REPO)}/issues/(\d+)\)|\[@(#{USER})\]\(https://github\.com/(#{USER})\)}) do
+    code.gsub(%r{\[#(\d+)\]\(https://github\.com/#{Regexp.escape(repo)}/issues/(\d+)\)|\[@(#{USER})\]\(https://github\.com/(#{USER})\)}) do
       match = Regexp.last_match
       if match[1] then match[1] == match[2] ? "##{match[1]}" : match[0]
       else match[3] == match[4] ? "@#{match[3]}" : match[0]
@@ -794,7 +798,7 @@ module KongHarnessesChangelog
   # each `[@name](https://github.com/name)` as `@name`, read with its own string
   # compares, apart from `without_subject_links`.
   def code_without_subject_links(code)
-    [['[#', "](https://github.com/#{REPO}/issues/", /\A\d+\z/], ['[@', '](https://github.com/', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, prefix, label)|
+    [['[#', "](https://github.com/#{repo}/issues/", /\A\d+\z/], ['[@', '](https://github.com/', /\A[a-z0-9](?:-?[a-z0-9]){0,38}\z/]].reduce(code) do |text, (open, prefix, label)|
       text.split(open, -1).each_with_index.map do |part, index|
         next part if index.zero?
 
@@ -817,14 +821,14 @@ module KongHarnessesChangelog
     owner, repository, kind, id, *rest = address.delete_prefix(site).split('/', -1)
     return unless rest.empty? && [owner, repository].all? { |part| part.to_s.match?(/\A[\w.-]+\z/) && !part.match?(/\A\.\.?\z/) }
 
-    own = "#{owner}/#{repository}" == REPO
+    own = "#{owner}/#{repository}" == repo
     label = ->(text) { html(parse("[#{text}](#{address})")).at_css('a')&.inner_html == link.inner_html }
     if kind == 'commit' && own && id.to_s.match?(/\A[0-9a-f]{40}\z/)
       :commit if label.call(id[0, 7])
     elsif kind == 'issues' && id.to_s.match?(/\A\d+\z/)
       return :issue if own && label.call("##{id}")
 
-      :closes if ["#{owner}/#{repository}##{id}", ("#{repository}##{id}" if owner == REPO.split('/').first)].compact.any?(&label)
+      :closes if ["#{owner}/#{repository}##{id}", ("#{repository}##{id}" if owner == repo.split('/').first)].compact.any?(&label)
     end
   end
 
@@ -886,8 +890,8 @@ module KongHarnessesChangelog
   def fetch(get)
     releases = []
     (1..).each do |page|
-      status, body = get.call("/repos/#{REPO}/releases?per_page=100&page=#{page}", 'application/vnd.github+json')
-      raise "GitHub API request for #{REPO} releases failed (#{status}). Pass a GitHub token in the GH_TOKEN environment variable." unless status == 200
+      status, body = get.call("/repos/#{repo}/releases?per_page=100&page=#{page}", 'application/vnd.github+json')
+      raise "GitHub API request for #{repo} releases failed (#{status}). Pass a GitHub token in the GH_TOKEN environment variable." unless status == 200
 
       batch = JSON.parse(body)
       releases.concat(batch)
@@ -901,7 +905,7 @@ module KongHarnessesChangelog
                      .grep(STABLE_TAG)
                      .map { |tag| tag.delete_prefix('v') }
     highest = finals.max_by { |version| Gem::Version.new(version) }
-    raise "#{REPO} has no published vX.Y.Z release." unless highest
+    raise "#{repo} has no published vX.Y.Z release." unless highest
 
     # Every published release, prereleases too, but no draft.
     published = releases.reject { |release| release['draft'] }
@@ -909,8 +913,8 @@ module KongHarnessesChangelog
                         .grep(/\Av#{VERSION}\z/)
                         .map { |tag| tag.delete_prefix('v') }
     # main, not the tag, so a correction to an earlier entry reaches the page.
-    status, changelog = get.call("/repos/#{REPO}/contents/CHANGELOG.md?ref=main", 'application/vnd.github.raw')
-    raise "GitHub API request for #{REPO} CHANGELOG.md on main failed (#{status})." unless status == 200
+    status, changelog = get.call("/repos/#{repo}/contents/CHANGELOG.md?ref=main", 'application/vnd.github.raw')
+    raise "GitHub API request for #{repo} CHANGELOG.md on main failed (#{status})." unless status == 200
 
     ["v#{highest}", export(changelog.force_encoding('UTF-8'), published: published, finals: finals, highest: highest)]
   end

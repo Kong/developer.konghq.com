@@ -14,9 +14,9 @@ require 'yaml'
 # pass. It reads the text of each element as a reader sees it, joined across inline
 # markup such as bold, and refuses `//`, `www.`, `mailto:`, `xmpp:` and an `@` between
 # two characters of a name, as in `user@host`, outside code. Text in code is not a link,
-# but it still must not name the kong-harnesses repository, also with a `.` or `..`
-# segment in a GitHub address. It also refuses a hidden code point, which shows nothing
-# or changes the order of the text around it.
+# but it still must not name the repository that publishes the releases, also with a
+# `.` or `..` segment in a GitHub address. It also refuses a hidden code point, which
+# shows nothing or changes the order of the text around it.
 module KongHarnessesChangelogLinks
   module_function
 
@@ -37,11 +37,26 @@ module KongHarnessesChangelogLinks
   # The hosts that serve the repository, matched only as a whole name, so notgithub.com
   # or github.com.example.com does not match.
   HOSTS = %w[github.com www.github.com api.github.com raw.githubusercontent.com codeload.github.com].freeze
-  REPOSITORY = /
-    (?<![a-z0-9.\-])(?:#{HOSTS.map { |host| Regexp.escape(host) }.join('|')})\.?
-    (?::\d*)?[\/:]+(?:repos\/+)?kong\/+kong-harnesses(?:\.git)?
-    (?![a-z0-9_\-]|\.[a-z0-9_\-])
-  /x
+  REPO_VARIABLE = 'KONG_HARNESSES_RELEASES_REPO'
+
+  # The repository that publishes the releases is internal, so no file of this public
+  # repository names it: the sync job sets it from a repository variable.
+  def repo
+    name = ENV.fetch(REPO_VARIABLE, '')
+    return name if name.match?(%r{\A[A-Za-z0-9-]+/[A-Za-z0-9._-]+\z})
+
+    raise "Set #{REPO_VARIABLE} to the <owner>/<name> of the repository that publishes the kong-harnesses releases."
+  end
+
+  # The repository in an address of those hosts, in the lower case that `normalize` gives.
+  def repository_pattern
+    owner, name = repo.downcase.split('/').map { |part| Regexp.escape(part) }
+    /
+      (?<![a-z0-9.\-])(?:#{HOSTS.map { |host| Regexp.escape(host) }.join('|')})\.?
+      (?::\d*)?[\/:]+(?:repos\/+)?#{owner}\/+#{name}(?:\.git)?
+      (?![a-z0-9_\-]|\.[a-z0-9_\-])
+    /x
+  end
   # A `.` or `..` segment in an address of those hosts, which a browser resolves to
   # another path, so the address can name the repository in a form that the pattern
   # above does not match.
@@ -150,6 +165,7 @@ module KongHarnessesChangelogLinks
   # Outside the site build, kramdown renders a code block as plain <pre><code>. The site
   # highlights it with its own template, which adds no address from the changelog text.
   def html_problems(html)
+    repository = repository_pattern
     fragment = Nokogiri::HTML5.fragment(html)
     found = hidden?(fragment) ? ['a hidden code point'] : []
     fragment.traverse do |node|
@@ -171,7 +187,7 @@ module KongHarnessesChangelogLinks
 
       seen = visible(node)
       found << "the address in #{seen.strip[0, 200].inspect} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
-      found << "the kong-harnesses repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(REPOSITORY)
+      found << "the releases repository in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(repository)
       found << "a dot segment in a GitHub address in #{seen.strip[0, 200].inspect}" if normalize(seen).match?(DOT_SEGMENT)
     end
     found.uniq

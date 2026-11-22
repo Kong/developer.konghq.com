@@ -3,6 +3,17 @@
 require_relative '../../../tools/kong-harnesses-versions/check-changelog-links'
 
 RSpec.describe KongHarnessesChangelogLinks do
+  before { stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => 'example/sample-tool')) }
+
+  describe '.repo' do
+    [nil, '', 'sample-tool', 'example/sample-tool/x', 'example/sample tool'].each do |value|
+      it "refuses #{value.inspect} and names the variable" do
+        stub_const('ENV', ENV.to_h.merge('KONG_HARNESSES_RELEASES_REPO' => value).compact)
+        expect { described_class.check(entry('add')) }.to raise_error(/KONG_HARNESSES_RELEASES_REPO/)
+      end
+    end
+  end
+
   def entry(text)
     "## 1.0.0\n\n### Features\n\n* #{text}\n"
   end
@@ -10,31 +21,31 @@ RSpec.describe KongHarnessesChangelogLinks do
   describe '.check' do
     [
       ['a link to any address', '[x](https://example.com/a)'],
-      ['a link after unequal backtick runs', 'a ` [x](https://github.com/Kong/./kong-harnesses) `` d'],
-      ['a link with a ../ segment', '[x](https://github.com/Kong/../Kong/kong-harnesses)'],
-      ['a link to a renamed repository', '[x](https://github.com/Kong/agent-auth-cli)'],
-      ['a link to another GitHub host', '[x](https://github.dev/Kong/kong-harnesses)'],
-      ['an image', 'a ` <img src="https://github.com/Kong/kong-harnesses/a.png"> `` d'],
-      ['a link from an indented definition', "see [x][r]\n\n    [r]: //github.com/Kong/./kong-harnesses"],
-      ['a link from a definition in a block quote', "see [x][r]\n\n> [r]: //github.com/Kong/./kong-harnesses"],
-      ['a link with character references', '[x](https://github&#46;com/Kong/kong&#45;harnesses)'],
-      ['raw HTML with an address', '<a href="https://github&#x2e;com/Kong/kong-harnesses/pull/1">x</a>'],
-      ['a meta refresh', '<meta http-equiv="refresh" content="0; url=https://github.com/Kong/kong-harnesses">'],
-      ['an SVG link', '<svg><a xlink:href="https://github.com/Kong/kong-harnesses"><text>x</text></a></svg>'],
-      ['an attribute list on a span', '*x*{: title="x" data-x="https://github.com/Kong/kong-harnesses"}'],
-      ['an autolink in capitals', '<HTTPS://GITHUB.COM/KONG/KONG-HARNESSES>'],
-      ['a scheme-relative address in text', 'see //github.com/Kong/kong-harnesses/x now'],
+      ['a link after unequal backtick runs', 'a ` [x](https://github.com/example/./sample-tool) `` d'],
+      ['a link with a ../ segment', '[x](https://github.com/example/../example/sample-tool)'],
+      ['a link to a renamed repository', '[x](https://github.com/example/old-tool)'],
+      ['a link to another GitHub host', '[x](https://github.dev/example/sample-tool)'],
+      ['an image', 'a ` <img src="https://github.com/example/sample-tool/a.png"> `` d'],
+      ['a link from an indented definition', "see [x][r]\n\n    [r]: //github.com/example/./sample-tool"],
+      ['a link from a definition in a block quote', "see [x][r]\n\n> [r]: //github.com/example/./sample-tool"],
+      ['a link with character references', '[x](https://github&#46;com/example/sample&#45;tool)'],
+      ['raw HTML with an address', '<a href="https://github&#x2e;com/example/sample-tool/pull/1">x</a>'],
+      ['a meta refresh', '<meta http-equiv="refresh" content="0; url=https://github.com/example/sample-tool">'],
+      ['an SVG link', '<svg><a xlink:href="https://github.com/example/sample-tool"><text>x</text></a></svg>'],
+      ['an attribute list on a span', '*x*{: title="x" data-x="https://github.com/example/sample-tool"}'],
+      ['an autolink in capitals', '<HTTPS://GITHUB.COM/EXAMPLE/SAMPLE-TOOL>'],
+      ['a scheme-relative address in text', 'see //github.com/example/sample-tool/x now'],
       ['an ssh address in text', 'accept ssh://user@host targets'],
-      ['an scp-like git address', 'clone git@github.com:Kong/kong-harnesses.git'],
-      ['a full-width dot in the host', 'see github．com/Kong/kong-harnesses'],
-      ['percent-encoding in the name', 'see github.com/Kong/kong%252Dharnesses'],
-      ['an invisible character in the host', "see git​hub.com/Kong/kong-harnesses"],
-      ['the repository in a code span', 'run `go install github.com/Kong/kong-harnesses/cmd/x`'],
-      ['the repository at the end of a sentence', 'see github.com/Kong/kong-harnesses.'],
+      ['an scp-like git address', 'clone git@github.com:example/sample-tool.git'],
+      ['a full-width dot in the host', 'see github．com/example/sample-tool'],
+      ['percent-encoding in the name', 'see github.com/example/sample%252Dtool'],
+      ['an invisible character in the host', "see git​hub.com/example/sample-tool"],
+      ['the repository in a code span', 'run `go install github.com/example/sample-tool/cmd/x`'],
+      ['the repository at the end of a sentence', 'see github.com/example/sample-tool.'],
       ['an HTML comment', '<!-- note -->'],
       ['a footnote', "see [^1]\n\n[^1]: a note"],
-      ['the repository split by bold', 'see github.com/**Kong**/kong-harnesses'],
-      ['the repository split by a code span', 'see `github.com`/Kong/kong-harnesses'],
+      ['the repository split by bold', 'see github.com/**example**/sample-tool'],
+      ['the repository split by a code span', 'see `github.com`/example/sample-tool'],
       ['an address split by bold', 'see https:**//**example.com'],
       ['a www address', 'see www.example.org now'],
       ['a mail address', 'mail me@example.org now'],
@@ -45,14 +56,14 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a tag character in a host', "see www\u{e0020}.example.com"],
       ['a function application in a scheme', "see https:/\u2061/evil.example"],
       ['a line separator in a host', "see ww\u2028w.evil.example"],
-      ['an annotation character in the repository', "run `github.com/Kong\ufff9/kong-harnesses`"],
-      ['a hieroglyph format control in the repository', "run `github.com/Kong\u{13430}/kong-harnesses`"],
-      ['the repository in tag characters after a black flag', "see \u{1f3f4}#{'see github.com/kong/kong-harnesses'.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}"],
+      ['an annotation character in the repository', "run `github.com/example\ufff9/sample-tool`"],
+      ['a hieroglyph format control in the repository', "run `github.com/example\u{13430}/sample-tool`"],
+      ['the repository in tag characters after a black flag', "see \u{1f3f4}#{'see github.com/example/sample-tool'.chars.map { |char| (char.ord + 0xe0000).chr(Encoding::UTF_8) }.join}\u{e007f}"],
       ['a vowel separator in a mail address', "mail bob\u180e@evil.example"],
-      ['a grapheme joiner in the repository', "run `github.com/Kong\u034f/kong-harnesses`"],
+      ['a grapheme joiner in the repository', "run `github.com/example\u034f/sample-tool`"],
       ['a variation selector in a host', "see www\ufe0f.example.com"],
-      ['a . segment in the repository', 'run `github.com/Kong/./kong-harnesses`'],
-      ['a .. segment in a GitHub address', 'run `github.com/x/../Kong/kong-harnesses`']
+      ['a . segment in the repository', 'run `github.com/example/./sample-tool`'],
+      ['a .. segment in a GitHub address', 'run `github.com/x/../example/sample-tool`']
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/link or an address/)
@@ -60,10 +71,10 @@ RSpec.describe KongHarnessesChangelogLinks do
     end
 
     [
-      ['another host that ends with the same name', 'see `notgithub.com/Kong/kong-harnesses/help`'],
-      ['a host that starts with the same name', 'see `github.com.example.com/Kong/kong-harnesses`'],
-      ['another repository with a longer name', 'see `github.com/Kong/kong-harnesses-plugin`'],
-      ['the host and the path in separate paragraphs', "see github.com\n\n  then Kong/kong-harnesses"],
+      ['another host that ends with the same name', 'see `notgithub.com/example/sample-tool/help`'],
+      ['a host that starts with the same name', 'see `github.com.example.com/example/sample-tool`'],
+      ['another repository with a longer name', 'see `github.com/example/sample-tool-plugin`'],
+      ['the host and the path in separate paragraphs', "see github.com\n\n  then example/sample-tool"],
       ['an address in a code span', 'run `curl https://example.com/a`'],
       ['the product name in text', 'run kong-harnesses login once after the upgrade'],
       ['an entry in parentheses', 'use the value from (the migration guide).'],
@@ -83,7 +94,7 @@ RSpec.describe KongHarnessesChangelogLinks do
 
     it 'reads the repository through a format character' do
       ["\ufff9", "\u{13430}", "\u2061"].each do |format|
-        expect(described_class.problems("run `github.com/Kong#{format}/kong-harnesses`")).to include(a_string_starting_with('the kong-harnesses repository')), format.inspect
+        expect(described_class.problems("run `github.com/example#{format}/sample-tool`")).to include(a_string_starting_with('the releases repository')), format.inspect
       end
     end
 
