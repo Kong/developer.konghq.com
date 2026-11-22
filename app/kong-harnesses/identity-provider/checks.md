@@ -42,22 +42,14 @@ It also refuses a response with more than 16,384 bytes of headers, or a body tha
 
 ## Profile values
 
-* `--name`: 1 to 63 lowercase letters, digits or `-`, starting with a letter and not ending with `-`.
-  The name can't be `default`, `con`, `prn`, `aux`, `nul`, or `com` or `lpt` followed by a digit from 1 to 9.
-* `display_name` and `description` in a profile file: 1 to 80 and 1 to 240 printable ASCII characters.
-* `--client-id`: 1 to 256 visible ASCII characters.
-* `--redirect-uri`: See [Callback](/kong-harnesses/identity-provider/#callback).
-* `--audience`: An absolute URI of 1 to 2,048 bytes of visible ASCII characters, without user information or a fragment.
-* `--scope`: 2 to 16 scopes, with `openid` and `offline_access`.
-  Each scope has 1 to 128 visible ASCII characters, without `"` or `\`, and the list can't have a scope twice.
-* `--gateway-origin`: An `https` origin that meets the rules in [URLs](#urls), without a path or query, or an `http` origin on a loopback host, such as `http://localhost:8000`.
-  An `http` origin meets the same rules, with port `80` in place of `443`, and can't use an IPv4-mapped IPv6 address.
-* `discovery_url` in a profile file: The issuer URL without a trailing slash, followed by `/.well-known/openid-configuration`.
-  The result must also meet the rules in [URLs](#urls).
+For `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
+For `--name`, `display_name`, `description` and `--gateway-origin`, see [Top-level fields](/kong-harnesses/profile-file/#top-level-fields).
+For `--redirect-uri`, see [Callback](/kong-harnesses/identity-provider/#callback).
+`--gateway-origin` also meets [URLs](#urls), without a path or query and with port `80` in place of `443` for loopback `http`.
 
 ## URLs
 
-The issuer, `authorization_endpoint`, `token_endpoint`, `jwks_uri` and `revocation_endpoint` must each be a canonical `https` URL:
+The issuer, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri` and `revocation_endpoint` must each be a canonical `https` URL:
 
 * At most 2,048 bytes of visible ASCII characters, without `\`.
 * A host without percent encoding that is a lowercase DNS name, an IPv4 address in canonical dotted decimal form, such as `192.0.2.1`, or an IPv6 address in brackets in its canonical short form, without a zone.
@@ -176,15 +168,15 @@ In both responses:
 * `scope`, when present, is a nonempty string with single spaces between scopes, without a space at the start or the end.
   Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, occurs only once, and must match a different allowed scope.
 
-At sign-in, the allowed scopes are the scopes that the profile requests, and the accepted list becomes the matched scopes or, when the response omits `scope`, the requested scopes.
-At renewal, the allowed scopes are the last accepted list.
-A renewal response with `scope` replaces that list with the matched scopes, and a renewal response without `scope` keeps it.
+At sign-in, the allowed scopes are the requested scopes.
+At renewal, they are the last accepted list.
+A response with `scope` sets the accepted list to its matched scopes, and a response without `scope` keeps the allowed list.
 
-To match each returned scope against the allowed scopes, {{site.kong_harnesses}} tries these rules in order:
+{{site.kong_harnesses}} matches each returned scope against the allowed scopes in order:
 
-1. Look for an allowed scope equal to the returned scope.
-2. Decode percent escapes in the returned scope and look for an equal allowed scope.
-3. Look for exactly one allowed scope that is a URI with a scheme and a host whose last path segment equals the returned scope, such as `api://API_ID/access_as_user` for `access_as_user`.
+1. Match an equal allowed scope.
+2. Match an allowed scope equal to the percent-decoded value.
+3. Match when exactly one allowed scope is a URI with a scheme and a host whose last path segment equals the returned scope, such as `api://API_ID/access_as_user` for `access_as_user`.
 
 When `scope` is present, it must keep every scope that the profile requests other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
 
