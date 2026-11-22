@@ -60,7 +60,7 @@ prereqs:
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
       content: |
-        Install {{ site.claude_code }} 2.1.278 or later.
+        Install {{ site.claude_code }} 2.1.284 or later.
         On macOS and Linux:
 
         ```sh
