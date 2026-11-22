@@ -194,49 +194,44 @@ Rolling back {{ site.claude_code }} installs a native build at a release that wo
 
 When `claude --version` shows a different release than the one you installed, another `claude` binary or a custom launcher takes precedence on your `PATH`.
 
-Run the native build by its full path to verify that the target release is installed:
-
-{% navtabs "check-native-binary" %}
+{% navtabs "check-claude-executable" %}
 {% navtab "macOS and Linux" %}
 
-```sh
-~/.local/bin/claude --version
-```
+1. Run the native build by its full path to verify that the target release is installed:
 
-If you replaced the `~/.local/bin/claude` launcher with your own launcher, point it at the release you installed, as [Auto-updates](https://code.claude.com/docs/en/setup#auto-updates) describes.
+   ```sh
+   ~/.local/bin/claude --version
+   ```
 
-{% endnavtab %}
-{% navtab "Windows Command Prompt" %}
+   If you replaced the `~/.local/bin/claude` launcher with your own launcher, point it at the release you installed, as [Auto-updates](https://code.claude.com/docs/en/setup#auto-updates) describes.
 
-```cmd
-"%USERPROFILE%\.local\bin\claude.exe" --version
-```
+1. If the native build shows the release you installed, list every `claude` executable on your `PATH`:
 
-{% endnavtab %}
-{% navtab "Windows PowerShell" %}
-
-```powershell
-& "$env:USERPROFILE\.local\bin\claude.exe" --version
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-If the native build shows the release you installed, list every `claude` executable on your `PATH`:
-
-{% navtabs "check-claude-path" %}
-{% navtab "macOS and Linux" %}
-
-```sh
-which -a claude
-```
+   ```sh
+   which -a claude
+   ```
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
-```powershell
-where.exe claude
-```
+1. Run the native build by its full path to verify that the target release is installed.
+   In PowerShell, run:
+
+   ```powershell
+   & "$env:USERPROFILE\.local\bin\claude.exe" --version
+   ```
+
+   In Command Prompt, run:
+
+   ```cmd
+   "%USERPROFILE%\.local\bin\claude.exe" --version
+   ```
+
+1. If the native build shows the release you installed, list every `claude` executable on your `PATH`:
+
+   ```powershell
+   where.exe claude
+   ```
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -325,6 +320,10 @@ Switching casks can install an older release than your current one.
    ```
 
 {% endnavtab %}
-{% endnavtabs %}
+{% navtab "apt, dnf, or apk" %}
 
-For Linux package managers, see [Configure release channel](https://code.claude.com/docs/en/setup#configure-release-channel).
+Installs from the `apt`, `dnf`, and `apk` repositories choose a channel by repository instead of the `autoUpdatesChannel` setting.
+To switch to the stable channel, follow [Install with Linux package managers](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
+
+{% endnavtab %}
+{% endnavtabs %}
