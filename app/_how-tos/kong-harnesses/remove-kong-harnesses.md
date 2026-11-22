@@ -190,10 +190,17 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
 Each item is a password in your default keychain, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
-The following commands search the keychains that `security list-keychains` prints.
-If the keychain that was your default when you set up kong-harnesses isn't in that list, add its path, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command.
+If your default keychain changed after you set up kong-harnesses, add the path of the keychain that was the default then, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command, including `security unlock-keychain`.
+If you don't know which keychain that was, do these steps once for each keychain that `security list-keychains` prints, with its path.
 
-1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
+1. In a terminal of your desktop session, unlock the keychain:
+
+   ```sh
+   security unlock-keychain
+   ```
+
+   Enter the keychain password when `security` asks for it.
+1. If the `Gateway MCP keys` field names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
    ```sh
    security dump-keychain | awk '
@@ -206,13 +213,6 @@ If the keychain that was your default when you set up kong-harnesses isn't in th
 
    The command prints only item names, not their values.
    Use each name that it prints as `ITEM_NAME` in the next step.
-1. In a terminal of your desktop session, unlock the keychain:
-
-   ```sh
-   security unlock-keychain
-   ```
-
-   Enter the keychain password when `security` asks for it.
 1. Delete each named item:
 
    ```sh
@@ -240,15 +240,15 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 > Always pass the `profile` attribute to `secret-tool clear`.
 > Without it, the command deletes every item that kong-harnesses saved in an unlocked keyring, including your sign-ins.
 
-1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
+1. If the `Gateway MCP keys` field names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
    ```sh
-   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null; } 2>&1 \
+   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null || echo "secret-tool: exit code $?"; } 2>&1 \
      | sed -n -e 's/^attribute\.profile = \(PROFILE_NAME\.mcp-key\.\)/\1/p' -e '/^secret-tool: /p'
    ```
 
    If your desktop asks you to unlock the keyring, unlock it.
-   The command prints only item names, not their values, and any `secret-tool` error.
+   The command prints only item names, not their values, and a `secret-tool:` line when `secret-tool` fails or is missing.
    Use each name that it prints as `ITEM_NAME` in the next step.
 1. Delete each named item while the keyring is unlocked, because `secret-tool clear` removes only items in an unlocked keyring:
 
@@ -259,7 +259,7 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 1. Check that each item is gone:
 
    ```sh
-   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null; } 2>&1 \
+   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null || echo "secret-tool: exit code $?"; } 2>&1 \
      | sed -n -e 's/^attribute\.profile = \(PROFILE_NAME\.mcp-key\.\)/\1/p' -e '/^secret-tool: /p'
    ```
 
@@ -272,7 +272,7 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 
 Each item is a file named `ITEM_NAME.login.dpapi` in the `%LOCALAPPDATA%\kong-harnesses\vault` folder.
 
-1. If the output names `PROFILE_NAME.mcp-key.*`, delete every item of that profile in PowerShell:
+1. If the `Gateway MCP keys` field names `PROFILE_NAME.mcp-key.*`, delete every item of that profile in PowerShell:
 
    ```powershell
    Get-ChildItem -LiteralPath "$env:LOCALAPPDATA\kong-harnesses\vault" -Filter 'PROFILE_NAME.mcp-key.*.login.dpapi' | Remove-Item
