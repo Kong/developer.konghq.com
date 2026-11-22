@@ -92,47 +92,7 @@ cleanup:
   inline:
     - title: Remove the fleet build
       content: |
-        1. Before you uninstall kong-harnesses, ask every developer with a user-level activation to remove their user-level {{ site.claude_code }} settings, regardless of the build's MCP mode (even for an `exclusive` build).
-           Add `--dry-run` to preview the changes:
-
-           ```sh
-           kong-harnesses profile cleanup --client claude-code
-           ```
-
-           [`profile cleanup`](/kong-harnesses/profile/cleanup/) doesn't take a profile name and removes whatever kong-harnesses setup the developer's user-level settings use, even for another profile.
-           It works before or after you delete the build files, as long as kong-harnesses is still installed.
-        1. Unassign the build package or script in your MDM tool so it doesn't reinstall after deletion.
-           For an Intune macOS app (PKG), remove groups from both its Required and Available assignments.
-        1. Run `kong-harnesses fleet remove` with the build's record file (`kong-harnesses-fleet-BUILD_ID.json`).
-           For an MDM build, pass the policy file that the computers receive now with `--policy` (an older copy discards later changes).
-           For an `exclusive` build, pass the `managed-mcp.json` that the computers have now with `--mcp-config`.
-           Pass a new or empty folder with `--output-dir` whenever policy keys or your own MCP servers remain.
-
-           To remove a file build, run `fleet remove` with `--record` (add `--mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed-BUILD_ID` for an `exclusive` MCP build):
-
-           ```sh
-           kong-harnesses fleet remove --record 'BUILD_RECORD'
-           ```
-
-           To remove an MDM build, pass both `--record` and the current `--policy` file (add `--mcp-config 'MCP_CONFIG_FILE'` for an `exclusive` MCP build):
-
-           ```sh
-           kong-harnesses fleet remove \
-             --record 'BUILD_RECORD' \
-             --policy 'POLICY_FILE' \
-             --output-dir fleet-removed-BUILD_ID
-           ```
-
-        1. Follow the instructions that `fleet remove` prints:
-           * If `fleet remove` writes a policy under `mdm/`, review the listed removed and restored values and deploy the updated policy in place of the existing one.
-           * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool even when `fleet remove` doesn't write an `mdm/` folder.
-           * If `fleet remove` writes `managed-mcp.json` under `root/`, remove any kept gateway server definitions that changed after the build and deploy the updated file.
-           * Delete every file path listed under `Remove` from each managed computer as an administrator.
-        1. On macOS, forget the package receipt on each computer so your MDM tool can install a future package with the same identifier and version:
-
-           ```sh
-           sudo pkgutil --forget PACKAGE_IDENTIFIER
-           ```
+        To unassign the deployment, revert managed settings and `managed-mcp.json` with `kong-harnesses fleet remove`, and delete build files from managed computers, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 ---
 
 Use `kong-harnesses fleet build` to turn a kong-harnesses profile into a machine-wide profile and [{{ site.claude_code }} managed settings](https://code.claude.com/docs/en/managed-settings) that lock managed macOS, Linux, and Windows computers to {{ site.ai_gateway }}.
