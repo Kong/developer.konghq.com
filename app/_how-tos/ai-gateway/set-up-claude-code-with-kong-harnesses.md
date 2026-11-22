@@ -59,7 +59,7 @@ prereqs:
       include_content: prereqs/auth/oidc/okta-kong-harnesses
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code-kong-harnesses
+      include_content: md/ai-gateway/v2/prereqs/kong-harnesses-claude-code
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
