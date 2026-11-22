@@ -59,6 +59,7 @@ These settings add to the client settings in [Register {{site.kong_harnesses}} i
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
 * Scopes: The token response names each default client scope of the client that has **Include in token scope** on, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
+  The exception is a default client scope with role scope mappings, which Keycloak leaves out of the response for a user who has none of its roles, as [Client scopes permissions](https://www.keycloak.org/docs/latest/server_admin/index.html#client-scopes-permissions) describes.
   The response can't name a scope that the profile doesn't request, and a response with `scope` must keep every custom scope that the profile requests, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
   **Include in token scope** is a setting of the shared client scope, so changing it alters the `scope` claim for every other client linked to that scope.
   In the **Client scopes** tab of the {{site.kong_harnesses}} client, find each default client scope that the profile doesn't request and that has **Include in token scope** on, as [Link client scope with the client](https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes_linking) describes.
