@@ -13,7 +13,7 @@ breadcrumbs:
 ---
 
 The `doctor` command checks one profile end to end: the profile, the sign-in, the client, the gateway and, for a profile that signs in through an identity provider, the identity provider.
-It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each server: the gateway, the identity provider of a profile that signs in through one, and the profile server of a profile imported from an HTTPS URL.
+It also checks each CA bundle file that `SSL_CERT_FILE` or `NODE_EXTRA_CA_CERTS` names, with a result for each of these servers that uses HTTPS and for the profile server of a profile imported from an HTTPS URL.
 A missing or unreadable file gets a separate result.
 It reaches the network, reports each finding beside its fix, and can write the report as JSON.
 
