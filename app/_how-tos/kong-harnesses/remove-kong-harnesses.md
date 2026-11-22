@@ -190,7 +190,8 @@ If an unreadable profile is machine-wide, ask your administrator to reinstall it
 
 Each item is a password in your default keychain, normally the login keychain, with the service `io.kong.kong-harnesses.login` and the item name as its account.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
-If you changed the default keychain after setup, add the path of the keychain that was the default then, as listed by `security list-keychains`, at the end of each `security` command below.
+The following commands search the keychains that `security list-keychains` prints.
+If the keychain that was your default when you set up kong-harnesses isn't in that list, add its path, for example `~/Library/Keychains/login.keychain-db`, at the end of each `security` command.
 
 1. If the output names `PROFILE_NAME.mcp-key.*`, list the item names of that profile:
 
@@ -205,6 +206,13 @@ If you changed the default keychain after setup, add the path of the keychain th
 
    The command prints only item names, not their values.
    Use each name that it prints as `ITEM_NAME` in the next step.
+1. In a terminal of your desktop session, unlock the keychain:
+
+   ```sh
+   security unlock-keychain
+   ```
+
+   Enter the keychain password when `security` asks for it.
 1. Delete each named item:
 
    ```sh
@@ -220,6 +228,7 @@ If you changed the default keychain after setup, add the path of the keychain th
    ```
 
    The command must report that the item couldn't be found in the keychain.
+   This result counts only after the unlock step succeeded, because `security` also prints it when the keychain stays locked.
    Any other message, or no message, means that the item is still there.
 
 {% endnavtab %}
@@ -250,10 +259,13 @@ Each item is a Secret Service item with the attribute `application` set to `io.k
 1. Check that each item is gone:
 
    ```sh
-   secret-tool lookup application io.kong.kong-harnesses profile 'ITEM_NAME' >/dev/null && echo 'ITEM_NAME is still there'
+   { secret-tool search --all --unlock application io.kong.kong-harnesses >/dev/null; } 2>&1 \
+     | sed -n -e 's/^attribute\.profile = \(PROFILE_NAME\.mcp-key\.\)/\1/p' -e '/^secret-tool: /p'
    ```
 
-   The command prints nothing when the item is gone.
+   If your desktop asks you to unlock the keyring, unlock it.
+   The item is gone only when the command prints neither its name nor a `secret-tool:` line.
+   If you cancelled the unlock, unlock the keyring and run the check again.
 
 {% endnavtab %}
 {% navtab "Windows" %}
