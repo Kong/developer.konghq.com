@@ -88,9 +88,8 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 ---
 
-[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one.
-It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
-kong-harnesses doesn't write a long-lived key to the {{ site.claude_code }} settings.
+[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when needed.
+It stores the sign-in in the [secret store of the operating system](/kong-harnesses/sign-in/) rather than writing a long-lived key to {{ site.claude_code }} settings.
 
 In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
 Then you set up {{ site.claude_code }} as a developer does.
@@ -362,6 +361,4 @@ Send a prompt to check that you get a reply.
 {{ site.claude_code }} now sends every model request to {{site.ai_gateway}}.
 kong-harnesses renews your access token by itself.
 Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
-
-On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
-Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
+When kong-harnesses can't read your sign-in, follow the fix in [Sign-in errors](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
