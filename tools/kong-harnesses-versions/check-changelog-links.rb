@@ -201,8 +201,7 @@ module KongHarnessesChangelogLinks
   # the job log would show the repository in another letter case. The numbers count
   # what the page holds, which has no tooling entries, so they say "on the page".
   def place(node)
-    top = node
-    top = top.parent until top.fragment? || top.parent.nil? || top.parent.fragment?
+    top = top_of(node)
     return 'the page' if top.fragment?
 
     release, section, before = heading_of(top)
@@ -219,6 +218,22 @@ module KongHarnessesChangelogLinks
     else
       "#{where}, block #{before.length + 1} on the page"
     end
+  end
+
+  # The release and section of a node, as `place` names them.
+  def section_of(node)
+    top = top_of(node)
+    return 'the page' if top.fragment?
+
+    release, section, = heading_of(top)
+    where = release ? "release #{release}" : 'the text before the first release'
+    section ? "#{where}, section #{section}" : where
+  end
+
+  def top_of(node)
+    top = node
+    top = top.parent until top.fragment? || top.parent.nil? || top.parent.fragment?
+    top
   end
 
   # The release and section that the top-level element `top` is in, and the elements

@@ -786,13 +786,44 @@ module KongHarnessesChangelog
   end
 
   # The release whose text the export would change, which a refusal names in place of
-  # the text.
+  # the text. When the two have other releases, it names the first block that reads
+  # differently.
   def changed_release(source, tree, releases)
     parts = [html(source), html(tree)].map { |fragment| releases_in(fragment) }
-    return 'the changelog' unless parts.map(&:length).uniq == [releases.length]
+    unless parts.map(&:length).uniq == [releases.length]
+      return changed_block(html(source), html(tree)) { |before, after| reading(in_section(before)) == reading(in_section(after)) } || 'the changelog'
+    end
 
     index = parts[0].zip(parts[1]).index { |before, after| reading(before) != reading(after) }
     index ? "release #{releases[index]}" : 'the changelog'
+  end
+
+  # The first block of `expected` that `actual` does not show the same by `same`, and in
+  # a list its first entry that differs, named as the page check names a place, or nil.
+  # A block that only `actual` has is named there.
+  def changed_block(expected, actual, &same)
+    pairs = lambda do |nodes|
+      runs = nodes.map { |list| list.reject { |node| node.text? && node.text.strip.empty? } }
+      (0...runs.map(&:length).max).lazy.map { |index| runs.map { |run| run[index] } }.find { |pair| pair.include?(nil) || !same.call(*pair) }
+    end
+    pair = pairs.call([expected, actual].map(&:children)) or return
+
+    if pair.none?(&:nil?) && %w[ul ol].include?(pair[0].name) && pair[0].name == pair[1].name
+      pair = pairs.call(pair.map(&:element_children)) || pair
+    end
+    KongHarnessesChangelogLinks.place(pair.compact.first)
+  end
+
+  # A block, or a list entry in a list of its own, with the heading of its section, so
+  # that `reading` takes the same references off it as off the whole page.
+  def in_section(node)
+    top = KongHarnessesChangelogLinks.top_of(node)
+    heading = top.previous_element
+    heading = heading.previous_element while heading && !%w[h2 h3].include?(heading.name)
+    Nokogiri::HTML5.fragment('').tap do |part|
+      part.add_child(heading.dup) if heading&.name == 'h3' && top.name != 'h3'
+      part.add_child(node.name == 'li' ? node.parent.dup(0).tap { |list| list.add_child(node.dup) } : node.dup)
+    end
   end
 
   def releases_in(fragment)
@@ -880,16 +911,25 @@ module KongHarnessesChangelog
   # of the source. It also refuses a code block that lost its language.
   def written(output, tree, source = nil, lines = [], releases: [])
     reread, = Kramdown::Parser::GFM.parse(output, options)
-    raise 'The export would write a link back, so it refuses the changelog.' if types_of(reread).intersect?(%i[a img])
-    raise 'The export would change what a reader sees, so it refuses the changelog.' unless page(html(reread)) == page(html(tree))
+    if types_of(reread).intersect?(%i[a img])
+      link = html(reread).at_css('a, img')
+      raise "The export would write a link back in #{link ? KongHarnessesChangelogLinks.place(link) : 'the page'}, so it refuses the changelog."
+    end
+    unless page(html(reread)) == page(html(tree))
+      raise "The export would change what a reader sees in #{changed_block(html(tree), html(reread)) { |before, after| page(before) == page(after) } || 'the page'}, so it refuses the changelog."
+    end
     return output unless source
 
-    raise 'The changelog has a link that release-please does not write so, and the export refuses it.' if unwritten_link?(source, lines)
+    link = unwritten_link(source, lines, releases)
+    raise "The changelog has a link that release-please does not write so in #{link}, and the export refuses it." if link
 
     before = reading(html(source))
     after = reading(html(tree))
     raise "The export would change the text that a reader sees in #{changed_release(source, tree, releases)}, so it refuses the changelog." unless before == after
-    raise 'The export would change the language of a code block, so it refuses the changelog.' unless code_languages(html(source)).map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') } == code_languages(html(tree))
+    code = [html(source), html(tree)].map { |fragment| code_blocks(fragment) }
+    expected = code[0].map { |block| language_of(block) }.map { |language| language && (KongHarnessesChangelogLinks.languages.include?(language) ? language : 'text') }
+    index = (0...code.map(&:length).max).find { |number| code.any? { |blocks| blocks[number].nil? } || expected[number] != language_of(code[1][number]) }
+    raise "The export would change the language of the code block in #{code_block_place(code.find { |blocks| blocks[index] }, index)}, so it refuses the changelog." if index
 
     output
   end
@@ -899,27 +939,51 @@ module KongHarnessesChangelog
   # release-please writes. So each link of an element must have that form in the source
   # lines of the element, apart from the same text in code. `lines` are the lines of the
   # source, with their line ends.
-  def unwritten_link?(source, lines)
-    source.children.flat_map { |element| %i[ul ol].include?(element.type) ? element.children.map { |item| [item, element.type] } : [[element]] }.any? do |element, list|
-      from = element.options[:location] or next false
-      raw = lines[(from - 1)...element.options.fetch(:last_line)].join
-      root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
-      root.children << (list ? Kramdown::Element.new(list).tap { |parent| parent.children << element } : element)
-      fragment = html(root)
-      code = fragment.css('code').map(&:text)
-      fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
-        # A label that release-please writes has no `\` or `&`, and no attribute list
-        # follows the link, also one that gives no attribute.
-        form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)(?!\{:)/
-        written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
-        written.call(raw) - code.sum(&written) < links.length
-      end
+  #
+  # It gives the place of the first such element, as its first line in the source and its
+  # release, or nil.
+  def unwritten_link(source, lines, releases)
+    count = 0
+    source.children.each do |element|
+      count += 1 if element.type == :header && element.options[:level] == 2
+      items = %i[ul ol].include?(element.type) ? element.children.map { |item| [item, element.type] } : [[element]]
+      found = items.find { |item, list| unwritten_link_in?(item, list, lines) } or next
+
+      release = count.zero? ? 'the text before the first release' : "release #{releases[count - 1] || 'with no version'}"
+      return "the entry or block on line #{found.first.options[:location]}, in #{release}"
+    end
+    nil
+  end
+
+  def unwritten_link_in?(element, list, lines)
+    from = element.options[:location] or return false
+    raw = lines[(from - 1)...element.options.fetch(:last_line)].join
+    root = Kramdown::Element.new(:root, nil, nil, encoding: Encoding::UTF_8)
+    root.children << (list ? Kramdown::Element.new(list).tap { |parent| parent.children << element } : element)
+    fragment = html(root)
+    code = fragment.css('code').map(&:text)
+    fragment.css('a').group_by { |link| [link['href'].to_s, link.inner_html] }.any? do |(address, label), links|
+      # A label that release-please writes has no `\` or `&`, and no attribute list
+      # follows the link, also one that gives no attribute.
+      form = /\[([^\[\]\\&\n]*)\]\(#{Regexp.escape(address)}\)(?!\{:)/
+      written = ->(text) { text.scan(form).count { |(written_label)| html(parse("[#{written_label}](#{address})")).at_css('a')&.inner_html == label } }
+      written.call(raw) - code.sum(&written) < links.length
     end
   end
 
-  def code_languages(fragment)
+  def code_blocks(fragment)
     # A code block of only white space goes.
-    fragment.css('pre code').reject { |code| code.text.strip.empty? }.map { |code| code['class'].to_s[/(?:\A|\s)language-(\S+)/, 1] }
+    fragment.css('pre code').reject { |code| code.text.strip.empty? }
+  end
+
+  def language_of(code)
+    code['class'].to_s[/(?:\A|\s)language-(\S+)/, 1]
+  end
+
+  # A code block as its number in its section on the page, with the release and section.
+  def code_block_place(blocks, index)
+    sections = blocks[0..index].map { |code| KongHarnessesChangelogLinks.section_of(code) }
+    "#{sections.last}, code block #{sections.count(sections.last)} on the page"
   end
 
   # `get` takes a path of the GitHub API and an Accept type, and gives the status code

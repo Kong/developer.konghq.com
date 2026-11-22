@@ -695,7 +695,7 @@ RSpec.describe KongHarnessesChangelog do
     tree.children.first.children.first.children.first.children.first.children.clear
     expect { described_class.written("* **** y\n", tree) }.to raise_error(/would change what a reader sees/)
     source = source_of("```sh\nkoha up\n```\n")
-    expect { described_class.written("    koha up\n", described_class.parse("    koha up\n"), *source) }.to raise_error(/language of a code block/)
+    expect { described_class.written("    koha up\n", described_class.parse("    koha up\n"), *source) }.to raise_error(/language of the code block in/)
   end
 
   # GitHub masks only the exact text of the secret, so an error that quoted the entry
@@ -716,6 +716,52 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/raw HTML in release 0\.17\.1, section Bug Fixes, entry 4,/)
     expect { exported(release_please_changelog.sub('follow the', "follow `x\n  <profile>` the"), ['0.17.1']) }
       .to raise_error(/code with a line that starts a block in release 0\.17\.1, section Bug Fixes, entry 4,/)
+  end
+
+  # The refusals of the whole page name a place too, and none of its text. The docs
+  # entry is the second Bug Fixes entry on the page, and starts on line 16 of the fixture.
+  describe 'the place of a refused page' do
+    let(:page) { exported(release_please_changelog, ['0.17.1']) }
+    let(:secret) { ->(error) { expect(error.message).not_to match(/sample-tool|follow|koha/i) } }
+
+    it 'names the first link that the export would write back' do
+      expect { described_class.written(page.sub('follow the', 'follow [the](https://example.org)'), described_class.parse(page)) }
+        .to raise_error(/write a link back in release 0\.17\.1, section Bug Fixes, entry 2 on the page,/, &secret)
+    end
+
+    # The export takes a reference link for no reference, so the check of the link form
+    # gets this source here without the export.
+    it 'names the line and release of a link that release-please does not write so' do
+      reference = "#{release_please_changelog.sub('[#418](https://github.com/example/sample-tool/issues/418)', '[#418][r]')}\n[r]: https://github.com/example/sample-tool/issues/418\n"
+      expect { described_class.written(page, described_class.parse(page), *source_of(reference), releases: ['0.17.1']) }
+        .to raise_error(/does not write so in the entry or block on line 16, in release 0\.17\.1,/, &secret)
+    end
+
+    it 'names the first entry that a reader would see differently' do
+      allow_any_instance_of(described_class::Writer).to receive(:convert_entity) { |_writer, element, _opts| element.value.char } # rubocop:disable RSpec/AnyInstance
+      expect { exported(release_please_changelog.sub('follow the', 'follow &#124; the'), ['0.17.1']) }
+        .to raise_error(/what a reader sees in release 0\.17\.1, section Bug Fixes, entry 2 on the page,/, &secret)
+    end
+  end
+
+  it 'names the code block whose language the export would change' do
+    allow_any_instance_of(described_class::Writer).to receive(:convert_codeblock).and_wrap_original do |original, element, opts| # rubocop:disable RSpec/AnyInstance
+      element.attr.delete('class')
+      element.options.delete(:lang)
+      original.call(element, opts)
+    end
+    markdown = release_please_changelog.sub("after the upgrade\n", "after the upgrade\n\n  ```sh\n  koha login\n  ```\n")
+    expect { exported(markdown, ['0.17.1']) }
+      .to raise_error(/language of the code block in release 0\.17\.1, section ⚠ BREAKING CHANGES, code block 1 on the page,/) { |error| expect(error.message).not_to match(/koha/) }
+  end
+
+  # When the page and the source hold other releases, the refusal names the first block
+  # that a reader sees differently: here the source heading of 0.9.0 that the page lost.
+  it 'names the first changed block when the releases differ' do
+    source = source_of("## 1.0.0\n\n### Features\n\n* add\n\n## 0.9.0\n\n### Features\n\n* fix\n")
+    page = "## 1.0.0\n\n### Features\n\n* add\n\n### Features\n\n* fix\n"
+    expect { described_class.written(page, described_class.parse(page), *source, releases: %w[1.0.0 0.9.0]) }
+      .to raise_error(/sees in the heading of release 0\.9\.0,/)
   end
 
   it 'counts the entries at the source, and the page check counts the entries on the page' do
