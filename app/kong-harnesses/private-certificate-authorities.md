@@ -128,8 +128,9 @@ rows:
       If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
 {% endtable %}
 
-When `NODE_EXTRA_CA_CERTS` is set, omp and the Bun release archives of pi use Bun's bundled CA list and that file instead of `/etc/ssl/certs` and the system trust store, even when `NODE_USE_SYSTEM_CA=1` is set.
+When `NODE_EXTRA_CA_CERTS` is set, omp and the Bun release archives of pi use Bun's bundled CA list and that file instead of `/etc/ssl/certs` and the system trust store.
 Put every private CA that omp or pi needs in that file, such as the CA of a proxy.
+For omp, `NODE_USE_SYSTEM_CA=1` doesn't add the system trust store when `NODE_EXTRA_CA_CERTS` is also set.
 
 ## CA settings per program
 
