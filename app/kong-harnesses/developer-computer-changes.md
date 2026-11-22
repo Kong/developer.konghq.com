@@ -65,7 +65,6 @@ When the command doesn't name `--client`, `setup` leaves that agent CLI out and 
 When the command names `--client`, `setup` stops.
 When the test request doesn't contain a part that the agent CLI adds itself, such as a header from its own settings, `setup` warns and sets up the agent CLI.
 When an agent CLI can't take the profile, `setup` stops before it writes the settings of any agent CLI.
-Fix the cause, then run `setup` again.
 
 `login` saves the renewal credential or the static key in the operating system's credential store.
 It also saves there the key of each gateway MCP server that asks for a key, when the developer enters it.
@@ -121,14 +120,12 @@ rows:
   - mode: "`anthropic`"
     keys: "`env.ANTHROPIC_BASE_URL` set to the gateway origin."
   - mode: "`foundry`"
-    keys: |
-      `env.CLAUDE_CODE_USE_FOUNDRY` and `env.CLAUDE_CODE_SKIP_FOUNDRY_AUTH` set to `1`, and `env.ANTHROPIC_FOUNDRY_BASE_URL` set to the gateway origin.
-      The model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
+    keys: "`env.CLAUDE_CODE_USE_FOUNDRY` and `env.CLAUDE_CODE_SKIP_FOUNDRY_AUTH` set to `1`, and `env.ANTHROPIC_FOUNDRY_BASE_URL` set to the gateway origin."
   - mode: "`mantle`"
-    keys: |
-      `env.CLAUDE_CODE_USE_MANTLE` and `env.CLAUDE_CODE_SKIP_MANTLE_AUTH` set to `1`, and `env.ANTHROPIC_BEDROCK_MANTLE_BASE_URL` set to the gateway origin.
-      The model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
+    keys: "`env.CLAUDE_CODE_USE_MANTLE` and `env.CLAUDE_CODE_SKIP_MANTLE_AUTH` set to `1`, and `env.ANTHROPIC_BEDROCK_MANTLE_BASE_URL` set to the gateway origin."
 {% endtable %}
+
+In both the `foundry` and `mantle` modes, the model picker and the `availableModels` allowlist show only the profile's models, `replaceBuiltInOptions` hides the built-in models, and `env.ANTHROPIC_DEFAULT_MODEL` is the profile's default model.
 
 `profile activate` also writes the settings of each other agent CLI that the profile sets up.
 For these settings, see [`profile activate`](/kong-harnesses/profile/activate/).

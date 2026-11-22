@@ -109,7 +109,7 @@ For these limits, see the [{{ site.claude_code }} CA certificate store](https://
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 The `scripts/login.py` sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
-omp and pi use their own CA list by default, except on Debian and Ubuntu as the table says, so set one of these variables in the environment where they start:
+omp and pi use their own CA list by default, so set one of these variables in the environment where they start:
 
 {% table %}
 columns:
@@ -122,13 +122,13 @@ rows:
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`.
       When `NODE_EXTRA_CA_CERTS` is set, omp uses its own CA list and the file instead of the system trust store, so put every private CA that omp needs in the file, such as the CA of a proxy.
-      On Debian and Ubuntu, omp also reads `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
   - client: pi
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`, which pi on Node.js and pi's Bun release archives both read.
       If pi runs on Node.js from Homebrew and doesn't trust a CA that you added to the macOS keychain, set `NODE_EXTRA_CA_CERTS`, because that Node.js uses a copy of the keychain from when Homebrew installed its CA certificates.
-      On Debian and Ubuntu, pi's Bun release archives also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
 {% endtable %}
+
+On Debian and Ubuntu, omp and the Bun release archives of pi also read `/etc/ssl/certs`, so a CA that `update-ca-certificates` installed works without a variable, and `NODE_EXTRA_CA_CERTS` set to another file removes that trust.
 
 ## CA settings per program
 
