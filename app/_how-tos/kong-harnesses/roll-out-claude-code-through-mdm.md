@@ -47,14 +47,30 @@ prereqs:
   inline:
     - title: kong-harnesses and a profile
       content: |
-        Install [kong-harnesses](/kong-harnesses/install/) on your build desktop (macOS, Windows 11, or Linux with Secret Service, not WSL, a container, or SSH).
+        Install [kong-harnesses](/kong-harnesses/install/) on a build desktop that meets the requirement for its operating system:
+
+        {% table %}
+        columns:
+          - title: Operating system
+            key: os
+          - title: Build desktop requirement
+            key: requirement
+        rows:
+          - os: macOS
+            requirement: None
+          - os: Linux
+            requirement: Secret Service, such as GNOME Keyring or KWallet, outside WSL, a container, or an SSH session
+          - os: Windows
+            requirement: Windows 11
+        {% endtable %}
+
         Create and install an HTTPS OIDC profile named `work` ([setup guide](/ai-gateway/set-up-claude-code-with-kong-harnesses/)), replacing `work` with your profile name.
         `fleet build` refuses `http://` origins and Claude subscription profiles.
         For the Anthropic API provider, your build computer must reach the gateway and trust any private gateway CA.
     - title: MDM, {{ site.claude_code }}, and test access
       content: |
         You need an MDM tool (for example, Jamf Pro or Microsoft Intune) or Linux configuration management, administrator access on one test computer per platform and policy group, and [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) access ([required role](/ai-cost-management/analytics-and-debugging/#how-the-views-relate)).
-        Target computers need {{ site.claude_code }} `2.1.285` or later to enforce `allowedProviders`.
+        Target computers need {{ site.claude_code }} `2.1.285` or later to enforce `allowedProviders` ([Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks)).
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to managed computers with kong-harnesses?
@@ -251,8 +267,9 @@ Install in this order through your MDM tool or configuration management.
    In Microsoft Intune, add it as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), not a line-of-business app, because without an `/Applications` `.app` bundle Intune may not detect it.
    `root` must own the machine-wide profile and its parent folders, without group or world write permissions.
 1. If you migrate from a file build to an MDM build, unassign the old package or script before you change the policy (for an Intune macOS PKG, remove its **Required** and **Available** assignments).
-   Then delete `/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 1. For an MDM build, upload `mdm/com.anthropic.claudecode.plist` as Custom Settings for `com.anthropic.claudecode`, replacing the existing policy.
+1. If you migrate from a file build, wait until `/status` on the computer shows the MDM build label from [Validate](#validate).
+   Then delete `/Library/Application Support/ClaudeCode/managed-settings.d/kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 
 The preinstall script checks the targets and their parent folders before it writes.
 If it prints `Not installed:`, fix the cause (symlink, extra hard link, unexpected owner, or writable permissions or ACLs) and retry.
@@ -289,8 +306,9 @@ Delete an unexpected file or link only at a build file's exact path, never syste
    The command checks targets for unexpected owners, writable ACLs, symlinks, junctions, and extra hard links, copies under `C:\`, sets `Administrators` ownership, and runs `icacls /reset` on written paths (including existing folders) to inherit `C:\Program Files` ACLs.
    Only `Administrators`, `SYSTEM`, or `TrustedInstaller` may own and write the machine-wide profile and its folders up to `C:\Program Files`, without symlinks or junctions.
 1. If you migrate from a file build to an MDM build, unassign the old package or script before you change the policy.
-   Then delete `C:\Program Files\ClaudeCode\managed-settings.d\kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 1. For an MDM build, set the `REG_SZ` value `Settings` under `HKLM\SOFTWARE\Policies\ClaudeCode` to the single-line JSON in `mdm/Settings.json`, replacing the existing value.
+1. If you migrate from a file build, wait until `/status` on the computer shows the MDM build label from [Validate](#validate).
+   Then delete `C:\Program Files\ClaudeCode\managed-settings.d\kong-harnesses.json`, so {{ site.claude_code }} stops reading its `env` and MCP lock.
 
 If the command prints `Not installed:`, fix the cause (symlink, junction, extra hard link, unexpected owner, or writable ACLs) and retry.
 If it prints `could not be written in full; fix the cause and run the step again`, the write was partial: fix the cause and run the command again.
