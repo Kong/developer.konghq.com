@@ -62,8 +62,9 @@ Until you get an updated profile, or if you don't use {{site.kong_harnesses}}, a
 You can also export `DISABLE_AUTOUPDATER=1` in your shell environment.
 
 When you activate a {{site.kong_harnesses}} profile that enables or omits auto-updates, activation doesn't set `DISABLE_AUTOUPDATER`.
-If an earlier activation wrote `DISABLE_AUTOUPDATER` (for example, from a profile with auto-updates off), activation restores the earlier value in your settings file, or removes the key if it wasn't present before.
-Otherwise, activation leaves `DISABLE_AUTOUPDATER` itself unchanged in your settings and doesn't override a `DISABLE_AUTOUPDATER` shell export.
+If an earlier activation wrote `DISABLE_AUTOUPDATER` (for example, from a profile with auto-updates off) and your settings file still has the value that it wrote, activation restores the earlier value, or removes the key if it wasn't present before.
+If you changed the value after that activation, activation keeps your value.
+If no earlier activation wrote it, activation leaves `DISABLE_AUTOUPDATER` itself unchanged in your settings and doesn't override a `DISABLE_AUTOUPDATER` shell export.
 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also turns off auto-updates, so a non-empty value in your settings or shell can still keep auto-updates off unless activation writes it blank for another enabled choice.
 For when activation writes, keeps, or restores `DISABLE_AUTOUPDATER` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).
 
