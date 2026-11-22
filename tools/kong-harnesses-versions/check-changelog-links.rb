@@ -280,12 +280,12 @@ module KongHarnessesChangelogLinks
 
   # The version that a heading shows, written back as the source writes it.
   def shown_version(heading)
-    written_version(heading.text.strip[SHOWN_VERSION].to_s)
+    written_version(heading.text.strip[SHOWN_VERSION, 1].to_s)
   end
 
-  # The version at the start of a heading, with the dashes and the ellipsis that kramdown
-  # makes of `--`, `---` and `...`.
-  SHOWN_VERSION = /\A[0-9A-Za-z.+\-–—…]+/
+  # The version at the start of a heading, after an optional `[` as in HEADING_VERSION,
+  # with the dashes and the ellipsis that kramdown makes of `--`, `---` and `...`.
+  SHOWN_VERSION = /\A\[?([0-9A-Za-z.+\-–—…]+)/
 
   def written_version(shown)
     shown.gsub('—', '---').gsub('–', '--').gsub('…', '...')

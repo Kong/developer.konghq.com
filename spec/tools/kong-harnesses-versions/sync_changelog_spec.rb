@@ -804,6 +804,15 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
+  # A heading can write its version in brackets with no compare link. The page lost
+  # the 1.0.0 release of the source.
+  it 'names the release of a heading that shows its version in brackets' do
+    source = source_of("## [1.0.0]\n\n### Features\n\n* add\n\n## [2.0.0]\n\n### Features\n\n* fix\n")
+    page = "## [2.0.0]\n\n### Features\n\n* fix [x](https://example.org)\n"
+    expect { described_class.written(page, described_class.parse(page), *source) }
+      .to raise_error(/write a link back in release 2\.0\.0, section Features, entry 1 on the page,/)
+  end
+
   it 'counts the entries at the source, and the page check counts the entries on the page' do
     expect { exported(release_please_changelog.sub('follow the', "follow‮ the"), ['0.17.1']) }
       .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 4,/)
