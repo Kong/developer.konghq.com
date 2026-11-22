@@ -44,7 +44,7 @@ related_resources:
 Managed computers configured with `kong-harnesses fleet build` can fail validation when another managed settings source outranks the build, an MCP policy blocks gateway servers, or a host app or WSL distribution reads different settings.
 For general `kong-harnesses doctor` checks, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 For deployment steps, see [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
-Replace `PROFILE_NAME` with your profile name in each command, and set `KONG_HARNESSES_FEATURES=fleet` on a `preview` build when running `kong-harnesses doctor` to include the `mcp` policy check.
+Replace `PROFILE_NAME` with your profile name in each command.
 
 ## Status labels
 
@@ -61,7 +61,7 @@ rows:
   - label: "Missing `Enterprise managed settings`, `(file)`, or `(HKCU)`"
     fix: |
       Build files or the MDM policy didn't reach the computer, or the policy sets only control keys, `null`, or empty objects.
-      Verify the files at their target paths and redeploy.
+      Verify the files at their [target paths](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output) and redeploy.
   - label: "`(drop-ins)` or `(file + drop-ins)` on an MDM build"
     fix: |
       The MDM policy didn't reach the computer or sets only control keys, `null`, or empty objects.
@@ -90,11 +90,13 @@ When a gateway MCP server isn't connected or doesn't appear in `/mcp`, check the
 
 * **Key server without a saved key:** Run `kong-harnesses login --profile PROFILE_NAME` once to save each key.
 * **Rejected key on a key server:** Run `kong-harnesses logout --profile PROFILE_NAME` and then `kong-harnesses login --profile PROFILE_NAME`.
-  `logout` asks you to type the profile name, signs out of the profile, and removes both the saved sign-in and every saved gateway MCP key of the profile.
+  When a saved sign-in exists, `logout` asks you to type the profile name, signs out of the profile, and removes both the saved sign-in and every saved gateway MCP key of the profile.
+  When only saved gateway MCP keys remain without a saved sign-in, `logout` deletes those keys without a prompt.
   Have all server keys ready before running `logout`.
 * **Server with its own OAuth sign-in:** Sign in from `/mcp`.
 * **Gateway-authenticated server failed at startup:** If a server [fails during the initial browser sign-in](https://code.claude.com/docs/en/mcp#failed-first-connections), reconnect it from `/mcp` after signing in.
-* **Missing servers:** Run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` (with `KONG_HARNESSES_FEATURES=fleet` for the `mcp` check) and `claude doctor` to find dropped invalid entries.
+* **Missing servers:** Run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and `claude doctor` to find dropped invalid entries.
+  For `--mcp-servers allowlist` or `any`, `profile activate` installs the gateway MCP plugin in `~/.claude/skills` (`%USERPROFILE%\.claude\skills` on Windows, or `skills` inside `CLAUDE_CONFIG_DIR`).
   Remove `--strict-mcp-config` from startup commands, and check both `allowedMcpServers` and `deniedMcpServers` across all settings scopes:
   * User settings
   * Project settings
