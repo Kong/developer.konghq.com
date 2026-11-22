@@ -89,7 +89,7 @@ Run the steps in this order:
    It also prints each published final release that has no section in the changelog.
    It stops with an error at a release heading with no version, such as `Unreleased`, when the changelog has no section with the version of the highest final release, and when no entry for users is left, so a changelog that lost its sections cannot empty the page.
    It also stops at a release heading whose text on the page does not start with exactly the version of its line, such as one with text right after the compare link, and names the line.
-   After a `[`, a `]`, a whitespace character such as a space or a tab, a `(` or the end ends the version, and without a `[`, only a whitespace character, a `(` or the end ends it.
+   After a `[`, a `]`, an ASCII white space character such as a space or a tab, a `(` or the end ends the version, and without a `[`, only an ASCII white space character, a `(` or the end ends it.
    It also stops at a second release heading with the version of an earlier one, and names the line, and `check-changelog-links.rb` refuses a second release heading on the page that shows the version of an earlier one, so each version names one release.
    Jekyll does not parse a variable as a template, so Liquid syntax in a commit subject stays text.
    Vale checks only Markdown pages, so the commit subjects in this file do not fail the spelling check.
