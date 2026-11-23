@@ -28,7 +28,7 @@ The workflow also masks the owner and the name each on their own, so the job log
 Without the secret each job fails with an error that names it.
 The workflow, `fetch-versions.js` and the changelog scripts take only an owner of letters, digits and hyphens, and a name of letters, digits, `.`, `_` and `-` that isn't `.` or `..`, and the changelog scripts compare the owner and the name without regard to letter case, as GitHub does.
 
-The manual runbook below does the same work by hand, and stays the way to sync from a local binary.
+The following manual runbook does the same work, and stays the way to sync from a local binary.
 
 ## How to run the sync
 
