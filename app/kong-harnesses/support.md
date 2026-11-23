@@ -55,7 +55,7 @@ To update, install the new release the same way you [installed kong-harnesses](/
    For any other profile, `doctor` exits with an error without writing the report, which leaves `report.json` empty.
 
    {:.warning}
-   > The `--inference` flag sends a model request through the gateway that can cost money.
+   > The model request that `--inference` sends through the gateway can cost money.
    > The request does not send local files or chat history.
 
 4. Review `report.json` for sensitive data before you send it.
@@ -65,7 +65,8 @@ To update, install the new release the same way you [installed kong-harnesses](/
 
 ### What the support report contains
 
-The support report contains the profile name, profile-level findings, and per-CLI findings from `doctor`, including each finding's fix.
+The support report contains the profile name and every `doctor` finding with its fix.
+The findings cover both the profile and each agent CLI that `doctor` checks.
 The report also includes the kong-harnesses version, operating system, and CPU architecture of the build.
 When the report covers {{ site.claude_code }}, the report includes the {{ site.claude_code }} version from `claude --version`.
 The report records each part that `doctor` can't read, such as the {{ site.claude_code }} version, under `unavailable`.
@@ -115,7 +116,7 @@ rows:
     behavior: |
       Full command only when the value matches the command that kong-harnesses wrote.
       Otherwise `<redacted>`.
-  - category: Other {{ site.claude_code }} top-level settings
+  - category: Other {{ site.claude_code }} top-level settings, except `env`
     behavior: |
       `<redacted>`, including `hooks` and `statusLine`, because commands can contain tokens.
   - category: Empty or switch environment variables
