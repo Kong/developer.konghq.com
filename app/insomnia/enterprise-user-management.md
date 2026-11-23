@@ -81,10 +81,58 @@ The [**Licenses** tab](https://app.insomnia.rest/app/enterprise/licenses) in you
 
 From this tab, you can also remove users from your Enterprise account. These users will still be able to log in, but they will not have access to Enterprise data and their seat will be freed.
 
-## User activity reports
+The Licenses page lists every user who consumes a license, including users with a pending invite. Pending invites consume a license as soon as they're sent, so that a seat stays open for the invited user. An invite expires after 30 days, and its seat is freed when it expires.
 
-You can generate a CSV report about active and inactive users by clicking the download button next to **Last Active** in the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page.
-Each report includes the date each user last used Insomnia in the last 7, 30, or 90 days. Tracked activity includes creating and sending requests and creating API Collections.
+The following columns show each user's status as **Yes** or **No**:
+
+{% table %}
+columns:
+  - title: Column
+    key: column
+  - title: Description
+    key: description
+rows:
+  - column: "**Pending**"
+    description: The user was invited but hasn't accepted the invite yet.
+  - column: "**E2EE**"
+    description: The user has set up end-to-end encryption for their account.
+  - column: "**SCIM**"
+    description: The user is provisioned through [SCIM](/insomnia/scim/).
+{% endtable %}
+
+To view the organizations and teams that a user belongs to, click the user's name on the Licenses page. A dialog lists each organization and team as a link that opens it in a new tab.
+
+## User reports
+
+To download the user reports, click the download button on the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page. The download is a single Excel (`.xlsx`) workbook with one sheet per report:
+
+* **Managed Users**: One row per user who consumes a license, with their last activity and the **Pending**, **E2EE**, and **SCIM** columns from the Licenses page.
+* **Unmanaged Users**: Users on your verified domains who aren't associated with your Enterprise account. For more information, see [User types](#user-types).
+* **Users & Organizations**: One row for each combination of user and organization. For example, a user who belongs to three organizations has three rows.
+* **Users & Teams**: One row for each combination of user and team.
+
+The **Email** column is calculated the same way in every report, so you can compare the sheets or match rows across them, for example with a lookup formula.
+
+The Users & Organizations and Users & Teams reports contain the following columns:
+
+{% table %}
+columns:
+  - title: Report
+    key: report
+  - title: Columns
+    key: columns
+rows:
+  - report: Users & Organizations
+    columns: Email, organization ID, organization name, role, pending invite, URL
+  - report: Users & Teams
+    columns: Email, team name, role, URL
+{% endtable %}
+
+The URL column links directly to the organization or team in Insomnia Admin, where you can manage it.
+
+### User activity
+
+The Managed Users report includes the date each user last used Insomnia in the last 7, 30, or 90 days. Tracked activity includes creating and sending requests and creating API Collections.
 
 This data is maintained for 90 days. After 90 days without any activity, the date no longer appears in the report but the user will always be listed. If a user was last active more than 100 days before the report was generated, the **Last Active** value for that user will be `N/A` in the report. This allows you to quickly find inactive users.
 

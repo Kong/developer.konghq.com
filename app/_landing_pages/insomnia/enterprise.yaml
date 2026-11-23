@@ -93,11 +93,11 @@ rows:
         - type: card
           config:
             title: Reports
-            description: Get reports on active and inactive users.
+            description: Download reports on licensed users, user activity, and organization and team membership.
             icon: /assets/icons/analytics.svg
             cta:
               text: Learn more
-              url: /insomnia/enterprise-user-management/#user-activity-reports
+              url: /insomnia/enterprise-user-management/#user-reports
       - blocks:
         - type: card
           config:
