@@ -72,10 +72,25 @@ To list the rapid releases available in the chart repository:
 helm search repo kong/kong-operator --devel --versions
 ```
 
-To install a rapid release, or to move an existing installation onto a newer one, set the chart version explicitly. `--reuse-values` keeps the values you installed with:
+To install a rapid release, or to move an existing installation onto a newer one, set the chart version and the {{site.operator_product_name}} image tag explicitly. `--reuse-values` keeps the values you installed with, including any `image.tag` you set at install time. If you don't override the tag, Helm upgrades the chart and its CRDs but the controller manager keeps running the previous image, so controllers added in the rapid release don't start:
 
 ```bash
-helm upgrade kong-operator kong/kong-operator -n kong-system --version {{ rapid.chart }} --reuse-values
+helm upgrade kong-operator kong/kong-operator -n kong-system \
+  --version {{ rapid.chart }} \
+  --reuse-values \
+  --set-string image.tag={{ rapid.app }}
+```
+
+Wait for the rollout to finish:
+
+```bash
+kubectl -n kong-system rollout status deployment/kong-operator-kong-operator-controller-manager
+```
+
+Then check that the running pod uses the rapid release image. The `IMAGE` column should end in `{{ rapid.app }}`:
+
+```bash
+kubectl -n kong-system get pods -o custom-columns=NAME:.metadata.name,IMAGE:.spec.containers[*].image
 ```
 
 For a full install walkthrough, see [Install {{site.operator_product_name}}](/operator/install/).
