@@ -114,8 +114,9 @@ This configuration example uses low thresholds so that you can open the circuit 
 ## Export circuit breaker metrics with OpenTelemetry
 
 While a circuit is open, clients receive a `503` response.
-By default, that response reads `The upstream server is currently unavailable`, the same message that {{site.base_gateway}} returns when an upstream is down.
-A client sees the same response whether the circuit rejected the request or the upstream failed.
+By default, that response reads `The upstream server is currently unavailable`, the same message that
+{{site.base_gateway}} uses for its own 503 errors.
+A client can't tell a request that the circuit rejected from one of those errors by the status code and message alone.
 
 The Circuit Breaker plugin records metrics in {{site.base_gateway}}'s metrics registry.
 Use the [OpenTelemetry plugin](/plugins/opentelemetry/) to export them to an OpenTelemetry backend.
