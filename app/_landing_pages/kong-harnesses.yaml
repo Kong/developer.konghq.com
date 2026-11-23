@@ -74,9 +74,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Keep a fleet current
-            description: Hold managed computers to a range of Claude Code versions and move them to a new model.
+            title: Maintain a fleet
+            description: Pin managed computers to tested Claude Code versions or move them to a new model.
             cta:
-              text: Keep a fleet current
+              text: Maintain a fleet
               url: /kong-harnesses/maintain-a-claude-code-fleet/
               align: end
