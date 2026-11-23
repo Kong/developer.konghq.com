@@ -236,13 +236,13 @@ After the test passes, create the production profile with the flag, which skips 
 
 ## Access token lifetime
 
-{{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
+{{site.kong_harnesses}} reads the access token lifetime from `expires_in` in the token response, at sign-in and at renewal.
 It refuses a lifetime under 365 seconds, so that a renewed access token still has at least 360 seconds left when a client gets it.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
 If your identity provider issues longer access tokens, find the longest access token lifetime in its policy, and set `--max-token-lifetime-seconds` to that value, from 365 to 86400 seconds.
-If the policy allows more than 86400 seconds, reduce it to 86400 seconds.
+If the policy allows more than 86400 seconds, lower the access token lifetime of the policy to 86400 seconds or less.
 
 ## Create the profile
 
