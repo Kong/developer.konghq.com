@@ -17,6 +17,8 @@ related_resources:
     url: '/mesh/get-started/universal/install/'
   - text: 'Data plane on Kubernetes'
     url: '/mesh/data-plane-kubernetes/'
+  - text: 'Platform responsibilities in Universal mode'
+    url: '/mesh/universal-mode-responsibilities/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
   - text: Deploy a multi-zone global control plane in Universal mode with Docker

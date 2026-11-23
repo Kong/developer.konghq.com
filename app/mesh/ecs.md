@@ -23,6 +23,8 @@ related_resources:
     url: /mesh/#install-kong-mesh
   - text: Deploy {{site.mesh_product_name}} on Universal
     url: /mesh/get-started/universal/install/
+  - text: Platform responsibilities in Universal mode
+    url: /mesh/universal-mode-responsibilities/
   - text: "Access Audit"
     url: /mesh/access-audit/
   - text: "Vault Policy"
