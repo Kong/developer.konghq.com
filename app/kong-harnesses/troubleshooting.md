@@ -53,9 +53,8 @@ Some checks read the variables of that shell and the {{ site.claude_code }} proj
 kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 ```
 
-Replace `PROFILE_NAME` with the name of your installed profile.
+Replace `PROFILE_NAME` with the name of your installed profile in every command on this page.
 To check the only installed profile or the default profile, omit `--profile PROFILE_NAME` and leave `KONG_HARNESSES_PROFILE` unset.
-The commands on this page use the same placeholder.
 Replace `CLIENT_NAME` with the agent CLI to check, such as `claude-code`.
 To check every supported agent CLI that the profile configures, omit `--client`.
 The `doctor` command then prints one report for each agent CLI.
@@ -242,7 +241,8 @@ rows:
       The result depends on what `doctor` can send:
 
       * `doctor` sends your credential: an HTTP `401` or `403` response gives `fail`, because the gateway refuses your credential on that route.
-      * The test request doesn't have an input that the agent CLI can send, such as a client certificate or custom headers: a refused credential or a missing route gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
+      * The test request doesn't have an input that the agent CLI can send, such as a client certificate or custom headers: a refused credential or a missing route gives `warn` instead of `fail`.
+        The agent CLI can get a different response with that input.
       * `doctor` doesn't have a credential to send, such as when you aren't signed in or the agent CLI owns its sign-in: a `401` or `403` response gives `ok`.
         That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       * The profile is a Claude subscription profile: a `401` or `403` response gives `warn`.
@@ -351,7 +351,8 @@ rows:
       The `doctor` command doesn't send the request when it can't build the request, such as when a usable sign-in or gateway model doesn't exist.
       For a Claude subscription profile, `doctor` doesn't send the request, because `doctor` can't read your subscription sign-in.
     next: |
-      * The finding has a `fix:` line: do the steps on the line, then run `doctor` again.
-        When the line says to send a prompt, send one from {{ site.claude_code }} to test the route.
+      * The `fix:` line says to send a prompt: send one from {{ site.claude_code }}.
+        The answer to that prompt is the result of this check.
+      * The `fix:` line gives another step: do the steps on the line, then run `doctor` again.
       * The finding doesn't include a `fix:` line: read the finding for the cause.
 {% endtable %}
