@@ -400,7 +400,8 @@ Run `doctor` without `--inference`, or select a profile with a `claude-code` blo
 
 `profile delete` checks for a saved sign-in and inspects each agent CLI's settings before it removes a profile:
 
-* "selected profile still has a saved sign-in" or "the saved sign-in could not be inspected, so the profile was not deleted": The profile is still signed in, or `profile delete` couldn't check, for example because the password store is locked.
+* "selected profile still has a saved sign-in" or "the saved sign-in could not be inspected, so the profile was not deleted": The profile is still signed in, or `profile delete` couldn't check.
+  For example, the password store is locked.
   Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
 * "cannot tell whether the profile still has a saved sign-in and did not delete it": The message starts with "no Secret Service runs in this session".
   On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses.
@@ -447,7 +448,7 @@ When `profile activate` checks several agent CLIs and stops before it changes a 
 
 ### "settings file sets ANTHROPIC_AUTH_TOKEN or ANTHROPIC_API_KEY"
 
-The full message says that your Claude settings file sets `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`.
+The full message says that your {{ site.claude_code }} settings file sets `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`.
 {{ site.claude_code }} would send that value in place of your sign-in.
 Delete the variable from the settings file, then try again.
 
