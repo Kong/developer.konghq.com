@@ -39,7 +39,7 @@ faqs:
   - q: What happens if {{ site.insomnia }} cannot refresh the SCIM token automatically?
     a: |
       SCIM effectively breaks. Account owners **must** manually refresh the token to continue SCIM provisioning. You can manually refresh the token by doing the following:
-      1. In the {{ site.insomnia }} web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+      1. In the {{ site.insomnia }} web app, navigate to **Enterprise tools > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
       2. Select **Refresh Token**.
       3. Enter your passphrase to generate a new token.
       4. In your identity provider, update the token.
@@ -58,7 +58,7 @@ faqs:
     a: |
       To restore SCIM provisioning:
       
-      1. Go to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+      1. Go to **Enterprise tools > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
       2. Select **Refresh Token**.
       3. Enter your passphrase to generate a new token.
       4. In your identity provider, update the token.
@@ -137,7 +137,7 @@ When a token is close to expiration and cannot be refreshed automatically, {{ si
 
 ### Connector URL and token
 
-When you enable SCIM in {{ site.insomnia }} from the Enterprise Controls, you generate a connector URL and token. This token authorizes your IdP to provision users and teams.
+When you enable SCIM in {{ site.insomnia }} from Enterprise tools, you generate a connector URL and token. This token authorizes your IdP to provision users and teams.
 
 When generating the token, you can choose an expiration window. Available options include 30 days, 90 days, 180 days, 1 year, 2 years, or no expiration.
 
@@ -158,14 +158,14 @@ If the token expires and is not renewed:
 - SCIM provisioning stops until the token is refreshed.
 
 You must manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
-1. In the {{ site.insomnia }} web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+1. In the {{ site.insomnia }} web app, navigate to **Enterprise tools > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
 2. Select **Refresh Token**.
 3. Enter your passphrase to generate a new token.
 4. In your identity provider, update the token.
 
 ## SCIM logs
 
-Use SCIM logs to validate your SCIM configuration and troubleshoot provisioning issues. To view SCIM request logs, navigate to [**Enterprise Controls > SCIM**](https://app.insomnia.rest/app/enterprise/scim).
+Use SCIM logs to validate your SCIM configuration and troubleshoot provisioning issues. To view SCIM request logs, navigate to [**Enterprise tools > SCIM**](https://app.insomnia.rest/app/enterprise/scim).
 
 ## Next steps
 

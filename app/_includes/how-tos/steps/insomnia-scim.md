@@ -1,4 +1,4 @@
-1. Go to [**Enterprise Controls** > **SCIM**](https://app.insomnia.rest/app/enterprise/scim)
+1. Go to [**Enterprise tools** > **SCIM**](https://app.insomnia.rest/app/enterprise/scim)
 1. Select **Bearer Token**
 1. Click the toggle to enable SCIM
 

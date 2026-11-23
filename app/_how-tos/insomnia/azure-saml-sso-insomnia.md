@@ -51,7 +51,7 @@ prereqs:
 
 Start the SSO configuration in Insomnia first to get the single sign-on URL and audience URI you'll need in Azure.
 
-1. In your Insomnia account settings, click your account at the top right and select **Enterprise Controls** from the dropdown.
+1. Go to [Insomnia Admin](https://app.insomnia.rest/app/home).
 1. Click **SSO** in the sidebar and then click **Create Connection**.
 1. In the SSO settings, enter your company's domain.
 

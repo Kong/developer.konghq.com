@@ -60,7 +60,7 @@ If you have access to multiple team instances, you can switch between them by do
 1. From the sidebar, click the name of the team that you're currently viewing.
 1. From the dropdown menu, select the name of the team that you want to switch to.
 
-Manage teams in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team), to create new teams, invite users to teams, and assign organizations to teams.
+Manage teams in [**Enterprise tools** > **Teams**](https://app.insomnia.rest/app/enterprise/team), to create new teams, invite users to teams, and assign organizations to teams.
 
 You can also manage teams using SCIM provisioning. For more information, see [SCIM](/insomnia/scim/).
 
@@ -98,12 +98,12 @@ In your Enterprise Plan, there are two types of users:
 - **Unmanaged Users**: A user that operates Insomnia from one of your verified domains, but is not associated with your Enterprise account. These users don't consume a license and not impacted by organization policies, for example, restrictions on allowed project storage types.
 
 You can review unmanaged users on a domain to identify accounts that you may want to add to your Enterprise organization. At this time, you must review unmanaged users on a per-domain basis. To view all of the unmanaged users associated with a domain:
-1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. In the Enterprise tools sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Select your domain.
 1. From the **Unclaimed Accounts** section, click **Manage**.
 
 To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
-1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. In the Enterprise tools sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Select your domain.
 1. Enable the **Enable** toggle.
 
