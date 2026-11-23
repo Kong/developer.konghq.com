@@ -58,7 +58,7 @@ Keycloak needs the following settings for the {{site.kong_harnesses}} client:
 * Issuer: Use the `issuer` value from the discovery document of the realm, such as `https://KEYCLOAK_HOST/realms/REALM_NAME`.
   If your deployment has a [context path](https://www.keycloak.org/server/reverseproxy#_different_context_path_on_reverse_proxy), such as `/auth`, the issuer includes it.
 * Client: Create an OpenID Connect client, disable **Client authentication**, which makes it a public client, and enable **Standard flow**.
-  Set its **PKCE Method** to `S256`, as the [Server Administration Guide](https://www.keycloak.org/docs/latest/server_admin/index.html) describes.
+  Set its **PKCE Method** to `S256`, as [PKCE method](https://www.keycloak.org/docs/latest/server_admin/index.html#_proof-key-for-code-exchange) describes.
   By default, the discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
 * Consent: Keycloak shows the consent screen only when **Consent required** is on in the **Login settings** of the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
@@ -66,10 +66,10 @@ Keycloak needs the following settings for the {{site.kong_harnesses}} client:
 * Scopes: Link the scopes that the profile requests, and unlink or change the default client scopes that it doesn't request, as [Keycloak client scopes](#keycloak-client-scopes) describes.
 * Refresh token rotation: When **Use refresh tokens** is on, Keycloak sends a new refresh token in each renewal response, unless a client policy with the `suppress-refresh-token-rotation` executor applies to the client, as [OIDC auth flows](https://www.keycloak.org/docs/latest/server_admin/index.html#con-oidc-auth-flows_server_administration_guide) describes.
   {{site.kong_harnesses}} works with and without a new refresh token in the renewal response, so **Revoke Refresh Token** can stay off.
-  If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, keep **Refresh Token Max Reuse** at 0, so that Keycloak accepts each refresh token only once, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
+  If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes, keep **Refresh Token Max Reuse** at 0, so that Keycloak accepts each refresh token only once.
 * Audience: Set `--audience-parameter none`, so that the sign-in request doesn't send `resource` and the Audience mapper is the only source of the gateway audience.
-  In the dedicated client scope of the client, add an Audience mapper, set its **Included Custom Audience** to the `--audience` value, and keep **Add to access token** on.
-  Keep **Add to ID token** off, because the [ID token](/kong-harnesses/identity-provider/checks/#id-token) check accepts only the client ID in `aud`, as [Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded) describes.
+  In the dedicated client scope of the client, add an Audience mapper, as [Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded) describes, set its **Included Custom Audience** to the `--audience` value, and keep **Add to access token** on.
+  Keep **Add to ID token** off, because the [ID token](/kong-harnesses/identity-provider/checks/#id-token) check accepts only the client ID in `aud`.
   The dedicated client scope isn't named in the scope list of the token response, so it passes the scope check of {{site.kong_harnesses}}.
   If you use a shared client scope instead, assign it to the client as a default client scope, because the profile doesn't request it by name, and turn off **Include in token scope** in it.
   Use a shared client scope this way only when the other clients linked to it need **Include in token scope** off too.
@@ -78,8 +78,8 @@ Keycloak needs the following settings for the {{site.kong_harnesses}} client:
 
 ### Keycloak client scopes
 
-Keycloak names each default client scope of the client that has **Include in token scope** on in the `scope` of the token response, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
-The exception is a default client scope with role scope mappings, which Keycloak leaves out of the token and out of the token response for a user who has none of its roles, as [Client scopes permissions](https://www.keycloak.org/docs/latest/server_admin/index.html#client-scopes-permissions) describes.
+When **Include in token scope** is on for a default client scope of the client, Keycloak names that scope in the `scope` of the token response, as [Include in token scope](https://www.keycloak.org/docs/latest/server_admin/index.html#include-in-token-scope) describes.
+The exception is a default client scope with role scope mappings, which Keycloak leaves out of the token and out of the token response for a user who doesn't have any of its roles, as [Client scopes permissions](https://www.keycloak.org/docs/latest/server_admin/index.html#client-scopes-permissions) describes.
 The token response can't name a scope that the profile doesn't request, and a response with `scope` must keep every custom scope that the profile requests, as [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) describes.
 
 **Include in token scope** is a setting of the shared client scope, so a change to it changes the `scope` claim for every other client linked to that scope.
@@ -112,7 +112,7 @@ Link each other scope that the profile requests to the client as a default clien
 For example, link `profile` and `email` when the profile uses the default `--scope` list.
 
 Keep **Include in token scope** on for each custom scope that the profile requests, because the token response must keep it.
-If such a custom scope has role scope mappings, Keycloak leaves it out of the token and out of `scope` for a user who has none of its roles, so the sign-in of that user fails.
+If such a custom scope has role scope mappings, Keycloak leaves it out of the token and out of `scope` for a user who doesn't have any of its roles, so the sign-in of that user fails.
 Check that each user who signs in has at least one role of each such scope.
 For `profile`, `email`, `offline_access` and the other scopes that [Token responses](/kong-harnesses/identity-provider/checks/#token-responses) lists as exceptions, the setting can be on or off.
 
