@@ -44,6 +44,8 @@ related_resources:
     url: /plugins/oauth2/reference/
   - text: Configure the OAuth 2.0 Introspection plugin with {{site.identity}}
     url: /how-to/configure-kong-identity-oauth-introspection/
+  - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+    url: /identity/migrate-oauth-to-identity/
 
 min_version:
   gateway: '1.0'
