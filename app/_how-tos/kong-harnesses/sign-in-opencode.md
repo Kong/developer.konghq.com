@@ -129,7 +129,7 @@ Complete the sign-in in your browser, then restart OpenCode so it loads the gate
 
 ## Check your sign-in status
 
-Inspect the local OpenCode setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check the local OpenCode setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client opencode

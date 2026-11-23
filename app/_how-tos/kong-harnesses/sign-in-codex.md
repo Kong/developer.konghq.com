@@ -51,7 +51,7 @@ prereqs:
 
         Your {{ site.ai_gateway }} must meet these requirements for Codex:
 
-        * Serve an `https://` gateway with an OpenAI-format `POST /v1/responses` route.
+        * Expose an OpenAI-format `POST /v1/responses` route over `https://`.
           Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI or Amazon Bedrock Mantle.
         * Avoid guardrail policies that force response buffering on the Responses model.
         * For static-key profiles, run {{ site.ai_gateway }} 2.4 or later so `key-auth` accepts `Authorization: Bearer` tokens.
@@ -89,11 +89,11 @@ Because `token` never opens a browser, sign in with `kong-harnesses login` befor
 
 ## Sign in before starting Codex
 
-{% include kong-harnesses/sign-in-token-cli-login.md cli_name="Codex" %}
+{% include kong-harnesses/sign-in-login-steps.md cli_name="Codex" ci_note="true" %}
 
 ## Check your sign-in status
 
-Inspect the local sign-in and Codex setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check the local sign-in and Codex setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client codex

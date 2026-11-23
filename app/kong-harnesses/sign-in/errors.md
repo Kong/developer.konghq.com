@@ -53,11 +53,9 @@ Don't combine `--diagnostics` with `--no-browser` or `--replace`.
 ## When kong-harnesses can't give an access token
 
 When [`kong-harnesses credential`](/kong-harnesses/credential/) can't give {{ site.claude_code }} an access token, it prints one line starting with `Error:` that {{ site.claude_code }} shows.
-[`kong-harnesses token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/), and [`login`](/kong-harnesses/login/) print the same lines for matching failures, and [`logout`](/kong-harnesses/logout/) prints them when the secret store refuses access or isn't running, when the saved sign-in needs attention, or when another command uses the profile.
+[`kong-harnesses token`](/kong-harnesses/token/), [`status`](/kong-harnesses/status/), and [`login`](/kong-harnesses/login/) print the same lines for matching failures.
+[`logout`](/kong-harnesses/logout/) prints them for secret store failures, for a saved sign-in that needs attention, and when another command uses the profile.
 Commands that load the profile store can also print `profile storage is unavailable` or `the profiles in FOLDER could not be moved`.
-
-When the browser doesn't open for a first sign-in, kong-harnesses prints the sign-in URL and waits.
-Open that URL in a browser on the same computer while kong-harnesses waits, or run `kong-harnesses login --profile PROFILE_NAME --no-browser` to get a new URL if the attempt times out.
 
 The following table lists the start of each line after `Error:`:
 
@@ -89,7 +87,9 @@ rows:
     fix: "Check your network or VPN, or run [`kong-harnesses doctor --profile PROFILE_NAME`](/kong-harnesses/doctor/)."
   - message: "`no browser opened to sign in`"
     cause: kong-harnesses couldn't open a browser for the first sign-in, and the callback address didn't receive a sign-in result.
-    fix: "Run `kong-harnesses login --profile PROFILE_NAME` in a terminal to print the sign-in URL."
+    fix: >-
+      Open the printed sign-in URL in a browser on the same computer while kong-harnesses waits.
+      If the attempt timed out, run `kong-harnesses login --profile PROFILE_NAME --no-browser` in a terminal to get a new URL.
   - message: "`another kong-harnesses command, such as a sign-in or a renewal, is using this profile`"
     cause: Another kong-harnesses command uses the profile, such as a sign-in waiting for the browser.
     fix: Try again when the other command finishes.
@@ -111,7 +111,8 @@ rows:
     fix: >-
       Add the gateway host to `NO_PROXY` and `no_proxy` in your shell (for IPv6, add every form named in the error, such as `[::1]:8000,[::1],::1`), or switch to an `https://` gateway.
       For {{ site.claude_code }}, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` from your project folder, follow its proxy steps, run `kong-harnesses profile activate PROFILE_NAME --client claude-code`, and restart {{ site.claude_code }}.
-      For omp and pi, set those exclusions in the shell that starts the CLI; Codex, OpenCode, and Hermes Agent require an `https://` gateway.
+      For omp and pi, set those exclusions in the shell that starts the CLI.
+      Codex, OpenCode, and Hermes Agent require an `https://` gateway.
   - message: "`the profiles in FOLDER could not be moved to FOLDER`"
     cause: kong-harnesses couldn't move the profiles of an earlier release to their new folder.
     fix: Move the profile folder to the path named in the error, then try again.
@@ -120,7 +121,9 @@ rows:
     fix: "Verify your user permissions on the profile folder and file, then run [`kong-harnesses profile list`](/kong-harnesses/profile/list/)."
   - message: "`this profile uses your own Claude subscription`"
     cause: "{{ site.claude_code }} sends its own Claude sign-in to the model, so `credential` doesn't give it a token."
-    fix: "Sign in to Claude inside {{ site.claude_code }} with `/login`; `kong-harnesses login --profile PROFILE_NAME` still signs you in for your gateway identity."
+    fix: >-
+      Sign in to Claude inside {{ site.claude_code }} with `/login`.
+      `kong-harnesses login --profile PROFILE_NAME` still signs you in for your gateway identity.
   - message: "`credential operation cancelled before access-token output`, `token operation cancelled before access-token output`, or `token operation cancelled before credential use`"
     cause: The request stopped before kong-harnesses wrote the token.
     fix: Try again.
@@ -132,7 +135,7 @@ rows:
       `token` never opens a browser, and the saved sign-in is missing, expired, damaged, mismatched, rejected on renewal, or returned an invalid bearer token.
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
   - message: "`credential operation could not complete` or `token operation could not complete`"
-    cause: kong-harnesses stopped for an unspecified reason, such as a failed browser sign-in.
+    cause: kong-harnesses stopped without a more specific error, for example after a failed browser sign-in.
     fix: >-
       Run `kong-harnesses login --profile PROFILE_NAME` in a terminal.
       If `login` fails, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` or `kong-harnesses doctor --profile PROFILE_NAME`.
@@ -273,16 +276,16 @@ rows:
     cause: "`logout` stopped before it finished, for example because you cancelled the confirmation."
     fix: "Run `kong-harnesses logout --profile PROFILE_NAME` again."
   - message: "`logout could not complete`"
-    cause: "`logout` stopped for an unspecified reason."
+    cause: "`logout` stopped without a more specific error."
     fix: "Check status with `kong-harnesses status --profile PROFILE_NAME`, then run `logout` again."
   - message: "`login result could not be written`, `logout result could not be written`, or `diagnostic report could not be written`"
-    cause: The command couldn't write its output (for example, the terminal closed) after possibly changing the sign-in.
+    cause: The command couldn't write its output, for example because the terminal closed, sometimes after changing the sign-in.
     fix: "Check `kong-harnesses status --profile PROFILE_NAME` before running the command again."
   - message: "`login could not complete`"
-    cause: "`login` stopped for an unspecified reason."
+    cause: "`login` stopped without a more specific error."
     fix: "Run `kong-harnesses login --profile PROFILE_NAME --diagnostics` to find the cause."
   - message: "`login cancelled; no usable login was created`"
-    cause: The sign-in or confirmation stopped (possibly right after saving the sign-in).
+    cause: "The sign-in or confirmation stopped, sometimes after `login` saved the sign-in."
     fix: >-
       Check `kong-harnesses status --profile PROFILE_NAME`.
       Run `kong-harnesses login --profile PROFILE_NAME` again in an interactive terminal if `Login` isn't `Ready` or if gateway MCP server keys are missing.

@@ -47,7 +47,8 @@ prereqs:
     - title: Hermes Agent, plugin, and kong-harnesses
       content: |
         Install [kong-harnesses](/kong-harnesses/), Hermes Agent, and the {{ site.ai_gateway_name }} model-provider plugin (version 1.1.0 or later).
-        Install an `https://` identity provider profile that configures `hermes` (with `audience_parameter` set to `audience` and scopes `openid`, `profile`, `email`, and `offline_access`).
+        Install an `https://` identity provider profile that configures `hermes`.
+        Your administrator configures the profile with `audience_parameter: audience` and the `openid`, `profile`, `email`, and `offline_access` scopes.
         Hermes Agent doesn't support static-key profiles or plain `http://` gateways.
         Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: Activated Hermes Agent profile
@@ -119,7 +120,8 @@ Verify both the Hermes credential pool and the kong-harnesses setup:
    hermes auth list kong-ai-gateway
    ```
 
-1. Check local status without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+   Confirm that the list shows at least one `kong-ai-gateway` entry.
+1. Check the local Hermes Agent setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
    ```sh
    kong-harnesses status --profile PROFILE_NAME --client hermes

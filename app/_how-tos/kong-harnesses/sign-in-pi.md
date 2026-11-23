@@ -88,15 +88,13 @@ Remove any saved `kong` key from pi's `auth.json` first:
 pi auth logout kong
 ```
 
-If pi doesn't have a saved `kong` key, continue to the next step.
-
 ## Sign in before starting pi
 
-{% include kong-harnesses/sign-in-token-cli-login.md cli_name="pi" %}
+{% include kong-harnesses/sign-in-login-steps.md cli_name="pi" ci_note="true" %}
 
 ## Check your sign-in status
 
-Inspect the local sign-in and pi setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check the local sign-in and pi setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client pi

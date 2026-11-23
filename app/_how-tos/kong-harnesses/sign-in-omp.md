@@ -81,11 +81,11 @@ Because `token` never opens a browser, sign in with `kong-harnesses login` befor
 
 ## Sign in before starting omp
 
-{% include kong-harnesses/sign-in-token-cli-login.md cli_name="omp" %}
+{% include kong-harnesses/sign-in-login-steps.md cli_name="omp" ci_note="true" %}
 
 ## Check your sign-in status
 
-Inspect the local sign-in and omp setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check the local sign-in and omp setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client omp

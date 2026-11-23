@@ -64,16 +64,7 @@ prereqs:
 cleanup:
   inline:
     - title: Sign out of {{ site.claude_code }}
-      content: |
-        Remove the saved sign-in or static key and any saved gateway MCP server keys for the profile using [`kong-harnesses logout`](/kong-harnesses/logout/):
-
-        ```sh
-        kong-harnesses logout --profile PROFILE_NAME
-        ```
-
-        Type `PROFILE_NAME` when prompted to confirm, or pass `--auto-approve` to confirm in advance.
-        An already-running {{ site.claude_code }} session can keep using a cached access token until that token expires.
-        For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+      include_content: kong-harnesses/sign-in-cleanup
 
 faqs:
   - q: How do I replace a working {{ site.claude_code }} sign-in or diagnose a failure?
@@ -92,21 +83,7 @@ You must run `login` first for static-key profiles, Claude subscription profiles
 
 ## Sign in to your profile
 
-Sign in to your profile in an interactive terminal before starting {{ site.claude_code }}.
-
-1. Run [`kong-harnesses login`](/kong-harnesses/login/) for your profile:
-
-   ```sh
-   kong-harnesses login --profile PROFILE_NAME
-   ```
-
-   For an identity provider profile, kong-harnesses opens your browser at the identity provider's sign-in page and prints the URL in the terminal.
-   Open that URL in a browser on the same computer so the callback reaches kong-harnesses, or add `--no-browser` to print the URL without opening a browser automatically.
-
-   For a static-key profile, `login` prompts for the key from your administrator and hides your input as you type or paste it.
-1. If your profile lists gateway MCP servers that take a key, enter each key when `login` prompts for it.
-   When the profile already has a usable sign-in, `login` keeps it and asks only for missing gateway MCP server keys.
-1. Follow the command in the `Next` field and restart {{ site.claude_code }} if it's already running.
+{% include kong-harnesses/sign-in-login-steps.md cli_name=site.claude_code mcp_keys="true" %}
 
 {:.info}
 > **Claude subscriptions and CI jobs:**
@@ -117,7 +94,7 @@ Sign in to your profile in an interactive terminal before starting {{ site.claud
 
 ## Check your sign-in status
 
-Inspect the local sign-in and {{ site.claude_code }} setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check the local sign-in and {{ site.claude_code }} setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client claude-code
@@ -137,15 +114,12 @@ Confirm that your sign-in, gateway route, and {{ site.claude_code }} settings pa
    ```
 
    Confirm that `login`, `client`, and `gateway` report `ok`, and resolve any failures.
-1. Optionally test a live model request through {{ site.ai_gateway }}:
-
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client claude-code --inference
-   ```
-
-   This check sends the prompt `"Reply with OK."` with at most 16 output tokens and can incur model usage cost.
 1. Start {{ site.claude_code }} and send a prompt to confirm you receive a reply:
 
    ```sh
    claude
    ```
+
+{:.info}
+> To test a live model request from `doctor` before starting `claude`, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code --inference`.
+> That probe sends `"Reply with OK."` with at most 16 output tokens and can incur model usage cost.
