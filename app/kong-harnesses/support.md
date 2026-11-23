@@ -70,7 +70,7 @@ kong-harnesses doctor --profile PROFILE_NAME --report | Set-Content -Path report
 
    To also test the {{ site.claude_code }} route with one small model request, add `--inference`.
    The `--inference` flag works only when the selected profile configures {{ site.claude_code }}.
-   For any other profile, `doctor` exits with an error without writing the report, which leaves `report.json` empty.
+   For any other profile, `doctor` exits with an error without writing the report.
 
    {:.warning}
    > The model request that `--inference` sends through the gateway can cost money.
