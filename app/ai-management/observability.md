@@ -241,6 +241,7 @@ features:
 An alert rule watches one metric of your AI traffic, like error rates or latency from models, routes, or providers.
 When the metric breaks the rule, the rule triggers an alert for that model, route, or provider, for example `Model: gpt-4o`.
 An alert shows **Triggered** while it is active and **Resolved** after it ends.
+To see the requests that an alert affected, open its [sessions](#sessions).
 
 To open alerts, in the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Alerts**.
 
@@ -322,18 +323,15 @@ To get details about delivery problems, add a failure-notice email to the webhoo
 
 ## Sessions
 
-A session groups the requests that form one AI conversation, such as the turns of a chat or the steps of an agent run.
-Requests with the same session ID belong to the same session.
-If a client does not send a session ID, Kong generates one, and that session contains only that request.
+A session is one AI conversation: the requests that have the same session ID.
+If a client does not send a session ID, Kong generates one, and the session contains only that request.
 
-Use sessions to find out why a conversation failed, cost more than expected, or ran slowly.
-A session adds up the cost, tokens, and duration of all its requests.
-For each request, the session keeps the spans of its LLM calls, tool calls, and guardrails, with their input and output.
+{{site.konnect_short_name}} adds up the cost, tokens, and duration of the requests in a session.
+Each request in a session keeps the spans of its LLM calls, tool calls, and guardrails, with their input and output.
 
 When an [alert](#alerts) triggers, you can open the sessions that it affected during the alert's time window.
 
-Sessions does not need any configuration. {{site.ai_gateway}} sends session data to {{site.konnect_short_name}} automatically.
-If you use edge regions, you must also set an environment variable.
+{{site.ai_gateway}} sends session data to {{site.konnect_short_name}} without extra configuration.
 
 ## Logs
 
