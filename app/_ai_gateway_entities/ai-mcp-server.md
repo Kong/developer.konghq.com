@@ -92,6 +92,16 @@ faqs:
       reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
       authentication AI Policy directly to its `policies` field isn't supported.
 
+  - q: Can {{site.ai_gateway}} call an Entra ID-protected upstream MCP server as the end user?
+    a: |
+      Yes. Configure the OpenID Connect [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in
+      [`access.auth_strategies`](#schema-aigateway-mcpserver-access) to use Entra ID's On-Behalf-Of flow.
+      {{site.ai_gateway}} exchanges the caller's Entra ID token for one scoped to the upstream MCP server's
+      application and forwards that token instead, so the upstream authorizes the end user rather than a shared
+      service identity. This is separate from [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream),
+      which authenticates {{site.ai_gateway}} itself. See
+      [Microsoft Entra ID On-Behalf-Of flow](/ai-gateway/openid-connect/#microsoft-entra-id-on-behalf-of-flow).
+
   - q: Can I attach a rate-limiting policy to an AI MCP Server?
     a: |
       Yes. Policy configuration such as rate limiting, logging, or request/response transformation goes through
