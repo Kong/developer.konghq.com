@@ -558,3 +558,6 @@
 
 # AI Access Management moved out of ai-gateway
 /ai-gateway/access-management/ /ai-access-management/ 301
+
+# Access Policy Engine
+/ai-gateway/policies/access-policy-engine/ /ai-gateway/access-policy-engine/ 301

@@ -411,7 +411,7 @@ When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't se
 
 To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
 
-If your callers are {{site.identity}} principals and you want to manage access rules in {{site.konnect_short_name}} instead of on each AI Model, use the [AI Access Policy Engine Policy](/ai-gateway/policies/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/policies/access-policy-engine/#choose-between-access-control-options).
+If your callers are {{site.identity}} principals and you want to manage access rules in {{site.konnect_short_name}} instead of on each AI Model, use the [Access Policy Engine](/ai-gateway/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/access-policy-engine/#choose-between-access-control-options).
 
 To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 

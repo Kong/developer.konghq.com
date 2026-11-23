@@ -491,7 +491,7 @@ When you expose tools through an AI MCP Server, anyone who can reach the endpoin
 
 ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step. For ACL configuration, see [ACL tool control](#acl-tool-control).
 
-If your callers are {{site.identity}} principals and you want to manage access to tools with rules in {{site.konnect_short_name}}, use the [AI Access Policy Engine Policy](/ai-gateway/policies/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/policies/access-policy-engine/#choose-between-access-control-options).
+If your callers are {{site.identity}} principals and you want to manage access to tools with rules in {{site.konnect_short_name}}, use the [Access Policy Engine](/ai-gateway/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/access-policy-engine/#choose-between-access-control-options).
 
 ### Protected resource metadata
 
