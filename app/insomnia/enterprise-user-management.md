@@ -40,7 +40,7 @@ faqs:
       Configure this variable through your organization’s device management system. When active, this setting prevents {{ site.insomnia }} from performing automatic updates and allows your IT department to control rollout and version management through its standard deployment process.
   - q: Can I export a list of unmanaged users?
     a: |
-      Yes. You can export a CSV file of unmanaged users for a specific domain from the **Licenses** section in the Enterprise tools.  
+      Yes. You can export an XLSX  file of unmanaged users for a specific domain from the **Licenses** section in the Enterprise tools.  
 
 ---
 
