@@ -87,6 +87,9 @@ platform:
         - text: Kubernetes Operator
           url: /operator/
           product: operator
+        - text: Webhook Engine
+          url: /webhook-engine/
+          product: webhook-engine
     - title: Govern APIs
       links:
         - text: Observability

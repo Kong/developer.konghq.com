@@ -262,6 +262,16 @@ products_section:
               url: /how-to/?products=operator
             - text: All documentation
               url: /index/operator/
+        - title: "{{site.webhook_engine}}"
+          icon: /assets/icons/event.svg
+          description: "Send and manage webhooks reliably from your applications."
+          links:
+            - text: "Overview"
+              url: /webhook-engine/
+            - text: How-to guides
+              url: /how-to/?products=webhook-engine
+            - text: All documentation
+              url: /index/webhook-engine/
     - name: Konnect Platform
       items:
         - title: Platform auth

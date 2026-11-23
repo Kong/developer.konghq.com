@@ -1,0 +1,98 @@
+metadata:
+  title: "{{site.webhook_engine}}"
+  content_type: landing_page
+  description: This page is an introduction to {{site.webhook_engine}}.
+  products:
+    - webhook-engine
+  works_on:
+    - konnect
+  tags:
+    - webhook
+
+rows:
+  - header:
+      type: h1
+      text: "{{ site.webhook_engine }}"
+      sub_text: "TO DO"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing {{ site.webhook_engine }}"
+              blocks:
+                - type: text
+                  text: |
+                   {{ site.webhook_engine }} is...
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    [diagram goes here]
+  - header:
+      type: h2
+      text: "Install {{ site.webhook_engine }}"
+    columns:
+      - blocks:
+        - type: text
+          config: |
+           Get an instance of {{ site.webhook_engine }} running almost instantly:
+        - type: tabs
+          tab_group: run-gateway
+          config:
+            - title: "Konnect"
+              content: |
+                This command requires a [{{site.konnect_short_name}} Access Token](https://cloud.konghq.com/global/account/tokens).
+
+                ```sh
+                something
+                ```
+
+                The script creates a Control Plane in {{site.konnect_short_name}} and deploys a local Data Plane using Docker.
+
+                All licensing is handled automatically by {{site.konnect_short_name}}.
+            - title: "Terraform? Operator?"
+              content: |
+                [to do]
+
+  - header:
+      type: h2
+      text: Key references
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: API reference
+              description: |
+                Explore the reference documentation for the {{site.webhook_engine}} API
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: API reference
+                url: /api/
+                align: end
+
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: I'm getting connection errors between the control plane and data plane. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - gateway
+              quantity: 5

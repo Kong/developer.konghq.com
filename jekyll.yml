@@ -187,6 +187,7 @@ dev_portal: Dev Portal
 identity: Kong Identity
 insomnia: Insomnia
 ai_cost_management: AI Cost Management
+webhook_engine: Webhook Engine
 
 # Company names
 openai: OpenAI

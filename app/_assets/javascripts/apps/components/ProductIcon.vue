@@ -20,6 +20,7 @@ import konnect from '@/icons/products/konnect.svg'
 import referencePlatform from '@/icons/products/konnect-reference-platform.svg'
 import meteringBilling from '@/icons/products/metering-and-billing.svg'
 import identity from '@/icons/products/identity.svg'
+import webhookEngine from '@/icons/products/webhook-engine.svg'
 
 const productIcons = {
   'observability': observability,
@@ -34,6 +35,7 @@ const productIcons = {
   'konnect-reference-platform': referencePlatform,
   'metering-and-billing': meteringBilling,
   'identity': identity,
+  'webhook-engine': webhookEngine,
   operator,
   kic,
   mesh
