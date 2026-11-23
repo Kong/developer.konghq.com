@@ -69,7 +69,8 @@ A source sets a policy key when it sets a key to a value other than `null` or an
 * A `null` under `permissions` doesn't count.
 * A source that sets only `managedSourcesBehavior` or `wslInheritsWindowsSettings` doesn't count.
 
-If no source sets a policy key, {{ site.claude_code }} uses the highest source that sets a key to a value other than `null`.
+A source with policy values as written outranks a source whose policy values are only substitutes that {{ site.claude_code }} uses for invalid values.
+If no source sets a policy key to a value other than an empty object, {{ site.claude_code }} uses the highest source that sets a policy key to an empty object, such as `"env": {}`.
 
 A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list:
 
@@ -85,7 +86,9 @@ A `null` `gatewayInternalNetworks` also counts as set.
 {{ site.claude_code }} reads it as a network that matches no address.
 When the highest managed source on a computer holds it, `/login` refuses every new [cloud gateway](https://code.claude.com/docs/en/claude-apps-gateway) sign-in on that computer.
 For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
-`fleet build` refuses a `--policy` that sets it.
+`fleet build` refuses a `--policy` that sets `gatewayInternalNetworks` to `null`.
+
+A `null` `crossSessionInbound` or `remoteControl` also counts as set, because {{ site.claude_code }} reads it as a value.
 
 Some keys apply from every administrator source, including `env` and the MCP locks.
 For the list, see [Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
@@ -126,10 +129,12 @@ Before you build, check each policy source:
   On managed computers, remove the credentials that load a conflicting remote policy: an organization claude.ai sign-in, `CLAUDE_CODE_OAUTH_TOKEN`, or a direct API key.
   For details, see [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 * **Values that `fleet build` refuses:** `fleet build` refuses a `--policy` that sets any of these:
-  * `forceLoginMethod`, `forceLoginGatewayUrl`, `policyHelper`, or `policyHelpers`
+  * `forceLoginMethod` or `forceLoginGatewayUrl`, with a value other than `null`
+  * A `policyHelper` or `policyHelpers` value that supplies settings for the target platform
   * An `allowedProviders` text entry other than `customEndpoint`
   * In `ANTHROPIC_CUSTOM_HEADERS`: `Authorization`, `Proxy-Authorization`, `X-Api-Key`, `Host`, a malformed line, or a header that conflicts with attribution
-  * An `env` value that isn't a string, which {{ site.claude_code }} drops
+  * An `env` value that {{ site.claude_code }} drops, because it can't convert the value to text or the text holds a NUL byte.
+    Numbers and booleans convert to text.
   * An invalid version bound, as described in [Version range checks](#version-range-checks)
 * **Other keys to remove:** Remove `forceLoginOrgUUID`, because it blocks `apiKeyHelper` at startup.
   Also remove `enforceAnthropicSignIn`.
@@ -145,13 +150,13 @@ Before you build, check each policy source:
   * `allowedProviders` entries other than `customEndpoint`, because lists combine
 
   Confirm that no drop-in that sorts after `kong-harnesses.json` overrides `apiKeyHelper`, `env`, or `modelPicker`.
-  Move non-secret `ANTHROPIC_CUSTOM_HEADERS` from drop-ins that sort before it into `managed-settings.json`.
+  Move non-secret `ANTHROPIC_CUSTOM_HEADERS` from drop-ins that sort before `kong-harnesses.json` into `managed-settings.json`.
 * **Merged sources:** For `managedSourcesBehavior: "merge"` in an MDM build, include the key in `--policy`.
   Confirm that `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries, such as `permissions.allow` rules or hooks.
   For details, see [Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source).
 * **MDM policy and a file build:** An MDM policy that sets a policy key outranks a file build.
   {{ site.claude_code }} then uses the `apiKeyHelper` of the MDM policy, or no helper when the MDM policy has none.
-  An MDM policy that holds only empty objects yields to a file build only when the file sets a policy key to a value other than an empty object.
+  An MDM policy that holds only empty objects yields to a file build only when the file sets a policy key.
   The `apiKeyHelper` that `fleet build` writes is such a value.
 
 ### MDM policy location
@@ -215,18 +220,26 @@ rows:
 
 ### Servers that skip the MCP checks
 
-* In-process Agent SDK servers (`type: "sdk"`) skip the `managed-mcp.json`, allowlist, and `deniedMcpServers` checks.
+* In-process servers (`type: "sdk"`) skip the `managed-mcp.json`, allowlist, and `deniedMcpServers` checks.
+  The app that started the session registers them, for example an Agent SDK app, the VS Code extension, or Claude Desktop for its connectors.
   For details, see [How a server is evaluated](https://code.claude.com/docs/en/managed-mcp#how-a-server-is-evaluated).
-* In `exclusive` mode, `managedMcpServers` and the [exclusive-control exceptions](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json) still load.
-  The exceptions are Claude Desktop connectors, and Claude in Chrome with `allowClaudeInChromeWithManagedMcp`.
+* In `exclusive` mode, these servers also [load with `managed-mcp.json`](https://code.claude.com/docs/en/managed-mcp#exclusive-control-with-managed-mcp-json):
+  * `managedMcpServers` entries
+  * The server that {{ site.claude_code }} creates when a mod adds tools
+  * Claude in Chrome, when device policy sets `allowClaudeInChromeWithManagedMcp` to `true`
+  * The claude.ai connectors that {{ site.claude_code }} fetches, when managed settings set `allowAllClaudeAiMcps` to `true`
+
   Remove `managedMcpServers` entries that point to a gateway URL under another name.
-* In `allowlist` mode, `managedMcpServers` and the [allowlist-exempt servers](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check) also load.
-  The exempt servers are the built-in IDE, Chrome, and Agent SDK servers.
+* In `allowlist` mode, these servers [skip the allowlist check](https://code.claude.com/docs/en/managed-mcp#servers-that-skip-the-allowlist-check):
+  * `managedMcpServers` entries
+  * Built-in servers, such as Claude in Chrome, the `ide` server, and servers that the CLI configures
+  * The Slack tools of a Claude Tag session
 
 ### Denylist
 
-In every mode, including `exclusive`, a `deniedMcpServers` entry in any scope blocks each server that it matches, also gateway servers.
-Only in-process Agent SDK servers skip the denylist.
+In every mode, including `exclusive`, a `deniedMcpServers` entry in any scope blocks each server that it matches, including the gateway servers.
+Only in-process servers (`type: "sdk"`) skip the denylist.
+`managedMcpServers` servers and Claude in Chrome don't skip it.
 Before you deploy, confirm that no policy denies the gateway servers.
 
 ### Allowlist checks of managed MCP servers
@@ -241,7 +254,7 @@ This rule applies to the `exclusive` mode.
 
 `fleet build` applies the checks of the minimum version that the computers get.
 It takes the minimum from `--claude-code-minimum` or from the `requiredMinimumVersion` of `--policy`, as described in [Version range checks](#version-range-checks).
-When the build sets no minimum, it applies both earlier checks.
+When the build doesn't set a minimum, it applies both earlier checks.
 
 A checked server is blocked only when the allowlist doesn't permit it or a deny entry matches it.
 
@@ -263,8 +276,9 @@ A server is undecided in these cases:
   {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the scheme, host, or path of the URL.
   This case applies at every minimum version.
   Write such an entry as a literal URL.
-* The server names a variable in `headersHelper`, the [allowlist checks](#allowlist-checks-of-managed-mcp-servers) don't check it, an allowlist is set, and the allowlist doesn't permit it.
-  The {{ site.claude_code }} docs don't say whether that variable starts the check.
+* The server names a variable in `headersHelper`, an allowlist is set, and the allowlist doesn't permit the server.
+  The [allowlist checks](#allowlist-checks-of-managed-mcp-servers) don't already check this server.
+  The {{ site.claude_code }} docs don't say whether a variable in `headersHelper` starts the check.
 
 `fleet build` refuses a blocked or undecided server.
 It names each server, the cause, and the fix, such as a literal allowlist entry or a value for the variable in the `env` of the policy.
@@ -299,7 +313,8 @@ This rule applies to the `allowlist` and `any` modes.
 * A `managedMcpServers` entry points to the URL of a gateway server, because the [provided server takes precedence](https://code.claude.com/docs/en/managed-mcp#how-provided-servers-load) over the plugin server.
 * `strictPluginOnlyCustomization` is `true`, or a list with `skills`, `agents`, `hooks`, or `mcp`.
   Any other value that isn't a boolean, a list, or `null`, such as a string, also counts as `true`.
-  `false`, `[]`, `null`, which removes the key, and list entries that name no surface lock nothing.
+  These values don't lock anything: `false`, `[]`, `null`, and list entries that don't name a surface.
+  A `null` removes the key.
 * `strictKnownMarketplaces`, or its alias `allowedMarketplaces`, is set without `{"source": "skills-dir"}`.
 * `blockedMarketplaces` lists `{"source": "skills-dir"}`.
 * `strictKnownMarketplaces` or `allowedMarketplaces` has a wholly invalid value, which fails closed.
@@ -318,12 +333,14 @@ This rule applies to every mode, also when the profile has no gateway MCP server
 
 `fleet build` refuses a `--policy` in these cases:
 
-* The `allowedMcpServers` or `deniedMcpServers` value isn't a list. A `null` value is also refused.
-* An entry doesn't have exactly one valid key: `serverName`, `serverUrl`, or `serverCommand`.
+* The `allowedMcpServers` or `deniedMcpServers` value isn't a list.
+  `fleet build` also refuses a `null` value.
+* An entry doesn't have exactly one key with a valid value.
+  The key must be `serverName`, `serverUrl`, or `serverCommand`.
 
 {{ site.claude_code }} drops such an entry and enforces the rest, but `fleet build` can't know what the entry was meant to allow or deny.
-A `deniedMcpServers` value that isn't a list blocks no server.
-To set no list, leave the key out of `--policy`.
+A `deniedMcpServers` value that isn't a list doesn't block any server.
+If you don't want a list, leave the key out of `--policy`.
 
 In the `allowlist` and `any` modes, {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value, also `null`, as an empty managed allowlist.
 For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
@@ -334,7 +351,7 @@ With the MCP lock (`allowManagedMcpServersOnly: true`), a valid list in an admin
 For details, see [Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
 
 When the empty list applies, it's the only list if the MCP lock is set or no other settings scope sets `allowedMcpServers`.
-Then no server that a developer adds loads, and neither do the gateway plugin servers.
+Then the servers that a developer adds don't load, and the gateway plugin servers don't load either.
 In `any` mode without the MCP lock, an `allowedMcpServers` entry in user, project, or local settings can still permit a server.
 
 ### Allowlist values and quoting
@@ -442,13 +459,17 @@ columns:
 rows:
   - platform: macOS
     form: "`kong-harnesses`"
-    chars: Line breaks and NUL bytes. For MDM builds, also control characters.
+    chars: |
+      Line breaks and NUL bytes.
+      For MDM builds, also control characters.
   - platform: Linux
     form: "`kong-harnesses`"
     chars: Line breaks and NUL bytes
   - platform: Windows
     form: "`kong-harnesses.exe`, with a drive letter and backslashes"
-    chars: "`\"`, `%`, `!`, and control characters. With `--wsl inherit`, also `'`."
+    chars: |
+      `"`, `%`, `!`, and control characters.
+      With `--wsl inherit`, also `'`.
 {% endtable %}
 
 ## Keep or revert recorded flags
@@ -466,10 +487,14 @@ columns:
     key: revert
 rows:
   - earlier: "`--model`"
-    keep: Pass `--model` for each family again. Your local profile doesn't change.
+    keep: |
+      Pass `--model` for each family again.
+      Your local profile doesn't change.
     revert: Leave out the `--model` of the family and pass `--profile-models`.
   - earlier: "`--mcp-servers any` or `exclusive`"
-    keep: Pass the mode again. For `exclusive`, also pass `--mcp-config 'MCP_CONFIG_FILE'`.
+    keep: |
+      Pass the mode again.
+      For `exclusive`, also pass `--mcp-config 'MCP_CONFIG_FILE'`.
     revert: |
       From `any`, pass `allowlist` or `exclusive`.
 
@@ -484,10 +509,14 @@ rows:
     revert: Pass `--claude-code-any-version` alone to clear both bounds, or with one bound to clear the other.
   - earlier: "`--host-settings merge`"
     keep: Pass `--host-settings merge`.
-    revert: Pass `--host-settings ignore`. Then confirm that the MDM policy, `managed-settings.json`, and `managed-settings.d/` don't set `merge`.
+    revert: |
+      Pass `--host-settings ignore`.
+      Then confirm that the MDM policy, `managed-settings.json`, and `managed-settings.d/` don't set `merge`.
   - earlier: "`--wsl inherit` (Windows)"
     keep: Pass `--wsl inherit`.
-    revert: Pass `--wsl ignore`. Then confirm that the [Windows administrator sources](#wsl-on-windows) leave it out or set it to `null`, `false`, or `"false"`.
+    revert: |
+      Pass `--wsl ignore`.
+      Then confirm that the [Windows administrator sources](#wsl-on-windows) leave it out or set it to `null`, `false`, or `"false"`.
   - earlier: "`--mcp-url` or `--mcp-command` (`allowlist`)"
     keep: Pass each server flag again.
     revert: Pass `--gateway-mcp-only` to drop the earlier entries that you don't list.
@@ -504,7 +533,11 @@ rows:
 
 * `--claude-code-minimum` is earlier than `2.1.163`, the first release that reads version bounds.
   This check applies only to the flag.
-* `--claude-code-minimum` or `--claude-code-maximum` differs from the `requiredMinimumVersion` or `requiredMaximumVersion` that `--policy` sets.
+* `--claude-code-minimum` differs from a valid `requiredMinimumVersion` or `minimumVersion` in `--policy`.
+* `--claude-code-maximum` differs from a valid `requiredMaximumVersion` in `--policy`.
+* You pass `--claude-code-minimum`, and `--policy` sets `requiredMinimumVersion` and `minimumVersion` to different versions.
+
+{{ site.claude_code }} ignores a policy bound that isn't a valid version, so `fleet build` ignores it too.
 * The maximum version is earlier than `2.1.285`, the first release that keeps every session on the gateway.
   The maximum version is `--claude-code-maximum` or the combined `requiredMaximumVersion`.
 * The minimum version is later than the maximum version.
@@ -533,7 +566,9 @@ rows:
   - platform: Linux
     how: Pin the version in your package manager.
   - platform: Windows
-    how: "[Turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM. Microsoft Store installs still update."
+    how: |
+      [Turn off automatic updates](https://code.claude.com/docs/en/desktop#device-management-policies) through MDM.
+      Microsoft Store installs still update.
 {% endtable %}
 
 ## Model overrides
@@ -541,8 +576,9 @@ rows:
 `fleet build` applies `--model` to the managed settings and the machine-wide profile:
 
 * **Family:** `fleet build` detects the `opus`, `sonnet`, `haiku`, or `fable` family from `NEW_MODEL_ID`.
-  You can also name the family, for example `--model sonnet=NEW_MODEL_ID`.
-  Pass one `--model` for each family. `fleet build` refuses two for the same family.
+  You can also name the family with `--model FAMILY=NEW_MODEL_ID`, for example `--model sonnet=NEW_MODEL_ID`.
+  Pass one `--model` for each family.
+  `fleet build` refuses two for the same family.
   Each ID has 1 to 128 visible ASCII characters.
 * **Settings and roles:** `fleet build` updates the family slot.
   It also updates each role that used the previous model of the family: `active`, `default`, `subagent`, `background_classifier`, and `auto_mode`.

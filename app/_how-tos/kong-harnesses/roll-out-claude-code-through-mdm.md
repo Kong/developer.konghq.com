@@ -63,7 +63,9 @@ prereqs:
             requirement: None
             tool: An MDM tool, such as Jamf Pro or Microsoft Intune
           - os: Linux
-            requirement: Secret Service, such as GNOME Keyring or KWallet. Secret Service in WSL, a container, or an SSH session doesn't work.
+            requirement: |
+              A Linux desktop session with Secret Service, such as GNOME Keyring or KWallet.
+              Run the build outside WSL, containers, and SSH sessions.
             tool: Configuration management
           - os: Windows
             requirement: Windows 11
@@ -82,7 +84,9 @@ prereqs:
 
         * Administrator access to one test computer for each platform and policy group.
         * Access to the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger), with the [required role](/ai-cost-management/analytics-and-debugging/#how-the-views-relate).
-        * {{ site.claude_code }} `2.1.285` or later on the target computers. Earlier versions don't enforce `allowedProviders`. For details, see [Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks).
+        * {{ site.claude_code }} `2.1.285` or later on the target computers.
+          Earlier versions don't enforce `allowedProviders`.
+          For details, see [Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks).
 
 tldr:
   q: How do I roll out {{ site.claude_code }} to managed computers with kong-harnesses?
@@ -156,8 +160,9 @@ Replace these placeholders in the command for your platform:
   If there's no policy, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 * `MCP_MODE`: `exclusive`, `allowlist`, or `any`.
   Also add the flags that the mode needs, from [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
-* `GROUP`: A name for the group, without spaces.
-  The `--output-dir` folder must be new or empty.
+* `GROUP`: A name for the group, without spaces, because the command doesn't quote `--output-dir`.
+
+The `--output-dir` folder must be new or empty.
 
 Keep the quotes in the command.
 For the quotes that each shell needs, see [Allowlist values and quoting](/kong-harnesses/fleet-build-options/#allowlist-values-and-quoting).
@@ -415,7 +420,7 @@ Do these checks before you send a prompt:
    Fix any errors before you continue.
 1. Start {{ site.claude_code }} with `claude`.
    Sign in when the browser opens.
-   For the Anthropic API provider, it opens at startup to discover models. For other providers, it opens on the first request.
+   It can open at startup, for example for Anthropic API model discovery, or on the first request.
 
 Check the settings source on each test computer:
 
@@ -452,9 +457,9 @@ Linux supports only file builds.
 Then finish the checks on every platform:
 
 1. Send `Say hello` and confirm that {{ site.claude_code }} replies.
-1. In the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger), find the event under your control plane.
+1. Find the event under your control plane in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger).
    Filter by **User** `oidc/SUB`, where `SUB` is the `sub` claim of the test user.
-   You can also set up [subject attribution](/ai-cost-management/attribution/#set-up-subject-attribution).
+   If you use [subject attribution](/ai-cost-management/attribution/#set-up-subject-attribution), you can find the event by its attribution instead.
 1. Confirm that no policy sets `disableAllHooks` to `true`.
    The test prompt doesn't check the hooks.
 1. If the profile has gateway MCP servers, run `/mcp` and confirm that every server connects.

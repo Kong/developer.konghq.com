@@ -66,8 +66,7 @@ tldr:
 ---
 
 This guide removes the managed settings, the machine-wide profile, and the `managed-mcp.json` file that you deployed with [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
-Do the steps in order.
-Then your deployment tool doesn't install the files again, and developers can still run the sign-out and cleanup commands.
+Do the steps in order, so that your deployment tool doesn't install the files again and developers can still run the sign-out and cleanup commands.
 
 ## Have developers sign out and clean up
 
@@ -107,9 +106,9 @@ Run `kong-harnesses fleet remove` on your administration computer.
 Replace these placeholders:
 
 * `BUILD_RECORD`: The path to the build record.
-* `POLICY_FILE`: The MDM policy that the computers get now.
+* `POLICY_FILE` (MDM build only): The MDM policy that the computers get now.
   `fleet remove` reads it so that it keeps the changes that you made after the build.
-* `MCP_CONFIG_FILE`: The `managed-mcp.json` file that the computers have now.
+* `MCP_CONFIG_FILE` (`exclusive` build only): The `managed-mcp.json` file that the computers have now.
 * `BUILD_ID`: The build ID, used in the name of the output folder.
 
 When policy keys or your own MCP servers remain, pass `--output-dir` with a new or empty folder.
@@ -162,7 +161,8 @@ Then remove the build files from each managed computer:
 {% navtab "macOS" %}
 
 1. Delete every file path listed under `Remove` as an administrator.
-1. Forget the package receipt so your MDM tool can install a future package with the same identifier and version:
+1. Forget the package receipt, so that your MDM tool can install a later package with the same identifier and version.
+   Replace `PACKAGE_IDENTIFIER` with the identifier of the package that you deployed:
 
    ```sh
    sudo pkgutil --forget PACKAGE_IDENTIFIER
