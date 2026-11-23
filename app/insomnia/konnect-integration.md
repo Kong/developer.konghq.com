@@ -20,7 +20,7 @@ next_steps:
     url: /how-to/link-konnect-to-insomnia/
 
 related_resources:
-  - text: Security at Insomnia
+  - text: Security at {{ site.insomnia }}
     url: /insomnia/manage-insomnia/#security
   - text: Enterprise
     url: /insomnia/enterprise/
@@ -30,7 +30,7 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Migrate from scratch pad to Enterprise
     url: /insomnia/migrate-to-enterprise-from-scratchpad/
-  - text: Link Konnect to Insomnia
+  - text: Link Konnect to {{ site.insomnia }}
     url: /how-to/link-konnect-to-insomnia/
 
 faqs:
@@ -81,7 +81,7 @@ rows:
     how: |
       1. From {{ site.konnect_short_name }}, generate a [Personal Access Token (PAT)](/konnect-api/#personal-access-tokens).
       1. Copy the PAT.
-      1. In Insomnia, open **Preferences** > **Konnect**.
+      1. In {{ site.insomnia }}, open **Preferences** > **Konnect**.
       1. Paste the PAT.
       1. Click **Validate & Save**.
   - feature: |

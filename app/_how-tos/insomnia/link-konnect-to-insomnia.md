@@ -31,7 +31,7 @@ prereqs:
       - example-route
 
 next_steps:
-  - text: Use the Collection Runner in Insomnia
+  - text: Use the Collection Runner in {{ site.insomnia }}
     url: /how-to/use-the-collection-runner/
   - text: Inspect the plugins that apply to a synced request
     url: /insomnia/konnect-integration/#plugins-tab
