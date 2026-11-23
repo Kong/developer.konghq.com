@@ -107,7 +107,7 @@ Run the steps in this order:
    Its errors and those of `check-changelog-links.rb` name the place of an entry, as its release version, section and entry number, and none of its text, because GitHub masks only the exact text of the secret.
    This script counts the entries of a section in `CHANGELOG.md`, also the tooling entries that the page drops, so the number leads straight to the entry to fix.
    `check-changelog-links.rb` reads only the page, so it counts the entries on the page and says "on the page".
-   The checks of the whole page below read the page too, so they name the first place that they refuse on the page in the same way, and a code block by its number in its section.
+   The whole-page checks in the following items read the page too, so they name the first place that they refuse on the page in the same way, and a code block by its number in its section.
    The check of the text that a reader sees names the release, or the first block that differs when the page and the source hold other releases.
    A place names a release by the version that its `CHANGELOG.md` heading writes, and finds it by the version that the heading shows, not by the order of the headings.
    The checks name a link that release-please does not write so by the line in `CHANGELOG.md` where its entry or block starts, and its release.
@@ -117,7 +117,7 @@ Run the steps in this order:
    It allows only a soft hyphen, U+200B to U+200D, U+2060, U+FEFF, the tag characters of the flags of England, Scotland and Wales, and one U+FE0E or U+FE0F right after an emoji, which selects how the emoji shows.
    These change no order, and the address checks read text without them.
    It reads the source lines of each part that it keeps as they came, so it also refuses a CR, which kramdown reads as a line end, and a control character at the end of an entry, which kramdown drops.
-   It refuses text with `//`, `www.`, `mailto:`, `xmpp:` or an `@` between two characters of a name, as in `user@host`, outside code, because the site's parser shows such an address as text.
+   It refuses text with `//`, `www.`, `mailto:`, `xmpp:` or an `@` between two characters of a name, as in `user@host`, outside code, because the site's parser turns such an address into a link.
    A value such as `go@1.21` can go in backticks.
    It parses the changelog with the GFM parser and options that the site uses, changes the tree, and writes it back with kramdown's own Markdown writer, so it never rewrites Markdown text with patterns.
    Two changes keep text as text: a `|` does not make a table and a placeholder such as `<name>` is not HTML, also at the start of a line, and the writer escapes both.
@@ -136,7 +136,7 @@ Run the steps in this order:
    A code span is checked too, so an entry with a `go install` command for that repository stops the sync by design: leave the address out of changelog entries.
    The sync job runs it before it opens the pull request.
    The script filters the releases and sections first and reads the links only in the text it keeps, so a section that is left out cannot stop the sync.
-   It keeps only the sections for users (**⚠ BREAKING CHANGES**, **Features**, **Bug Fixes** and **Performance**), so the steps an upgrade needs stay under **⚠ BREAKING CHANGES**.
+   It keeps only the sections for users (**⚠ BREAKING CHANGES**, **Features**, **Bug Fixes** and **Performance**) and gives them sentence case titles (**Breaking changes**, **Features**, **Bug fixes** and **Performance**), as the style guide asks for headings, so the steps an upgrade needs stay under **Breaking changes**.
    It drops every other section, the changes to the repository's own tooling and dependency pins (the tooling scopes in `TOOLING_SCOPES` of `sync-changelog.rb`) outside **⚠ BREAKING CHANGES**, and a release with nothing left.
 
 Commit the generated `app/_data/tools/kong-harnesses.yml`, `app/_includes/kong-harnesses/help/**` and `app/_data/kong-harnesses/changelog.json` files with any page changes from pruning.

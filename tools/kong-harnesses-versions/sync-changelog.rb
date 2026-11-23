@@ -37,7 +37,8 @@ module KongHarnessesChangelog
 
   # Readers of the site need what changed for them, not the repository's own build, CI
   # and docs work, so only these sections are published.
-  USER_SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
+  SECTION_TITLES = KongHarnessesChangelogLinks::SECTION_TITLES
+  USER_SECTIONS = SECTION_TITLES.keys.freeze
   BREAKING_CHANGES = '⚠ BREAKING CHANGES'
   # Scopes of changes to the repository's own tooling and dependency pins.
   # The release notes of the kong-harnesses releases use the same scopes; change both
@@ -605,7 +606,9 @@ module KongHarnessesChangelog
     return [[], []] if kept.all? { |element| element.type == :blank }
 
     raw_checked(title, lines, "the heading of section #{name} of #{release}")
-    [[*checked(title, "the heading of section #{name} of #{release}"), *kept], sources]
+    heading = checked(title, "the heading of section #{name} of #{release}")
+    heading.each { |element| element.children = [Kramdown::Element.new(:text, SECTION_TITLES.fetch(name))] if element.type == :header }
+    [[*heading, *kept], sources]
   end
 
   def prerelease?(version)
@@ -791,12 +794,14 @@ module KongHarnessesChangelog
     fragment.css('h2').each do |heading|
       heading.content = heading.text.sub(KongHarnessesChangelogLinks::HEADING_START) { |version| KongHarnessesChangelogLinks.written_version(version) }
     end
+    # The source names a section as release-please does, and the page by its title.
+    fragment.css('h3').each { |heading| heading.content = SECTION_TITLES.fetch(heading.text.strip, heading.text.strip) }
     section = nil
     fragment.children.each do |node|
       section = node.text.strip if node.name == 'h3'
       next unless node.name == 'ul'
 
-      node.element_children.each { |item| without_rendered_references(item) } unless section == BREAKING_CHANGES
+      node.element_children.each { |item| without_rendered_references(item) } unless section == SECTION_TITLES.fetch(BREAKING_CHANGES)
     end
     text = +''
     add = ->(value) { value.each_char { |char| text << (char.match?(/\s/) ? ' ' : char) unless char.match?(/\s/) && (text.empty? || text.end_with?(' ')) } }

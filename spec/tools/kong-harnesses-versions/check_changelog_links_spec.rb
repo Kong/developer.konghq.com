@@ -136,7 +136,7 @@ RSpec.describe KongHarnessesChangelogLinks do
     # would show the repository in another letter case in the job log.
     it 'names the place of a refused entry and none of its text' do
       markdown = "## 1.0.0 (2026-01-01)\n\n### Features\n\n* add\n\n### Bug Fixes\n\n* fix\n* see `github.com/EXAMPLE/SAMPLE-TOOL` and <SAMPLE-TOOL>x</SAMPLE-TOOL>\n"
-      expect { described_class.check(markdown) }.to raise_error(/in release 1\.0\.0, section Bug Fixes, entry 2/) { |error| expect(error.message).not_to match(/sample-tool|see /i) }
+      expect { described_class.check(markdown) }.to raise_error(/in release 1\.0\.0, section Bug fixes, entry 2/) { |error| expect(error.message).not_to match(/sample-tool|see /i) }
     end
 
     # The page that the sync spec's release-please fixture gives, with an older release.
@@ -161,11 +161,11 @@ RSpec.describe KongHarnessesChangelogLinks do
 
     [
       ['a hidden code point in an entry', page.sub('follow the', "follow‮ the"),
-       'a hidden code point in release 0.17.1, section Bug Fixes, entry 2 on the page'],
+       'a hidden code point in release 0.17.1, section Bug fixes, entry 2 on the page'],
       ['a bad heading of the second release', page.sub('## 0.17.0 (2026-11-18)', '## 0.17.0 (2026-11-18) a@b'),
        'an address in the heading of release 0.17.0 '],
       ['a bad heading of the second section', page.sub('### Bug Fixes', "### Bug Fixes\n{: data-x=\"1\"}"),
-       'an attribute that plain text markup does not have in the heading of section Bug Fixes of release 0.17.1'],
+       'an attribute that plain text markup does not have in the heading of section Bug fixes of release 0.17.1'],
       ['a bad heading of an unknown section', page.sub('### Bug Fixes', '### Other a@b'),
        'an address in the heading of section 2 of release 0.17.1 '],
       ['an entry of an unknown section', page.sub('### Bug Fixes', '### Other').sub('follow the', 'follow a@b the'),

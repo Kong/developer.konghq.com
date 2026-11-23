@@ -196,8 +196,10 @@ module KongHarnessesChangelogLinks
     found.uniq
   end
 
-  # The sections that sync-changelog.rb keeps, the only section titles that a place names.
-  SECTIONS = ['⚠ BREAKING CHANGES', 'Features', 'Bug Fixes', 'Performance'].freeze
+  # The sections that sync-changelog.rb keeps, as release-please names them, and the
+  # sentence case title that the page gives each, as the site's style guide asks for
+  # headings. A place names a section by its title.
+  SECTION_TITLES = { '⚠ BREAKING CHANGES' => 'Breaking changes', 'Features' => 'Features', 'Bug Fixes' => 'Bug fixes', 'Performance' => 'Performance' }.freeze
   # A version as release-please reads one (index.js:59193), with a prerelease and a build
   # part made of the characters that semver allows.
   VERSION = /\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?/
@@ -304,7 +306,8 @@ module KongHarnessesChangelogLinks
 
   def section_name(section, release)
     name = section.text.strip
-    return name if SECTIONS.include?(name)
+    title = SECTION_TITLES.fetch(name, name)
+    return title if SECTION_TITLES.value?(title)
 
     count = 0
     sibling = section

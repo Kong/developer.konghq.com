@@ -74,11 +74,11 @@ RSpec.describe KongHarnessesChangelog do
     expect(exported(release_please_changelog, ['0.17.1'])).to eq(<<~MARKDOWN)
       ## 0.17.1 (2026-11-19)
 
-      ### ⚠ BREAKING CHANGES
+      ### Breaking changes
 
       * **profile:** run login again after the upgrade
 
-      ### Bug Fixes
+      ### Bug fixes
 
       * **profile:** accept plain http for a gateway on loopback
       * **docs:** follow the Claude Code settings \\{\\{ unchanged }} \\{% endraw %}
@@ -466,26 +466,26 @@ RSpec.describe KongHarnessesChangelog do
   # A breaking change note is the author's text, so its `(#N)` stays as text.
   it 'keeps the `(#N)` of a breaking change note as text' do
     expect(exported(section("* **profile:** run login again ([#1](#{issue}))", '⚠ BREAKING CHANGES')))
-      .to eq(section('* **profile:** run login again (#1)', '⚠ BREAKING CHANGES'))
+      .to eq(section('* **profile:** run login again (#1)', 'Breaking changes'))
     expect { exported(section("* **profile:** run login again ([#1](#{issue})) ([abc1234](#{commit}))", '⚠ BREAKING CHANGES')) }.to raise_error(/has a link in release 1\.0\.0, section ⚠ BREAKING CHANGES, entry 1,/)
     # What googleapis/release-please-action 45996ed1 writes for the commit
     # "fix: require a restart\n\nBREAKING CHANGE: Follow the procedure in issue (#12)\n- Restart the service".
     generated = "## [1.2.3](https://github.com/example/sample-tool/compare/v1.2.2...v1.2.3) (2026-11-20)\n\n\n### ⚠ BREAKING CHANGES\n\n" \
                 "* Follow the procedure in issue ([#12](https://github.com/example/sample-tool/issues/12))\n    - Restart the service\n\n### Bug Fixes\n\n" \
                 '* require a restart ([abc1234](https://github.com/example/sample-tool/commit/abc1234000000000000000000000000000000000))'
-    expect(exported(generated, ['1.2.3'])).to eq("## 1.2.3 (2026-11-20)\n\n### ⚠ BREAKING CHANGES\n\n* Follow the procedure in issue (#12)\n  * Restart the service\n\n" \
-                                                 "### Bug Fixes\n\n* require a restart\n")
+    expect(exported(generated, ['1.2.3'])).to eq("## 1.2.3 (2026-11-20)\n\n### Breaking changes\n\n* Follow the procedure in issue (#12)\n  * Restart the service\n\n" \
+                                                 "### Bug fixes\n\n* require a restart\n")
     # release-please writes a `#### ` line of the note under it, which kramdown reads as
     # text of the same paragraph, so the `(#N)` is in running text and stays as text.
     expect(exported(section("* **api:** drop v1 ([#12](https://github.com/example/sample-tool/issues/12))\n    #### Deleted\n    - endpoint 1", '⚠ BREAKING CHANGES')))
-      .to eq(section("* **api:** drop v1 (#12) #### Deleted\n  * endpoint 1", '⚠ BREAKING CHANGES'))
+      .to eq(section("* **api:** drop v1 (#12) #### Deleted\n  * endpoint 1", 'Breaking changes'))
   end
 
   it 'leaves out the repository tooling scopes, also with a nested scope, but keeps an upgrade step' do
     expect(exported("## 1.0.0\n\n### Bug Fixes\n\n* **deps(actions):** bump\n* **ci(release):** retry\n* **cli(help):** fix\n"))
-      .to eq("## 1.0.0\n\n### Bug Fixes\n\n* **cli(help):** fix\n")
+      .to eq("## 1.0.0\n\n### Bug fixes\n\n* **cli(help):** fix\n")
     expect(exported("## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n\n### Bug Fixes\n\n* **deps:** update Go\n"))
-      .to eq("## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n")
+      .to eq("## 1.0.0\n\n### Breaking changes\n\n* **deps:** install Go 1.30 first\n")
   end
 
   it 'drops a section with no entry left' do
@@ -535,7 +535,7 @@ RSpec.describe KongHarnessesChangelog do
     changelog = "## [1.2.3-rc--1](https://github.com/example/sample-tool/compare/v1.2.2...v1.2.3-rc--1) (2026-11-20)\n\n\n### Bug Fixes\n\n" \
                 "* tag it ([abc1234](#{commit}))\n\n## 1.2.3--rc.1\n\n### Bug Fixes\n\n* try it\n\n## 1.2.3\n\n### Bug Fixes\n\n* final\n"
     page = exported(changelog, %w[1.2.3-rc--1 1.2.3--rc.1 1.2.3])
-    expect(page).to eq("## 1.2.3-rc\\-\\-1 (2026-11-20)\n\n### Bug Fixes\n\n* tag it\n\n## 1.2.3\\-\\-rc.1\n\n### Bug Fixes\n\n* try it\n\n## 1.2.3\n\n### Bug Fixes\n\n* final\n")
+    expect(page).to eq("## 1.2.3-rc\\-\\-1 (2026-11-20)\n\n### Bug fixes\n\n* tag it\n\n## 1.2.3\\-\\-rc.1\n\n### Bug fixes\n\n* try it\n\n## 1.2.3\n\n### Bug fixes\n\n* final\n")
     expect(Nokogiri::HTML5.fragment(KongHarnessesChangelogLinks.html(page)).css('h2').map(&:text)).to eq(['1.2.3-rc--1 (2026-11-20)', '1.2.3--rc.1', '1.2.3'])
     build = "## [1.2.3+build--2](https://github.com/example/sample-tool/compare/v1.2.2...v1.2.3+build--2)\n\n### Features\n\n* add\n"
     page = described_class.export(build, published: %w[1.2.3+build--2], finals: %w[1.2.3+build--2], highest: '1.2.3+build--2', log: StringIO.new)
@@ -729,7 +729,7 @@ RSpec.describe KongHarnessesChangelog do
 
     it 'names the first link that the export would write back' do
       expect { described_class.written(page.sub('follow the', 'follow [the](https://example.org)'), described_class.parse(page)) }
-        .to raise_error(/write a link back in release 0\.17\.1, section Bug Fixes, entry 2 on the page,/, &secret)
+        .to raise_error(/write a link back in release 0\.17\.1, section Bug fixes, entry 2 on the page,/, &secret)
     end
 
     # The export takes a reference link for no reference, so the check of the link form
@@ -743,7 +743,7 @@ RSpec.describe KongHarnessesChangelog do
     it 'names the first entry that a reader would see differently' do
       allow_any_instance_of(described_class::Writer).to receive(:convert_entity) { |_writer, element, _opts| element.value.char } # rubocop:disable RSpec/AnyInstance
       expect { exported(release_please_changelog.sub('follow the', 'follow &#124; the'), ['0.17.1']) }
-        .to raise_error(/what a reader sees in release 0\.17\.1, section Bug Fixes, entry 2 on the page,/, &secret)
+        .to raise_error(/what a reader sees in release 0\.17\.1, section Bug fixes, entry 2 on the page,/, &secret)
     end
   end
 
@@ -755,7 +755,7 @@ RSpec.describe KongHarnessesChangelog do
     end
     markdown = release_please_changelog.sub("after the upgrade\n", "after the upgrade\n\n  ```sh\n  koha login\n  ```\n")
     expect { exported(markdown, ['0.17.1']) }
-      .to raise_error(/language of the code block in release 0\.17\.1, section ⚠ BREAKING CHANGES, code block 1 on the page,/) { |error| expect(error.message).not_to match(/koha/) }
+      .to raise_error(/language of the code block in release 0\.17\.1, section Breaking changes, code block 1 on the page,/) { |error| expect(error.message).not_to match(/koha/) }
   end
 
   # kramdown shows `--` in a heading as a dash, so a place in the source names the
@@ -866,7 +866,7 @@ RSpec.describe KongHarnessesChangelog do
       .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 4,/)
     page = exported(release_please_changelog, ['0.17.1']).sub('follow the', "follow‮ the")
     expect { KongHarnessesChangelogLinks.check(page) }
-      .to raise_error(/a hidden code point in release 0\.17\.1, section Bug Fixes, entry 2 on the page/)
+      .to raise_error(/a hidden code point in release 0\.17\.1, section Bug fixes, entry 2 on the page/)
     page = exported("## 1.0.0(2026-11-22)\n\n### Features\n\n* add\n").sub('* add', "* add‮ x")
     expect { KongHarnessesChangelogLinks.check(page) }.to raise_error(/a hidden code point in release 1\.0\.0, section Features, entry 1 on the page/)
   end
