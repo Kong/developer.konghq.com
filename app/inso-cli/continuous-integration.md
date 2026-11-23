@@ -29,6 +29,8 @@ Inso CLI is designed to run in a Continuous Integration (CI) environment. It dis
 
 You can use the [Setup Inso](https://github.com/marketplace/actions/setup-inso) GitHub Action to perform Inso CLI tasks in your repository's GitHub Actions.
 
+CI pipelines that read a Git Sync repository or an exported file don't need the Insomnia local encryption key. You need the key only when Inso CLI reads the Insomnia app's local database files. For more information, see [Encryption key](/inso-cli/configuration/#encryption-key).
+
 ## GitHub Action example
 
 The following sample GitHub Actions performs the following tasks:
