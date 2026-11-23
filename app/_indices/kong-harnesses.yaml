@@ -4,6 +4,7 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/
+          - path: /kong-harnesses/support/
           - path: /kong-harnesses/changelog/
 
   - title: CLI References
