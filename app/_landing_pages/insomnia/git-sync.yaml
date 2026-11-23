@@ -52,7 +52,7 @@ rows:
         - type: image
           config:
             url: /assets/images/insomnia/insomnia-cloud-sync.svg
-            alt_text: "{{ site.insomnia }} Git Sync architecture"
+            alt_text: "Insomnia Git Sync architecture"
 
   - header:
       type: h2
