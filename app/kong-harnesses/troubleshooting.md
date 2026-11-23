@@ -54,7 +54,7 @@ kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 ```
 
 Replace `PROFILE_NAME` with the name of your installed profile.
-To check the only installed profile or the default profile, omit `--profile PROFILE_NAME`.
+To check the only installed profile or the default profile, omit `--profile PROFILE_NAME` and leave `KONG_HARNESSES_PROFILE` unset.
 The commands on this page use the same placeholder.
 Replace `CLIENT_NAME` with the agent CLI to check, such as `claude-code`.
 To check every supported agent CLI that the profile configures, omit `--client`.
@@ -192,7 +192,6 @@ rows:
       When the `fix:` line says to run `profile cleanup`, use the following steps for the cleanup and the activation.
       Do the other steps on the `fix:` line as the line names them.
 
-
       1. If the `fix:` line names a variable for the cleanup step, open a shell without that variable.
       1. Run `kong-harnesses --client opencode profile cleanup`.
          Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
@@ -240,9 +239,9 @@ rows:
   - check: "`route`"
     what: |
       The gateway has a route for the requests of the agent CLI.
-      The result of an HTTP `401` or `403` response depends on what `doctor` can send:
+      The result depends on what `doctor` can send:
 
-      * `doctor` sends your credential: the gateway refuses the test request on that route.
+      * `doctor` sends your credential: an HTTP `401` or `403` response gives `fail`, because the gateway refuses your credential on that route.
       * The test request doesn't have an input that the agent CLI can send, such as a client certificate or custom headers: a refused credential or a missing route gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
       * `doctor` doesn't have a credential to send, such as when you aren't signed in or the agent CLI owns its sign-in: a `401` or `403` response gives `ok`.
         That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
@@ -272,7 +271,7 @@ rows:
       The `/model` menu of {{ site.claude_code }} matches the gateway discovery mode:
 
       * Gateway discovery is off: the menu offers only models that the gateway serves or that the profile lists.
-        The check reports a menu that shows the built-in models, alone or beside the selected rows, missing rows, and rows for models that the gateway doesn't serve.
+        The check reports missing rows, rows for models that the gateway doesn't serve, and a menu that shows the built-in models, either alone or beside the selected rows.
         When the profile gives the model IDs, the check reports rows for models that the profile doesn't list instead.
       * Gateway discovery fills the menu: the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
         The check reports settings that hide the built-in models, duplicate rows for models that discovery adds, missing rows for gateway models that discovery skips, and rows for models that the gateway doesn't serve.
@@ -287,8 +286,8 @@ rows:
       These cases need more context:
 
       * The finding says that the model list isn't available: fix the `catalog` problem first.
-      * The `fix:` line says to pick a model: run `/model` and pick the gateway model or the profile model that the line names.
-      * The `fix:` line says to unset a variable: unset the variable in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
+      * The `fix:` line says to pick a model: run `/model` and pick a gateway model or a profile model, as the line says.
+      * The `fix:` line says to unset a variable: unset the variable in the shell that starts {{ site.claude_code }}.
       * The `fix:` line says that the profile pins the model: import the profile again from the deployment that issued it, then do the next step on the `fix:` line.
         If the gateway still doesn't serve the pinned model, ask your administrator to pin a model that the gateway serves.
       * The managed settings of your organization set the model: ask your administrator to change the settings.
@@ -352,8 +351,7 @@ rows:
       The `doctor` command doesn't send the request when it can't build the request, such as when a usable sign-in or gateway model doesn't exist.
       For a Claude subscription profile, `doctor` doesn't send the request, because `doctor` can't read your subscription sign-in.
     next: |
-      * The `fix:` line says to send a prompt: send one from {{ site.claude_code }} to test the route.
-      * `doctor` doesn't send the request for another reason: do the step on the `fix:` line, then run `doctor` again.
-      * The finding doesn't include a `fix:` line: read the finding for the reason.
-      * The request fails: read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
+      * The finding has a `fix:` line: do the steps on the line, then run `doctor` again.
+        When the line says to send a prompt, send one from {{ site.claude_code }} to test the route.
+      * The finding doesn't include a `fix:` line: read the finding for the cause.
 {% endtable %}
