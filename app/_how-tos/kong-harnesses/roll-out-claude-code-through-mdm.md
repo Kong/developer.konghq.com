@@ -104,7 +104,7 @@ cleanup:
         To remove the build, first have each developer sign out of the machine-wide profile and remove any user-level activation.
         Then unassign the deployment and run `kong-harnesses fleet remove`.
         Follow the instruction under `MDM policy` when it appears.
-        Follow the instruction under `MCP config` when it appears.
+        Follow the instructions under `MCP config` when it appears.
         Delete each file listed under `Remove`.
         For the steps, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
