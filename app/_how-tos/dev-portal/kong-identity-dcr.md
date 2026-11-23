@@ -118,7 +118,10 @@ body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
   description: "Auth server for the Appointment dev environment"
+  dcr_default_access_token_duration: 1800
 {% endkonnect_api_request %}
+
+The `dcr_default_access_token_duration` field sets how long the access tokens issued to DCR clients on this auth server stay valid, in seconds. Because DCR registers clients automatically, set the duration here rather than on each client. If you omit the field, DCR clients issue tokens that are valid for 300 seconds. For more information, see [Access token duration](/identity/auth-servers/#access-token-duration).
 
 Export the issuer URL:
 ```sh
