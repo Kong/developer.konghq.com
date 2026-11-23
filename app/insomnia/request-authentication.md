@@ -47,18 +47,17 @@ Navigate to a request in a collection, click the **Auth** tab below your request
 
 ![Image of all the available request auth types in {{ site.insomnia }}](/assets/images/insomnia/request-auth.png)
 
-## How do I share authentication across requests?
+## How do I share settings across requests?
 
-Set authentication once on a folder or on the API Collection, then set the authentication type of each request to **Inherit from parent**:
+{% new_in 13.5 %} Set authentication, headers, and scripts once on the API Collection or on a folder, and every request inside uses them. On the API Collection screen, use the **Auth**, **Headers**, and **Scripts** tabs. For a folder, select it in the sidebar. To use inherited authentication, set the request's authentication type to **Inherit from parent**.
 
-* **Folder:** In the sidebar, select the folder, click the **Auth** tab, and select an authentication type.
-* **API Collection:** {% new_in 13.5 %} On the API Collection screen, click the **Auth** tab and select an authentication type.
+### How inheritance works
 
-A request that inherits authentication uses the nearest parent folder that sets authentication. If no parent folder sets one, the request uses the authentication of the API Collection. A request with any other authentication type, including **None**, uses its own setting.
+{{ site.insomnia }} applies settings from the API Collection, then from each folder (outermost first), then from the request:
 
-If the inherited authentication is OAuth 2.0, all requests that inherit it share the token stored on the folder or API Collection that owns the configuration.
-
-For the full inheritance rules, including headers and scripts, see [Collection and folder settings](/insomnia/requests/#collection-and-folder-settings).
+* **Authentication:** The closest level that sets authentication wins. A request's own type, including **None**, overrides inheritance. Requests that inherit OAuth 2.0 share the token stored on the level that owns the configuration.
+* **Headers:** {{ site.insomnia }} combines headers from every level. When several levels set the same header, it joins the values with a comma. The exception is single-value headers such as `Authorization`, `Content-Type`, and `Host`, where the closest level wins.
+* **Scripts:** Pre-request and after-response scripts run in the same order: API Collection, then folders, then request.
 
 ## Which authentication types are supported?
 

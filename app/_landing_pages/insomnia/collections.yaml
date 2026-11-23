@@ -115,26 +115,12 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {% new_in 13.5 %} Configure settings once on the API Collection, and every request in it uses them. On the API Collection screen, next to the **Spec** tab, use the following tabs:
-                - type: unordered_list
-                  items:
-                    - "**Auth**: Set the authentication that requests use when their authentication type is **Inherit from parent**."
-                    - "**Headers**: Add headers that {{ site.insomnia }} sends with every request in the API Collection."
-                    - "**Scripts**: Write **Pre-request** and **After-response** scripts that run for every request in the API Collection."
-                    - "**Environment**: Edit the base environment and sub-environments of the API Collection."
-                    - "**Docs**: Write a description of the API Collection in Markdown."
-                - type: text
-                  text: |
-                    Folders and requests can override or add to the collection settings. {{ site.insomnia }} resolves each setting from the API Collection, then each folder from the outermost to the innermost, then the request:
-
-                    * **Authentication:** The closest level that sets authentication wins. A request uses its own authentication, then its nearest folder's, then the API Collection's.
-                    * **Headers:** {{ site.insomnia }} combines the headers from every level. If the same header is set at several levels, {{ site.insomnia }} joins the values with a comma, except for single-value headers such as `Authorization`, `Content-Type`, and `Host`, where the closest level wins.
-                    * **Scripts:** {{ site.insomnia }} runs the API Collection script first, then the folder scripts from the outermost to the innermost, then the request script.
+                    {% new_in 13.5 %} Configure authentication, headers, scripts, environments, and docs once on the API Collection, using the tabs on the API Collection screen. Folders and requests can override or add to these settings.
           - type: button
             config:
               align: left
               text: Learn more about inheritance
-              url: /insomnia/requests/#collection-and-folder-settings
+              url: /insomnia/request-authentication/#how-inheritance-works
 
   - header:
       type: h2
@@ -291,7 +277,7 @@ rows:
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
             - q: Can I set authentication headers at the collection level so I do not repeat them on every request?
               a: |
-                {% new_in 13.5 %} Yes. On the API Collection screen, click the **Auth** tab to set authentication, or the **Headers** tab to add headers, for every request in the API Collection. In each request, set the authentication type to **Inherit from parent** to use the collection authentication. A folder or request that sets its own authentication overrides the collection authentication. For details, see [Collection settings](#collection-settings).
+                {% new_in 13.5 %} Yes. Use the **Auth** and **Headers** tabs on the API Collection screen, and set each request's authentication type to **Inherit from parent**. See [How inheritance works](/insomnia/request-authentication/#how-inheritance-works).
 
                 In {{ site.insomnia }} 13.4 and earlier, you can only set authentication and headers on folders and requests.
             - q: Can I hide other projects and API Collections to focus only on one?
