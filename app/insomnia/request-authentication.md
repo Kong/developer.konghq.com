@@ -49,7 +49,16 @@ Navigate to a request in a collection, click the **Auth** tab below your request
 
 ## How do I share authentication across requests?
 
-Set authentication once on a folder or {% new_in 13.5 %} on the API Collection, using its **Auth** tab. Then set each request's authentication type to **Inherit from parent**. For the inheritance rules, which also cover headers and scripts, see [Collection settings](/insomnia/collections/#collection-settings).
+Set settings (including authentication) once on a folder or {% new_in 13.5 %} on the API Collection, using its **Auth** tab. Then set each request's authentication type to **Inherit from parent**.
+
+{{ site.insomnia }} applies settings first from the API Collection, then from each folder (outermost first), then from the request:
+
+* **Authentication:** The closest level that sets authentication wins. To inherit it, set the request's authentication type to **Inherit from parent**. A request's own type, including **None**, overrides inheritance. Requests that inherit OAuth 2.0 share the token stored on the level that owns the configuration.
+
+* **Headers:** {{ site.insomnia }} combines headers from every level. When several levels set the same header, it joins the values with a comma. The exception is single-value headers such as `Authorization`, `Content-Type`, and `Host`, where the closest level wins.
+
+* **Scripts:** Pre-request and after-response scripts run in the same order: API Collection, then folders, then request.
+
 
 ## Which authentication types are supported?
 
