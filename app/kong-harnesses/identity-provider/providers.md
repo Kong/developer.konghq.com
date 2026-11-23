@@ -40,8 +40,8 @@ Auth0 needs the following settings for the {{site.kong_harnesses}} client:
 
 * Issuer: Use `https://YOUR_AUTH0_DOMAIN/`, with the trailing slash.
 * Client: Create a **Native** application, which Auth0 registers as a public application with the token endpoint authentication method **None**, as [Confidential and Public Applications](https://auth0.com/docs/get-started/applications/confidential-and-public-applications) describes.
-* Consent: For a loopback callback, such as `localhost` or `127.0.0.1`, Auth0 shows a confirmation prompt at each sign-in, unless the user saw another screen, such as MFA, in the same sign-in.
-  Keep **Non-Verifiable Callback URI End-User Confirmation** enabled, as [Measures Against Application Impersonation](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation) recommends.
+* Consent: In the settings of the native application, under **Advanced** > **OAuth**, keep **Non-Verifiable Callback URI End-User Confirmation** enabled, as [Measures Against Application Impersonation](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation) recommends.
+  Auth0 then shows a confirmation prompt at each sign-in with a loopback callback, such as `localhost` or `127.0.0.1`, unless the user saw another screen, such as MFA, in the same sign-in.
 * Offline access: Enable **Allow Offline Access** in the API of the gateway, as [API Settings](https://auth0.com/docs/get-started/apis/api-settings) describes.
   To use rotating refresh tokens, enable **Allow Refresh Token Rotation** under **Refresh Token Rotation** in the settings of the native application.
   Keep **Rotation Overlap Period** at 0, because Auth0 doesn't detect the reuse of a refresh token during that period, as [Configure Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/configure-refresh-token-rotation) describes.
@@ -60,12 +60,12 @@ Keycloak needs the following settings for the {{site.kong_harnesses}} client:
 * Client: Create an OpenID Connect client, disable **Client authentication**, which makes it a public client, and enable **Standard flow**.
   Set its **PKCE Method** to `S256`, as the [Server Administration Guide](https://www.keycloak.org/docs/latest/server_admin/index.html) describes.
   By default, the discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
-* Consent: Keycloak shows the consent screen only when consent is on for the client.
+* Consent: Keycloak shows the consent screen only when **Consent required** is on in the **Login settings** of the client.
 * Offline access: Keep `offline_access` as an optional client scope of the client.
   Check that users have the realm role `offline_access`, and that the **Scope** tab of the `offline_access` client scope maps that role.
 * Scopes: Link the scopes that the profile requests, and unlink or change the default client scopes that it doesn't request, as [Keycloak client scopes](#keycloak-client-scopes) describes.
 * Refresh token rotation: When **Use refresh tokens** is on, Keycloak sends a new refresh token in each renewal response, unless a client policy with the `suppress-refresh-token-rotation` executor applies to the client, as [OIDC auth flows](https://www.keycloak.org/docs/latest/server_admin/index.html#con-oidc-auth-flows_server_administration_guide) describes.
-  {{site.kong_harnesses}} accepts both, and **Revoke Refresh Token** can stay off.
+  {{site.kong_harnesses}} works with and without a new refresh token in the renewal response, so **Revoke Refresh Token** can stay off.
   If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, keep **Refresh Token Max Reuse** at 0, so that a copied refresh token can't be used again, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
 * Audience: Set `--audience-parameter none`, so that the sign-in request doesn't send `resource` and the Audience mapper is the only source of the gateway audience.
   In the dedicated client scope of the client, add an Audience mapper, set its **Included Custom Audience** to the `--audience` value, and keep **Add to access token** on.
@@ -93,7 +93,7 @@ columns:
   - title: Change
     key: change
 rows:
-  - when: "Has mappers and role scope mappings that the {{site.kong_harnesses}} client doesn't need"
+  - when: "Doesn't have mappers or role scope mappings that the {{site.kong_harnesses}} client needs"
     change: "Unlink the scope from the client."
   - when: "Can have **Include in token scope** off for every other client linked to it"
     change: "Turn **Include in token scope** off on the scope."
@@ -121,9 +121,10 @@ For `profile`, `email`, `offline_access` and the other scopes that [Token respon
 Microsoft Entra ID needs the following settings for the {{site.kong_harnesses}} client:
 
 * Issuer: Use the issuer of your tenant, `https://login.microsoftonline.com/TENANT_ID/v2.0`, not `common`, `organizations` or `consumers`.
-* Client: Register the callback under **Mobile and desktop applications**, and don't add a client secret, as [Configure desktop apps that call web APIs](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-configuration) describes.
+* Client: Don't add a client secret.
   The discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`, so test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
-* Callback: Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
+* Callback: Register the callback under **Mobile and desktop applications**, as [Configure desktop apps that call web APIs](https://learn.microsoft.com/en-us/entra/identity-platform/scenario-desktop-app-configuration) describes.
+  Entra ID ignores the port only for a `localhost` callback, and doesn't accept `[::1]`, as [Redirect URI best practices](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url) describes.
   Register one `localhost` callback for each path.
   Don't register several `localhost` callbacks that differ only by port, because Entra ID then uses only one of them, as [localhost exceptions](https://learn.microsoft.com/en-us/entra/identity-platform/reply-url#localhost-exceptions) describes.
   The Azure portal doesn't accept an `http` callback with `127.0.0.1`, so register a `localhost` callback there.
@@ -144,7 +145,7 @@ Microsoft Entra ID needs the following settings for the {{site.kong_harnesses}} 
 * Audience: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
   Add the delegated permission of the gateway API to the client, as [Configure app permissions for a web API](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-permissions-to-access-your-web-api) describes:
 
-  1. In the client, click **API permissions**.
+  1. In the sidebar of the client app registration, click **API permissions**.
   1. Click **Add a permission**.
   1. Click the **My APIs** tab.
   1. Select the gateway API.
