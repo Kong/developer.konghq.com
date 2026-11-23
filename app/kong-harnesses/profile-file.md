@@ -99,69 +99,14 @@ The following profile signs developers in with an identity provider and sets up 
 }
 ```
 
-## Profile file encoding
-
-`profile import` reads a profile file in these encodings:
-
-* UTF-8, with or without a byte-order mark.
-* UTF-16LE or UTF-16BE, with a byte-order mark.
-  The `>` redirection of Windows PowerShell 5.1 writes UTF-16LE with a byte-order mark, so `profile import` reads that file.
-
-A UTF-16 file holds about half as much text as a UTF-8 file in the limit of 65,536 bytes.
-`profile import` stores the profile as UTF-8.
-
-When `profile import` refuses a file, the message names the encoding that it found:
-
-{% table %}
-columns:
-  - title: Encoding in the message
-    key: encoding
-  - title: Fix
-    key: fix
-rows:
-  - encoding: "`UTF-16LE without a byte-order mark` or `UTF-16BE without a byte-order mark`"
-    fix: "Save a copy with a byte-order mark or as UTF-8, then import the copy."
-  - encoding: "`UTF-32`"
-    fix: "Save a copy as UTF-16 or UTF-8, then import the copy."
-  - encoding: "`UTF-16 with a broken character`"
-    fix: "Get the profile file again, because the file is cut short or damaged."
-  - encoding: "`a text encoding that is not UTF-8`, or `UTF-8 with a byte-order mark` when a file has two byte-order marks"
-    fix: "Save a copy as UTF-8 with an editor, then import the copy."
-{% endtable %}
-
-To save a copy of a UTF-16 or UTF-32 file in another encoding:
-
-{% navtabs "convert-profile-encoding" %}
-{% navtab "Windows" %}
-
-For UTF-16LE without a byte-order mark, run this in PowerShell:
-
-```powershell
-Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE
-```
-
-For UTF-16BE without a byte-order mark, use `-Encoding BigEndianUnicode` after `Get-Content`.
-For UTF-32, leave out `-Encoding Unicode` after `Get-Content`.
-
-{% endnavtab %}
-{% navtab "macOS and Linux" %}
-
-Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
-
-```sh
-iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
 ## Schema versions
 
 `schema_version` controls which fields a profile can use.
 Each release reads versions up to its latest and refuses newer ones.
 `profile create` writes the latest schema version, so older releases can't import its profiles.
 
-To share one profile across releases, set the lowest version with every needed field that the oldest release reads:
+To share one profile across releases, use the lowest version that has every field that you need.
+Check that the oldest release in use reads that version:
 
 {% table %}
 columns:
@@ -274,7 +219,8 @@ rows:
       Required.
       The origin of {{site.ai_gateway}}, up to 2,048 bytes of visible ASCII.
       It uses `https://` and a lowercase host, without a path, a query, a fragment, user information, or the default port.
-      A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not on an IPv4-mapped IPv6 address.
+      A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`.
+      An IPv4-mapped IPv6 address can't use `http://`.
       `fleet build` refuses an `http://` gateway.
       A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`.
       For which agent CLIs work with an `http://` gateway and the proxy rules, see [Plain HTTP gateways](#plain-http-gateways).
@@ -282,7 +228,8 @@ rows:
     description: >-
       Version 12 and later.
       PEM certificate authorities for the gateway certificate, up to 32 KB.
-      {{site.kong_harnesses}} reads this field so that older profiles still import, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so.
+      {{site.kong_harnesses}} reads this field so that older profiles still import.
+      Neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so.
       Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes.
   - field: "`sign_in`"
     description: >-
@@ -327,7 +274,8 @@ Requests to an `http://` gateway aren't encrypted, so a proxy could read the cre
 * When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
   Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
   `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
-  A proxy variable or `NO_PROXY` in project settings takes precedence over these values, and `profile activate` refuses when managed settings could send the requests through a proxy.
+  A proxy variable or `NO_PROXY` in project settings takes precedence over these values.
+  `profile activate` refuses when managed settings could send the requests through a proxy.
 * `fleet build` refuses `http://` profiles because it can't check proxy settings on managed computers.
 
 See [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Fleet build errors](/kong-harnesses/errors/#fleet-build-errors) for errors and fixes.
@@ -407,8 +355,8 @@ rows:
     description: >-
       Where the identity provider sends the browser after sign-in.
       The default is `http://localhost:9876/callback`.
-      Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port from 1 to 65535.
-      Its path is 2 to 256 characters of letters, digits and `-._~/`, without a `.` or `..` segment, `//`, a query or a fragment.
+      Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port from 1 to 65535, written without leading zeros.
+      Its path is 2 to 256 characters of letters, digits and `-._~/`, without a `.` or `..` segment, `//`, a trailing `/`, a query or a fragment.
       Register the same value with the identity provider.
   - field: "`audience`"
     description: >-
@@ -437,6 +385,7 @@ rows:
       The default is 3600.
       Releases up to 0.18.0 also accepted 360.
       A profile that they installed with 360 still reads, but sign-in refuses it, so give developers a profile with 365 or more.
+      The identity provider must issue access tokens that last at least 365 seconds, because each token that {{site.kong_harnesses}} gives to an agent CLI has at least 360 seconds left.
 {% endtable %}
 
 ### Security identity
@@ -444,7 +393,8 @@ rows:
 A profile's security identity consists of `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
 
 A saved sign-in belongs to one security identity.
-When `profile create` or `profile import` replaces a profile and changes one of these fields, each developer signs in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes for each kind of profile.
+Sometimes `profile create` or `profile import` replaces a profile and changes one of these fields.
+Each developer then signs in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes for each kind of profile.
 An `environment_key` profile doesn't save a sign-in, so developers don't need to sign in again.
 `profile create` and `profile import` refuse the change while an agent CLI uses the profile.
 Run `profile cleanup` for that client, or activate another profile there.
@@ -521,7 +471,7 @@ rows:
 
 Some blocks have more rules:
 
-* The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes.
+* The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes of visible ASCII.
   A profile with a `hermes` block signs in with an identity provider, so it can't use `static_key`, `environment_key` or `subscription`.
   The profile must also set `audience_parameter` to `audience`, and request exactly the scopes `openid`, `profile`, `email` and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
@@ -617,7 +567,8 @@ rows:
 #### Claude Code choices
 
 Each choice turns one {{ site.claude_code }} feature on with `true` or off with `false`, and `profile activate` writes the settings in the following table.
-From version 14, each choice is optional, and a choice that the profile leaves out writes nothing.
+From version 14, each choice is optional, and a choice that the profile leaves out writes no setting of its own.
+A setting that several choices share can still get a value from another choice, and so can `enableArtifact` in a `subscription` profile, as [Routes](#routes) describes.
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 
@@ -635,10 +586,14 @@ columns:
     key: on
 rows:
   - choice: "`auto_updates`"
-    off: "Writes `DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, except when a version 18 or later profile writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank."
+    off: >-
+      Writes `DISABLE_AUTOUPDATER=1` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`.
+      From version 18, it writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank instead when the profile turns on a feature that this switch turns off.
+      See [Nonessential traffic](#nonessential-traffic).
     on: >-
-      Writes neither setting, except when a version 18 or later profile writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank for another enabled choice.
-      A developer can still turn off automatic updates with `DISABLE_AUTOUPDATER`, and can turn off all nonessential traffic with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` when activation doesn't write it blank.
+      Writes neither setting.
+      From version 18, it writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank when the profile turns on a feature that this switch turns off.
+      Otherwise, a developer can turn off automatic updates with `DISABLE_AUTOUPDATER`, or all nonessential traffic with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`.
   - choice: "`tool_search`"
     off: "Writes `ENABLE_TOOL_SEARCH=false`."
     on: >-
@@ -719,7 +674,7 @@ rows:
 
 When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its default, which loads every tool at startup behind a gateway.
 
-##### Choices that can't go together
+#### Choices that can't go together
 
 Some {{ site.claude_code }} settings turn off more than one feature:
 
@@ -737,7 +692,7 @@ columns:
   - title: Schema versions
     key: versions
 rows:
-  - pair: "`auto_updates: false` with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`"
+  - pair: "`auto_updates: false` with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`, when no other choice already turns that feature off"
     versions: "Up to 17"
   - pair: "`auto_updates: false` with `artifact: true` in a `subscription` profile"
     versions: "Up to 17"
@@ -765,10 +720,11 @@ Releases up to 0.18.0 accepted some of these combinations.
 A profile that they installed still reads, and `profile activate` and `profile get` report which features {{ site.claude_code }} keeps off.
 For a profile before version 18 with `auto_updates: false`, they ask for a version 18 profile.
 
-##### Nonessential traffic
+#### Nonessential traffic
 
 From version 18, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank when the profile turns on a feature that this switch turns off.
-These are the features of the first three rows in [Choices that can't go together](#choices-that-can-t-go-together).
+These features are telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, the artifact tool in a `subscription` profile, and the advisor tool on `anthropic-messages`.
+A feature counts only when no other choice already turns it off.
 This applies for every value of `auto_updates`.
 
 While the switch is blank:
@@ -777,8 +733,10 @@ While the switch is blank:
   In the Claude Desktop app or a self-hosted environment runner, the launch environment [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over settings, so a value set there still turns them off.
 * `auto_updates: false` turns off only automatic updates of {{ site.claude_code }}, its plugins, and its marketplaces.
   To keep plugin updates on, set `FORCE_AUTOUPDATE_PLUGINS=1`.
-* Other nonessential traffic resumes where the conditions of each feature apply, and each choice set to `false` keeps its own traffic off.
-* {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway and `ANTHROPIC_API_KEY` is a key from the gateway in a format other than an Anthropic API key.
+* The other nonessential traffic of {{ site.claude_code }} resumes for each feature that is on.
+  Each choice set to `false` still keeps its own feature off.
+* {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway.
+  This applies when `ANTHROPIC_API_KEY` holds a key from the gateway that doesn't have the format of an Anthropic API key.
 
 #### Request shape
 
@@ -933,7 +891,8 @@ rows:
     description: >-
       For `oauth`, and refused for other servers.
       Both are optional.
-      Set them to the client that you registered for {{ site.claude_code }} with the identity provider of the server, when that provider doesn't let {{ site.claude_code }} register a client.
+      Some identity providers don't let {{ site.claude_code }} register a client.
+      For such a server, register a client for {{ site.claude_code }} yourself, and set these fields to that client.
       The client ID is up to 256 visible ASCII characters.
       The port is from 0 to 65535, and `0` is the same as no port: `profile activate` then writes no callback port.
   - field: "`key_header`"
@@ -951,3 +910,59 @@ Each sign-in setting has its own rules:
 * A `subscription` profile can't list servers.
 * A profile with an `http://` gateway can't list `oauth` servers.
 * Two `key` servers can't have names that differ only in case.
+
+## Profile file encoding
+
+`profile import` reads a profile file in these encodings:
+
+* UTF-8, with or without a byte-order mark.
+* UTF-16LE or UTF-16BE, with a byte-order mark.
+  The `>` redirection of Windows PowerShell 5.1 writes UTF-16LE with a byte-order mark, so `profile import` reads that file.
+
+The limit of 65,536 bytes applies to the file as saved, so a UTF-16 file holds about half as much text as a UTF-8 file.
+`profile import` stores the profile as UTF-8.
+
+When `profile import` refuses a file, the message names the encoding that it found:
+
+{% table %}
+columns:
+  - title: Encoding in the message
+    key: encoding
+  - title: Fix
+    key: fix
+rows:
+  - encoding: "`UTF-16LE without a byte-order mark` or `UTF-16BE without a byte-order mark`"
+    fix: "Save a copy with a byte-order mark or as UTF-8, then import the copy."
+  - encoding: "`UTF-32`"
+    fix: "Save a copy as UTF-8, or as UTF-16 with a byte-order mark, then import the copy."
+  - encoding: "`UTF-16 with a broken character`"
+    fix: "Get the profile file again, because the file is cut short or damaged."
+  - encoding: "`a text encoding that is not UTF-8`, or `UTF-8 with a byte-order mark` when a file has two byte-order marks"
+    fix: "Save a copy as UTF-8 with an editor, then import the copy."
+{% endtable %}
+
+To save a copy of a UTF-16 or UTF-32 file in another encoding:
+
+{% navtabs "convert-profile-encoding" %}
+{% navtab "macOS and Linux" %}
+
+Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
+
+```sh
+iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
+```
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+For UTF-16LE without a byte-order mark, run this in PowerShell:
+
+```powershell
+Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE
+```
+
+For UTF-16BE without a byte-order mark, use `-Encoding BigEndianUnicode` after `Get-Content`.
+For UTF-32, leave out `-Encoding Unicode` after `Get-Content`.
+
+{% endnavtab %}
+{% endnavtabs %}

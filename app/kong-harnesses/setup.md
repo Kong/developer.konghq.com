@@ -13,7 +13,7 @@ breadcrumbs:
 ---
 
 The `setup` command gets a profile, signs in, and configures your agent CLI in one run.
-Use it to get a developer from a profile to a working agent CLI with one command.
+Use it to go from a profile to a working agent CLI with one command.
 
 `setup` takes the profile from one of these sources:
 
@@ -37,6 +37,7 @@ A rerun doesn't change what is already correct:
 
 * `setup` keeps a usable sign-in.
 * `setup` changes the settings of a configured client only when they don't match the profile, for example after the profile changes its model aliases.
+  When someone else changed the settings that {{site.kong_harnesses}} wrote, `setup` stops at the client configuration step, as ["settings are inconsistent"](/kong-harnesses/errors/#settings-are-inconsistent-or-settings-no-longer-match-what-this-tool-installed) describes.
 * With a profile file or HTTPS URL, `setup` imports the profile again only when the source differs from the installed profile.
 * Without a source or `--profile`, `setup` starts profile creation again from the first question.
 
@@ -68,7 +69,8 @@ Before you start, get the gateway URL from your administrator.
 If the gateway doesn't list its models, also get a model ID, because `setup` asks for the model before the sign-in step.
 
 When your administrator gave you a key, pick **Use a key from the administrator** at the **Sign-in** question.
-If the gateway lists its models only to a caller with a key, `setup` asks for the key during profile creation to read the model list, when the terminal can hide what you type.
+Sometimes the gateway lists its models only to a caller with a key.
+`setup` then asks for the key during profile creation to read the model list, when the terminal can hide what you type.
 The sign-in step then saves that key without asking again, unless the gateway refused it.
 When the profile already has a usable sign-in, `setup` keeps the saved key.
 

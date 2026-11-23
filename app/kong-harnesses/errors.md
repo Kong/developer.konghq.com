@@ -63,7 +63,7 @@ rows:
   - value: "1"
     meaning: >-
       An operational failure, such as a network error, a locked password store, or a profile that another command uses.
-      `doctor` also uses it for an endpoint failure, including one that doesn't go away on a retry, such as a missing route or a refused sign-in.
+      For `doctor`, see [Exit codes of doctor](#exit-codes-of-doctor).
     action: "Follow the message, then run the command again."
   - value: "2"
     meaning: "A wrong flag or argument, or a problem in the profile, the client settings or this computer."
@@ -81,7 +81,8 @@ rows:
   - value: "4"
     meaning: >-
       A partial result.
-      For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider, or `profile activate` set up some agent CLIs and failed for or left out another one.
+      For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider.
+      Another example is `profile activate` that set up some agent CLIs, and failed for or left out another one.
       `profile activate --dry-run` can exit with 4 without a change to any file, when it leaves out a client.
     action: "Follow the message, then run the command again."
   - value: "130"
@@ -99,9 +100,9 @@ When `doctor` finds a failure, it uses these exit codes:
 
 * `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
   This includes a failure that doesn't go away on a retry, such as a missing route or a refused sign-in.
-* `2` for the profile (including a `login` finding when `max_access_token_lifetime_seconds` is too low), the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows
-* `3` for the sign-in, or a missing key for a gateway MCP server
-* `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C
+* `2` for the profile (including a `login` finding when `max_access_token_lifetime_seconds` is too low), the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows.
+* `3` for the sign-in, or a missing key for a gateway MCP server.
+* `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C.
 
 Within one report, the first failed check in report order sets the exit code of that report.
 `doctor` writes one report for the install, one for the profile, and one for each agent CLI.
@@ -167,9 +168,10 @@ The profile file isn't valid for this release.
 Common causes:
 
 * The file isn't valid JSON, or it has a field that this release doesn't know.
-* The `schema_version` is newer than this release reads.
-  [Install a newer {{site.kong_harnesses}}](/kong-harnesses/), or ask your administrator for a profile with an older version.
+* The file, or the answer from the HTTPS URL, is larger than 65,536 bytes.
 * A field has a value that the schema version doesn't allow, or two choices conflict.
+
+A profile with a newer `schema_version` gets its own message, as ["selected profile needs a newer kong-harnesses"](#selected-profile-needs-a-newer-kong-harnesses) describes.
 
 Check the file against the [profile file reference](/kong-harnesses/profile-file/).
 
@@ -200,9 +202,10 @@ Set both to the same value, or leave both out.
 
 ### "need an HTTPS gateway"
 
-The full message is `a Claude subscription and a gateway MCP server with its own OAuth sign-in need an HTTPS gateway; give the profile an https:// gateway_origin` (or `--gateway-origin` in `profile create`).
+The message starts with `a Claude subscription and a gateway MCP server with its own OAuth sign-in need an HTTPS gateway`.
+`profile import` ends it with `give the profile an https:// gateway_origin`, and `profile create` ends it with `give --gateway-origin an https:// address`.
 A `subscription` profile, and a profile with an `oauth` MCP server, send a sign-in that only HTTPS keeps private.
-Change `gateway_origin` in the profile to an `https://` URL.
+Change `gateway_origin` in the profile, or `--gateway-origin` in `profile create`, to an `https://` URL.
 
 ### "the profile file is in" an encoding that kong-harnesses can't read
 
@@ -220,6 +223,16 @@ Check that the issuer URL is right and that this computer can reach it over HTTP
 When the message ends with "check the public flag values and scopes", a flag value isn't valid, for example a URL or a scope.
 When it ends with "check the profile name and public values", the profile that it built from the values isn't valid.
 Check the values against the [profile file reference](/kong-harnesses/profile-file/), then run the command again.
+
+### "the profile was saved, but its result could not be shown"
+
+`profile create` saved the profile, then couldn't print its result, and exits with `1`.
+The profile is installed, so don't create it again.
+To see the profile, run:
+
+```sh
+kong-harnesses profile get PROFILE_NAME
+```
 
 ### "OIDC metadata is incompatible with profile creation"
 
@@ -275,7 +288,9 @@ Then create or import the profile, and activate it again.
 
 Your organization delivers the profile to {{ site.claude_code }} through managed settings, so your account can't change its security identity or remove its credential helper with `profile cleanup`.
 When `profile import` prints "your organization's managed settings run this profile in Claude Code", ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
-When `profile delete` prints "your organization's managed settings run the selected profile", ask your administrator to remove the fleet build with `kong-harnesses fleet remove`, then delete the profile.
+When `profile delete` prints "your organization's managed settings run the selected profile", ask your administrator to remove the fleet build from your computer.
+`kong-harnesses fleet remove` tells the administrator what to remove from the managed computers.
+After the removal, delete the profile.
 
 ### "your administrator installed a profile with this name for every user" or "installed this profile for every user"
 
@@ -292,14 +307,18 @@ The installed copy of a user profile fails validation or can't be read, and `pro
 `profile list` and `status` report it as unreadable with the same `profile delete` and import step in text output, and `doctor` reports "the stored profile is invalid".
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
-When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server key for each server name in `mcp_servers` and deletes the profile file.
-Sometimes `profile delete` can't remove a key, for example when your password store keeps it.
-It also can't find the keys when the file doesn't have a readable `mcp_servers` list, also when the list is absent or `null`.
-In both cases, its result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
-`profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
-When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
-When its result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
-For an agent CLI that still uses the profile, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
+When you confirm the deletion of an invalid user profile, `profile delete` deletes the profile file.
+It also removes the saved gateway MCP server key for each server name in `mcp_servers`.
+Its result tells you what is left to clean up:
+
+* A gateway MCP server key: `profile delete` can't remove a key that your password store keeps.
+  It also can't find the keys when the file doesn't have a readable `mcp_servers` list, also when the list is absent or `null`.
+  The result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
+* A saved sign-in: `profile delete` doesn't remove a saved sign-in.
+  When it finds one or can't rule one out, it warns before it asks you to confirm, and again in its result.
+  When the result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
+* An agent CLI that still uses the profile: `profile delete` can't check which agent CLIs use an invalid profile.
+  For each agent CLI that used it, run `kong-harnesses profile cleanup --client CLIENT_NAME`.
 
 ### "selected profile needs a newer kong-harnesses"
 
@@ -334,7 +353,8 @@ In text output, the end of the message tells you what to do:
 ### "selected profile is missing, invalid, or unsupported"
 
 The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile, because the profile isn't installed, can't be read, or needs a newer release.
-`login`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies; otherwise, they print a more specific profile error.
+`login`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies.
+Otherwise, they print a more specific profile error.
 Run `kong-harnesses profile list` to check whether the profile is installed, then import it or follow the step that `profile list` prints for it.
 
 ### "selected profile configures no agent client that this kong-harnesses sets up"
@@ -372,7 +392,10 @@ This section lists the `login` result that leaves a client check open, and the e
 `login`, or the sign-in step of `setup`, saved the sign-in, then stopped before it finished checking the settings of each agent CLI.
 The command exits with `1`, or with `130` if you canceled it.
 The sign-in works, so you don't need to sign in again.
-Run the `status` command that the message names to finish the check.
+After `login`, run the `status` command that the message names to finish the check.
+After `setup`, run the resume command that `setup` prints, because `status` only checks the settings and doesn't configure the agent CLIs.
+
+When {{ site.claude_code }} refuses to start on its managed settings, that message comes first and the command exits with `2`, as ["refuses to start on its managed settings"](#refuses-to-start-on-its-managed-settings) describes.
 
 ### "no key for the gateway MCP server"
 
@@ -422,8 +445,9 @@ Use an `https://` gateway, or ask your administrator to make the change that the
 
 The managed settings of {{ site.claude_code }} on this computer have a value that stops {{ site.claude_code }} from starting.
 The command exits with `2`, and this message comes before any other error.
-Run the `doctor` command that the message names to find the setting.
-Then ask your administrator to fix that setting in the managed settings file that `doctor` names.
+When `doctor` prints this message, the message names the setting and the managed settings file, so ask your administrator to fix that setting in that file.
+Other commands name a `doctor` command instead.
+Run it to find the setting and the file.
 
 ### "applies none of" a settings file
 
@@ -483,6 +507,11 @@ Run it in a terminal.
 
 [`kong-harnesses setup`](/kong-harnesses/setup/) runs its steps in order and keeps each finished step when a later step fails.
 
+### "setup accepts a profile source or --profile, not both"
+
+You gave `setup` a profile file or HTTPS URL, and also `--profile`.
+Give one of them: the source to import a profile, or `--profile PROFILE_NAME` to use an installed profile.
+
 ### "setup without a profile source asks profile create's questions, which needs a terminal"
 
 `setup` without a profile file, HTTPS URL, or `--profile` asks the questions of `profile create`, and it runs without a terminal, for example in a script.
@@ -495,13 +524,16 @@ Fix the cause, using the entry for that message on this page.
 Then run the command that the message names, which resumes after the finished steps.
 For which command that is, and what it keeps, see [Resume after a step fails](/kong-harnesses/setup/#resume-after-a-step-fails).
 
-When the gateway or this computer refuses an agent CLI, the line before the message names the fix:
+When the gateway or this computer refuses an agent CLI, the line before the message names the fix.
+The message then says what `setup` did:
 
-* "setup configured the other clients at step": `setup` configured each other agent CLI, left out the refused one, and exits with `4`.
-* "cannot be configured": The refused agent CLI is the only one, so `setup` stopped.
-  To set up the other agent CLIs that the gateway serves, run `setup` without `--client`.
+* "setup configured the other clients at step": `setup` configured each other agent CLI, left out the refused ones, and exits with `4`.
+* "which leaves" an agent CLI "out until the fix above is made": Another part of the step failed too.
+  Fix it, then run the command that the message names, which leaves the refused agent CLI out.
+* "cannot be configured": `setup` refused every agent CLI that it was to configure, so it stopped.
+  When you named the agent CLI with `--client`, you can also run `setup` without `--client` to set up the other agent CLIs that the gateway serves.
 
-Until you make that fix, `setup` leaves the refused agent CLI out each time, or stops at the same step.
+Until you make the fix for a refused agent CLI, `setup` leaves it out each time, or stops at the same step.
 
 ## Fleet build errors
 
@@ -515,7 +547,7 @@ The profile uses an `http://` gateway.
 `fleet build` can't check the proxy settings of the managed computers when it runs, so a proxy there could read the credential.
 Build from a profile with an `https://` `gateway_origin`.
 
-### "fleet build cannot use a Claude subscription profile yet"
+### "fleet build cannot use a Claude subscription profile"
 
 The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in.
 Build from a profile that doesn't use `sign_in: subscription`.
