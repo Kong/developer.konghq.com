@@ -27,7 +27,8 @@ related_resources:
 
 ## kong-harnesses versions
 
-We recommend keeping kong-harnesses up to date because Kong fixes problems in new releases.
+Kong supports only the latest stable release of kong-harnesses and doesn't support older releases or pre-releases.
+We recommend keeping kong-harnesses up to date because every fix, including security fixes, ships in a new release.
 
 Check which version of kong-harnesses you run:
 
@@ -49,6 +50,7 @@ To update, install the new release the same way you [installed kong-harnesses](/
    ```
 
    Replace `PROFILE_NAME` with your profile name, or omit `--profile PROFILE_NAME` to check your default profile.
+   In Windows PowerShell 5.1, `>` writes UTF-16 output, so pipe to `Set-Content -Path report.json -Encoding utf8` instead to write UTF-8.
 
    To also test the {{ site.claude_code }} route with one small model request, add `--inference`.
    The `--inference` flag works only when the selected profile configures {{ site.claude_code }}.
