@@ -36,14 +36,14 @@ related_resources:
     url: https://code.claude.com/docs/en/setup
 ---
 
-Kong tests each {{ site.claude_code }} release in the [provider modes](/ai-gateway/claude-code-compatibility/#provider-modes).
+Kong tests each new {{ site.claude_code }} release through {{site.ai_gateway}} in four [provider modes](/ai-gateway/claude-code-compatibility/#provider-modes).
 When a release fails in a tested mode, this page lists the affected release, what breaks, and how to avoid it.
-You can keep {{ site.claude_code }} on a working release in the following ways:
 
-* [Turn off auto-updates](#turn-off-auto-updates)
-* [Update manually](#update-manually)
-* [Roll back to an earlier release](#roll-back-to-an-earlier-release)
-* [Follow the stable channel](#follow-the-stable-channel)
+Choose an approach based on your situation:
+
+* **Your current release is broken**: [Turn off auto-updates](#turn-off-auto-updates), then [roll back to an earlier release](#roll-back-to-an-earlier-release).
+* **You want to prevent broken updates**: Turn off auto-updates, check [Confirmed issues](#confirmed-issues), and [update manually](#update-manually).
+* **You want slower updates that skip releases with major regressions**: [Follow the stable channel](#follow-the-stable-channel).
 
 ## Confirmed issues
 
@@ -54,11 +54,22 @@ A release that isn't listed on this page might not have a test result yet.
 
 Turning off {{ site.claude_code }} auto-updates keeps an untested or broken release from installing automatically.
 
+Homebrew and WinGet installs don't auto-update unless you set `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE=1`, so leave that variable unset.
+If you previously rolled back with `claude install`, follow the rest of this section because `claude install` adds a native build that updates itself.
+
 [{{site.kong_harnesses}}](/kong-harnesses/) turns auto-updates off by default.
-If your profile enables auto-updates or omits the setting, ask your administrator to create a new profile with [`{{site.kong_harnesses}} profile create`](/kong-harnesses/profile/create/) and `--auto-updates off`.
+To check your profile, run [`{{site.kong_harnesses}} profile get`](/kong-harnesses/profile/get/):
+
+```sh
+kong-harnesses profile get PROFILE_NAME
+```
+
+If the `Auto-updates` line shows `On`, ask your administrator to create a new profile with [`{{site.kong_harnesses}} profile create`](/kong-harnesses/profile/create/) and `--auto-updates off`.
 
 Until you get an updated profile, or if you don't use {{site.kong_harnesses}}, set `DISABLE_AUTOUPDATER` in your [{{ site.claude_code }} settings](https://code.claude.com/docs/en/setup#disable-auto-updates).
-Add `"DISABLE_AUTOUPDATER": "1"` to the `env` block, such as in `~/.claude/settings.json`:
+We recommend the settings file over a shell export because the settings file applies to every terminal and IDE session.
+
+Add `"DISABLE_AUTOUPDATER": "1"` inside the `env` block of `~/.claude/settings.json`, keeping your existing settings:
 
 ```json
 {
@@ -70,18 +81,14 @@ Add `"DISABLE_AUTOUPDATER": "1"` to the `env` block, such as in `~/.claude/setti
 
 You can also export `DISABLE_AUTOUPDATER=1` in your shell environment.
 
-Activating a {{site.kong_harnesses}} profile that enables or omits auto-updates doesn't set `DISABLE_AUTOUPDATER`.
-What happens to an existing value depends on what an earlier activation did:
+Activating a {{site.kong_harnesses}} profile that enables or omits auto-updates keeps a `DISABLE_AUTOUPDATER` value that you set.
+Activation removes or restores only a value that an earlier activation wrote and that you didn't change.
 
-* If an earlier activation wrote `DISABLE_AUTOUPDATER`, for example from a profile with auto-updates off, and your settings file still has the value that it wrote, activation restores the earlier value or removes the key if it wasn't present before.
-* If you changed the value after that activation, activation keeps your value.
-* If no earlier activation wrote it, activation leaves `DISABLE_AUTOUPDATER` unchanged in your settings and doesn't override a `DISABLE_AUTOUPDATER` shell export.
+`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also turns off auto-updates, but some profile choices make activation write that variable blank.
+Set `DISABLE_AUTOUPDATER` instead.
+For the full activation rules, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also turns off auto-updates.
-A non-empty value in your settings or shell can keep auto-updates off, unless activation writes the variable blank for another enabled choice.
-For when activation writes, keeps, or restores these variables, see [Claude Code choices](/kong-harnesses/profile-file/#claude-code-choices).
-
-On a native or npm install, run `claude doctor` after setting `DISABLE_AUTOUPDATER` or activating a {{site.kong_harnesses}} profile to confirm that auto-updates are off:
+On a native or npm install, run `claude doctor` to confirm that auto-updates are off:
 
 ```sh
 claude doctor
@@ -89,24 +96,16 @@ claude doctor
 
 The `Auto-updates` line in the output starts with `disabled`.
 
-Homebrew and WinGet installs don't auto-update unless you set `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE=1`, so leave that variable unset.
-
-{:.warning}
-> After you run `claude install`, you also have a native build on your computer.
-> The native build updates itself unless `DISABLE_AUTOUPDATER=1` is set in your {{ site.claude_code }} settings or exported in your shell.
-
 ## Update manually
 
-Before updating {{ site.claude_code }} manually, check which release your install method offers.
-Skip the update if [Confirmed issues](#confirmed-issues) lists an issue for that release in your provider mode.
+Check [Confirmed issues](#confirmed-issues) for the release your install method offers before you run an update.
+Skip the update if the list reports an issue for that release in your provider mode.
 
 ### Check the available release
 
-Find the release that your install method offers before running an update:
+Look up the release available for your install method:
 
 * **Native**: Open Anthropic's [latest release file](https://downloads.claude.ai/claude-code-releases/latest), or the [stable release file](https://downloads.claude.ai/claude-code-releases/stable) if you follow the [stable channel](https://code.claude.com/docs/en/setup#configure-release-channel).
-  When a native install uses the stable channel with [`minimumVersion`](https://code.claude.com/docs/en/setup#pin-a-minimum-version) set, the release you get can be the one you already have.
-  Auto-updates and `claude update` don't install a release below `minimumVersion`.
 * **Homebrew**: Run `brew info --cask claude-code` or `brew info --cask claude-code@latest`, matching the cask you installed.
 * **npm**: Run `npm view @anthropic-ai/claude-code version`.
 * **WinGet**: Run `winget show Anthropic.ClaudeCode`.
@@ -160,7 +159,7 @@ brew upgrade claude-code@latest
 > Close {{ site.claude_code }} before you upgrade with WinGet.
 > Windows locks the running executable, which can cause the upgrade to fail.
 
-```sh
+```powershell
 winget upgrade Anthropic.ClaudeCode
 ```
 
@@ -191,13 +190,13 @@ Rolling back {{ site.claude_code }} installs a native build at a release that wo
 > An auto-update can then replace the release you install.
 > See [Turn off auto-updates](#turn-off-auto-updates).
 
-1. Install a working {{ site.claude_code }} release by replacing `VERSION` with a release that worked in your provider mode:
+1. Install a working {{ site.claude_code }} release by replacing `VERSION` with the rollback release listed in [Confirmed issues](#confirmed-issues), or the release you used before the update:
 
    ```sh
    claude install VERSION
    ```
 
-   If `claude install` reports an error, resolve it with [Troubleshoot installation](https://code.claude.com/docs/en/troubleshoot-install) before continuing.
+   If `claude install` reports an error, resolve it with [Troubleshoot installation](https://code.claude.com/docs/en/troubleshoot-install) before you continue.
 
 1. Confirm that your shell runs the release you installed:
 
@@ -207,19 +206,20 @@ Rolling back {{ site.claude_code }} installs a native build at a release that wo
 
    If `claude --version` doesn't show the release you installed, follow [Check which executable runs](#check-which-executable-runs).
 
-### Check which executable runs
+## Check which executable runs
 
-When `claude --version` shows a different release than the one you installed, another `claude` binary or a custom launcher takes precedence on your `PATH`.
+When `claude --version` shows a different release than the one you installed, the native build is on another release, a custom launcher points at another release, or another `claude` binary comes first on your `PATH`.
 
 {% navtabs "check-claude-executable" %}
 {% navtab "macOS and Linux" %}
 
-1. Run the native build by its full path to verify that the target release is installed:
+1. Run the native build by its full path to verify that the release you installed is present:
 
    ```sh
    ~/.local/bin/claude --version
    ```
 
+   If the output shows a different release, run `claude install VERSION` again.
    If you replaced the `~/.local/bin/claude` launcher with your own launcher, point it at the release you installed, as [Auto-updates](https://code.claude.com/docs/en/setup#auto-updates) describes.
 
 1. If the native build shows the release you installed, list every `claude` executable on your `PATH`:
@@ -231,7 +231,7 @@ When `claude --version` shows a different release than the one you installed, an
 {% endnavtab %}
 {% navtab "Windows" %}
 
-1. Run the native build by its full path to verify that the target release is installed.
+1. Run the native build by its full path to verify that the release you installed is present.
    In PowerShell, run:
 
    ```powershell
@@ -243,6 +243,8 @@ When `claude --version` shows a different release than the one you installed, an
    ```cmd
    "%USERPROFILE%\.local\bin\claude.exe" --version
    ```
+
+   If the output shows a different release, run `claude install VERSION` again.
 
 1. If the native build shows the release you installed, list every `claude` executable on your `PATH`.
    In PowerShell, run:
@@ -265,7 +267,7 @@ Resolve any `PATH` or installation conflict:
 * If the native build's folder isn't on your `PATH` or your shell can't find `claude`, add the folder as [Verify your PATH](https://code.claude.com/docs/en/troubleshoot-install#verify-your-path) shows.
 * If another `claude` install still comes before the native build, remove that install as [Check for conflicting installations](https://code.claude.com/docs/en/troubleshoot-install#check-for-conflicting-installations) shows.
 
-Confirm that `claude --version` now shows the release you installed before continuing:
+Confirm that `claude --version` shows the release you installed:
 
 ```sh
 claude --version
@@ -273,16 +275,16 @@ claude --version
 
 ## Follow the stable channel
 
-The stable release channel delivers {{ site.claude_code }} updates later than the latest channel and skips releases with major regressions.
+The `stable` release channel delivers {{ site.claude_code }} updates later than the `latest` channel and skips releases with major regressions.
 
-Before switching channels, verify that [Confirmed issues](#confirmed-issues) doesn't list an issue for the stable release in your provider mode.
+Before you switch channels, verify that [Confirmed issues](#confirmed-issues) doesn't list an issue for the stable release in your provider mode.
 To see which release is on the stable channel, open Anthropic's [stable release file](https://downloads.claude.ai/claude-code-releases/stable) or, on Homebrew, run `brew info --cask claude-code`.
 After each update, run `claude --version` and check the confirmed issues list for your provider mode.
 
 {% navtabs "switch-stable-channel" %}
 {% navtab "Native" %}
 
-Configure the stable release channel in your {{ site.claude_code }} settings:
+Add `"autoUpdatesChannel": "stable"` at the top level of `~/.claude/settings.json`, keeping your existing settings:
 
 ```json
 {
@@ -294,24 +296,32 @@ Configure the stable release channel in your {{ site.claude_code }} settings:
 If you turn auto-updates on, they also follow the stable channel.
 When auto-updates are off, run `claude update` whenever you want the current stable release.
 
-To stay on your current release until the stable channel reaches a newer release, also set [`minimumVersion`](https://code.claude.com/docs/en/setup#pin-a-minimum-version) to your release.
-Don't run `claude install stable`, which installs the stable release immediately.
+To switch to the stable channel and keep your current release until the stable channel reaches a newer one, also set [`minimumVersion`](https://code.claude.com/docs/en/setup#pin-a-minimum-version) to your current release in `~/.claude/settings.json`:
+
+```json
+{
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "VERSION"
+}
+```
+
 If you switch back to `latest` in `/config`, {{ site.claude_code }} clears `minimumVersion` from your settings.
 
-To switch channels and install the stable release immediately instead of editing settings, run `claude install stable`:
+To switch to the stable channel and install the stable release immediately instead of editing settings, run `claude install stable`:
 
 ```sh
 claude install stable
 ```
 
 `claude install stable` also saves the stable channel in your settings.
+The stable release can be older than your current release.
 
 {% endnavtab %}
 {% navtab "npm or WinGet" %}
 
 Anthropic documents the stable channel switch and `minimumVersion` for native installs only, so move to the native build first.
 
-1. Keep `DISABLE_AUTOUPDATER=1` set in your {{ site.claude_code }} settings or exported in your shell because the native build updates itself (see [Turn off auto-updates](#turn-off-auto-updates)).
+1. [Turn off auto-updates](#turn-off-auto-updates) if they're on.
 
 1. Move to the native build at your current release by replacing `VERSION` with the release you have installed:
 
@@ -352,7 +362,7 @@ An install from the `apt`, `dnf`, or `apk` repositories gets its channel from th
 To switch to the stable channel, follow [Install with Linux package managers](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
 
 On Alpine Linux, the `apk` steps add the `stable` repository line to `/etc/apk/repositories` and keep any `latest` line.
-To use only the stable channel, replace the `latest` line with the `stable` line:
+As root, replace the `latest` line with the `stable` line and update the package:
 
 1. Remove the `latest` repository line from `/etc/apk/repositories`:
 
@@ -360,17 +370,28 @@ To use only the stable channel, replace the `latest` line with the `stable` line
    sed -i '\|^https://downloads\.claude\.ai/claude-code/apk/latest$|d' /etc/apk/repositories
    ```
 
-1. Add the `stable` repository line if `/etc/apk/repositories` doesn't already include it:
+1. Check whether `/etc/apk/repositories` already contains the `stable` repository line:
 
    ```sh
-   grep -qxF "https://downloads.claude.ai/claude-code/apk/stable" /etc/apk/repositories || \
-     echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
+   grep -xF "https://downloads.claude.ai/claude-code/apk/stable" /etc/apk/repositories
    ```
 
-1. Update the package:
+1. If the command doesn't print the `stable` URL, add the `stable` repository line:
 
    ```sh
-   apk update && apk upgrade claude-code
+   echo "https://downloads.claude.ai/claude-code/apk/stable" >> /etc/apk/repositories
+   ```
+
+1. Refresh the package index:
+
+   ```sh
+   apk update
+   ```
+
+1. Upgrade the package:
+
+   ```sh
+   apk upgrade claude-code
    ```
 
 `apk` keeps your current release until the `stable` channel serves a newer one.

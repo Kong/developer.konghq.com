@@ -122,7 +122,7 @@ rows:
           config:
             title: Claude Code compatibility testing
             icon: /assets/icons/third-party/claude.svg
-            description: How Kong tests each Claude Code release through {{site.ai_gateway}}, and which provider modes are covered
+            description: How Kong tests each Claude Code release through {{site.ai_gateway}}, and which provider modes the tests cover
             cta:
               url: /ai-gateway/claude-code-compatibility/
       - blocks:
