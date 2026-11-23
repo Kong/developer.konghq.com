@@ -212,8 +212,8 @@ Insomnia allows you to have control over the [storage options](/insomnia/storage
 This allows you to completely control where your proprietary code and data are, and what servers they touch.
 
 1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
-1. In the sidebar, click [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
-1. Click the **Edit** icon for your personal workspaces and organizations.
+1. In the sidebar, click **Governance**.
+1. In the **Project Storage** section, click the **Edit** icon for your personal workspaces and organizations.
 1. Select the storage options you want to allow.
 1. Click **Save**.
 

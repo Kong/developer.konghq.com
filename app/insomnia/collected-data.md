@@ -225,7 +225,7 @@ Depending on your configuration, AI processing can occur in one of the following
 
 Insomnia doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
 
-Enterprise administrators can enable or disable AI features in Insomnia Admin settings. This lets your organization either:
+Enterprise administrators can enable or disable AI features in Insomnia Admin, from **Enterprise Controls** > **Governance** > **AI Features**. This lets your organization either:
 - Disable AI features entirely
 - Allow AI features only in approved environments
 

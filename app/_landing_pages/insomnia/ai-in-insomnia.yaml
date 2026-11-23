@@ -170,7 +170,7 @@ rows:
                   If AI is deactivated at the instance level, the feature toggles will remain unavailable in the UI.
               - q: How do I manage AI across my organization?
                 a: |
-                  Enterprise administrators can activate or deactivate AI features at the instance level from **Insomnia Admin → AI Settings**.  
+                  Enterprise administrators can activate or deactivate AI features at the instance level from **Enterprise Controls** > **Governance** > **AI Features** in Insomnia Admin.
                   When deactivated, the desktop app shows an explanatory message.  
                   When activated, each user must still activate a model before toggles become available.
                   This setting is available only for Enterprise plans.

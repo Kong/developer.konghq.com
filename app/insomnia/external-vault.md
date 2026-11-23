@@ -204,6 +204,8 @@ External vault secrets can be referenced anywhere in Insomnia requests using [te
 
 {% new_in 13.4 %} {{ site.insomnia }} hides external vault values as `••••••` in previews and generated code, and sends the real value when you send a request. To change this, see [Confidential variables](/insomnia/environments/#confidential-variables).
 
+{% new_in 13.5 %} On Enterprise plans, an administrator can [enforce hiding confidential values](/insomnia/enterprise-account-management/#enforce-hiding-confidential-values) for the whole account. Users can remove the confidential marking from environment variables, but external vault values are always confidential, so in practice the enforcement guarantees that external vault values stay hidden.
+
 ## Vault secrets cache
 
 Vault secret caching works like the following in Insomnia:

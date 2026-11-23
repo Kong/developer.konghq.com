@@ -81,7 +81,7 @@ When you enable domain lock on a specific domain, all users from that domain wil
 ### Invite control
 Use invite control to specify which domains can receive invitations to your Enterprise organizations.
 
-To configure invite control, navigate to [**Enterprise Controls** > **Invites**](https://app.insomnia.rest/app/enterprise/invite) and define the rules to apply to your organizations.
+To configure invite control, navigate to [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/) > **Governance** > **Invites** and define the rules to apply to your organizations.
 
 You can set your preference for allowing invitations from the following domain types:
 - **All domains**: Invites to any email domain are accepted which includes personal addresses.
@@ -91,6 +91,15 @@ You can set your preference for allowing invitations from the following domain t
 ## Manage storage
 
 {% include insomnia/enterprise-storage.md %}
+
+## Enforce hiding confidential values
+
+{% new_in 13.5 %} Enterprise administrators can require every user in the account to hide [confidential values](/insomnia/environments/#confidential-variables) in previews and the console. To enforce this, navigate to [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/) > **Governance** > **Security** and enable the setting.
+
+When the setting is enforced, the **Hide Confidential values in Preview/Console** preference in the {{ site.insomnia }} app is turned on and locked, and shows **Enforced by your organization**.
+
+{:.info}
+> Users can still remove the confidential marking from an environment variable, so the enforcement can't guarantee that environment variables stay hidden. Values from [external vaults](/insomnia/external-vault/) are always treated as confidential, so they stay hidden. To keep a value hidden across your organization, store it in an external vault.
 
 ## Manage co-owners
 
