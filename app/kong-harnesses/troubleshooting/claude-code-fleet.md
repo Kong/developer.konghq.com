@@ -108,6 +108,9 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
   It signs out of the profile and removes the saved sign-in and every saved gateway MCP key of the profile.
   When only saved gateway MCP keys remain, `logout` deletes them without a prompt.
 * **Server with its own OAuth sign-in:** Sign in from `/mcp`.
+* **Server turned off in {{ site.claude_code }}:** `/mcp disable` and `disabledMcpjsonServers` can turn off a gateway MCP server.
+  `kong-harnesses doctor` then fails and names the setting that turned the server off.
+  Run `/mcp enable SERVER_NAME` in {{ site.claude_code }}, or remove the entry that `doctor` names from `disabledMcpjsonServers`.
 * **Gateway-authenticated server failed at startup:** A server can [fail during the first browser sign-in](https://code.claude.com/docs/en/mcp#failed-first-connections).
   After you sign in, reconnect it from `/mcp`.
 * **Missing servers:** To find invalid entries that {{ site.claude_code }} dropped, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and `claude doctor`.
@@ -129,7 +132,7 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
   * It treats a `strictPluginOnlyCustomization` value that isn't a boolean, a list, or `null`, such as a string, as `true`.
   * It doesn't treat a `null` `strictPluginOnlyCustomization` as a lock, because `null` removes the key.
 
-  `doctor` also warns when a setting turns off the gateway MCP plugin:
+  `doctor` also fails when a setting turns off the gateway MCP plugin:
 
   * If `enabledPlugins` in a settings file sets the gateway plugin to `false`, remove that entry.
   * If the `plugin.json` manifest of the plugin turns it off, follow the fix that `doctor` prints.
