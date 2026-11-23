@@ -1,7 +1,7 @@
 ---
 title: Collected data
 
-description: Insomnia collects usage analytics data to help improve the application.
+description: "{{ site.insomnia }} collects usage analytics data to help improve the application."
 breadcrumbs: 
   - /insomnia/manage-insomnia/
 search_aliases:
@@ -9,19 +9,19 @@ search_aliases:
 content_type: reference
 layout: reference
 related_resources:
-  - text: Security at Insomnia
+  - text: Security at {{ site.insomnia }}
     url: /insomnia/manage-insomnia/#security
   - text: Storage options
     url: /insomnia/storage/
-  - text: Insomnia terminology
+  - text: "{{ site.insomnia }} terminology"
     url: /insomnia/terminology/
 products:
     - insomnia
 
 faqs:
-  - q: What specific data does Insomnia collect?
+  - q: What specific data does {{ site.insomnia }} collect?
     a: |
-      Insomnia collects information like the following JSON:
+      {{ site.insomnia }} collects information like the following JSON:
 
       ```json
       {
@@ -56,26 +56,26 @@ faqs:
       }
       ```
   - q: Do you retain server logs, or event logs?
-    a: All server logs stored are kept within GCP and only accessed by engineers authorized to manage the Insomnia servers.
-  - q: I use the desktop Insomnia app, how do I opt out of data collection?
-    a: If you use the Insomnia desktop application without an account, users have the choice to opt out of sending this information in the desktop application user interface. Users can opt out of sharing analytics data with Insomnia via the Insomnia app Preference Page by scrolling down to the Network Activity section and checking or unchecking the box next to Send Usage Statistics.
+    a: All server logs stored are kept within GCP and only accessed by engineers authorized to manage the {{ site.insomnia }} servers.
+  - q: I use the desktop {{ site.insomnia }} app, how do I opt out of data collection?
+    a: If you use the {{ site.insomnia }} desktop application without an account, users have the choice to opt out of sending this information in the desktop application user interface. Users can opt out of sharing analytics data with {{ site.insomnia }} via the {{ site.insomnia }} app Preference Page by scrolling down to the Network Activity section and checking or unchecking the box next to Send Usage Statistics.
   - q: Do you retain server logs, or event logs?
-    a: All server logs stored are kept within GCP and only accessed by engineers authorized to manage the Insomnia servers.
-  - q: What does end-to-end encryption (E2EE) mean in Insomnia?
+    a: All server logs stored are kept within GCP and only accessed by engineers authorized to manage the {{ site.insomnia }} servers.
+  - q: What does end-to-end encryption (E2EE) mean in {{ site.insomnia }}?
     a: |
       End-to-end encryption means that all encryption keys are generated locally on your device. 
       All data is encrypted before being sent and only decrypted after being received. 
-      At no point during synchronization can Insomnia servers—or anyone with access to those servers—read your encrypted project data.
+      At no point during synchronization can {{ site.insomnia }} servers—or anyone with access to those servers—read your encrypted project data.
 
-  - q: What is considered project data in Insomnia?
+  - q: What is considered project data in {{ site.insomnia }}?
     a: |
-      Project data includes your API design specifications, collections, tests, and other files that you choose to sync and share through Insomnia’s hosted service.
+      Project data includes your API design specifications, collections, tests, and other files that you choose to sync and share through {{ site.insomnia }}’s hosted service.
 
       Data used with artificial intelligence tools is **not** end-to-end encrypted and is excluded from this protection.
 
-  - q: What encryption algorithms does Insomnia use?
+  - q: What encryption algorithms does {{ site.insomnia }} use?
     a: |
-      Insomnia uses randomly generated 256-bit symmetric keys with `AES-GCM-256` (Galois Counter Mode) to encrypt project data.
+      {{ site.insomnia }} uses randomly generated 256-bit symmetric keys with `AES-GCM-256` (Galois Counter Mode) to encrypt project data.
 
   - q: What happens if I forget my passphrase?
     a: |
@@ -88,20 +88,20 @@ faqs:
     a: |
       Yes. While project data is fully encrypted, the `id` and `name` of each resource are sent in plaintext along with the encrypted payload.
 
-  - q: Is Insomnia project data encrypted on disk?
+  - q: Is {{ site.insomnia }} project data encrypted on disk?
     a: |
       No. Project data is stored in raw form on disk. E2EE applies only to data transmitted over the network. 
       You should take appropriate measures to secure your local environment from unauthorized access.
-  - q: Where does Insomnia store application data?
+  - q: Where does {{ site.insomnia }} store application data?
     a: |
-      Insomnia stores local data in platform-specific `appData` directories:
+      {{ site.insomnia }} stores local data in platform-specific `appData` directories:
 
       * `%APPDATA%\Insomnia` on Windows
       * `$XDG_CONFIG_HOME/Insomnia` or `~/.config/Insomnia` on Linux
       * `~/Library/Application Support/Insomnia` on macOS
 
       You can access this via **Help** > **Show App Data Folder** in the UI. Files are stored as `insomnia.<resource>.db`.
-  - q: Where does Insomnia store logs?
+  - q: Where does {{ site.insomnia }} store logs?
     a: |
       Logs are stored in the following locations:
 
@@ -110,28 +110,28 @@ faqs:
       * `~/Library/Logs/Insomnia` on macOS
 
       Access the log folder via **Help** > **Show App Logs Folder**.
-  - q: Where does Insomnia store environment information on a Linux Snap install?
+  - q: Where does {{ site.insomnia }} store environment information on a Linux Snap install?
     a: |
       Snap installations store user data and environment settings in the following locations:
       * `/var/snap/`: For system-level snap data
       * `~/snap/`: For user-level, versioned snap data
-  - q: Where is my data stored when using Insomnia sync features?
+  - q: Where is my data stored when using {{ site.insomnia }} sync features?
     a: |
       The storage location depends on the sync method you're using:
 
       * **Cloud sync** – Data is stored in Postgres databases hosted in the Google Cloud Platform (GCP) `us-central1` region.
-      * **Git sync** – Data is stored in the underlying storage of your connected source control system (e.g., GitHub, GitLab) and is not managed by Insomnia.
-  - q: Does Insomnia sanitize or redact data before sending it to the AI model?
+      * **Git sync** – Data is stored in the underlying storage of your connected source control system (e.g., GitHub, GitLab) and is not managed by {{ site.insomnia }}.
+  - q: Does {{ site.insomnia }} sanitize or redact data before sending it to the AI model?
     a: |
-      No. Insomnia doesn't inspect, sanitize, redact, or transform AI prompts or responses.
+      No. {{ site.insomnia }} doesn't inspect, sanitize, redact, or transform AI prompts or responses.
       The data is sent directly to the configured AI model provider. Any data protection, filtering, or handling controls must be handled by the selected model provider or in your own environment.
 
 ---
 
-If users are logged into their Insomnia account or if they haven't opted out of analytics in the desktop application, we collect usage data to help improve the application. The usage analytics are collected to evaluate user behavior for the purpose of guiding product decisions.
+If users are logged into their {{ site.insomnia }} account or if they haven't opted out of analytics in the desktop application, we collect usage data to help improve the application. The usage analytics are collected to evaluate user behavior for the purpose of guiding product decisions.
 
-Insomnia collects usage data like the following:
-* Insomnia app version
+{{ site.insomnia }} collects usage data like the following:
+* {{ site.insomnia }} app version
 * OS name and version
 * Events (like executing a request)
 * Preferred HTTP version
@@ -140,7 +140,7 @@ Insomnia collects usage data like the following:
 
 ## Data models
 
-The following are data models Insomnia uses:
+The following are data models {{ site.insomnia }} uses:
 
 
 {% table %}
@@ -163,7 +163,7 @@ rows:
 
 ## Keys and Salts
 
-The following are keys and salts Insomnia uses.
+The following are keys and salts {{ site.insomnia }} uses.
 
 
 {% table %}
@@ -214,19 +214,19 @@ rows:
 
 ## Data handling
 
-Insomnia’s AI features are designed so that Kong doesn't collect, store, or process customer data.
+{{ site.insomnia }}’s AI features are designed so that Kong doesn't collect, store, or process customer data.
 
-When you use an AI feature, Insomnia sends the data for AI processing only to the AI model provider you configured. Insomnia doesn't proxy, inspect, or retain AI prompts, responses, or intermediate data.
+When you use an AI feature, {{ site.insomnia }} sends the data for AI processing only to the AI model provider you configured. {{ site.insomnia }} doesn't proxy, inspect, or retain AI prompts, responses, or intermediate data.
 
 Depending on your configuration, AI processing can occur in one of the following locations:
 - **Locally**: A local large language model that runs entirely on your machine
 - **In your environment**: A self-hosted model endpoint
 - **With a third-party AI provider**: In accordance with that provider’s data handling policies
 
-Insomnia doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
+{{ site.insomnia }} doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
 
-Enterprise administrators can enable or disable AI features in Insomnia Admin, from **Enterprise Controls** > **Governance** > **AI Features**. This lets your organization either:
+Enterprise administrators can enable or disable AI features in {{ site.insomnia }} Admin, from **Enterprise Controls** > **Governance** > **AI Features**. This lets your organization either:
 - Disable AI features entirely
 - Allow AI features only in approved environments
 
-For more information, navigate to [AI in Insomnia](/insomnia/ai-in-insomnia/#get-started).
+For more information, navigate to [AI in {{ site.insomnia }}](/insomnia/ai-in-insomnia/#get-started).

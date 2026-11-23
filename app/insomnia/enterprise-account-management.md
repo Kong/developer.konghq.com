@@ -1,7 +1,7 @@
 ---
 title: Enterprise account management
 
-description: Learn how to manage your Insomnia Enterprise account.
+description: Learn how to manage your {{ site.insomnia }} Enterprise account.
 
 content_type: reference
 layout: reference
@@ -19,7 +19,7 @@ related_resources:
     url: /insomnia/enterprise/
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
-  - text: Get started with Insomnia Enterprise
+  - text: Get started with {{ site.insomnia }} Enterprise
     url: /insomnia/enterprise-onboarding/
 
 faqs:
@@ -33,9 +33,9 @@ faqs:
     a: |
       If you enable both Domain Capture and Domain Lock, Domain Capture takes priority for new sign-ups. New users that sign up with a verified company email domain are automatically added to the Enterprise organization and assigned a license, as long as license seats are available.
 
-      Insomnia enforces Domain Lock in the following cases:
+      {{ site.insomnia }} enforces Domain Lock in the following cases:
       - Existing users with a verified email domain who are not already part of the Enterprise organization must still be explicitly invited.
-      - When no license seats are available, Insomnia blocks new sign-ups with that domain unless an administrator invites the user.     
+      - When no license seats are available, {{ site.insomnia }} blocks new sign-ups with that domain unless an administrator invites the user.     
 
 ---
 
@@ -43,7 +43,7 @@ faqs:
 
 To upgrade your account to the Enterprise plan:
 1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
-1. In [Insomnia Admin](https://app.insomnia.rest/app/home), click **Plan & billing**, then click **Enter Activation Code** at the bottom and enter your activation code.
+1. In [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home), click **Plan & billing**, then click **Enter Activation Code** at the bottom and enter your activation code.
 
 {:.info}
 > **Notes**:
@@ -54,7 +54,7 @@ If you have requested to increase the number of seats in your instance, you shou
 
 ## Add domains
 
-You can use domains in your Insomnia Enterprise account to manage users.
+You can use domains in your {{ site.insomnia }} Enterprise account to manage users.
 
 To create a domain:
 {% include insomnia/new-domain.md %}
@@ -67,16 +67,16 @@ Once the domain is verified, you can configure its settings to control users wit
 
 ### Domain lock
 
-Use domain lock to remove access to your Insomnia Enterprise account for existing Essentials users and uninvited new users.
+Use domain lock to remove access to your {{ site.insomnia }} Enterprise account for existing Essentials users and uninvited new users.
 
 To enable domain lock, navigate to [**Company** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list), specify the domain, and then click the **Lock** toggle.
 
-When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
-- **Existing users without an Enterprise invite:** Ariel is an existing Essentials user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to Insomnia with that address, she won't have access to the Enterprise account.
-- **Users without an account, but with a matching email domain:** George doesn't have an Insomnia account, but has an email address `george@DomainLockExample.com`. When George creates an Insomnia account, the domain lock blocks his sign-in, which means that he can't access the Insomnia Enterprise account or its features.
+When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's {{ site.insomnia }} Enterprise account. For example:
+- **Existing users without an Enterprise invite:** Ariel is an existing Essentials user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to {{ site.insomnia }} with that address, she won't have access to the Enterprise account.
+- **Users without an account, but with a matching email domain:** George doesn't have an {{ site.insomnia }} account, but has an email address `george@DomainLockExample.com`. When George creates an {{ site.insomnia }} account, the domain lock blocks his sign-in, which means that he can't access the {{ site.insomnia }} Enterprise account or its features.
 
 {:.info}
-> If you enable both domain capture and domain lock on the same verified domain in Insomnia, then domain capture takes priority for new sign-ups and overrides domain lock.
+> If you enable both domain capture and domain lock on the same verified domain in {{ site.insomnia }}, then domain capture takes priority for new sign-ups and overrides domain lock.
 
 ### Invite control
 Use invite control to specify which domains can receive invitations to your Enterprise organizations.
@@ -103,7 +103,7 @@ When the setting is enforced, the **Hide Confidential values in Preview/Console*
 
 ## Manage co-owners
 
-The owner of an Insomnia Enterprise account can invite other users to be co-owners of the account.
+The owner of an {{ site.insomnia }} Enterprise account can invite other users to be co-owners of the account.
 
 ### Add a co-awner
 
