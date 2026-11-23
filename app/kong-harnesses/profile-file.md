@@ -24,7 +24,7 @@ related_resources:
     url: /kong-harnesses/profile/create/
   - text: "kong-harnesses profile import"
     url: /kong-harnesses/profile/import/
-  - text: "kong-harnesses errors and exit codes"
+  - text: "{{site.kong_harnesses}} errors and exit codes"
     url: /kong-harnesses/errors/
   - text: "Set up {{ site.claude_code }} with kong-harnesses"
     url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
@@ -152,12 +152,13 @@ rows:
     release: "0.5.0 and later"
   - version: "12"
     adds: >-
-      `routes`, `clients`, `gateway_ca_bundle`, `sign_in` and `mcp_servers`.
+      `routes`, `clients`, `gateway_ca_bundle`, `sign_in`, and `mcp_servers`.
       The {{ site.claude_code }} settings move from the top level into `clients.claude-code`.
-      `models` adds the `default`, `fable`, `subagent`, `background_classifier` and `auto_mode` roles, and every role except `max_context_tokens` is required.
+      `models` adds the `default`, `fable`, `subagent`, `background_classifier`, and `auto_mode` roles, and every role except `max_context_tokens` is required.
+      Some `sign_in` values, and `mcp_servers`, need a newer release, as the list after this table shows.
     release: "0.6.0 and later"
   - version: "13"
-    adds: "The `codex`, `opencode` and `omp` client blocks."
+    adds: "The `codex`, `opencode`, and `omp` client blocks."
     release: "0.7.0 and later"
   - version: "14"
     adds: >-
@@ -207,7 +208,7 @@ rows:
     description: >-
       Required.
       The name that commands take with `--profile`.
-      1 to 63 bytes of lowercase letters, digits and hyphens.
+      1 to 63 bytes of lowercase letters, digits, and hyphens.
       It starts with a letter, and ends with a letter or a digit.
       `default`, `con`, `prn`, `aux`, `nul`, `com1` to `com9` and `lpt1` to `lpt9` are reserved.
   - field: "`display_name`"
@@ -257,7 +258,7 @@ rows:
       See [Attribution](#attribution).
 {% endtable %}
 
-Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`.
+Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata`, and `pricing`.
 From version 12, these fields go in `clients.claude-code`, and the top level refuses them.
 A profile before version 12 doesn't have client blocks, so `profile activate` can set up every agent CLI except Hermes Agent, subject to the refusals in [Clients](#clients).
 
@@ -271,7 +272,8 @@ Requests to an `http://` gateway aren't encrypted, so a proxy could read the cre
 * {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway.
   `profile activate` sets them up when the profile configures them, they are installed or named with `--client`, and the checks in this list pass.
   `profile activate` doesn't change any client settings when a pre-write check fails.
-* When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
+* When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client.
+  `credential` and `token` also don't return a credential.
   Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
   `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
   A proxy variable or `NO_PROXY` in project settings takes precedence over these values.
@@ -342,7 +344,7 @@ rows:
     description: >-
       Required.
       The endpoints from the discovery document.
-      `profile create` and `profile import` refuse an `authorization_endpoint` with a query that sets a parameter that the sign-in request adds: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`.
+      `profile create` and `profile import` refuse an `authorization_endpoint` with a query that sets a parameter that the sign-in request adds: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience`, or `prompt`.
   - field: "`revocation_endpoint`"
     description: >-
       Version 4 and later.
@@ -355,8 +357,8 @@ rows:
     description: >-
       Where the identity provider sends the browser after sign-in.
       The default is `http://localhost:9876/callback`.
-      Another value uses `http://`, the host `localhost`, `127.0.0.1` or `[::1]`, and a port from 1 to 65535, written without leading zeros.
-      Its path is 2 to 256 characters of letters, digits and `-._~/`, without a `.` or `..` segment, `//`, a trailing `/`, a query or a fragment.
+      Another value uses `http://`, the host `localhost`, `127.0.0.1`, or `[::1]`, and a port from 1 to 65535, written without leading zeros.
+      Its path is 2 to 256 characters of letters, digits, and `-._~/`, without a `.` or `..` segment, `//`, a trailing `/`, a query, or a fragment.
       Register the same value with the identity provider.
   - field: "`audience`"
     description: >-
@@ -378,19 +380,20 @@ rows:
       Required.
       The scopes that the sign-in requests, 2 to 16 of them, with `openid` and `offline_access` among them.
       Each scope appears once, and is 1 to 128 visible ASCII characters, except double quotes and backslashes.
-      `profile create` writes `openid`, `profile`, `email` and `offline_access` unless you give `--scope`.
+      `profile create` writes `openid`, `profile`, `email`, and `offline_access` unless you give `--scope`.
   - field: "`max_access_token_lifetime_seconds`"
     description: >-
       The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400.
       The default is 3600.
       Releases up to 0.18.0 accepted values down to 360.
       A profile that they installed with 360 to 364 still reads, but sign-in refuses it, so give developers a profile with 365 or more.
-      The identity provider must issue access tokens that last at least 365 seconds, because each token that {{site.kong_harnesses}} gives to an agent CLI has at least 360 seconds left.
+      The identity provider must issue access tokens that last at least 365 seconds.
+      Each token that {{site.kong_harnesses}} gives to an agent CLI has at least 360 seconds left.
 {% endtable %}
 
 ### Security identity
 
-A profile's security identity consists of `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle` and `sign_in`.
+A profile's security identity consists of `issuer`, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, `revocation_endpoint`, `client_id`, `redirect_uri`, `gateway_origin`, `audience`, `audience_parameter`, `public_client_evidence`, `scopes`, `max_access_token_lifetime_seconds`, `gateway_ca_bundle`, and `sign_in`.
 
 A saved sign-in belongs to one security identity.
 Sometimes `profile create` or `profile import` replaces a profile and changes one of these fields.
@@ -451,7 +454,7 @@ columns:
 rows:
   - block: "`claude-code`"
     version: "12"
-    protocol: "`anthropic-messages`, `foundry-messages` or `bedrock-mantle-messages`"
+    protocol: "`anthropic-messages`, `foundry-messages`, or `bedrock-mantle-messages`"
   - block: "`codex`"
     version: "13"
     protocol: "`openai-responses`"
@@ -472,8 +475,8 @@ rows:
 Some blocks have more rules:
 
 * The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes of visible ASCII.
-  A profile with a `hermes` block signs in with an identity provider, so it can't use `static_key`, `environment_key` or `subscription`.
-  The profile must also set `audience_parameter` to `audience`, and request exactly the scopes `openid`, `profile`, `email` and `offline_access`.
+  A profile with a `hermes` block signs in with an identity provider, so it can't use `static_key`, `environment_key`, or `subscription`.
+  The profile must also set `audience_parameter` to `audience`, and request exactly the scopes `openid`, `profile`, `email`, and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
 * A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
 * A profile named `constructor` or `prototype` can't set up OpenCode.
@@ -529,7 +532,7 @@ rows:
 
 `profile activate` writes each alias into {{ site.claude_code }} settings.
 Each alias is 1 to 128 bytes of visible ASCII.
-Versions 2 to 6 take `active`, `sonnet` and `opus`, and require all three.
+Versions 2 to 6 take `active`, `sonnet`, and `opus`, and require all three.
 Version 7 adds optional `haiku` and `max_context_tokens`.
 From version 12, every role except `max_context_tokens` is required.
 
@@ -575,7 +578,7 @@ A left-out choice also writes its `false` value when the route doesn't serve the
 * `advisor` on a route without `advisor`.
 * `artifact` in a `subscription` profile on a route without `artifact`.
 
-Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
+Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor`, and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 
 When a new profile leaves out a choice or sets `auto_updates: true`, activation stops controlling the setting of that choice, unless another choice sets it.
@@ -686,7 +689,7 @@ On a route with `tool_reference`, it writes nothing, and {{ site.claude_code }} 
 Some {{ site.claude_code }} settings turn off more than one feature:
 
 * `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, turns off telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on `anthropic-messages`.
-* `DISABLE_TELEMETRY`, which `anthropic_telemetry: false` writes, also turns off feature flags, error reports and the feedback survey.
+* `DISABLE_TELEMETRY`, which `anthropic_telemetry: false` writes, also turns off feature flags, error reports, and the feedback survey.
 * `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` are two names for one switch.
   Either one turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
 
@@ -703,7 +706,7 @@ rows:
     versions: "Up to 17"
   - pair: "`auto_updates: false` with `artifact: true` in a `subscription` profile"
     versions: "Up to 17"
-  - pair: "`auto_updates: false` with `advisor: true` on `anthropic-messages`, when none of `experimental_betas`, `feature_flags` and `anthropic_telemetry` is `false`"
+  - pair: "`auto_updates: false` with `advisor: true` on `anthropic-messages`, when none of `experimental_betas`, `feature_flags`, and `anthropic_telemetry` is `false`"
     versions: "Up to 17"
   - pair: "`feature_flags: true` with `anthropic_telemetry: false`"
     versions: "All"
@@ -766,7 +769,7 @@ rows:
   - field: "`betas`"
     description: >-
       A list of beta names that activation writes to `ANTHROPIC_BETAS`.
-      1 to 16 names, each unique and 1 to 64 characters of lowercase letters, digits and hyphens.
+      1 to 16 names, each unique and 1 to 64 characters of lowercase letters, digits, and hyphens.
       A name starts and ends with a letter or a digit.
   - field: "`thinking`"
     description: "`false` writes `CLAUDE_CODE_DISABLE_THINKING=1` and `MAX_THINKING_TOKENS=0`."
@@ -819,7 +822,7 @@ rows:
 #### Pricing
 
 `pricing` sets the prices that {{ site.claude_code }} uses to show the cost of a session.
-The block sets `multiplier`, `models` or both.
+The block sets `multiplier`, `models`, or both.
 
 {% table %}
 columns:
@@ -834,7 +837,7 @@ rows:
       The default is 1.
   - field: "`models`"
     description: >-
-      Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens.
+      Maps a gateway model ID to its `input`, `output`, `cache_read`, and `cache_write` prices, in USD for each million tokens.
       Each model sets all four prices, from 0 to 10000.
       Each model ID is 1 to 128 bytes of visible ASCII, is unique without regard to case, and can't end with `[1m]`.
       A price here takes precedence over the price from the gateway model list.
@@ -854,14 +857,14 @@ rows:
   - field: "`endpoint`"
     description: >-
       Required.
-      The URL of the collector, up to 512 characters, without user information, a query or a fragment.
+      The URL of the collector, up to 512 characters, without user information, a query, or a fragment.
       It uses `https://`, or `http://` for a collector on this computer.
   - field: "`protocol`"
     description: "`http/protobuf`, the default, `http/json`, or `grpc`."
   - field: "`resource_attributes`"
     description: >-
       1 to 8 names and values that {{ site.claude_code }} adds to each data point.
-      A name is 1 to 64 characters of letters, digits, `.`, `_` and `-`.
+      A name is 1 to 64 characters of letters, digits, `.`, `_`, and `-`.
       A value is 1 to 64 visible ASCII characters, without `,` or `=`.
 {% endtable %}
 
@@ -873,7 +876,7 @@ The gateway reads `Ai-Cost-<name>` headers as cost tags.
 
 A header name is an HTTP token of up to 64 bytes, and appears once without regard to case.
 A value is 1 to 128 printable ASCII characters.
-These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent` and `X-Api-Key`.
+These header names are reserved, in any case: `Authorization`, `Connection`, `Cookie`, `Content-Encoding`, `Content-Length`, `Content-Type`, `Expect`, `Host`, `Keep-Alive`, `Proxy-Authenticate`, `Proxy-Authorization`, `Set-Cookie`, `TE`, `Trailer`, `Transfer-Encoding`, `Upgrade`, `User-Agent`, and `X-Api-Key`.
 
 {{site.kong_harnesses}} ignores `caller` from older profiles so they still import.
 
@@ -894,7 +897,7 @@ rows:
       Required.
       The path of the server on the gateway origin, 2 to 256 characters.
       It starts with `/` and doesn't end with `/`.
-      Each segment uses letters, digits and `-._~`, isn't empty, and isn't `.` or `..`.
+      Each segment uses letters, digits, and `-._~`, isn't empty, and isn't `.` or `..`.
       Each server has its own path.
   - field: "`sign_in`"
     description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
@@ -911,7 +914,7 @@ rows:
       Only for `key`, and refused for other servers.
       The header that carries the key, an HTTP token of up to 64 bytes.
       The default is `apikey`.
-      `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding` and `Connection` are refused.
+      `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding`, and `Connection` are refused.
 {% endtable %}
 
 Each sign-in setting has its own rules:
@@ -957,7 +960,7 @@ To save a copy of a UTF-16 or UTF-32 file in another encoding:
 {% navtabs "convert-profile-encoding" %}
 {% navtab "macOS" %}
 
-Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
+Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE`, or `UTF-32`:
 
 ```sh
 iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
@@ -966,7 +969,7 @@ iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
 {% endnavtab %}
 {% navtab "Linux" %}
 
-Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
+Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE`, or `UTF-32`:
 
 ```sh
 iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE

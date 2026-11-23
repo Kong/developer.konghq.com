@@ -66,7 +66,7 @@ rows:
       For `doctor`, see [Exit codes of doctor](#exit-codes-of-doctor).
     action: "Follow the message, then run the command again."
   - value: "2"
-    meaning: "A wrong flag or argument, or a problem in the profile, the client settings or this computer."
+    meaning: "A wrong flag or argument, or a problem in the profile, the client settings, or this computer."
     action: >-
       Fix what the message names.
       Running the command again without a change gives the same error.
@@ -110,7 +110,7 @@ It exits with the most severe code of all findings and reports: `2` takes preced
 
 ## Profile errors
 
-Most messages about choosing a profile start with the command name, such as `login`, `logout`, `doctor` or `profile activate`.
+Most messages about choosing a profile start with the command name, such as `login`, `logout`, `doctor`, or `profile activate`.
 
 ### Unreadable profiles
 
@@ -143,9 +143,10 @@ kong-harnesses profile list
 The command needs a profile, and didn't get one.
 The end of the message tells you what to do:
 
-* "and no installed profile is usable" or "and none is installed": Without a profile name, `login`, `logout`, `doctor` and `fleet build` use the default profile, or the only installed profile.
+* "and no installed profile is usable" or "and none is installed": Without a profile name, `login`, `logout`, `doctor`, and `fleet build` use the default profile, or the only installed profile.
   They didn't find a usable one.
-  Run `kong-harnesses profile list` to see the profiles, then install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or name one with `--profile PROFILE_NAME`.
+  Run `kong-harnesses profile list` to see the profiles.
+  Install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or name one with `--profile PROFILE_NAME`.
 * "specify one with --profile <name> or KONG_HARNESSES_PROFILE": `token`, `credential`, `statusline`, the MCP header helper that {{ site.claude_code }} runs, and `budget refresh` don't use a default profile.
   Name the profile with `--profile PROFILE_NAME`, or with `KONG_HARNESSES_PROFILE`.
 * "requires a profile name": The command takes the profile name as its argument, as in `kong-harnesses profile activate PROFILE_NAME`.
@@ -198,7 +199,7 @@ Set `auto_updates` to `true`, set the named choices to `false`, or ask your admi
 
 ### "one switch that turns /bug, /feedback and /share on or off together"
 
-{{ site.claude_code }} turns `/bug`, `/feedback` and `/share` on or off together.
+{{ site.claude_code }} turns `/bug`, `/feedback`, and `/share` on or off together.
 `profile import` refused the profile, because it sets only one of `bug_command` and `feedback_command`, or sets them to different values.
 Set both to the same value, or leave both out.
 
@@ -225,6 +226,20 @@ Check that the issuer URL is right and that this computer can reach it over HTTP
 When the message ends with "check the public flag values and scopes", a flag value isn't valid, for example a URL or a scope.
 When it ends with "check the profile name and public values", the profile that it built from the values isn't valid.
 Check the values against the [profile file reference](/kong-harnesses/profile-file/), then run the command again.
+
+### "profile create cannot configure"
+
+`profile create` can't build a profile for the agent CLI that you named with `--client`.
+The end of the message gives the reason and the fix, for example:
+
+* "only Claude Code signs in to a Claude subscription": A `subscription` profile sets up only {{ site.claude_code }}.
+  Use `--client claude-code`, or use a different `--sign-in`.
+* "needs an identity provider": OpenCode and Hermes Agent don't work with a static key.
+  Create the profile with an identity provider.
+* "pass --audience-parameter audience and no other --scope": Hermes Agent sends the audience in the `audience` parameter and requests only the scopes `openid`, `profile`, `email`, and `offline_access`.
+  Add `--audience-parameter audience`, and remove the other `--scope` values.
+* "only Claude Code reaches the gateway in this provider mode": Only {{ site.claude_code }} works with the `--provider` that you gave.
+  Use `--client claude-code`, or use a different `--provider`.
 
 ### "the profile was saved, but its result could not be shown"
 
@@ -298,7 +313,7 @@ After the removal, delete the profile.
 
 An administrator installed this profile for every user of the computer, so `profile import` and `profile create` can't replace it, and `profile delete` can't remove it.
 `profile delete` refuses any machine-wide profile before asking you to confirm or removing saved keys.
-For a valid machine-wide profile, `profile import`, `profile create` and `setup` tell you to sign in to it with `kong-harnesses login`.
+For a valid machine-wide profile, `profile import`, `profile create`, and `setup` tell you to sign in to it with `kong-harnesses login`.
 Sign in to it, or ask your administrator to change or remove it.
 When the message also says that the profile "is invalid", or that "an account that is not an administrator can change it", {{site.kong_harnesses}} can't use the profile.
 Ask your administrator to reinstall it.
@@ -325,7 +340,8 @@ Its result tells you what is left to clean up:
 ### "selected profile needs a newer kong-harnesses"
 
 The installed profile, whether user or machine-wide, has a schema version that this release can't read, usually because a newer release installed it.
-`profile list` and `status` report it as unreadable with "update kong-harnesses, then run the command again" in text output, and `doctor` reports "the stored profile needs a newer kong-harnesses".
+`profile list` and `status` report it as unreadable with "update kong-harnesses, then run the command again" in text output.
+`doctor` reports "the stored profile needs a newer kong-harnesses".
 `profile import` and `profile create` print "the installed profile of this name needs a newer kong-harnesses" when an installed profile has a newer version.
 `profile import` prints "this profile needs a newer kong-harnesses" when a source file or URL has a newer version.
 Reinstalling the same profile doesn't change its schema version, so a machine-wide profile also needs an update of {{site.kong_harnesses}}.
@@ -354,17 +370,23 @@ In text output, the end of the message tells you what to do:
 
 ### "selected profile is missing, invalid, or unsupported"
 
-The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile, because the profile isn't installed, can't be read, or needs a newer release.
-`login --diagnostics`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies.
+The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile.
+The profile isn't installed, can't be read, or needs a newer release.
+`token`, `credential`, and `doctor` print this message only when they can't tell which of those causes applies, and `login --diagnostics` prints it on its `Reason` line.
 Otherwise, they print a more specific profile error.
 Run `kong-harnesses profile list` to check whether the profile is installed, then import it or follow the step that `profile list` prints for it.
 
 ### "selected profile configures no agent client that this kong-harnesses sets up"
 
-Without `--client`, `status`, `doctor` and `login --diagnostics` work on each agent CLI that the profile has a block for.
+Without `--client`, `status` and `doctor` work on each agent CLI that the profile has a block for.
 The profile doesn't have a block for any agent CLI that this release sets up.
 Ask your administrator for a profile with a block for your agent CLI in [`clients`](/kong-harnesses/profile-file/#clients).
 To check one agent CLI now, name it with `--client CLIENT_NAME`.
+
+### "doctor --inference sends its request through Claude Code"
+
+`doctor --inference` sends a test request with {{ site.claude_code }}, and the selected profile doesn't set up {{ site.claude_code }}.
+Run `doctor` without `--inference`, or select a profile with a `claude-code` block.
 
 ### "saved sign-in", "still activated" or "profile delete could not inspect"
 
@@ -374,7 +396,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
   Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
 * "cannot tell whether the profile still has a saved sign-in and did not delete it": The message starts with "no Secret Service runs in this session".
   On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses.
-  Delete the profile from a desktop session with a keyring, such as GNOME Keyring.
+  Delete the profile from a desktop session with a keyring, such as GNOME Keyring or KWallet.
 * "selected profile is still activated": An agent CLI still uses the profile.
   Run `kong-harnesses profile cleanup --client CLIENT_NAME`, then delete the profile.
 * "profile delete could not inspect": When the message ends with "retry later", the settings check didn't finish, so run `profile delete` again.
@@ -434,7 +456,7 @@ To fix it, follow the row for this message in [When kong-harnesses can't give an
 ### "is not configured: it can choose a proxy"
 
 The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`.
-`profile activate` doesn't set up Codex, OpenCode or Hermes Agent for an `http://` gateway, and sets up the other clients as [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways) describes.
+`profile activate` doesn't set up Codex, OpenCode, or Hermes Agent for an `http://` gateway, and sets up the other clients as [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways) describes.
 A failure while writing the settings can still leave some clients set up.
 Give these clients a profile with an `https://` gateway.
 
@@ -479,7 +501,7 @@ Set the field to that type, or remove it, then try again.
 ### "could not inspect the selected" or "could not use the selected" settings
 
 The message ends with "settings configuration", and names the agent CLI.
-`status`, `profile activate` or `profile cleanup` can't read the settings of that agent CLI.
+`status`, `profile activate`, or `profile cleanup` can't read the settings of that agent CLI.
 Fix the settings file of that client, then run the command again.
 
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
@@ -512,7 +534,7 @@ Check the settings of that client, then run `profile cleanup` again.
 
 ### "did not finish for" a list of clients
 
-`status`, `profile activate` or `profile cleanup` worked on several agent CLIs, and failed for each client in the list, for different reasons.
+`status`, `profile activate`, or `profile cleanup` worked on several agent CLIs, and failed for each client in the list, for different reasons.
 Run the command again with `--client CLIENT_NAME` for each client to see each reason.
 
 ### "selected profile does not configure"
@@ -533,13 +555,16 @@ Check that the profile has a block for that client in [`clients`](/kong-harnesse
 
 ### "this kong-harnesses runs from a temporary folder"
 
-The agent CLI would lose its credential helper when the folder is removed.
+When {{site.kong_harnesses}} runs from a temporary folder, the agent CLI would lose its credential helper after that folder is cleaned.
 [Install {{site.kong_harnesses}}](/kong-harnesses/), then run `profile activate` with the installed copy.
 
-### "requires an interactive controlling terminal"
+### "needs an interactive controlling terminal" or "requires an interactive controlling terminal"
 
-The command asks you a question, and it runs without a terminal, for example in a script.
-Run it in a terminal.
+The command asks you a question or asks you to type the profile name, and it runs without a terminal, for example in a script.
+Run the command in a terminal, or avoid the prompt:
+
+* For `profile activate`, pass `--auto-approve` or name one agent CLI with `--client CLIENT_NAME`.
+* For `profile delete` or `logout`, pass `--auto-approve`.
 
 ## Setup errors
 
@@ -587,7 +612,8 @@ Build from a profile with an `https://` `gateway_origin`.
 
 ### "fleet build cannot use a Claude subscription profile"
 
-The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in.
+The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper.
+A `subscription` profile uses each developer's own Claude sign-in.
 Build from a profile that doesn't use `sign_in: subscription`.
 
 ### "already holds the settings of an earlier fleet build"
@@ -608,7 +634,7 @@ columns:
   - title: What to check
     key: check
 rows:
-  - message: "`profile creation could not verify local storage; retry later`, `profile creation failed; retry after checking local storage`, `profile creation failed`, `profile lock could not be verified; retry after checking local storage` or `profile storage could not be read`"
+  - message: "`profile creation could not verify local storage; retry later`, `profile creation failed; retry after checking local storage`, `profile creation failed`, `profile lock could not be verified; retry after checking local storage`, or `profile storage could not be read`"
     check: "The profile folder of {{site.kong_harnesses}}: that the disk isn't full, and that your account can read and write the folder."
   - message: "`could not write the identity header to Claude Code's settings; retry later`"
     check: "That your account can write the {{ site.claude_code }} settings file."
