@@ -1,6 +1,6 @@
 ---
 title: Sign in to Codex with kong-harnesses
-description: Sign in to {{ site.ai_gateway }} for Codex using kong-harnesses, verify your sign-in, and start a session.
+description: Create an AI Model and a kong-harnesses profile, sign in to {{ site.ai_gateway }} for Codex, and validate your setup.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/codex/
@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - kong-harnesses
 
 tags:
@@ -24,11 +25,14 @@ tags:
 
 automated_tests: false
 
+min_version:
+  ai-gateway: '2.4'
+
 tldr:
   q: How do I sign in to Codex with kong-harnesses?
   a: |
-    Run `kong-harnesses login --profile PROFILE_NAME` before starting Codex, then verify with `kong-harnesses status --profile PROFILE_NAME --client codex` and `kong-harnesses doctor --profile PROFILE_NAME --client codex`.
-    Start Codex with `codex -m MODEL_NAME` using a model name served by {{ site.ai_gateway }}.
+    Send Codex requests through {{site.ai_gateway}} to an OpenAI Responses model with a short-lived Okta sign-in instead of a long-lived API key.
+    Create the AI Model and a kong-harnesses profile for an HTTPS gateway, sign in, activate the profile, and validate the setup with `kong-harnesses doctor`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -41,81 +45,169 @@ related_resources:
     url: /kong-harnesses/doctor/
 
 prereqs:
-  skip_product: true
-  skip_tool: true
+  konnect:
+    - name: KONG_SSL_CERT
+    - name: KONG_SSL_CERT_KEY
   inline:
-    - title: Codex, kong-harnesses, and an HTTPS Responses profile
+    - title: OpenAI
+      icon_url: /assets/icons/openai.svg
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
+    - title: Okta
+      icon_url: /assets/icons/okta.svg
+      include_content: prereqs/auth/oidc/okta-kong-harnesses
+    - title: A trusted certificate for the gateway
+      position: before
+      include_content: kong-harnesses/trusted-gateway-cert
+    - title: Codex
+      icon_url: /assets/icons/openai.svg
       content: |
-        Install [kong-harnesses](/kong-harnesses/) and Codex, and install an `https://` profile that configures `codex`.
-        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
-
-        Your {{ site.ai_gateway }} must meet these requirements for Codex:
-
-        * Expose an OpenAI-format `POST /v1/responses` route over `https://`.
-          Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI or Amazon Bedrock Mantle.
-        * Avoid guardrail policies that force response buffering on the Responses model.
-        * For static-key profiles, run {{ site.ai_gateway }} 2.4 or later so `key-auth` accepts `Authorization: Bearer` tokens.
-
-        kong-harnesses skips Codex for a plain `http://` gateway or a gateway without `POST /v1/responses`.
-    - title: Activated Codex profile
-      content: |
-        Activate the profile for Codex with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if you haven't already:
+        Install Node.js 18 or later, then install Codex:
 
         ```sh
-        kong-harnesses profile activate PROFILE_NAME --client codex
+        npm install -g @openai/codex
         ```
-
-        Run sign-in commands in an interactive terminal on your desktop so kong-harnesses can access your operating system's secret store.
 
 cleanup:
   inline:
-    - title: Sign out of Codex
-      include_content: kong-harnesses/sign-in-cleanup
+    - title: Clean up kong-harnesses
+      content: |
+        Remove the Codex settings that kong-harnesses added, sign out, and delete the profile:
 
-faqs:
-  - q: How do I replace a working Codex sign-in or diagnose a failure?
-    a: |
-      To switch accounts or rotate a saved static key for Codex, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
-      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
-      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
-  - q: What do I need to do on macOS after upgrading kong-harnesses?
-    a: |
-      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
-      Each time Keychain asks whether kong-harnesses can use your sign-in, click **Always Allow**.
+        ```sh
+        kong-harnesses profile cleanup --client codex
+        kong-harnesses logout --profile codex
+        kong-harnesses profile delete codex
+        ```
+
+        `profile delete` asks you to type `codex` to confirm.
+    - title: Clean up Okta
+      include_content: kong-harnesses/cleanup-okta
+    - title: Clean up the local certificate
+      include_content: kong-harnesses/trusted-gateway-cert-cleanup
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 ---
 
 Codex reads its provider configuration from `~/.codex/config.toml` and runs [`kong-harnesses token`](/kong-harnesses/token/) to get short-lived access tokens for {{ site.ai_gateway }}.
-Because `token` never opens a browser, sign in with `kong-harnesses login` before starting Codex.
+Because `token` never opens a browser, you sign in with `kong-harnesses login` before you start Codex.
 
-## Sign in before starting Codex
+## Create the AI Model
 
-{% include kong-harnesses/sign-in-login-steps.md cli_name="Codex" ci_note="true" %}
+Create the following entities:
 
-## Check your sign-in status
+* An `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that checks the Okta access token in the `Authorization` header.
+* An [AI Model Provider](/ai-gateway/entities/ai-model-provider/) with your OpenAI key.
+* An [AI Model](/ai-gateway/entities/ai-model/) that serves the OpenAI Responses API, which Codex uses.
 
-Check the local sign-in and Codex setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: okta-oidc
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: Okta OIDC
+    name: okta-oidc
+    type: openid-connect
+    config:
+      issuer: !env ISSUER_URL
+      audience_required:
+        - api://default
+      auth_methods:
+        - bearer
+      bearer_token_param_type:
+        - header
+      hide_credentials: true
+      upstream_access_token_header: null
+      cache_tokens_salt: okta-oidc-cache-salt
+ai_gateway_model_providers:
+  - ref: openai
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: OpenAI
+    name: openai
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
+ai_gateway_models:
+  - ref: gpt-5-4
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: gpt-5.4
+    name: gpt-5.4
+    type: model
+    capabilities:
+      - agentic
+    formats:
+      - type: openai
+    targets:
+      - name: gpt-5.4
+        provider: openai
+        config:
+          type: openai
+          upstream_url: https://api.openai.com/v1/responses
+    access:
+      auth_strategies:
+        - !ref okta-oidc#name
+    config:
+      route:
+        paths:
+          - /v1
+        model:
+          body_param: model
+          values:
+            - gpt-5.4
+{% endentity_examples %}
+
+In this example:
+
+* `capabilities: [agentic]` and `formats: [{ type: openai }]` serve the OpenAI-format `POST /v1/responses` route that Codex needs.
+* `config.route.paths: [/v1]` puts the route at `/v1/responses`.
+* When `upstream_access_token_header` is `null`, {{site.ai_gateway}} doesn't send the Okta access token to OpenAI and sends only your OpenAI key.
+
+{:.warning}
+> Do not attach guardrail policies that force response buffering to this AI Model.
+
+## Create the kong-harnesses profile
+
+Create a profile named `codex` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+The gateway origin is the HTTPS port of the quickstart data plane, `https://localhost:8443`.
+kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, saves the profile, and installs it on this computer:
 
 ```sh
-kong-harnesses status --profile PROFILE_NAME --client codex
+kong-harnesses profile create \
+  --name codex \
+  --issuer "$ISSUER_URL" \
+  --client-id "$OKTA_CLIENT_ID" \
+  --audience api://default \
+  --gateway-origin https://localhost:8443 \
+  --model gpt-5.4
 ```
 
-Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `Codex` shows `Configured`.
-For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
+## Sign in to the profile
+
+{% include kong-harnesses/sign-in-login-steps.md cli_name="Codex" profile="codex" %}
+
+## Activate the profile
+
+Configure Codex to use the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
+
+```sh
+kong-harnesses profile activate codex --client codex
+```
 
 ## Validate
 
 Confirm that your sign-in, gateway connection, and Codex configuration pass all checks:
 
-1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for Codex:
+{% validation custom-command %}
+command: kong-harnesses doctor --profile codex --client codex
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client codex
-   ```
+Start Codex and send a prompt to confirm that you receive a reply:
 
-   Confirm that `login`, `client`, and `gateway` report `ok`, and resolve any failures.
-1. Start Codex with a model that {{ site.ai_gateway }} serves and send a prompt to confirm you receive a reply.
-   Replace `MODEL_NAME` with that model name:
-
-   ```sh
-   codex -m MODEL_NAME
-   ```
+```sh
+codex -m gpt-5.4
+```

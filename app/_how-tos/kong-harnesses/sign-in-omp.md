@@ -1,6 +1,6 @@
 ---
 title: Sign in to omp with kong-harnesses
-description: Sign in to {{ site.ai_gateway }} for omp using kong-harnesses, verify your sign-in, and start a session.
+description: Create an AI Model and a kong-harnesses profile, sign in to {{ site.ai_gateway }} for omp, and validate your setup.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/omp/
@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - kong-harnesses
 
 tags:
@@ -24,11 +25,14 @@ tags:
 
 automated_tests: false
 
+min_version:
+  ai-gateway: '2.4'
+
 tldr:
   q: How do I sign in to omp with kong-harnesses?
   a: |
-    Run `kong-harnesses login --profile PROFILE_NAME` before starting omp, then verify with `kong-harnesses status --profile PROFILE_NAME --client omp` and `kong-harnesses doctor --profile PROFILE_NAME --client omp`.
-    Start `omp` and send a prompt to confirm the connection.
+    Send omp requests through {{site.ai_gateway}} with a short-lived Okta sign-in instead of a long-lived API key.
+    Create an AI Model and a kong-harnesses profile, sign in, activate the profile, and validate the setup with `kong-harnesses doctor`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -41,72 +45,94 @@ related_resources:
     url: /kong-harnesses/doctor/
 
 prereqs:
-  skip_product: true
-  skip_tool: true
   inline:
-    - title: omp, kong-harnesses, and a profile
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
+    - title: Okta
+      icon_url: /assets/icons/okta.svg
+      include_content: prereqs/auth/oidc/okta-kong-harnesses
+    - title: omp
       content: |
-        Install [kong-harnesses](/kong-harnesses/) and omp, and install a profile that configures `omp`.
-        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
-        If your profile uses a loopback `http://` gateway and your shell sets a proxy, add the gateway host to `NO_PROXY` and `no_proxy` in the shell that starts omp.
-    - title: Activated omp profile
-      content: |
-        Activate the profile for omp with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if you haven't already:
+        Install omp.
+        On macOS, run:
 
         ```sh
-        kong-harnesses profile activate PROFILE_NAME --client omp
+        brew install can1357/tap/omp
         ```
 
-        Run sign-in commands in an interactive terminal on your desktop so kong-harnesses can access your operating system's secret store.
+        For other systems, see the [omp installation instructions](https://github.com/can1357/oh-my-pi#install).
+        If your profile uses a loopback `http://` gateway and your shell sets a proxy, add the gateway host to `NO_PROXY` and `no_proxy` in the shell that starts omp.
 
 cleanup:
   inline:
-    - title: Sign out of omp
-      include_content: kong-harnesses/sign-in-cleanup
+    - title: Clean up kong-harnesses
+      content: |
+        Remove the omp settings that kong-harnesses added, sign out, and delete the profile:
 
-faqs:
-  - q: How do I replace a working omp sign-in or diagnose a failure?
-    a: |
-      To switch accounts or rotate a saved static key for omp, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
-      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
-      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
-  - q: What do I need to do on macOS after upgrading kong-harnesses?
-    a: |
-      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
-      Each time Keychain asks whether kong-harnesses can use your sign-in, click **Always Allow**.
+        ```sh
+        kong-harnesses profile cleanup --client omp
+        kong-harnesses logout --profile quickstart
+        kong-harnesses profile delete quickstart
+        ```
+
+        `profile delete` asks you to type `quickstart` to confirm.
+    - title: Clean up Okta
+      include_content: kong-harnesses/cleanup-okta
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 ---
 
 omp reads its provider configuration from `~/.omp/agent/models.yml` and runs [`kong-harnesses token`](/kong-harnesses/token/) to get short-lived access tokens for {{ site.ai_gateway }}.
-Because `token` never opens a browser, sign in with `kong-harnesses login` before starting omp.
+Because `token` never opens a browser, you sign in with `kong-harnesses login` before you start omp.
 
-## Sign in before starting omp
+## Create the AI Model
 
-{% include kong-harnesses/sign-in-login-steps.md cli_name="omp" ci_note="true" %}
+{% include how-tos/steps/kong-harnesses-anthropic-model.md cli_name="omp" %}
 
-## Check your sign-in status
+## Create the kong-harnesses profile
 
-Check the local sign-in and omp setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, saves the profile, and installs it on this computer:
 
 ```sh
-kong-harnesses status --profile PROFILE_NAME --client omp
+kong-harnesses profile create \
+  --name quickstart \
+  --issuer "$ISSUER_URL" \
+  --client-id "$OKTA_CLIENT_ID" \
+  --audience api://default \
+  --gateway-origin http://127.0.0.1:8000 \
+  --model claude-sonnet-5-5
 ```
 
-Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `omp` shows `Configured`.
-For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
+This guide sets up only omp, so you can ignore warnings about other agent CLIs.
+
+## Sign in to the profile
+
+{% include kong-harnesses/sign-in-login-steps.md cli_name="omp" profile="quickstart" %}
+
+## Activate the profile
+
+Configure omp to use the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
+
+```sh
+kong-harnesses profile activate quickstart --client omp
+```
 
 ## Validate
 
-Confirm that your sign-in, gateway route, and omp configuration pass all checks:
+Confirm that your sign-in, gateway connection, and client configuration pass all checks:
 
-1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for omp:
+{% validation custom-command %}
+command: kong-harnesses doctor --profile quickstart --client omp
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client omp
-   ```
+Start omp and send a prompt to confirm that you receive a reply:
 
-   Confirm that `login`, `client`, `gateway`, and `route` report `ok`, and resolve any failures.
-1. Start omp and send a prompt to confirm you receive a reply:
-
-   ```sh
-   omp
-   ```
+```sh
+omp
+```

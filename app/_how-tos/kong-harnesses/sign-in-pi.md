@@ -1,6 +1,6 @@
 ---
 title: Sign in to pi with kong-harnesses
-description: Clear any saved kong key in pi, sign in to {{ site.ai_gateway }} using kong-harnesses, verify your sign-in, and start a session.
+description: Create an AI Model and a kong-harnesses profile, clear any saved kong key in pi, sign in to {{ site.ai_gateway }} for pi, and validate your setup.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/pi/
@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - kong-harnesses
 
 tags:
@@ -24,11 +25,15 @@ tags:
 
 automated_tests: false
 
+min_version:
+  ai-gateway: '2.4'
+
 tldr:
   q: How do I sign in to pi with kong-harnesses?
   a: |
-    Remove any saved `kong` key in pi with `pi auth logout kong`, then run `kong-harnesses login --profile PROFILE_NAME` before starting pi.
-    Verify with `kong-harnesses status --profile PROFILE_NAME --client pi` and `kong-harnesses doctor --profile PROFILE_NAME --client pi`, then start `pi`.
+    Send pi requests through {{site.ai_gateway}} with a short-lived Okta sign-in instead of a long-lived API key.
+    Remove any saved `kong` entry from the pi `auth.json` first, because pi sends a saved key instead of a kong-harnesses token.
+    Then create an AI Model and a kong-harnesses profile, sign in, activate the profile, and validate the setup with `kong-harnesses doctor`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -41,81 +46,97 @@ related_resources:
     url: /kong-harnesses/doctor/
 
 prereqs:
-  skip_product: true
-  skip_tool: true
   inline:
-    - title: pi, kong-harnesses, and a profile
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
+    - title: Okta
+      icon_url: /assets/icons/okta.svg
+      include_content: prereqs/auth/oidc/okta-kong-harnesses
+    - title: pi
       content: |
-        Install [kong-harnesses](/kong-harnesses/) and pi, and install a profile that configures `pi`.
-        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
-        If your profile uses a loopback `http://` gateway and your shell sets a proxy, add the gateway host to `NO_PROXY` and `no_proxy` in the shell that starts pi.
-    - title: Activated pi profile
-      content: |
-        Activate the profile for pi with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if you haven't already:
+        Install [Node.js](https://nodejs.org/), then install pi:
 
         ```sh
-        kong-harnesses profile activate PROFILE_NAME --client pi
+        npm install -g @earendil-works/pi-coding-agent
         ```
 
-        Run sign-in commands in an interactive terminal on your desktop so kong-harnesses can access your operating system's secret store.
+        If your profile uses a loopback `http://` gateway and your shell sets a proxy, add the gateway host to `NO_PROXY` and `no_proxy` in the shell that starts pi.
 
 cleanup:
   inline:
-    - title: Sign out of pi
-      include_content: kong-harnesses/sign-in-cleanup
+    - title: Clean up kong-harnesses
+      content: |
+        Remove the pi settings that kong-harnesses added, sign out, and delete the profile:
 
-faqs:
-  - q: How do I replace a working pi sign-in or diagnose a failure?
-    a: |
-      To switch accounts or rotate a saved static key for pi, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
-      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
-      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
-  - q: What do I need to do on macOS after upgrading kong-harnesses?
-    a: |
-      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
-      Each time Keychain asks whether kong-harnesses can use your sign-in, click **Always Allow**.
+        ```sh
+        kong-harnesses profile cleanup --client pi
+        kong-harnesses logout --profile quickstart
+        kong-harnesses profile delete quickstart
+        ```
+
+        `profile delete` asks you to type `quickstart` to confirm.
+    - title: Clean up Okta
+      include_content: kong-harnesses/cleanup-okta
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 ---
 
 pi reads its provider configuration from `~/.pi/agent/models.json` and runs [`kong-harnesses token`](/kong-harnesses/token/) on every request to get a short-lived access token for {{ site.ai_gateway }}.
-Because `token` never opens a browser, sign in with `kong-harnesses login` before starting pi.
+Because `token` never opens a browser, you sign in with `kong-harnesses login` before you start pi.
+
+## Create the AI Model
+
+{% include how-tos/steps/kong-harnesses-anthropic-model.md cli_name="pi" %}
+
+## Create the kong-harnesses profile
+
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+kong-harnesses reads the endpoints of your Okta authorization server from its discovery document, saves the profile, and installs it on this computer:
+
+```sh
+kong-harnesses profile create \
+  --name quickstart \
+  --issuer "$ISSUER_URL" \
+  --client-id "$OKTA_CLIENT_ID" \
+  --audience api://default \
+  --gateway-origin http://127.0.0.1:8000 \
+  --model claude-sonnet-5-5
+```
+
+This guide sets up only pi, so you can ignore warnings about other agent CLIs.
 
 ## Clear any saved kong key in pi
 
-If you previously saved a key for the `kong` provider with `pi auth login`, pi sends that key instead of calling `kong-harnesses token`.
-Remove any saved `kong` key from pi's `auth.json` first:
+If you previously saved a key for the `kong` provider with `/login` in pi, pi sends that key instead of calling `kong-harnesses token`.
+Open `auth.json` in pi's agent directory, which is `~/.pi/agent/auth.json` by default, and remove the `kong` entry if it exists.
+
+## Sign in to the profile
+
+{% include kong-harnesses/sign-in-login-steps.md cli_name="pi" profile="quickstart" %}
+
+## Activate the profile
+
+Configure pi to use the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
 
 ```sh
-pi auth logout kong
+kong-harnesses profile activate quickstart --client pi
 ```
-
-## Sign in before starting pi
-
-{% include kong-harnesses/sign-in-login-steps.md cli_name="pi" ci_note="true" %}
-
-## Check your sign-in status
-
-Check the local sign-in and pi setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
-
-```sh
-kong-harnesses status --profile PROFILE_NAME --client pi
-```
-
-Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `pi` shows `Configured` (not `Bypassed by a key pi saved for the kong provider`).
-For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
 
 ## Validate
 
-Confirm that your sign-in, gateway route, and pi configuration pass all checks:
+Confirm that your sign-in, gateway connection, and client configuration pass all checks:
 
-1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for pi:
+{% validation custom-command %}
+command: kong-harnesses doctor --profile quickstart --client pi
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client pi
-   ```
+Start pi and send a prompt to confirm that you receive a reply:
 
-   Confirm that `login`, `client`, `gateway`, and `route` report `ok`, and resolve any failures.
-1. Start pi and send a prompt to confirm you receive a reply:
-
-   ```sh
-   pi
-   ```
+```sh
+pi
+```

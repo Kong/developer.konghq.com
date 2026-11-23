@@ -1,6 +1,6 @@
 ---
 title: Sign in to {{ site.claude_code }} with kong-harnesses
-description: Sign in to {{ site.ai_gateway }} for {{ site.claude_code }} using kong-harnesses, verify your sign-in, and start a session.
+description: Create an AI Model and a kong-harnesses profile, sign in to {{ site.ai_gateway }} for {{ site.claude_code }}, and validate your setup.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/claude-code/
@@ -15,6 +15,7 @@ works_on:
   - konnect
 
 tools:
+  - kongctl
   - kong-harnesses
 
 tags:
@@ -25,12 +26,14 @@ tags:
 
 automated_tests: false
 
+min_version:
+  ai-gateway: '2.4'
+
 tldr:
   q: How do I sign in to {{ site.claude_code }} with kong-harnesses?
   a: |
-    Run `kong-harnesses login --profile PROFILE_NAME` and check your state with `kong-harnesses status --profile PROFILE_NAME --client claude-code`.
-    Then validate with `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and start `claude`.
-    For an identity provider profile, {{ site.claude_code }} can also open your browser automatically on its first request.
+    Send {{ site.claude_code }} requests through {{site.ai_gateway}} with a short-lived Okta sign-in instead of a long-lived API key.
+    Create an AI Model and a kong-harnesses profile, sign in, activate the profile, and validate the setup with `kong-harnesses doctor`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -43,79 +46,119 @@ related_resources:
     url: /kong-harnesses/doctor/
 
 prereqs:
-  skip_product: true
-  skip_tool: true
   inline:
-    - title: "{{ site.claude_code }} and kong-harnesses"
+    - title: Shells on Windows
+      position: before
       content: |
-        Install [kong-harnesses](/kong-harnesses/) and {{ site.claude_code }}, and install a profile that configures `claude-code`.
-        If you haven't set up {{ site.claude_code }} yet, follow [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
-        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
-    - title: Activated {{ site.claude_code }} profile
+        On Windows, run the gateway quickstart, the `export` commands and `kongctl` in Windows Subsystem for Linux (WSL).
+        Run kong-harnesses and {{ site.claude_code }} in PowerShell.
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
+    - title: Okta
+      icon_url: /assets/icons/okta.svg
+      include_content: prereqs/auth/oidc/okta-kong-harnesses
+    - title: "{{ site.claude_code }}"
+      icon_url: /assets/icons/third-party/claude.svg
       content: |
-        Activate {{ site.claude_code }} for the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if your organization doesn't deploy managed settings:
+        Install {{ site.claude_code }} 2.1.278 or later.
+        On macOS and Linux:
 
         ```sh
-        kong-harnesses profile activate PROFILE_NAME --client claude-code
+        curl -fsSL https://claude.ai/install.sh | bash
         ```
 
-        Run sign-in commands in an interactive terminal on your desktop so kong-harnesses can access your operating system's secret store.
+        On Windows, in PowerShell:
+
+        ```powershell
+        irm https://claude.ai/install.ps1 | iex
+        ```
+
+        Run `claude --version` to check the install.
 
 cleanup:
   inline:
-    - title: Sign out of {{ site.claude_code }}
-      include_content: kong-harnesses/sign-in-cleanup
+    - title: Clean up kong-harnesses
+      content: |
+        Remove the {{ site.claude_code }} settings that kong-harnesses added, sign out, and delete the profile:
 
-faqs:
-  - q: How do I replace a working {{ site.claude_code }} sign-in or diagnose a failure?
-    a: |
-      To switch accounts or rotate a saved static key for {{ site.claude_code }}, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
-      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
-      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
-  - q: What do I need to do on macOS after upgrading kong-harnesses?
-    a: |
-      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
-      Each time Keychain asks whether kong-harnesses can use your sign-in or a gateway MCP server key, click **Always Allow**.
+        ```sh
+        kong-harnesses profile cleanup --client claude-code
+        kong-harnesses logout --profile quickstart
+        kong-harnesses profile delete quickstart
+        ```
+
+        `profile delete` asks you to type `quickstart` to confirm.
+    - title: Clean up Okta
+      include_content: kong-harnesses/cleanup-okta
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 ---
 
-{{ site.claude_code }} gets short-lived access tokens from [`kong-harnesses credential`](/kong-harnesses/credential/), and kong-harnesses renews them automatically without reopening your browser.
-You must run `login` first for static-key profiles, Claude subscription profiles, and profiles with key-authenticated gateway MCP servers.
+{{ site.claude_code }} gets short-lived access tokens from [`kong-harnesses credential`](/kong-harnesses/credential/), and kong-harnesses renews them without reopening your browser.
 
-## Sign in to your profile
+## Create the AI Model
 
-{% include kong-harnesses/sign-in-login-steps.md cli_name=site.claude_code ci_note="true" %}
+{% include how-tos/steps/kong-harnesses-anthropic-model.md cli_name=site.claude_code %}
 
-{:.info}
-> **Claude subscription profiles:** After `kong-harnesses login --profile PROFILE_NAME` signs you in for your gateway identity, start `claude` and run `/login` inside {{ site.claude_code }} to sign in to your Claude subscription.
+## Create the kong-harnesses profile
 
-## Check your sign-in status
+Create a profile named `quickstart` with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
+The gateway origin is `http://127.0.0.1:8000`, the address of the quickstart data plane.
+If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY` or `ALL_PROXY`, add `127.0.0.1` to `NO_PROXY` first, as described in [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/#create-the-kong-harnesses-profile).
 
-Check the local sign-in and {{ site.claude_code }} setup with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
+{% navtabs "profile-create" %}
+{% navtab "macOS and Linux" %}
 
 ```sh
-kong-harnesses status --profile PROFILE_NAME --client claude-code
+kong-harnesses profile create \
+  --name quickstart \
+  --issuer "$ISSUER_URL" \
+  --client-id "$OKTA_CLIENT_ID" \
+  --audience api://default \
+  --gateway-origin http://127.0.0.1:8000 \
+  --model claude-sonnet-5-5
 ```
 
-Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `Claude` shows `Configured`.
-For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
+{% endnavtab %}
+{% navtab "Windows" %}
+
+Replace the placeholders with the values of `ISSUER_URL` and `OKTA_CLIENT_ID` from the prerequisites:
+
+```powershell
+kong-harnesses profile create --name quickstart --issuer 'YOUR_ISSUER_URL' --client-id 'YOUR_CLIENT_ID' --audience api://default --gateway-origin http://127.0.0.1:8000 --model claude-sonnet-5-5
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+This guide sets up only {{ site.claude_code }}, so you can ignore warnings about other agent CLIs.
+
+## Sign in to the profile
+
+{% include kong-harnesses/sign-in-login-steps.md cli_name=site.claude_code profile="quickstart" %}
+
+## Activate the profile
+
+Configure {{ site.claude_code }} to use the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):
+
+```sh
+kong-harnesses profile activate quickstart --client claude-code
+```
 
 ## Validate
 
-Confirm that your sign-in, gateway route, and {{ site.claude_code }} settings pass all checks:
+Confirm that your sign-in, gateway connection, and {{ site.claude_code }} configuration pass all checks:
 
-1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for {{ site.claude_code }}:
+{% validation custom-command %}
+command: kong-harnesses doctor --profile quickstart --client claude-code
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client claude-code
-   ```
+Start {{ site.claude_code }} and send a prompt to confirm that you receive a reply:
 
-   Confirm that `login`, `client`, and `gateway` report `ok`, and resolve any failures.
-1. Start {{ site.claude_code }} and send a prompt to confirm you receive a reply:
-
-   ```sh
-   claude
-   ```
-
-{:.info}
-> To test a live model request from `doctor` before starting `claude`, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code --inference`.
-> That probe sends `"Reply with OK."` with at most 16 output tokens and can incur model usage cost.
+```sh
+claude
+```

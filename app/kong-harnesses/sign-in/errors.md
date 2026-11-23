@@ -258,9 +258,12 @@ rows:
     fix: "Run `kong-harnesses login --profile PROFILE_NAME`."
   - message: "`local sign-in disabled; server sign-out unconfirmed`"
     cause: >-
-      `logout` disabled the local sign-in but couldn't confirm that the identity provider revoked all authorizations for the profile, or it found an older sign-in copy it couldn't read.
+      `logout` disabled the local sign-in.
+      It couldn't confirm that the identity provider revoked all authorizations for the profile, or it found an older sign-in copy that it couldn't read.
     fix: >-
-      Check `kong-harnesses status --profile PROFILE_NAME`, revoke any active authorization at your identity provider (even if a later `logout` shows `Already signed out`), and run `kong-harnesses logout --profile PROFILE_NAME` again.
+      Run `kong-harnesses status --profile PROFILE_NAME`.
+      Revoke any active authorization at your identity provider, even if a later `logout` shows `Already signed out`.
+      Then run `kong-harnesses logout --profile PROFILE_NAME` again.
   - message: "`server sign-out confirmed; local cleanup incomplete`"
     cause: The identity provider confirmed revocation, but kong-harnesses couldn't finish removing local files or releasing the profile lock.
     fix: "Run `kong-harnesses logout --profile PROFILE_NAME` again."
