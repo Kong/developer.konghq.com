@@ -31,9 +31,9 @@ related_resources:
     url: /kong-harnesses/setup/
   - text: Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL
     url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
-  - text: kong-harnesses and private certificate authorities
+  - text: "{{site.kong_harnesses}} and private certificate authorities"
     url: /kong-harnesses/private-certificate-authorities/
-  - text: Changes that kong-harnesses makes on a developer's computer
+  - text: "Changes that {{site.kong_harnesses}} makes on a developer's computer"
     url: /kong-harnesses/developer-computer-changes/
 ---
 
@@ -42,10 +42,17 @@ A profile doesn't contain secrets, so you create it once and give the same file 
 Each developer then runs one command, and every computer uses the same gateway and models without editing agent settings files.
 For what `setup` saves and writes on each developer's computer, see [Changes that {{site.kong_harnesses}} makes on a developer's computer](/kong-harnesses/developer-computer-changes/).
 
+To roll out a profile:
+
+1. Choose a [provider mode](#provider-modes), and configure the gateway for that mode.
+1. Choose a [sign-in kind](#sign-in-kinds).
+1. [Create the profile](#profile-creation) with `kong-harnesses profile create`.
+1. [Export and host the profile](#profile-hosting), and give developers the URL or the file.
+
 ## Provider modes
 
 The provider mode sets the API format and the model IDs that {{ site.claude_code }} uses with the gateway.
-Set it with the `--provider` flag of `profile create`.
+Set the provider mode with the `--provider` flag of `profile create`.
 
 {% table %}
 columns:
@@ -76,35 +83,139 @@ rows:
 
 Use the `anthropic` mode unless the gateway serves Claude only through Microsoft Foundry or Amazon Bedrock Mantle and you want {{ site.claude_code }} to use that cloud's model IDs.
 The `anthropic` mode is the only mode that sets up other agent CLIs, and the only mode in which {{ site.claude_code }} reads the model list from the gateway.
-When the gateway lists a new model whose ID contains `claude` or `anthropic`, in any letter case, in a successful `GET /v1/models` response, the model appears in the model picker of the next {{ site.claude_code }} session without a new `setup`.
-For a model with another ID, `profile activate` adds a model picker entry from that list, so developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
+
+### Models in the model picker
+
+{{ site.claude_code }} has model roles, such as `opus` and `haiku`.
+A profile from `profile create` names one model, the `--model` value, for every role.
+
+In the `anthropic` mode, you add a model on the gateway:
+
+* A model whose ID contains `claude` or `anthropic`, in any letter case, appears in the model picker of the next {{ site.claude_code }} session.
+  The gateway must list the model in a successful `GET /v1/models` response.
+  Developers don't need to run `setup` again.
+* For a model with another ID, `profile activate` adds a model picker entry from that list.
+  Developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
-A profile from `profile create` names one model, the `--model` value, for every {{ site.claude_code }} model role.
-To offer more than one model, export the profile as in [Profile hosting](#profile-hosting), set some roles in `clients.claude-code.models`, such as `opus` and `haiku`, to other model IDs, and host the edited file.
+To offer more than one model, export the profile as in [Profile hosting](#profile-hosting), set some roles in `clients.claude-code.models` to other model IDs, and host the edited file.
 The model picker shows each model that a role names.
 
-In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin, so the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.claude_code }} uses the Anthropic format.
-{{ site.claude_code }} names the model that the developer uses in the `model` field of each request, by default the profile's `--model` value.
-Create one AI Model for each model ID that the route must accept, all on the same path, and set `config.route.model` to `body_param: model` with that model ID as the single entry of `values`.
-Set `targets[].name` to the upstream deployment name or model ID.
-For the `foundry` mode, point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
-For the `mantle` mode, use a `bedrock` [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
-Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
+### Gateway routes and AI Models
 
-In the `anthropic` mode, Codex sends OpenAI Responses API requests to `/v1/responses` on the gateway origin, so Codex needs an AI Model in the OpenAI format, as in [Route OpenAI Codex CLI traffic through {{site.ai_gateway}}](/ai-gateway/use-codex-with-ai-gateway/).
-OpenCode, omp, pi and Hermes Agent send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
+In every mode, {{ site.claude_code }} sends Anthropic Messages API requests to `/v1/messages` on the gateway origin.
+{{ site.claude_code }} names the model that the developer uses in the `model` field of each request, by default the profile's `--model` value.
+Configure the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.claude_code }} as follows:
+
+* Use the Anthropic format.
+* Create one AI Model for each model ID that the route must accept, all on the same path.
+* Set `config.route.model` to `body_param: model`, with that model ID as the single entry of `values`.
+* Set `targets[].name` to the upstream deployment name or model ID.
+
+Each provider mode needs more settings:
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: AI Model settings
+    key: settings
+rows:
+  - mode: "`anthropic`"
+    settings: |
+      Codex sends OpenAI Responses API requests to `/v1/responses` on the gateway origin, so Codex needs an AI Model in the OpenAI format, as in [Route OpenAI Codex CLI traffic through {{site.ai_gateway}}](/ai-gateway/use-codex-with-ai-gateway/).
+      OpenCode, omp, pi and Hermes Agent send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
+  - mode: "`foundry`"
+    settings: Point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
+  - mode: "`mantle`"
+    settings: |
+      Use a `bedrock` [AI Model Provider](/ai-gateway/entities/ai-model-provider/), and set `targets[].config.endpoint_type: mantle` on the AI Model, as in [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
+      Use `formats: [type: anthropic]` instead of `type: openai`, because the Mantle endpoint accepts the Anthropic format natively.
+{% endtable %}
+
+## Sign-in kinds
+
+By default, developers sign in through your identity provider, and the gateway checks their access token.
+The `--sign-in` flag of `profile create` selects another kind of sign-in:
+
+{% table %}
+columns:
+  - title: "`--sign-in`"
+    key: kind
+  - title: What developers use
+    key: use
+  - title: Limits
+    key: limits
+rows:
+  - kind: "`static-key`"
+    use: |
+      A key that you give each developer, without an identity provider.
+      Leave out `--issuer`, `--client-id` and `--audience`.
+      `login` asks for the key.
+    limits: The profile doesn't set up OpenCode or Hermes Agent.
+  - kind: "`environment-key`"
+    use: |
+      The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
+      Leave out `--issuer`, `--client-id` and `--audience`.
+      Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
+    limits: The profile doesn't set up OpenCode or Hermes Agent.
+  - kind: "`subscription`"
+    use: |
+      Each developer's own Claude subscription, with the same `--issuer`, `--client-id` and `--audience` flags as the default sign-in.
+      Each developer also signs in to {{ site.claude_code }} with their subscription.
+      See [Serve Claude subscriptions and company Claude models](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
+    limits: |
+      Needs the `anthropic` mode.
+      The profile sets up only {{ site.claude_code }}, and can't list gateway MCP servers.
+      Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
+{% endtable %}
+
+### Static keys on the gateway
+
+For a `static-key` or `environment-key` profile, {{ site.claude_code }} sends the key in both `Authorization: Bearer` and `x-api-key` in the `anthropic` mode.
+In the `foundry` and `mantle` modes, {{ site.claude_code }} sends the key only in `Authorization: Bearer`.
+Give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) that accepts those headers and hides the key from the model provider.
+For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
+
+### CI jobs with an environment key
+
+The setup of a CI job with an `environment-key` profile depends on the system:
+
+{% navtabs "environment-key-ci" %}
+{% navtab "macOS and Windows" %}
+
+The CI job doesn't need any other setup.
+
+{% endnavtab %}
+{% navtab "Linux" %}
+
+{{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
+A desktop sign-in sets the variable, but most CI containers don't.
+When the variable isn't set, create a private directory once, and give each step of the job that runs a {{site.kong_harnesses}} command the same `XDG_RUNTIME_DIR`.
+In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.
+For example, in GitHub Actions, add the following step before the first step that runs {{site.kong_harnesses}}:
+
+```yaml
+- run: echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Profile creation
 
 Create the profile on your own computer with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-Run it without flags to answer the questions instead.
-For the default or the `subscription` sign-in, `profile create` connects to your identity provider, so your computer must trust its certificate first.
-For a private CA, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
+Run `profile create` without flags to answer the questions instead.
 
+For the default and the `subscription` sign-ins, `profile create` connects to your identity provider, so your computer must trust its certificate first.
+For a private CA, see [{{site.kong_harnesses}} and private certificate authorities](/kong-harnesses/private-certificate-authorities/).
 The identity provider needs a public OIDC client, without a client secret, for the authorization code flow with PKCE (S256) and refresh tokens.
 Register `http://localhost:9876/callback` as a sign-in redirect URI of the client, or register another loopback URI and pass it with `--redirect-uri`.
 For an example with Okta, see [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
+
+Run the command for your provider mode.
+For a `static-key` or `environment-key` profile, leave out `--issuer`, `--client-id` and `--audience`, and add `--sign-in` with the kind.
+For a `subscription` profile, add `--sign-in subscription`.
 
 {% navtabs "provider-mode" %}
 {% navtab "Anthropic API" %}
@@ -185,71 +296,6 @@ Send a signed-in prompt from the affected agent CLI to check each warned route.
 If [`setup`](/kong-harnesses/developer-computer-changes/#setup) refuses a route that matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
 For more options, such as gateway MCP servers and {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
 
-### Sign-in kinds
-
-By default, developers sign in through your identity provider, and the gateway checks their access token.
-The `--sign-in` flag selects another kind of sign-in:
-
-{% table %}
-columns:
-  - title: "`--sign-in`"
-    key: kind
-  - title: What developers use
-    key: use
-  - title: Limits
-    key: limits
-rows:
-  - kind: "`static-key`"
-    use: |
-      A key that you give each developer, without an identity provider.
-      Leave out `--issuer`, `--client-id` and `--audience`.
-      `login` asks for the key.
-    limits: The profile doesn't set up OpenCode or Hermes Agent.
-  - kind: "`environment-key`"
-    use: |
-      The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
-      Leave out `--issuer`, `--client-id` and `--audience`.
-      Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
-    limits: The profile doesn't set up OpenCode or Hermes Agent.
-  - kind: "`subscription`"
-    use: |
-      Each developer's own Claude subscription, with the same `--issuer`, `--client-id` and `--audience` flags as the default sign-in.
-      Each developer also signs in to {{ site.claude_code }} with their subscription.
-      See [Serve Claude subscriptions and company Claude models](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
-    limits: |
-      Needs the `anthropic` mode.
-      The profile sets up only {{ site.claude_code }}, and can't list gateway MCP servers.
-      Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
-{% endtable %}
-
-The other setup of a CI job with an `environment-key` profile depends on the system:
-
-{% navtabs "environment-key-ci" %}
-{% navtab "macOS and Windows" %}
-
-The CI job needs no other setup.
-
-{% endnavtab %}
-{% navtab "Linux" %}
-
-{{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
-A desktop sign-in sets the variable, but most CI containers don't.
-When the variable isn't set, create a private directory once, and give each step of the job that runs a {{site.kong_harnesses}} command the same `XDG_RUNTIME_DIR`.
-In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.
-For example, in GitHub Actions, add the following step before the first step that runs {{site.kong_harnesses}}:
-
-```yaml
-- run: echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-In the `anthropic` mode, {{ site.claude_code }} sends a static key in both `Authorization: Bearer` and `x-api-key`.
-In the `foundry` and `mantle` modes, it sends the key only in `Authorization: Bearer`.
-Give the AI Model a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) that accepts those headers and hides the key from the model provider.
-For a complete example, see [Set up {{ site.claude_code }} with a static key](/ai-gateway/set-up-claude-code-with-a-static-key/).
-
 ## Profile hosting
 
 Export the installed profile as a JSON file with [jq](https://jqlang.org/):
@@ -297,6 +343,8 @@ rows:
       TLS 1.2 or later.
       {{site.kong_harnesses}} trusts the server certificate through the system trust store, and uses the proxy from `HTTPS_PROXY` and `NO_PROXY`.
 {% endtable %}
+
+### Profile updates
 
 To change the profile, publish the new file at the same URL or give developers the new file.
 When the change keeps the profile's [security identity](/kong-harnesses/profile-file/#security-identity), developers run the same `setup` command again.
