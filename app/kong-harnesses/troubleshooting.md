@@ -182,10 +182,11 @@ rows:
       The `provider` check appears only when it finds a problem.
     next: |
       Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
-      When the line says that OpenCode doesn't read the file where activation wrote the plugin, run `kong-harnesses --client opencode profile cleanup` in a shell without any variable that the line names.
+      When the line says that OpenCode doesn't read the file where activation wrote the plugin, run `kong-harnesses --client opencode profile cleanup`.
       Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
-      If the line names `OPENCODE_CONFIG_DIR`, set the variable to a clean absolute folder or unset the variable.
-      Then run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
+      When the line names a variable for the cleanup step, run the cleanup in a shell without that variable.
+      Then, in the shell that starts OpenCode, run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
+      When the line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable before the activation.
   - check: "`issuer`"
     what: |
       kong-harnesses can connect directly to the token endpoint of the identity provider.
@@ -211,11 +212,13 @@ rows:
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      When the line asks your administrator to change a managed `NO_PROXY` value, give the administrator the entries in this form:
+      When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to change each of `NO_PROXY` and `no_proxy` that the managed settings set.
+      Give the administrator the entries in this form:
 
       * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
       * For an IPv6 address, add all three forms of the address, because agent CLIs read the address in different forms.
         For example, for `http://[::1]:8000`, add `[::1]:8000,[::1],::1`.
+        When the URL has no port, use port `80`.
 
       For {{ site.claude_code }}, when the `fix:` line names `profile activate`, run that command as the last step.
       The command writes the same exclusion to the {{ site.claude_code }} settings.
@@ -224,7 +227,8 @@ rows:
     what: |
       The gateway has a route for the requests of the agent CLI.
       When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the test request on that route.
-      When the gateway refuses or doesn't route a test request that doesn't have an input that the agent CLI can send, such as a client certificate or custom headers, `route` gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
+      Some test requests don't have an input that the agent CLI can send, such as a client certificate or custom headers.
+      When the gateway refuses or doesn't route such a request, `route` gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
       When `doctor` has no credential to send, such as when you aren't signed in or the agent CLI owns its sign-in, a `401` or `403` response gives `ok`.
       That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       For a Claude subscription profile, the same response gives `warn`.
@@ -304,14 +308,15 @@ rows:
       The MCP policy of {{ site.claude_code }} allows the MCP servers in your user, local, and project settings.
       The `mcp` check appears only when a policy restricts MCP servers.
     next: |
-      If your own `deniedMcpServers` setting blocks a server, remove the entry that blocks the server.
+      If the report says that a denylist in your own settings blocks a server, remove the `deniedMcpServers` entry that blocks the server.
       A `deniedMcpServers` entry blocks a server even when `allowedMcpServers` lists the server.
-      If your own `allowedMcpServers` setting doesn't list a server, add an entry for the server, then run `doctor` again:
+      If the report says that your own `allowedMcpServers` can widen the allowlist, add an entry for the server to `allowedMcpServers`, then run `doctor` again:
 
-      * For a remote server, add a `serverUrl` entry when an allowlist already has a `serverUrl` entry. Otherwise, add a `serverName` entry.
-      * For a local server, add a `serverCommand` entry when an allowlist already has a `serverCommand` entry. Otherwise, add a `serverName` entry.
+      * For a remote server, add a `serverUrl` entry when any `allowedMcpServers` list that {{ site.claude_code }} applies has a `serverUrl` entry. Otherwise, add a `serverName` entry.
+      * For a local server, add a `serverCommand` entry when any `allowedMcpServers` list that {{ site.claude_code }} applies has a `serverCommand` entry. Otherwise, add a `serverName` entry.
 
-      A `serverName` entry doesn't count for a server when an allowlist has a `serverUrl` or `serverCommand` entry of the same kind.
+      {{ site.claude_code }} applies the `allowedMcpServers` lists in all your settings files and in the managed settings, not only the list that you edit.
+
       If the policy of your organization blocks a server, or the managed settings set `allowManagedMcpServersOnly` to `true`, ask your administrator to allow the server.
   - check: "`gateway-mcp`"
     what: |
