@@ -82,7 +82,7 @@ rows:
   - setting: Token type
     value: |
       `Bearer`, at sign-in and at renewal.
-      A client that requires DPoP or another token type fails.
+      A token type other than `Bearer`, such as `DPoP`, fails the sign-in and the renewal.
     flag: "No flag"
   - setting: PKCE
     value: "Required, with the `S256` method, which {{site.kong_harnesses}} always sends."
@@ -132,7 +132,7 @@ To use another callback, set `--redirect-uri` to a value that meets these rules:
 
 * It uses `http`.
 * Its host is `localhost`, `127.0.0.1` or `[::1]`.
-* Its port is from 1 to 65535, without zeros at the start.
+* Its port is from 1 to 65535, without a zero at the start.
 * Its path has 2 to 256 characters and starts with `/`, such as `/callback`.
   The path can have letters, digits, `-`, `.`, `_`, `~` and `/`, but it can't have `//` or a `.` or `..` segment, and it can't end with `/`.
 * It doesn't have user information, a query or a fragment.
@@ -191,7 +191,7 @@ Use the value that the identity provider puts in the claim that `config.audience
 The default claim is `aud`.
 
 Set `--audience` in the profile to an absolute URI that identifies the gateway, such as `https://gateway.example.com/api`.
-The profile also needs this value when you set `--audience-parameter none`.
+The profile needs this value with every `--audience-parameter` value, including `none`.
 For the rules of the value, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 The `aud` claim of the access token can differ from the `--audience` value.
 

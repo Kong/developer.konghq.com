@@ -32,7 +32,6 @@ related_resources:
 ---
 
 Use these checks to find why {{site.kong_harnesses}} refuses a value or a response of your identity provider at profile creation, at sign-in or at renewal.
-{{site.kong_harnesses}} refuses an identity provider value or response that doesn't meet these checks.
 [`kong-harnesses profile create`](/kong-harnesses/profile/create/) checks the profile values and the discovery document, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) checks the profile values.
 [`kong-harnesses login`](/kong-harnesses/login/) and [`kong-harnesses setup`](/kong-harnesses/setup/) check the discovery document again, and also the callback, the signing keys, the token response and the ID token.
 A renewal checks the token response.
@@ -94,7 +93,7 @@ For other error responses, the renewal fails and the saved sign-in stays.
 
 A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
 
-* One `Content-Type` header with the value `application/json`, and without a parameter other than `charset=utf-8`, in any case.
+* One `Content-Type` header with the value `application/json`, and without a parameter other than `charset=utf-8`, with any letter case.
 * No `Content-Encoding` header, or one with the value `identity`.
 * A body of at most 65,536 bytes, with the same length as its `Content-Length` header when the response has one.
 * One JSON object in UTF-8, with only whitespace after it.
@@ -162,7 +161,7 @@ In both responses:
 
 * `access_token` has 1 to 16,384 characters, from letters, digits, `-`, `.`, `_`, `~`, `+` and `/`, with optional `=` characters at the end.
 * `refresh_token` has 1 to 16,384 visible ASCII characters.
-* `token_type` is `Bearer`, in any case.
+* `token_type` is `Bearer`, with any letter case.
 * `expires_in` is a JSON number with digits only.
 * `scope`, when present, is a nonempty string with single spaces between scopes, without a space at the start or the end.
   Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, occurs only once, and must match a different allowed scope.
