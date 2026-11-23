@@ -45,10 +45,10 @@ Your current settings don't change until you activate the profile again.
 To apply the new settings:
 
 1. Check the profile:
-   * For a profile that you set up with `profile activate`, run `kong-harnesses status --profile PROFILE_NAME`.
+   * For a profile that you set up with `setup` or `profile activate`, run `kong-harnesses status --profile PROFILE_NAME`.
    * For a profile that you imported with `relay import`, run `kong-harnesses relay status --profile PROFILE_NAME`.
-1. If a client shows `Set up by an earlier release or profile`, run the command that the `Next` line names.
-1. Run the same status command again, and repeat the previous step until the `Next` line shows `None (ready to use)`.
+1. If a client shows `Set up by an earlier release or profile`, do the step that its `Next` line names.
+1. Run the same status command again, and repeat the previous step until no client shows `Set up by an earlier release or profile`.
 
 If your organization's managed settings set up {{site.claude_code}}, `status` doesn't name a command.
 In this case, the release lists a step for your administrator under **Breaking changes**.
