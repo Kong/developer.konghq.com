@@ -111,6 +111,8 @@ Replace these placeholders:
 * `POLICY_FILE` (MDM build only): The MDM policy that the computers get now.
   `fleet remove` reads it so that it keeps the changes that you made after the build.
 * `MCP_CONFIG_FILE` (`exclusive` build only): The `managed-mcp.json` file that the computers have now.
+  `fleet remove` refuses a file that holds none of the gateway servers of the build.
+  If you took those servers out of the file, put each one back as the build wrote it.
 * `BUILD_ID`: The build ID, used in the name of the output folder.
 
 When policy keys or your own MCP servers remain, pass `--output-dir` with a new or empty folder.

@@ -129,6 +129,12 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
   * It treats a `strictPluginOnlyCustomization` value that isn't a boolean, a list, or `null`, such as a string, as `true`.
   * It doesn't treat a `null` `strictPluginOnlyCustomization` as a lock, because `null` removes the key.
 
+  `doctor` also warns when a setting turns off the gateway MCP plugin:
+
+  * If `enabledPlugins` in a settings file sets the gateway plugin to `false`, remove that entry.
+  * If the `plugin.json` manifest of the plugin turns it off, follow the fix that `doctor` prints.
+    On a computer with a fleet build, the fix is to run `fleet build` again and deploy the new build.
+
   For the plugin blockers, see [Plugin blockers](/kong-harnesses/fleet-build-options/#plugin-blockers).
 
 ## Host apps and WSL

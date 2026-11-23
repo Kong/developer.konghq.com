@@ -325,14 +325,20 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   * It has only fields that `fleet build` can check.
   * It passes the checks in [Invalid MCP lists](#invalid-mcp-lists), so it can't set `command`, `args`, `env`, or `headersHelper`.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
+  If the renamed server points to a gateway address, it must also pass the rule for servers at a gateway address in this list.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   What `fleet build` does depends on the record:
   * **Record with server definitions:** `fleet build` takes out each recorded server that still has the recorded definition.
     If you changed the server after that build, `fleet build` doesn't take it out, the names still collide, and `fleet build` refuses the build.
     To fix it, put back the definition that the earlier build wrote.
     To keep your changes, add them as your own server under another name.
-    If that server points to a gateway address, it must also pass the rule for servers at a gateway address in this list.
+    That server must also pass the rule for servers at a gateway address in this list.
   * **Record with server names only:** `fleet build` takes out each `--mcp-config` server that has a recorded name, even when you changed that server after that build.
+
+  `fleet build` refuses an `--mcp-config` file that holds none of the servers that the record names.
+  Pass the `managed-mcp.json` that the computers have now.
+  If you took the recorded servers out of that file, put each one back under its name.
+  When the record holds the definitions, put back each server as the earlier build wrote it.
 
   The new `managed-mcp.json` holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't take out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
