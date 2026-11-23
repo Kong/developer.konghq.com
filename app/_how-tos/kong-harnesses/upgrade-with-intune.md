@@ -67,9 +67,6 @@ A new app doesn't copy the assignments of the previous app, so test each new rel
 
 Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intune.microsoft.com) for the new release and configure it to supersede the previous app in place.
 
-{:.info}
-> If Intune shows a **Scope tags** page between wizard pages, click **Next**.
-
 ### Upload the package and enter app details
 
 {% include how-tos/steps/kong-harnesses-intune-upload.md %}
@@ -97,7 +94,8 @@ Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intu
 
 Confirm that Intune upgraded kong-harnesses on the test device before rolling out the new release broadly.
 
-1. Wait until Intune reports the installation on the test device as successful.
+1. Under **Monitor** > **Device install status** for the app, wait until the test device reports `Installed`.
+   If you assigned a user group, check **User install status** instead.
 1. Open a new PowerShell window on the test device.
 1. Confirm that PowerShell resolves the system-wide executable:
 
@@ -118,6 +116,9 @@ Confirm that Intune upgraded kong-harnesses on the test device before rolling ou
 
 {% include how-tos/steps/kong-harnesses-intune-rollout.md %}
 
+Wait until all assigned devices report `Installed` under **Monitor** > **Device install status** before cleaning up the previous app.
+If you assigned user groups, check **User install status** instead.
+
 ## Clean up the previous app
 
 Intune allows at most 11 apps in a [supersedence graph](https://learn.microsoft.com/en-us/intune/intune-service/apps/apps-win32-supersedence#supersedence-limitations).
@@ -132,7 +133,7 @@ After all assigned devices report `Installed` for the new release, clean up the 
 1. Click the previous app.
 1. Click **Properties**.
 1. Next to **Assignments**, click **Edit**.
-1. Remove each assigned group.
+1. On each assigned group row, click **Remove**.
 1. Click **Review + save**.
 1. Click **Save**.
 
@@ -142,16 +143,17 @@ After all assigned devices report `Installed` for the new release, clean up the 
 1. Click the new app.
 1. Click **Properties**.
 1. Next to **Supersedence**, click **Edit**.
-1. Remove the previous app from the supersedence list.
+1. Click the action menu icon on the row of the previous app.
+1. Click **Delete**.
 1. Click **Review + save**.
 1. Click **Save**.
 
 ### Delete the previous app
 
 1. Navigate to **Apps** > **All apps**.
-1. Click the action menu icon on the row of the previous app, or right-click the row.
+1. Click the action menu icon on the row of the previous app.
 1. Click **Delete**.
-1. Confirm the deletion when prompted.
+1. Click **Yes**.
 
 ## Validate
 
@@ -163,7 +165,8 @@ Confirm that only the active kong-harnesses release app remains and that managed
 1. Under **Monitor**, click **Device install status**.
    If you assigned user groups, click **User install status** instead.
    Confirm that the assigned devices or users report `Installed`.
-1. On a managed Windows 11 device, verify the installed version in PowerShell:
+1. Open a new PowerShell window on a managed Windows 11 device.
+1. Verify the installed release version:
 
    {% validation custom-command %}
    command: kong-harnesses version

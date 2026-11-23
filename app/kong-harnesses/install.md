@@ -56,7 +56,7 @@ rows:
     packages: "`_darwin_arm64.pkg`, `_darwin_amd64.pkg`"
     path: "`/usr/local/bin/kong-harnesses`"
   - platform: Windows 11 (x64 / Arm)
-    packages: "`_windows_amd64.msi`, `_windows_arm64.msi` (not in a prerelease)"
+    packages: "`_windows_amd64.msi`, `_windows_arm64.msi`"
     path: "`C:\\Program Files\\Kong\\kong-harnesses\\kong-harnesses.exe`"
   - platform: Ubuntu 26.04, 24.04, 22.04 (amd64 / arm64)
     packages: "`_linux_amd64.deb`, `_linux_arm64.deb`"
@@ -65,6 +65,8 @@ rows:
     packages: "`_linux_amd64.rpm`, `_linux_arm64.rpm`"
     path: "`/usr/bin/kong-harnesses`"
 {% endtable %}
+
+Pre-releases don't include Windows installers.
 
 ## Check a downloaded file
 
@@ -208,7 +210,8 @@ Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Inst
 1. Confirm that on every target Mac where `/usr/local` or `/usr/local/bin` exists, each path is a directory owned by `root` and writable only by administrators, using step 1 of [Install on macOS](#install-on-macos).
 1. Assign the Arm package from [Platform packages](#platform-packages) to Apple silicon Macs and the Intel package to Intel Macs.
 1. Deploy to one test Mac first.
-   For a new release, use a test Mac running the previous release, because an earlier receipt also passes a receipt-existence check.
+   For a new release, use a test Mac running the previous release.
+   An earlier receipt also passes a check that only looks for a receipt, so the next step compares the receipt `version`.
 1. Inspect the package receipt on the test Mac:
 
    ```sh
@@ -220,13 +223,7 @@ Upload the verified `.pkg` (with passing checksum, provenance, Developer ID Inst
 
    * **An MDM tool that reports installation status, such as Jamf Pro:** The MDM tool reports success on the test Mac and the receipt `version` matches.
    * **Microsoft Intune:** The receipt `version` matches and `/usr/local/bin/kong-harnesses version` on the test Mac prints the release version with its leading `v`, for example `v1.2.3`.
-     Intune can't report success for this package, so don't wait for an Intune success status.
-
-{:.info}
-> **Microsoft Intune macOS PKG detection:** Microsoft Intune's **macOS app (PKG)** type can't report installation success for this package.
-> Intune's [unmanaged macOS PKG detection rules](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos#step-4--detection-rules) detect and monitor installations using the bundle IDs and build numbers of included `.app` applications, and **Included apps** must contain only applications.
-> The kong-harnesses `.pkg` installs only `/usr/local/bin/kong-harnesses` and documentation files without a `.app` bundle.
-> To check a deployment with Intune, run both Microsoft Intune checks in the last step of [Deploy on macOS with an MDM tool](#deploy-on-macos-with-an-mdm-tool) on the test Mac.
+     Intune's **macOS app (PKG)** type can't report installation success for this package, because its [unmanaged macOS PKG detection rules](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos#step-4--detection-rules) check only included `.app` bundles and this package installs a CLI binary without a `.app` bundle.
 
 ### Remove from macOS
 
@@ -249,8 +246,8 @@ Follow these steps to remove only the files installed by the macOS package:
    ```
 
    The `/usr/local` and `/usr/local/bin` lines must start with `d`, and the `/usr/local/bin/kong-harnesses` line must start with `-`.
-   If any line starts with another character or prints `No such file or directory`, skip the next three steps (verifying and deleting the executable).
-   Skipping them prevents `rm` from deleting a file in another folder through a symbolic link.
+   If any line starts with another character or prints `No such file or directory`, skip verifying and deleting the executable and go to the step that checks the documentation path.
+   Skipping those steps prevents `rm` from deleting a file in another folder through a symbolic link.
    If `/usr/local/bin/kong-harnesses` links to a path containing `Cellar`, Homebrew installed it.
    Remove that copy with Homebrew instead.
 1. Print the executable checksum stored in the package receipt:
@@ -267,7 +264,7 @@ Follow these steps to remove only the files installed by the macOS package:
 
    The first number must match the number on the `./bin/kong-harnesses` line of the receipt.
    If they don't match or the receipt doesn't contain `./bin/kong-harnesses`, another install replaced the package binary.
-   Skip the next step (deleting the executable).
+   Skip deleting the executable and go to the step that checks the documentation path.
 1. Delete the package executable:
 
    ```sh
@@ -281,8 +278,8 @@ Follow these steps to remove only the files installed by the macOS package:
    ```
 
    All four lines must start with `d`.
-   If any line starts with another character or prints `No such file or directory`, skip the next two steps (deleting the license files and folder).
-   Skipping them prevents `rm` from deleting files in another folder through a symbolic link.
+   If any line starts with another character or prints `No such file or directory`, skip deleting the documentation files and folder and go to the step that deletes the package receipt.
+   Skipping those steps prevents `rm` from deleting files in another folder through a symbolic link.
 1. Delete the license and third-party notices:
 
    ```sh

@@ -16,3 +16,4 @@
 1. Click **OK**.
 1. Click **Next**.
 1. On the **Dependencies** page, click **Next**.
+1. On the **Scope tags** page, click **Next**.

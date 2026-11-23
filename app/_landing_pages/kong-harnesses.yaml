@@ -63,6 +63,6 @@ rows:
           title: Install for every user
           description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
           cta:
-            text: Install for every user
+            text: Read the install guide
             url: /kong-harnesses/install/
             align: end

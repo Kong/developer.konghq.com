@@ -9,7 +9,7 @@
 1. Click **OK**.
 1. In the **Name** field, enter a name that includes the release and processor type, for example `kong-harnesses v1.2.3 x64`.
 1. Click **Edit Description**.
-1. In the description field, enter `Installs kong-harnesses for every user of the computer`.
+1. In the **Description** field, enter `Installs kong-harnesses for every user of the computer`.
 1. Click **OK**.
 1. In the **Publisher** field, enter `Kong Inc.` if the field is empty.
 1. Click **Next**.

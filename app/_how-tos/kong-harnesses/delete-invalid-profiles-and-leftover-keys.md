@@ -56,11 +56,12 @@ Use these steps to delete an invalid user profile and remove any leftover gatewa
 
 ## Delete an invalid profile
 
-Use this procedure only when `doctor`, `logout`, `profile get`, or `profile list` reports that a user profile is invalid or unreadable and names `kong-harnesses profile delete`.
+Delete an invalid user profile when `doctor`, `logout`, `profile get`, or `profile list` reports that the profile is invalid or unreadable and names `kong-harnesses profile delete`.
 For other unreadable profiles, follow the next step in the error message:
 
-* **Needs a newer kong-harnesses (`update kong-harnesses`):** Update kong-harnesses, then follow [Remove kong-harnesses](/kong-harnesses/remove-kong-harnesses/).
-* **Unreadable machine-wide profile (`ask your administrator to reinstall it` or `ask your administrator to remove it`):** Ask your administrator to reinstall an invalid or untrusted machine-wide profile so you can run `logout` before they remove the fleet build, or to remove a file whose name isn't a profile name.
+* **Needs a newer kong-harnesses (`update kong-harnesses`):** Update kong-harnesses, then follow [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile) and [Delete each profile](/kong-harnesses/remove-kong-harnesses/#delete-each-profile).
+* **Unreadable machine-wide profile (`ask your administrator to reinstall it` or `ask your administrator to remove it`):** For an invalid or untrusted machine-wide profile, ask your administrator to reinstall it so you can run `logout` before they remove the fleet build.
+  For a machine-wide file whose name isn't a profile name, ask your administrator to remove the file.
 * **User file whose name isn't a profile name (`no command can use or delete it`):** Skip that entry, because no kong-harnesses command can sign out of it or delete it.
 
 For details on unreadable profile messages, see [Profile errors](/kong-harnesses/errors/#profile-errors).
@@ -84,14 +85,33 @@ For details on unreadable profile messages, see [Profile errors](/kong-harnesses
    ```
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
-1. If the `Login` field reports that a saved sign-in might remain, import a valid copy of the profile again, run `kong-harnesses logout --profile PROFILE_NAME`, and then run `kong-harnesses profile delete PROFILE_NAME`.
+
+If the `Login` field reports that a saved sign-in might remain, revoke and remove it before continuing:
+
+1. Import a valid copy of the profile using [`kong-harnesses profile import`](/kong-harnesses/profile/import/), replacing `PROFILE_SOURCE` with the profile file path or URL:
+
+   ```sh
+   kong-harnesses profile import PROFILE_SOURCE
+   ```
+
+1. Sign out of the profile:
+
+   ```sh
+   kong-harnesses logout --profile PROFILE_NAME
+   ```
+
+1. Delete the profile:
+
+   ```sh
+   kong-harnesses profile delete PROFILE_NAME
+   ```
 
 If the `Gateway MCP keys` field lists items that might remain, continue to [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys).
 
 ## Delete leftover gateway MCP server keys
 
-Use these steps when the `Gateway MCP keys` field of `profile delete` names items that might remain, or when the tab for your operating system explains that items can remain without that field.
-The operating system steps apply after `logout` of a valid profile too.
+Delete leftover gateway MCP server keys when the `Gateway MCP keys` field of `profile delete` names items that might remain.
+On macOS, also check each keychain when that field is absent, including after `logout` of a valid profile.
 
 Replace `ITEM_NAME` with a name from the `Gateway MCP keys` field or from the list command in your operating system tab, such as `PROFILE_NAME.mcp-key.SERVER_NAME`.
 Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the items of that profile.
@@ -125,7 +145,7 @@ macOS can ask for the keychain password, normally your login password, to allow 
    Paste a path from `security list-keychains`, or the path of a former default keychain that isn't in that output, then press Enter.
    For example: `/Users/USER/Library/Keychains/login.keychain-db`.
    Don't paste the spaces and double quotes that `security list-keychains` prints around the path.
-   Reading into a variable preserves the path exactly, even when it holds a space or a `$`.
+   Reading into a variable preserves the path exactly, even when it holds a space, single quote, or `$`.
 1. In the same terminal, unlock the keychain:
 
    ```sh
@@ -230,7 +250,7 @@ Each item is a file named `ITEM_NAME.login.dpapi` in the `%LOCALAPPDATA%\kong-ha
 
 ## Validate
 
-Confirm that the invalid profile, its agent CLI settings, and its leftover gateway MCP server keys are removed.
+After verifying key deletion in your operating system tab, confirm that the invalid profile and its agent CLI settings are removed.
 
 1. Confirm that the deleted user profile doesn't appear in your installed profiles:
 
@@ -243,10 +263,10 @@ Confirm that the invalid profile, its agent CLI settings, and its leftover gatew
    {% endvalidation %}
 
    Use `profile list` rather than `status` to verify deletion, because `KONG_HARNESSES_PROFILE` limits `status` to one profile.
-1. Check that cleaned agent CLIs don't show active settings for the deleted profile (with `KONG_HARNESSES_PROFILE` unset):
+1. Check your remaining profiles and agent CLI settings (with `KONG_HARNESSES_PROFILE` unset):
 
    ```sh
    kong-harnesses status
    ```
 
-1. Confirm that the final check step in your operating system tab under [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys) reported that every removed key is gone.
+   The output doesn't list the deleted profile or show active kong-harnesses settings for cleaned agent CLIs.

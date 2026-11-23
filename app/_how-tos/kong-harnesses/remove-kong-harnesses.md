@@ -73,10 +73,6 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
 
    When the profile has a saved sign-in or static key on this computer, `logout` asks you to type the profile name to confirm.
    For what `logout` revokes at the identity provider, see [Sign out](/kong-harnesses/sign-in/#sign-out).
-   To remove gateway MCP server keys that stay after `logout`, see [Delete leftover gateway MCP server keys](/kong-harnesses/delete-invalid-profiles-and-leftover-keys/#delete-leftover-gateway-mcp-server-keys).
-   For an invalid user profile, skip `logout` and follow [Delete an invalid profile](/kong-harnesses/delete-invalid-profiles-and-leftover-keys/#delete-an-invalid-profile).
-   For other unreadable profiles, see [Profile errors](/kong-harnesses/errors/#profile-errors).
-   If `logout` fails for another reason, complete the step that its message names, then run `logout` again.
 1. If you use OpenCode or Hermes Agent, sign out through each plugin before you run `profile cleanup`, because they sign in through their own plugins and `kong-harnesses logout` doesn't sign out of them:
 
    * **OpenCode:** Run `opencode auth logout`, then select the provider named after the profile.
@@ -86,6 +82,10 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
 
    For the plugin commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
 
+If `logout` fails, complete the step that its message names, then run `logout` again.
+For an invalid user profile or gateway MCP server keys that stay after `logout`, follow [Delete invalid profiles and leftover gateway MCP server keys](/kong-harnesses/delete-invalid-profiles-and-leftover-keys/).
+For other unreadable profiles, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+
 ## Clean up agent CLI settings
 
 `kong-harnesses setup` and `kong-harnesses profile activate` change the settings of each agent CLI that they configure.
@@ -94,8 +94,7 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
 
 Without `--client`, `profile cleanup` works on every supported agent CLI.
 To clean up one agent CLI, add `--client CLIENT_NAME`, for example `--client claude-code`.
-
-On a computer with a [{{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/), run `kong-harnesses profile cleanup --client claude-code` before you uninstall if you activated a profile at the user level.
+On a computer with a [{{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/), run `profile cleanup` if you also activated a profile at the user level, because managed fleet settings don't clear user-level settings.
 
 1. Preview the changes that `profile cleanup` would make:
 
@@ -199,7 +198,16 @@ For silent removal or devices managed with Microsoft Intune, see [Remove from Wi
 Open a new terminal so `PATH` changes take effect, and confirm that `kong-harnesses` isn't found:
 
 {% navtabs "validate-remove-kong-harnesses" %}
-{% navtab "macOS and Linux" %}
+{% navtab "macOS" %}
+
+```sh
+command -v kong-harnesses
+```
+
+The command prints nothing and exits with a non-zero status.
+
+{% endnavtab %}
+{% navtab "Linux" %}
 
 ```sh
 command -v kong-harnesses
@@ -220,5 +228,5 @@ PowerShell reports that `kong-harnesses` isn't recognized.
 {% endnavtabs %}
 
 {:.info}
-> If an administrator will uninstall kong-harnesses for you, or you kept it installed, run `kong-harnesses profile list` to confirm each deleted user profile is gone.
+> If an administrator uninstalls kong-harnesses for you, or you kept it installed, run `kong-harnesses profile list` to confirm each deleted user profile is gone.
 > Then run `kong-harnesses status` with `KONG_HARNESSES_PROFILE` unset to confirm that cleaned agent CLIs don't show active kong-harnesses settings.

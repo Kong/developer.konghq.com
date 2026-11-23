@@ -27,7 +27,7 @@ tldr:
   a: |
     Wrap the verified `.msi` installer with the Microsoft Win32 Content Prep Tool (`IntuneWinAppUtil.exe`).
     Add the `.intunewin` file to Intune as a Windows app (Win32) with **System** install behavior, an MSI detection rule, and a **Required** assignment to a one-device test group.
-    Validate the install on the test device before assigning the remaining groups.
+    Test the installation on that device, then assign the remaining groups and validate the rollout.
 
 related_resources:
   - text: Upgrade the kong-harnesses Windows installer with Intune
@@ -63,7 +63,7 @@ cleanup:
         1. Click the kong-harnesses app for a deployed processor type (x64 or Arm64).
         1. Click **Properties**.
         1. Next to **Assignments**, click **Edit**.
-        1. Under **Required**, remove the target groups.
+        1. Under **Required**, click **Remove** on each target group row.
         1. Under **Uninstall**, click **Add group**.
         1. Select the same groups.
         1. Click **Select**.
@@ -73,10 +73,6 @@ cleanup:
 
         Intune's **Uninstall** assignment removes kong-harnesses only on devices where that Intune app installed it through a **Required** or **Available for enrolled devices** assignment.
         For copies installed outside the Intune app, follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
-
-        To uninstall manually on every device instead of through Intune, skip adding groups under **Uninstall**.
-        Save the removed **Required** assignment for each processor-type app (x64 and Arm64).
-        Then follow [Remove from Windows](/kong-harnesses/install/#remove-from-windows) on each device.
 ---
 
 ## Wrap the installer
@@ -86,9 +82,6 @@ cleanup:
 ## Add the app in Intune
 
 Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intune.microsoft.com) and assign it to a one-device test group first.
-
-{:.info}
-> If Intune shows a **Scope tags** page between wizard pages, click **Next**.
 
 ### Upload the package and enter app details
 
@@ -103,16 +96,17 @@ Create a Windows app (Win32) in the [Microsoft Intune admin center](https://intu
 1. On the **Supersedence** page, click **Next**.
 1. On the **Assignments** page, under **Required**, click **Add group**.
 1. Select a test group with one device, or with the user of one device.
-   Add the remaining groups only after [Validate](#validate) passes on that device.
+   Add the remaining groups only after [Test the installation on the test device](#test-the-installation-on-the-test-device) passes.
 1. Click **Select**.
 1. Click **Next**.
 1. On the **Review + create** page, click **Create**.
 
-## Validate
+## Test the installation on the test device
 
 Confirm that Intune installed the expected release on the test device before rolling out the app broadly.
 
-1. Wait until Intune reports the installation on the test device as successful.
+1. Under **Monitor** > **Device install status** for the app, wait until the test device reports `Installed`.
+   If you assigned a user group, check **User install status** instead.
 1. Open a new PowerShell window on the test device.
    The installer updates the system `PATH`, which a PowerShell window opened before the installation doesn't see.
 1. Confirm that PowerShell resolves the system-wide executable:
@@ -124,6 +118,28 @@ Confirm that Intune installed the expected release on the test device before rol
    The command prints `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
 1. Verify the installed release version:
 
+   ```powershell
+   kong-harnesses version
+   ```
+
+   The command prints the release added to Intune with its leading `v`, for example `v1.2.3`.
+
+## Roll out to remaining groups
+
+{% include how-tos/steps/kong-harnesses-intune-rollout.md %}
+
+## Validate
+
+Confirm that Intune installed kong-harnesses on the assigned Windows 11 computers and that the executable reports the deployed release.
+
+1. In the [Microsoft Intune admin center](https://intune.microsoft.com), navigate to **Apps** > **All apps**.
+1. Click the kong-harnesses app name.
+1. Under **Monitor**, click **Device install status**.
+   If you assigned user groups, click **User install status** instead.
+   Confirm that the assigned devices or users report `Installed`.
+1. Open a new PowerShell window on a managed Windows 11 device.
+1. Verify the installed release version:
+
    {% validation custom-command %}
    command: kong-harnesses version
    expected:
@@ -133,7 +149,3 @@ Confirm that Intune installed the expected release on the test device before rol
    {% endvalidation %}
 
    The command prints the release added to Intune with its leading `v`, for example `v1.2.3`.
-
-## Roll out to remaining groups
-
-{% include how-tos/steps/kong-harnesses-intune-rollout.md %}
