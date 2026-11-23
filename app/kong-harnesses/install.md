@@ -29,6 +29,8 @@ related_resources:
     url: /kong-harnesses/doctor/
   - text: Deploy the kong-harnesses Windows installer with Intune
     url: /kong-harnesses/deploy-with-intune/
+  - text: Upgrade the kong-harnesses Windows installer with Intune
+    url: /kong-harnesses/upgrade-with-intune/
   - text: Remove kong-harnesses
     url: /kong-harnesses/remove-kong-harnesses/
 ---
@@ -158,7 +160,7 @@ The notarization ticket is stapled to the package, so it installs without networ
 {:.warning}
 > Do not install kong-harnesses by another method on a Mac that uses the installer package.
 > On an Intel Mac, Homebrew installs `kong-harnesses` at `/usr/local/bin/kong-harnesses`, and a release archive can also go to that path.
-> Package removal can't distinguish a release archive copy from the package copy.
+> Package removal cannot distinguish a release archive copy from the package copy.
 
 ### Install on macOS
 
@@ -329,13 +331,15 @@ Installing a newer `.msi` replaces the installed version in place, and Windows I
 ### Deploy on Windows with Intune
 
 Releases don't include an `.intunewin` file, so wrap the verified `.msi` installer and add one Windows app (Win32) for each processor type and each release.
-See [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/deploy-with-intune/) for step-by-step instructions.
+To deploy kong-harnesses for the first time, see [Deploy the kong-harnesses Windows installer with Intune](/kong-harnesses/deploy-with-intune/).
+To upgrade an existing Intune deployment to a new release, see [Upgrade the kong-harnesses Windows installer with Intune](/kong-harnesses/upgrade-with-intune/).
 
 ### Remove from Windows
 
 1. Ask each developer on the computer to [remove their sign-ins, settings, and profiles](/kong-harnesses/remove-kong-harnesses/).
 1. If Microsoft Intune manages the app, remove the **Required** assignment for the target users or devices before uninstalling so Intune doesn't reinstall it.
-1. Open PowerShell as an administrator and uninstall kong-harnesses with the `.msi` file that installed it, replacing `MSI_PATH` with its full path:
+1. Open PowerShell as an administrator.
+1. Uninstall kong-harnesses with the `.msi` file that installed it, replacing `MSI_PATH` with its full path:
 
    ```powershell
    (Start-Process msiexec.exe -ArgumentList '/x "MSI_PATH" /qn /norestart' -Wait -PassThru).ExitCode
@@ -405,7 +409,7 @@ Confirm the terminal resolves the system-wide executable:
 command -v kong-harnesses
 ```
 
-The command must print `/usr/local/bin/kong-harnesses`.
+The command prints `/usr/local/bin/kong-harnesses`.
 
 {% endnavtab %}
 {% navtab "Linux" %}
@@ -414,7 +418,7 @@ The command must print `/usr/local/bin/kong-harnesses`.
 command -v kong-harnesses
 ```
 
-The command must print `/usr/bin/kong-harnesses`.
+The command prints `/usr/bin/kong-harnesses`.
 
 {% endnavtab %}
 {% navtab "Windows" %}
@@ -423,7 +427,7 @@ The command must print `/usr/bin/kong-harnesses`.
 (Get-Command kong-harnesses).Source
 ```
 
-The command must print `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
+The command prints `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
 
 {% endnavtab %}
 {% endnavtabs %}

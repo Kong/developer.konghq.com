@@ -6,7 +6,9 @@ groups:
           - path: /kong-harnesses/
           - path: /kong-harnesses/install/
           - path: /kong-harnesses/deploy-with-intune/
+          - path: /kong-harnesses/upgrade-with-intune/
           - path: /kong-harnesses/remove-kong-harnesses/
+          - path: /kong-harnesses/delete-invalid-profiles-and-leftover-keys/
 
   - title: CLI References
     sections:
