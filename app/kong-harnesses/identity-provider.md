@@ -36,7 +36,7 @@ related_resources:
     url: /kong-harnesses/identity-provider/checks/
 ---
 
-{{site.kong_harnesses}} signs a developer in to your OpenID Connect (OIDC) identity provider in the browser, with the authorization code flow and PKCE.
+{{site.kong_harnesses}} signs a developer in to your [OpenID Connect (OIDC)](/ai-gateway/openid-connect/) identity provider in the browser, with the authorization code flow and [Proof Key for Code Exchange (PKCE)](https://www.rfc-editor.org/rfc/rfc7636).
 It gets new access tokens with a refresh token, so the developer doesn't sign in for each one.
 Register one client for {{site.kong_harnesses}} in the identity provider, and put its values in the profile that you create with [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
 
@@ -47,7 +47,7 @@ Other OIDC identity providers need the same kinds of settings.
 
 ## Client settings
 
-Register the client with these settings, and set the matching profile flags.
+Register the {{site.kong_harnesses}} client in the identity provider with the following settings, and set the matching `profile create` flags.
 
 {% table %}
 columns:
@@ -58,35 +58,40 @@ columns:
   - title: Profile flag
     key: flag
 rows:
+  - setting: Issuer
+    value: |
+      The issuer URL of the identity provider, exactly as its discovery document lists it, with a trailing slash when the document has one.
+      See [Discovery document](/kong-harnesses/identity-provider/checks/#discovery-document).
+    flag: "`--issuer`"
   - setting: Client type
     value: |
       A public client, such as a native application.
       The client doesn't have a client secret.
-    flag: "None"
+    flag: "No flag"
   - setting: Client ID
     value: "The ID that the identity provider gives the client."
     flag: "`--client-id`"
   - setting: Grant types
     value: "Authorization code and refresh token."
-    flag: "None"
+    flag: "No flag"
   - setting: Response type
     value: |
       `code`, with the authorization code in the query of the callback.
       If the identity provider has a response mode setting, select `query`.
-    flag: "None"
+    flag: "No flag"
   - setting: Token type
     value: |
       `Bearer`, at sign-in and at renewal.
       A client that requires DPoP or another token type fails.
-    flag: "None"
+    flag: "No flag"
   - setting: PKCE
     value: "Required, with the `S256` method, which {{site.kong_harnesses}} always sends."
-    flag: "None"
+    flag: "No flag"
   - setting: ID token signature
     value: |
       An RSA or ECDSA algorithm, such as `RS256` or `ES256`.
       See [ID token](/kong-harnesses/identity-provider/checks/#id-token).
-    flag: "None"
+    flag: "No flag"
   - setting: Callback, also called the redirect URI
     value: |
       `http://localhost:9876/callback` by default.
@@ -120,18 +125,17 @@ For the checks on the callback request, see [Callback](/kong-harnesses/identity-
 
 Register the callback of the profile in the client as an exact value, not as a pattern.
 Use the same host, port and path in the client.
-If your identity provider ignores the port when it matches a loopback callback, as RFC 8252 allows, the port that you register can differ from the port in the profile.
+If your identity provider ignores the port when it matches a loopback callback, as [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252#section-7.3) allows, the port that you register can differ from the port in the profile.
 [`kong-harnesses profile get`](/kong-harnesses/profile/get/) and [`kong-harnesses doctor`](/kong-harnesses/doctor/) show the callback of a profile.
 
-To use another callback, set `--redirect-uri`.
-The value must:
+To use another callback, set `--redirect-uri` to a value that meets these rules:
 
-* Use `http`.
-* Have the host `localhost`, `127.0.0.1` or `[::1]`.
-* Have a port from 1 to 65535, without zeros at the start.
-* Have a path of 2 to 256 characters that starts with `/`, such as `/callback`.
+* It uses `http`.
+* Its host is `localhost`, `127.0.0.1` or `[::1]`.
+* Its port is from 1 to 65535, without zeros at the start.
+* Its path has 2 to 256 characters and starts with `/`, such as `/callback`.
   The path can have letters, digits, `-`, `.`, `_`, `~` and `/`, but it can't have `//` or a `.` or `..` segment, and it can't end with `/`.
-* Not have user information, a query or a fragment.
+* It doesn't have user information, a query or a fragment.
 
 For a `localhost` callback, {{site.kong_harnesses}} listens on `127.0.0.1`, and also on `[::1]` when the computer has it.
 Two sign-ins on the same computer conflict when they need the same address and port, even with different paths.
@@ -147,11 +151,17 @@ When another program, such as another sign-in, listens on the callback address a
 {% navtab "Windows" %}
 
 When another program, such as another sign-in, listens on the callback address and port, or when Windows reserved the port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the sign-in callback address is in use.
+The error also names the commands that list the reserved ports.
 
-To list the TCP ports that Windows reserved for IPv4 and IPv6, run these commands, which the error also names:
+To list the TCP ports that Windows reserved for IPv4, run this command:
 
 ```powershell
 netsh interface ipv4 show excludedportrange protocol=tcp
+```
+
+To list the TCP ports that Windows reserved for IPv6, run this command:
+
+```powershell
 netsh interface ipv6 show excludedportrange protocol=tcp
 ```
 
@@ -171,16 +181,17 @@ For the checks on the `scope` value and the other fields of a token response, se
 When the identity provider refuses a refresh token, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
 For the responses that remove the saved sign-in, see [HTTP responses](/kong-harnesses/identity-provider/checks/#http-responses).
 
-For the revocation at sign-out, see [`kong-harnesses logout`](/kong-harnesses/logout/).
+To revoke the refresh token when a developer signs out, see [`kong-harnesses logout`](/kong-harnesses/logout/).
 
 ## Gateway audience
 
 The gateway checks the audience of an access token when the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) sets [`config.audience_required`](/ai-gateway/openid-connect/#authorization).
-Set `config.audience_required` to a list that contains the gateway audience, as the identity provider puts it in the claim that `config.audience_claim` selects, `aud` by default.
+Set `config.audience_required` to a list that contains the gateway audience.
+Use the value that the identity provider puts in the claim that `config.audience_claim` selects.
+The default claim is `aud`.
 
-Set `--audience` in the profile to the gateway audience.
-The profile always needs this value, even with `--audience-parameter none`.
-For example, use an absolute URI such as `https://gateway.example.com/api`.
+Set `--audience` in the profile to an absolute URI that identifies the gateway, such as `https://gateway.example.com/api`.
+The profile also needs this value when you set `--audience-parameter none`.
 For the rules of the value, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 The `aud` claim of the access token can differ from the `--audience` value.
 
@@ -195,7 +206,7 @@ columns:
 rows:
   - value: "`resource`"
     description: |
-      The sign-in request sends the audience in the `resource` parameter of RFC 8707.
+      The sign-in request sends the audience in the `resource` parameter of [RFC 8707](https://www.rfc-editor.org/rfc/rfc8707).
       This is the default value.
   - value: "`audience`"
     description: |
@@ -209,7 +220,8 @@ rows:
 {% endtable %}
 
 {{site.kong_harnesses}} doesn't check the audience of the access token.
-If the identity provider ignores the audience in the request and doesn't set it in another way, its access tokens don't get the gateway audience, and a gateway with `config.audience_required` refuses them.
+If the identity provider ignores the audience in the request and doesn't set it in another way, its access tokens don't get the gateway audience.
+A gateway with `config.audience_required` refuses these access tokens.
 {{site.kong_harnesses}} sends the audience only in the authorization request in the browser, not in the code exchange or the renewal request.
 
 Before you give the profile to developers, check that the gateway accepts access tokens from a sign-in and from a renewal.
@@ -218,15 +230,14 @@ Before you give the profile to developers, check that the gateway accepts access
 
 [`profile create`](/kong-harnesses/profile/create/) reads the OIDC discovery document of the identity provider, and refuses a document that doesn't meet the rules in [Discovery document](/kong-harnesses/identity-provider/checks/#discovery-document) of the checks page.
 
-Some identity providers omit `none` from the advertised methods for public clients.
+Some identity providers list `token_endpoint_auth_methods_supported` in the discovery document without `none`, even for a public client.
 For them, first test a separate client in a non-production deployment, with `--public-client-evidence deployment` in its profile, and check that it signs in and renews its access token without a client secret.
 After the test passes, create the production profile with the flag, which skips only the check for `none`.
 
 ## Access token lifetime
 
 {{site.kong_harnesses}} reads the lifetime from `expires_in` in the token response, at sign-in and at renewal.
-It refuses a lifetime under 365 seconds, which is 360 seconds plus a 5-second margin for the renewal.
-After {{site.kong_harnesses}} saves the renewed sign-in, the access token must still have at least 360 seconds left when a client gets it.
+It refuses a lifetime under 365 seconds, so that a renewed access token still has at least 360 seconds left when a client gets it.
 If the identity provider sets the lifetime in whole minutes, use at least 7 minutes.
 {{site.kong_harnesses}} also refuses a lifetime over the limit of the profile, 3600 seconds by default.
 
@@ -236,5 +247,5 @@ If the policy allows more than 86400 seconds, reduce it to 86400 seconds.
 ## Create the profile
 
 To create and publish a profile with your identity provider settings, see [Profile creation](/kong-harnesses/profiles-for-administrators/#profile-creation) and [`kong-harnesses profile create`](/kong-harnesses/profile/create/).
-Changing an identity provider setting changes the profile's security identity.
+A change to a sign-in value of the profile, such as `--issuer`, `--client-id`, `--redirect-uri`, `--scope`, `--audience` or `--max-token-lifetime-seconds`, changes the security identity of the profile.
 For which fields belong to the security identity, and how `profile create` and [`profile import`](/kong-harnesses/profile/import/) handle changes while a client uses the profile, see [Security identity](/kong-harnesses/profile-file/#security-identity).
