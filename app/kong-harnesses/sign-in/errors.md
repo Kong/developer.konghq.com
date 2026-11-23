@@ -272,10 +272,10 @@ columns:
 rows:
   - message: "`OpenCode owns authentication`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client opencode`."
-    fix: "Follow the OpenCode steps in [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile)."
+    fix: "Follow [Sign in to OpenCode with kong-harnesses](/kong-harnesses/sign-in/opencode/)."
   - message: "`the Kong AI Gateway plugin owns authentication for Hermes`"
     cause: "You ran `login`, `logout`, `credential` or `token` with `--client hermes`."
-    fix: "Follow the Hermes Agent steps in [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile)."
+    fix: "Follow [Sign in to Hermes Agent with kong-harnesses](/kong-harnesses/sign-in/hermes/)."
   - message: "`login requires an interactive controlling terminal` or `logout asks you to type the profile name, so it needs an interactive controlling terminal`"
     cause: "`login` or `logout` ran without a terminal, for example in a script or a CI job."
     fix: >-
