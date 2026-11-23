@@ -31,21 +31,25 @@ related_resources:
     url: /changelogs/
 ---
 
-This page lists the changes for users in recent {{site.kong_harnesses}} releases, newest first.
-A release with no changes for users, such as one with only build or documentation changes, is not listed.
-A release that had a release candidate, such as `0.18.0-rc.1`, lists only the changes after that candidate, so also read the release candidate sections of the same version.
+This page lists the changes for users in each {{site.kong_harnesses}} release, newest first.
+A release with only build or documentation changes isn't listed.
 
-If a release needs a step when you upgrade, that release lists the step under **⚠ BREAKING CHANGES**.
-Do these steps after you install the new release, before you use it.
+If you must do something when you upgrade, the release lists the step under **⚠ BREAKING CHANGES**.
+Do the step after you install the new release and before you use it.
 
-A release can also change what `setup`, `profile activate` and `relay activate` write to a client's settings.
-The settings stay as the earlier release wrote them until you activate the profile again.
-`kong-harnesses status` reports these settings as `Set up by an earlier release or profile` and names `profile activate`, the command that applies the change.
-For a profile that you imported with `relay import`, `kong-harnesses relay status` reports them and names `relay activate`.
+A release that had a release candidate, such as `0.18.0-rc.1`, lists only the changes since that candidate.
+To see every change in the release, also read the sections of its release candidates.
 
-If your organization's managed settings set up Claude Code, `status` doesn't name a command for such a change.
-The administrator runs `fleet build` again into a new or empty output folder, with every flag of the earlier build that they keep, the record and the MDM policy or managed settings that the computers have now, and, for a build with `--mcp-servers exclusive`, the `managed-mcp.json` that the computers have now with `--mcp-config`.
-Then the administrator delivers the new build, as [Keep a Claude Code fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) describes.
-The release lists that step under **⚠ BREAKING CHANGES**.
+A release can also change the client settings that `setup`, `profile activate` and `relay activate` write.
+Your current settings don't change until you activate the profile again.
+To apply the new settings:
+
+* Run `kong-harnesses status`.
+  If a client shows `Set up by an earlier release or profile`, run the `profile activate` command that the `Next` line names.
+* For a profile that you imported with `relay import`, run `kong-harnesses relay status`, then run the `relay activate` command that it names.
+
+If your organization's managed settings set up {{site.claude_code}}, `status` doesn't name a command.
+In this case, the release lists a step for your administrator under **⚠ BREAKING CHANGES**.
+The administrator makes a new fleet build and delivers it, as described in [Keep a {{site.claude_code}} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/).
 
 {{ site.data.kong-harnesses.changelog.markdown }}
