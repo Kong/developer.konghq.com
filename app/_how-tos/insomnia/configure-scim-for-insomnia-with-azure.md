@@ -76,6 +76,6 @@ For more information, see the [Microsoft docs](https://learn.microsoft.com/en-us
 
 After configuring SCIM, you will see the following: 
 
-* **SCIM Request Logs** show provisioning activity. In your Insomnia Enterprise Controls, go to **SCIM** and check the request logs.
+* **SCIM Request Logs** show provisioning activity. In Insomnia Admin, go to **Enterprise tools** > **SCIM** and check the request logs.
 * **Teams** shows the groups synced from Azure. Go to **Teams** and confirm the expected teams appear.
 * **Collaborators** shows the linked teams. Under **Organizations** > **your organization** > **Collaborators**, you can view the teams linked to that organization.

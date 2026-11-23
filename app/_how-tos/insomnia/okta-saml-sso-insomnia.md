@@ -48,7 +48,7 @@ prereqs:
 
 Before you can configure the SSO connection in Okta, you must start configuring the SSO settings in Insomnia so you have access to the single-sign on URL and audience URI for the Okta settings.
 
-1. In your Insomnia account settings, click your account at the top right and select **Enterprise Controls** from the dropdown.
+1. Go to [Insomnia Admin](https://app.insomnia.rest/app/home).
 1. Click **SSO** in the sidebar and then click **Create Connection**.
 1. In the SSO settings, enter your company's domain.
 
