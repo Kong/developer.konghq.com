@@ -28,7 +28,7 @@ tldr:
   q: How do I sign in to Codex with kong-harnesses?
   a: |
     Run `kong-harnesses login --profile PROFILE_NAME` before starting Codex, because `kong-harnesses token` doesn't open a browser.
-    Check the sign-in with `kong-harnesses status --profile PROFILE_NAME --client codex`, validate with `kong-harnesses doctor --profile PROFILE_NAME --client codex`, and start `codex`.
+    Check the sign-in with `kong-harnesses status --profile PROFILE_NAME --client codex`, validate with `kong-harnesses doctor --profile PROFILE_NAME --client codex`, and start `codex -m MODEL_NAME`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -48,7 +48,8 @@ prereqs:
       content: |
         Install [kong-harnesses](/kong-harnesses/) and Codex, and install an `https://` profile that configures `codex`.
         Codex requires an `https://` gateway that serves an OpenAI-format `POST /v1/responses` route.
-        Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI, Azure OpenAI, xAI, or Amazon Bedrock Mantle.
+        Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI or Amazon Bedrock Mantle, without a guardrail policy that forces response buffering.
+        For static-key profiles, use {{ site.ai_gateway }} 2.4 or later so `key-auth` accepts `Authorization: Bearer` tokens.
         kong-harnesses doesn't configure Codex for a plain `http://` gateway or a gateway without `POST /v1/responses`.
         Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: Activated Codex profile
@@ -99,9 +100,9 @@ Confirm that your sign-in, gateway route, and Codex configuration pass all check
    kong-harnesses doctor --profile PROFILE_NAME --client codex
    ```
 
-   Confirm that `login`, `client`, `gateway`, and `route` report `ok`, and resolve any failures.
-1. Start Codex and send a prompt to confirm you receive a reply:
+   Confirm that `login`, `client`, and `gateway` report `ok`, and resolve any failures.
+1. Start Codex with a model name that {{ site.ai_gateway }} serves, replacing `MODEL_NAME` with that model name, and send a prompt to confirm you receive a reply:
 
    ```sh
-   codex
+   codex -m MODEL_NAME
    ```
